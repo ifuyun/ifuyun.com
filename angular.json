@@ -70,6 +70,10 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "port": 2008,
+            "proxyConfig": "proxy.conf.js"
+          },
           "configurations": {
             "production": {
               "browserTarget": "ifuyun.com:build:production"
@@ -132,6 +136,10 @@
         },
         "serve-ssr": {
           "builder": "@nguniversal/builders:ssr-dev-server",
+          "options": {
+            "port": 2022,
+            "proxyConfig": "proxy.conf.js"
+          },
           "configurations": {
             "development": {
               "browserTarget": "ifuyun.com:build:development",
