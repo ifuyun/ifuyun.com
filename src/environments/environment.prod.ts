@@ -1,3 +1,6 @@
 export const environment = {
-  production: true
+  production: true,
+  proxy: {
+    target: 'http://www.ifuyun.com'
+  }
 };
