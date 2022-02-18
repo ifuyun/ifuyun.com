@@ -43,5 +43,6 @@ Thumbs.db
 
 # Project
 package-lock.json
+/src/environments
 /src/favicon/*
 /src/webmaster/*
