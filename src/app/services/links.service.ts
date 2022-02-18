@@ -3,18 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BaseApiService } from '../core/base-api.service';
 import { ApiUrl } from '../enums/api-url';
-import { OptionEntity } from '../interfaces/options';
+import { LinkEntity } from '../interfaces/links';
 import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OptionsService extends BaseApiService {
+export class LinksService extends BaseApiService{
   constructor(protected http: HttpClient) {
     super();
   }
 
-  getOptions(): Observable<OptionEntity> {
-    return this.httpGetData(this.getApiUrl(ApiUrl.GET_OPTIONS));
+  getQuickLinks(): Observable<LinkEntity[]> {
+    return this.httpGetData(this.getApiUrl(ApiUrl.GET_LINKS_OF_QUICK));
   }
 }

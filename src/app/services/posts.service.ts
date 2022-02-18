@@ -9,12 +9,11 @@ import { ApiUrl } from '../enums/api-url';
   providedIn: 'root'
 })
 export class PostsService extends BaseApiService {
-
-  constructor(private http: HttpClient) {
-    super(http);
+  constructor(protected http: HttpClient) {
+    super();
   }
 
   getPosts(): Observable<any> {
-    return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS));
+    return this.httpGetData(this.getApiUrl(ApiUrl.GET_POSTS));
   }
 }

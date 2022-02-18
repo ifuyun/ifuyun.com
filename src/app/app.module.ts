@@ -1,17 +1,24 @@
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TransferHttpCacheModule } from '@nguniversal/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
+import { HeaderComponent } from './components/header/header.component';
 import { HomeComponent } from './components/home/home.component';
-import { ApiRequestInterceptor } from './interceptors/api-request.interceptor';
+import { httpInterceptorProviders } from './interceptors/http-interceptors';
+import { PostListComponent } from './components/post-list/post-list.component';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    HeaderComponent,
+    PostListComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),
@@ -19,13 +26,16 @@ import { ApiRequestInterceptor } from './interceptors/api-request.interceptor';
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
-    TransferHttpCacheModule
+    HttpClientXsrfModule.withOptions({
+      cookieName: 'XSRF',
+      headerName: 'x-xsrf-token',
+    }),
+    TransferHttpCacheModule,
+    ReactiveFormsModule
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS,
-    useClass: ApiRequestInterceptor,
-    multi: true
-  }],
+  providers: [
+    httpInterceptorProviders
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

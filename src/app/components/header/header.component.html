@@ -1,0 +1,91 @@
+<div class="m-header">
+  <div class="m-header-bg">&nbsp;</div>
+  <div class="m-nav f-clearfix">
+    <a class="u-logo" href="/" title="{{options['site_name']}}">
+      <img src="/img/logo.png" width="100%" alt="{{options['site_name']}}"/></a>
+    <ul class="f-list-none m-nav-main">
+      <li [ngClass]="{'active': activePage == 'index'}"><a title="返回{{options['site_name']}}首页" href="/">首页</a></li>
+      <ng-container *ngFor="let taxonomy of taxonomies">
+        <li [ngClass]="{'active': activePage == taxonomy.slug}">
+          <a title="<?- nav.description ?>" href="/category/{{taxonomy.slug || taxonomy.name }}">{{taxonomy.name}}</a>
+          <ul class="m-nav-sub" *ngIf="taxonomy.hasChildren">
+            <ng-container *ngFor="let subTaxonomy of taxonomy.children">
+              <li><a title="<?- subNav.description ?>" href="/category/{{subTaxonomy.slug || subTaxonomy.name }}">{{subTaxonomy.name}}</a></li>
+            </ng-container>
+          </ul>
+        </li>
+      </ng-container>
+    </ul>
+    <ul class="f-list-none m-nav-tool">
+      <li *ngFor="let link of quickLinks"><a title="{{link.linkDescription}}" href="{{link.linkUrl}}">{{link.linkName}}</a></li>
+<!--      <? if (isLogin){ ?>-->
+<!--      <li><a href="/admin" title="管理后台" target="_blank">管理</a></li>-->
+<!--      <li><a href="/user/logout" title="退出登录">登出</a></li>-->
+<!--      <? } else { ?>-->
+<!--      <li><a href="/user/login" title="登录<?- options.site_name.value ?>" rel="nofollow">登录</a></li>-->
+<!--      <? } ?>-->
+    </ul>
+    <!--  </div>-->
+    <!--  <div class="m-nav-wap f-clearfix">-->
+    <!--    <a class="u-logo" href="/" title="<?- options.site_name.value ?>">-->
+    <!--      <img src="/style/img/logo.png" width="100%" alt="<?- options.site_name.value ?>" /></a>-->
+    <!--    <span class="u-icon-list j-nav-btn">-->
+    <!--      <svg width="1em" height="1em" fill="#666" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">-->
+    <!--          <path d="M2.5 11.5A.5.5 0 013 11h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5zm0-4A.5.5 0 013 7h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5zm0-4A.5.5 0 013 3h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5z"></path>-->
+    <!--        </svg>-->
+    <!--    </span>-->
+    <!--    <div class="m-nav-wrap f-d-none j-nav-list">-->
+    <!--      <div class="u-nav-split"></div>-->
+    <!--      <ul class="f-list-none m-nav-list">-->
+    <!--        <li class="j-nav-item<? if(curNav === 'index'){ ?> active<? } ?>">-->
+    <!--          <a class="j-nav-item" href="javascript:" data-index="home" data-url="/" title="返回<?- options.site_name.value ?>首页">首页</a>-->
+    <!--        </li>-->
+    <!--        <? var itemIdx = 0; ?>-->
+    <!--        <? for(var navIdx in taxonomies.taxonomyTree){ ?>-->
+    <!--        <? var nav = taxonomies.taxonomyTree[navIdx]; itemIdx ++; ?>-->
+    <!--        <li class="j-nav-item<? if(nav.slug === curNav){ ?> active<? } ?>">-->
+    <!--          <a href="javascript:" title="<?- nav.description ?>" data-index="<?- itemIdx ?>" data-url="/category/<?= nav.slug ? nav.slug : nav.name ?>">-->
+    <!--            <span><?- nav.name ?></span>-->
+    <!--            <? if(nav.hasChildren){ ?>-->
+    <!--            <span class="u-icon-arrow">-->
+    <!--                                <svg width="1em" height="1em" fill="#666" viewBox="0 0 16 16"  xmlns="http://www.w3.org/2000/svg">-->
+    <!--                                    <path d="M4.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L10.293 8 4.646 2.354a.5.5 0 010-.708z"></path>-->
+    <!--                                </svg>-->
+    <!--                            </span>-->
+    <!--            <? } ?>-->
+    <!--          </a>-->
+    <!--        </li>-->
+    <!--        <? } ?>-->
+    <!--        <li class="j-nav-item<? if(curNav === 'archive-list'){ ?> active<? } ?>">-->
+    <!--          <a class="j-nav-item" href="javascript:" data-index="archive" data-url="/archive" title="文章归档">文章归档</a>-->
+    <!--        </li>-->
+    <!--        <li class="j-nav-item">-->
+    <!--          <a data-index="wp" data-type="text" title="黑匣子思维" href="javascript:">-->
+    <!--            <span>公众号</span>-->
+    <!--            <span class="u-icon-arrow">-->
+    <!--                            <svg width="1em" height="1em" fill="#666" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">-->
+    <!--                                <path d="M4.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L10.293 8 4.646 2.354a.5.5 0 010-.708z"></path>-->
+    <!--                            </svg>-->
+    <!--                        </span>-->
+    <!--          </a>-->
+    <!--        </li>-->
+    <!--      </ul>-->
+    <!--      <div class="m-nav-sublist m-nav-wp j-nav-sublist f-d-none" data-index="wp">-->
+    <!--        <img width="100%" src="http://s.ifuyun.com/upload/2020/03/3c94204aeddb6de3.jpg" alt="公众号：黑匣子思维" />-->
+    <!--      </div>-->
+    <!--      <? var itemIdx = 0; ?>-->
+    <!--      <? for(var navIdx in taxonomies.taxonomyTree){ ?>-->
+    <!--      <? var nav = taxonomies.taxonomyTree[navIdx]; itemIdx ++; ?>-->
+    <!--      <? if(nav.hasChildren){ ?>-->
+    <!--      <ul class="f-list-none m-nav-sublist j-nav-sublist<? if(nav.slug !== curNav){ ?> f-d-none<? } ?>" data-index="<?- itemIdx ?>">-->
+    <!--        <? for(subNavIdx in nav.children){ ?>-->
+    <!--        <? var subNav = nav.children[subNavIdx]; ?>-->
+    <!--        <li><a title="<?- subNav.description ?>" href="/category/<?= subNav.slug ? subNav.slug : subNav.name ?>"><?- subNav.name ?></a></li>-->
+    <!--        <? } ?>-->
+    <!--      </ul>-->
+    <!--      <? } ?>-->
+    <!--      <? } ?>-->
+    <!--    </div>-->
+    <div class="m-nav-mask f-d-none j-nav-mask"></div>
+  </div>
+</div>

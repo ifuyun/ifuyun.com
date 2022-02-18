@@ -3,5 +3,8 @@ export enum ApiUrl {
   GET_POSTS = '/posts',
   GET_POST = '/post/:postId',
   GET_OPTIONS = '/options',
-  SAVE_OPTIONS = '/options'
+  SAVE_OPTIONS = '/options',
+  GET_TAXONOMIES = '/taxonomies',
+  GET_LINKS_OF_QUICK = '/links/quick',
+  LOGIN = '/login',
 }

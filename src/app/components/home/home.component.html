@@ -1,1 +1,2 @@
-<p *ngFor="let post of posts">{{post.post.postTitle}}</p>
+<app-header [options]="options" [activePage]="pageIndex"></app-header>
+<router-outlet (activate)="onOutletLoaded($event)"></router-outlet>

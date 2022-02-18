@@ -29,6 +29,10 @@
             "assets": [
               {
                 "glob": "**/*",
+                "input": "src/favicon/",
+                "output": "/"
+              }, {
+                "glob": "**/*",
                 "input": "src/webmaster/",
                 "output": "/"
               }, {
@@ -107,6 +111,10 @@
             "inlineStyleLanguage": "less",
             "assets": [
               {
+                "glob": "**/*",
+                "input": "src/favicon/",
+                "output": "/"
+              }, {
                 "glob": "**/*",
                 "input": "src/webmaster/",
                 "output": "/"

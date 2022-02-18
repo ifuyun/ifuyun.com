@@ -1,1 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
+/* You can add global style to this file, and also import other style files */
+@import "assets/style/variables";
+/* functional */
+.f-clearfix:before, .f-clearfix:after { display: table; content: " "; }
+.f-clearfix:after { clear: both; }
+.f-float-left { float: left; }
+.f-float-right { float: right; }
+.f-d-none { display: none; }
+.f-list-none li { list-style: none; }
+/* reset */
+html, body, h1, h2, h3, h4, h5, h6, div, dl, dt, dd, ul, ol, li, p, blockquote, pre, hr, figure, table, caption, th, td, form, fieldset, legend, input, button, textarea, menu, optgroup, select { margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; }
+html { font-size:100%; -webkit-text-size-adjust:auto; -ms-text-size-adjust:auto; -moz-text-size-adjust:auto; }
+body { font-size: 14px; line-height: 1.42857143; background-color: #fafafa; color: #333; font-family: "Microsoft YaHei","SimHei","Helvetica Neue",Helvetica,Arial,sans-serif; }
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary { display: block; }
+a, a:hover, a:focus { color: @theme-color-text; text-decoration: none; outline: 0; }
+img { border: 0; vertical-align: middle; }
+textarea { overflow: auto; resize: none; }
+table { border-collapse: collapse; border-spacing: 0; }
+th { text-align: left; }
+h1, h2, h3, h4, h5, h6 { line-height: 1.1; }
+h1 { font-size: 18px; }
+h2 { font-size: 16px; }
+h3 { font-size: 14px; }
+h4, h5, h6 { font-size: 14px; }
+p { margin: 0; }
+ul, ol { margin-top: 0; margin-bottom: 0; }
+ul ul, ol ul, ul ol, ol ol { margin-bottom: 0; }
+button, input, select, textarea { line-height: inherit; font-family: inherit; font-size: inherit; }
+::selection { background: @theme-selection-background; color: #fff; text-shadow: none; }
