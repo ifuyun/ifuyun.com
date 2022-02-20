@@ -1,23 +1,25 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
-import { PostListComponent } from './components/post-list/post-list.component';
 import { LoginComponent } from './components/login/login.component';
+import { PostListComponent } from './components/post-list/post-list.component';
 
-const routes: Routes = [{
-  path: '',
-  component: HomeComponent,
-  children:[{
+const routes: Routes = [
+  {
     path: '',
-    component: PostListComponent
+    component: HomeComponent,
+    children: [{
+      path: '',
+      component: PostListComponent
+    }, {
+      path: 'post/page-:page',
+      component: PostListComponent
+    }]
   }, {
-    path: 'post/page-:page',
-    component: PostListComponent
-  }]
-}, {
-  path: 'user/login',
-  component: LoginComponent
-}];
+    path: 'user/login',
+    component: LoginComponent
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {

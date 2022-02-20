@@ -1,18 +1,23 @@
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
-import { isPlatformServer } from '@angular/common';
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { Inject, Injectable, Optional, PLATFORM_ID } from '@angular/core';
+import { REQUEST } from '@nguniversal/express-engine/tokens';
+import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 @Injectable()
 export class ApiRequestInterceptor implements HttpInterceptor {
-  constructor(@Inject(PLATFORM_ID) private platform: Object) {
+  constructor(
+    @Inject(PLATFORM_ID) private platform: Object,
+    @Optional() @Inject(REQUEST) private request: Request
+  ) {
   }
 
   intercept(httpRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const isApiRequest = httpRequest.url.startsWith('/api');
-    const token = localStorage.getItem('token');
+    const token = isPlatformBrowser(this.platform) ?  localStorage.getItem('token') : (this.request as any).session?.auth?.token;
     if (token) {
       httpRequest = httpRequest.clone({
         headers: httpRequest.headers.set('Authorization', 'Bearer ' + token)

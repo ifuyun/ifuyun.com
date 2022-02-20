@@ -1,14 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { PostsService } from '../../services/posts.service';
-import { Observable } from 'rxjs';
-import { PostModel } from '../../models/post.model';
-import { map } from 'rxjs/operators';
-import { HttpResponse } from '@angular/common/http';
 import { BaseComponent } from '../../core/base.component';
-import { OptionsService } from '../../services/options.service';
 import { OptionEntity } from '../../interfaces/options';
-import { LinksService } from '../../services/links.service';
-import { LinkEntity } from '../../interfaces/links';
+import { OptionsService } from '../../services/options.service';
+import { PostsService } from '../../services/posts.service';
 
 @Component({
   selector: 'app-home',

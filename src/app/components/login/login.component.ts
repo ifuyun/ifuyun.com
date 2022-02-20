@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import * as md5 from 'crypto-js/md5';
+import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
+import md5 from '../../helpers/md5';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -18,9 +19,10 @@ export class LoginComponent implements OnInit {
   });
 
   constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private cookieService: CookieService
+    private readonly fb: FormBuilder,
+    private readonly authService: AuthService,
+    private readonly cookieService: CookieService,
+    private readonly router: Router
   ) {
   }
 
@@ -32,7 +34,7 @@ export class LoginComponent implements OnInit {
       const { username, password, rememberMe } = this.loginForm.value;
       this.authService.login({
         username,
-        password: md5(password).toString()
+        password: md5(password)
       }).subscribe((res) => {
         // todo: error case
         if (res.accessToken) {
