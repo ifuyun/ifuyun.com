@@ -1,14 +1,10 @@
 export interface LoginEntity {
   username: string;
   password: string;
-}
-
-export interface AuthResponse {
-  accessToken: string;
-  expiresIn: number;
+  rememberMe?: string | boolean;
 }
 
 export interface LoginResponse {
   accessToken: string;
-  expiresIn: number;
+  expiresAt: number;
 }

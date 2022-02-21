@@ -38,7 +38,11 @@
               }, {
                 "glob": "**/*",
                 "input": "src/assets/",
-                "output": "/"
+                "output": "/assets/"
+              }, {
+                "glob": "**/*",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
+                "output": "/assets/"
               }
             ],
             "styles": [
@@ -51,13 +55,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "128kb",
+                  "maximumError": "512kb"
                 }
               ],
               "fileReplacements": [
@@ -121,7 +125,11 @@
               }, {
                 "glob": "**/*",
                 "input": "src/assets/",
-                "output": "/"
+                "output": "/assets/"
+              }, {
+                "glob": "**/*",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
+                "output": "/assets/"
               }
             ],
             "styles": [

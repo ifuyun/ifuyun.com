@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { BaseApiService } from '../core/base-api.service';
 import { HttpClient } from '@angular/common/http';
 import { TaxonomyNode } from '../interfaces/taxonomies';
@@ -10,11 +11,16 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class TaxonomiesService extends BaseApiService {
-  constructor(protected http: HttpClient) {
+  constructor(
+    protected http: HttpClient,
+    protected message: NzMessageService
+  ) {
     super();
   }
 
   getTaxonomies():Observable<TaxonomyNode[]> {
-    return this.httpGetData(this.getApiUrl(ApiUrl.GET_TAXONOMIES));
+    return this.httpGet(this.getApiUrl(ApiUrl.GET_TAXONOMIES)).pipe(
+      map((res) => res.data || [])
+    );
   }
 }

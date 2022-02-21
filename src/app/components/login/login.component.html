@@ -5,14 +5,14 @@
         <label for="username">
           <span>用户名</span>
           <br />
-          <input type="text" formControlName="username" class="u-input-login" id="username" tabindex="10" maxlength="20" autocomplete="off" autofocus/>
+          <input type="text" formControlName="username" class="u-input-login" id="username" tabindex="10" maxlength="20" autocomplete="off" [autofocus]="autoFocus.username"/>
         </label>
       </p>
       <p>
         <label for="password">
           <span>密码</span>
           <br />
-          <input type="password" formControlName="password" class="u-input-login" id="password" tabindex="20" maxlength="20"/>
+          <input type="password" formControlName="password" class="u-input-login" id="password" tabindex="20" maxlength="20" [autofocus]="autoFocus.password"/>
         </label>
       </p>
       <p class="m-rememberme">

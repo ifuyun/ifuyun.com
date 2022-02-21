@@ -2,7 +2,7 @@
   <div class="m-header-bg">&nbsp;</div>
   <div class="m-nav f-clearfix">
     <a class="u-logo" href="/" title="{{options['site_name']}}">
-      <img src="/img/logo.png" width="100%" alt="{{options['site_name']}}"/></a>
+      <img src="/assets/img/logo.png" width="100%" alt="{{options['site_name']}}"/></a>
     <ul class="f-list-none m-nav-main">
       <li [ngClass]="{'active': activePage == 'index'}"><a title="返回{{options['site_name']}}首页" href="/">首页</a></li>
       <ng-container *ngFor="let taxonomy of taxonomies">
@@ -18,12 +18,11 @@
     </ul>
     <ul class="f-list-none m-nav-tool">
       <li *ngFor="let link of quickLinks"><a title="{{link.linkDescription}}" href="{{link.linkUrl}}">{{link.linkName}}</a></li>
-<!--      <? if (isLogin){ ?>-->
-<!--      <li><a href="/admin" title="管理后台" target="_blank">管理</a></li>-->
-<!--      <li><a href="/user/logout" title="退出登录">登出</a></li>-->
-<!--      <? } else { ?>-->
-      <li><a routerLink="/user/login" title="登录{{options['site_name']}}" rel="nofollow">登录</a></li>
-<!--      <? } ?>-->
+      <ng-container *ngIf="isLogin">
+        <li><a href="/admin" title="管理后台" target="_blank">管理</a></li>
+        <li><a href="/user/logout" title="退出登录">登出</a></li>
+      </ng-container>
+      <li *ngIf="!isLogin"><a routerLink="/user/login" title="登录{{options['site_name']}}" rel="nofollow">登录</a></li>
     </ul>
     <!--  </div>-->
     <!--  <div class="m-nav-wap f-clearfix">-->
