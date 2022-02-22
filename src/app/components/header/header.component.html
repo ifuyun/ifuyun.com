@@ -18,73 +18,14 @@
     </ul>
     <ul class="f-list-none m-nav-tool">
       <li *ngFor="let link of quickLinks"><a title="{{link.linkDescription}}" href="{{link.linkUrl}}">{{link.linkName}}</a></li>
-      <ng-container *ngIf="isLogin">
-        <li><a href="/admin" title="管理后台" target="_blank">管理</a></li>
-        <li><a href="/user/logout" title="退出登录">登出</a></li>
-      </ng-container>
-      <li *ngIf="!isLogin"><a routerLink="/user/login" title="登录{{options['site_name']}}" rel="nofollow">登录</a></li>
+      <li>
+        <a href="https://github.com/ifuyun" title="Follow me on GitHub" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+            <path
+              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+          </svg>
+          GitHub</a>
+      </li>
     </ul>
-    <!--  </div>-->
-    <!--  <div class="m-nav-wap f-clearfix">-->
-    <!--    <a class="u-logo" href="/" title="<?- options.site_name.value ?>">-->
-    <!--      <img src="/style/img/logo.png" width="100%" alt="<?- options.site_name.value ?>" /></a>-->
-    <!--    <span class="u-icon-list j-nav-btn">-->
-    <!--      <svg width="1em" height="1em" fill="#666" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">-->
-    <!--          <path d="M2.5 11.5A.5.5 0 013 11h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5zm0-4A.5.5 0 013 7h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5zm0-4A.5.5 0 013 3h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5z"></path>-->
-    <!--        </svg>-->
-    <!--    </span>-->
-    <!--    <div class="m-nav-wrap f-d-none j-nav-list">-->
-    <!--      <div class="u-nav-split"></div>-->
-    <!--      <ul class="f-list-none m-nav-list">-->
-    <!--        <li class="j-nav-item<? if(curNav === 'index'){ ?> active<? } ?>">-->
-    <!--          <a class="j-nav-item" href="javascript:" data-index="home" data-url="/" title="返回<?- options.site_name.value ?>首页">首页</a>-->
-    <!--        </li>-->
-    <!--        <? var itemIdx = 0; ?>-->
-    <!--        <? for(var navIdx in taxonomies.taxonomyTree){ ?>-->
-    <!--        <? var nav = taxonomies.taxonomyTree[navIdx]; itemIdx ++; ?>-->
-    <!--        <li class="j-nav-item<? if(nav.slug === curNav){ ?> active<? } ?>">-->
-    <!--          <a href="javascript:" title="<?- nav.description ?>" data-index="<?- itemIdx ?>" data-url="/category/<?= nav.slug ? nav.slug : nav.name ?>">-->
-    <!--            <span><?- nav.name ?></span>-->
-    <!--            <? if(nav.hasChildren){ ?>-->
-    <!--            <span class="u-icon-arrow">-->
-    <!--                                <svg width="1em" height="1em" fill="#666" viewBox="0 0 16 16"  xmlns="http://www.w3.org/2000/svg">-->
-    <!--                                    <path d="M4.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L10.293 8 4.646 2.354a.5.5 0 010-.708z"></path>-->
-    <!--                                </svg>-->
-    <!--                            </span>-->
-    <!--            <? } ?>-->
-    <!--          </a>-->
-    <!--        </li>-->
-    <!--        <? } ?>-->
-    <!--        <li class="j-nav-item<? if(curNav === 'archive-list'){ ?> active<? } ?>">-->
-    <!--          <a class="j-nav-item" href="javascript:" data-index="archive" data-url="/archive" title="文章归档">文章归档</a>-->
-    <!--        </li>-->
-    <!--        <li class="j-nav-item">-->
-    <!--          <a data-index="wp" data-type="text" title="黑匣子思维" href="javascript:">-->
-    <!--            <span>公众号</span>-->
-    <!--            <span class="u-icon-arrow">-->
-    <!--                            <svg width="1em" height="1em" fill="#666" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">-->
-    <!--                                <path d="M4.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L10.293 8 4.646 2.354a.5.5 0 010-.708z"></path>-->
-    <!--                            </svg>-->
-    <!--                        </span>-->
-    <!--          </a>-->
-    <!--        </li>-->
-    <!--      </ul>-->
-    <!--      <div class="m-nav-sublist m-nav-wp j-nav-sublist f-d-none" data-index="wp">-->
-    <!--        <img width="100%" src="http://s.ifuyun.com/upload/2020/03/3c94204aeddb6de3.jpg" alt="公众号：黑匣子思维" />-->
-    <!--      </div>-->
-    <!--      <? var itemIdx = 0; ?>-->
-    <!--      <? for(var navIdx in taxonomies.taxonomyTree){ ?>-->
-    <!--      <? var nav = taxonomies.taxonomyTree[navIdx]; itemIdx ++; ?>-->
-    <!--      <? if(nav.hasChildren){ ?>-->
-    <!--      <ul class="f-list-none m-nav-sublist j-nav-sublist<? if(nav.slug !== curNav){ ?> f-d-none<? } ?>" data-index="<?- itemIdx ?>">-->
-    <!--        <? for(subNavIdx in nav.children){ ?>-->
-    <!--        <? var subNav = nav.children[subNavIdx]; ?>-->
-    <!--        <li><a title="<?- subNav.description ?>" href="/category/<?= subNav.slug ? subNav.slug : subNav.name ?>"><?- subNav.name ?></a></li>-->
-    <!--        <? } ?>-->
-    <!--      </ul>-->
-    <!--      <? } ?>-->
-    <!--      <? } ?>-->
-    <!--    </div>-->
-    <div class="m-nav-mask f-d-none j-nav-mask"></div>
   </div>
 </div>

@@ -10,13 +10,15 @@ import { NZ_I18N, zh_CN } from 'ng-zorro-antd/i18n';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
-import { HomeComponent } from './components/home/home.component';
-import { LoginComponent } from './components/login/login.component';
-import { PostListComponent } from './components/post-list/post-list.component';
+import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './pages/login/login.component';
+import { PostListComponent } from './pages/post-list/post-list.component';
+import { AutofocusDirective } from './directives/autofocus.directive';
 import { IconsProviderModule } from './icons-provider.module';
 import { httpInterceptorProviders } from './interceptors/http-interceptors';
 import { NgZorroAntdModule } from './ng-zorro-antd.module';
-import { AutofocusDirective } from './directives/autofocus.directive';
+import { FooterComponent } from './components/footer/footer.component';
+import { SiderComponent } from './components/sider/sider.component';
 
 registerLocaleData(zh);
 
@@ -27,7 +29,9 @@ registerLocaleData(zh);
     HeaderComponent,
     PostListComponent,
     LoginComponent,
-    AutofocusDirective
+    AutofocusDirective,
+    FooterComponent,
+    SiderComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),

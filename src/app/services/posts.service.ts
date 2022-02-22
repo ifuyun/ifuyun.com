@@ -2,8 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { BaseApiService } from '../core/base-api.service';
 import { ApiUrl } from '../enums/api-url';
+import { Post, PostArchiveDate } from '../interfaces/posts';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +20,25 @@ export class PostsService extends BaseApiService {
 
   getPosts(): Observable<any> {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS));
+  }
+
+  getPostArchiveDates({ showCount = false }): Observable<PostArchiveDate[]> {
+    return this.httpGet(this.getApiUrl(ApiUrl.GET_POST_ARCHIVE_DATES), {
+      showCount: showCount ? 1 : 0
+    }).pipe(
+      map((res) => res.data || [])
+    );
+  }
+
+  getHotPosts(): Observable<Post[]> {
+    return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS_OF_HOT)).pipe(
+      map((res) => res.data || [])
+    );
+  }
+
+  getRandomPosts(): Observable<Post[]> {
+    return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS_OF_RANDOM)).pipe(
+      map((res) => res.data || [])
+    );
   }
 }

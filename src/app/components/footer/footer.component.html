@@ -1,0 +1,21 @@
+<footer class="m-footer-wrap">
+  <div class="m-footer">
+    <ul>
+      <li><a href="/aboutme" title="关于抚云">关于抚云</a></li>
+      <li><a href="/feedback" title="意见反馈">意见反馈</a></li>
+      <li><a href="/contactus" title="联系我们">联系我们</a></li>
+      <li><a href="/copyright" title="版权声明">版权声明</a></li>
+    </ul>
+    <ul>
+      <li [innerHTML]="options['copyright_notice'] + '-' + curYear"></li>
+    </ul>
+    <ul>
+      <li><a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">{{options['icp_num']}}</a></li>
+      <li>|</li>
+      <li>
+        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode={{options['beian_num']}}" target="_blank" rel="nofollow">
+        <img src="http://www.beian.gov.cn/img/new/gongan.png" alt="gongan" style="margin-top: -2px;margin-right: 2px;"/>{{options['beian_prefix']}}&nbsp;{{options['beian_num']}}号</a>
+      </li>
+    </ul>
+  </div>
+</footer>

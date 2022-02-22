@@ -1,0 +1,10 @@
+<app-header [options]="options" [activePage]="pageIndex"></app-header>
+<section class="g-container f-clearfix">
+  <div class="m-content-wrap">
+    <div class="m-content">
+      <router-outlet (activate)="onOutletLoaded($event)"></router-outlet>
+    </div>
+  </div>
+  <app-sider></app-sider>
+</section>
+<app-footer [options]="options"></app-footer>

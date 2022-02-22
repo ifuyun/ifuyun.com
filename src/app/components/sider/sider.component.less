@@ -1,0 +1,130 @@
+@import "../../../assets/style/variables";
+
+* {
+  box-sizing: initial;
+}
+
+.m-sidebar {
+  float: left;
+  margin-left: -272px;
+  width: 272px;
+  position: relative;
+}
+
+.m-search {
+  margin-bottom: 15px;
+}
+
+.m-widget, .m-ads-widget {
+  margin-top: 15px;
+  border: 1px solid transparent;
+  border-radius: @box-border-radius;
+  background-color: #fff;
+  -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  -o-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.m-widget {
+  padding: 10px;
+
+  h3 {
+    font-size: 15px;
+    font-weight: normal;
+    color: #444;
+    line-height: 24px;
+    margin-bottom: 10px;
+  }
+
+  > ul > li {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    height: 24px;
+    line-height: 24px;
+    border-bottom: 1px dashed #eaeaea;
+    padding: 3px 20px;
+    color: #777;
+    font-size: 14px;
+
+    &:hover {
+      background-color: #f6f6f6;
+    }
+  }
+
+  > ul > li > a {
+    color: #666;
+
+    &:hover {
+      color: @theme-color-text;
+    }
+  }
+
+  .u-icon-widget {
+    margin-right: 4px;
+    margin-bottom: 1px;
+    vertical-align: text-bottom;
+  }
+
+  .m-qrcode-wx {
+    width: 240px;
+    height: 240px;
+    margin: 0 auto;
+    background: url(http://s.ifuyun.com/upload/2020/03/3c94204aeddb6de3.jpg) no-repeat;
+    background-size: cover;
+  }
+}
+
+.u-input {
+  width: 201px;
+  border: 1px solid #d0d0d0;
+  border-radius: 0;
+  outline: 0;
+  color: #6a6a6a;
+  padding: 5px;
+  background: #fafafa;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.u-input:focus {
+  color: #585858;
+  border-color: @theme-color-bg;
+}
+
+.u-input-search {
+  border-right: none;
+  height: 20px;
+  border-radius: @box-border-radius;
+}
+
+.u-btn {
+  padding: 6px 15px;
+  outline: 0;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+  border: 0;
+  border-radius: 0;
+  -webkit-appearance: button;
+}
+
+.u-btn:hover {
+  background-color: @theme-color-dark;
+}
+
+.u-btn-submit {
+  border-top-right-radius: @box-border-radius;
+  border-bottom-right-radius: @box-border-radius;
+  color: #fff;
+  background-color: @theme-color-bg;
+  letter-spacing: 1px;
+}
+
+/*修复FF宽高不一致问题*/
+.u-btn::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}

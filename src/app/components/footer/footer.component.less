@@ -1,0 +1,36 @@
+@import "../../../assets/style/variables";
+
+.m-footer-wrap {
+  text-align: center;
+  line-height: 24px;
+  font-size: 13px;
+  color: #7e7e7e;
+  border-top: 1px solid #eee;
+  margin-top: 20px;
+  background: #f8f8f8;
+}
+
+.m-footer {
+  padding: 15px 0;
+
+  a {
+    color: #7e7e7e;
+
+    &:hover {
+      color: @theme-color-text;
+      text-decoration: underline;
+    }
+  }
+
+  ul {
+    list-style: none;
+
+    li {
+      display: inline-block;
+
+      + li {
+        margin-left: 6px;
+      }
+    }
+  }
+}
