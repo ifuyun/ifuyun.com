@@ -26,7 +26,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isLogin = this.authService.isLoggedIn();
+    // this.isLogin = this.authService.isLoggedIn();
     this.taxonomiesService.getTaxonomies().subscribe((res) => this.taxonomies = res);
     this.linksService.getQuickLinks().subscribe((res) => this.quickLinks = res);
   }

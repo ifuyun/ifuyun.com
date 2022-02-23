@@ -9,6 +9,7 @@ export enum ApiUrl {
   SAVE_OPTIONS = '/options',
   GET_TAXONOMIES = '/taxonomies',
   GET_LINKS_OF_QUICK = '/links/quick',
+  GET_LINKS_OF_FRIEND = '/links/friend',
   LOGIN = '/login',
   GET_POST_ARCHIVE_DATES = '/archive-dates',
 }

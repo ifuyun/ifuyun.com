@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BaseApiService } from '../core/base-api.service';
 import { ApiUrl } from '../enums/api-url';
-import { Post, PostArchiveDate } from '../interfaces/posts';
+import { PostArchiveDate, PostEntity, PostList } from '../interfaces/posts';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +18,10 @@ export class PostsService extends BaseApiService {
     super();
   }
 
-  getPosts(): Observable<any> {
-    return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS));
+  getPosts(param: { page: number, keyword?: string }): Observable<PostList> {
+    return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS), param).pipe(
+      map((res) => res.data || {})
+    );
   }
 
   getPostArchiveDates({ showCount = false }): Observable<PostArchiveDate[]> {
@@ -30,13 +32,13 @@ export class PostsService extends BaseApiService {
     );
   }
 
-  getHotPosts(): Observable<Post[]> {
+  getHotPosts(): Observable<PostEntity[]> {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS_OF_HOT)).pipe(
       map((res) => res.data || [])
     );
   }
 
-  getRandomPosts(): Observable<Post[]> {
+  getRandomPosts(): Observable<PostEntity[]> {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS_OF_RANDOM)).pipe(
       map((res) => res.data || [])
     );

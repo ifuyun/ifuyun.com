@@ -23,4 +23,12 @@ export class LinksService extends BaseApiService {
       map((res) => res.data || [])
     );
   }
+
+  getFriendLinks(isHome: boolean): Observable<LinkEntity[]> {
+    return this.httpGet(this.getApiUrl(ApiUrl.GET_LINKS_OF_FRIEND), {
+      isHome
+    }).pipe(
+      map((res) => res.data || [])
+    );
+  }
 }

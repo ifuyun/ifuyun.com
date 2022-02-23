@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { postListUrlMatcher } from './config/post-list.matcher';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { PostListComponent } from './pages/post-list/post-list.component';
@@ -12,7 +13,8 @@ const routes: Routes = [
       path: '',
       component: PostListComponent
     }, {
-      path: 'post/:page',
+      /* post/:page */
+      matcher: postListUrlMatcher,
       component: PostListComponent
     }]
   }, {

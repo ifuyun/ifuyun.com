@@ -8,8 +8,16 @@ export interface TaxonomyEntity {
   count?: number;
 }
 
+export interface TaxonomyModel extends TaxonomyEntity {
+  type: string;
+  termOrder: number;
+  termGroup: number;
+  created: Date;
+  modified: Date;
+}
+
 export interface TaxonomyNode extends TaxonomyEntity {
-  level?: number
+  level?: number;
   children?: TaxonomyNode[];
   hasChildren?: boolean;
   isChecked?: boolean;
