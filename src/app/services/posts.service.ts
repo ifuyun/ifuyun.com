@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BaseApiService } from '../core/base-api.service';
 import { ApiUrl } from '../enums/api-url';
-import { PostArchiveDate, PostEntity, PostList } from '../interfaces/posts';
+import { PostArchiveDate, PostEntity, PostList, PostQueryParam } from '../interfaces/posts';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class PostsService extends BaseApiService {
     super();
   }
 
-  getPosts(param: { page: number, keyword?: string }): Observable<PostList> {
+  getPosts(param: PostQueryParam): Observable<PostList> {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS), param).pipe(
       map((res) => res.data || {})
     );

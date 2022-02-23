@@ -1,5 +1,14 @@
 @import "../../../assets/style/variables";
 
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: bold;
+}
+
+a, a:hover {
+  transition: none;
+}
+
 .m-content-box {
   border-radius: @box-border-radius;
   -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
@@ -179,7 +188,7 @@
     border-radius: 2px;
 
     &:hover {
-      color: #fff;
+      color: #fff !important;
       background: #777;
     }
   }

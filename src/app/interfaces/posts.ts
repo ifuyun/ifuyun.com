@@ -46,3 +46,12 @@ export interface PostArchiveDate {
   dateTitle: string;
   count?: number;
 }
+
+export interface PostQueryParam {
+  page: number;
+  keyword?: string;
+  category?: string;
+  tag?: string;
+  year?: string;
+  month?: string;
+}
