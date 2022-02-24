@@ -1,0 +1,82 @@
+@import "../../../assets/style/variables";
+
+* {
+  box-sizing: initial;
+}
+
+.m-content-box {
+  border-radius: @box-border-radius;
+  -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -o-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+}
+
+.m-pagination {
+  margin-top: 15px;
+  padding: 20px;
+  background-color: #fff;
+
+  > ul {
+    font-size: 13px;
+
+    > li {
+      display: inline-block;
+      line-height: 32px;
+      height: 30px;
+      text-align: center;
+      vertical-align: middle;
+
+      a {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+
+        &, &:hover {
+          color: #777;
+        }
+      }
+
+      &.u-page {
+        border: solid 1px #cfcfcf;
+        background-color: #eee;
+
+        &:hover {
+          border: solid 1px @theme-color-bg;
+          background-color: #fff;
+        }
+      }
+
+      &.active {
+        background-color: #fff;
+        color: #888;
+        font-weight: bold;
+      }
+    }
+  }
+
+  > .x-pc {
+    text-align: right;
+
+    > li {
+      width: 30px;
+
+      + li {
+        margin-left: 10px;
+      }
+    }
+  }
+
+  > .x-wap {
+    text-align: center;
+
+    .u-page-prev {
+      float: left;
+    }
+
+    .u-page-next {
+      float: right;
+    }
+  }
+}

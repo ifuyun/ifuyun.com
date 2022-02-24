@@ -19,6 +19,7 @@ import { httpInterceptorProviders } from './interceptors/http-interceptors';
 import { NgZorroAntdModule } from './ng-zorro-antd.module';
 import { FooterComponent } from './components/footer/footer.component';
 import { SiderComponent } from './components/sider/sider.component';
+import { PageBarComponent } from './components/page-bar/page-bar.component';
 
 registerLocaleData(zh);
 
@@ -31,7 +32,8 @@ registerLocaleData(zh);
     LoginComponent,
     AutofocusDirective,
     FooterComponent,
-    SiderComponent
+    SiderComponent,
+    PageBarComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),

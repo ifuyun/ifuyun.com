@@ -4,7 +4,7 @@ export function archiveUrlMatcher(url: UrlSegment[], group: UrlSegmentGroup, rou
   if (url.length < 2 || url.length > 4 || url[0].path !== 'archive') {
     return null;
   }
-  let page = '1';
+  let page = '';
   let month = '';
   if (!/^(19|2\d)\d{2}$/i.test(url[1].path)) {
     return null;
@@ -17,7 +17,7 @@ export function archiveUrlMatcher(url: UrlSegment[], group: UrlSegmentGroup, rou
         return null;
       }
       month = url[2].path;
-      page = url[3] && url[3].path.split('-')[3] || '1';
+      page = url[3] && url[3].path.split('-')[1] || '';
     } else {
       return null;
     }
@@ -25,11 +25,13 @@ export function archiveUrlMatcher(url: UrlSegment[], group: UrlSegmentGroup, rou
   const params: {
     [name: string]: UrlSegment;
   } = {
-    year: new UrlSegment(url[1].path, {}),
-    page: new UrlSegment(page, {})
+    year: new UrlSegment(url[1].path, {})
   };
   if (month) {
     params['month'] = new UrlSegment(month, {});
+  }
+  if (page) {
+    params['page'] = new UrlSegment(page, {});
   }
   return {
     consumed: url,

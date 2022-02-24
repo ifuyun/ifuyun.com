@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { BaseApiService } from '../core/base-api.service';
 import { ApiUrl } from '../enums/api-url';
-import { LoginEntity, LoginResponse } from '../interfaces/auth.interface';
+import { LoginEntity, LoginResponse } from '../interfaces/auth';
 
 @Injectable({
   providedIn: 'root'
