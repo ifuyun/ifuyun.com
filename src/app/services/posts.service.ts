@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BaseApiService } from '../core/base-api.service';
 import { ApiUrl } from '../enums/api-url';
+import { CrumbEntity } from '../interfaces/crumb';
 import { PostArchiveDate, PostEntity, PostList, PostQueryParam } from '../interfaces/posts';
 
 @Injectable({
@@ -18,7 +19,7 @@ export class PostsService extends BaseApiService {
     super();
   }
 
-  getPosts(param: PostQueryParam): Observable<PostList> {
+  getPosts(param: PostQueryParam): Observable<{ postList: PostList, crumbs: CrumbEntity[] }> {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS), param).pipe(
       map((res) => res.data || {})
     );

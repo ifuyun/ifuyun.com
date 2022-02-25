@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { BaseService } from '../core/base.service';
 import { CrumbEntity } from '../interfaces/crumb';
 
@@ -7,10 +7,10 @@ import { CrumbEntity } from '../interfaces/crumb';
   providedIn: 'root'
 })
 export class CrumbService extends BaseService {
-  private crumbSource = new Subject<CrumbEntity[]>();
-  crumb$ = this.crumbSource.asObservable();
+  private crumbSource: BehaviorSubject<CrumbEntity[]> = new BehaviorSubject<CrumbEntity[]>([]);
+  public crumb$: Observable<CrumbEntity[]> = this.crumbSource.asObservable();
 
-  updateCrumb(crumb: CrumbEntity[]) {
-    this.crumbSource.next(crumb);
+  updateCrumb(crumbs: CrumbEntity[]) {
+    this.crumbSource.next(crumbs);
   }
 }

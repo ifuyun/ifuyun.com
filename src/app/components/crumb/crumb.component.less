@@ -1,0 +1,40 @@
+@import "../../../assets/style/variables";
+
+* {
+  box-sizing: initial;
+}
+
+h3 {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.1;
+}
+
+.m-content-box {
+  border-radius: @box-border-radius;
+  -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -o-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+}
+
+.m-crumb-wrap {
+  margin-bottom: 15px;
+  padding: 10px 25px;
+  border-radius: @box-border-radius;
+}
+
+.m-crumb, .m-crumb a {
+  color: #333;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.m-crumb a:hover {
+  color: @theme-color-text;
+}
+
+.m-crumb h3 {
+  display: inline-block;
+}

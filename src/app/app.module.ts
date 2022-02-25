@@ -20,6 +20,7 @@ import { NgZorroAntdModule } from './ng-zorro-antd.module';
 import { FooterComponent } from './components/footer/footer.component';
 import { SiderComponent } from './components/sider/sider.component';
 import { PageBarComponent } from './components/page-bar/page-bar.component';
+import { CrumbComponent } from './components/crumb/crumb.component';
 
 registerLocaleData(zh);
 
@@ -33,7 +34,8 @@ registerLocaleData(zh);
     AutofocusDirective,
     FooterComponent,
     SiderComponent,
-    PageBarComponent
+    PageBarComponent,
+    CrumbComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),
