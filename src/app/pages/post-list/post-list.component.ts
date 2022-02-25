@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { uniq } from 'lodash';
 import { BaseComponent } from '../../core/base.component';
 import { CrumbEntity } from '../../interfaces/crumb';
+import { HTMLMetaData } from '../../interfaces/meta';
 import { OptionEntity } from '../../interfaces/options';
 import { PaginatorEntity } from '../../interfaces/paginator';
-import { Post, PostList, PostQueryParam } from '../../interfaces/posts';
+import { PostList, PostQueryParam } from '../../interfaces/posts';
 import { CrumbService } from '../../services/crumb.service';
+import { CustomMetaService } from '../../services/custom-meta.service';
 import { OptionsService } from '../../services/options.service';
 import { PaginatorService } from '../../services/paginator.service';
 import { PostsService } from '../../services/posts.service';
@@ -18,7 +20,7 @@ import { PostsService } from '../../services/posts.service';
 })
 export class PostListComponent extends BaseComponent implements OnInit {
   pageIndex: string = 'index';
-  options: Observable<OptionEntity> = this.optionsService.options$;
+  options: OptionEntity = {};
   page: number = 1;
   keyword: string = '';
   category: string = '';
@@ -37,12 +39,16 @@ export class PostListComponent extends BaseComponent implements OnInit {
     private postsService: PostsService,
     private paginator: PaginatorService,
     private router: ActivatedRoute,
-    private crumbService: CrumbService
+    private crumbService: CrumbService,
+    private metaService: CustomMetaService
   ) {
     super();
   }
 
   ngOnInit(): void {
+    this.optionsService.options$.subscribe((options) => {
+      this.options = options;
+    });
     this.router.params.subscribe((params) => {
       this.page = parseInt(params['page'], 10) || 1;
       this.category = params['category']?.trim();
@@ -61,7 +67,7 @@ export class PostListComponent extends BaseComponent implements OnInit {
       param.keyword = this.keyword;
     }
     if (this.category) {
-      param.category = this.category
+      param.category = this.category;
     }
     if (this.tag) {
       param.tag = this.tag;
@@ -104,6 +110,49 @@ export class PostListComponent extends BaseComponent implements OnInit {
       this.postList = res.postList;
       this.page = this.postList.page || 1;
       this.count = this.postList.count || 0;
+
+      const siteName: string = this.options['site_name'] || '';
+      let description: string = siteName;
+      const titles: string[] = [siteName];
+      const taxonomies: string[] = [];
+      const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+      if (this.category) {
+        res.crumbs && titles.unshift(res.crumbs[res.crumbs.length - 1].label);
+        taxonomies.push(res.crumbs[res.crumbs.length - 1].label);
+        keywords.unshift(res.crumbs[res.crumbs.length - 1].label);
+      }
+      if (this.tag) {
+        titles.unshift(this.tag);
+        taxonomies.push(this.tag);
+        keywords.unshift(this.tag);
+      }
+      description += taxonomies.length > 0 ? `「${taxonomies.join('-')}」` : '';
+      if (this.year) {
+        const label = `${this.year}年${this.month ? this.month + '月' : ''}`;
+        titles.unshift(label);
+        description += label;
+      }
+      description += '文章';
+      if (this.keyword) {
+        titles.unshift(`"${this.keyword}"搜索结果`);
+        description += `搜索「${this.keyword}」结果`;
+        keywords.unshift(this.keyword);
+      } else {
+        description += '列表';
+      }
+      if (this.page > 1) {
+        titles.unshift(`第${this.page}页`);
+        description += `(第${this.page}页)`;
+      }
+      description += `。${this.options['site_description']}`;
+      const metaData: HTMLMetaData = {
+        title: titles.join(' - '),
+        description,
+        author: this.options['site_author'],
+        keywords: uniq(keywords).join(',')
+      };
+      this.metaService.updateHTMLMeta(metaData);
+
       crumbs = res.crumbs || crumbs || null;
       if (crumbs) {
         this.showCrumb = true;
