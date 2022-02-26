@@ -87,6 +87,13 @@
   font-size: 14px;
   line-height: 20px;
 }
+.u-input, .u-btn {
+  border-color: transparent;
+  -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  -o-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
 
 .u-input:focus {
   color: #585858;
@@ -96,7 +103,9 @@
 .u-input-search {
   border-right: none;
   height: 20px;
-  border-radius: @box-border-radius;
+  border-top-left-radius: @box-border-radius;
+  border-bottom-left-radius: @box-border-radius;
+  background: #fff;
 }
 
 .u-btn {

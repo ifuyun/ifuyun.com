@@ -3,12 +3,19 @@ import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@an
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import * as QRCode from 'qrcode';
+import { POST_DESCRIPTION_LENGTH } from '../../config/constants';
+import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { CommentDto, CommentEntity } from '../../interfaces/comments';
 import { CrumbEntity } from '../../interfaces/crumb';
+import { OptionEntity } from '../../interfaces/options';
 import { PostEntity, PostModel } from '../../interfaces/posts';
 import { TaxonomyEntity } from '../../interfaces/taxonomies';
 import { LoginUserEntity } from '../../interfaces/users';
 import { CommentsService } from '../../services/comments.service';
+import { CrumbService } from '../../services/crumb.service';
+import { CustomMetaService } from '../../services/custom-meta.service';
+import { OptionsService } from '../../services/options.service';
 import { PostsService } from '../../services/posts.service';
 import { UsersService } from '../../services/users.service';
 
@@ -21,6 +28,8 @@ import { UsersService } from '../../services/users.service';
 export class PostComponent implements OnInit {
   private postId: string = '';
   private loginUser: LoginUserEntity = {};
+  private shareUrl: string = '';
+  private options: OptionEntity = {};
 
   prevPost: PostEntity | null = null;
   nextPost: PostEntity | null = null;
@@ -31,8 +40,11 @@ export class PostComponent implements OnInit {
   postCategories: TaxonomyEntity[] = [];
   crumbs: CrumbEntity[] = [];
   showCrumb: boolean = true;
+  showQrcodeOfShare: boolean = false;
+  showQrcodeOfReward: boolean = false;
 
   @ViewChild('captchaImg') captchaImg!: ElementRef;
+  @ViewChild('qrcodeCanvas') qrcodeCanvas!: ElementRef;
 
   commentForm = this.fb.group({
     author: ['', [Validators.required, Validators.maxLength(8)]],
@@ -46,6 +58,9 @@ export class PostComponent implements OnInit {
     private postsService: PostsService,
     private commentsService: CommentsService,
     private usersService: UsersService,
+    private crumbService: CrumbService,
+    private optionsService: OptionsService,
+    private metaService: CustomMetaService,
     private fb: FormBuilder,
     private message: NzMessageService,
     private scroller: ViewportScroller
@@ -62,6 +77,17 @@ export class PostComponent implements OnInit {
       this.postTags = post.tags;
       this.postCategories = post.categories;
       this.crumbs = post.crumbs || [];
+      this.crumbService.updateCrumb(this.crumbs);
+      this.optionsService.options$.subscribe((options) => {
+        this.options = options;
+        this.metaService.updateHTMLMeta({
+          title: `${post.post.postTitle} - ${options?.['site_name']}`,
+          description: post.post.postExcerpt || cutStr(filterHtmlTag(post.post.postContent), POST_DESCRIPTION_LENGTH),
+          author: options?.['site_author'],
+          keywords: options?.['site_keywords']
+        });
+        this.initQrcode();
+      });
     });
     this.postsService.getPostsOfPrevAndNext(this.postId).subscribe((res) => {
       this.prevPost = res.prevPost;
@@ -87,6 +113,20 @@ export class PostComponent implements OnInit {
     this.commentForm.markAsPristine();
     this.commentForm.get('captcha')?.setValue('');
     this.commentForm.get('content')?.setValue('');
+  }
+
+  private initQrcode() {
+    const siteUrl = this.options?.['site_url'].replace(/\/$/i, '');
+    const postGuid = this.post?.postGuid.replace(/^\//i, '');
+    this.shareUrl = siteUrl + '/' + postGuid + '?ref=qrcode';
+    QRCode.toCanvas(this.shareUrl, {
+      width: 160,
+      margin: 0
+    }).then((canvas) => {
+      this.qrcodeCanvas.nativeElement.appendChild(canvas);
+    }).catch((err) => {
+      this.message.error(err);
+    });
   }
 
   saveComment() {
@@ -134,5 +174,13 @@ export class PostComponent implements OnInit {
         }
       });
     }
+  }
+
+  toggleShareQrcode() {
+    this.showQrcodeOfShare = !this.showQrcodeOfShare;
+  }
+
+  toggleRewardQrcode() {
+    this.showQrcodeOfReward = !this.showQrcodeOfReward;
   }
 }

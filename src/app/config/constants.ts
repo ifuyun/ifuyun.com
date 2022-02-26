@@ -1,0 +1,2 @@
+export const POST_DESCRIPTION_LENGTH = 140;
+export const POST_EXCERPT_LENGTH = 120;

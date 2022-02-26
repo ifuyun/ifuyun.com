@@ -110,15 +110,15 @@
         <span title="更新于: {{post?.postModified | date:'yyyy-MM-dd HH:mm'}}">最后更新：{{post?.postModified | date:'yyyy-MM-dd HH:mm'}}</span></div>
     </div>
     <div class="m-article-qrcode f-clearfix">
-      <div class="m-article-qrcode-img m-article-qrcode-share" id="qrcodeShare" data-url="<?= urlShare ?>">
+      <div #qrcodeCanvas [ngStyle]="{display: showQrcodeOfShare ? 'block' : 'none'}" class="m-article-qrcode-img m-article-qrcode-share">
         <div class="m-article-qrcode-arrow"><i></i><i></i></div>
       </div>
-      <div class="m-article-qrcode-img m-article-qrcode-reward" id="qrcodeReward">
+      <div [ngStyle]="{display: showQrcodeOfReward ? 'block' : 'none'}" class="m-article-qrcode-img m-article-qrcode-reward">
         <div class="m-article-qrcode-arrow"><i></i><i></i></div>
         <img src="/assets/img/reward.jpg" width="160" height="160" alt="reward"/>
       </div>
-      <div class="m-article-qrcode-item m-article-share" id="btnShare">分享</div>
-      <div class="m-article-qrcode-item m-article-reward" id="btnReward">打赏</div>
+      <div class="m-article-qrcode-item m-article-share" (mouseover)="toggleShareQrcode()" (mouseout)="toggleShareQrcode()">分享</div>
+      <div class="m-article-qrcode-item m-article-reward" (mouseover)="toggleRewardQrcode()" (mouseout)="toggleRewardQrcode()">打赏</div>
     </div>
     <div class="m-article-link f-clearfix">
       <div class="m-article-link-prev">

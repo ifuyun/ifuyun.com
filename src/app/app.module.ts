@@ -9,18 +9,18 @@ import { TransferHttpCacheModule } from '@nguniversal/common';
 import { NZ_I18N, zh_CN } from 'ng-zorro-antd/i18n';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { CrumbComponent } from './components/crumb/crumb.component';
+import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
-import { HomeComponent } from './pages/home/home.component';
-import { LoginComponent } from './pages/login/login.component';
-import { PostListComponent } from './pages/post-list/post-list.component';
+import { PageBarComponent } from './components/page-bar/page-bar.component';
+import { SiderComponent } from './components/sider/sider.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { IconsProviderModule } from './icons-provider.module';
 import { httpInterceptorProviders } from './interceptors/http-interceptors';
 import { NgZorroAntdModule } from './ng-zorro-antd.module';
-import { FooterComponent } from './components/footer/footer.component';
-import { SiderComponent } from './components/sider/sider.component';
-import { PageBarComponent } from './components/page-bar/page-bar.component';
-import { CrumbComponent } from './components/crumb/crumb.component';
+import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './pages/login/login.component';
+import { PostListComponent } from './pages/post-list/post-list.component';
 import { PostComponent } from './pages/post/post.component';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 
@@ -30,16 +30,16 @@ registerLocaleData(zh);
   declarations: [
     AppComponent,
     HomeComponent,
-    HeaderComponent,
     PostListComponent,
+    PostComponent,
     LoginComponent,
-    AutofocusDirective,
-    FooterComponent,
+    HeaderComponent,
+    CrumbComponent,
     SiderComponent,
     PageBarComponent,
-    CrumbComponent,
-    PostComponent,
-    SafeHtmlPipe
+    FooterComponent,
+    SafeHtmlPipe,
+    AutofocusDirective
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),
