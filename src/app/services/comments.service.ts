@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BaseApiService } from '../core/base-api.service';
 import { ApiUrl } from '../enums/api-url';
-import { CommentEntity } from '../interfaces/comments';
+import { CommentDto, CommentEntity } from '../interfaces/comments';
+import { HttpResponseEntity } from '../interfaces/http-response';
 
 @Injectable({
   providedIn: 'root'
@@ -24,5 +25,9 @@ export class CommentsService extends BaseApiService{
     }).pipe(
       map((res) => res.data || {})
     );
+  }
+
+  saveComment(commentDto: CommentDto): Observable<HttpResponseEntity> {
+    return this.httpPost(this.getApiUrl(ApiUrl.SAVE_COMMENT), commentDto);
   }
 }

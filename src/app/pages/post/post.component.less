@@ -1,5 +1,9 @@
 @import "../../../assets/style/variables";
 
+* {
+  box-sizing: initial;
+}
+
 .m-content-box {
   border-radius: @box-border-radius;
   -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
@@ -362,4 +366,116 @@
   //    border-radius: 10px;
   //    border: 2px solid #1ba6ff;
   //}
+}
+
+.m-row {
+  margin: 10px 0;
+}
+
+.m-comment-form {
+  padding: 10px 30px 20px;
+
+  .u-captcha {
+    cursor: pointer;
+  }
+}
+
+.m-comment-list {
+  padding: 0 20px;
+
+  .m-comment-item {
+    padding: 10px;
+
+    > p {
+      padding: 3px 0;
+    }
+  }
+
+  .m-comment-meta {
+    color: #999;
+  }
+
+  .m-comment-time {
+    float: right;
+  }
+
+  .m-comment-action {
+    text-align: right;
+
+    > span {
+      margin-left: 5px;
+    }
+
+    a {
+      color: #999;
+
+      &:hover, &:focus {
+        color: @theme-color-text;
+      }
+    }
+  }
+
+  .m-diag {
+    left: 0;
+    margin-right: 0;
+  }
+
+  .m-diag-dashed {
+    border-top-style: dashed;
+  }
+}
+
+.u-input {
+  width: 201px;
+  border: 1px solid #d0d0d0;
+  border-radius: 0;
+  outline: 0;
+  color: #6a6a6a;
+  padding: 5px;
+  background: #fafafa;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.u-input:focus {
+  color: #585858;
+  border-color: @theme-color-bg;
+}
+
+.u-textarea-comment {
+  width: 400px;
+  height: 80px;
+}
+
+.u-label-required {
+  color: #f00;
+  margin-left: 5px;
+  font-weight: bold;
+}
+
+.u-btn {
+  padding: 6px 15px;
+  outline: 0;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+  border: 0;
+  border-radius: 0;
+  -webkit-appearance: button;
+}
+
+.u-btn:hover {
+  background-color: @theme-color-dark;
+}
+
+.u-btn-submit {
+  border-radius: @box-border-radius;
+  color: #fff;
+  background-color: @theme-color-bg;
+  letter-spacing: 1px;
+}
+
+.ng-touched.ng-invalid:not(form) {
+  border: 1px solid #a94442;
 }

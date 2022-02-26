@@ -1,13 +1,13 @@
 export interface CommentEntity {
-  commentId: string;
+  commentId?: string;
   postId: string;
   commentContent: string;
-  commentStatus: string;
+  commentStatus?: string;
   commentAuthor: string;
   commentAuthorEmail: string;
-  created: Date;
-  modified: Date;
-  commentVote: number;
+  created?: Date;
+  modified?: Date;
+  commentVote?: number;
 }
 
 export interface CommentModel {
@@ -16,4 +16,8 @@ export interface CommentModel {
   commentAgent: string;
   parentId: string;
   userId: string;
+}
+
+export interface CommentDto extends CommentEntity {
+  captchaCode?: string;
 }

@@ -130,5 +130,47 @@
           <span class="m-article-link-text"><span>下一篇：{{nextPost.postTitle}}</span></span><span class="u-text-arrow"> &gt;</span></a>
       </div>
     </div>
-</footer>
+  </footer>
+  <ng-container *ngIf="post?.commentFlag !== 'close' && comments.length > 0">
+    <div class="m-diag">&nbsp;</div>
+    <div class="m-comment-list" id="comments">
+      <ng-container *ngFor="let comment of comments; let i = index">
+        <div *ngIf="i > 0" class="m-diag m-diag-dashed">&nbsp;</div>
+        <div class="m-comment-item">
+          <p class="m-comment-meta">
+            <span class="m-comment-author">{{comment.commentAuthor}}</span>
+            <span class="m-comment-time">{{comment.created | date:'yyyy-MM-dd HH:mm'}}</span>
+          </p>
+          <p>{{comment.commentContent}}</p>
+          <p class="m-comment-action">
+            <span><a class="j-vote-up" href="javascript:">赞(<span class="j-vote-count">{{comment.commentVote}}</span>)</a></span>
+            <span><a class="j-reply" href="javascript:">回复</a></span>
+          </p>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+  <ng-container>
+    <div class="m-diag">&nbsp;</div>
+    <div class="m-comment-form" id="respond">
+      <form [formGroup]="commentForm" (ngSubmit)="saveComment()" class="j-form-comment">
+        <p class="m-row">
+          <input type="text" class="u-input" formControlName="author" maxlength="8" placeholder="昵称" /><span class="u-label-required">*</span>
+        </p>
+        <p class="m-row">
+          <input type="text" class="u-input" formControlName="email" maxlength="100" placeholder="Email" /><span class="u-label-required">*</span>
+        </p>
+        <p class="m-row">
+          <input type="text" class="u-input" formControlName="captcha" maxlength="4" placeholder="验证码" /><span class="u-label-required">*</span>
+          <img #captchaImg class="u-captcha" src="/api/captcha" title="点击刷新验证码" alt="验证码" onclick="this.src='/api/captcha?r='+Math.random()" />
+        </p>
+        <p class="m-row">
+          <textarea class="u-input u-textarea-comment" formControlName="content" maxlength="400" placeholder="评论内容"></textarea><span class="u-label-required">*</span>
+        </p>
+        <p class="m-row">
+          <input type="submit" class="u-btn u-btn-submit" value="提交" />
+        </p>
+      </form>
+    </div>
+  </ng-container>
 </div>

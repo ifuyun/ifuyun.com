@@ -3,7 +3,6 @@ export enum ApiUrl {
   GET_POSTS = '/posts',
   GET_POST = '/posts/:postId',
   GET_POSTS_OF_HOT = '/posts/hot',
-  GET_POSTS_OF_RECENT = '/posts/recent',
   GET_POSTS_OF_RANDOM = '/posts/random',
   GET_POSTS_OF_PREV_AND_NEXT = '/posts/prev-and-next',
   GET_POST_ARCHIVE_DATES = '/posts/archive-dates',
@@ -12,6 +11,7 @@ export enum ApiUrl {
   GET_LINKS_OF_QUICK = '/links/quick',
   GET_LINKS_OF_FRIEND = '/links/friend',
   GET_COMMENTS = '/comments',
+  SAVE_COMMENT = '/comments',
   LOGIN = '/users/login',
   GET_LOGIN_USER = '/users/login-user',
 }
