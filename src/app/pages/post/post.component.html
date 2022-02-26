@@ -1,0 +1,134 @@
+<app-crumb *ngIf="showCrumb"></app-crumb>
+<div class="m-content-box">
+  <header class="m-article-header">
+    <h1 class="m-article-title">
+      <a rel="bookmark" title="{{post?.postTitle}}" href="{{post?.postGuid}}">{{post?.postTitle}}</a>
+    </h1>
+    <div class="m-article-meta m-article-meta-post">
+      <span title="写作时间: {{post?.postDate | date:'yyyy-MM-dd'}}">
+        <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6.445 11.688V6.354h-.633A12.6 12.6 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61h.675zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82h-.684zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23z"/>
+          <path fill-rule="evenodd" d="M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm1-3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z"/>
+          <path fill-rule="evenodd" d="M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z"/>
+        </svg>{{post?.postDate | date:'yyyy-MM-dd'}}
+      </span>
+      <span class="m-meta-dynamic">
+        <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
+          <path fill-rule="evenodd" d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"/>
+        </svg><a *ngFor="let cat of postCategories" title="查看 {{cat.name}} 中的全部文章" rel="category" href="/category/{{cat.slug || cat.name}}">{{cat.name}}</a>
+      </span>
+      <span title="作者：{{postMeta['postAuthor']}}">
+        <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M13 14s1 0 1-1-1-4-6-4-6 3-6 4 1 1 1 1h10zm-9.995-.944v-.002.002zM3.022 13h9.956a.274.274 0 0 0 .014-.002l.008-.002c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664a1.05 1.05 0 0 0 .022.004zm9.974.056v-.002.002zM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+        </svg>{{postMeta['postAuthor']}}
+      </span>
+      <ng-container *ngIf="post?.postOriginal === 1">
+        <span class="m-meta-dynamic" title="{{post?.author?.userNiceName}}原创">
+          <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M11.293 1.293a1 1 0 0 1 1.414 0l2 2a1 1 0 0 1 0 1.414l-9 9a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391l9-9zM12 2l2 2-9 9-3 1 1-3 9-9z"/>
+            <path fill-rule="evenodd" d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 0 0 .5.5H4v.5a.5.5 0 0 0 .5.5H5v.5a.5.5 0 0 0 .5.5H6v-1.5a.5.5 0 0 0-.5-.5H5v-.5a.5.5 0 0 0-.5-.5H3z"/>
+          </svg><span>原创</span>
+        </span>
+        <span class="m-meta-dynamic" title="{{postMeta['copyrightType']}}">
+          <ng-container *ngIf="postMeta['copyright_type'] === '0'">
+            <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>
+            </svg><span>{{postMeta['copyrightType']}}</span>
+          </ng-container>
+          <ng-container *ngIf="postMeta['copyright_type'] !== '0'">
+            <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M4.646 4.354a.5.5 0 0 0 .708 0L8 1.707l2.646 2.647a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 0 0 0 .708z"/>
+              <path fill-rule="evenodd" d="M8 11.5a.5.5 0 0 0 .5-.5V2a.5.5 0 0 0-1 0v9a.5.5 0 0 0 .5.5z"/>
+              <path fill-rule="evenodd" d="M2.5 14A1.5 1.5 0 0 0 4 15.5h8a1.5 1.5 0 0 0 1.5-1.5V7A1.5 1.5 0 0 0 12 5.5h-1.5a.5.5 0 0 0 0 1H12a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5V7a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 0 0-1H4A1.5 1.5 0 0 0 2.5 7v7z"/>
+            </svg><span>{{postMeta['copyrightType']}}</span>
+          </ng-container>
+        </span>
+      </ng-container>
+      <ng-container *ngIf="post?.postOriginal !== 1">
+        <span class="m-meta-dynamic" title="来源：<?- postMeta.post_source ?>">
+          <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M3.214 1.072C4.813.752 6.916.71 8.354 2.146A.5.5 0 0 1 8.5 2.5v11a.5.5 0 0 1-.854.354c-.843-.844-2.115-1.059-3.47-.92-1.344.14-2.66.617-3.452 1.013A.5.5 0 0 1 0 13.5v-11a.5.5 0 0 1 .276-.447L.5 2.5l-.224-.447.002-.001.004-.002.013-.006a5.017 5.017 0 0 1 .22-.103 12.958 12.958 0 0 1 2.7-.869zM1 2.82v9.908c.846-.343 1.944-.672 3.074-.788 1.143-.118 2.387-.023 3.426.56V2.718c-1.063-.929-2.631-.956-4.09-.664A11.958 11.958 0 0 0 1 2.82z"/>
+            <path fill-rule="evenodd" d="M12.786 1.072C11.188.752 9.084.71 7.646 2.146A.5.5 0 0 0 7.5 2.5v11a.5.5 0 0 0 .854.354c.843-.844 2.115-1.059 3.47-.92 1.344.14 2.66.617 3.452 1.013A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.276-.447L15.5 2.5l.224-.447-.002-.001-.004-.002-.013-.006-.047-.023a12.582 12.582 0 0 0-.799-.34 12.96 12.96 0 0 0-2.073-.609zM15 2.82v9.908c-.846-.343-1.944-.672-3.074-.788-1.143-.118-2.387-.023-3.426.56V2.718c1.063-.929 2.631-.956 4.09-.664A11.956 11.956 0 0 1 15 2.82z"/>
+          </svg><span>{{postMeta['post_source']}}</span>
+        </span>
+      </ng-container>
+    </div>
+  </header>
+  <div class="m-diag">&nbsp;</div>
+  <article class="m-article-content" id="postContent">
+    <div [innerHTML]="(post?.postContent || '') | safeHtml"></div>
+    <hr *ngIf="postMeta['show_wechat_card'] === '1'" />
+    <div *ngIf="postMeta['show_wechat_card'] === '1' || postMeta['show_wechat_card'] === '2'" class="m-wechat-card">
+      <img src="http://s.ifuyun.com/upload/2020/06/3e4393acc7f2733d.png" alt="公众号：黑匣子思维" width="420" />
+    </div>
+  </article>
+  <footer class="m-article-footer">
+    <div class="m-article-meta m-article-taxonomy m-meta-dynamic">
+      <div class="m-meta-icon f-float-left">
+        <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
+          <path fill-rule="evenodd" d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"/>
+        </svg>
+      </div>
+      <ul class="f-clearfix">
+        <li *ngFor="let cat of postCategories"><a title="查看 {{cat.name}} 中的全部文章" rel="category" href="/category/{{cat.slug || cat.name}}">{{cat.name}}</a></li>
+      </ul>
+    </div>
+    <div *ngIf="postTags.length > 0" class="m-article-meta m-article-taxonomy">
+        <div class="m-meta-icon f-float-left">
+            <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M2 2v4.586l7 7L13.586 9l-7-7H2zM1 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2z"/>
+                <path fill-rule="evenodd" d="M4.5 5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1zm0 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+            </svg>
+        </div>
+        <ul class="f-clearfix">
+          <li *ngFor="let tag of postTags"><a title="查看 {{tag.name}} 中的全部文章" rel="category" href="/tag/{{tag.slug || tag.name}}">{{tag.name}}</a></li>
+        </ul>
+    </div>
+    <div class="m-article-meta m-article-source m-meta-dynamic">
+      <div class="f-float-left">
+        <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M3.214 1.072C4.813.752 6.916.71 8.354 2.146A.5.5 0 0 1 8.5 2.5v11a.5.5 0 0 1-.854.354c-.843-.844-2.115-1.059-3.47-.92-1.344.14-2.66.617-3.452 1.013A.5.5 0 0 1 0 13.5v-11a.5.5 0 0 1 .276-.447L.5 2.5l-.224-.447.002-.001.004-.002.013-.006a5.017 5.017 0 0 1 .22-.103 12.958 12.958 0 0 1 2.7-.869zM1 2.82v9.908c.846-.343 1.944-.672 3.074-.788 1.143-.118 2.387-.023 3.426.56V2.718c-1.063-.929-2.631-.956-4.09-.664A11.958 11.958 0 0 0 1 2.82z"/>
+          <path fill-rule="evenodd" d="M12.786 1.072C11.188.752 9.084.71 7.646 2.146A.5.5 0 0 0 7.5 2.5v11a.5.5 0 0 0 .854.354c.843-.844 2.115-1.059 3.47-.92 1.344.14 2.66.617 3.452 1.013A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.276-.447L15.5 2.5l.224-.447-.002-.001-.004-.002-.013-.006-.047-.023a12.582 12.582 0 0 0-.799-.34 12.96 12.96 0 0 0-2.073-.609zM15 2.82v9.908c-.846-.343-1.944-.672-3.074-.788-1.143-.118-2.387-.023-3.426.56V2.718c1.063-.929 2.631-.956 4.09-.664A11.956 11.956 0 0 1 15 2.82z"/>
+        </svg>
+      </div>
+      <div class="m-meta-text">
+        <span *ngIf="post?.postOriginal === 1" title="来源: <?= post.author.userNiceName ?>原创">来源：{{post?.author?.userNiceName}}原创</span>
+        <span *ngIf="post?.postOriginal !== 1" title="来源: <?= postMeta.post_source ?>">来源：{{postMeta['post_source']}}</span>
+      </div>
+    </div>
+    <div class="m-article-meta">
+      <div class="f-float-left">
+        <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
+          <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+        </svg>
+      </div>
+      <div class="m-meta-text">
+        <span title="更新于: {{post?.postModified | date:'yyyy-MM-dd HH:mm'}}">最后更新：{{post?.postModified | date:'yyyy-MM-dd HH:mm'}}</span></div>
+    </div>
+    <div class="m-article-qrcode f-clearfix">
+      <div class="m-article-qrcode-img m-article-qrcode-share" id="qrcodeShare" data-url="<?= urlShare ?>">
+        <div class="m-article-qrcode-arrow"><i></i><i></i></div>
+      </div>
+      <div class="m-article-qrcode-img m-article-qrcode-reward" id="qrcodeReward">
+        <div class="m-article-qrcode-arrow"><i></i><i></i></div>
+        <img src="/assets/img/reward.jpg" width="160" height="160" alt="reward"/>
+      </div>
+      <div class="m-article-qrcode-item m-article-share" id="btnShare">分享</div>
+      <div class="m-article-qrcode-item m-article-reward" id="btnReward">打赏</div>
+    </div>
+    <div class="m-article-link f-clearfix">
+      <div class="m-article-link-prev">
+        <a *ngIf="prevPost" href="{{prevPost.postGuid}}" title="{{prevPost.postTitle}}">
+          <span class="m-article-link-text">&lt; <span>上一篇：{{prevPost.postTitle}}</span></span></a>
+      </div>
+      <div class="m-article-link-next">
+        <a *ngIf="nextPost" href="{{nextPost.postGuid}}" title="{{nextPost.postTitle}}">
+          <span class="m-article-link-text"><span>下一篇：{{nextPost.postTitle}}</span></span><span class="u-text-arrow"> &gt;</span></a>
+      </div>
+    </div>
+</footer>
+</div>

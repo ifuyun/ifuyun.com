@@ -3,9 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { archiveUrlMatcher } from './config/post-archive.matcher';
 import { postListUrlMatcher } from './config/post-list.matcher';
 import { taxonomyUrlMatcher } from './config/post-taxonomy.matcher';
+import { postUrlMatcher } from './config/post.matcher';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { PostListComponent } from './pages/post-list/post-list.component';
+import { PostComponent } from './pages/post/post.component';
 
 const routes: Routes = [
   {
@@ -24,12 +26,16 @@ const routes: Routes = [
       matcher: taxonomyUrlMatcher,
       component: PostListComponent
     }, {
-      /* 'archive/:year' */
-      /* 'archive/:year/page-:page' */
-      /* 'archive/:year/:month' */
-      /* 'archive/:year/:month/page-:page' */
+      /* archive/:year */
+      /* archive/:year/page-:page */
+      /* archive/:year/:month */
+      /* archive/:year/:month/page-:page */
       matcher: archiveUrlMatcher,
       component: PostListComponent
+    }, {
+      /* post/:postId */
+      matcher: postUrlMatcher,
+      component: PostComponent
     }]
   }, {
     path: 'user/login',

@@ -35,10 +35,10 @@ export class PostListComponent extends BaseComponent implements OnInit {
   showCrumb: boolean = false;
 
   constructor(
+    private router: ActivatedRoute,
     private optionsService: OptionsService,
     private postsService: PostsService,
     private paginator: PaginatorService,
-    private router: ActivatedRoute,
     private crumbService: CrumbService,
     private metaService: CustomMetaService
   ) {

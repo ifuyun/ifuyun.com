@@ -14,3 +14,10 @@ export interface UserModel extends UserEntity {
   userActivationKey: string;
   userDisplayName: string;
 }
+
+export interface LoginUserEntity {
+  userName?: string;
+  userEmail?: string;
+  meta?: Record<string, string>;
+  isAdmin?: boolean;
+}

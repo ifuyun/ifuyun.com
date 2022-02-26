@@ -1,3 +1,4 @@
+import { CrumbEntity } from './crumb';
 import { TaxonomyEntity } from './taxonomies';
 import { UserEntity } from './users';
 
@@ -32,6 +33,7 @@ export interface Post {
   meta: Record<string, string>;
   tags: TaxonomyEntity[];
   categories: TaxonomyEntity[];
+  crumbs?: CrumbEntity[];
 }
 
 export interface PostList {

@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { BaseApiService } from '../core/base-api.service';
 import { ApiUrl } from '../enums/api-url';
 import { CrumbEntity } from '../interfaces/crumb';
-import { PostArchiveDate, PostEntity, PostList, PostQueryParam } from '../interfaces/posts';
+import { Post, PostArchiveDate, PostEntity, PostList, PostQueryParam } from '../interfaces/posts';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,20 @@ export class PostsService extends BaseApiService {
 
   getPosts(param: PostQueryParam): Observable<{ postList: PostList, crumbs: CrumbEntity[] }> {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS), param).pipe(
+      map((res) => res.data || {})
+    );
+  }
+
+  getPostById(postId: string): Observable<Post> {
+    return this.httpGet(this.getApiUrl(ApiUrl.GET_POST.replace(':postId', postId))).pipe(
+      map((res) => res.data || {})
+    );
+  }
+
+  getPostsOfPrevAndNext(postId: string): Observable<{ prevPost: PostEntity, nextPost: PostEntity }> {
+    return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS_OF_PREV_AND_NEXT), {
+      postId
+    }).pipe(
       map((res) => res.data || {})
     );
   }

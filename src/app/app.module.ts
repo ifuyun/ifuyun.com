@@ -21,6 +21,8 @@ import { FooterComponent } from './components/footer/footer.component';
 import { SiderComponent } from './components/sider/sider.component';
 import { PageBarComponent } from './components/page-bar/page-bar.component';
 import { CrumbComponent } from './components/crumb/crumb.component';
+import { PostComponent } from './pages/post/post.component';
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 
 registerLocaleData(zh);
 
@@ -35,7 +37,9 @@ registerLocaleData(zh);
     FooterComponent,
     SiderComponent,
     PageBarComponent,
-    CrumbComponent
+    CrumbComponent,
+    PostComponent,
+    SafeHtmlPipe
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),
