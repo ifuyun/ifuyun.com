@@ -57,7 +57,7 @@
     </div>
   </header>
   <div class="m-diag">&nbsp;</div>
-  <article class="m-article-content" id="postContent">
+  <article #postContent class="m-article-content">
     <div [innerHTML]="(post?.postContent || '') | safeHtml"></div>
     <hr *ngIf="postMeta['show_wechat_card'] === '1'" />
     <div *ngIf="postMeta['show_wechat_card'] === '1' || postMeta['show_wechat_card'] === '2'" class="m-wechat-card">
@@ -174,3 +174,4 @@
     </div>
   </ng-container>
 </div>
+<app-modal *ngIf="showImgModal" [imgEle]="clickedImage" (toggleModal)="toggleImgModal($event)"></app-modal>

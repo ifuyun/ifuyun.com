@@ -1,5 +1,5 @@
 import { ViewportScroller } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -30,6 +30,7 @@ export class PostComponent implements OnInit {
   private loginUser: LoginUserEntity = {};
   private shareUrl: string = '';
   private options: OptionEntity = {};
+  private unlistenClick!: Function;
 
   prevPost: PostEntity | null = null;
   nextPost: PostEntity | null = null;
@@ -42,9 +43,12 @@ export class PostComponent implements OnInit {
   showCrumb: boolean = true;
   showQrcodeOfShare: boolean = false;
   showQrcodeOfReward: boolean = false;
+  clickedImage!: HTMLImageElement;
+  showImgModal: boolean = false;
 
   @ViewChild('captchaImg') captchaImg!: ElementRef;
   @ViewChild('qrcodeCanvas') qrcodeCanvas!: ElementRef;
+  @ViewChild('postContent', { static: false }) postContent!: ElementRef;
 
   commentForm = this.fb.group({
     author: ['', [Validators.required, Validators.maxLength(8)]],
@@ -63,7 +67,8 @@ export class PostComponent implements OnInit {
     private metaService: CustomMetaService,
     private fb: FormBuilder,
     private message: NzMessageService,
-    private scroller: ViewportScroller
+    private scroller: ViewportScroller,
+    private renderer: Renderer2
   ) {
   }
 
@@ -182,5 +187,22 @@ export class PostComponent implements OnInit {
 
   toggleRewardQrcode() {
     this.showQrcodeOfReward = !this.showQrcodeOfReward;
+  }
+
+  toggleImgModal(status: boolean) {
+    this.showImgModal = status;
+  }
+
+  ngAfterViewInit() {
+    this.unlistenClick = this.renderer.listen(this.postContent.nativeElement, 'click', ((e: MouseEvent) => {
+      if (e.target instanceof HTMLImageElement) {
+        this.clickedImage = e.target;
+        this.showImgModal = true;
+      }
+    }));
+  }
+
+  ngOnDestroy() {
+    this.unlistenClick();
   }
 }

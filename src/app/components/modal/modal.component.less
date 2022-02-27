@@ -1,0 +1,68 @@
+.g-mask {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, .45);
+  z-index: 1023;
+  cursor: zoom-out;
+}
+
+.g-modal-wrap {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  font-size: 0;
+  text-align: center;
+  overflow: auto;
+  outline: 0;
+  z-index: 1024;
+  cursor: zoom-out;
+}
+
+.g-modal-wrap:before {
+  display: inline-block;
+  width: 0;
+  height: 100%;
+  vertical-align: middle;
+  content: '';
+}
+
+.g-modal {
+  display: inline-block;
+  width: auto;
+  vertical-align: middle;
+  font-size: 14px;
+  cursor: default;
+}
+
+.g-modal-content {
+  position: relative;
+}
+
+.g-modal-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 8px;
+  border-radius: 4px;
+  line-height: 32px;
+  font-size: 32px;
+  color: rgba(0, 0, 0, .45);
+  background: rgba(255, 255, 255, .8);
+  cursor: pointer;
+  z-index: 10;
+}
+
+.g-modal-close-icon {
+  display: inline-block;
+  vertical-align: top;
+  color: rgba(0, 0, 0, .45);
+
+  &:hover {
+    color: rgba(0, 0, 0, .75);
+  }
+}

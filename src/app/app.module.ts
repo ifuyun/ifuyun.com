@@ -23,6 +23,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { PostListComponent } from './pages/post-list/post-list.component';
 import { PostComponent } from './pages/post/post.component';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+import { ModalComponent } from './components/modal/modal.component';
 
 registerLocaleData(zh);
 
@@ -39,7 +40,8 @@ registerLocaleData(zh);
     PageBarComponent,
     FooterComponent,
     SafeHtmlPipe,
-    AutofocusDirective
+    AutofocusDirective,
+    ModalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),
