@@ -57,3 +57,9 @@ export interface PostQueryParam {
   year?: string;
   month?: string;
 }
+
+export interface PostContent {
+  isCode: boolean;
+  body: string;
+  lang: string[]
+}

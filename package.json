@@ -49,6 +49,7 @@
     "moment": "^2.29.1",
     "ng-zorro-antd": "^13.0.1",
     "ngx-cookie-service": "^13.1.2",
+    "ngx-highlightjs": "^6.1.1",
     "qrcode": "^1.5.0",
     "redis": "^4.0.3",
     "rxjs": "~7.5.4",

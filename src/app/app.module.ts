@@ -7,6 +7,7 @@ import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-bro
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TransferHttpCacheModule } from '@nguniversal/common';
 import { NZ_I18N, zh_CN } from 'ng-zorro-antd/i18n';
+import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highlightjs';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CrumbComponent } from './components/crumb/crumb.component';
@@ -56,11 +57,30 @@ registerLocaleData(zh);
     ReactiveFormsModule,
     BrowserAnimationsModule,
     NgZorroAntdModule,
-    IconsProviderModule
+    IconsProviderModule,
+    HighlightModule
   ],
   providers: [
     httpInterceptorProviders,
-    { provide: NZ_I18N, useValue: zh_CN }
+    { provide: NZ_I18N, useValue: zh_CN },
+    {
+      provide: HIGHLIGHT_OPTIONS,
+      useValue: <HighlightOptions> {
+        lineNumbers: true,
+        coreLibraryLoader: () => import('highlight.js/lib/core'),
+        // @ts-ignore
+        lineNumbersLoader: () => import('highlightjs-line-numbers.js'),
+        languages: {
+          typescript: () => import('highlight.js/lib/languages/typescript'),
+          javascript: () => import('highlight.js/lib/languages/javascript'),
+          json: () => import('highlight.js/lib/languages/json'),
+          css: () => import('highlight.js/lib/languages/css'),
+          xml: () => import('highlight.js/lib/languages/xml'),
+          php: () => import('highlight.js/lib/languages/php'),
+          java: () => import('highlight.js/lib/languages/java')
+        }
+      }
+    }
   ],
   bootstrap: [AppComponent]
 })
