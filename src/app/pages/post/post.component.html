@@ -1,8 +1,8 @@
 <app-crumb *ngIf="showCrumb"></app-crumb>
-<div class="m-content-box">
+<div class="m-content-box" id="article">
   <header class="m-article-header">
     <h1 class="m-article-title">
-      <a rel="bookmark" title="{{post?.postTitle}}" href="{{post?.postGuid}}">{{post?.postTitle}}</a>
+      <a rel="bookmark" title="{{post?.postTitle}}" [routerLink]="[post?.postGuid]">{{post?.postTitle}}</a>
     </h1>
     <div class="m-article-meta m-article-meta-post">
       <span title="写作时间: {{post?.postDate | date:'yyyy-MM-dd'}}">
@@ -16,7 +16,7 @@
         <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
           <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
           <path fill-rule="evenodd" d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"/>
-        </svg><a *ngFor="let cat of postCategories" title="查看 {{cat.name}} 中的全部文章" rel="category" href="/category/{{cat.slug || cat.name}}">{{cat.name}}</a>
+        </svg><a *ngFor="let cat of postCategories" title="查看 {{cat.name}} 中的全部文章" rel="category" [routerLink]="['/category/'+(cat.slug || cat.name)]">{{cat.name}}</a>
       </span>
       <span title="作者：{{postMeta['postAuthor']}}">
         <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -73,7 +73,7 @@
         </svg>
       </div>
       <ul class="f-clearfix">
-        <li *ngFor="let cat of postCategories"><a title="查看 {{cat.name}} 中的全部文章" rel="category" href="/category/{{cat.slug || cat.name}}">{{cat.name}}</a></li>
+        <li *ngFor="let cat of postCategories"><a title="查看 {{cat.name}} 中的全部文章" rel="category" [routerLink]="['/category/'+(cat.slug || cat.name)]">{{cat.name}}</a></li>
       </ul>
     </div>
     <div *ngIf="postTags.length > 0" class="m-article-meta m-article-taxonomy">
@@ -84,7 +84,7 @@
             </svg>
         </div>
         <ul class="f-clearfix">
-          <li *ngFor="let tag of postTags"><a title="查看 {{tag.name}} 中的全部文章" rel="category" href="/tag/{{tag.slug || tag.name}}">{{tag.name}}</a></li>
+          <li *ngFor="let tag of postTags"><a title="查看 {{tag.name}} 中的全部文章" rel="category" [routerLink]="['/tag/'+(tag.slug || tag.name)]">{{tag.name}}</a></li>
         </ul>
     </div>
     <div class="m-article-meta m-article-source m-meta-dynamic">
@@ -122,11 +122,11 @@
     </div>
     <div class="m-article-link f-clearfix">
       <div class="m-article-link-prev">
-        <a *ngIf="prevPost" href="{{prevPost.postGuid}}" title="{{prevPost.postTitle}}">
+        <a *ngIf="prevPost" [routerLink]="[prevPost.postGuid]" title="{{prevPost.postTitle}}">
           <span class="m-article-link-text">&lt; <span>上一篇：{{prevPost.postTitle}}</span></span></a>
       </div>
       <div class="m-article-link-next">
-        <a *ngIf="nextPost" href="{{nextPost.postGuid}}" title="{{nextPost.postTitle}}">
+        <a *ngIf="nextPost" [routerLink]="[nextPost.postGuid]" title="{{nextPost.postTitle}}">
           <span class="m-article-link-text"><span>下一篇：{{nextPost.postTitle}}</span></span><span class="u-text-arrow"> &gt;</span></a>
       </div>
     </div>

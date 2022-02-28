@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { LinkEntity } from '../../interfaces/links';
 import { PostArchiveDate, PostEntity } from '../../interfaces/posts';
 import { LinksService } from '../../services/links.service';
@@ -11,6 +12,12 @@ import { UrlService } from '../../services/url.service';
   styleUrls: ['./sider.component.less']
 })
 export class SiderComponent implements OnInit {
+  private archiveListener!: Subscription;
+  private hotPostsListener!: Subscription;
+  private randomPostsListener!: Subscription;
+  private urlListener!: Subscription;
+  private linksListener!: Subscription;
+
   archiveDates: PostArchiveDate[] = [];
   hotPosts: PostEntity[] = [];
   randomPosts: PostEntity[] = [];
@@ -24,14 +31,22 @@ export class SiderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.postsService.getPostArchiveDates({
+    this.archiveListener = this.postsService.getPostArchiveDates({
       showCount: true
     }).subscribe((res) => this.archiveDates = res);
-    this.postsService.getHotPosts().subscribe((res) => this.hotPosts = res);
-    this.postsService.getRandomPosts().subscribe((res) => this.randomPosts = res);
-    this.urlService.urlInfo$.subscribe((url) => {
+    this.hotPostsListener = this.postsService.getHotPosts().subscribe((res) => this.hotPosts = res);
+    this.randomPostsListener = this.postsService.getRandomPosts().subscribe((res) => this.randomPosts = res);
+    this.urlListener = this.urlService.urlInfo$.subscribe((url) => {
       const isHome = url.current.split('?')[0] === '/';
-      this.linksService.getFriendLinks(isHome).subscribe((res) => this.friendLinks = res);
+      this.linksListener = this.linksService.getFriendLinks(isHome).subscribe((res) => this.friendLinks = res);
     });
+  }
+
+  ngOnDestroy() {
+    this.archiveListener.unsubscribe();
+    this.hotPostsListener.unsubscribe();
+    this.randomPostsListener.unsubscribe();
+    this.urlListener.unsubscribe();
+    this.linksListener.unsubscribe();
   }
 }

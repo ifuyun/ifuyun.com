@@ -74,6 +74,7 @@ registerLocaleData(zh);
           typescript: () => import('highlight.js/lib/languages/typescript'),
           javascript: () => import('highlight.js/lib/languages/javascript'),
           json: () => import('highlight.js/lib/languages/json'),
+          haml: () => import('highlight.js/lib/languages/haml'),
           css: () => import('highlight.js/lib/languages/css'),
           xml: () => import('highlight.js/lib/languages/xml'),
           php: () => import('highlight.js/lib/languages/php'),

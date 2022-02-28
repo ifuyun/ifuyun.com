@@ -25,9 +25,9 @@
     </h3>
     <ul>
       <li *ngFor="let item of archiveDates">
-        <a href="/archive/{{item.dateText}}" title="{{item.dateTitle}}">{{item.dateTitle}}({{item.count}})</a>
+        <a [routerLink]="['/archive/'+item.dateText]" title="{{item.dateTitle}}">{{item.dateTitle}}({{item.count}})</a>
       </li>
-      <li *ngIf="archiveDates.length >= 10"><a href="/archive" title="查看全部归档">……</a></li>
+      <li *ngIf="archiveDates.length >= 10"><a [routerLink]="['/archive']" title="查看全部归档">……</a></li>
     </ul>
   </div>
   <div class="m-widget">
@@ -39,7 +39,7 @@
       <span>热门文章</span>
     </h3>
     <ul>
-      <li *ngFor="let post of hotPosts"><a title="{{post.postTitle}}" href="{{post.postGuid}}">{{post.postTitle}}</a></li>
+      <li *ngFor="let post of hotPosts"><a title="{{post.postTitle}}" [routerLink]="[post.postGuid]">{{post.postTitle}}</a></li>
     </ul>
   </div>
   <div class="m-widget">
@@ -55,7 +55,7 @@
       <span>手气不错</span>
     </h3>
     <ul>
-      <li *ngFor="let post of randomPosts"><a title="{{post.postTitle}}" href="{{post.postGuid}}">{{post.postTitle}}</a></li>
+      <li *ngFor="let post of randomPosts"><a title="{{post.postTitle}}" [routerLink]="[post.postGuid]">{{post.postTitle}}</a></li>
     </ul>
   </div>
   <div class="m-widget">

@@ -25,8 +25,10 @@ export class PostsService extends BaseApiService {
     );
   }
 
-  getPostById(postId: string): Observable<Post> {
-    return this.httpGet(this.getApiUrl(ApiUrl.GET_POST.replace(':postId', postId))).pipe(
+  getPostById(postId: string, referer?: string): Observable<Post> {
+    return this.httpGet(this.getApiUrl(ApiUrl.GET_POST.replace(':postId', postId)), {
+      from : referer
+    }).pipe(
       map((res) => res.data || {})
     );
   }

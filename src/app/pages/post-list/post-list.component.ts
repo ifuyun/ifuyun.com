@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { uniq } from 'lodash';
+import { combineLatestWith, Subscription, tap } from 'rxjs';
 import { BaseComponent } from '../../core/base.component';
 import { CrumbEntity } from '../../interfaces/crumb';
 import { HTMLMetaData } from '../../interfaces/meta';
@@ -10,6 +11,7 @@ import { PostList, PostQueryParam } from '../../interfaces/posts';
 import { CrumbService } from '../../services/crumb.service';
 import { CustomMetaService } from '../../services/custom-meta.service';
 import { OptionsService } from '../../services/options.service';
+import { PagesService } from '../../services/pages.service';
 import { PaginatorService } from '../../services/paginator.service';
 import { PostsService } from '../../services/posts.service';
 
@@ -19,6 +21,9 @@ import { PostsService } from '../../services/posts.service';
   styleUrls: ['./post-list.component.less']
 })
 export class PostListComponent extends BaseComponent implements OnInit {
+  private optionsListener!: Subscription;
+  private paramListener!: Subscription;
+
   pageIndex: string = 'index';
   options: OptionEntity = {};
   page: number = 1;
@@ -38,6 +43,7 @@ export class PostListComponent extends BaseComponent implements OnInit {
     private router: ActivatedRoute,
     private optionsService: OptionsService,
     private postsService: PostsService,
+    private pagesService: PagesService,
     private paginator: PaginatorService,
     private crumbService: CrumbService,
     private metaService: CustomMetaService
@@ -45,20 +51,7 @@ export class PostListComponent extends BaseComponent implements OnInit {
     super();
   }
 
-  ngOnInit(): void {
-    this.optionsService.options$.subscribe((options) => {
-      this.options = options;
-    });
-    this.router.params.subscribe((params) => {
-      this.page = parseInt(params['page'], 10) || 1;
-      this.category = params['category']?.trim();
-      this.tag = params['tag']?.trim();
-      this.year = params['year']?.trim();
-      this.month = params['month']?.trim();
-    });
-    this.router.queryParams.subscribe((params) => {
-      this.keyword = params['keyword']?.trim();
-    });
+  private fetchPosts() {
     const param: PostQueryParam = {
       page: this.page
     };
@@ -70,6 +63,7 @@ export class PostListComponent extends BaseComponent implements OnInit {
       param.category = this.category;
     }
     if (this.tag) {
+      this.pageIndex = 'tag';
       param.tag = this.tag;
       crumbs = [{
         'label': '标签',
@@ -84,6 +78,7 @@ export class PostListComponent extends BaseComponent implements OnInit {
       }];
     }
     if (this.year) {
+      this.pageIndex = 'archive';
       param.year = this.year;
       crumbs = [{
         'label': '文章归档',
@@ -153,11 +148,15 @@ export class PostListComponent extends BaseComponent implements OnInit {
       };
       this.metaService.updateHTMLMeta(metaData);
 
-      crumbs = res.crumbs || crumbs || null;
+      if (res.crumbs) {
+        crumbs = res.crumbs;
+        this.pageIndex = res.crumbs[0].slug || '';
+      }
       if (crumbs) {
         this.showCrumb = true;
         this.crumbService.updateCrumb(crumbs);
       }
+      this.pagesService.updateActivePage(this.pageIndex);
 
       this.paginatorData = this.paginator.getPaginator(this.page, this.count);
       const urlSegments: string[] = [];
@@ -180,5 +179,27 @@ export class PostListComponent extends BaseComponent implements OnInit {
       });
       this.pageUrlParam = urlQuery.length > 0 ? '?' + urlQuery.join('&') : '';
     });
+  }
+
+  ngOnInit(): void {
+    this.optionsListener = this.optionsService.options$.subscribe((options) => {
+      this.options = options;
+    });
+    this.paramListener = this.router.paramMap.pipe(
+      combineLatestWith(this.router.queryParamMap),
+      tap(([params, queryParams]) => {
+        this.page = Number(params.get('page')) || 1;
+        this.category = params.get('category')?.trim() || '';
+        this.tag = params.get('tag')?.trim() || '';
+        this.year = params.get('year')?.trim() || '';
+        this.month = params.get('month')?.trim() || '';
+        this.keyword = queryParams.get('keyword')?.trim() || '';
+      })
+    ).subscribe(() => this.fetchPosts());
+  }
+
+  ngOnDestroy() {
+    this.optionsListener.unsubscribe();
+    this.paramListener.unsubscribe();
   }
 }

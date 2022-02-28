@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { LinkEntity } from '../../interfaces/links';
 import { OptionEntity } from '../../interfaces/options';
 import { TaxonomyNode } from '../../interfaces/taxonomies';
-import { AuthService } from '../../services/auth.service';
 import { LinksService } from '../../services/links.service';
 import { TaxonomiesService } from '../../services/taxonomies.service';
 
@@ -20,13 +19,11 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private taxonomiesService: TaxonomiesService,
-    private linksService: LinksService,
-    private authService: AuthService
+    private linksService: LinksService
   ) {
   }
 
   ngOnInit(): void {
-    // this.isLogin = this.authService.isLoggedIn();
     this.taxonomiesService.getTaxonomies().subscribe((res) => this.taxonomies = res);
     this.linksService.getQuickLinks().subscribe((res) => this.quickLinks = res);
   }

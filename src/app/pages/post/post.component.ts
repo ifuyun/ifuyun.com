@@ -7,6 +7,7 @@ import { HighlightJS } from 'ngx-highlightjs';
 import * as QRCode from 'qrcode';
 import { Subscription } from 'rxjs';
 import { POST_DESCRIPTION_LENGTH } from '../../config/constants';
+import { BaseComponent } from '../../core/base.component';
 import { VoteType } from '../../enums/common.enum';
 import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { CommentDto, CommentEntity } from '../../interfaces/comments';
@@ -19,7 +20,9 @@ import { CommentsService } from '../../services/comments.service';
 import { CrumbService } from '../../services/crumb.service';
 import { CustomMetaService } from '../../services/custom-meta.service';
 import { OptionsService } from '../../services/options.service';
+import { PagesService } from '../../services/pages.service';
 import { PostsService } from '../../services/posts.service';
+import { UrlService } from '../../services/url.service';
 import { UsersService } from '../../services/users.service';
 import { VotesService } from '../../services/votes.service';
 
@@ -29,14 +32,19 @@ import { VotesService } from '../../services/votes.service';
   styleUrls: ['./post.component.less'],
   encapsulation: ViewEncapsulation.None
 })
-export class PostComponent implements OnInit {
+export class PostComponent extends BaseComponent implements OnInit {
   private postId: string = '';
   private loginUser: LoginUserEntity = {};
   private shareUrl: string = '';
   private options: OptionEntity = {};
   private unlistenClick!: Function;
   private listeners: Subscription[] = [];
+  private referer: string = '';
+  private urlListener!: Subscription;
+  private paramListener!: Subscription;
+  private userListener!: Subscription;
 
+  pageIndex: string = '';
   prevPost: PostEntity | null = null;
   nextPost: PostEntity | null = null;
   comments: CommentEntity[] = [];
@@ -66,29 +74,48 @@ export class PostComponent implements OnInit {
   constructor(
     private router: ActivatedRoute,
     private postsService: PostsService,
+    private pagesService: PagesService,
     private commentsService: CommentsService,
+    private votesService: VotesService,
     private usersService: UsersService,
     private crumbService: CrumbService,
     private optionsService: OptionsService,
     private metaService: CustomMetaService,
-    private votesService: VotesService,
+    private urlService: UrlService,
     private fb: FormBuilder,
     private message: NzMessageService,
     private scroller: ViewportScroller,
     private renderer: Renderer2,
     private highlight: HighlightJS
   ) {
+    super();
   }
 
   ngOnInit(): void {
-    this.router.params.subscribe((params) => {
-      this.postId = params['postId']?.trim();
+    this.urlListener = this.urlService.urlInfo$.subscribe((url) => {
+      this.referer = url.previous;
     });
-    this.postsService.getPostById(this.postId).subscribe((post) => {
+    this.paramListener = this.router.params.subscribe((params) => {
+      this.postId = params['postId']?.trim();
+      this.fetchPost();
+      this.fetchComments();
+      this.scroller.scrollToAnchor('article');
+    });
+    this.userListener = this.usersService.getLoginUser().subscribe((user) => {
+      this.loginUser = user;
+      this.commentForm.get('author')?.setValue(user.userName);
+      this.commentForm.get('email')?.setValue(user.userEmail);
+    });
+  }
+
+  private fetchPost() {
+    this.postsService.getPostById(this.postId, this.referer).subscribe((post) => {
       this.post = post.post;
       this.postMeta = post.meta;
       this.postTags = post.tags;
       this.postCategories = post.categories;
+      this.pageIndex = post.crumbs?.[0].slug || '';
+      this.pagesService.updateActivePage(this.pageIndex);
       this.crumbs = post.crumbs || [];
       this.crumbService.updateCrumb(this.crumbs);
       this.optionsService.options$.subscribe((options) => {
@@ -105,12 +132,6 @@ export class PostComponent implements OnInit {
     this.postsService.getPostsOfPrevAndNext(this.postId).subscribe((res) => {
       this.prevPost = res.prevPost;
       this.nextPost = res.nextPost;
-    });
-    this.fetchComments();
-    this.usersService.getLoginUser().subscribe((user) => {
-      this.loginUser = user;
-      this.commentForm.get('author')?.setValue(user.userName);
-      this.commentForm.get('email')?.setValue(user.userEmail);
     });
   }
 
@@ -235,6 +256,9 @@ export class PostComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.urlListener.unsubscribe();
+    this.paramListener.unsubscribe();
+    this.userListener.unsubscribe();
     this.listeners.forEach((listener) => listener.unsubscribe());
     this.unlistenClick();
   }

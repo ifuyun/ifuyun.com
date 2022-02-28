@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CrumbEntity } from '../../interfaces/crumb';
 import { OptionEntity } from '../../interfaces/options';
 import { CrumbService } from '../../services/crumb.service';
@@ -10,6 +11,9 @@ import { OptionsService } from '../../services/options.service';
   styleUrls: ['./crumb.component.less']
 })
 export class CrumbComponent implements OnInit {
+  private crumbListener!: Subscription;
+  private optionsListener!: Subscription;
+
   crumbs: CrumbEntity[] = [];
   options: OptionEntity | null = null;
   separator: string = '&nbsp;→&nbsp;';
@@ -21,10 +25,10 @@ export class CrumbComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.optionsService.options$.subscribe((options) => {
+    this.optionsListener = this.optionsService.options$.subscribe((options) => {
       this.options = options;
     });
-    this.crumbService.crumb$.subscribe((crumbs) => {
+    this.crumbListener = this.crumbService.crumb$.subscribe((crumbs) => {
       this.crumbs = crumbs;
       this.crumbs.unshift({
         'label': '首页',
@@ -33,5 +37,10 @@ export class CrumbComponent implements OnInit {
         'headerFlag': false
       });
     });
+  }
+
+  ngOnDestroy() {
+    this.crumbListener.unsubscribe();
+    this.optionsListener.unsubscribe();
   }
 }

@@ -1,10 +1,10 @@
 <footer class="m-footer-wrap">
   <div class="m-footer">
     <ul>
-      <li><a href="/aboutme" title="关于抚云">关于抚云</a></li>
-      <li><a href="/feedback" title="意见反馈">意见反馈</a></li>
-      <li><a href="/contactus" title="联系我们">联系我们</a></li>
-      <li><a href="/copyright" title="版权声明">版权声明</a></li>
+      <li><a [routerLink]="['/aboutme']" title="关于抚云">关于抚云</a></li>
+      <li><a [routerLink]="['/feedback']" title="意见反馈">意见反馈</a></li>
+      <li><a [routerLink]="['/contactus']" title="联系我们">联系我们</a></li>
+      <li><a [routerLink]="['/copyright']" title="版权声明">版权声明</a></li>
     </ul>
     <ul>
       <li [innerHTML]="options['copyright_notice'] + '-' + curYear"></li>

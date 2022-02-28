@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '../../core/base.component';
 import { OptionEntity } from '../../interfaces/options';
 import { OptionsService } from '../../services/options.service';
+import { PagesService } from '../../services/pages.service';
 
 @Component({
   selector: 'app-home',
@@ -13,16 +14,14 @@ export class HomeComponent extends BaseComponent implements OnInit {
   options: OptionEntity = {};
 
   constructor(
-    private optionsService: OptionsService
+    private optionsService: OptionsService,
+    private pagesService: PagesService
   ) {
     super();
   }
 
   ngOnInit(): void {
     this.optionsService.getOptions().subscribe((res) => this.options = res);
-  }
-
-  onOutletLoaded(component: BaseComponent) {
-    this.pageIndex = component.pageIndex;
+    this.pagesService.page$.subscribe((activePage) => this.pageIndex = activePage);
   }
 }
