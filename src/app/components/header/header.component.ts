@@ -13,6 +13,7 @@ import { TaxonomiesService } from '../../services/taxonomies.service';
 export class HeaderComponent implements OnInit {
   @Input() options: OptionEntity = {};
   @Input() activePage: string = '';
+
   taxonomies: TaxonomyNode[] = [];
   quickLinks: LinkEntity[] = [];
   isLogin: boolean = false;

@@ -9,7 +9,7 @@
     </li>
   </ul>
 </div>
-<article *ngFor="let post of postList.posts" class="m-excerpt m-content-box f-clearfix">
+<article id="postList" *ngFor="let post of postList.posts" class="m-excerpt m-content-box f-clearfix">
   <div class="m-excerpt-detail f-clearfix">
     <header>
       <h3><a rel="bookmark" title="{{post.post.postTitle}}" [routerLink]="[post.post.postGuid]">{{post.post.postTitle}}</a></h3>

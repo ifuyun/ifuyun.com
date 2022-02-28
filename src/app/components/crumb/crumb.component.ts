@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CrumbEntity } from '../../interfaces/crumb';
 import { OptionEntity } from '../../interfaces/options';
@@ -10,13 +10,13 @@ import { OptionsService } from '../../services/options.service';
   templateUrl: './crumb.component.html',
   styleUrls: ['./crumb.component.less']
 })
-export class CrumbComponent implements OnInit {
-  private crumbListener!: Subscription;
-  private optionsListener!: Subscription;
-
+export class CrumbComponent implements OnInit, OnDestroy {
   crumbs: CrumbEntity[] = [];
   options: OptionEntity | null = null;
   separator: string = '&nbsp;→&nbsp;';
+
+  private crumbListener!: Subscription;
+  private optionsListener!: Subscription;
 
   constructor(
     private crumbService: CrumbService,

@@ -8,6 +8,7 @@ import { OptionEntity } from '../../interfaces/options';
 })
 export class FooterComponent implements OnInit {
   @Input() options: OptionEntity = {};
+
   curYear = new Date().getFullYear();
 
   ngOnInit(): void {

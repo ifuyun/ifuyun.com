@@ -1,5 +1,5 @@
 import { ViewportScroller } from '@angular/common';
-import { Component, ElementRef, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -32,18 +32,7 @@ import { VotesService } from '../../services/votes.service';
   styleUrls: ['./post.component.less'],
   encapsulation: ViewEncapsulation.None
 })
-export class PostComponent extends BaseComponent implements OnInit {
-  private postId: string = '';
-  private loginUser: LoginUserEntity = {};
-  private shareUrl: string = '';
-  private options: OptionEntity = {};
-  private unlistenClick!: Function;
-  private listeners: Subscription[] = [];
-  private referer: string = '';
-  private urlListener!: Subscription;
-  private paramListener!: Subscription;
-  private userListener!: Subscription;
-
+export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
   pageIndex: string = '';
   prevPost: PostEntity | null = null;
   nextPost: PostEntity | null = null;
@@ -58,6 +47,17 @@ export class PostComponent extends BaseComponent implements OnInit {
   showQrcodeOfReward: boolean = false;
   clickedImage!: HTMLImageElement;
   showImgModal: boolean = false;
+
+  private postId: string = '';
+  private loginUser: LoginUserEntity = {};
+  private shareUrl: string = '';
+  private options: OptionEntity = {};
+  private unlistenClick!: Function;
+  private listeners: Subscription[] = [];
+  private referer: string = '';
+  private urlListener!: Subscription;
+  private paramListener!: Subscription;
+  private userListener!: Subscription;
 
   @ViewChild('captchaImg') captchaImg!: ElementRef;
   @ViewChild('qrcodeCanvas') qrcodeCanvas!: ElementRef;
@@ -108,59 +108,30 @@ export class PostComponent extends BaseComponent implements OnInit {
     });
   }
 
-  private fetchPost() {
-    this.postsService.getPostById(this.postId, this.referer).subscribe((post) => {
-      this.post = post.post;
-      this.postMeta = post.meta;
-      this.postTags = post.tags;
-      this.postCategories = post.categories;
-      this.pageIndex = post.crumbs?.[0].slug || '';
-      this.pagesService.updateActivePage(this.pageIndex);
-      this.crumbs = post.crumbs || [];
-      this.crumbService.updateCrumb(this.crumbs);
-      this.optionsService.options$.subscribe((options) => {
-        this.options = options;
-        this.metaService.updateHTMLMeta({
-          title: `${post.post.postTitle} - ${options?.['site_name']}`,
-          description: post.post.postExcerpt || cutStr(filterHtmlTag(post.post.postContent), POST_DESCRIPTION_LENGTH),
-          author: options?.['site_author'],
-          keywords: options?.['site_keywords']
-        });
-        this.initQrcode();
+  ngAfterViewInit() {
+    const listener = this.highlight.highlightAll().subscribe(() => {
+      const codeEles = this.postContentEle.nativeElement.querySelectorAll('pre code');
+      codeEles.forEach((ele: HTMLElement) => {
+        this.renderer.addClass(ele, 'code-lines');
+        const lineListener = this.highlight.lineNumbersBlock(ele).subscribe();
+        this.listeners.push(lineListener);
       });
     });
-    this.postsService.getPostsOfPrevAndNext(this.postId).subscribe((res) => {
-      this.prevPost = res.prevPost;
-      this.nextPost = res.nextPost;
-    });
+    this.listeners.push(listener);
+    this.unlistenClick = this.renderer.listen(this.postContentEle.nativeElement, 'click', ((e: MouseEvent) => {
+      if (e.target instanceof HTMLImageElement) {
+        this.clickedImage = e.target;
+        this.showImgModal = true;
+      }
+    }));
   }
 
-  private fetchComments(cb?: Function) {
-    this.commentsService.getCommentsByPostId(this.postId).subscribe((comments) => {
-      this.comments = comments;
-      cb && cb();
-    });
-  }
-
-  private resetCommentForm() {
-    this.commentForm.markAsUntouched();
-    this.commentForm.markAsPristine();
-    this.commentForm.get('captcha')?.setValue('');
-    this.commentForm.get('content')?.setValue('');
-  }
-
-  private initQrcode() {
-    const siteUrl = this.options?.['site_url'].replace(/\/$/i, '');
-    const postGuid = this.post?.postGuid.replace(/^\//i, '');
-    this.shareUrl = siteUrl + '/' + postGuid + '?ref=qrcode';
-    QRCode.toCanvas(this.shareUrl, {
-      width: 160,
-      margin: 0
-    }).then((canvas) => {
-      this.qrcodeCanvas.nativeElement.appendChild(canvas);
-    }).catch((err) => {
-      this.message.error(err);
-    });
+  ngOnDestroy() {
+    this.urlListener.unsubscribe();
+    this.paramListener.unsubscribe();
+    this.userListener.unsubscribe();
+    this.listeners.forEach((listener) => listener.unsubscribe());
+    this.unlistenClick();
   }
 
   saveComment() {
@@ -237,29 +208,58 @@ export class PostComponent extends BaseComponent implements OnInit {
     this.scroller.scrollToAnchor('respond');
   }
 
-  ngAfterViewInit() {
-    const listener = this.highlight.highlightAll().subscribe(() => {
-      const codeEles = this.postContentEle.nativeElement.querySelectorAll('pre code');
-      codeEles.forEach((ele: HTMLElement) => {
-        this.renderer.addClass(ele, 'code-lines');
-        const lineListener = this.highlight.lineNumbersBlock(ele).subscribe();
-        this.listeners.push(lineListener);
+  private fetchPost() {
+    this.postsService.getPostById(this.postId, this.referer).subscribe((post) => {
+      this.post = post.post;
+      this.postMeta = post.meta;
+      this.postTags = post.tags;
+      this.postCategories = post.categories;
+      this.pageIndex = post.crumbs?.[0].slug || '';
+      this.pagesService.updateActivePage(this.pageIndex);
+      this.crumbs = post.crumbs || [];
+      this.crumbService.updateCrumb(this.crumbs);
+      this.optionsService.options$.subscribe((options) => {
+        this.options = options;
+        this.metaService.updateHTMLMeta({
+          title: `${post.post.postTitle} - ${options?.['site_name']}`,
+          description: post.post.postExcerpt || cutStr(filterHtmlTag(post.post.postContent), POST_DESCRIPTION_LENGTH),
+          author: options?.['site_author'],
+          keywords: options?.['site_keywords']
+        });
+        this.initQrcode();
       });
     });
-    this.listeners.push(listener);
-    this.unlistenClick = this.renderer.listen(this.postContentEle.nativeElement, 'click', ((e: MouseEvent) => {
-      if (e.target instanceof HTMLImageElement) {
-        this.clickedImage = e.target;
-        this.showImgModal = true;
-      }
-    }));
+    this.postsService.getPostsOfPrevAndNext(this.postId).subscribe((res) => {
+      this.prevPost = res.prevPost;
+      this.nextPost = res.nextPost;
+    });
   }
 
-  ngOnDestroy() {
-    this.urlListener.unsubscribe();
-    this.paramListener.unsubscribe();
-    this.userListener.unsubscribe();
-    this.listeners.forEach((listener) => listener.unsubscribe());
-    this.unlistenClick();
+  private fetchComments(cb?: Function) {
+    this.commentsService.getCommentsByPostId(this.postId).subscribe((comments) => {
+      this.comments = comments;
+      cb && cb();
+    });
+  }
+
+  private resetCommentForm() {
+    this.commentForm.markAsUntouched();
+    this.commentForm.markAsPristine();
+    this.commentForm.get('captcha')?.setValue('');
+    this.commentForm.get('content')?.setValue('');
+  }
+
+  private initQrcode() {
+    const siteUrl = this.options?.['site_url'].replace(/\/$/i, '');
+    const postGuid = this.post?.postGuid.replace(/^\//i, '');
+    this.shareUrl = siteUrl + '/' + postGuid + '?ref=qrcode';
+    QRCode.toCanvas(this.shareUrl, {
+      width: 160,
+      margin: 0
+    }).then((canvas) => {
+      this.qrcodeCanvas.nativeElement.appendChild(canvas);
+    }).catch((err) => {
+      this.message.error(err);
+    });
   }
 }

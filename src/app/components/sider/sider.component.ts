@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LinkEntity } from '../../interfaces/links';
 import { PostArchiveDate, PostEntity } from '../../interfaces/posts';
@@ -11,17 +11,17 @@ import { UrlService } from '../../services/url.service';
   templateUrl: './sider.component.html',
   styleUrls: ['./sider.component.less']
 })
-export class SiderComponent implements OnInit {
+export class SiderComponent implements OnInit, OnDestroy {
+  archiveDates: PostArchiveDate[] = [];
+  hotPosts: PostEntity[] = [];
+  randomPosts: PostEntity[] = [];
+  friendLinks: LinkEntity[] = [];
+
   private archiveListener!: Subscription;
   private hotPostsListener!: Subscription;
   private randomPostsListener!: Subscription;
   private urlListener!: Subscription;
   private linksListener!: Subscription;
-
-  archiveDates: PostArchiveDate[] = [];
-  hotPosts: PostEntity[] = [];
-  randomPosts: PostEntity[] = [];
-  friendLinks: LinkEntity[] = [];
 
   constructor(
     private postsService: PostsService,

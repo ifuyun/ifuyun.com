@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { ViewportScroller } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { uniq } from 'lodash';
 import { combineLatestWith, Subscription, tap } from 'rxjs';
@@ -20,10 +21,7 @@ import { PostsService } from '../../services/posts.service';
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.less']
 })
-export class PostListComponent extends BaseComponent implements OnInit {
-  private optionsListener!: Subscription;
-  private paramListener!: Subscription;
-
+export class PostListComponent extends BaseComponent implements OnInit, OnDestroy {
   pageIndex: string = 'index';
   options: OptionEntity = {};
   page: number = 1;
@@ -39,6 +37,9 @@ export class PostListComponent extends BaseComponent implements OnInit {
   pageUrlParam: string = '';
   showCrumb: boolean = false;
 
+  private optionsListener!: Subscription;
+  private paramListener!: Subscription;
+
   constructor(
     private router: ActivatedRoute,
     private optionsService: OptionsService,
@@ -46,9 +47,35 @@ export class PostListComponent extends BaseComponent implements OnInit {
     private pagesService: PagesService,
     private paginator: PaginatorService,
     private crumbService: CrumbService,
-    private metaService: CustomMetaService
+    private metaService: CustomMetaService,
+    private scroller: ViewportScroller
   ) {
     super();
+  }
+
+  ngOnInit(): void {
+    this.optionsListener = this.optionsService.options$.subscribe((options) => {
+      this.options = options;
+    });
+    this.paramListener = this.router.paramMap.pipe(
+      combineLatestWith(this.router.queryParamMap),
+      tap(([params, queryParams]) => {
+        this.page = Number(params.get('page')) || 1;
+        this.category = params.get('category')?.trim() || '';
+        this.tag = params.get('tag')?.trim() || '';
+        this.year = params.get('year')?.trim() || '';
+        this.month = params.get('month')?.trim() || '';
+        this.keyword = queryParams.get('keyword')?.trim() || '';
+      })
+    ).subscribe(() => {
+      this.fetchPosts();
+      this.scroller.scrollToAnchor('postList');
+    });
+  }
+
+  ngOnDestroy() {
+    this.optionsListener.unsubscribe();
+    this.paramListener.unsubscribe();
   }
 
   private fetchPosts() {
@@ -179,27 +206,5 @@ export class PostListComponent extends BaseComponent implements OnInit {
       });
       this.pageUrlParam = urlQuery.length > 0 ? '?' + urlQuery.join('&') : '';
     });
-  }
-
-  ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$.subscribe((options) => {
-      this.options = options;
-    });
-    this.paramListener = this.router.paramMap.pipe(
-      combineLatestWith(this.router.queryParamMap),
-      tap(([params, queryParams]) => {
-        this.page = Number(params.get('page')) || 1;
-        this.category = params.get('category')?.trim() || '';
-        this.tag = params.get('tag')?.trim() || '';
-        this.year = params.get('year')?.trim() || '';
-        this.month = params.get('month')?.trim() || '';
-        this.keyword = queryParams.get('keyword')?.trim() || '';
-      })
-    ).subscribe(() => this.fetchPosts());
-  }
-
-  ngOnDestroy() {
-    this.optionsListener.unsubscribe();
-    this.paramListener.unsubscribe();
   }
 }

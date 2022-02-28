@@ -1,29 +1,25 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-modal',
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.less']
 })
-export class ModalComponent implements OnInit {
-  private unlistenClick!: Function;
-  private unlistenInput!: Function;
-  private bodyEle!: ElementRef;
+export class ModalComponent implements OnInit, OnDestroy {
+  @Input('imgEle') imgEle!: HTMLImageElement;
+  @Output() toggleModal = new EventEmitter<boolean>();
 
   @ViewChild('modal') modal!: ElementRef;
   @ViewChild('modalBody') modalBody!: ElementRef;
-  @Input('imgEle') imgEle!: HTMLImageElement;
-  @Output() toggleModal = new EventEmitter<boolean>();
+
+  private unlistenClick!: Function;
+  private unlistenInput!: Function;
+  private bodyEle!: ElementRef;
 
   constructor(private renderer: Renderer2) {
   }
 
   ngOnInit(): void {
-  }
-
-  private hideModal() {
-    this.toggleModal.emit(false);
-    this.renderer.removeStyle(this.bodyEle, 'overflow');
   }
 
   ngAfterViewInit(): void {
@@ -54,5 +50,10 @@ export class ModalComponent implements OnInit {
   ngOnDestroy() {
     this.unlistenClick();
     this.unlistenInput();
+  }
+
+  private hideModal() {
+    this.toggleModal.emit(false);
+    this.renderer.removeStyle(this.bodyEle, 'overflow');
   }
 }
