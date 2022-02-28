@@ -11,7 +11,8 @@ export enum ApiUrl {
   GET_LINKS_OF_QUICK = '/links/quick',
   GET_LINKS_OF_FRIEND = '/links/friend',
   GET_COMMENTS = '/comments',
-  SAVE_COMMENT = '/comments',
+  SAVE_COMMENTS = '/comments',
+  SAVE_VOTES = '/votes',
   LOGIN = '/users/login',
   GET_LOGIN_USER = '/users/login-user',
 }

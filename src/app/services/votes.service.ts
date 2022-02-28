@@ -5,13 +5,12 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BaseApiService } from '../core/base-api.service';
 import { ApiUrl } from '../enums/api-url';
-import { CommentDto, CommentEntity } from '../interfaces/comments';
-import { HttpResponseEntity } from '../interfaces/http-response';
+import { VoteType } from '../enums/common.enum';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CommentsService extends BaseApiService{
+export class VotesService extends BaseApiService{
   constructor(
     protected http: HttpClient,
     protected message: NzMessageService
@@ -19,15 +18,9 @@ export class CommentsService extends BaseApiService{
     super();
   }
 
-  getCommentsByPostId(postId: string): Observable<CommentEntity[]> {
-    return this.httpGet(this.getApiUrl(ApiUrl.GET_COMMENTS), {
-      postId
-    }).pipe(
+  saveVote(voteDto: { objectId: string, type: VoteType }): Observable<{ vote: number }> {
+    return this.httpPost(this.getApiUrl(ApiUrl.SAVE_VOTES), voteDto).pipe(
       map((res) => res.data || {})
     );
-  }
-
-  saveComment(commentDto: CommentDto): Observable<HttpResponseEntity> {
-    return this.httpPost(this.getApiUrl(ApiUrl.SAVE_COMMENTS), commentDto);
   }
 }

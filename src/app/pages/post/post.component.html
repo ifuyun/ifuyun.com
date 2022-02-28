@@ -143,8 +143,8 @@
           </p>
           <p>{{comment.commentContent}}</p>
           <p class="m-comment-action">
-            <span><a class="j-vote-up" href="javascript:">赞(<span class="j-vote-count">{{comment.commentVote}}</span>)</a></span>
-            <span><a class="j-reply" href="javascript:">回复</a></span>
+            <span><a href="javascript:" (click)="saveVote(comment, true)">赞(<span>{{comment.commentVote}}</span>)</a></span>
+            <span><a href="javascript:" (click)="replyComment(comment)">回复</a></span>
           </p>
         </div>
       </ng-container>
@@ -153,7 +153,7 @@
   <ng-container>
     <div class="m-diag">&nbsp;</div>
     <div class="m-comment-form" id="respond">
-      <form [formGroup]="commentForm" (ngSubmit)="saveComment()" class="j-form-comment">
+      <form [formGroup]="commentForm" (ngSubmit)="saveComment()">
         <p class="m-row">
           <input type="text" class="u-input" formControlName="author" maxlength="8" placeholder="昵称" /><span class="u-label-required">*</span>
         </p>
@@ -168,7 +168,9 @@
           <textarea class="u-input u-textarea-comment" formControlName="content" maxlength="400" placeholder="评论内容"></textarea><span class="u-label-required">*</span>
         </p>
         <p class="m-row">
+          <input type="hidden" formControlName="parentId" />
           <input type="submit" class="u-btn u-btn-submit" value="提交" />
+          <input type="reset" class="u-btn" value="重置" />
         </p>
       </form>
     </div>

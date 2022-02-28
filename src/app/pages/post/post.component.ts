@@ -7,6 +7,7 @@ import { HighlightJS } from 'ngx-highlightjs';
 import * as QRCode from 'qrcode';
 import { Subscription } from 'rxjs';
 import { POST_DESCRIPTION_LENGTH } from '../../config/constants';
+import { VoteType } from '../../enums/common.enum';
 import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { CommentDto, CommentEntity } from '../../interfaces/comments';
 import { CrumbEntity } from '../../interfaces/crumb';
@@ -20,6 +21,7 @@ import { CustomMetaService } from '../../services/custom-meta.service';
 import { OptionsService } from '../../services/options.service';
 import { PostsService } from '../../services/posts.service';
 import { UsersService } from '../../services/users.service';
+import { VotesService } from '../../services/votes.service';
 
 @Component({
   selector: 'app-post',
@@ -57,7 +59,8 @@ export class PostComponent implements OnInit {
     author: ['', [Validators.required, Validators.maxLength(8)]],
     email: ['', [Validators.required, Validators.maxLength(100), Validators.email]],
     captcha: ['', [Validators.required, Validators.maxLength(4)]],
-    content: ['', [Validators.required, Validators.maxLength(400)]]
+    content: ['', [Validators.required, Validators.maxLength(400)]],
+    parentId: []
   });
 
   constructor(
@@ -68,6 +71,7 @@ export class PostComponent implements OnInit {
     private crumbService: CrumbService,
     private optionsService: OptionsService,
     private metaService: CustomMetaService,
+    private votesService: VotesService,
     private fb: FormBuilder,
     private message: NzMessageService,
     private scroller: ViewportScroller,
@@ -164,9 +168,10 @@ export class PostComponent implements OnInit {
       });
       msgs.forEach((msg) => this.message.error(msg));
     } else {
-      const { author, email, captcha, content } = this.commentForm.value;
+      const { author, email, captcha, content, parentId } = this.commentForm.value;
       const commentDto: CommentDto = {
         postId: this.postId,
+        parentId: parentId || '',
         captchaCode: captcha,
         commentContent: content,
         commentAuthor: author,
@@ -195,6 +200,20 @@ export class PostComponent implements OnInit {
 
   toggleImgModal(status: boolean) {
     this.showImgModal = status;
+  }
+
+  saveVote(comment: CommentEntity, isLike: boolean) {
+    this.votesService.saveVote({
+      objectId: comment.commentId,
+      type: isLike ? VoteType.LIKE : VoteType.DISLIKE
+    }).subscribe((res) => {
+      comment.commentVote = res.vote;
+    });
+  }
+
+  replyComment(comment: CommentEntity) {
+    this.commentForm.get('parentId')?.setValue(comment.commentId);
+    this.scroller.scrollToAnchor('respond');
   }
 
   ngAfterViewInit() {
