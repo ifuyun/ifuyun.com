@@ -3,13 +3,15 @@ import { Component, ElementRef, OnInit, Renderer2, ViewChild, ViewEncapsulation 
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { HighlightJS } from 'ngx-highlightjs';
 import * as QRCode from 'qrcode';
+import { Subscription } from 'rxjs';
 import { POST_DESCRIPTION_LENGTH } from '../../config/constants';
 import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { CommentDto, CommentEntity } from '../../interfaces/comments';
 import { CrumbEntity } from '../../interfaces/crumb';
 import { OptionEntity } from '../../interfaces/options';
-import { PostContent, PostEntity, PostModel } from '../../interfaces/posts';
+import { PostEntity, PostModel } from '../../interfaces/posts';
 import { TaxonomyEntity } from '../../interfaces/taxonomies';
 import { LoginUserEntity } from '../../interfaces/users';
 import { CommentsService } from '../../services/comments.service';
@@ -31,6 +33,7 @@ export class PostComponent implements OnInit {
   private shareUrl: string = '';
   private options: OptionEntity = {};
   private unlistenClick!: Function;
+  private listeners: Subscription[] = [];
 
   prevPost: PostEntity | null = null;
   nextPost: PostEntity | null = null;
@@ -45,7 +48,6 @@ export class PostComponent implements OnInit {
   showQrcodeOfReward: boolean = false;
   clickedImage!: HTMLImageElement;
   showImgModal: boolean = false;
-  postContents: PostContent[] = [];
 
   @ViewChild('captchaImg') captchaImg!: ElementRef;
   @ViewChild('qrcodeCanvas') qrcodeCanvas!: ElementRef;
@@ -69,7 +71,8 @@ export class PostComponent implements OnInit {
     private fb: FormBuilder,
     private message: NzMessageService,
     private scroller: ViewportScroller,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private highlight: HighlightJS
   ) {
   }
 
@@ -79,7 +82,6 @@ export class PostComponent implements OnInit {
     });
     this.postsService.getPostById(this.postId).subscribe((post) => {
       this.post = post.post;
-      this.analysePost();
       this.postMeta = post.meta;
       this.postTags = post.tags;
       this.postCategories = post.categories;
@@ -105,37 +107,6 @@ export class PostComponent implements OnInit {
       this.loginUser = user;
       this.commentForm.get('author')?.setValue(user.userName);
       this.commentForm.get('email')?.setValue(user.userEmail);
-    });
-  }
-
-  private analysePost() {
-    const codeReg = /<pre(?:\s+class="([a-zA-Z0-9-\s]+)")?>\s*<code>([\s\S]*?)<\/code>\s*<\/pre>/ig;
-    const splitReg = /<pre(?:\s+class="[a-zA-Z0-9-\s]+")?>\s*<code>[\s\S]*?<\/code>\s*<\/pre>/i;
-    const contents = this.post?.postContent.split(splitReg) || [];
-    const codes: { lang: string[], code: string }[] = [];
-    Array.from(this.post?.postContent.matchAll(codeReg) || []).forEach((result) => {
-      const langs = (result[1]?.split(' ') || []).map((item) => {
-        const lang = item.split('-');
-        return lang.length > 1 ? lang[1] : lang[0] || '';
-      });
-      codes.push({
-        lang: langs,
-        code: result[2]
-      });
-    });
-    contents.forEach((content, i) => {
-      this.postContents.push({
-        isCode: false,
-        body: content,
-        lang: []
-      });
-      if (i < contents.length - 1) {
-        this.postContents.push({
-          isCode: true,
-          body: codes[i].code,
-          lang: codes[i].lang
-        });
-      }
     });
   }
 
@@ -227,6 +198,15 @@ export class PostComponent implements OnInit {
   }
 
   ngAfterViewInit() {
+    const listener = this.highlight.highlightAll().subscribe(() => {
+      const codeEles = this.postContentEle.nativeElement.querySelectorAll('pre code');
+      codeEles.forEach((ele: HTMLElement) => {
+        this.renderer.addClass(ele, 'code-lines');
+        const lineListener = this.highlight.lineNumbersBlock(ele).subscribe();
+        this.listeners.push(lineListener);
+      });
+    });
+    this.listeners.push(listener);
     this.unlistenClick = this.renderer.listen(this.postContentEle.nativeElement, 'click', ((e: MouseEvent) => {
       if (e.target instanceof HTMLImageElement) {
         this.clickedImage = e.target;
@@ -236,6 +216,7 @@ export class PostComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.listeners.forEach((listener) => listener.unsubscribe());
     this.unlistenClick();
   }
 }

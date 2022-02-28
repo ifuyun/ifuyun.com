@@ -58,10 +58,7 @@
   </header>
   <div class="m-diag">&nbsp;</div>
   <article #postContent class="m-article-content">
-    <ng-container *ngFor="let content of postContents">
-      <div *ngIf="!content.isCode" [innerHTML]="(content.body || '') | safeHtml"></div>
-      <pre *ngIf="content.isCode"><code [highlight]="content.body" [languages]="content.lang" [lineNumbers]="true"></code></pre>
-    </ng-container>
+    <div [innerHTML]="(post?.postContent || '') | safeHtml"></div>
     <hr *ngIf="postMeta['show_wechat_card'] === '1'" />
     <div *ngIf="postMeta['show_wechat_card'] === '1' || postMeta['show_wechat_card'] === '2'" class="m-wechat-card">
       <img src="http://s.ifuyun.com/upload/2020/06/3e4393acc7f2733d.png" alt="公众号：黑匣子思维" width="420" />
