@@ -82,7 +82,7 @@ export class PostListComponent extends BaseComponent implements OnInit, OnDestro
     const param: PostQueryParam = {
       page: this.page
     };
-    let crumbs: CrumbEntity[] | null;
+    let crumbs: CrumbEntity[];
     if (this.keyword) {
       param.keyword = this.keyword;
     }

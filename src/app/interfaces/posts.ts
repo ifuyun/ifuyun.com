@@ -49,6 +49,18 @@ export interface PostArchiveDate {
   count?: number;
 }
 
+export interface PostArchiveDateMap {
+  [year: string]: {
+    list: PostArchiveDate[];
+    countByYear: number;
+  };
+}
+
+export interface PostArchiveDateList {
+  dateList: PostArchiveDateMap;
+  yearList: string[];
+}
+
 export interface PostQueryParam {
   page: number;
   keyword?: string;

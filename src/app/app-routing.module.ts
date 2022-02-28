@@ -4,6 +4,7 @@ import { archiveUrlMatcher } from './config/post-archive.matcher';
 import { postListUrlMatcher } from './config/post-list.matcher';
 import { taxonomyUrlMatcher } from './config/post-taxonomy.matcher';
 import { postUrlMatcher } from './config/post.matcher';
+import { ArchiveComponent } from './pages/archive/archive.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { PostListComponent } from './pages/post-list/post-list.component';
@@ -36,6 +37,9 @@ const routes: Routes = [
       /* post/:postId */
       matcher: postUrlMatcher,
       component: PostComponent
+    }, {
+      path: 'archive',
+      component: ArchiveComponent
     }]
   }, {
     path: 'user/login',

@@ -5,8 +5,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BaseApiService } from '../core/base-api.service';
 import { ApiUrl } from '../enums/api-url';
+import { PostType } from '../enums/common.enum';
 import { CrumbEntity } from '../interfaces/crumb';
-import { Post, PostArchiveDate, PostEntity, PostList, PostQueryParam } from '../interfaces/posts';
+import { Post, PostArchiveDate, PostArchiveDateList, PostArchiveDateMap, PostEntity, PostList, PostQueryParam } from '../interfaces/posts';
 
 @Injectable({
   providedIn: 'root'
@@ -41,12 +42,31 @@ export class PostsService extends BaseApiService {
     );
   }
 
-  getPostArchiveDates({ showCount = false }): Observable<PostArchiveDate[]> {
+  getPostArchiveDates({ showCount = false, limit = 10 }): Observable<PostArchiveDate[]> {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_POST_ARCHIVE_DATES), {
-      showCount: showCount ? 1 : 0
+      postType: PostType.POST,
+      showCount: showCount ? 1 : 0,
+      limit
     }).pipe(
       map((res) => res.data || [])
     );
+  }
+
+  transformArchiveDates(archiveDates: PostArchiveDate[]): PostArchiveDateList {
+    const dateList: PostArchiveDateMap = {};
+    (archiveDates || []).forEach((item) => {
+      const year = item.dateText.split('/')[0];
+      dateList[year] = dateList[year] || {};
+      dateList[year].list = dateList[year].list || [];
+      dateList[year].list.push(item);
+      dateList[year].countByYear = dateList[year].countByYear || 0;
+      dateList[year].countByYear += item.count || 0;
+    });
+    const yearList = Object.keys(dateList).sort((a, b) => a < b ? 1 : -1);
+
+    return {
+      dateList, yearList
+    };
   }
 
   getHotPosts(): Observable<PostEntity[]> {
