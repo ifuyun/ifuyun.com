@@ -7,6 +7,7 @@ import { postUrlMatcher } from './config/post.matcher';
 import { ArchiveComponent } from './pages/archive/archive.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PostListComponent } from './pages/post-list/post-list.component';
 import { PostComponent } from './pages/post/post.component';
 
@@ -16,6 +17,7 @@ const routes: Routes = [
     component: HomeComponent,
     children: [{
       path: '',
+      pathMatch: 'full',
       component: PostListComponent
     }, {
       /* post/page-:page */
@@ -44,6 +46,9 @@ const routes: Routes = [
   }, {
     path: 'user/login',
     component: LoginComponent
+  }, {
+    path: '**',
+    component: NotFoundComponent
   }
 ];
 

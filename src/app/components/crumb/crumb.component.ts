@@ -13,7 +13,7 @@ import { OptionsService } from '../../services/options.service';
 export class CrumbComponent implements OnInit, OnDestroy {
   crumbs: CrumbEntity[] = [];
   options: OptionEntity | null = null;
-  separator: string = '&nbsp;→&nbsp;';
+  separator: string = '&nbsp;/&nbsp;';
 
   private crumbListener!: Subscription;
   private optionsListener!: Subscription;

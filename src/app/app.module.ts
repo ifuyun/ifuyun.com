@@ -26,6 +26,7 @@ import { PostComponent } from './pages/post/post.component';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { ModalComponent } from './components/modal/modal.component';
 import { ArchiveComponent } from './pages/archive/archive.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 registerLocaleData(zh);
 
@@ -44,7 +45,8 @@ registerLocaleData(zh);
     SafeHtmlPipe,
     AutofocusDirective,
     ModalComponent,
-    ArchiveComponent
+    ArchiveComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),

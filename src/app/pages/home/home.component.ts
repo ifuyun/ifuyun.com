@@ -21,7 +21,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.optionsService.getOptions().subscribe((res) => this.options = res);
+    this.optionsService.options$.subscribe((res) => this.options = res);
     this.pagesService.page$.subscribe((activePage) => this.pageIndex = activePage);
   }
 }
