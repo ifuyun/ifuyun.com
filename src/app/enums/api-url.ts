@@ -2,6 +2,7 @@ export enum ApiUrl {
   API_URL_PREFIX = '/api',
   GET_POSTS = '/posts',
   GET_POST = '/posts/:postId',
+  GET_POST_STANDALONE = '/posts/standalone',
   GET_POSTS_OF_HOT = '/posts/hot',
   GET_POSTS_OF_RANDOM = '/posts/random',
   GET_POSTS_OF_PREV_AND_NEXT = '/posts/prev-and-next',

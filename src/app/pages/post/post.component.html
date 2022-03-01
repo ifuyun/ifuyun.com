@@ -1,10 +1,10 @@
 <app-crumb *ngIf="showCrumb"></app-crumb>
-<div class="m-content-box" id="article">
+<div class="m-content-box" [ngClass]="{'m-page': isStandalone}" id="article">
   <header class="m-article-header">
     <h1 class="m-article-title">
       <a rel="bookmark" title="{{post?.postTitle}}" [routerLink]="[post?.postGuid]">{{post?.postTitle}}</a>
     </h1>
-    <div class="m-article-meta m-article-meta-post">
+    <div *ngIf="!isStandalone" class="m-article-meta m-article-meta-post">
       <span title="写作时间: {{post?.postDate | date:'yyyy-MM-dd'}}">
         <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
           <path d="M6.445 11.688V6.354h-.633A12.6 12.6 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61h.675zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82h-.684zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23z"/>
@@ -65,7 +65,7 @@
     </div>
   </article>
   <footer class="m-article-footer">
-    <div class="m-article-meta m-article-taxonomy m-meta-dynamic">
+    <div *ngIf="!isStandalone" class="m-article-meta m-article-taxonomy m-meta-dynamic">
       <div class="m-meta-icon f-float-left">
         <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
           <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
@@ -76,7 +76,7 @@
         <li *ngFor="let cat of postCategories"><a title="查看 {{cat.name}} 中的全部文章" rel="category" [routerLink]="['/category/'+(cat.slug || cat.name)]">{{cat.name}}</a></li>
       </ul>
     </div>
-    <div *ngIf="postTags.length > 0" class="m-article-meta m-article-taxonomy">
+    <div *ngIf="!isStandalone && postTags.length > 0" class="m-article-meta m-article-taxonomy">
         <div class="m-meta-icon f-float-left">
             <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M2 2v4.586l7 7L13.586 9l-7-7H2zM1 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2z"/>
@@ -87,8 +87,8 @@
           <li *ngFor="let tag of postTags"><a title="查看 {{tag.name}} 中的全部文章" rel="category" [routerLink]="['/tag/'+(tag.slug || tag.name)]">{{tag.name}}</a></li>
         </ul>
     </div>
-    <div class="m-article-meta m-article-source m-meta-dynamic">
-      <div class="f-float-left">
+    <div *ngIf="!isStandalone" class="m-article-meta m-article-source m-meta-dynamic">
+      <div class="m-meta-icon f-float-left">
         <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd" d="M3.214 1.072C4.813.752 6.916.71 8.354 2.146A.5.5 0 0 1 8.5 2.5v11a.5.5 0 0 1-.854.354c-.843-.844-2.115-1.059-3.47-.92-1.344.14-2.66.617-3.452 1.013A.5.5 0 0 1 0 13.5v-11a.5.5 0 0 1 .276-.447L.5 2.5l-.224-.447.002-.001.004-.002.013-.006a5.017 5.017 0 0 1 .22-.103 12.958 12.958 0 0 1 2.7-.869zM1 2.82v9.908c.846-.343 1.944-.672 3.074-.788 1.143-.118 2.387-.023 3.426.56V2.718c-1.063-.929-2.631-.956-4.09-.664A11.958 11.958 0 0 0 1 2.82z"/>
           <path fill-rule="evenodd" d="M12.786 1.072C11.188.752 9.084.71 7.646 2.146A.5.5 0 0 0 7.5 2.5v11a.5.5 0 0 0 .854.354c.843-.844 2.115-1.059 3.47-.92 1.344.14 2.66.617 3.452 1.013A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.276-.447L15.5 2.5l.224-.447-.002-.001-.004-.002-.013-.006-.047-.023a12.582 12.582 0 0 0-.799-.34 12.96 12.96 0 0 0-2.073-.609zM15 2.82v9.908c-.846-.343-1.944-.672-3.074-.788-1.143-.118-2.387-.023-3.426.56V2.718c1.063-.929 2.631-.956 4.09-.664A11.956 11.956 0 0 1 15 2.82z"/>
@@ -100,7 +100,7 @@
       </div>
     </div>
     <div class="m-article-meta">
-      <div class="f-float-left">
+      <div class="m-meta-icon f-float-left">
         <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
           <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
@@ -120,7 +120,7 @@
       <div class="m-article-qrcode-item m-article-share" (mouseover)="toggleShareQrcode()" (mouseout)="toggleShareQrcode()">分享</div>
       <div class="m-article-qrcode-item m-article-reward" (mouseover)="toggleRewardQrcode()" (mouseout)="toggleRewardQrcode()">打赏</div>
     </div>
-    <div class="m-article-link f-clearfix">
+    <div *ngIf="!isStandalone" class="m-article-link f-clearfix">
       <div class="m-article-link-prev">
         <a *ngIf="prevPost" [routerLink]="[prevPost.postGuid]" title="{{prevPost.postTitle}}">
           <span class="m-article-link-text">&lt; <span>上一篇：{{prevPost.postTitle}}</span></span></a>

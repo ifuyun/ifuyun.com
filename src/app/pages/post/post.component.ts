@@ -37,7 +37,7 @@ export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
   prevPost: PostEntity | null = null;
   nextPost: PostEntity | null = null;
   comments: CommentEntity[] = [];
-  post: PostModel | null = null;
+  post!: PostModel;
   postMeta: Record<string, string> = {};
   postTags: TaxonomyEntity[] = [];
   postCategories: TaxonomyEntity[] = [];
@@ -47,8 +47,10 @@ export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
   showQrcodeOfReward: boolean = false;
   clickedImage!: HTMLImageElement;
   showImgModal: boolean = false;
+  isStandalone: boolean = false;
 
   private postId: string = '';
+  private postSlug: string = '';
   private loginUser: LoginUserEntity = {};
   private shareUrl: string = '';
   private options: OptionEntity = {};
@@ -97,8 +99,8 @@ export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
     });
     this.paramListener = this.router.params.subscribe((params) => {
       this.postId = params['postId']?.trim();
-      this.fetchPost();
-      this.fetchComments();
+      this.postSlug = params['postSlug']?.trim();
+      this.postSlug ? this.fetchPostStandalone() : this.fetchPost();
       this.scroller.scrollToAnchor('article');
     });
     this.userListener = this.usersService.getLoginUser().subscribe((user) => {
@@ -208,6 +210,19 @@ export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
     this.scroller.scrollToAnchor('respond');
   }
 
+  private initMeta() {
+    this.optionsService.options$.subscribe((options) => {
+      this.options = options;
+      this.metaService.updateHTMLMeta({
+        title: `${this.post.postTitle} - ${options?.['site_name']}`,
+        description: this.post.postExcerpt || cutStr(filterHtmlTag(this.post.postContent), POST_DESCRIPTION_LENGTH),
+        author: options?.['site_author'],
+        keywords: options?.['site_keywords']
+      });
+      this.initQrcode();
+    });
+  }
+
   private fetchPost() {
     this.postsService.getPostById(this.postId, this.referer).subscribe((post) => {
       this.post = post.post;
@@ -218,20 +233,27 @@ export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
       this.pagesService.updateActivePage(this.pageIndex);
       this.crumbs = post.crumbs || [];
       this.crumbService.updateCrumb(this.crumbs);
-      this.optionsService.options$.subscribe((options) => {
-        this.options = options;
-        this.metaService.updateHTMLMeta({
-          title: `${post.post.postTitle} - ${options?.['site_name']}`,
-          description: post.post.postExcerpt || cutStr(filterHtmlTag(post.post.postContent), POST_DESCRIPTION_LENGTH),
-          author: options?.['site_author'],
-          keywords: options?.['site_keywords']
-        });
-        this.initQrcode();
-      });
+      this.showCrumb = true;
+      this.isStandalone = false;
+      this.initMeta();
+      this.fetchComments();
     });
     this.postsService.getPostsOfPrevAndNext(this.postId).subscribe((res) => {
       this.prevPost = res.prevPost;
       this.nextPost = res.nextPost;
+    });
+  }
+
+  private fetchPostStandalone() {
+    this.postsService.getPostBySlug(this.postSlug).subscribe((post) => {
+      this.post = post.post;
+      this.postId = this.post.postId;
+      this.postMeta = post.meta;
+      this.pagesService.updateActivePage(this.pageIndex);
+      this.showCrumb = false;
+      this.isStandalone = true;
+      this.initMeta();
+      this.fetchComments();
     });
   }
 

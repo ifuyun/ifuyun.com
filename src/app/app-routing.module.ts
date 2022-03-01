@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { archiveUrlMatcher } from './config/post-archive.matcher';
 import { postListUrlMatcher } from './config/post-list.matcher';
+import { postStandaloneUrlMatcher } from './config/post-standalone.matcher';
 import { taxonomyUrlMatcher } from './config/post-taxonomy.matcher';
 import { postUrlMatcher } from './config/post.matcher';
 import { ArchiveComponent } from './pages/archive/archive.component';
@@ -42,6 +43,10 @@ const routes: Routes = [
     }, {
       path: 'archive',
       component: ArchiveComponent
+    }, {
+      /* :postSlug */
+      matcher: postStandaloneUrlMatcher,
+      component: PostComponent
     }]
   }, {
     path: 'user/login',

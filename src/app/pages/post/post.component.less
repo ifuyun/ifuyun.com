@@ -13,6 +13,10 @@
   background-color: #fff;
 }
 
+.m-page .m-article-header {
+  text-align: left;
+}
+
 .m-diag {
   height: 1px;
   border-top: 1px solid #eee;
@@ -22,10 +26,6 @@
 }
 
 .m-article-taxonomy {
-  .m-meta-icon {
-    line-height: 26px;
-  }
-
   ul {
     padding-left: 2em;
 
@@ -104,8 +104,8 @@
   }
 }
 
-.m-article-content, .m-archive {
-  padding: 15px 25px;
+.m-article-content {
+  padding: 10px 25px;
   line-height: 1.75em;
   word-wrap: break-word;
   letter-spacing: .038em;
@@ -259,11 +259,15 @@
   .m-article-meta {
     text-align: left;
     padding: 0;
+
+    .m-meta-icon {
+      line-height: 26px;
+    }
   }
 }
 
 .m-article-qrcode {
-  margin-top: 10px;
+  margin: 10px 0;
   text-align: center;
   position: relative;
 
@@ -378,6 +382,7 @@
   .m-article-link-next {
     padding-right: 12px;
     text-align: right;
+    float: right;
 
     .u-text-arrow {
       position: absolute;
