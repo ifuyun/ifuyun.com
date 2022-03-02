@@ -1,13 +1,14 @@
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, Optional, PLATFORM_ID } from '@angular/core';
-import { REQUEST } from '@nguniversal/express-engine/tokens';
-import { Request } from 'express';
+import { Router } from '@angular/router';
+import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
+import { Request, Response } from 'express';
 import * as moment from 'moment';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CookieService } from 'ngx-cookie-service';
-import { Observable, tap } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { BaseApiService } from '../core/base-api.service';
 import { ApiUrl } from '../enums/api-url';
@@ -20,8 +21,10 @@ export class AuthService extends BaseApiService {
   constructor(
     protected readonly http: HttpClient,
     protected readonly message: NzMessageService,
+    protected readonly router: Router,
+    @Inject(PLATFORM_ID) protected readonly platform: Object,
+    @Optional() @Inject(RESPONSE) protected readonly response: Response,
     private readonly cookieService: CookieService,
-    @Inject(PLATFORM_ID) private readonly platform: Object,
     @Optional() @Inject(REQUEST) private readonly request: Request
   ) {
     super();

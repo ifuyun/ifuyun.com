@@ -1,7 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
+import { HttpStatusCode } from '@angular/common/http';
+import { Component, Inject, OnDestroy, OnInit, Optional, PLATFORM_ID } from '@angular/core';
+import { RESPONSE } from '@nguniversal/express-engine/tokens';
+import { Response } from 'express';
 import { Subscription } from 'rxjs';
-import { POST_DESCRIPTION_LENGTH } from '../../config/constants';
-import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { OptionEntity } from '../../interfaces/options';
 import { CustomMetaService } from '../../services/custom-meta.service';
 import { OptionsService } from '../../services/options.service';
@@ -19,11 +21,16 @@ export class NotFoundComponent implements OnInit, OnDestroy {
 
   constructor(
     private optionsService: OptionsService,
-    private metaService: CustomMetaService
+    private metaService: CustomMetaService,
+    @Inject(PLATFORM_ID) private platform: Object,
+    @Optional() @Inject(RESPONSE) private response: Response,
   ) {
   }
 
   ngOnInit(): void {
+    if (isPlatformServer(this.platform)) {
+      this.response.status(HttpStatusCode.NotFound);
+    }
     this.optionsListener = this.optionsService.options$.subscribe((options) => {
       this.options = options;
       this.metaService.updateHTMLMeta({

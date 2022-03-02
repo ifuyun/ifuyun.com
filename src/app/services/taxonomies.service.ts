@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, Optional, PLATFORM_ID } from '@angular/core';
+import { Router } from '@angular/router';
+import { RESPONSE } from '@nguniversal/express-engine/tokens';
+import { Response } from 'express';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { BaseApiService } from '../core/base-api.service';
 import { HttpClient } from '@angular/common/http';
@@ -13,7 +16,10 @@ import { map } from 'rxjs/operators';
 export class TaxonomiesService extends BaseApiService {
   constructor(
     protected http: HttpClient,
-    protected message: NzMessageService
+    protected message: NzMessageService,
+    protected router: Router,
+    @Inject(PLATFORM_ID) protected platform: Object,
+    @Optional() @Inject(RESPONSE) protected response: Response
   ) {
     super();
   }

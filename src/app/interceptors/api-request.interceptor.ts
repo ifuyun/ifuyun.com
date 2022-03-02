@@ -16,7 +16,7 @@ export class ApiRequestInterceptor implements HttpInterceptor {
 
   intercept(httpRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const isApiRequest = httpRequest.url.startsWith('/api');
-    const token = isPlatformBrowser(this.platform) ?  localStorage.getItem('token') : (this.request as any).session?.auth?.token;
+    const token = isPlatformBrowser(this.platform) ? localStorage.getItem('token') : (this.request as any).session?.auth?.token;
     if (token) {
       httpRequest = httpRequest.clone({
         headers: httpRequest.headers.set('Authorization', 'Bearer ' + token)

@@ -1,5 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, Optional, PLATFORM_ID } from '@angular/core';
+import { Router } from '@angular/router';
+import { RESPONSE } from '@nguniversal/express-engine/tokens';
+import { Response } from 'express';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -11,10 +14,13 @@ import { HttpResponseEntity } from '../interfaces/http-response';
 @Injectable({
   providedIn: 'root'
 })
-export class CommentsService extends BaseApiService{
+export class CommentsService extends BaseApiService {
   constructor(
     protected http: HttpClient,
-    protected message: NzMessageService
+    protected message: NzMessageService,
+    protected router: Router,
+    @Inject(PLATFORM_ID) protected platform: Object,
+    @Optional() @Inject(RESPONSE) protected response: Response
   ) {
     super();
   }

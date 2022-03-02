@@ -2,14 +2,11 @@ import { APP_BASE_HREF } from '@angular/common';
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import * as bodyParser from 'body-parser';
 import * as compress from 'compression';
-import * as connectRedis from 'connect-redis';
 import * as cookieParser from 'cookie-parser';
 import * as csrf from 'csurf';
 import * as express from 'express';
-import * as session from 'express-session';
 import { existsSync } from 'fs';
 import { join } from 'path';
-import { createClient } from 'redis';
 import 'zone.js/dist/zone-node';
 import { environment as env } from './src/environments/environment';
 import { AppServerModule } from './src/main.server';
@@ -32,27 +29,6 @@ export async function app(): Promise<express.Express> {
   server.use(cookieParser(env.cookie.secret));
   server.use(csrf({ cookie: { key: 'XSRF' } }));
 
-  const redisClient = createClient({
-    url: `redis://:${env.redis.password}@${env.redis.host}:${env.redis.port}`,
-    legacyMode: true
-  });
-  // todo: log
-  await redisClient.connect().catch((err) => console.log(`Redis Client Error: ${err.message}`));
-  const RedisStore = connectRedis(session);
-  server.use(session({
-    name: env.session.key,
-    store: new RedisStore({
-      // @ts-ignore
-      client: redisClient,
-      ttl: 7 * 24 * 60 * 60
-    }),
-    secret: env.session.secret,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: env.cookie.expires * 24 * 60 * 60 * 1000
-    }
-  }));
   server.use(bodyParser.json({ limit: '2mb' }));
   server.use(bodyParser.urlencoded({ extended: true }));
   server.enable('trust proxy');
@@ -74,6 +50,12 @@ export async function app(): Promise<express.Express> {
         { provide: 'REQUEST', useValue: req },
         { provide: 'RESPONSE', useValue: res }
       ]
+    }, (error: Error, html: string) => {
+      if (error) {
+        res.status(res.statusCode).send(error);
+      } else if (!res.headersSent) {
+        res.send(html);
+      }
     });
   });
 

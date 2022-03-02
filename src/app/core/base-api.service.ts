@@ -1,6 +1,9 @@
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { isPlatformBrowser } from '@angular/common';
+import { HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { Response } from 'express';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Observable, of } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ApiUrl } from '../enums/api-url';
 import { HttpResponseEntity } from '../interfaces/http-response';
@@ -10,6 +13,9 @@ export abstract class BaseApiService extends BaseService {
   protected apiUrlPrefix: string = ApiUrl.API_URL_PREFIX;
   protected abstract http: HttpClient;
   protected abstract message: NzMessageService;
+  protected abstract router: Router;
+  protected abstract platform: Object;
+  protected abstract response: Response;
 
   protected getApiUrl(path: string): string {
     return `${this.apiUrlPrefix}${path}`;
@@ -24,10 +30,17 @@ export abstract class BaseApiService extends BaseService {
 
   protected handleError<T>() {
     return (error: HttpErrorResponse): Observable<T> => {
-      this.message.error(error.error.message || error.message);
-
-      // Let the app keep running by returning an empty result.
-      return of(error.error as T);
+      if (error.status !== HttpStatusCode.NotFound) {
+        this.message.error(error.error.message || error.message);
+        // Let the app keep running by returning an empty result.
+        return of(error.error as T);
+      }
+      if (isPlatformBrowser(this.platform)) {
+        this.router.navigate(['404']);
+      } else {
+        this.response.redirect('/404');
+      }
+      return EMPTY;
     };
   }
 

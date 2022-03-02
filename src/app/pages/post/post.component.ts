@@ -1,7 +1,9 @@
 import { ViewportScroller } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, Inject, OnDestroy, OnInit, Optional, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RESPONSE } from '@nguniversal/express-engine/tokens';
+import { Response } from 'express';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { HighlightJS } from 'ngx-highlightjs';
 import * as QRCode from 'qrcode';
@@ -88,7 +90,9 @@ export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
     private message: NzMessageService,
     private scroller: ViewportScroller,
     private renderer: Renderer2,
-    private highlight: HighlightJS
+    private highlight: HighlightJS,
+    private route: Router,
+    @Optional() @Inject(RESPONSE) private response: Response
   ) {
     super();
   }
@@ -225,18 +229,20 @@ export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
 
   private fetchPost() {
     this.postsService.getPostById(this.postId, this.referer).subscribe((post) => {
-      this.post = post.post;
-      this.postMeta = post.meta;
-      this.postTags = post.tags;
-      this.postCategories = post.categories;
-      this.pageIndex = post.crumbs?.[0].slug || '';
-      this.pagesService.updateActivePage(this.pageIndex);
-      this.crumbs = post.crumbs || [];
-      this.crumbService.updateCrumb(this.crumbs);
-      this.showCrumb = true;
-      this.isStandalone = false;
-      this.initMeta();
-      this.fetchComments();
+      if (post && post.post && post.post.postId) {
+        this.post = post.post;
+        this.postMeta = post.meta;
+        this.postTags = post.tags;
+        this.postCategories = post.categories;
+        this.pageIndex = post.crumbs?.[0].slug || '';
+        this.pagesService.updateActivePage(this.pageIndex);
+        this.crumbs = post.crumbs || [];
+        this.crumbService.updateCrumb(this.crumbs);
+        this.showCrumb = true;
+        this.isStandalone = false;
+        this.initMeta();
+        this.fetchComments();
+      }
     });
     this.postsService.getPostsOfPrevAndNext(this.postId).subscribe((res) => {
       this.prevPost = res.prevPost;
@@ -246,14 +252,16 @@ export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
 
   private fetchPostStandalone() {
     this.postsService.getPostBySlug(this.postSlug).subscribe((post) => {
-      this.post = post.post;
-      this.postId = this.post.postId;
-      this.postMeta = post.meta;
-      this.pagesService.updateActivePage(this.pageIndex);
-      this.showCrumb = false;
-      this.isStandalone = true;
-      this.initMeta();
-      this.fetchComments();
+      if (post && post.post && post.post.postId) {
+        this.post = post.post;
+        this.postId = this.post?.postId;
+        this.postMeta = post.meta;
+        this.pagesService.updateActivePage(this.pageIndex);
+        this.showCrumb = false;
+        this.isStandalone = true;
+        this.initMeta();
+        this.fetchComments();
+      }
     });
   }
 
