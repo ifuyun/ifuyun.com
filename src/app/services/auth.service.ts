@@ -1,58 +1,49 @@
-import { isPlatformBrowser } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable, Optional, PLATFORM_ID } from '@angular/core';
-import { Router } from '@angular/router';
-import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
-import { Request, Response } from 'express';
+import { Injectable } from '@angular/core';
 import * as moment from 'moment';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { BaseApiService } from '../core/base-api.service';
+import { ApiService } from '../core/api.service';
+import { CommonService } from '../core/common.service';
+import { PlatformService } from '../core/platform.service';
 import { ApiUrl } from '../enums/api-url';
 import { LoginEntity, LoginResponse } from '../interfaces/auth';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService extends BaseApiService {
+export class AuthService {
   constructor(
-    protected readonly http: HttpClient,
-    protected readonly message: NzMessageService,
-    protected readonly router: Router,
-    @Inject(PLATFORM_ID) protected readonly platform: Object,
-    @Optional() @Inject(RESPONSE) protected readonly response: Response,
-    private readonly cookieService: CookieService,
-    @Optional() @Inject(REQUEST) private readonly request: Request
+    private apiService: ApiService,
+    private platform: PlatformService,
+    private readonly cookieService: CookieService
   ) {
-    super();
   }
 
   login(loginData: LoginEntity): Observable<LoginResponse> {
-    return this.httpPost(this.getApiUrl(ApiUrl.LOGIN), loginData).pipe(
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.LOGIN), loginData).pipe(
       map((res) => res?.data || {}),
       tap((res) => this.setSession(res, loginData))
     );
   }
 
   getToken(): string {
-    if (isPlatformBrowser(this.platform)) {
+    if (this.platform.isBrowser) {
       return localStorage.getItem('token') || '';
     }
-    return (this.request as any).session?.auth?.token || '';
+    return '';
   }
 
   getExpiration() {
-    if (isPlatformBrowser(this.platform)) {
+    if (this.platform.isBrowser) {
       try {
-        return JSON.parse(<string> localStorage.getItem('token_expires')) || 0;
+        return JSON.parse(<string>localStorage.getItem('token_expires')) || 0;
       } catch (e) {
         return 0;
       }
     }
-    return (this.request as any).session?.auth?.expiresAt || 0;
+    return 0;
   }
 
   private setSession(authResult: LoginResponse, loginData: LoginEntity) {

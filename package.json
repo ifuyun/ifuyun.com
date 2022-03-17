@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@angular/animations": "~13.2.6",
+    "@angular/cdk": "^13.2.6",
     "@angular/common": "~13.2.6",
     "@angular/compiler": "~13.2.6",
     "@angular/core": "~13.2.6",
@@ -43,7 +44,6 @@
     "express": "^4.17.3",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "ng-zorro-antd": "^13.1.1",
     "ngx-cookie-service": "^13.1.2",
     "ngx-highlightjs": "^6.1.1",
     "qrcode": "^1.5.0",

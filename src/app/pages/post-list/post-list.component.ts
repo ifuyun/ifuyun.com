@@ -7,15 +7,15 @@ import { uniq } from 'lodash';
 import { combineLatestWith, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { BasePageComponent } from '../../core/base-page.component';
-import { CrumbEntity } from '../../interfaces/crumb';
+import { CrumbEntity } from '../../components/crumb/crumb.interface';
 import { HTMLMetaData } from '../../interfaces/meta';
 import { OptionEntity } from '../../interfaces/options';
 import { PaginatorEntity } from '../../interfaces/paginator';
 import { PostList, PostQueryParam } from '../../interfaces/posts';
-import { CrumbService } from '../../services/crumb.service';
+import { CrumbService } from '../../components/crumb/crumb.service';
 import { CustomMetaService } from '../../services/custom-meta.service';
 import { OptionsService } from '../../services/options.service';
-import { CommonService } from '../../services/common.service';
+import { CommonService } from '../../core/common.service';
 import { PaginatorService } from '../../services/paginator.service';
 import { PostsService } from '../../services/posts.service';
 

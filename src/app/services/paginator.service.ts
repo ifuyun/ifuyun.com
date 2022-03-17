@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BaseService } from '../core/base.service';
-import { PaginatorRange, PaginatorEntity } from '../interfaces/paginator';
+import { PaginatorEntity, PaginatorRange } from '../interfaces/paginator';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PaginatorService extends BaseService {
+export class PaginatorService {
   // todo: get from db:options
   private pageSize: number = 10;
   private paginationSize: number = 9;

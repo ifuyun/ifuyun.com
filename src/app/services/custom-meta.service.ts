@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import { BaseService } from '../core/base.service';
 import { HTMLMetaData } from '../interfaces/meta';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CustomMetaService extends BaseService {
+export class CustomMetaService {
   constructor(
     private meta: Meta,
     private title: Title
   ) {
-    super();
   }
 
   updateHTMLMeta(metaData: HTMLMetaData) {

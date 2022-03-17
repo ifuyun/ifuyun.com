@@ -4,23 +4,23 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Response } from 'express';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { HighlightJS } from 'ngx-highlightjs';
 import * as QRCode from 'qrcode';
 import { Subscription } from 'rxjs';
+import { CrumbService } from '../../components/crumb/crumb.service';
+import { MessageService } from '../../components/message/message.service';
 import { POST_DESCRIPTION_LENGTH } from '../../config/constants';
 import { BasePageComponent } from '../../core/base-page.component';
+import { CommonService } from '../../core/common.service';
 import { VoteType } from '../../enums/common.enum';
 import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { CommentDto, CommentEntity } from '../../interfaces/comments';
-import { CrumbEntity } from '../../interfaces/crumb';
+import { CrumbEntity } from '../../components/crumb/crumb.interface';
 import { OptionEntity } from '../../interfaces/options';
 import { PostEntity, PostModel } from '../../interfaces/posts';
 import { TaxonomyEntity } from '../../interfaces/taxonomies';
 import { LoginUserEntity } from '../../interfaces/users';
 import { CommentsService } from '../../services/comments.service';
-import { CommonService } from '../../services/common.service';
-import { CrumbService } from '../../services/crumb.service';
 import { CustomMetaService } from '../../services/custom-meta.service';
 import { OptionsService } from '../../services/options.service';
 import { PostsService } from '../../services/posts.service';
@@ -89,7 +89,7 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
     private metaService: CustomMetaService,
     private urlService: UrlService,
     private fb: FormBuilder,
-    private message: NzMessageService,
+    private message: MessageService,
     private scroller: ViewportScroller,
     private renderer: Renderer2,
     private highlight: HighlightJS

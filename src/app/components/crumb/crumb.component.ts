@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { CrumbEntity } from '../../interfaces/crumb';
+import { CrumbEntity } from './crumb.interface';
 import { OptionEntity } from '../../interfaces/options';
-import { CrumbService } from '../../services/crumb.service';
+import { CrumbService } from './crumb.service';
 import { OptionsService } from '../../services/options.service';
 
 @Component({

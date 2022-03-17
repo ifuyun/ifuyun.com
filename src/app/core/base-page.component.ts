@@ -1,6 +1,4 @@
-import { BaseComponent } from './base.component';
-
-export abstract class BasePageComponent extends BaseComponent {
+export abstract class BasePageComponent {
   protected abstract pageIndex: string;
 
   protected abstract updateActivePage(): void;

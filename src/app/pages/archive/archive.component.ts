@@ -3,10 +3,10 @@ import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Response } from 'express';
 import { Subscription } from 'rxjs';
 import { BasePageComponent } from '../../core/base-page.component';
-import { CrumbEntity } from '../../interfaces/crumb';
+import { CrumbEntity } from '../../components/crumb/crumb.interface';
 import { PostArchiveDateMap } from '../../interfaces/posts';
-import { CrumbService } from '../../services/crumb.service';
-import { CommonService } from '../../services/common.service';
+import { CrumbService } from '../../components/crumb/crumb.service';
+import { CommonService } from '../../core/common.service';
 import { PostsService } from '../../services/posts.service';
 
 @Component({
