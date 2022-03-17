@@ -1,10 +1,10 @@
-import { Component, Inject, OnInit, Optional, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Response } from 'express';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { CookieService } from 'ngx-cookie-service';
-import { BaseComponent } from '../../core/base.component';
+import { MessageService } from '../../components/message/message.service';
+import { PlatformService } from '../../core/platform.service';
 import md5 from '../../helpers/md5';
 import { AuthService } from '../../services/auth.service';
 
@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.less']
 })
-export class LoginComponent extends BaseComponent implements OnInit {
+export class LoginComponent implements OnInit {
   loginForm = this.fb.group({
     username: [this.cookieService.get('username') || '', [Validators.required, Validators.maxLength(20)]],
     password: [null, [Validators.required, Validators.maxLength(20)]],
@@ -25,14 +25,13 @@ export class LoginComponent extends BaseComponent implements OnInit {
   };
 
   constructor(
-    @Inject(PLATFORM_ID) protected readonly platform: Object,
-    @Optional() @Inject(RESPONSE) protected readonly response: Response,
-    private readonly fb: FormBuilder,
-    private readonly authService: AuthService,
-    private readonly cookieService: CookieService,
-    private readonly message: NzMessageService
+    private fb: FormBuilder,
+    private cookieService: CookieService,
+    private authService: AuthService,
+    private platform: PlatformService,
+    private message: MessageService,
+    @Optional() @Inject(RESPONSE) protected response: Response
   ) {
-    super();
   }
 
   ngOnInit(): void {
@@ -44,7 +43,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
     const rememberMe = this.cookieService.get('rememberMe');
     /* 登录状态直接跳转后台首页 */
     if ((rememberMe === '1' || rememberMe === 'true') && this.authService.getToken()) {
-      if (this.isPlatformBrowser()) {
+      if (this.platform.isBrowser) {
         location.href = '/admin';
       } else {
         this.response.redirect('/admin');

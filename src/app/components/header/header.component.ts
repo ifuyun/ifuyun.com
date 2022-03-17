@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { LinkEntity } from '../../interfaces/links';
 import { OptionEntity } from '../../interfaces/options';
 import { TaxonomyNode } from '../../interfaces/taxonomies';
-import { CommonService } from '../../services/common.service';
+import { CommonService } from '../../core/common.service';
 import { LinksService } from '../../services/links.service';
 import { OptionsService } from '../../services/options.service';
 import { TaxonomiesService } from '../../services/taxonomies.service';

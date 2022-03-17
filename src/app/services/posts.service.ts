@@ -1,39 +1,29 @@
-import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable, Optional, PLATFORM_ID } from '@angular/core';
-import { Router } from '@angular/router';
-import { RESPONSE } from '@nguniversal/express-engine/tokens';
-import { Response } from 'express';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BaseApiService } from '../core/base-api.service';
+import { ApiService } from '../core/api.service';
 import { ApiUrl } from '../enums/api-url';
 import { PostType } from '../enums/common.enum';
-import { CrumbEntity } from '../interfaces/crumb';
+import { CrumbEntity } from '../components/crumb/crumb.interface';
 import { Post, PostArchiveDate, PostArchiveDateList, PostArchiveDateMap, PostEntity, PostList, PostQueryParam } from '../interfaces/posts';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PostsService extends BaseApiService {
+export class PostsService {
   constructor(
-    protected http: HttpClient,
-    protected router: Router,
-    protected message: NzMessageService,
-    @Inject(PLATFORM_ID) protected platform: Object,
-    @Optional() @Inject(RESPONSE) protected response: Response
+    private apiService: ApiService
   ) {
-    super();
   }
 
   getPosts(param: PostQueryParam): Observable<{ postList: PostList, crumbs: CrumbEntity[] }> {
-    return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS), param).pipe(
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS), param).pipe(
       map((res) => res?.data || {})
     );
   }
 
   getPostById(postId: string, referer?: string): Observable<Post> {
-    return this.httpGet(this.getApiUrlWithParam(ApiUrl.GET_POST, postId), {
+    return this.apiService.httpGet(this.apiService.getApiUrlWithParam(ApiUrl.GET_POST, postId), {
       from: referer
     }).pipe(
       map((res) => res?.data || {})
@@ -41,7 +31,7 @@ export class PostsService extends BaseApiService {
   }
 
   getPostBySlug(slug: string): Observable<Post> {
-    return this.httpGet(this.getApiUrl(ApiUrl.GET_POST_STANDALONE), {
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_POST_STANDALONE), {
       slug
     }).pipe(
       map((res) => res?.data || {})
@@ -49,7 +39,7 @@ export class PostsService extends BaseApiService {
   }
 
   getPostsOfPrevAndNext(postId: string): Observable<{ prevPost: PostEntity, nextPost: PostEntity }> {
-    return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS_OF_PREV_AND_NEXT), {
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS_OF_PREV_AND_NEXT), {
       postId
     }).pipe(
       map((res) => res?.data || {})
@@ -57,7 +47,7 @@ export class PostsService extends BaseApiService {
   }
 
   getPostArchiveDates({ showCount = false, limit = 10 }): Observable<PostArchiveDate[]> {
-    return this.httpGet(this.getApiUrl(ApiUrl.GET_POST_ARCHIVE_DATES), {
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_POST_ARCHIVE_DATES), {
       postType: PostType.POST,
       showCount: showCount ? 1 : 0,
       limit
@@ -84,13 +74,13 @@ export class PostsService extends BaseApiService {
   }
 
   getHotPosts(): Observable<PostEntity[]> {
-    return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS_OF_HOT)).pipe(
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS_OF_HOT)).pipe(
       map((res) => res?.data || [])
     );
   }
 
   getRandomPosts(): Observable<PostEntity[]> {
-    return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS_OF_RANDOM)).pipe(
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS_OF_RANDOM)).pipe(
       map((res) => res?.data || [])
     );
   }

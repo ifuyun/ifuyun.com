@@ -1,4 +1,4 @@
-import { CrumbEntity } from './crumb';
+import { CrumbEntity } from '../components/crumb/crumb.interface';
 import { TaxonomyEntity } from './taxonomies';
 import { UserEntity } from './users';
 

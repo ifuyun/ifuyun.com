@@ -1,0 +1,24 @@
+@font-face {
+  font-family: "icons";
+  src: url("../fonts/icons.woff2?524846017b983fc8ded9325d94ed40f3") format("woff2"), url("../fonts/icons.woff?524846017b983fc8ded9325d94ed40f3") format("woff");
+}
+
+.icon::before, [class^="icon-"]::before, [class*=" icon-"]::before {
+  display: inline-block;
+  font-family: icons !important;
+  font-style: normal;
+  font-weight: normal !important;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  vertical-align: -.125em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon {
+  &-success::before { content: "\F26B"; }
+  &-error::before { content: "\F623"; }
+  &-warning::before { content: "\F333"; }
+  &-info::before { content: "\F431"; }
+}
