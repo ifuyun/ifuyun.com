@@ -1,7 +1,7 @@
 import { ViewportScroller } from '@angular/common';
-import { Component, ElementRef, Inject, OnDestroy, OnInit, Optional, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, Inject, OnDestroy, OnInit, Optional, PLATFORM_ID, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Response } from 'express';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -9,7 +9,7 @@ import { HighlightJS } from 'ngx-highlightjs';
 import * as QRCode from 'qrcode';
 import { Subscription } from 'rxjs';
 import { POST_DESCRIPTION_LENGTH } from '../../config/constants';
-import { BaseComponent } from '../../core/base.component';
+import { BasePageComponent } from '../../core/base-page.component';
 import { VoteType } from '../../enums/common.enum';
 import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { CommentDto, CommentEntity } from '../../interfaces/comments';
@@ -19,10 +19,10 @@ import { PostEntity, PostModel } from '../../interfaces/posts';
 import { TaxonomyEntity } from '../../interfaces/taxonomies';
 import { LoginUserEntity } from '../../interfaces/users';
 import { CommentsService } from '../../services/comments.service';
+import { CommonService } from '../../services/common.service';
 import { CrumbService } from '../../services/crumb.service';
 import { CustomMetaService } from '../../services/custom-meta.service';
 import { OptionsService } from '../../services/options.service';
-import { PagesService } from '../../services/pages.service';
 import { PostsService } from '../../services/posts.service';
 import { UrlService } from '../../services/url.service';
 import { UsersService } from '../../services/users.service';
@@ -34,7 +34,7 @@ import { VotesService } from '../../services/votes.service';
   styleUrls: ['./post.component.less'],
   encapsulation: ViewEncapsulation.None
 })
-export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
+export class PostComponent extends BasePageComponent implements OnInit, OnDestroy {
   pageIndex: string = '';
   prevPost: PostEntity | null = null;
   nextPost: PostEntity | null = null;
@@ -76,9 +76,11 @@ export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
   });
 
   constructor(
-    private router: ActivatedRoute,
+    @Inject(PLATFORM_ID) protected platform: Object,
+    @Optional() @Inject(RESPONSE) protected response: Response,
+    private route: ActivatedRoute,
     private postsService: PostsService,
-    private pagesService: PagesService,
+    private commonService: CommonService,
     private commentsService: CommentsService,
     private votesService: VotesService,
     private usersService: UsersService,
@@ -90,9 +92,7 @@ export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
     private message: NzMessageService,
     private scroller: ViewportScroller,
     private renderer: Renderer2,
-    private highlight: HighlightJS,
-    private route: Router,
-    @Optional() @Inject(RESPONSE) private response: Response
+    private highlight: HighlightJS
   ) {
     super();
   }
@@ -101,7 +101,7 @@ export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
     this.urlListener = this.urlService.urlInfo$.subscribe((url) => {
       this.referer = url.previous;
     });
-    this.paramListener = this.router.params.subscribe((params) => {
+    this.paramListener = this.route.params.subscribe((params) => {
       this.postId = params['postId']?.trim();
       this.postSlug = params['postSlug']?.trim();
       this.postSlug ? this.fetchPostStandalone() : this.fetchPost();
@@ -214,6 +214,10 @@ export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
     this.scroller.scrollToAnchor('respond');
   }
 
+  protected updateActivePage(): void {
+    this.commonService.updateActivePage(this.pageIndex);
+  }
+
   private initMeta() {
     this.optionsService.options$.subscribe((options) => {
       this.options = options;
@@ -235,7 +239,7 @@ export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
         this.postTags = post.tags;
         this.postCategories = post.categories;
         this.pageIndex = post.crumbs?.[0].slug || '';
-        this.pagesService.updateActivePage(this.pageIndex);
+        this.updateActivePage();
         this.crumbs = post.crumbs || [];
         this.crumbService.updateCrumb(this.crumbs);
         this.showCrumb = true;
@@ -256,7 +260,7 @@ export class PostComponent extends BaseComponent implements OnInit, OnDestroy {
         this.post = post.post;
         this.postId = this.post?.postId;
         this.postMeta = post.meta;
-        this.pagesService.updateActivePage(this.pageIndex);
+        this.updateActivePage();
         this.showCrumb = false;
         this.isStandalone = true;
         this.initMeta();

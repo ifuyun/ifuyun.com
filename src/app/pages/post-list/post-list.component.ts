@@ -1,10 +1,12 @@
 import { ViewportScroller } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, Optional, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { RESPONSE } from '@nguniversal/express-engine/tokens';
+import { Response } from 'express';
 import { uniq } from 'lodash';
 import { combineLatestWith, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { BaseComponent } from '../../core/base.component';
+import { BasePageComponent } from '../../core/base-page.component';
 import { CrumbEntity } from '../../interfaces/crumb';
 import { HTMLMetaData } from '../../interfaces/meta';
 import { OptionEntity } from '../../interfaces/options';
@@ -13,7 +15,7 @@ import { PostList, PostQueryParam } from '../../interfaces/posts';
 import { CrumbService } from '../../services/crumb.service';
 import { CustomMetaService } from '../../services/custom-meta.service';
 import { OptionsService } from '../../services/options.service';
-import { PagesService } from '../../services/pages.service';
+import { CommonService } from '../../services/common.service';
 import { PaginatorService } from '../../services/paginator.service';
 import { PostsService } from '../../services/posts.service';
 
@@ -22,7 +24,7 @@ import { PostsService } from '../../services/posts.service';
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.less']
 })
-export class PostListComponent extends BaseComponent implements OnInit, OnDestroy {
+export class PostListComponent extends BasePageComponent implements OnInit, OnDestroy {
   pageIndex: string = 'index';
   options: OptionEntity = {};
   page: number = 1;
@@ -42,10 +44,12 @@ export class PostListComponent extends BaseComponent implements OnInit, OnDestro
   private paramListener!: Subscription;
 
   constructor(
-    private router: ActivatedRoute,
+    @Inject(PLATFORM_ID) protected platform: Object,
+    @Optional() @Inject(RESPONSE) protected response: Response,
+    private route: ActivatedRoute,
     private optionsService: OptionsService,
     private postsService: PostsService,
-    private pagesService: PagesService,
+    private commonService: CommonService,
     private paginator: PaginatorService,
     private crumbService: CrumbService,
     private metaService: CustomMetaService,
@@ -58,8 +62,8 @@ export class PostListComponent extends BaseComponent implements OnInit, OnDestro
     this.optionsListener = this.optionsService.options$.subscribe((options) => {
       this.options = options;
     });
-    this.paramListener = this.router.paramMap.pipe(
-      combineLatestWith(this.router.queryParamMap),
+    this.paramListener = this.route.paramMap.pipe(
+      combineLatestWith(this.route.queryParamMap),
       tap(([params, queryParams]) => {
         this.page = Number(params.get('page')) || 1;
         this.category = params.get('category')?.trim() || '';
@@ -77,6 +81,10 @@ export class PostListComponent extends BaseComponent implements OnInit, OnDestro
   ngOnDestroy() {
     this.optionsListener.unsubscribe();
     this.paramListener.unsubscribe();
+  }
+
+  protected updateActivePage(): void {
+    this.commonService.updateActivePage(this.pageIndex);
   }
 
   private fetchPosts() {
@@ -184,23 +192,23 @@ export class PostListComponent extends BaseComponent implements OnInit, OnDestro
         this.showCrumb = true;
         this.crumbService.updateCrumb(crumbs);
       }
-      this.pagesService.updateActivePage(this.pageIndex);
+      this.updateActivePage();
 
       this.paginatorData = this.paginator.getPaginator(this.page, this.count);
       const urlSegments: string[] = [];
-      for (let url of this.router.snapshot.url) {
+      for (let url of this.route.snapshot.url) {
         urlSegments.push(url.path);
       }
       if (urlSegments.length < 1) {
         urlSegments.push('post');
       }
-      if (this.router.snapshot.paramMap.get('page')) {
+      if (this.route.snapshot.paramMap.get('page')) {
         urlSegments.splice(-1, 1, 'page-');
       } else {
         urlSegments.push('page-');
       }
       this.pageUrl = `/${urlSegments.join('/')}`;
-      const params = this.router.snapshot.queryParams;
+      const params = this.route.snapshot.queryParams;
       const urlQuery: string[] = [];
       Object.keys(params).forEach((key) => {
         urlQuery.push(`${key}=${params[key]}`);

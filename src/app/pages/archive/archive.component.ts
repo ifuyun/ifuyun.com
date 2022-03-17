@@ -1,9 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, Optional, PLATFORM_ID } from '@angular/core';
+import { RESPONSE } from '@nguniversal/express-engine/tokens';
+import { Response } from 'express';
 import { Subscription } from 'rxjs';
-import { BaseComponent } from '../../core/base.component';
+import { BasePageComponent } from '../../core/base-page.component';
 import { CrumbEntity } from '../../interfaces/crumb';
 import { PostArchiveDateMap } from '../../interfaces/posts';
 import { CrumbService } from '../../services/crumb.service';
+import { CommonService } from '../../services/common.service';
 import { PostsService } from '../../services/posts.service';
 
 @Component({
@@ -11,7 +14,7 @@ import { PostsService } from '../../services/posts.service';
   templateUrl: './archive.component.html',
   styleUrls: ['./archive.component.less']
 })
-export class ArchiveComponent extends BaseComponent implements OnInit, OnDestroy {
+export class ArchiveComponent extends BasePageComponent implements OnInit, OnDestroy {
   pageIndex: string = 'archive';
   archiveDateList!: PostArchiveDateMap;
   archiveYearList: string[] = [];
@@ -20,8 +23,11 @@ export class ArchiveComponent extends BaseComponent implements OnInit, OnDestroy
   private archiveListener!: Subscription;
 
   constructor(
+    @Inject(PLATFORM_ID) protected platform: Object,
+    @Optional() @Inject(RESPONSE) protected response: Response,
     private postsService: PostsService,
-    private crumbService: CrumbService
+    private crumbService: CrumbService,
+    private commonService: CommonService
   ) {
     super();
   }
@@ -46,10 +52,15 @@ export class ArchiveComponent extends BaseComponent implements OnInit, OnDestroy
       const { dateList, yearList } = this.postsService.transformArchiveDates(res);
       this.archiveDateList = dateList;
       this.archiveYearList = yearList;
+      this.updateActivePage();
     });
   }
 
   ngOnDestroy() {
     this.archiveListener.unsubscribe();
+  }
+
+  protected updateActivePage(): void {
+    this.commonService.updateActivePage(this.pageIndex);
   }
 }

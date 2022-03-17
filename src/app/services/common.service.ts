@@ -5,9 +5,9 @@ import { BaseService } from '../core/base.service';
 @Injectable({
   providedIn: 'root'
 })
-export class PagesService extends BaseService {
+export class CommonService extends BaseService {
   private pageIndex: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  public page$: Observable<string> = this.pageIndex.asObservable();
+  public pageIndex$: Observable<string> = this.pageIndex.asObservable();
 
   updateActivePage(activePage: string) {
     this.pageIndex.next(activePage);

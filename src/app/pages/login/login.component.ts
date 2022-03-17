@@ -1,10 +1,10 @@
-import { isPlatformBrowser } from '@angular/common';
 import { Component, Inject, OnInit, Optional, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Response } from 'express';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CookieService } from 'ngx-cookie-service';
+import { BaseComponent } from '../../core/base.component';
 import md5 from '../../helpers/md5';
 import { AuthService } from '../../services/auth.service';
 
@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.less']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent extends BaseComponent implements OnInit {
   loginForm = this.fb.group({
     username: [this.cookieService.get('username') || '', [Validators.required, Validators.maxLength(20)]],
     password: [null, [Validators.required, Validators.maxLength(20)]],
@@ -25,13 +25,14 @@ export class LoginComponent implements OnInit {
   };
 
   constructor(
+    @Inject(PLATFORM_ID) protected readonly platform: Object,
+    @Optional() @Inject(RESPONSE) protected readonly response: Response,
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
     private readonly cookieService: CookieService,
-    private readonly message: NzMessageService,
-    @Inject(PLATFORM_ID) private readonly platform: Object,
-    @Optional() @Inject(RESPONSE) private readonly response: Response
+    private readonly message: NzMessageService
   ) {
+    super();
   }
 
   ngOnInit(): void {
@@ -43,7 +44,7 @@ export class LoginComponent implements OnInit {
     const rememberMe = this.cookieService.get('rememberMe');
     /* 登录状态直接跳转后台首页 */
     if ((rememberMe === '1' || rememberMe === 'true') && this.authService.getToken()) {
-      if (isPlatformBrowser(this.platform)) {
+      if (this.isPlatformBrowser()) {
         location.href = '/admin';
       } else {
         this.response.redirect('/admin');
