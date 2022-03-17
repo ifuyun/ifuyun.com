@@ -16,8 +16,8 @@ import { VoteType } from '../enums/common.enum';
 export class VotesService extends BaseApiService{
   constructor(
     protected http: HttpClient,
-    protected message: NzMessageService,
     protected router: Router,
+    protected message: NzMessageService,
     @Inject(PLATFORM_ID) protected platform: Object,
     @Optional() @Inject(RESPONSE) protected response: Response
   ) {

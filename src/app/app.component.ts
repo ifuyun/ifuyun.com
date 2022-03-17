@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
-import { OptionEntity } from './interfaces/options';
 import { OptionsService } from './services/options.service';
 import { UrlService } from './services/url.service';
 
@@ -11,8 +10,6 @@ import { UrlService } from './services/url.service';
   styleUrls: ['./app.component.less']
 })
 export class AppComponent implements OnInit {
-  options: OptionEntity = {};
-
   private currentUrl: string = '';
 
   constructor(
@@ -32,6 +29,6 @@ export class AppComponent implements OnInit {
       });
       this.currentUrl = (event as NavigationEnd).url;
     });
-    this.optionsService.getOptions().subscribe((res) => this.options = res);
+    this.optionsService.getOptions().subscribe();
   }
 }

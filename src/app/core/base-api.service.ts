@@ -21,9 +21,9 @@ export abstract class BaseApiService extends BaseService {
     return `${this.apiUrlPrefix}${path}`;
   }
 
-  protected getApiUrlWithParam(path: string, ...args: string[]) {
+  protected getApiUrlWithParam(path: string, ...args: string[]): string {
     let idx = 0;
-    return path.replace(/(:[a-zA-Z0-9\-_]+)/ig, (matched) => {
+    return this.apiUrlPrefix + path.replace(/(:[a-zA-Z0-9\-_]+)/ig, (matched) => {
       return args[idx++] || matched;
     });
   }
