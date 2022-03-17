@@ -28,7 +28,7 @@ export class PostsService extends BaseApiService {
 
   getPosts(param: PostQueryParam): Observable<{ postList: PostList, crumbs: CrumbEntity[] }> {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS), param).pipe(
-      map((res) => res.data || {})
+      map((res) => res?.data || {})
     );
   }
 
@@ -36,7 +36,7 @@ export class PostsService extends BaseApiService {
     return this.httpGet(this.getApiUrlWithParam(ApiUrl.GET_POST, postId), {
       from: referer
     }).pipe(
-      map((res) => res.data || {})
+      map((res) => res?.data || {})
     );
   }
 
@@ -44,7 +44,7 @@ export class PostsService extends BaseApiService {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_POST_STANDALONE), {
       slug
     }).pipe(
-      map((res) => res.data || {})
+      map((res) => res?.data || {})
     );
   }
 
@@ -52,7 +52,7 @@ export class PostsService extends BaseApiService {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS_OF_PREV_AND_NEXT), {
       postId
     }).pipe(
-      map((res) => res.data || {})
+      map((res) => res?.data || {})
     );
   }
 
@@ -62,7 +62,7 @@ export class PostsService extends BaseApiService {
       showCount: showCount ? 1 : 0,
       limit
     }).pipe(
-      map((res) => res.data || [])
+      map((res) => res?.data || [])
     );
   }
 
@@ -85,13 +85,13 @@ export class PostsService extends BaseApiService {
 
   getHotPosts(): Observable<PostEntity[]> {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS_OF_HOT)).pipe(
-      map((res) => res.data || [])
+      map((res) => res?.data || [])
     );
   }
 
   getRandomPosts(): Observable<PostEntity[]> {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_POSTS_OF_RANDOM)).pipe(
-      map((res) => res.data || [])
+      map((res) => res?.data || [])
     );
   }
 }

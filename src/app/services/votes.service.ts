@@ -26,7 +26,7 @@ export class VotesService extends BaseApiService{
 
   saveVote(voteDto: { objectId: string, type: VoteType }): Observable<{ vote: number }> {
     return this.httpPost(this.getApiUrl(ApiUrl.SAVE_VOTES), voteDto).pipe(
-      map((res) => res.data || {})
+      map((res) => res?.data || {})
     );
   }
 }

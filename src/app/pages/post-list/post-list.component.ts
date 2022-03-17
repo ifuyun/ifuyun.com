@@ -138,7 +138,7 @@ export class PostListComponent extends BasePageComponent implements OnInit, OnDe
       }
     }
     this.postsService.getPosts(param).subscribe((res) => {
-      this.postList = res.postList;
+      this.postList = res.postList || {};
       this.page = this.postList.page || 1;
       this.count = this.postList.count || 0;
 

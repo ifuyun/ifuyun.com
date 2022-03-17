@@ -26,7 +26,7 @@ export class TaxonomiesService extends BaseApiService {
 
   getTaxonomies():Observable<TaxonomyNode[]> {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_TAXONOMIES)).pipe(
-      map((res) => res.data || [])
+      map((res) => res?.data || [])
     );
   }
 }

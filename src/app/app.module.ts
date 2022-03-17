@@ -13,20 +13,20 @@ import { AppComponent } from './app.component';
 import { CrumbComponent } from './components/crumb/crumb.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
+import { ModalComponent } from './components/modal/modal.component';
 import { PageBarComponent } from './components/page-bar/page-bar.component';
 import { SiderComponent } from './components/sider/sider.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { IconsProviderModule } from './icons-provider.module';
 import { httpInterceptorProviders } from './interceptors/http-interceptors';
 import { NgZorroAntdModule } from './ng-zorro-antd.module';
+import { ArchiveComponent } from './pages/archive/archive.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PostListComponent } from './pages/post-list/post-list.component';
 import { PostComponent } from './pages/post/post.component';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
-import { ModalComponent } from './components/modal/modal.component';
-import { ArchiveComponent } from './pages/archive/archive.component';
-import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 registerLocaleData(zh);
 
@@ -51,13 +51,13 @@ registerLocaleData(zh);
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),
     BrowserTransferStateModule,
+    TransferHttpCacheModule,
     AppRoutingModule,
     HttpClientModule,
     HttpClientXsrfModule.withOptions({
       cookieName: 'XSRF',
       headerName: 'x-xsrf-token'
     }),
-    TransferHttpCacheModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
     NgZorroAntdModule,
