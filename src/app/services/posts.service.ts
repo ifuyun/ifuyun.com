@@ -18,8 +18,8 @@ import { Post, PostArchiveDate, PostArchiveDateList, PostArchiveDateMap, PostEnt
 export class PostsService extends BaseApiService {
   constructor(
     protected http: HttpClient,
-    protected message: NzMessageService,
     protected router: Router,
+    protected message: NzMessageService,
     @Inject(PLATFORM_ID) protected platform: Object,
     @Optional() @Inject(RESPONSE) protected response: Response
   ) {
@@ -33,7 +33,7 @@ export class PostsService extends BaseApiService {
   }
 
   getPostById(postId: string, referer?: string): Observable<Post> {
-    return this.httpGet(this.getApiUrl(ApiUrl.GET_POST.replace(':postId', postId)), {
+    return this.httpGet(this.getApiUrlWithParam(ApiUrl.GET_POST, postId), {
       from: referer
     }).pipe(
       map((res) => res.data || {})
