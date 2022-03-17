@@ -1,12 +1,12 @@
 {
-  "singleQuote": true,
-  "trailingComma": "none",
+  "arrowParens": "always",
+  "bracketSameLine": false,
+  "bracketSpacing": true,
   "endOfLine": "lf",
   "printWidth": 200,
-  "arrowParens": "always",
-  "bracketSpacing": true,
-  "bracketSameLine": false,
   "semi": true,
+  "singleQuote": true,
   "tabWidth": 2,
+  "trailingComma": "none",
   "useTabs": false
 }

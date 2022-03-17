@@ -184,7 +184,7 @@ export class PostListComponent extends BasePageComponent implements OnInit, OnDe
       };
       this.metaService.updateHTMLMeta(metaData);
 
-      if (res.crumbs) {
+      if (res.crumbs && res.crumbs.length > 0) {
         crumbs = res.crumbs;
         this.pageIndex = res.crumbs[0].slug || '';
       }

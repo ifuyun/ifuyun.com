@@ -14,7 +14,7 @@ import { AppServerModule } from './src/main.server';
 // The Express app is exported so that it can be used by serverless Functions.
 export async function app(): Promise<express.Express> {
   const server = express();
-  const distFolder = join(process.cwd(), 'dist/ifuyun.com/browser');
+  const distFolder = join(process.cwd(), 'dist/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
@@ -46,9 +46,7 @@ export async function app(): Promise<express.Express> {
       req,
       res,
       providers: [
-        { provide: APP_BASE_HREF, useValue: req.baseUrl },
-        { provide: 'REQUEST', useValue: req },
-        { provide: 'RESPONSE', useValue: res }
+        { provide: APP_BASE_HREF, useValue: req.baseUrl }
       ]
     }, (error: Error, html: string) => {
       if (error) {
@@ -62,7 +60,7 @@ export async function app(): Promise<express.Express> {
   return server;
 }
 
-function run(): void {
+function run() {
   const port = process.env['PORT'] || 4000;
 
   // Start up the Node server
