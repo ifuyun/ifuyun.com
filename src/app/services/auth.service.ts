@@ -32,7 +32,7 @@ export class AuthService extends BaseApiService {
 
   login(loginData: LoginEntity): Observable<LoginResponse> {
     return this.httpPost(this.getApiUrl(ApiUrl.LOGIN), loginData).pipe(
-      map((res) => res.data || {}),
+      map((res) => res?.data || {}),
       tap((res) => this.setSession(res, loginData))
     );
   }

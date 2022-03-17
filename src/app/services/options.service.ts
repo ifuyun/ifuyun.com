@@ -29,7 +29,7 @@ export class OptionsService extends BaseApiService {
 
   getOptions(): Observable<OptionEntity> {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_OPTIONS)).pipe(
-      map((res) => res.data || {}),
+      map((res) => res?.data || {}),
       tap((options) => {
         this.options.next(options);
       })

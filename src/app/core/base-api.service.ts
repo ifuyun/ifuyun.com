@@ -6,6 +6,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ApiUrl } from '../enums/api-url';
+import { Message } from '../enums/message.enum';
 import { HttpResponseEntity } from '../interfaces/http-response';
 import { BaseService } from './base.service';
 
@@ -31,7 +32,7 @@ export abstract class BaseApiService extends BaseService {
   protected handleError<T>() {
     return (error: HttpErrorResponse): Observable<T> => {
       if (error.status !== HttpStatusCode.NotFound) {
-        this.message.error(error.error.message || error.message);
+        this.message.error(error.error?.message || error.message || Message.UNKNOWN_ERROR);
         // Let the app keep running by returning an empty result.
         return of(error.error as T);
       }
@@ -62,7 +63,7 @@ export abstract class BaseApiService extends BaseService {
       }),
       observe: 'body'
     }).pipe(
-      map((res) => res.data),
+      map((res) => res?.data),
       catchError(this.handleError<T>())
     );
   }

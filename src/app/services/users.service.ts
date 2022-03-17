@@ -26,7 +26,7 @@ export class UsersService extends BaseApiService {
 
   getLoginUser(): Observable<LoginUserEntity> {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_LOGIN_USER)).pipe(
-      map((res) => res.data || {})
+      map((res) => res?.data || {})
     );
   }
 }

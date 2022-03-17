@@ -29,7 +29,7 @@ export class CommentsService extends BaseApiService {
     return this.httpGet(this.getApiUrl(ApiUrl.GET_COMMENTS), {
       postId
     }).pipe(
-      map((res) => res.data || {})
+      map((res) => res?.data || {})
     );
   }
 
