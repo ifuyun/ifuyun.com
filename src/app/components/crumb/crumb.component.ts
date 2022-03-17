@@ -29,7 +29,7 @@ export class CrumbComponent implements OnInit, OnDestroy {
       this.options = options;
     });
     this.crumbListener = this.crumbService.crumb$.subscribe((crumbs) => {
-      this.crumbs = crumbs;
+      this.crumbs = [...crumbs];
       this.crumbs.unshift({
         'label': '首页',
         'url': '/',

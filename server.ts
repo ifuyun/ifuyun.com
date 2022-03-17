@@ -1,9 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { ngExpressEngine } from '@nguniversal/express-engine';
-import * as bodyParser from 'body-parser';
 import * as compress from 'compression';
 import * as cookieParser from 'cookie-parser';
-import * as csrf from 'csurf';
 import * as express from 'express';
 import { existsSync } from 'fs';
 import { join } from 'path';
@@ -27,14 +25,8 @@ export async function app(): Promise<express.Express> {
 
   server.use(compress());
   server.use(cookieParser(env.cookie.secret));
-  server.use(csrf({ cookie: { key: 'XSRF' } }));
-
-  server.use(bodyParser.json({ limit: '2mb' }));
-  server.use(bodyParser.urlencoded({ extended: true }));
   server.enable('trust proxy');
 
-  // Example Express Rest API endpoints
-  // server.get('/api/**', (req, res) => { });
   // Serve static files from /browser
   server.get('*.*', express.static(distFolder, {
     maxAge: '1y'
