@@ -1,19 +1,25 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Response } from 'express';
+import { uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
+import { Subscription } from 'rxjs';
 import { MessageService } from '../../components/message/message.service';
 import { PlatformService } from '../../core/platform.service';
 import md5 from '../../helpers/md5';
+import { HTMLMetaData } from '../../interfaces/meta';
+import { OptionEntity } from '../../interfaces/options';
 import { AuthService } from '../../services/auth.service';
+import { CustomMetaService } from '../../services/custom-meta.service';
+import { OptionsService } from '../../services/options.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.less']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm = this.fb.group({
     username: [this.cookieService.get('username') || '', [Validators.required, Validators.maxLength(20)]],
     password: [null, [Validators.required, Validators.maxLength(20)]],
@@ -24,7 +30,12 @@ export class LoginComponent implements OnInit {
     password: false
   };
 
+  private options: OptionEntity = {};
+  private optionsListener!: Subscription;
+
   constructor(
+    private optionsService: OptionsService,
+    private metaService: CustomMetaService,
     private fb: FormBuilder,
     private cookieService: CookieService,
     private authService: AuthService,
@@ -35,6 +46,18 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.optionsListener = this.optionsService.options$.subscribe((options) => {
+      this.options = options;
+      const titles = ['登录', this.options['site_name']];
+      const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+      const metaData: HTMLMetaData = {
+        title: titles.join(' - '),
+        description: this.options['site_description'],
+        author: this.options['site_author'],
+        keywords: uniq(keywords).join(',')
+      };
+      this.metaService.updateHTMLMeta(metaData);
+    });
     const username = this.cookieService.get('username');
     if (username) {
       this.autoFocus.username = false;
@@ -49,6 +72,10 @@ export class LoginComponent implements OnInit {
         this.response.redirect('/admin');
       }
     }
+  }
+
+  ngOnDestroy() {
+    this.optionsListener.unsubscribe();
   }
 
   login() {

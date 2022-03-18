@@ -1,12 +1,15 @@
-import { Component, Inject, OnDestroy, OnInit, Optional, PLATFORM_ID } from '@angular/core';
-import { RESPONSE } from '@nguniversal/express-engine/tokens';
-import { Response } from 'express';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { uniq } from 'lodash';
 import { Subscription } from 'rxjs';
-import { BasePageComponent } from '../../core/base-page.component';
 import { CrumbEntity } from '../../components/crumb/crumb.interface';
-import { PostArchiveDateMap } from '../../interfaces/posts';
 import { CrumbService } from '../../components/crumb/crumb.service';
+import { BasePageComponent } from '../../core/base-page.component';
 import { CommonService } from '../../core/common.service';
+import { HTMLMetaData } from '../../interfaces/meta';
+import { OptionEntity } from '../../interfaces/options';
+import { PostArchiveDateMap } from '../../interfaces/posts';
+import { CustomMetaService } from '../../services/custom-meta.service';
+import { OptionsService } from '../../services/options.service';
 import { PostsService } from '../../services/posts.service';
 
 @Component({
@@ -20,11 +23,13 @@ export class ArchiveComponent extends BasePageComponent implements OnInit, OnDes
   archiveYearList: string[] = [];
   showCrumb: boolean = true;
 
+  private options: OptionEntity = {};
+  private optionsListener!: Subscription;
   private archiveListener!: Subscription;
 
   constructor(
-    @Inject(PLATFORM_ID) protected platform: Object,
-    @Optional() @Inject(RESPONSE) protected response: Response,
+    private optionsService: OptionsService,
+    private metaService: CustomMetaService,
     private postsService: PostsService,
     private crumbService: CrumbService,
     private commonService: CommonService
@@ -33,6 +38,18 @@ export class ArchiveComponent extends BasePageComponent implements OnInit, OnDes
   }
 
   ngOnInit(): void {
+    this.optionsListener = this.optionsService.options$.subscribe((options) => {
+      this.options = options;
+      const titles = ['文章归档', this.options['site_name']];
+      const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+      const metaData: HTMLMetaData = {
+        title: titles.join(' - '),
+        description: `${this.options['site_name']}文章归档。${this.options['site_description']}`,
+        author: this.options['site_author'],
+        keywords: uniq(keywords).join(',')
+      };
+      this.metaService.updateHTMLMeta(metaData);
+    });
     const crumbs: CrumbEntity[] = [{
       'label': '文章归档',
       'tooltip': '文章归档',
@@ -57,6 +74,7 @@ export class ArchiveComponent extends BasePageComponent implements OnInit, OnDes
   }
 
   ngOnDestroy() {
+    this.optionsListener.unsubscribe();
     this.archiveListener.unsubscribe();
   }
 

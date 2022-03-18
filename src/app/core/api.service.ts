@@ -14,7 +14,7 @@ import { PlatformService } from './platform.service';
 @Injectable({
   providedIn: 'root'
 })
-export abstract class ApiService {
+export class ApiService {
   private apiUrlPrefix: string = ApiUrl.API_URL_PREFIX;
 
   constructor(
