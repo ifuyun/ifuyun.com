@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
     const rememberMe = this.cookieService.get('rememberMe');
     /* 登录状态直接跳转后台首页 */
-    if ((rememberMe === '1' || rememberMe === 'true') && this.authService.getToken()) {
+    if ((rememberMe === '1' || rememberMe === 'true') && this.authService.isLoggedIn()) {
       if (this.platform.isBrowser) {
         location.href = '/admin';
       } else {

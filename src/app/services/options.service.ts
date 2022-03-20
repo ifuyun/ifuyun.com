@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ApiService } from '../core/api.service';
-import { ApiUrl } from '../enums/api-url';
+import { ApiUrl } from '../config/api-url';
 import { OptionEntity } from '../interfaces/options';
 
 @Injectable({

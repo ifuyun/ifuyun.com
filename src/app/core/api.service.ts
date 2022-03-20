@@ -6,8 +6,8 @@ import { Response } from 'express';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { MessageService } from '../components/message/message.service';
-import { ApiUrl } from '../enums/api-url';
-import { Message } from '../enums/message.enum';
+import { ApiUrl } from '../config/api-url';
+import { Message } from '../config/message.enum';
 import { HttpResponseEntity } from '../interfaces/http-response';
 import { PlatformService } from './platform.service';
 

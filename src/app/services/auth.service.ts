@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 import { ApiService } from '../core/api.service';
 import { CommonService } from '../core/common.service';
 import { PlatformService } from '../core/platform.service';
-import { ApiUrl } from '../enums/api-url';
+import { ApiUrl } from '../config/api-url';
 import { LoginEntity, LoginResponse } from '../interfaces/auth';
 
 @Injectable({
@@ -37,11 +37,7 @@ export class AuthService {
 
   getExpiration() {
     if (this.platform.isBrowser) {
-      try {
-        return JSON.parse(<string>localStorage.getItem('token_expires')) || 0;
-      } catch (e) {
-        return 0;
-      }
+      return parseInt(localStorage.getItem('token_expires') || '', 10) || 0;
     }
     return 0;
   }
@@ -65,17 +61,26 @@ export class AuthService {
     }
   }
 
-  logout() {
-    // todo: must request to server: logout
+  clearAuth() {
     localStorage?.removeItem('token');
     localStorage?.removeItem('token_expires');
-    this.cookieService.delete('username');
-    this.cookieService.delete('rememberMe');
+  }
+
+  logout() {
+    // todo: must request to server: logout
+    this.clearAuth();
   }
 
   isLoggedIn() {
     // todo: warning: in client mode, should check token is valid, not only is existence.
-    return !!this.getToken() && moment().isBefore(this.getExpiration());
+    const isLoggedIn = !!this.getToken() && moment().isBefore(this.getExpiration());
+
+    if (!isLoggedIn) {
+      this.clearAuth();
+      return false;
+    }
+
+    return true;
   }
 
   isLoggedOut() {

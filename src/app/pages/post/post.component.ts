@@ -12,7 +12,8 @@ import { MessageService } from '../../components/message/message.service';
 import { POST_DESCRIPTION_LENGTH } from '../../config/constants';
 import { BasePageComponent } from '../../core/base-page.component';
 import { CommonService } from '../../core/common.service';
-import { VoteType } from '../../enums/common.enum';
+import { PlatformService } from '../../core/platform.service';
+import { VoteType } from '../../config/common.enum';
 import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { CommentDto, CommentEntity } from '../../interfaces/comments';
 import { CrumbEntity } from '../../components/crumb/crumb.interface';
@@ -76,9 +77,6 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
   });
 
   constructor(
-    @Inject(PLATFORM_ID) protected platform: Object,
-    @Optional() @Inject(RESPONSE) protected response: Response,
-    private route: ActivatedRoute,
     private postsService: PostsService,
     private commonService: CommonService,
     private commentsService: CommentsService,
@@ -86,10 +84,12 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
     private usersService: UsersService,
     private crumbService: CrumbService,
     private optionsService: OptionsService,
+    private route: ActivatedRoute,
     private metaService: CustomMetaService,
     private urlService: UrlService,
     private fb: FormBuilder,
     private message: MessageService,
+    private platform: PlatformService,
     private scroller: ViewportScroller,
     private renderer: Renderer2,
     private highlight: HighlightJS
@@ -107,14 +107,16 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
       this.postSlug ? this.fetchPostStandalone() : this.fetchPost();
       this.scroller.scrollToAnchor('article');
     });
-    this.userListener = this.usersService.getLoginUser().subscribe((user) => {
-      this.loginUser = user;
-      this.commentForm.get('author')?.setValue(user.userName);
-      this.commentForm.get('email')?.setValue(user.userEmail);
-    });
   }
 
   ngAfterViewInit() {
+    if (this.platform.isBrowser) {
+      this.userListener = this.usersService.getLoginUser().subscribe((user) => {
+        this.loginUser = user;
+        this.commentForm.get('author')?.setValue(user.userName);
+        this.commentForm.get('email')?.setValue(user.userEmail);
+      });
+    }
     const listener = this.highlight.highlightAll().subscribe(() => {
       const codeEles = this.postContentEle.nativeElement.querySelectorAll('pre code');
       codeEles.forEach((ele: HTMLElement) => {
@@ -135,7 +137,7 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
   ngOnDestroy() {
     this.urlListener.unsubscribe();
     this.paramListener.unsubscribe();
-    this.userListener.unsubscribe();
+    this.userListener?.unsubscribe();
     this.listeners.forEach((listener) => listener.unsubscribe());
     this.unlistenClick();
   }

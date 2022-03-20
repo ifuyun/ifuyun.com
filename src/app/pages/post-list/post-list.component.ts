@@ -34,7 +34,7 @@ export class PostListComponent extends BasePageComponent implements OnInit, OnDe
   year: string = '';
   month: string = '';
   postList: PostList = {};
-  count: number = 0;
+  total: number = 0;
   paginatorData: PaginatorEntity | null = null;
   pageUrl: string = '';
   pageUrlParam: string = '';
@@ -140,7 +140,7 @@ export class PostListComponent extends BasePageComponent implements OnInit, OnDe
     this.postsService.getPosts(param).subscribe((res) => {
       this.postList = res.postList || {};
       this.page = this.postList.page || 1;
-      this.count = this.postList.count || 0;
+      this.total = this.postList.total || 0;
 
       const siteName: string = this.options['site_name'] || '';
       let description: string = siteName;
@@ -194,7 +194,7 @@ export class PostListComponent extends BasePageComponent implements OnInit, OnDe
       }
       this.updateActivePage();
 
-      this.paginatorData = this.paginator.getPaginator(this.page, this.count);
+      this.paginatorData = this.paginator.getPaginator(this.page, this.total);
       const urlSegments: string[] = [];
       for (let url of this.route.snapshot.url) {
         urlSegments.push(url.path);

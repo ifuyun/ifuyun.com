@@ -52,13 +52,13 @@ export class PaginatorService {
   /**
    * 生成分页对象
    * @param {number|string} [page=1] 请求页
-   * @param {number} [count] 总记录数
+   * @param {number} [total] 总记录数
    * @return {PaginatorEntity} 分页对象
    * @version 1.0.0
    * @since 1.0.0
    */
-  getPaginator(page: string | number, count: number): PaginatorEntity {
-    let pages = Math.ceil(count / this.pageSize);// 总页数
+  getPaginator(page: string | number, total: number): PaginatorEntity {
+    let pages = Math.ceil(total / this.pageSize);// 总页数
     if (typeof page === 'string') {// page是字符串
       page = parseInt(page, 10);
     }
@@ -75,7 +75,7 @@ export class PaginatorService {
       curPage: page,
       totalPage: pages,
       pageLimit: this.pageSize,
-      total: count
+      total
     };
   }
 }

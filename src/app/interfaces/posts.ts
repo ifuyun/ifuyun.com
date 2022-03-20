@@ -39,7 +39,7 @@ export interface Post {
 export interface PostList {
   posts?: Post[];
   page?: number;
-  count?: number;
+  total?: number;
   postIds?: string[];
 }
 

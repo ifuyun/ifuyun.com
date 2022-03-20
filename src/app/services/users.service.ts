@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../core/api.service';
-import { ApiUrl } from '../enums/api-url';
+import { ApiUrl } from '../config/api-url';
 import { LoginUserEntity } from '../interfaces/users';
 
 @Injectable({
