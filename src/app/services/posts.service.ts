@@ -23,9 +23,11 @@ export class PostsService {
   }
 
   getPostById(postId: string, referer?: string): Observable<Post> {
-    return this.apiService.httpGet(this.apiService.getApiUrlWithParam(ApiUrl.GET_POST, postId), {
-      from: referer
-    }).pipe(
+    const param: Record<string, any> = {};
+    if (referer?.trim()) {
+      param['ref'] = referer;
+    }
+    return this.apiService.httpGet(this.apiService.getApiUrlWithParam(ApiUrl.GET_POST, postId), param).pipe(
       map((res) => res?.data || {})
     );
   }

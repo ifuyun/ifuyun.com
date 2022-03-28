@@ -15,7 +15,7 @@ export class TaxonomiesService {
   }
 
   getTaxonomies():Observable<TaxonomyNode[]> {
-    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_TAXONOMIES)).pipe(
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_TAXONOMY_TREE)).pipe(
       map((res) => res?.data || [])
     );
   }

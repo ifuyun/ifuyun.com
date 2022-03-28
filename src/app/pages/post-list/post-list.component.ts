@@ -6,8 +6,10 @@ import { Response } from 'express';
 import { uniq } from 'lodash';
 import { combineLatestWith, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { POST_EXCERPT_LENGTH } from '../../config/constants';
 import { BasePageComponent } from '../../core/base-page.component';
 import { CrumbEntity } from '../../components/crumb/crumb.interface';
+import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { HTMLMetaData } from '../../interfaces/meta';
 import { OptionEntity } from '../../interfaces/options';
 import { PaginatorEntity } from '../../interfaces/paginator';
@@ -141,6 +143,9 @@ export class PostListComponent extends BasePageComponent implements OnInit, OnDe
       this.postList = res.postList || {};
       this.page = this.postList.page || 1;
       this.total = this.postList.total || 0;
+      this.postList.posts?.map((item) => {
+        item.post.postExcerpt = item.post.postExcerpt || cutStr(filterHtmlTag(item.post.postContent), POST_EXCERPT_LENGTH);
+      });
 
       const siteName: string = this.options['site_name'] || '';
       let description: string = siteName;

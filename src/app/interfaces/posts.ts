@@ -40,7 +40,6 @@ export interface PostList {
   posts?: Post[];
   page?: number;
   total?: number;
-  postIds?: string[];
 }
 
 export interface PostArchiveDate {

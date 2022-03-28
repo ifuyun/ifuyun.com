@@ -1,22 +1,20 @@
 import { ViewportScroller } from '@angular/common';
-import { Component, ElementRef, Inject, OnDestroy, OnInit, Optional, PLATFORM_ID, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { RESPONSE } from '@nguniversal/express-engine/tokens';
-import { Response } from 'express';
 import { HighlightJS } from 'ngx-highlightjs';
 import * as QRCode from 'qrcode';
 import { Subscription } from 'rxjs';
+import { CrumbEntity } from '../../components/crumb/crumb.interface';
 import { CrumbService } from '../../components/crumb/crumb.service';
 import { MessageService } from '../../components/message/message.service';
-import { POST_DESCRIPTION_LENGTH } from '../../config/constants';
+import { CommentFlag, VoteType } from '../../config/common.enum';
+import { POST_EXCERPT_LENGTH } from '../../config/constants';
 import { BasePageComponent } from '../../core/base-page.component';
 import { CommonService } from '../../core/common.service';
 import { PlatformService } from '../../core/platform.service';
-import { VoteType } from '../../config/common.enum';
 import { cutStr, filterHtmlTag } from '../../helpers/helper';
-import { CommentDto, CommentEntity } from '../../interfaces/comments';
-import { CrumbEntity } from '../../components/crumb/crumb.interface';
+import { CommentEntity, CommentModel } from '../../interfaces/comments';
 import { OptionEntity } from '../../interfaces/options';
 import { PostEntity, PostModel } from '../../interfaces/posts';
 import { TaxonomyEntity } from '../../interfaces/taxonomies';
@@ -30,16 +28,16 @@ import { UsersService } from '../../services/users.service';
 import { VotesService } from '../../services/votes.service';
 
 @Component({
+  encapsulation: ViewEncapsulation.None,
   selector: 'app-post',
   templateUrl: './post.component.html',
-  styleUrls: ['./post.component.less'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./post.component.less']
 })
 export class PostComponent extends BasePageComponent implements OnInit, OnDestroy {
   pageIndex: string = '';
   prevPost: PostEntity | null = null;
   nextPost: PostEntity | null = null;
-  comments: CommentEntity[] = [];
+  comments: CommentModel[] = [];
   post!: PostModel;
   postMeta: Record<string, string> = {};
   postTags: TaxonomyEntity[] = [];
@@ -169,7 +167,7 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
       msgs.forEach((msg) => this.message.error(msg));
     } else {
       const { author, email, captcha, content, parentId } = this.commentForm.value;
-      const commentDto: CommentDto = {
+      const commentDto: CommentEntity = {
         postId: this.postId,
         parentId: parentId || '',
         captchaCode: captcha,
@@ -179,7 +177,8 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
       };
       this.commentsService.saveComment(commentDto).subscribe((res) => {
         if (res.code === 0) {
-          this.message.success('评论成功');
+          const msg = res.data.commentFlag === CommentFlag.OPEN ? '评论成功' : '评论成功，审核通过后将显示在页面上'
+          this.message.success(msg);
           this.resetCommentForm();
           this.captchaImg.nativeElement.src = `${this.captchaImg.nativeElement.src}?r=${Math.random()}`;
           this.fetchComments(() => {
@@ -202,7 +201,7 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
     this.showImgModal = status;
   }
 
-  saveVote(comment: CommentEntity, isLike: boolean) {
+  saveVote(comment: CommentModel, isLike: boolean) {
     this.votesService.saveVote({
       objectId: comment.commentId,
       type: isLike ? VoteType.LIKE : VoteType.DISLIKE
@@ -211,7 +210,7 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
     });
   }
 
-  replyComment(comment: CommentEntity) {
+  replyComment(comment: CommentModel) {
     this.commentForm.get('parentId')?.setValue(comment.commentId);
     this.scroller.scrollToAnchor('respond');
   }
@@ -223,9 +222,10 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
   private initMeta() {
     this.optionsService.options$.subscribe((options) => {
       this.options = options;
+      // todo: tags
       this.metaService.updateHTMLMeta({
         title: `${this.post.postTitle} - ${options?.['site_name']}`,
-        description: this.post.postExcerpt || cutStr(filterHtmlTag(this.post.postContent), POST_DESCRIPTION_LENGTH),
+        description: this.post.postExcerpt,
         author: options?.['site_author'],
         keywords: options?.['site_keywords']
       });
@@ -237,6 +237,7 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
     this.postsService.getPostById(this.postId, this.referer).subscribe((post) => {
       if (post && post.post && post.post.postId) {
         this.post = post.post;
+        this.post.postExcerpt = this.post.postExcerpt || cutStr(filterHtmlTag(this.post.postContent), POST_EXCERPT_LENGTH);
         this.postMeta = post.meta;
         this.postTags = post.tags;
         this.postCategories = post.categories;

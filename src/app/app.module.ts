@@ -22,7 +22,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PostListComponent } from './pages/post-list/post-list.component';
 import { PostComponent } from './pages/post/post.component';
-import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+import { PipesModule } from './pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -36,7 +36,6 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
     SiderComponent,
     PageBarComponent,
     FooterComponent,
-    SafeHtmlPipe,
     AutofocusDirective,
     ModalComponent,
     ArchiveComponent,
@@ -54,6 +53,7 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
     }),
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    PipesModule,
     HighlightModule,
     MessageModule
   ],

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../core/api.service';
 import { ApiUrl } from '../config/api-url';
-import { CommentDto, CommentEntity } from '../interfaces/comments';
+import { CommentEntity, CommentModel } from '../interfaces/comments';
 import { HttpResponseEntity } from '../interfaces/http-response';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class CommentsService {
   ) {
   }
 
-  getCommentsByPostId(postId: string): Observable<CommentEntity[]> {
+  getCommentsByPostId(postId: string): Observable<CommentModel[]> {
     return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_COMMENTS), {
       postId
     }).pipe(
@@ -23,7 +23,7 @@ export class CommentsService {
     );
   }
 
-  saveComment(commentDto: CommentDto): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_COMMENTS), commentDto);
+  saveComment(comment: CommentEntity): Observable<HttpResponseEntity> {
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_COMMENTS), comment);
   }
 }

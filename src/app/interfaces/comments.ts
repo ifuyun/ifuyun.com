@@ -1,4 +1,4 @@
-export interface CommentDto {
+export interface CommentEntity {
   postId: string;
   parentId?: string;
   commentAuthor: string;
@@ -7,18 +7,15 @@ export interface CommentDto {
   captchaCode?: string;
 }
 
-export interface CommentEntity extends CommentDto {
+export interface CommentModel extends CommentEntity {
   commentId: string;
   commentStatus: string;
   created: Date;
   modified: Date;
   commentVote: number;
-}
-
-export interface CommentModel {
-  commentAuthorLink: string;
-  commentIp: string;
-  commentAgent: string;
-  parentId: string;
-  userId: string;
+  commentAuthorLink?: string;
+  commentIp?: string;
+  commentAgent?: string;
+  parentId?: string;
+  userId?: string;
 }
