@@ -58,7 +58,7 @@
       <li *ngFor="let post of randomPosts"><a title="{{post.postTitle}}" [routerLink]="[post.postGuid]">{{post.postTitle}}</a></li>
     </ul>
   </div>
-  <div class="m-widget">
+  <div class="m-widget" *ngIf="friendLinks.length > 0">
     <h3 class="m-widget-title">
       <svg class="u-icon-widget" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
         <path

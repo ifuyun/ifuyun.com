@@ -14,12 +14,6 @@ export class LinksService {
   ) {
   }
 
-  getQuickLinks(): Observable<LinkEntity[]> {
-    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_LINKS_OF_QUICK)).pipe(
-      map((res) => res?.data || [])
-    );
-  }
-
   getFriendLinks(isHome: boolean): Observable<LinkEntity[]> {
     return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_LINKS_OF_FRIEND), {
       isHome

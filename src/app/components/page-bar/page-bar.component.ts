@@ -14,7 +14,7 @@ export class PageBarComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  counter(number: number) {
-    return new Array(number);
+  counter(size: number) {
+    return new Array(size);
   }
 }
