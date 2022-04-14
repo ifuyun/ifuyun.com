@@ -4,10 +4,9 @@ import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { ApiService } from '../core/api.service';
-import { CommonService } from '../core/common.service';
-import { PlatformService } from '../core/platform.service';
 import { ApiUrl } from '../config/api-url';
+import { ApiService } from '../core/api.service';
+import { PlatformService } from '../core/platform.service';
 import { LoginEntity, LoginResponse } from '../interfaces/auth';
 
 @Injectable({
@@ -46,7 +45,7 @@ export class AuthService {
     if (authResult.accessToken) {
       localStorage?.setItem('token', authResult.accessToken);
       localStorage?.setItem('token_expires', authResult.expiresAt.toString());
-      if (loginData.rememberMe === true || loginData.rememberMe === '1') {
+      if (loginData.rememberMe) {
         this.cookieService.set('username', loginData.username, {
           path: '/',
           domain: environment.cookie.domain,

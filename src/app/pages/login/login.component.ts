@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   loginForm = this.fb.group({
     username: [this.cookieService.get('username') || '', [Validators.required, Validators.maxLength(20)]],
     password: [null, [Validators.required, Validators.maxLength(20)]],
-    rememberMe: [this.cookieService.get('rememberMe') || false]
+    rememberMe: [this.cookieService.get('rememberMe') === '1']
   });
   autoFocus = {
     username: true,
@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
     const rememberMe = this.cookieService.get('rememberMe');
     /* 登录状态直接跳转后台首页 */
-    if ((rememberMe === '1' || rememberMe === 'true') && this.authService.isLoggedIn()) {
+    if (rememberMe === '1' && this.authService.isLoggedIn()) {
       if (this.platform.isBrowser) {
         location.href = '/admin';
       } else {

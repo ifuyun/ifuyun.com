@@ -1,7 +1,7 @@
 export interface LoginEntity {
   username: string;
   password: string;
-  rememberMe?: string | boolean;
+  rememberMe?: boolean;
 }
 
 export interface LoginResponse {
