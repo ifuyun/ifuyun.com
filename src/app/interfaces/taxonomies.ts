@@ -1,11 +1,11 @@
 export interface TaxonomyEntity {
-  name: string;
-  description?: string;
-  slug: string;
+  taxonomyName: string;
+  taxonomyDescription?: string;
+  taxonomySlug: string;
   taxonomyId: string;
-  parentId?: string;
-  status?: number;
-  count?: number;
+  taxonomyParent?: string;
+  taxonomyStatus?: number;
+  objectCount?: number;
 }
 
 export interface TaxonomyNode extends TaxonomyEntity {

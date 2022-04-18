@@ -71,7 +71,7 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
     email: ['', [Validators.required, Validators.maxLength(100), Validators.email]],
     captcha: ['', [Validators.required, Validators.maxLength(4)]],
     content: ['', [Validators.required, Validators.maxLength(400)]],
-    parentId: []
+    commentParent: []
   });
 
   constructor(
@@ -166,10 +166,10 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
       });
       msgs.forEach((msg) => this.message.error(msg));
     } else {
-      const { author, email, captcha, content, parentId } = this.commentForm.value;
+      const { author, email, captcha, content, commentParent } = this.commentForm.value;
       const commentDto: CommentEntity = {
         postId: this.postId,
-        parentId: parentId || '',
+        commentParent: commentParent || '',
         captchaCode: captcha,
         commentContent: content,
         commentAuthor: author,
@@ -211,7 +211,7 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
   }
 
   replyComment(comment: CommentModel) {
-    this.commentForm.get('parentId')?.setValue(comment.commentId);
+    this.commentForm.get('commentParent')?.setValue(comment.commentId);
     this.scroller.scrollToAnchor('respond');
   }
 
@@ -274,7 +274,7 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
 
   private fetchComments(cb?: Function) {
     this.commentsService.getCommentsByPostId(this.postId).subscribe((comments) => {
-      this.comments = comments;
+      this.comments = comments.comments || [];
       cb && cb();
     });
   }

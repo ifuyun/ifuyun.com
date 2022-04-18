@@ -1,6 +1,6 @@
 export interface CommentEntity {
   postId: string;
-  parentId?: string;
+  commentParent?: string;
   commentAuthor: string;
   commentAuthorEmail: string;
   commentContent: string;
@@ -10,12 +10,17 @@ export interface CommentEntity {
 export interface CommentModel extends CommentEntity {
   commentId: string;
   commentStatus: string;
-  created: Date;
-  modified: Date;
+  commentCreated: Date;
+  commentModified: Date;
   commentVote: number;
   commentAuthorLink?: string;
   commentIp?: string;
   commentAgent?: string;
-  parentId?: string;
   userId?: string;
+}
+
+export interface CommentList {
+  comments?: CommentModel[];
+  page?: number;
+  total?: number;
 }

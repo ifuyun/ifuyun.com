@@ -31,7 +31,7 @@ export class SiderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.archiveListener = this.postsService.getPostArchiveDates({
+    this.archiveListener = this.postsService.getPostArchives({
       showCount: true
     }).subscribe((res) => this.archiveDates = res);
     this.hotPostsListener = this.postsService.getHotPosts().subscribe((res) => this.hotPosts = res);

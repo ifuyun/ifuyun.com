@@ -27,13 +27,13 @@ export class PostsService {
     if (referer?.trim()) {
       param['ref'] = referer;
     }
-    return this.apiService.httpGet(this.apiService.getApiUrlWithParam(ApiUrl.GET_POST, postId), param).pipe(
+    return this.apiService.httpGet(this.apiService.getApiUrlWithParam(ApiUrl.GET_POST_BY_ID, postId), param).pipe(
       map((res) => res?.data || {})
     );
   }
 
   getPostBySlug(slug: string): Observable<Post> {
-    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_POST_STANDALONE), {
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_POST_BY_PARAM), {
       slug
     }).pipe(
       map((res) => res?.data || {})
@@ -48,8 +48,8 @@ export class PostsService {
     );
   }
 
-  getPostArchiveDates({ showCount = false, limit = 10 }): Observable<PostArchiveDate[]> {
-    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_POST_ARCHIVE_DATES), {
+  getPostArchives({ showCount = false, limit = 10 }): Observable<PostArchiveDate[]> {
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_POST_ARCHIVES), {
       postType: PostType.POST,
       showCount: showCount ? 1 : 0,
       limit

@@ -46,7 +46,7 @@
           <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
           <path fill-rule="evenodd" d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"/>
         </svg>
-        <a *ngFor="let category of post.categories" title="查看 <?- category.name ?> 中的全部文章" rel="category" [routerLink]="['/category/'+(category.slug || category.name)]">{{category.name}}</a>
+        <a *ngFor="let category of post.categories" title="查看 {{category.taxonomyName}} 中的全部文章" rel="category" [routerLink]="['/category/'+(category.taxonomySlug || category.taxonomyName)]">{{category.taxonomyName}}</a>
       </span>
       <span *ngIf="post.post.postOriginal === 1" title="{{post.post.author.userNiceName}}原创">
         <svg class="u-icon-meta" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -66,7 +66,7 @@
         </div>
         <ul class="f-clearfix">
           <li *ngFor="let category of post.categories">
-            <a title="查看 {{category.name}} 中的全部文章" rel="category" [routerLink]="['/category/'+(category.slug || category.name)]">{{category.name}}</a>
+            <a title="查看 {{category.taxonomyName}} 中的全部文章" rel="category" [routerLink]="['/category/'+(category.taxonomySlug || category.taxonomyName)]">{{category.taxonomyName}}</a>
           </li>
         </ul>
       </div>
@@ -79,7 +79,7 @@
         </div>
         <ul class="f-clearfix">
           <li *ngFor="let tag of post.tags">
-            <a title="查看 {{tag.name}} 中的全部文章" rel="category" [routerLink]="['/tag/'+(tag.slug || tag.name)]">{{tag.name}}</a>
+            <a title="查看 {{tag.taxonomyName}} 中的全部文章" rel="category" [routerLink]="['/tag/'+(tag.taxonomySlug || tag.taxonomyName)]">{{tag.taxonomyName}}</a>
           </li>
         </ul>
       </div>

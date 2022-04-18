@@ -6,11 +6,14 @@
     <ul class="f-list-none m-nav-main">
       <li [ngClass]="{'active': activePage == 'index'}"><a title="返回{{options['site_name']}}首页" [routerLink]="['/']">首页</a></li>
       <ng-container *ngFor="let taxonomy of taxonomies">
-        <li [ngClass]="{'active': activePage == taxonomy.slug}">
-          <a title="{{taxonomy.description}}" [routerLink]="['/category/'+(taxonomy.slug || taxonomy.name)]">{{taxonomy.name}}</a>
+        <li [ngClass]="{'active': activePage == taxonomy.taxonomySlug}">
+          <a title="{{taxonomy.taxonomyDescription}}"
+             [routerLink]="['/category/'+(taxonomy.taxonomySlug || taxonomy.taxonomyName)]">{{taxonomy.taxonomyName}}</a>
           <ul class="m-nav-sub" *ngIf="!taxonomy.isLeaf">
             <ng-container *ngFor="let subTaxonomy of taxonomy.children">
-              <li><a title="{{subTaxonomy.description}}" [routerLink]="['/category/'+(subTaxonomy.slug || subTaxonomy.name)]">{{subTaxonomy.name}}</a></li>
+              <li>
+                <a title="{{subTaxonomy.taxonomyDescription}}"
+                   [routerLink]="['/category/'+(subTaxonomy.taxonomySlug || subTaxonomy.taxonomyName)]">{{subTaxonomy.taxonomyName}}</a></li>
             </ng-container>
           </ul>
         </li>

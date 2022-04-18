@@ -62,7 +62,7 @@ export class ArchiveComponent extends BasePageComponent implements OnInit, OnDes
       'headerFlag': true
     }];
     this.crumbService.updateCrumb(crumbs);
-    this.archiveListener = this.postsService.getPostArchiveDates({
+    this.archiveListener = this.postsService.getPostArchives({
       showCount: true,
       limit: 0
     }).subscribe((res) => {

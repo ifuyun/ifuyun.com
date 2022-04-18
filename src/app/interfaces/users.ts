@@ -12,7 +12,6 @@ export interface UserModel extends UserEntity {
   userPassSalt: string;
   userLink: string;
   userActivationKey: string;
-  userDisplayName: string;
 }
 
 export interface LoginUserEntity {
