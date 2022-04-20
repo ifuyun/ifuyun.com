@@ -2,61 +2,67 @@
 <div class="m-sticky m-content-box">
   <ul>
     <li>
-      <img src="/assets/img/cloud.jpg" alt="{{options['site_name']}}" />
-      <div class="m-sticky-desc">
-        <p>&nbsp;</p>
-      </div>
+      <img src="/assets/img/cloud.jpg" alt="{{options['site_name']}}"/>
+      <div class="m-sticky-desc"><p>&nbsp;</p></div>
     </li>
   </ul>
 </div>
 <article id="postList" *ngFor="let post of postList?.posts" class="m-excerpt m-content-box f-clearfix">
   <div class="m-excerpt-detail f-clearfix">
     <header>
-      <h3><a rel="bookmark" title="{{post.post.postTitle}}" [routerLink]="[post.post.postGuid]">{{post.post.postTitle}}</a></h3>
-      <div class="m-excerpt-comment">
-        <ng-container *ngIf="post.post.commentFlag === 'close'">
-          <i class='icon icon-chat'></i>评论关闭
-        </ng-container>
+      <h3><a rel="bookmark" title="{{post.post.postTitle}}"
+             [routerLink]="[post.post.postGuid]">{{post.post.postTitle}}</a></h3>
+      <div class="m-excerpt-data">
         <ng-container *ngIf="post.post.commentFlag !== 'close'">
-        <a title="《{{post.post.postTitle}}》上的评论" [routerLink]="[post.post.postGuid + (post.post.commentCount > 0 ? '#comments' : '#respond')]">
-          <i class='icon icon-chat-dot'></i>{{post.post.commentCount > 0 ? post.post.commentCount + ' 条评论' : '抢沙发'}}</a>
+          <a title="《{{post.post.postTitle}}》评论"
+             [routerLink]="[post.post.postGuid]" fragment="comments">
+            <ng-container *ngIf="post.post.commentCount > 0">
+              <i class='icon icon-chat-dot'></i><span>{{post.post.commentCount}}</span>
+            </ng-container>
+            <ng-container *ngIf="post.post.commentCount < 1">
+              <i class='icon icon-chat'></i><span>0</span>
+            </ng-container>
+          </a>
         </ng-container>
+        <span><i class="icon icon-eye"></i><span>{{post.post.postViewCount}}</span></span>
       </div>
     </header>
     <div class="m-excerpt-meta m-excerpt-meta-post">
-      <span title="写作时间: {{post.post.postDate | date:'yyyy-MM-dd'}}">
-          <i class='icon icon-calendar'></i>{{post.post.postDate | date:'yyyy-MM-dd'}}
+      <span title="写于: {{post.post.postDate | date:'yyyy-MM-dd'}}">
+        <i class='icon icon-calendar'></i><span>{{post.post.postDate | date:'yyyy-MM-dd'}}</span>
       </span>
       <span title="作者：{{post.meta['post_author'] || post.post.author.userNiceName}}">
         <i class='icon icon-person'></i>{{post.meta['post_author'] || post.post.author.userNiceName}}
       </span>
       <span class="m-meta-dynamic">
         <i class='icon icon-folder'></i>
-        <a *ngFor="let category of post.categories" title="查看 {{category.taxonomyName}} 中的全部文章" rel="category" [routerLink]="['/category/'+(category.taxonomySlug || category.taxonomyName)]">{{category.taxonomyName}}</a>
+        <a *ngFor="let category of post.categories" title="{{category.taxonomyName}}" rel="category"
+           [routerLink]="['/category/'+(category.taxonomySlug || category.taxonomyName)]">{{category.taxonomyName}}</a>
       </span>
       <span *ngIf="post.post.postOriginal === 1" title="{{post.post.author.userNiceName}}原创">
         <i class='icon icon-pencil'></i><span>原创</span>
       </span>
     </div>
-    <p class="m-excerpt-content"><span [innerHTML]="post.post.postExcerpt"></span><a title="{{post.post.postTitle}}" [routerLink]="[post.post.postGuid]">[阅读全文]</a></p>
+    <p class="m-excerpt-content">
+      <span [innerHTML]="post.post.postExcerpt"></span>
+      <a title="{{post.post.postTitle}}" [routerLink]="[post.post.postGuid]">[阅读全文]</a>
+    </p>
     <div class="m-excerpt-meta m-excerpt-meta-taxonomy">
       <div class="m-article-taxonomy m-meta-dynamic">
-        <div class="m-meta-icon f-float-left">
-          <i class='icon icon-folder'></i>
-        </div>
+        <div class="m-meta-icon f-float-left"><i class='icon icon-folder'></i></div>
         <ul class="f-clearfix">
           <li *ngFor="let category of post.categories">
-            <a title="查看 {{category.taxonomyName}} 中的全部文章" rel="category" [routerLink]="['/category/'+(category.taxonomySlug || category.taxonomyName)]">{{category.taxonomyName}}</a>
+            <a title="{{category.taxonomyName}}" rel="category"
+               [routerLink]="['/category/'+(category.taxonomySlug || category.taxonomyName)]">{{category.taxonomyName}}</a>
           </li>
         </ul>
       </div>
       <div class="m-article-taxonomy">
-        <div class="m-meta-icon f-float-left">
-          <i class='icon icon-tag'></i>
-        </div>
+        <div class="m-meta-icon f-float-left"><i class='icon icon-tag'></i></div>
         <ul class="f-clearfix">
           <li *ngFor="let tag of post.tags">
-            <a title="查看 {{tag.taxonomyName}} 中的全部文章" rel="category" [routerLink]="['/tag/'+(tag.taxonomySlug || tag.taxonomyName)]">{{tag.taxonomyName}}</a>
+            <a title="{{tag.taxonomyName}}" rel="category"
+               [routerLink]="['/tag/'+(tag.taxonomySlug || tag.taxonomyName)]">{{tag.taxonomyName}}</a>
           </li>
         </ul>
       </div>

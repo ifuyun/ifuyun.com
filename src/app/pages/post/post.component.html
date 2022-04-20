@@ -5,11 +5,11 @@
       <a rel="bookmark" title="{{post?.postTitle}}" [routerLink]="[post?.postGuid]">{{post?.postTitle}}</a>
     </h1>
     <div *ngIf="!isStandalone" class="m-article-meta m-article-meta-post">
-      <span title="写作时间: {{post?.postDate | date:'yyyy-MM-dd'}}">
+      <span title="写于: {{post?.postDate | date:'yyyy-MM-dd'}}">
         <i class='icon icon-calendar'></i>{{post?.postDate | date:'yyyy-MM-dd'}}
       </span>
       <span class="m-meta-dynamic">
-        <i class='icon icon-folder'></i><a *ngFor="let cat of postCategories" title="查看 {{cat.taxonomyName}} 中的全部文章" rel="category" [routerLink]="['/category/'+(cat.taxonomySlug || cat.taxonomyName)]">{{cat.taxonomyName}}</a>
+        <i class='icon icon-folder'></i><a *ngFor="let cat of postCategories" title="{{cat.taxonomyName}}" rel="category" [routerLink]="['/category/'+(cat.taxonomySlug || cat.taxonomyName)]">{{cat.taxonomyName}}</a>
       </span>
       <span title="作者：{{postMeta['postAuthor']}}">
         <i class='icon icon-person'></i>{{postMeta['postAuthor']}}
@@ -48,7 +48,7 @@
         <i class='icon icon-folder'></i>
       </div>
       <ul class="f-clearfix">
-        <li *ngFor="let cat of postCategories"><a title="查看 {{cat.taxonomyName}} 中的全部文章" rel="category" [routerLink]="['/category/'+(cat.taxonomySlug || cat.taxonomyName)]">{{cat.taxonomyName}}</a></li>
+        <li *ngFor="let cat of postCategories"><a title="{{cat.taxonomyName}}" rel="category" [routerLink]="['/category/'+(cat.taxonomySlug || cat.taxonomyName)]">{{cat.taxonomyName}}</a></li>
       </ul>
     </div>
     <div *ngIf="!isStandalone && postTags.length > 0" class="m-article-meta m-article-taxonomy">
@@ -56,7 +56,7 @@
           <i class='icon icon-tag'></i>
         </div>
         <ul class="f-clearfix">
-          <li *ngFor="let tag of postTags"><a title="查看 {{tag.taxonomyName}} 中的全部文章" rel="category" [routerLink]="['/tag/'+(tag.taxonomySlug || tag.taxonomyName)]">{{tag.taxonomyName}}</a></li>
+          <li *ngFor="let tag of postTags"><a title="{{tag.taxonomyName}}" rel="category" [routerLink]="['/tag/'+(tag.taxonomySlug || tag.taxonomyName)]">{{tag.taxonomyName}}</a></li>
         </ul>
     </div>
     <div *ngIf="!isStandalone" class="m-article-meta m-article-source m-meta-dynamic">

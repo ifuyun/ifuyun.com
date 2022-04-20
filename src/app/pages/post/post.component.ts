@@ -177,7 +177,7 @@ export class PostComponent extends BasePageComponent implements OnInit, OnDestro
       };
       this.commentsService.saveComment(commentDto).subscribe((res) => {
         if (res.code === 0) {
-          const msg = res.data.commentFlag === CommentFlag.OPEN ? '评论成功' : '评论成功，审核通过后将显示在页面上'
+          const msg = res.data.status === 'success' ? '评论成功' : '评论成功，审核通过后将显示在页面上'
           this.message.success(msg);
           this.resetCommentForm();
           this.captchaImg.nativeElement.src = `${this.captchaImg.nativeElement.src}?r=${Math.random()}`;

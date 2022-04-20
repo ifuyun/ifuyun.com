@@ -18,7 +18,7 @@ a, a:hover {
   background-color: #fff;
 
   .m-post-header {
-    border-left: 4px solid #1ba6ff;
+    border-left: 4px solid @theme-color-text;
     padding-left: 10px;
     margin: 15px 0;
   }
@@ -69,7 +69,7 @@ a, a:hover {
       font-size: 16px;
       line-height: 32px;
       height: 32px;
-      margin-right: 90px;
+      margin-right: 120px;
 
       a {
         display: inline-block;
@@ -90,22 +90,24 @@ a, a:hover {
       word-wrap: break-word;
     }
 
-    .m-excerpt-comment {
+    .m-excerpt-data {
       position: absolute;
       right: 0;
       top: 0;
       font-size: 13px;
-      color: #888;
+      color: #999;
       line-height: 32px;
 
+      > :not(:last-child) {
+        margin-right: 12px;
+      }
+
       i {
-        top: 3px;
-        margin-right: 5px;
-        font-size: 13px;
+        margin-right: 4px;
       }
 
       a {
-        color: #888;
+        color: #999;
 
         &:hover, &:hover i {
           color: @theme-color-text;
@@ -122,17 +124,9 @@ a, a:hover {
   }
 
   .m-excerpt-meta {
-    color: #888;
+    color: #999;
     padding: 10px 0;
     font-size: 13px;
-
-    a {
-      color: #888;
-
-      + a {
-        margin-left: 10px;
-      }
-    }
 
     .icon {
       margin-right: 4px;
@@ -140,13 +134,21 @@ a, a:hover {
   }
 
   .m-excerpt-meta-post {
-    span + span {
-      margin-left: 20px;
+    span:not(:last-child) {
+      margin-right: 20px;
     }
 
-    a:hover {
-      color: @theme-color-text;
-      text-decoration: none;
+    a {
+      color: #999;
+
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
+
+      &:hover {
+        color: @theme-color-text;
+        text-decoration: none;
+      }
     }
 
     .u-icon-meta {
@@ -175,9 +177,12 @@ a, a:hover {
 
     li {
       float: left;
-      margin-right: 10px;
       padding: 2px 0;
       list-style: none;
+
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
     }
   }
 
@@ -185,10 +190,11 @@ a, a:hover {
     padding: 4px 6px;
     background-color: #eee;
     border-radius: 2px;
+    color: #999;
 
     &:hover {
-      color: #fff !important;
-      background: #777;
+      color: #fff;
+      background-color: @theme-color-text;
     }
   }
 }
