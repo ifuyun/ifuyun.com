@@ -1,39 +1,24 @@
 @import "../../../assets/style/variables";
 
-* {
-  box-sizing: initial;
-}
-
-h3 {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.1;
-}
-
-.m-content-box {
+.breadcrumb {
+  margin: @box-shadow-width @box-shadow-width @primary-margin;
+  padding: 0 @content-margin;
+  line-height: 40px;
   border-radius: @box-border-radius;
-  -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  -o-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-  background-color: #fff;
-}
+  box-shadow: @content-box-shadow;
+  background-color: @content-background-color;
 
-.m-crumb-wrap {
-  margin-bottom: 15px;
-  padding: 10px 25px;
-  border-radius: @box-border-radius;
-}
+  .separator {
+    margin: 0 8px;
+  }
 
-.m-crumb, .m-crumb a {
-  font-size: 14px;
-  font-weight: normal;
-}
+  a:hover {
+    text-decoration: underline;
+  }
 
-.m-crumb a:hover {
-  text-decoration: underline;
-}
-
-.m-crumb h3 {
-  display: inline-block;
+  h3 {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+  }
 }

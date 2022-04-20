@@ -47,7 +47,7 @@
       <div class="m-meta-icon f-float-left">
         <i class='icon icon-folder'></i>
       </div>
-      <ul class="f-clearfix">
+      <ul class="clearfix">
         <li *ngFor="let cat of postCategories"><a title="{{cat.taxonomyName}}" rel="category" [routerLink]="['/category/'+(cat.taxonomySlug || cat.taxonomyName)]">{{cat.taxonomyName}}</a></li>
       </ul>
     </div>
@@ -55,7 +55,7 @@
         <div class="m-meta-icon f-float-left">
           <i class='icon icon-tag'></i>
         </div>
-        <ul class="f-clearfix">
+        <ul class="clearfix">
           <li *ngFor="let tag of postTags"><a title="{{tag.taxonomyName}}" rel="category" [routerLink]="['/tag/'+(tag.taxonomySlug || tag.taxonomyName)]">{{tag.taxonomyName}}</a></li>
         </ul>
     </div>
@@ -75,7 +75,7 @@
       <div class="m-meta-text">
         <span title="更新于: {{post?.postModified | date:'yyyy-MM-dd HH:mm'}}">最后更新：{{post?.postModified | date:'yyyy-MM-dd HH:mm'}}</span></div>
     </div>
-    <div class="m-article-qrcode f-clearfix">
+    <div class="m-article-qrcode clearfix">
       <div #qrcodeCanvas [ngStyle]="{display: showQrcodeOfShare ? 'block' : 'none'}" class="m-article-qrcode-img m-article-qrcode-share">
         <div class="m-article-qrcode-arrow"><i></i><i></i></div>
       </div>
@@ -86,7 +86,7 @@
       <div class="m-article-qrcode-item m-article-share" (mouseover)="toggleShareQrcode()" (mouseout)="toggleShareQrcode()">分享</div>
       <div class="m-article-qrcode-item m-article-reward" (mouseover)="toggleRewardQrcode()" (mouseout)="toggleRewardQrcode()">打赏</div>
     </div>
-    <div *ngIf="!isStandalone" class="m-article-link f-clearfix">
+    <div *ngIf="!isStandalone" class="m-article-link clearfix">
       <div class="m-article-link-prev">
         <a *ngIf="prevPost" [routerLink]="[prevPost.postGuid]" title="{{prevPost.postTitle}}">
           <span class="m-article-link-text">&lt; <span>上一篇：{{prevPost.postTitle}}</span></span></a>
@@ -118,25 +118,25 @@
   </ng-container>
   <ng-container>
     <div class="m-diag">&nbsp;</div>
-    <div class="m-comment-form" id="respond">
+    <div class="comment-form" id="respond">
       <form [formGroup]="commentForm" (ngSubmit)="saveComment()">
         <p class="m-row">
-          <input type="text" class="u-input" formControlName="author" maxlength="8" placeholder="昵称" /><span class="u-label-required">*</span>
+          <input type="text" class="input" formControlName="author" maxlength="8" placeholder="昵称" /><span class="form-required">*</span>
         </p>
         <p class="m-row">
-          <input type="text" class="u-input" formControlName="email" maxlength="100" placeholder="Email" /><span class="u-label-required">*</span>
+          <input type="text" class="input" formControlName="email" maxlength="100" placeholder="Email" /><span class="form-required">*</span>
         </p>
         <p class="m-row">
-          <input type="text" class="u-input" formControlName="captcha" maxlength="4" placeholder="验证码" /><span class="u-label-required">*</span>
-          <img #captchaImg class="u-captcha" src="/api/captcha" title="点击刷新验证码" alt="验证码" onclick="this.src='/api/captcha?r='+Math.random()" />
+          <input type="text" class="input" formControlName="captcha" maxlength="4" placeholder="验证码" /><span class="form-required">*</span>
+          <img #captchaImg class="captcha" src="/api/captcha" title="点击刷新验证码" alt="验证码" onclick="this.src='/api/captcha?r='+Math.random()" />
         </p>
         <p class="m-row">
-          <textarea class="u-input u-textarea-comment" formControlName="content" maxlength="400" placeholder="评论内容"></textarea><span class="u-label-required">*</span>
+          <textarea class="input input-textarea" rows="4" formControlName="content" maxlength="400" placeholder="评论内容"></textarea><span class="form-required">*</span>
         </p>
         <p class="m-row">
           <input type="hidden" formControlName="commentParent" />
-          <input type="submit" class="u-btn u-btn-submit" value="提交" />
-          <input type="reset" class="u-btn" value="重置" />
+          <input type="submit" class="button button-submit" value="提交" />
+          <input type="reset" class="button" value="重置" />
         </p>
       </form>
     </div>

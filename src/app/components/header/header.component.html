@@ -1,29 +1,32 @@
-<header class="m-header">
-  <div class="m-header-bg">&nbsp;</div>
-  <div class="m-nav f-clearfix">
-    <a class="u-logo" [routerLink]="['/']" title="{{options['site_name']}}">
-      <img src="/assets/img/logo.png" width="100%" alt="{{options['site_name']}}"/></a>
-    <ul class="f-list-none m-nav-main">
-      <li [ngClass]="{'active': activePage == 'index'}"><a title="返回{{options['site_name']}}首页" [routerLink]="['/']">首页</a></li>
+<header class="header">
+  <div class="header-bg"></div>
+  <div class="nav">
+    <a class="logo" [routerLink]="['/']" title="{{options['site_name']}}">
+      <img src="/assets/img/logo.png" alt="{{options['site_name']}}"/>
+    </a>
+    <ul class="nav-list">
+      <li [ngClass]="{'active': activePage == 'index'}">
+        <a title="{{options['site_name']}}首页" [routerLink]="['/']">首页</a>
+      </li>
       <ng-container *ngFor="let taxonomy of taxonomies">
         <li [ngClass]="{'active': activePage == taxonomy.taxonomySlug}">
           <a title="{{taxonomy.taxonomyDescription}}"
-             [routerLink]="['/category/'+(taxonomy.taxonomySlug || taxonomy.taxonomyName)]">{{taxonomy.taxonomyName}}</a>
-          <ul class="m-nav-sub" *ngIf="!taxonomy.isLeaf">
+             [routerLink]="['/category/'+taxonomy.taxonomySlug]">{{taxonomy.taxonomyName}}</a>
+          <ul class="sub-nav-list" *ngIf="!taxonomy.isLeaf">
             <ng-container *ngFor="let subTaxonomy of taxonomy.children">
               <li>
                 <a title="{{subTaxonomy.taxonomyDescription}}"
-                   [routerLink]="['/category/'+(subTaxonomy.taxonomySlug || subTaxonomy.taxonomyName)]">{{subTaxonomy.taxonomyName}}</a></li>
+                   [routerLink]="['/category/'+subTaxonomy.taxonomySlug]">{{subTaxonomy.taxonomyName}}</a>
+              </li>
             </ng-container>
           </ul>
         </li>
       </ng-container>
     </ul>
-    <ul class="f-list-none m-nav-tool">
+    <ul class="link-list">
       <li>
         <a href="https://github.com/ifuyun" title="Follow me on GitHub" target="_blank">
-          <i class='icon icon-github'></i>
-          <span>GitHub</span>
+          <i class='icon icon-github'></i><span>GitHub</span>
         </a>
       </li>
     </ul>

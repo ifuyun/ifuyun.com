@@ -1,137 +1,77 @@
 @import "../../../assets/style/variables";
 
-* {
-  box-sizing: initial;
+.search {
+  @search-btn-width: 60px;
+  margin-bottom: @primary-margin;
+
+  .input-search {
+    width: @sider-width - @search-btn-width - @input-padding-horizontal * 2 - 2;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .button-submit {
+    width: @search-btn-width;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 }
 
-.m-sidebar {
-  float: left;
-  margin-left: -272px;
-  width: 272px;
-  position: relative;
-}
-
-.m-search {
-  margin-bottom: 15px;
-}
-
-.m-widget, .m-ads-widget {
-  margin-top: 15px;
+.widget, .ads-widget {
+  margin-top: @primary-margin;
   border: 1px solid transparent;
-  border-radius: @box-border-radius;
-  background-color: #fff;
-  -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-  -o-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  border-radius: @border-radius;
+  box-shadow: @content-box-shadow;
+  background-color: @content-background-color;
 }
 
-.m-widget {
-  padding: 10px;
+.widget {
+  @widget-padding: 12px;
+  padding: @widget-padding;
 
-  h3 {
+  .widget-title {
     font-size: 15px;
     font-weight: normal;
     color: #444;
     line-height: 24px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
-  > ul > li {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    height: 24px;
-    line-height: 24px;
-    border-bottom: 1px dashed #eaeaea;
-    padding: 3px 20px;
-    color: #777;
-    font-size: 14px;
-
-    &:hover {
-      background-color: #f6f6f6;
-    }
-  }
-
-  > ul > li > a {
-    color: #666;
-
-    &:hover {
-      color: @theme-color-text;
-    }
+  .wechat-qrcode {
+    width: @sider-width - @widget-padding * 2 - 2;
+    height: @sider-width - @widget-padding * 2 - 2;
+    margin: 0 auto;
+    background: url(/assets/img/wechat.jpg) no-repeat;
+    background-size: cover;
   }
 
   .icon {
     margin-right: 4px;
   }
 
-  .m-qrcode-wx {
-    width: 240px;
-    height: 240px;
-    margin: 0 auto;
-    background: url(http://s.ifuyun.com/upload/2020/03/3c94204aeddb6de3.jpg) no-repeat;
-    background-size: cover;
+  > ul > li {
+    height: 24px;
+    padding: 4px 20px;
+    line-height: 24px;
+    border-bottom: 1px dashed #eaeaea;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    &:hover {
+      background-color: @tag-background-color;
+    }
   }
-}
 
-.u-input {
-  width: 201px;
-  border: 1px solid #d0d0d0;
-  border-radius: 0;
-  outline: 0;
-  color: #6a6a6a;
-  padding: 5px;
-  background: #fafafa;
-  font-size: 14px;
-  line-height: 20px;
-}
-.u-input, .u-btn {
-  border-color: transparent;
-  -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-  -o-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-}
+  > ul > li > a {
+    color: @base-color;
 
-.u-input:focus {
-  color: #585858;
-  border-color: @theme-color-bg;
-}
-
-.u-input-search {
-  border-right: none;
-  height: 20px;
-  border-top-left-radius: @box-border-radius;
-  border-bottom-left-radius: @box-border-radius;
-  background: #fff;
-}
-
-.u-btn {
-  padding: 6px 15px;
-  outline: 0;
-  font-size: 14px;
-  line-height: 20px;
-  text-align: center;
-  cursor: pointer;
-  border: 0;
-  border-radius: 0;
-  -webkit-appearance: button;
-}
-
-.u-btn:hover {
-  background-color: @theme-color-active;
-}
-
-.u-btn-submit {
-  border-top-right-radius: @box-border-radius;
-  border-bottom-right-radius: @box-border-radius;
-  color: #fff;
-  background-color: @theme-color-bg;
-  letter-spacing: 1px;
-}
-
-/*修复FF宽高不一致问题*/
-.u-btn::-moz-focus-inner {
-  border: 0;
-  padding: 0;
+    &:hover {
+      color: @primary-color;
+    }
+  }
 }

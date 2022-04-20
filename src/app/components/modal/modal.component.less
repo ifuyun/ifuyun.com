@@ -1,4 +1,4 @@
-.g-mask {
+.modal-mask {
   position: fixed;
   top: 0;
   right: 0;
@@ -9,7 +9,7 @@
   cursor: zoom-out;
 }
 
-.g-modal-wrap {
+.modal-container {
   position: fixed;
   top: 0;
   right: 0;
@@ -21,17 +21,17 @@
   outline: 0;
   z-index: 1024;
   cursor: zoom-out;
+
+  &:before {
+    display: inline-block;
+    width: 0;
+    height: 100%;
+    vertical-align: middle;
+    content: '';
+  }
 }
 
-.g-modal-wrap:before {
-  display: inline-block;
-  width: 0;
-  height: 100%;
-  vertical-align: middle;
-  content: '';
-}
-
-.g-modal {
+.modal-body {
   display: inline-block;
   width: auto;
   vertical-align: middle;
@@ -39,11 +39,11 @@
   cursor: default;
 }
 
-.g-modal-content {
+.modal-content {
   position: relative;
 }
 
-.g-modal-close {
+.modal-close {
   position: absolute;
   top: 0;
   right: 0;

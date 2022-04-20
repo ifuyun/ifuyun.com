@@ -7,8 +7,8 @@
     </li>
   </ul>
 </div>
-<article id="postList" *ngFor="let post of postList?.posts" class="m-excerpt m-content-box f-clearfix">
-  <div class="m-excerpt-detail f-clearfix">
+<article id="postList" *ngFor="let post of postList?.posts" class="m-excerpt m-content-box clearfix">
+  <div class="m-excerpt-detail clearfix">
     <header>
       <h3><a rel="bookmark" title="{{post.post.postTitle}}"
              [routerLink]="[post.post.postGuid]">{{post.post.postTitle}}</a></h3>
@@ -50,7 +50,7 @@
     <div class="m-excerpt-meta m-excerpt-meta-taxonomy">
       <div class="m-article-taxonomy m-meta-dynamic">
         <div class="m-meta-icon f-float-left"><i class='icon icon-folder'></i></div>
-        <ul class="f-clearfix">
+        <ul class="clearfix">
           <li *ngFor="let category of post.categories">
             <a title="{{category.taxonomyName}}" rel="category"
                [routerLink]="['/category/'+(category.taxonomySlug || category.taxonomyName)]">{{category.taxonomyName}}</a>
@@ -59,7 +59,7 @@
       </div>
       <div class="m-article-taxonomy">
         <div class="m-meta-icon f-float-left"><i class='icon icon-tag'></i></div>
-        <ul class="f-clearfix">
+        <ul class="clearfix">
           <li *ngFor="let tag of post.tags">
             <a title="{{tag.taxonomyName}}" rel="category"
                [routerLink]="['/tag/'+(tag.taxonomySlug || tag.taxonomyName)]">{{tag.taxonomyName}}</a>

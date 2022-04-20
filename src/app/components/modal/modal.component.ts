@@ -41,7 +41,7 @@ export class ModalComponent implements OnInit, OnDestroy, AfterViewInit {
         // in case of: SVGPathElement
         classNames = Array.from(((e.target as HTMLElement).parentNode as HTMLElement).classList);
       }
-      if (classNames.some((name) => ['g-mask', 'g-modal-wrap', 'g-modal-close', 'icon-close'].includes(name))) {
+      if (classNames.some((name) => ['modal-mask', 'modal-container', 'modal-close', 'icon-close'].includes(name))) {
         this.hideModal();
       }
     });

@@ -1,14 +1,23 @@
-.g-container {
-  position: relative;
-  max-width: 1000px;
-  margin: 80px auto 0 auto;
-}
+@import "../../../assets/style/variables";
 
-.m-content-wrap {
-  width: 100%;
-  float: left;
-}
+.main {
+  display: flex;
+  flex: auto;
+  flex-direction: row;
+  width: @body-width;
+  margin: @header-height + @header-bg-height + @primary-margin auto 0;
+  justify-content: space-between;
 
-.m-content {
-  margin-right: 300px;
+  .content {
+    display: flex;
+    flex: auto;
+    flex-direction: column;
+    margin: -@box-shadow-width (@primary-margin - @box-shadow-width) -@box-shadow-width -@box-shadow-width;
+    overflow: hidden;
+  }
+
+  .sider {
+    flex: 0 0 @sider-width;
+    width: @sider-width;
+  }
 }

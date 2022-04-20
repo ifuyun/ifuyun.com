@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CommonService } from '../../core/common.service';
-import { LinkEntity } from '../../interfaces/links';
 import { OptionEntity } from '../../interfaces/options';
 import { TaxonomyNode } from '../../interfaces/taxonomies';
 import { OptionsService } from '../../services/options.service';
@@ -16,7 +15,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   options: OptionEntity = {};
   activePage: string = '';
   taxonomies: TaxonomyNode[] = [];
-  quickLinks: LinkEntity[] = [];
   isLogin: boolean = false;
 
   private optionsListener!: Subscription;

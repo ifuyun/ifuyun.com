@@ -1,61 +1,70 @@
-@import "./assets/style/funcational";
-@import "./assets/style/variables";
-@import "./assets/style/icons";
 @import '~highlight.js/styles/github.css';
-
-/* reset */
-* {
-  margin: 0;
-  padding: 0;
-}
-
-html, body {
-  width: 100%;
-  height: 100%;
-}
-
-html {
-  font-size: 100%;
-  -webkit-text-size-adjust: auto;
-  -ms-text-size-adjust: auto;
-  -moz-text-size-adjust: auto;
-}
-
-body {
-  font-size: 14px;
-  line-height: 1.42857143;
-  background-color: #fafafa;
-  color: #333;
-  font-family: SpecialSymbol, DINRegular, -apple-system, BlinkMacSystemFont, PingFang SC, Helvetica Neue, Hiragino Sans GB, Segoe UI, Microsoft YaHei, \5fae\8f6f\96c5\9ed1, sans-serif;
-}
-
-p, ul {
-  margin: 0;
-}
-
-img {
-  border: 0;
-  vertical-align: middle;
-}
-
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
-textarea {
-  overflow: auto;
-  resize: none;
-}
+@import "./assets/style/icons";
+@import "./assets/style/variables";
+@import "./assets/style/funcational";
+@import "./assets/style/reset";
 
 a, a:hover, a:focus {
-  color: @theme-color-text;
+  color: @primary-color;
   text-decoration: none;
   outline: 0;
 }
 
 ::selection {
-  background: @theme-selection-background;
+  background: @primary-color;
   color: #fff;
   text-shadow: none;
+}
+
+.input, .button {
+  line-height: 1.5715;
+  outline: 0;
+  border-radius: @border-radius;
+  font-size: @primary-font-size;
+}
+
+.input {
+  padding: 4px @input-padding-horizontal;
+  border: 1px solid transparent;
+  box-shadow: @content-box-shadow;
+  color: #6a6a6a;
+  background: @content-background-color;
+
+  &:focus {
+    color: #585858;
+    border-color: @primary-color;
+  }
+}
+
+.button {
+  padding: 5px 16px;
+  border: 1px solid #d9d9d9;
+  box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+  text-align: center;
+  color: rgba(0, 0, 0, 0.85);
+  background: #fff;
+  -webkit-appearance: button;
+  cursor: pointer;
+
+  &:hover {
+    color: @primary-color;
+    border-color: @primary-color;
+  }
+
+  &::-moz-focus-inner { /*修复FF宽高不一致问题*/
+    border: 0;
+    padding: 0;
+  }
+}
+
+.button-submit {
+  border-color: @primary-color;
+  color: #fff;
+  background-color: @primary-color;
+
+  &:hover {
+    border-color: @active-color;
+    color: #fff;
+    background-color: @active-color;
+  }
 }

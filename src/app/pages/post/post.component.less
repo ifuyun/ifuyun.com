@@ -1,10 +1,7 @@
 @import "../../../assets/style/variables";
 
-* {
-  box-sizing: initial;
-}
-
 .m-content-box {
+  margin: @box-shadow-width;
   border-radius: @box-border-radius;
   -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -403,15 +400,6 @@
   margin: 10px 0;
 }
 
-.m-comment-form {
-  padding: 10px 30px 20px;
-
-  .u-captcha {
-    cursor: pointer;
-    margin-left: 6px;
-  }
-}
-
 .m-comment-list {
   padding: 0 20px;
 
@@ -457,64 +445,33 @@
   }
 }
 
-.u-input {
-  width: 201px;
-  border: 1px solid #d0d0d0;
-  border-radius: 0;
-  outline: 0;
-  color: #6a6a6a;
-  padding: 5px;
-  background: #fafafa;
-  font-size: 14px;
-  line-height: 20px;
-}
+.comment-form {
+  padding: 10px 30px 20px;
 
-.u-input:focus {
-  color: #585858;
-  border-color: @theme-color-bg;
-}
+  .input {
+    width: 200px;
+  }
 
-.u-textarea-comment {
-  width: 400px;
-  height: 80px;
-}
+  .input-textarea {
+    width: 400px;
+  }
 
-.u-label-required {
-  color: #f00;
-  margin-left: 5px;
-  font-weight: bold;
-}
+  .form-required {
+    color: #f00;
+    margin-left: 6px;
+    font-weight: bold;
+  }
 
-.u-input, .u-btn {
-  border-radius: @box-border-radius;
-}
+  .captcha {
+    cursor: pointer;
+    margin-left: 6px;
+  }
 
-.u-btn {
-  padding: 6px 15px;
-  outline: 0;
-  font-size: 14px;
-  line-height: 20px;
-  text-align: center;
-  cursor: pointer;
-  border: 0;
-  -webkit-appearance: button;
-}
+  .button:not(:last-child) {
+    margin-right: 12px;
+  }
 
-.u-btn + .u-btn {
-  margin-left: 12px;
-}
-
-.u-btn:hover {
-  color: #fff;
-  background-color: @theme-color-active;
-}
-
-.u-btn-submit {
-  color: #fff;
-  background-color: @theme-color-bg;
-  letter-spacing: 1px;
-}
-
-.ng-touched.ng-invalid:not(form) {
-  border: 1px solid #a94442;
+  .ng-touched.ng-invalid:not(form) {
+    border: 1px solid #a94442;
+  }
 }
