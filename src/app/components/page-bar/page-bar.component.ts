@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Params } from '@angular/router';
 import { PaginatorEntity } from '../../interfaces/paginator';
 
 @Component({
@@ -9,7 +10,7 @@ import { PaginatorEntity } from '../../interfaces/paginator';
 export class PageBarComponent implements OnInit {
   @Input() paginator: PaginatorEntity | null = null;
   @Input() url: string = '';
-  @Input() param: string = '';
+  @Input() param: Params = {};
 
   ngOnInit(): void {
   }

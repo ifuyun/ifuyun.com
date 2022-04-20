@@ -3,7 +3,7 @@ import { uniq } from 'lodash';
 import { Subscription } from 'rxjs';
 import { CrumbEntity } from '../../components/crumb/crumb.interface';
 import { CrumbService } from '../../components/crumb/crumb.service';
-import { BasePageComponent } from '../../core/base-page.component';
+import { PageComponent } from '../../core/page.component';
 import { CommonService } from '../../core/common.service';
 import { HTMLMetaData } from '../../interfaces/meta';
 import { OptionEntity } from '../../interfaces/options';
@@ -17,7 +17,7 @@ import { PostsService } from '../../services/posts.service';
   templateUrl: './archive.component.html',
   styleUrls: ['./archive.component.less']
 })
-export class ArchiveComponent extends BasePageComponent implements OnInit, OnDestroy {
+export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy {
   pageIndex: string = 'archive';
   archiveDateList!: PostArchiveDateMap;
   archiveYearList: string[] = [];
@@ -54,12 +54,7 @@ export class ArchiveComponent extends BasePageComponent implements OnInit, OnDes
       'label': '文章归档',
       'tooltip': '文章归档',
       'url': '/archive',
-      'headerFlag': false
-    }, {
-      'label': '归档历史',
-      'tooltip': '归档历史',
-      'url': '',
-      'headerFlag': true
+      'isHeader': true
     }];
     this.crumbService.updateCrumb(crumbs);
     this.archiveListener = this.postsService.getPostArchives({

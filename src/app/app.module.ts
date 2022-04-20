@@ -17,7 +17,7 @@ import { SiderComponent } from './components/sider/sider.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { httpInterceptorProviders } from './interceptors/http-interceptors';
 import { ArchiveComponent } from './pages/archive/archive.component';
-import { HomeComponent } from './pages/home/home.component';
+import { LayoutComponent } from './components/layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PostListComponent } from './pages/post-list/post-list.component';
@@ -27,7 +27,7 @@ import { PipesModule } from './pipes/pipes.module';
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
+    LayoutComponent,
     PostListComponent,
     PostComponent,
     LoginComponent,

@@ -34,7 +34,7 @@ export class CrumbComponent implements OnInit, OnDestroy {
         'label': '首页',
         'url': '/',
         'tooltip': this.options && this.options['site_name'] || '',
-        'headerFlag': false
+        'isHeader': false
       });
     });
   }

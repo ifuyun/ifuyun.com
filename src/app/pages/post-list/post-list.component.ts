@@ -1,13 +1,13 @@
 import { ViewportScroller } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit, Optional, PLATFORM_ID } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Response } from 'express';
 import { uniq } from 'lodash';
 import { combineLatestWith, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { POST_EXCERPT_LENGTH } from '../../config/constants';
-import { BasePageComponent } from '../../core/base-page.component';
+import { PageComponent } from '../../core/page.component';
 import { CrumbEntity } from '../../components/crumb/crumb.interface';
 import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { HTMLMetaData } from '../../interfaces/meta';
@@ -26,7 +26,7 @@ import { PostsService } from '../../services/posts.service';
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.less']
 })
-export class PostListComponent extends BasePageComponent implements OnInit, OnDestroy {
+export class PostListComponent extends PageComponent implements OnInit, OnDestroy {
   pageIndex: string = 'index';
   options: OptionEntity = {};
   page: number = 1;
@@ -39,7 +39,7 @@ export class PostListComponent extends BasePageComponent implements OnInit, OnDe
   total: number = 0;
   paginatorData: PaginatorEntity | null = null;
   pageUrl: string = '';
-  pageUrlParam: string = '';
+  pageUrlParam: Params = {};
   showCrumb: boolean = false;
 
   private optionsListener!: Subscription;
@@ -104,38 +104,38 @@ export class PostListComponent extends BasePageComponent implements OnInit, OnDe
       this.pageIndex = 'tag';
       param.tag = this.tag;
       crumbs = [{
-        'label': '标签',
-        'tooltip': '标签',
-        'url': '',
-        'headerFlag': false
+        label: '标签',
+        tooltip: '标签',
+        url: '',
+        isHeader: false
       }, {
-        'label': this.tag,
-        'tooltip': this.tag,
-        'url': '/tag/' + this.tag,
-        'headerFlag': true
+        label: this.tag,
+        tooltip: this.tag,
+        url: '/tag/' + this.tag,
+        isHeader: true
       }];
     }
     if (this.year) {
       this.pageIndex = 'archive';
       param.year = this.year;
       crumbs = [{
-        'label': '文章归档',
-        'tooltip': '文章归档',
-        'url': '/archive',
-        'headerFlag': false
+        label: '文章归档',
+        tooltip: '文章归档',
+        url: '/archive',
+        isHeader: false
       }, {
-        'label': `${this.year}年`,
-        'tooltip': `${this.year}年`,
-        'url': '/archive/' + this.year,
-        'headerFlag': !this.year
+        label: `${this.year}年`,
+        tooltip: `${this.year}年`,
+        url: '/archive/' + this.year,
+        isHeader: !this.year
       }];
       if (this.month) {
         param.month = this.month;
         crumbs.push({
-          'label': `${parseInt(this.month, 10)}月`,
-          'tooltip': `${this.year}年${this.month}月`,
-          'url': `/archive/${this.year}/${this.month}`,
-          'headerFlag': true
+          label: `${parseInt(this.month, 10)}月`,
+          tooltip: `${this.year}年${this.month}月`,
+          url: `/archive/${this.year}/${this.month}`,
+          isHeader: true
         });
       }
     }
@@ -152,8 +152,8 @@ export class PostListComponent extends BasePageComponent implements OnInit, OnDe
       const titles: string[] = [siteName];
       const taxonomies: string[] = [];
       const keywords: string[] = (this.options['site_keywords'] || '').split(',');
-      if (this.category) {
-        res.crumbs && titles.unshift(res.crumbs[res.crumbs.length - 1].label);
+      if (this.category && res.crumbs && res.crumbs.length > 0) {
+        titles.unshift(res.crumbs[res.crumbs.length - 1].label);
         taxonomies.push(res.crumbs[res.crumbs.length - 1].label);
         keywords.unshift(res.crumbs[res.crumbs.length - 1].label);
       }
@@ -200,10 +200,7 @@ export class PostListComponent extends BasePageComponent implements OnInit, OnDe
       this.updateActivePage();
 
       this.paginatorData = this.paginator.getPaginator(this.page, this.total);
-      const urlSegments: string[] = [];
-      for (let url of this.route.snapshot.url) {
-        urlSegments.push(url.path);
-      }
+      const urlSegments = this.route.snapshot.url.map((url) => url.path);
       if (urlSegments.length < 1) {
         urlSegments.push('post');
       }
@@ -213,12 +210,7 @@ export class PostListComponent extends BasePageComponent implements OnInit, OnDe
         urlSegments.push('page-');
       }
       this.pageUrl = `/${urlSegments.join('/')}`;
-      const params = this.route.snapshot.queryParams;
-      const urlQuery: string[] = [];
-      Object.keys(params).forEach((key) => {
-        urlQuery.push(`${key}=${params[key]}`);
-      });
-      this.pageUrlParam = urlQuery.length > 0 ? '?' + urlQuery.join('&') : '';
+      this.pageUrlParam = { ...this.route.snapshot.queryParams };
     });
   }
 }

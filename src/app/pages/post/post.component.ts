@@ -10,7 +10,7 @@ import { CrumbService } from '../../components/crumb/crumb.service';
 import { MessageService } from '../../components/message/message.service';
 import { CommentFlag, VoteType } from '../../config/common.enum';
 import { POST_EXCERPT_LENGTH } from '../../config/constants';
-import { BasePageComponent } from '../../core/base-page.component';
+import { PageComponent } from '../../core/page.component';
 import { CommonService } from '../../core/common.service';
 import { PlatformService } from '../../core/platform.service';
 import { cutStr, filterHtmlTag } from '../../helpers/helper';
@@ -33,7 +33,7 @@ import { VotesService } from '../../services/votes.service';
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.less']
 })
-export class PostComponent extends BasePageComponent implements OnInit, OnDestroy {
+export class PostComponent extends PageComponent implements OnInit, OnDestroy {
   pageIndex: string = '';
   prevPost: PostEntity | null = null;
   nextPost: PostEntity | null = null;

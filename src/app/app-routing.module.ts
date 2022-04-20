@@ -6,7 +6,7 @@ import { postStandaloneUrlMatcher } from './config/post-standalone.matcher';
 import { taxonomyUrlMatcher } from './config/post-taxonomy.matcher';
 import { postUrlMatcher } from './config/post.matcher';
 import { ArchiveComponent } from './pages/archive/archive.component';
-import { HomeComponent } from './pages/home/home.component';
+import { LayoutComponent } from './components/layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PostListComponent } from './pages/post-list/post-list.component';
@@ -15,7 +15,7 @@ import { PostComponent } from './pages/post/post.component';
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
+    component: LayoutComponent,
     children: [{
       path: '',
       pathMatch: 'full',

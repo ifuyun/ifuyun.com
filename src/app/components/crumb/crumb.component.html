@@ -4,8 +4,8 @@
     <span>
       <ng-container *ngFor="let crumb of crumbs; let i = index">
         <ng-container *ngIf="i > 0"><span [innerHTML]="separator"></span></ng-container>
-        <a *ngIf="crumb.url !== '' && !crumb.headerFlag" title="{{crumb.tooltip}}" [routerLink]="[crumb.url]">{{crumb.label}}</a>
-        <h3 *ngIf="crumb.url !== '' && crumb.headerFlag"><a title="{{crumb.tooltip}}" [routerLink]="[crumb.url]">{{crumb.label}}</a></h3>
+        <a *ngIf="crumb.url !== '' && !crumb.isHeader" title="{{crumb.tooltip}}" [routerLink]="[crumb.url]">{{crumb.label}}</a>
+        <h3 *ngIf="crumb.url !== '' && crumb.isHeader"><a title="{{crumb.tooltip}}" [routerLink]="[crumb.url]">{{crumb.label}}</a></h3>
         <span *ngIf="crumb.url === ''" title="{{crumb.tooltip}}">{{crumb.label}}</span>
       </ng-container>
     </span>
