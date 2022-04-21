@@ -1,82 +1,58 @@
 @import "../../../assets/style/variables";
 
-* {
-  box-sizing: initial;
-}
-
-.m-content-box {
-  border-radius: @box-border-radius;
-  -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  -o-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-  background-color: #fff;
-}
-
-.m-pagination {
-  margin: 15px @box-shadow-width @box-shadow-width @box-shadow-width;
+.paginator {
+  margin: @primary-margin @box-shadow-width @box-shadow-width @box-shadow-width;
   padding: 20px;
-  background-color: #fff;
+  box-shadow: @content-box-shadow;
+  border-radius: @border-radius;
+  background-color: @content-background-color;
 
   > ul {
-    font-size: 13px;
+    @item-size: 32px;
+    text-align: right;
 
     > li {
+      box-sizing: border-box;
       display: inline-block;
-      line-height: 32px;
-      height: 30px;
+      width: @item-size;
+      height: @item-size;
+      border-radius: 2px;
+      line-height: @item-size - 2px;
       text-align: center;
       vertical-align: middle;
+
+      &:not(:last-child) {
+        margin-right: 12px;
+      }
+
+      &.paginator-page {
+        border: solid 1px #cfcfcf;
+        background-color: @tag-background-color;
+
+        &:hover {
+          border: solid 1px @primary-color;
+          background-color: @content-background-color;
+          color: @primary-color;
+        }
+      }
+
+      &.active {
+        border: solid 1px @primary-color;
+        background-color: @content-background-color;
+        color: @primary-color;
+        font-weight: bold;
+      }
 
       a {
         display: inline-block;
         width: 100%;
         height: 100%;
-
-        &, &:hover {
-          color: #777;
-        }
-      }
-
-      &.u-page {
-        border: solid 1px #cfcfcf;
-        background-color: #eee;
+        color: #666;
 
         &:hover {
-          border: solid 1px @theme-color-bg;
-          background-color: #fff;
+          color: @primary-color;
         }
       }
-
-      &.active {
-        background-color: #fff;
-        color: #888;
-        font-weight: bold;
-      }
-    }
-  }
-
-  > .x-pc {
-    text-align: right;
-
-    > li {
-      width: 30px;
-
-      + li {
-        margin-left: 10px;
-      }
-    }
-  }
-
-  > .x-wap {
-    text-align: center;
-
-    .u-page-prev {
-      float: left;
-    }
-
-    .u-page-next {
-      float: right;
     }
   }
 }
