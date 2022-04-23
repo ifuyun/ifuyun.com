@@ -1,4 +1,5 @@
 import { CrumbEntity } from '../components/crumb/crumb.interface';
+import { CommentFlag, PostType } from '../config/common.enum';
 import { TaxonomyEntity } from './taxonomies';
 import { UserEntity } from './users';
 
@@ -11,12 +12,12 @@ export interface PostEntity {
   postContent: string;
   postExcerpt: string;
   postStatus: string;
-  commentFlag: string;
+  commentFlag: CommentFlag;
   postOriginal: number;
   postModified: Date;
   postCreated: Date;
   postParent: string;
-  postType: string;
+  postType: PostType;
   commentCount: number;
   postViewCount: number;
   author: UserEntity;

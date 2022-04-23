@@ -70,11 +70,18 @@ import { PipesModule } from './pipes/pipes.module';
           typescript: () => import('highlight.js/lib/languages/typescript'),
           javascript: () => import('highlight.js/lib/languages/javascript'),
           json: () => import('highlight.js/lib/languages/json'),
-          haml: () => import('highlight.js/lib/languages/haml'),
           css: () => import('highlight.js/lib/languages/css'),
+          less: () => import('highlight.js/lib/languages/less'),
+          scss: () => import('highlight.js/lib/languages/scss'),
           xml: () => import('highlight.js/lib/languages/xml'),
           php: () => import('highlight.js/lib/languages/php'),
-          java: () => import('highlight.js/lib/languages/java')
+          java: () => import('highlight.js/lib/languages/java'),
+          python: () => import('highlight.js/lib/languages/python'),
+          sql: () => import('highlight.js/lib/languages/sql'),
+          bash: () => import('highlight.js/lib/languages/bash'),
+          shell: () => import('highlight.js/lib/languages/shell'),
+          nginx: () => import('highlight.js/lib/languages/nginx'),
+          ini: () => import('highlight.js/lib/languages/ini')
         }
       }
     }

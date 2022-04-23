@@ -1,4 +1,4 @@
-export interface UrlInfo {
+export interface UrlHistory {
   previous: string;
   current: string;
 }

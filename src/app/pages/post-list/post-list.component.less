@@ -1,18 +1,18 @@
 @import "../../../assets/style/variables";
 
 .sticky, .post {
-  border-radius: @border-radius;
   box-shadow: @content-box-shadow;
+  border-radius: @border-radius;
   background-color: @content-background-color;
 }
 
 .sticky {
   position: relative;
   margin: @box-shadow-width;
-  border-radius: @box-border-radius;
+  border-radius: @border-radius;
 
   li {
-    border-radius: @box-border-radius;
+    border-radius: @border-radius;
     overflow: hidden;
 
     img {
@@ -22,10 +22,9 @@
 }
 
 .post {
-  @post-line-height: 24px;
   margin: @primary-margin @box-shadow-width @box-shadow-width @box-shadow-width;
   padding: 12px 20px;
-  border-radius: @box-border-radius;
+  border-radius: @border-radius;
   line-height: @post-line-height;
 
   &:hover {
@@ -100,32 +99,34 @@
   }
 
   .post-meta-bottom {
-    @tag-row-span: 2px;
     margin-top: 8px;
     padding-bottom: 0;
-    border-top: 1px dashed #eee;
+    border-top: 1px dashed @primary-border-color;
 
     .icon {
       line-height: @post-line-height + @tag-row-span * 2;
     }
 
-    .mobile {
-      margin-bottom: 4px;
-    }
-
     .post-meta-taxonomy {
-      ul {
+      &:not(:last-child) {
+        margin-bottom: 4px;
+      }
+
+      .post-meta-icon {
+        float: left;
+      }
+
+      .post-meta-info {
         padding-left: 20px;
+      }
 
-        li {
-          float: left;
-          padding: @tag-row-span 0;
-          list-style: none;
+      ul li, .post-meta-info-text {
+        display: inline-block;
+        padding: @tag-row-span 0;
+      }
 
-          &:not(:last-child) {
-            margin-right: 8px;
-          }
-        }
+      ul li:not(:last-child) {
+        margin-right: 8px;
       }
 
       a {

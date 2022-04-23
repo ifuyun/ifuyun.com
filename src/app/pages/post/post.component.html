@@ -1,24 +1,26 @@
 <app-crumb *ngIf="showCrumb"></app-crumb>
-<div class="m-content-box" [ngClass]="{'m-page': isStandalone}" id="article">
-  <header class="m-article-header">
-    <h1 class="m-article-title">
-      <a rel="bookmark" title="{{post?.postTitle}}" [routerLink]="[post?.postGuid]">{{post?.postTitle}}</a>
+<div class="post" id="article">
+  <header class="post-header">
+    <h1 class="post-title">
+      <a [routerLink]="[post?.postGuid]" title="{{post?.postTitle}}" rel="bookmark">{{post?.postTitle}}</a>
     </h1>
-    <div *ngIf="!isStandalone" class="m-article-meta m-article-meta-post">
+    <div *ngIf="!isStandalone" class="post-meta post-meta-top">
       <span title="写于: {{post?.postDate | date:'yyyy-MM-dd'}}">
-        <i class='icon icon-calendar'></i>{{post?.postDate | date:'yyyy-MM-dd'}}
-      </span>
-      <span class="m-meta-dynamic">
-        <i class='icon icon-folder'></i><a *ngFor="let cat of postCategories" title="{{cat.taxonomyName}}" rel="category" [routerLink]="['/category/'+(cat.taxonomySlug || cat.taxonomyName)]">{{cat.taxonomyName}}</a>
+        <i class='icon icon-calendar'></i><span>{{post?.postDate | date:'yyyy-MM-dd'}}</span>
       </span>
       <span title="作者：{{postMeta['postAuthor']}}">
-        <i class='icon icon-person'></i>{{postMeta['postAuthor']}}
+        <i class='icon icon-person'></i><span>{{postMeta['postAuthor']}}</span>
+      </span>
+      <span class="desktop">
+        <i class='icon icon-folder'></i>
+        <a *ngFor="let cat of postCategories" [routerLink]="['/category/' + cat.taxonomySlug]"
+           title="{{cat.taxonomyName}}" rel="category">{{cat.taxonomyName}}</a>
       </span>
       <ng-container *ngIf="post?.postOriginal === 1">
-        <span class="m-meta-dynamic" title="{{post?.author?.userNiceName}}原创">
+        <span class="desktop" title="{{post?.author?.userNiceName}}原创">
           <i class='icon icon-pencil'></i><span>原创</span>
         </span>
-        <span class="m-meta-dynamic" title="{{postMeta['copyright_type'] | copyrightType}}">
+        <span class="desktop" title="{{postMeta['copyright_type'] | copyrightType}}">
           <ng-container *ngIf="postMeta['copyright_type'] === '0'">
             <i class='icon icon-shield'></i><span>{{postMeta['copyright_type'] | copyrightType}}</span>
           </ng-container>
@@ -28,116 +30,133 @@
         </span>
       </ng-container>
       <ng-container *ngIf="post?.postOriginal !== 1">
-        <span class="m-meta-dynamic" title="来源：{{postMeta['post_source']}}">
+        <span class="desktop" title="来源：{{postMeta['post_source']}}">
           <i class='icon icon-book'></i><span>{{postMeta['post_source']}}</span>
         </span>
       </ng-container>
     </div>
   </header>
-  <div class="m-diag">&nbsp;</div>
-  <article #postContent class="m-article-content">
-    <div [innerHTML]="(post?.postContent || '') | safeHtml"></div>
-    <hr *ngIf="postMeta['show_wechat_card'] === '1'" />
-    <div *ngIf="postMeta['show_wechat_card'] === '1' || postMeta['show_wechat_card'] === '2'" class="m-wechat-card">
-      <img src="http://s.ifuyun.com/upload/2020/06/3e4393acc7f2733d.png" alt="公众号：黑匣子思维" width="420" />
+  <div class="divider"></div>
+  <article #postContent class="post-content" [innerHTML]="(post?.postContent || '') | safeHtml"></article>
+  <ng-container *ngIf="postMeta['show_wechat_card'] === '1'">
+    <div class="divider"></div>
+    <div class="wechat-card">
+      <img src="/assets/img/wechat-card.png" alt="公众号：黑匣子思维"/>
     </div>
-  </article>
-  <footer class="m-article-footer">
-    <div *ngIf="!isStandalone" class="m-article-meta m-article-taxonomy m-meta-dynamic">
-      <div class="m-meta-icon f-float-left">
-        <i class='icon icon-folder'></i>
-      </div>
-      <ul class="clearfix">
-        <li *ngFor="let cat of postCategories"><a title="{{cat.taxonomyName}}" rel="category" [routerLink]="['/category/'+(cat.taxonomySlug || cat.taxonomyName)]">{{cat.taxonomyName}}</a></li>
-      </ul>
-    </div>
-    <div *ngIf="!isStandalone && postTags.length > 0" class="m-article-meta m-article-taxonomy">
-        <div class="m-meta-icon f-float-left">
-          <i class='icon icon-tag'></i>
-        </div>
-        <ul class="clearfix">
-          <li *ngFor="let tag of postTags"><a title="{{tag.taxonomyName}}" rel="category" [routerLink]="['/tag/'+(tag.taxonomySlug || tag.taxonomyName)]">{{tag.taxonomyName}}</a></li>
+  </ng-container>
+  <footer class="post-footer">
+    <div>
+      <div class="post-meta mobile" *ngIf="!isStandalone">
+        <div class="post-meta-icon"><i class='icon icon-folder'></i></div>
+        <ul class="post-meta-info">
+          <li *ngFor="let cat of postCategories">
+            <a [routerLink]="['/category/' + cat.taxonomySlug]"
+               title="{{cat.taxonomyName}}" rel="category">{{cat.taxonomyName}}</a>
+          </li>
         </ul>
+      </div>
+      <div class="post-meta" *ngIf="!isStandalone && postTags.length > 0">
+        <div class="post-meta-icon"><i class='icon icon-tag'></i></div>
+        <ul class="post-meta-info">
+          <li *ngFor="let tag of postTags">
+            <a [routerLink]="['/tag/' + tag.taxonomySlug]"
+               title="{{tag.taxonomyName}}" rel="category">{{tag.taxonomyName}}</a>
+          </li>
+        </ul>
+      </div>
+      <div class="post-meta mobile" *ngIf="!isStandalone">
+        <div class="post-meta-icon"><i class='icon icon-book'></i></div>
+        <div class="post-meta-info">
+          <span class="post-meta-info-text" *ngIf="post?.postOriginal === 1"
+                title="来源: {{post?.author?.userNiceName}}原创">
+            来源：{{post?.author?.userNiceName}}原创
+          </span>
+          <span *ngIf="post?.postOriginal !== 1" title="来源: {{postMeta['post_source']}}">
+            来源：{{postMeta['post_source']}}
+          </span>
+        </div>
+      </div>
+      <div class="post-meta">
+        <div class="post-meta-icon"><i class='icon icon-clock'></i></div>
+        <div class="post-meta-info">
+        <span class="post-meta-info-text" title="更新于: {{post?.postModified | date:'yyyy-MM-dd HH:mm'}}">
+          最后更新：{{post?.postModified | date:'yyyy-MM-dd HH:mm'}}
+        </span>
+        </div>
+      </div>
     </div>
-    <div *ngIf="!isStandalone" class="m-article-meta m-article-source m-meta-dynamic">
-      <div class="m-meta-icon f-float-left">
-        <i class='icon icon-book'></i>
+    <div class="post-qrcode">
+      <div #qrcodeCanvas class="post-qrcode-box post-qrcode-share"
+           [ngStyle]="{display: showShareQrcode ? 'block' : 'none'}">
+        <div class="post-qrcode-arrow"><i></i><i></i></div>
       </div>
-      <div class="m-meta-text">
-        <span *ngIf="post?.postOriginal === 1" title="来源: {{post?.author?.userNiceName}}原创">来源：{{post?.author?.userNiceName}}原创</span>
-        <span *ngIf="post?.postOriginal !== 1" title="来源: {{postMeta['post_source']}}">来源：{{postMeta['post_source']}}</span>
+      <div class="post-qrcode-box post-qrcode-reward" [ngStyle]="{display: showRewardQrcode ? 'block' : 'none'}">
+        <div class="post-qrcode-arrow"><i></i><i></i></div>
+        <img src="/assets/img/reward.jpg" alt="reward"/>
       </div>
+      <div class="post-qrcode-item" (mouseover)="toggleShareQrcode()" (mouseout)="toggleShareQrcode()">分享</div>
+      <div class="post-qrcode-item" (mouseover)="toggleRewardQrcode()" (mouseout)="toggleRewardQrcode()">打赏</div>
     </div>
-    <div class="m-article-meta">
-      <div class="m-meta-icon f-float-left">
-        <i class='icon icon-clock'></i>
-      </div>
-      <div class="m-meta-text">
-        <span title="更新于: {{post?.postModified | date:'yyyy-MM-dd HH:mm'}}">最后更新：{{post?.postModified | date:'yyyy-MM-dd HH:mm'}}</span></div>
-    </div>
-    <div class="m-article-qrcode clearfix">
-      <div #qrcodeCanvas [ngStyle]="{display: showQrcodeOfShare ? 'block' : 'none'}" class="m-article-qrcode-img m-article-qrcode-share">
-        <div class="m-article-qrcode-arrow"><i></i><i></i></div>
-      </div>
-      <div [ngStyle]="{display: showQrcodeOfReward ? 'block' : 'none'}" class="m-article-qrcode-img m-article-qrcode-reward">
-        <div class="m-article-qrcode-arrow"><i></i><i></i></div>
-        <img src="/assets/img/reward.jpg" width="160" height="160" alt="reward"/>
-      </div>
-      <div class="m-article-qrcode-item m-article-share" (mouseover)="toggleShareQrcode()" (mouseout)="toggleShareQrcode()">分享</div>
-      <div class="m-article-qrcode-item m-article-reward" (mouseover)="toggleRewardQrcode()" (mouseout)="toggleRewardQrcode()">打赏</div>
-    </div>
-    <div *ngIf="!isStandalone" class="m-article-link clearfix">
-      <div class="m-article-link-prev">
+    <div class="post-link" *ngIf="!isStandalone">
+      <div class="post-link-prev">
         <a *ngIf="prevPost" [routerLink]="[prevPost.postGuid]" title="{{prevPost.postTitle}}">
-          <span class="m-article-link-text">&lt; <span>上一篇：{{prevPost.postTitle}}</span></span></a>
+          <span class="post-link-text">上一篇：{{prevPost.postTitle}}</span>
+        </a>
       </div>
-      <div class="m-article-link-next">
+      <div class="post-link-next">
         <a *ngIf="nextPost" [routerLink]="[nextPost.postGuid]" title="{{nextPost.postTitle}}">
-          <span class="m-article-link-text"><span>下一篇：{{nextPost.postTitle}}</span></span><span class="u-text-arrow"> &gt;</span></a>
+          <span class="post-link-text">下一篇：{{nextPost.postTitle}}</span><span>&gt;</span>
+        </a>
       </div>
     </div>
   </footer>
   <ng-container *ngIf="post?.commentFlag !== 'close' && comments.length > 0">
-    <div class="m-diag">&nbsp;</div>
-    <div class="m-comment-list" id="comments">
+    <div class="divider"></div>
+    <div class="comment-list" id="comments">
       <ng-container *ngFor="let comment of comments; let i = index">
-        <div *ngIf="i > 0" class="m-diag m-diag-dashed">&nbsp;</div>
-        <div class="m-comment-item">
-          <p class="m-comment-meta">
-            <span class="m-comment-author">{{comment.commentAuthor}}</span>
-            <span class="m-comment-time">{{comment.commentCreated | date:'yyyy-MM-dd HH:mm'}}</span>
+        <div *ngIf="i > 0" class="divider divider-dashed"></div>
+        <div class="comment-item">
+          <p class="comment-item-meta">
+            <span>{{comment.commentAuthor}}</span>
+            <span class="comment-item-time">{{comment.commentCreated | date:'yyyy-MM-dd HH:mm'}}</span>
           </p>
           <p>{{comment.commentContent}}</p>
-          <p class="m-comment-action">
-            <span><a href="javascript:" (click)="saveVote(comment, true)">赞(<span>{{comment.commentVote}}</span>)</a></span>
-            <span><a href="javascript:" (click)="replyComment(comment)">回复</a></span>
+          <p class="comment-item-action">
+            <a (click)="saveVote(comment, true)">赞(<span>{{comment.commentVote}}</span>)</a>
+            <a (click)="replyComment(comment)">回复</a>
           </p>
         </div>
       </ng-container>
     </div>
   </ng-container>
-  <ng-container>
-    <div class="m-diag">&nbsp;</div>
+  <ng-container *ngIf="post?.commentFlag !== 'close'">
+    <div class="divider"></div>
     <div class="comment-form" id="respond">
       <form [formGroup]="commentForm" (ngSubmit)="saveComment()">
-        <p class="m-row">
-          <input type="text" class="input" formControlName="author" maxlength="8" placeholder="昵称" /><span class="form-required">*</span>
-        </p>
-        <p class="m-row">
-          <input type="text" class="input" formControlName="email" maxlength="100" placeholder="Email" /><span class="form-required">*</span>
-        </p>
-        <p class="m-row">
-          <input type="text" class="input" formControlName="captcha" maxlength="4" placeholder="验证码" /><span class="form-required">*</span>
-          <img #captchaImg class="captcha" src="/api/captcha" title="点击刷新验证码" alt="验证码" onclick="this.src='/api/captcha?r='+Math.random()" />
-        </p>
-        <p class="m-row">
-          <textarea class="input input-textarea" rows="4" formControlName="content" maxlength="400" placeholder="评论内容"></textarea><span class="form-required">*</span>
-        </p>
-        <p class="m-row">
-          <input type="hidden" formControlName="commentParent" />
-          <input type="submit" class="button button-submit" value="提交" />
-          <input type="reset" class="button" value="重置" />
-        </p>
+        <div class="form-row">
+          <input type="text" class="input" formControlName="author" maxlength="8" placeholder="昵称"/>
+          <span class="form-required">*</span>
+        </div>
+        <div class="form-row">
+          <input type="text" class="input" formControlName="email" maxlength="100" placeholder="Email"/>
+          <span class="form-required">*</span>
+        </div>
+        <div class="form-row">
+          <input type="text" class="input" formControlName="captcha" maxlength="4" placeholder="验证码"/>
+          <span class="form-required">*</span>
+          <img #captchaImg class="captcha" src="/api/captcha" title="点击刷新验证码" alt="验证码"
+               onclick="this.src='/api/captcha?r='+Math.random()"/>
+        </div>
+        <div class="form-row">
+          <textarea class="input input-textarea" formControlName="content" rows="4"
+                    maxlength="400" placeholder="评论内容"></textarea>
+          <span class="form-required">*</span>
+        </div>
+        <div class="form-row">
+          <input type="hidden" formControlName="commentParent"/>
+          <input type="submit" class="button button-submit" value="提交"/>
+          <input type="reset" class="button" value="重置"/>
+        </div>
       </form>
     </div>
   </ng-container>

@@ -4,14 +4,15 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HighlightJS } from 'ngx-highlightjs';
 import * as QRCode from 'qrcode';
-import { Subscription } from 'rxjs';
+import { from, mergeAll, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { CrumbEntity } from '../../components/crumb/crumb.interface';
 import { CrumbService } from '../../components/crumb/crumb.service';
 import { MessageService } from '../../components/message/message.service';
-import { CommentFlag, VoteType } from '../../config/common.enum';
+import { VoteType } from '../../config/common.enum';
 import { POST_EXCERPT_LENGTH } from '../../config/constants';
-import { PageComponent } from '../../core/page.component';
 import { CommonService } from '../../core/common.service';
+import { PageComponent } from '../../core/page.component';
 import { PlatformService } from '../../core/platform.service';
 import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { CommentEntity, CommentModel } from '../../interfaces/comments';
@@ -44,8 +45,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
   postCategories: TaxonomyEntity[] = [];
   crumbs: CrumbEntity[] = [];
   showCrumb: boolean = true;
-  showQrcodeOfShare: boolean = false;
-  showQrcodeOfReward: boolean = false;
+  showShareQrcode: boolean = false;
+  showRewardQrcode: boolean = false;
   clickedImage!: HTMLImageElement;
   showImgModal: boolean = false;
   isStandalone: boolean = false;
@@ -55,12 +56,13 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
   private loginUser: LoginUserEntity = {};
   private shareUrl: string = '';
   private options: OptionEntity = {};
-  private unlistenClick!: Function;
+  private unlistenImgClick!: Function;
   private listeners: Subscription[] = [];
   private referer: string = '';
   private urlListener!: Subscription;
   private paramListener!: Subscription;
   private userListener!: Subscription;
+  private lineNumbersObs: MutationObserver | null = null;
 
   @ViewChild('captchaImg') captchaImg!: ElementRef;
   @ViewChild('qrcodeCanvas') qrcodeCanvas!: ElementRef;
@@ -108,6 +110,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    this.initHighlight();
     if (this.platform.isBrowser) {
       this.userListener = this.usersService.getLoginUser().subscribe((user) => {
         this.loginUser = user;
@@ -115,16 +118,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
         this.commentForm.get('email')?.setValue(user.userEmail);
       });
     }
-    const listener = this.highlight.highlightAll().subscribe(() => {
-      const codeEles = this.postContentEle.nativeElement.querySelectorAll('pre code');
-      codeEles.forEach((ele: HTMLElement) => {
-        this.renderer.addClass(ele, 'code-lines');
-        const lineListener = this.highlight.lineNumbersBlock(ele).subscribe();
-        this.listeners.push(lineListener);
-      });
-    });
-    this.listeners.push(listener);
-    this.unlistenClick = this.renderer.listen(this.postContentEle.nativeElement, 'click', ((e: MouseEvent) => {
+    this.unlistenImgClick = this.renderer.listen(this.postContentEle.nativeElement, 'click', ((e: MouseEvent) => {
       if (e.target instanceof HTMLImageElement) {
         this.clickedImage = e.target;
         this.showImgModal = true;
@@ -136,8 +130,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
     this.urlListener.unsubscribe();
     this.paramListener.unsubscribe();
     this.userListener?.unsubscribe();
-    this.listeners.forEach((listener) => listener.unsubscribe());
-    this.unlistenClick();
+    this.unlistenImgClick();
+    this.resetHighlight();
   }
 
   saveComment() {
@@ -177,7 +171,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
       };
       this.commentsService.saveComment(commentDto).subscribe((res) => {
         if (res.code === 0) {
-          const msg = res.data.status === 'success' ? '评论成功' : '评论成功，审核通过后将显示在页面上'
+          const msg = res.data.status === 'success' ? '评论成功' : '评论成功，审核通过后将显示在页面上';
           this.message.success(msg);
           this.resetCommentForm();
           this.captchaImg.nativeElement.src = `${this.captchaImg.nativeElement.src}?r=${Math.random()}`;
@@ -190,21 +184,21 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
   }
 
   toggleShareQrcode() {
-    this.showQrcodeOfShare = !this.showQrcodeOfShare;
+    this.showShareQrcode = !this.showShareQrcode;
   }
 
   toggleRewardQrcode() {
-    this.showQrcodeOfReward = !this.showQrcodeOfReward;
+    this.showRewardQrcode = !this.showRewardQrcode;
   }
 
   toggleImgModal(status: boolean) {
     this.showImgModal = status;
   }
 
-  saveVote(comment: CommentModel, isLike: boolean) {
+  saveVote(comment: CommentModel, like: boolean) {
     this.votesService.saveVote({
       objectId: comment.commentId,
-      type: isLike ? VoteType.LIKE : VoteType.DISLIKE
+      type: like ? VoteType.LIKE : VoteType.DISLIKE
     }).subscribe((res) => {
       comment.commentVote = res.vote;
     });
@@ -286,12 +280,40 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
     this.commentForm.get('content')?.setValue('');
   }
 
+  private initHighlight() {
+    const listener = this.highlight.highlightAll().subscribe(() => {
+      const codeElements: HTMLElement[] = Array.from(this.postContentEle.nativeElement.querySelectorAll('pre > code'));
+      if (codeElements.length > 0) {
+        const lineListener = from(codeElements)
+          .pipe(map((ele) => this.highlight.lineNumbersBlock(ele as HTMLElement)))
+          .pipe(mergeAll())
+          .subscribe();
+        this.listeners.push(lineListener);
+
+        /* todo: angular version doesn't support options: singleLine */
+        this.lineNumbersObs = new MutationObserver(() => {
+          codeElements
+            .filter((ele) => ele.firstElementChild && ele.firstElementChild.tagName.toLowerCase() === 'table')
+            .forEach((ele) => this.renderer.addClass(ele, 'code-lines'));
+        });
+        this.lineNumbersObs.observe(this.postContentEle.nativeElement, { childList: true, subtree: true });
+      }
+    });
+    this.listeners.push(listener);
+  }
+
+  private resetHighlight() {
+    this.listeners.forEach((listener) => listener.unsubscribe());
+    this.lineNumbersObs?.disconnect();
+    this.lineNumbersObs = null;
+  }
+
   private initQrcode() {
     const siteUrl = this.options?.['site_url'].replace(/\/$/i, '');
     const postGuid = this.post?.postGuid.replace(/^\//i, '');
     this.shareUrl = siteUrl + '/' + postGuid + '?ref=qrcode';
     QRCode.toCanvas(this.shareUrl, {
-      width: 160,
+      width: 164,
       margin: 0
     }).then((canvas) => {
       this.qrcodeCanvas.nativeElement.appendChild(canvas);

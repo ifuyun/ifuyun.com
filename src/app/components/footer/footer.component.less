@@ -1,36 +1,28 @@
 @import "../../../assets/style/variables";
 
-.m-footer-wrap {
+.footer {
+  margin-top: @content-margin;
+  padding: 16px 0;
+  border-top: 1px solid @primary-border-color;
+  line-height: 28px;
   text-align: center;
-  line-height: 24px;
-  font-size: 13px;
-  color: #7e7e7e;
-  border-top: 1px solid #eee;
-  margin-top: 20px;
+  font-size: @minor-font-size;
   background: #f8f8f8;
-}
-
-.m-footer {
-  padding: 15px 0;
+  color: #7e7e7e;
 
   a {
     color: #7e7e7e;
 
     &:hover {
-      color: @theme-color-text;
-      text-decoration: underline;
+      color: @primary-color;
     }
   }
 
-  ul {
-    list-style: none;
+  ul li {
+    display: inline-block;
 
-    li {
-      display: inline-block;
-
-      + li {
-        margin-left: 10px;
-      }
+    &:not(:last-child) {
+      margin-right: 12px;
     }
   }
 }
