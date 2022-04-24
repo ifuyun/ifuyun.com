@@ -4,19 +4,19 @@
     <h1 class="post-title">
       <a [routerLink]="[post?.postGuid]" title="{{post?.postTitle}}" rel="bookmark">{{post?.postTitle}}</a>
     </h1>
-    <div *ngIf="!isStandalone" class="post-meta post-meta-top">
+    <div class="post-meta post-meta-top">
       <span title="写于: {{post?.postDate | date:'yyyy-MM-dd'}}">
         <i class='icon icon-calendar'></i><span>{{post?.postDate | date:'yyyy-MM-dd'}}</span>
       </span>
       <span title="作者：{{postMeta['postAuthor']}}">
         <i class='icon icon-person'></i><span>{{postMeta['postAuthor']}}</span>
       </span>
-      <span class="desktop">
+      <span class="desktop" *ngIf="!isStandalone">
         <i class='icon icon-folder'></i>
         <a *ngFor="let cat of postCategories" [routerLink]="['/category/' + cat.taxonomySlug]"
            title="{{cat.taxonomyName}}" rel="category">{{cat.taxonomyName}}</a>
       </span>
-      <ng-container *ngIf="post?.postOriginal === 1">
+      <ng-container *ngIf="post?.postOriginal === 1 && !isStandalone">
         <span class="desktop" title="{{post?.author?.userNiceName}}原创">
           <i class='icon icon-pencil'></i><span>原创</span>
         </span>
@@ -29,7 +29,7 @@
           </ng-container>
         </span>
       </ng-container>
-      <ng-container *ngIf="post?.postOriginal !== 1">
+      <ng-container *ngIf="post?.postOriginal !== 1 && !isStandalone">
         <span class="desktop" title="来源：{{postMeta['post_source']}}">
           <i class='icon icon-book'></i><span>{{postMeta['post_source']}}</span>
         </span>
@@ -55,7 +55,7 @@
           </li>
         </ul>
       </div>
-      <div class="post-meta" *ngIf="!isStandalone && postTags.length > 0">
+      <div class="post-meta" *ngIf="postTags.length > 0">
         <div class="post-meta-icon"><i class='icon icon-tag'></i></div>
         <ul class="post-meta-info">
           <li *ngFor="let tag of postTags">
@@ -85,7 +85,7 @@
         </div>
       </div>
     </div>
-    <div class="post-qrcode">
+    <div class="post-qrcode" *ngIf="!isStandalone">
       <div #qrcodeCanvas class="post-qrcode-box post-qrcode-share"
            [ngStyle]="{display: showShareQrcode ? 'block' : 'none'}">
         <div class="post-qrcode-arrow"><i></i><i></i></div>

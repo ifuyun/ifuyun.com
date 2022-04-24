@@ -1,3 +1,5 @@
+@import "../../../assets/style/variables";
+
 .error {
   display: flex;
   width: 100%;
@@ -14,9 +16,9 @@
   }
 
   .error-code {
-    font-size: 10em;
     margin: 0;
-    color: #1ba6ff;
+    color: @primary-color;
+    font-size: 10em;
   }
 
   .error-message, .error-link {
@@ -25,9 +27,9 @@
 
   .error-message {
     margin: 0;
+    color: #7c7c7c;
     font-size: 16px;
     font-weight: normal;
-    color: #7c7c7c;
   }
 
   .error-link {

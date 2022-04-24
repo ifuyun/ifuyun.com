@@ -31,6 +31,7 @@
 
 .widget {
   @widget-padding: 12px;
+  @widget-icon-width: 20px;
   padding: @widget-padding;
 
   .widget-title {
@@ -50,12 +51,13 @@
   }
 
   .icon {
-    margin-right: 4px;
+    display: inline-block;
+    width: @widget-icon-width;
   }
 
   > ul > li {
     height: 24px;
-    padding: 4px 20px;
+    padding: 4px @widget-icon-width;
     line-height: 24px;
     border-bottom: 1px dashed #eaeaea;
     overflow: hidden;

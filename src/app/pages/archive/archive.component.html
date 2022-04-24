@@ -1,17 +1,20 @@
 <app-crumb *ngIf="showCrumb"></app-crumb>
-<div class="m-content-box">
-  <header class="m-article-header">
-    <h1 class="m-article-title">
-      <a rel="bookmark" [routerLink]="['/archive']" title="文章归档">文章归档</a>
+<div class="archive">
+  <header class="archive-header">
+    <h1 class="archive-title">
+      <a [routerLink]="['/archive']" title="文章归档" rel="bookmark">文章归档</a>
     </h1>
   </header>
-  <div class="m-archive">
+  <div class="archive-content">
     <ng-container *ngFor="let year of archiveYearList">
-      <h2 class="m-post-header">{{year}}年({{archiveDateList[year].countByYear}})</h2>
-      <ul class="m-archive-list clearfix">
+      <h2>{{year}}年({{archiveDateList[year].countByYear}})</h2>
+      <ul class="archive-content-list">
         <li *ngFor="let item of archiveDateList[year].list">
-          <a [routerLink]="['/archive/' + item.dateText]" title="{{item.dateTitle}}">{{item.dateTitle}}({{item.count}})</a>
+          <a [routerLink]="['/archive/' + item.dateText]" title="{{item.dateTitle}}">
+            {{item.dateTitle}}({{item.count}})</a>
         </li>
+        <li *ngIf="archiveDateList[year].list.length % 3 === 1">&nbsp;</li>
+        <li *ngIf="archiveDateList[year].list.length % 3 > 0">&nbsp;</li>
       </ul>
     </ng-container>
   </div>

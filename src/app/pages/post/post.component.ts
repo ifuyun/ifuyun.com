@@ -12,6 +12,7 @@ import {
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import highlight from 'highlight.js';
+import { uniq } from 'lodash';
 import * as QRCode from 'qrcode';
 import { Subscription } from 'rxjs';
 import { CrumbEntity } from '../../components/crumb/crumb.interface';
@@ -219,14 +220,14 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private initMeta() {
     this.optionsService.options$.subscribe((options) => {
       this.options = options;
-      // todo: tags
+      const keywords: string[] = (options['site_keywords'] || '').split(',');
       this.metaService.updateHTMLMeta({
         title: `${this.post.postTitle} - ${options?.['site_name']}`,
         description: this.post.postExcerpt,
         author: options?.['site_author'],
-        keywords: options?.['site_keywords']
+        keywords: uniq(this.postTags.map((item) => item.taxonomyName).concat(keywords)).join(',')
       });
-      this.initQrcode();
+      !this.isStandalone && this.initQrcode();
     });
   }
 
@@ -261,6 +262,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         this.post = post.post;
         this.postId = this.post?.postId;
         this.postMeta = post.meta;
+        this.postTags = post.tags;
         this.updateActivePage();
         this.showCrumb = false;
         this.isStandalone = true;
