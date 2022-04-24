@@ -130,24 +130,27 @@
     }
 
     pre {
+      display: flex;
       border-radius: @border-radius;
       box-shadow: @content-box-shadow;
-      overflow: auto;
+      overflow: hidden;
 
-      > code {
+      ul.i-code-lines, code.i-code-text {
+        padding: 8px 12px;
+      }
+
+      ul.i-code-lines {
+        margin: 0;
+        border-right: 1px solid @code-border-color;
+        list-style: none;
+        text-align: right;
+      }
+
+      code.i-code-text {
         width: max-content;
         padding: 8px @primary-margin;
         background-color: transparent;
-
-        &.code-lines {
-          padding: 0;
-        }
-
-        // todo: to be removed
-        th, td {
-          padding: 0;
-          border: none;
-        }
+        overflow: auto;
       }
     }
 
@@ -157,36 +160,20 @@
       color: @base-color;
     }
 
-    .hljs-ln tr {
-      &:first-child td {
-        padding-top: 8px;
-      }
-
-      &:last-child td {
-        padding-bottom: 8px;
-      }
-    }
-
-    td.hljs-ln-numbers {
-      padding-left: 12px;
-      padding-right: 12px;
-      border-right: 1px solid @code-border-color;
-      text-align: right;
-      vertical-align: top;
-      user-select: none;
-    }
-
-    td.hljs-ln-code {
-      padding-left: 12px;
-    }
-
     ol, ul {
       padding-left: 2.2em;
-      list-style: auto;
 
       p {
         margin: 0;
       }
+    }
+
+    ul {
+      list-style: disc;
+    }
+
+    ol {
+      list-style: decimal;
     }
 
     table {

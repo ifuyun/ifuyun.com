@@ -1,11 +1,19 @@
 import { ViewportScroller } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { HighlightJS } from 'ngx-highlightjs';
+import highlight from 'highlight.js';
 import * as QRCode from 'qrcode';
-import { from, mergeAll, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { CrumbEntity } from '../../components/crumb/crumb.interface';
 import { CrumbService } from '../../components/crumb/crumb.service';
 import { MessageService } from '../../components/message/message.service';
@@ -34,7 +42,7 @@ import { VotesService } from '../../services/votes.service';
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.less']
 })
-export class PostComponent extends PageComponent implements OnInit, OnDestroy {
+export class PostComponent extends PageComponent implements OnInit, OnDestroy, AfterViewInit {
   pageIndex: string = '';
   prevPost: PostEntity | null = null;
   nextPost: PostEntity | null = null;
@@ -57,12 +65,10 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
   private shareUrl: string = '';
   private options: OptionEntity = {};
   private unlistenImgClick!: Function;
-  private listeners: Subscription[] = [];
   private referer: string = '';
   private urlListener!: Subscription;
   private paramListener!: Subscription;
   private userListener!: Subscription;
-  private lineNumbersObs: MutationObserver | null = null;
 
   @ViewChild('captchaImg') captchaImg!: ElementRef;
   @ViewChild('qrcodeCanvas') qrcodeCanvas!: ElementRef;
@@ -91,8 +97,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
     private message: MessageService,
     private platform: PlatformService,
     private scroller: ViewportScroller,
-    private renderer: Renderer2,
-    private highlight: HighlightJS
+    private renderer: Renderer2
   ) {
     super();
   }
@@ -110,7 +115,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.initHighlight();
     if (this.platform.isBrowser) {
       this.userListener = this.usersService.getLoginUser().subscribe((user) => {
         this.loginUser = user;
@@ -131,7 +135,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
     this.paramListener.unsubscribe();
     this.userListener?.unsubscribe();
     this.unlistenImgClick();
-    this.resetHighlight();
   }
 
   saveComment() {
@@ -158,7 +161,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
           }
         });
       });
-      msgs.forEach((msg) => this.message.error(msg));
+      msgs.length > 0 && this.message.error(msgs[0]);
     } else {
       const { author, email, captcha, content, commentParent } = this.commentForm.value;
       const commentDto: CommentEntity = {
@@ -242,6 +245,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
         this.showCrumb = true;
         this.isStandalone = false;
         this.initMeta();
+        this.parseHtml();
         this.fetchComments();
       }
     });
@@ -261,6 +265,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
         this.showCrumb = false;
         this.isStandalone = true;
         this.initMeta();
+        this.parseHtml();
         this.fetchComments();
       }
     });
@@ -280,32 +285,37 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy {
     this.commentForm.get('content')?.setValue('');
   }
 
-  private initHighlight() {
-    const listener = this.highlight.highlightAll().subscribe(() => {
-      const codeElements: HTMLElement[] = Array.from(this.postContentEle.nativeElement.querySelectorAll('pre > code'));
-      if (codeElements.length > 0) {
-        const lineListener = from(codeElements)
-          .pipe(map((ele) => this.highlight.lineNumbersBlock(ele as HTMLElement)))
-          .pipe(mergeAll())
-          .subscribe();
-        this.listeners.push(lineListener);
+  private parseHtml() {
+    this.post.postContent = this.post.postContent.replace(
+      /<pre(?:\s+[^>]*)*>\s*<code(?:\s+[^>]*)?>([\s\S]*?)<\/code>\s*<\/pre>/ig,
+      (preStr, codeStr: string) => {
+        const langReg = /^<pre(?:\s+[^>]*)*\s+class="([^"]+)"(?:\s+[^>]*)*>/ig;
+        const langResult = Array.from(preStr.matchAll(langReg));
+        let langStr = '';
+        let language = '';
+        if (langResult.length > 0 && langResult[0].length === 2) {
+          const langClass = langResult[0][1].split(/\s+/i).filter(
+            (item) => item.split('-')[0].toLowerCase() === 'language'
+          );
+          if (langClass.length > 0) {
+            langStr = langClass[0].split('-')[1] || '';
+            if (langStr && highlight.getLanguage(langStr)) {
+              language = langStr;
+            }
+          }
+        }
+        // unescape tag name & arrow function
+        codeStr = codeStr.replace(/&lt;([\s\S]*?)&gt;/ig, '<$1>').replace(/=&gt;/ig, '=>');
+        const lines = codeStr.split(/\r\n|\r|\n/i).map((str, i) => `<li>${i + 1}</li>`).join('');
+        const codes = language
+          ? highlight.highlight(codeStr, { language }).value
+          : highlight.highlightAuto(codeStr).value;
 
-        /* todo: angular version doesn't support options: singleLine */
-        this.lineNumbersObs = new MutationObserver(() => {
-          codeElements
-            .filter((ele) => ele.firstElementChild && ele.firstElementChild.tagName.toLowerCase() === 'table')
-            .forEach((ele) => this.renderer.addClass(ele, 'code-lines'));
-        });
-        this.lineNumbersObs.observe(this.postContentEle.nativeElement, { childList: true, subtree: true });
+        return `<pre class="i-code"${langStr ? ' data-lang="' + langStr + '"' : ''}>` +
+          `<ul class="i-code-lines">${lines}</ul>` +
+          `<code class="i-code-text">${codes}</code></pre>`;
       }
-    });
-    this.listeners.push(listener);
-  }
-
-  private resetHighlight() {
-    this.listeners.forEach((listener) => listener.unsubscribe());
-    this.lineNumbersObs?.disconnect();
-    this.lineNumbersObs = null;
+    );
   }
 
   private initQrcode() {
