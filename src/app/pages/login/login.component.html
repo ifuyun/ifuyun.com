@@ -1,31 +1,27 @@
-<div class="g-doc-login">
-  <div class="g-view-login">
-    <form class="m-form-login" [formGroup]="loginForm" (ngSubmit)="login()">
-      <p>
-        <label for="username">
-          <span>用户名</span>
-          <br/>
-          <input type="text" formControlName="username" class="u-input-login" id="username" tabindex="10"
-                 maxlength="20" autocomplete="off" [autofocus]="autoFocus.username"/>
-        </label>
-      </p>
-      <p>
-        <label for="password">
-          <span>密码</span>
-          <br/>
-          <input type="password" formControlName="password" class="u-input-login" id="password" tabindex="20"
-                 maxlength="20" [autofocus]="autoFocus.password"/>
-        </label>
-      </p>
-      <p class="m-rememberMe">
-        <label for="rememberMe">
-          <input type="checkbox" formControlName="rememberMe" class="u-checkbox" id="rememberMe" tabindex="90"/>
-          <span>记住我的登录信息</span>
-        </label>
-      </p>
-      <p>
-        <input type="submit" class="u-btn-login" id="userSubmit" tabindex="100" value="登录"/>
-      </p>
+<div class="login">
+  <div class="login-body">
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()">
+      <div class="login-form-row">
+        <label class="login-form-label" for="username">用户名</label>
+        <input type="text" formControlName="username" class="input" id="username" tabindex="10"
+               maxlength="20" autocomplete="off" [autofocus]="autoFocus.username"/>
+      </div>
+      <div class="login-form-row">
+        <label class="login-form-label" for="password">密码</label>
+        <input type="password" formControlName="password" class="input" id="password" tabindex="20"
+               maxlength="20" [autofocus]="autoFocus.password"/>
+      </div>
+      <div class="login-form-row">
+        <div class="login-form-col">
+          <label>
+            <input type="checkbox" formControlName="rememberMe" class="input-checkbox" tabindex="90"/>
+            <span>记住我的登录信息</span>
+          </label>
+        </div>
+        <div class="login-form-col">
+          <input type="submit" class="button button-submit" tabindex="100" value="登录"/>
+        </div>
+      </div>
     </form>
   </div>
 </div>

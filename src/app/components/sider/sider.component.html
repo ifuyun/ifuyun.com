@@ -5,15 +5,11 @@
   </form>
 </div>
 <div class="widget">
-  <h3 class="widget-title">
-    <i class='icon icon-heart'></i><span>微信公众号（黑匣子思维）</span>
-  </h3>
+  <h3 class="widget-title"><i class='icon icon-heart'></i><span>微信公众号（黑匣子思维）</span></h3>
   <div class="wechat-qrcode"></div>
 </div>
 <div class="widget">
-  <h3 class="widget-title">
-    <i class='icon icon-archive'></i><span>文章归档</span>
-  </h3>
+  <h3 class="widget-title"><i class='icon icon-archive'></i><span>文章归档</span></h3>
   <ul>
     <li *ngFor="let item of archiveDates">
       <a [routerLink]="['/archive/'+item.dateText]" title="{{item.dateTitle}}">{{item.dateTitle}}({{item.count}})</a>
@@ -22,25 +18,19 @@
   </ul>
 </div>
 <div class="widget">
-  <h3 class="widget-title">
-    <i class='icon icon-star'></i><span>热门文章</span>
-  </h3>
+  <h3 class="widget-title"><i class='icon icon-star'></i><span>热门文章</span></h3>
   <ul>
     <li *ngFor="let post of hotPosts"><a title="{{post.postTitle}}" [routerLink]="[post.postGuid]">{{post.postTitle}}</a></li>
   </ul>
 </div>
 <div class="widget">
-  <h3 class="widget-title">
-    <i class='icon icon-shuffle'></i><span>手气不错</span>
-  </h3>
+  <h3 class="widget-title"><i class='icon icon-shuffle'></i><span>手气不错</span></h3>
   <ul>
     <li *ngFor="let post of randomPosts"><a title="{{post.postTitle}}" [routerLink]="[post.postGuid]">{{post.postTitle}}</a></li>
   </ul>
 </div>
 <div class="widget" *ngIf="friendLinks.length > 0">
-  <h3 class="widget-title">
-    <i class='icon icon-link'></i><span>友情链接</span>
-  </h3>
+  <h3 class="widget-title"><i class='icon icon-link'></i><span>友情链接</span></h3>
   <ul>
     <li *ngFor="let link of friendLinks">
       <a title="{{link.linkDescription}}" href="{{link.linkUrl}}" target="{{link.linkTarget}}">{{link.linkName}}</a>
