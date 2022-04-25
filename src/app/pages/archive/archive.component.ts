@@ -1,14 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { uniq } from 'lodash';
 import { Subscription } from 'rxjs';
-import { CrumbEntity } from '../../components/crumb/crumb.interface';
-import { CrumbService } from '../../components/crumb/crumb.service';
+import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
+import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
 import { PageComponent } from '../../core/page.component';
 import { CommonService } from '../../core/common.service';
+import { UserAgentService } from '../../core/user-agent.service';
 import { HTMLMetaData } from '../../interfaces/meta';
 import { OptionEntity } from '../../interfaces/options';
 import { PostArchiveDateMap } from '../../interfaces/posts';
-import { CustomMetaService } from '../../services/custom-meta.service';
+import { MetaService } from '../../core/meta.service';
 import { OptionsService } from '../../services/options.service';
 import { PostsService } from '../../services/posts.service';
 
@@ -18,6 +19,7 @@ import { PostsService } from '../../services/posts.service';
   styleUrls: ['./archive.component.less']
 })
 export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy {
+  isMobile = false;
   pageIndex: string = 'archive';
   archiveDateList!: PostArchiveDateMap;
   archiveYearList: string[] = [];
@@ -29,12 +31,14 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
 
   constructor(
     private optionsService: OptionsService,
-    private metaService: CustomMetaService,
+    private metaService: MetaService,
     private postsService: PostsService,
-    private crumbService: CrumbService,
-    private commonService: CommonService
+    private crumbService: BreadcrumbService,
+    private commonService: CommonService,
+    private userAgentService: UserAgentService,
   ) {
     super();
+    this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {
@@ -50,7 +54,7 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
       };
       this.metaService.updateHTMLMeta(metaData);
     });
-    const crumbs: CrumbEntity[] = [{
+    const crumbs: BreadcrumbEntity[] = [{
       'label': '文章归档',
       'tooltip': '文章归档',
       'url': '/archive',

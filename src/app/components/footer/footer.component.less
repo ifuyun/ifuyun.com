@@ -1,28 +1,56 @@
 @import "../../../assets/style/variables";
 
 .footer {
-  margin-top: @content-margin;
-  padding: 16px 0;
+  @footer-color: #7e7e7e;
   border-top: 1px solid @primary-border-color;
   line-height: 28px;
   text-align: center;
   font-size: @minor-font-size;
   background: #f8f8f8;
-  color: #7e7e7e;
+  color: @footer-color;
 
-  a {
-    color: #7e7e7e;
+  &-desktop {
+    margin-top: @content-margin;
+    padding: 16px 0;
+  }
 
-    &:hover {
-      color: @primary-color;
+  &-mobile {
+    margin-top: @m-footer-margin;
+    padding: @m-primary-margin 0;
+  }
+
+  &-link {
+    li:not(:last-child) {
+      margin-right: 12px;
+    }
+  }
+
+  &-record {
+    display: flex;
+    justify-content: center;
+
+    &-desktop {
+      li:not(:last-child):after {
+        content: '';
+        margin: 0 12px;
+        border-right: 1px solid @footer-color;
+      }
+    }
+
+    &-mobile {
+      flex-direction: column;
     }
   }
 
   ul li {
     display: inline-block;
+  }
 
-    &:not(:last-child) {
-      margin-right: 12px;
+  a {
+    color: @footer-color;
+
+    &:hover {
+      color: @primary-color;
     }
   }
 }

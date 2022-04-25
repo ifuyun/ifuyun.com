@@ -12,17 +12,17 @@
   justify-content: center;
   line-height: 24px;
 
-  .login-body {
+  &-body {
     border: solid 1px #e5e5e5;
     border-radius: @border-radius;
     box-shadow: 0 4px 10px -1px rgba(200, 200, 200, 0.7);
     background-color: @content-background-color;
   }
 
-  .login-form {
+  &-form {
     padding: @content-margin;
 
-    .login-form-row {
+    &-row {
       margin: @primary-margin 0;
       width: @form-body-width;
 
@@ -35,7 +35,7 @@
       }
     }
 
-    .login-form-col {
+    &-col {
       display: inline-block;
       width: 50%;
 
@@ -49,7 +49,7 @@
       cursor: pointer;
     }
 
-    .login-form-label:after {
+    &-label:after {
       content: ':';
       margin-left: 4px;
     }

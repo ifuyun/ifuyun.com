@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { UserAgentService } from '../../core/user-agent.service';
 import { OptionEntity } from '../../interfaces/options';
 import { OptionsService } from '../../services/options.service';
 
@@ -9,12 +10,17 @@ import { OptionsService } from '../../services/options.service';
   styleUrls: ['./footer.component.less']
 })
 export class FooterComponent implements OnInit, OnDestroy {
+  isMobile: boolean = false;
   options: OptionEntity = {};
   curYear = new Date().getFullYear();
 
   private optionsListener!: Subscription;
 
-  constructor(private optionsService: OptionsService) {
+  constructor(
+    private optionsService: OptionsService,
+    private userAgentService: UserAgentService
+  ) {
+    this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {

@@ -1,5 +1,5 @@
-<app-crumb *ngIf="showCrumb"></app-crumb>
-<div class="post" id="article">
+<app-breadcrumb *ngIf="showCrumb"></app-breadcrumb>
+<div class="post" [ngClass]="{'post-desktop': !isMobile, 'post-mobile': isMobile}" id="article">
   <header class="post-header">
     <h1 class="post-title">
       <a [routerLink]="[post?.postGuid]" title="{{post?.postTitle}}" rel="bookmark">{{post?.postTitle}}</a>
@@ -11,28 +11,30 @@
       <span title="作者：{{postMeta['postAuthor']}}">
         <i class='icon icon-person'></i><span>{{postMeta['postAuthor']}}</span>
       </span>
-      <span class="desktop" *ngIf="!isStandalone">
-        <i class='icon icon-folder'></i>
-        <a *ngFor="let cat of postCategories" [routerLink]="['/category/' + cat.taxonomySlug]"
-           title="{{cat.taxonomyName}}" rel="category">{{cat.taxonomyName}}</a>
-      </span>
-      <ng-container *ngIf="post?.postOriginal === 1 && !isStandalone">
-        <span class="desktop" title="{{post?.author?.userNiceName}}原创">
-          <i class='icon icon-pencil'></i><span>原创</span>
+      <ng-container *ngIf="!isMobile">
+        <span *ngIf="!isStandalone">
+          <i class='icon icon-folder'></i>
+          <a *ngFor="let cat of postCategories" [routerLink]="['/category/' + cat.taxonomySlug]"
+             title="{{cat.taxonomyName}}" rel="category">{{cat.taxonomyName}}</a>
         </span>
-        <span class="desktop" title="{{postMeta['copyright_type'] | copyrightType}}">
-          <ng-container *ngIf="postMeta['copyright_type'] === '0'">
-            <i class='icon icon-shield'></i><span>{{postMeta['copyright_type'] | copyrightType}}</span>
-          </ng-container>
-          <ng-container *ngIf="postMeta['copyright_type'] !== '0'">
-            <i class='icon icon-share'></i><span>{{postMeta['copyright_type'] | copyrightType}}</span>
-          </ng-container>
-        </span>
-      </ng-container>
-      <ng-container *ngIf="post?.postOriginal !== 1 && !isStandalone">
-        <span class="desktop" title="来源：{{postMeta['post_source']}}">
-          <i class='icon icon-book'></i><span>{{postMeta['post_source']}}</span>
-        </span>
+        <ng-container *ngIf="post?.postOriginal === 1 && !isStandalone">
+          <span title="{{post?.author?.userNiceName}}原创">
+            <i class='icon icon-pencil'></i><span>原创</span>
+          </span>
+          <span title="{{postMeta['copyright_type'] | copyrightType}}">
+            <ng-container *ngIf="postMeta['copyright_type'] === '0'">
+              <i class='icon icon-shield'></i><span>{{postMeta['copyright_type'] | copyrightType}}</span>
+            </ng-container>
+            <ng-container *ngIf="postMeta['copyright_type'] !== '0'">
+              <i class='icon icon-share'></i><span>{{postMeta['copyright_type'] | copyrightType}}</span>
+            </ng-container>
+          </span>
+        </ng-container>
+        <ng-container *ngIf="post?.postOriginal !== 1 && !isStandalone">
+          <span title="来源：{{postMeta['post_source']}}">
+            <i class='icon icon-book'></i><span>{{postMeta['post_source']}}</span>
+          </span>
+        </ng-container>
       </ng-container>
     </div>
   </header>
@@ -46,7 +48,7 @@
   </ng-container>
   <footer class="post-footer">
     <div>
-      <div class="post-meta mobile" *ngIf="!isStandalone">
+      <div class="post-meta" *ngIf="!isStandalone && isMobile">
         <div class="post-meta-icon"><i class='icon icon-folder'></i></div>
         <ul class="post-meta-info">
           <li *ngFor="let cat of postCategories">
@@ -64,7 +66,7 @@
           </li>
         </ul>
       </div>
-      <div class="post-meta mobile" *ngIf="!isStandalone">
+      <div class="post-meta" *ngIf="!isStandalone && isMobile">
         <div class="post-meta-icon"><i class='icon icon-book'></i></div>
         <div class="post-meta-info">
           <span class="post-meta-info-text" *ngIf="post?.postOriginal === 1"
@@ -143,16 +145,16 @@
         </div>
         <div class="form-row">
           <input type="text" class="input" formControlName="captcha" maxlength="4" placeholder="验证码"/>
-          <span class="form-required">*</span>
           <img #captchaImg class="captcha" src="/api/captcha" title="点击刷新验证码" alt="验证码"
                onclick="this.src='/api/captcha?r='+Math.random()"/>
+          <span class="form-required">*</span>
         </div>
-        <div class="form-row">
+        <div class="form-row form-row-long">
           <textarea class="input input-textarea" formControlName="content" rows="4"
                     maxlength="400" placeholder="评论内容"></textarea>
           <span class="form-required">*</span>
         </div>
-        <div class="form-row">
+        <div class="form-row form-btns">
           <input type="hidden" formControlName="commentParent"/>
           <input type="submit" class="button button-submit" value="提交"/>
           <input type="reset" class="button" value="重置"/>

@@ -50,6 +50,7 @@
     "qrcode": "^1.5.0",
     "rxjs": "~7.5.5",
     "tslib": "^2.4.0",
+    "ua-parser-js": "^1.0.2",
     "zone.js": "^0.11.5"
   },
   "devDependencies": {
@@ -65,6 +66,7 @@
     "@types/lodash": "^4.14.182",
     "@types/node": "^17.0.25",
     "@types/qrcode": "^1.4.2",
+    "@types/ua-parser-js": "^0.7.36",
     "jasmine-core": "~4.1.0",
     "karma": "~6.3.19",
     "karma-chrome-launcher": "~3.1.1",

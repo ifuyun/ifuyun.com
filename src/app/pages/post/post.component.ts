@@ -15,14 +15,15 @@ import highlight from 'highlight.js';
 import { uniq } from 'lodash';
 import * as QRCode from 'qrcode';
 import { Subscription } from 'rxjs';
-import { CrumbEntity } from '../../components/crumb/crumb.interface';
-import { CrumbService } from '../../components/crumb/crumb.service';
+import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
+import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
 import { MessageService } from '../../components/message/message.service';
 import { VoteType } from '../../config/common.enum';
 import { POST_EXCERPT_LENGTH } from '../../config/constants';
 import { CommonService } from '../../core/common.service';
 import { PageComponent } from '../../core/page.component';
 import { PlatformService } from '../../core/platform.service';
+import { UserAgentService } from '../../core/user-agent.service';
 import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { CommentEntity, CommentModel } from '../../interfaces/comments';
 import { OptionEntity } from '../../interfaces/options';
@@ -30,10 +31,10 @@ import { PostEntity, PostModel } from '../../interfaces/posts';
 import { TaxonomyEntity } from '../../interfaces/taxonomies';
 import { LoginUserEntity } from '../../interfaces/users';
 import { CommentsService } from '../../services/comments.service';
-import { CustomMetaService } from '../../services/custom-meta.service';
+import { MetaService } from '../../core/meta.service';
 import { OptionsService } from '../../services/options.service';
 import { PostsService } from '../../services/posts.service';
-import { UrlService } from '../../services/url.service';
+import { UrlService } from '../../core/url.service';
 import { UsersService } from '../../services/users.service';
 import { VotesService } from '../../services/votes.service';
 
@@ -44,6 +45,7 @@ import { VotesService } from '../../services/votes.service';
   styleUrls: ['./post.component.less']
 })
 export class PostComponent extends PageComponent implements OnInit, OnDestroy, AfterViewInit {
+  isMobile = false;
   pageIndex: string = '';
   prevPost: PostEntity | null = null;
   nextPost: PostEntity | null = null;
@@ -52,7 +54,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   postMeta: Record<string, string> = {};
   postTags: TaxonomyEntity[] = [];
   postCategories: TaxonomyEntity[] = [];
-  crumbs: CrumbEntity[] = [];
+  crumbs: BreadcrumbEntity[] = [];
   showCrumb: boolean = true;
   showShareQrcode: boolean = false;
   showRewardQrcode: boolean = false;
@@ -89,11 +91,12 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     private commentsService: CommentsService,
     private votesService: VotesService,
     private usersService: UsersService,
-    private crumbService: CrumbService,
+    private crumbService: BreadcrumbService,
     private optionsService: OptionsService,
     private route: ActivatedRoute,
-    private metaService: CustomMetaService,
+    private metaService: MetaService,
     private urlService: UrlService,
+    private userAgentService: UserAgentService,
     private fb: FormBuilder,
     private message: MessageService,
     private platform: PlatformService,
@@ -101,6 +104,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     private renderer: Renderer2
   ) {
     super();
+    this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {

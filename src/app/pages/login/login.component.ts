@@ -12,7 +12,7 @@ import md5 from '../../helpers/md5';
 import { HTMLMetaData } from '../../interfaces/meta';
 import { OptionEntity } from '../../interfaces/options';
 import { AuthService } from '../../services/auth.service';
-import { CustomMetaService } from '../../services/custom-meta.service';
+import { MetaService } from '../../core/meta.service';
 import { OptionsService } from '../../services/options.service';
 
 const margin = 24;
@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor(
     private optionsService: OptionsService,
-    private metaService: CustomMetaService,
+    private metaService: MetaService,
     private fb: FormBuilder,
     private cookieService: CookieService,
     private authService: AuthService,

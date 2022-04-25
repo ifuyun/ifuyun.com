@@ -1,10 +1,15 @@
 <app-header></app-header>
-<section class="main">
+<section class="main main-desktop" *ngIf="!isMobile">
   <div class="content">
     <router-outlet></router-outlet>
   </div>
   <aside class="sider">
     <app-sider></app-sider>
   </aside>
+</section>
+<section class="main main-mobile" *ngIf="isMobile">
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
 </section>
 <app-footer></app-footer>

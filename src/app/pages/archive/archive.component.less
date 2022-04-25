@@ -4,12 +4,44 @@
   @header-padding-left: 12px;
   @header-border-width: 4px;
   box-shadow: @content-box-shadow;
-  margin: @box-shadow-width;
   border-radius: @border-radius;
   background-color: @content-background-color;
 
-  .archive-header {
-    padding: @content-margin @content-margin 4px;
+  &-desktop {
+    margin: @box-shadow-width;
+
+    .archive-header {
+      padding: @content-margin @content-margin 4px;
+    }
+
+    .archive-content {
+      padding: @content-margin;
+    }
+
+    .archive-content-list {
+      li {
+        width: 33.3333%;
+      }
+    }
+  }
+
+  &-mobile {
+    .archive-header {
+      padding: @m-primary-margin @m-primary-margin 0.4rem;
+    }
+
+    .archive-content {
+      padding: @m-primary-margin;
+    }
+
+    .archive-content-list {
+      li {
+        width: 50%;
+      }
+    }
+  }
+
+  &-header {
     text-align: center;
 
     .archive-title {
@@ -28,8 +60,7 @@
     }
   }
 
-  .archive-content {
-    padding: @content-margin;
+  &-content {
     line-height: 1.71428571em;
     word-wrap: break-word;
     text-align: justify;
@@ -49,40 +80,31 @@
       line-height: 1.6em;
       font-size: 15px;
     }
-  }
 
-  .archive-content-list {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: flex-start;
-    padding: 0 @header-padding-left + @header-border-width;
+    &-list {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: flex-start;
+      padding: 0 @header-padding-left + @header-border-width;
 
-    > li {
-      width: 33.3333%;
-      height: 32px;
-      line-height: 32px;
-      border-bottom: 1px dashed @code-border-color;
+      > li {
+        height: 32px;
+        line-height: 32px;
+        border-bottom: 1px dashed @code-border-color;
 
-      > a {
-        display: inline-block;
-        width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        > a {
+          display: inline-block;
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
 
-        &:hover {
-          text-decoration: underline;
+          &:hover {
+            text-decoration: underline;
+          }
         }
       }
-    }
-  }
-}
-
-@media (max-width: 568px) {
-  .archive-content-list {
-    > li {
-      width: 50%;
     }
   }
 }

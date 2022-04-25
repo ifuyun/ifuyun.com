@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { OptionsService } from './services/options.service';
-import { UrlService } from './services/url.service';
+import { UrlService } from './core/url.service';
 
 @Component({
   selector: 'app-root',

@@ -1,4 +1,4 @@
-import { CrumbEntity } from '../components/crumb/crumb.interface';
+import { BreadcrumbEntity } from '../components/breadcrumb/breadcrumb.interface';
 import { CommentFlag, PostType } from '../config/common.enum';
 import { TaxonomyEntity } from './taxonomies';
 import { UserEntity } from './users';
@@ -34,7 +34,7 @@ export interface Post {
   meta: Record<string, string>;
   tags: TaxonomyEntity[];
   categories: TaxonomyEntity[];
-  crumbs?: CrumbEntity[];
+  crumbs?: BreadcrumbEntity[];
 }
 
 export interface PostList {

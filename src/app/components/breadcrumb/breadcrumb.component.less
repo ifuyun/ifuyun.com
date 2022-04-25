@@ -1,12 +1,20 @@
 @import "../../../assets/style/variables";
 
 .breadcrumb {
-  margin: @box-shadow-width @box-shadow-width @primary-margin;
-  padding: 0 @content-margin;
   line-height: 40px;
   border-radius: @border-radius;
   box-shadow: @content-box-shadow;
   background-color: @content-background-color;
+
+  &-desktop {
+    margin: @box-shadow-width @box-shadow-width @primary-margin;
+    padding: 0 @content-margin;
+  }
+
+  &-mobile {
+    margin-bottom: @m-primary-margin;
+    padding: 0 @m-primary-margin;
+  }
 
   .separator {
     margin: 0 8px;

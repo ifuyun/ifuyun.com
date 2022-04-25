@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UserAgentService } from '../../core/user-agent.service';
 
 @Component({
   selector: 'app-layout',
@@ -6,4 +7,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./layout.component.less']
 })
 export class LayoutComponent {
+  isMobile: boolean = false;
+
+  constructor(
+    private userAgentService: UserAgentService
+  ) {
+    this.isMobile = this.userAgentService.isMobile();
+  }
 }

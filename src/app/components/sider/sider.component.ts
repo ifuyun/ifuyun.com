@@ -4,7 +4,7 @@ import { LinkEntity } from '../../interfaces/links';
 import { PostArchiveDate, PostEntity } from '../../interfaces/posts';
 import { LinksService } from '../../services/links.service';
 import { PostsService } from '../../services/posts.service';
-import { UrlService } from '../../services/url.service';
+import { UrlService } from '../../core/url.service';
 
 @Component({
   selector: 'app-sider',

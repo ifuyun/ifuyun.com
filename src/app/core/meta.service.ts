@@ -5,7 +5,7 @@ import { HTMLMetaData } from '../interfaces/meta';
 @Injectable({
   providedIn: 'root'
 })
-export class CustomMetaService {
+export class MetaService {
   constructor(
     private meta: Meta,
     private title: Title

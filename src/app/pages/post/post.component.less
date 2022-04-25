@@ -6,12 +6,71 @@
   border-radius: @border-radius;
   background-color: @content-background-color;
 
+  &-desktop {
+    .post-header {
+      padding: @content-margin @content-margin 4px;
+    }
+
+    .post-content, .comment-list, .comment-form {
+      padding: @content-margin;
+    }
+
+    .post-footer {
+      padding: 0 @content-margin @content-margin;
+    }
+
+    .divider {
+      margin: 0 20px;
+    }
+
+    .wechat-card {
+      margin: @content-margin 0;
+    }
+
+    .comment-form {
+      .form-row {
+        width: 280px;
+      }
+
+      .form-row-long {
+        width: 400px;
+      }
+    }
+  }
+
+  &-mobile {
+    .post-header {
+      padding: @m-primary-margin @m-primary-margin 4px;
+    }
+
+    .post-content, .comment-list, .comment-form {
+      padding: @m-primary-margin;
+    }
+
+    .post-footer {
+      padding: 0 @m-primary-margin @m-primary-margin;
+    }
+
+    .divider {
+      margin: 0 @m-primary-margin;
+    }
+
+    .wechat-card {
+      margin: @m-primary-margin;
+    }
+
+    .comment-form {
+      .form-btns {
+        justify-content: center !important;
+      }
+    }
+  }
+
   .icon {
     margin-right: 4px;
   }
 
-  .post-header {
-    padding: @content-margin @content-margin 4px;
+  &-header {
     text-align: center;
 
     .post-title {
@@ -30,10 +89,23 @@
     }
   }
 
-  .post-meta {
+  &-meta {
     line-height: @post-line-height;
     color: @minor-color;
     font-size: @minor-font-size;
+
+    &-top {
+      margin-bottom: 8px;
+      padding: 0 @content-margin;
+
+      span:not(:last-child) {
+        margin-right: 20px;
+      }
+
+      a:not(:last-child) {
+        margin-right: 8px;
+      }
+    }
 
     a {
       color: @minor-color;
@@ -44,21 +116,7 @@
     }
   }
 
-  .post-meta-top {
-    margin-bottom: 8px;
-    padding: 0 @content-margin;
-
-    span:not(:last-child) {
-      margin-right: 20px;
-    }
-
-    a:not(:last-child) {
-      margin-right: 8px;
-    }
-  }
-
-  .post-content {
-    padding: @content-margin;
+  &-content {
     line-height: 1.71428571em;
     word-wrap: break-word;
     text-align: justify;
@@ -196,18 +254,7 @@
     }
   }
 
-  .wechat-card {
-    margin: @content-margin 0;
-    text-align: center;
-
-    img {
-      width: 420px;
-    }
-  }
-
-  .post-footer {
-    padding: 0 @content-margin @content-margin;
-
+  &-footer {
     .icon {
       line-height: @post-line-height + @tag-row-span * 2;
     }
@@ -367,7 +414,7 @@
       .post-link-next a {
         display: inline-flex;
         width: 100%;
-        justify-content: end;
+        justify-content: flex-end;
 
         .post-link-text {
           margin-right: 8px;
@@ -379,8 +426,16 @@
     }
   }
 
+  .wechat-card {
+    text-align: center;
+
+    img {
+      width: 420px;
+      max-width: 100%;
+    }
+  }
+
   .comment-list {
-    margin: @content-margin;
     line-height: @post-line-height;
 
     .divider {
@@ -389,34 +444,35 @@
 
     .comment-item {
       padding: 0 8px;
-    }
 
-    .comment-item-meta {
-      color: @minor-color;
-    }
-
-    .comment-item-time {
-      float: right;
-    }
-
-    .comment-item-action {
-      text-align: right;
-
-      > :not(:last-child) {
-        margin-right: 12px;
+      &-meta {
+        color: @minor-color;
       }
 
-      a:hover {
-        cursor: pointer;
-        text-decoration: underline;
+      &-time {
+        float: right;
+      }
+
+      &-action {
+        text-align: right;
+
+        > :not(:last-child) {
+          margin-right: 12px;
+        }
+
+        a:hover {
+          cursor: pointer;
+          text-decoration: underline;
+        }
       }
     }
   }
 
   .comment-form {
-    padding: @content-margin;
-
     .form-row {
+      display: flex;
+      justify-content: space-between;
+
       &:not(:last-child) {
         margin-bottom: @primary-margin;
       }
@@ -424,25 +480,30 @@
       &:not(:first-child) {
         margin-top: @primary-margin;
       }
+
+      > :not(:last-child) {
+        margin-right: 8px;
+      }
+
+      .input {
+        flex-grow: 1;
+      }
+    }
+
+    .form-btns {
+      justify-content: flex-start;
     }
 
     .form-required {
-      margin-left: 6px;
+      display: inline-block;
+      width: 8px;
       color: @input-required-color;
       font-weight: bold;
-    }
-
-    .input {
-      width: 200px;
-    }
-
-    .input-textarea {
-      width: 400px;
+      text-align: center;
     }
 
     .captcha {
       cursor: pointer;
-      margin-left: 6px;
     }
 
     .button:not(:last-child) {
@@ -457,10 +518,9 @@
 
 .divider {
   height: 1px;
-  margin: 0 20px;
   border-top: 1px solid @primary-border-color;
-}
 
-.divider-dashed {
-  border-top-style: dashed;
+  &-dashed {
+    border-top-style: dashed;
+  }
 }

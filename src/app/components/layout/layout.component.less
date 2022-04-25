@@ -1,23 +1,33 @@
 @import "../../../assets/style/variables";
 
 .main {
-  display: flex;
-  flex: auto;
-  flex-direction: row;
-  width: @body-width;
-  margin: @header-height + @header-bg-height + @primary-margin auto 0;
-  justify-content: space-between;
-
-  .content {
+  &-desktop {
     display: flex;
     flex: auto;
-    flex-direction: column;
-    margin: -@box-shadow-width (@primary-margin - @box-shadow-width) -@box-shadow-width -@box-shadow-width;
-    overflow: hidden;
+    flex-direction: row;
+    width: @body-width;
+    margin: @header-height + @header-bg-height + @primary-margin auto 0;
+    justify-content: space-between;
+
+    .content {
+      display: flex;
+      flex: auto;
+      flex-direction: column;
+      margin: -@box-shadow-width (@primary-margin - @box-shadow-width) -@box-shadow-width -@box-shadow-width;
+      overflow: hidden;
+    }
+
+    .sider {
+      flex: 0 0 @sider-width;
+      width: @sider-width;
+    }
   }
 
-  .sider {
-    flex: 0 0 @sider-width;
-    width: @sider-width;
+  &-mobile {
+    margin: 0 auto;
+
+    .content {
+      margin: (@m-header-height + @m-primary-margin) @m-content-margin @m-footer-margin;
+    }
   }
 }

@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Params } from '@angular/router';
+import { UserAgentService } from '../../core/user-agent.service';
 import { PaginatorEntity } from '../../interfaces/paginator';
 
 @Component({
@@ -7,12 +8,17 @@ import { PaginatorEntity } from '../../interfaces/paginator';
   templateUrl: './page-bar.component.html',
   styleUrls: ['./page-bar.component.less']
 })
-export class PageBarComponent implements OnInit {
+export class PageBarComponent {
   @Input() paginator: PaginatorEntity | null = null;
   @Input() url: string = '';
   @Input() param: Params = {};
 
-  ngOnInit(): void {
+  isMobile = false;
+
+  constructor(
+    private userAgentService: UserAgentService
+  ) {
+    this.isMobile = this.userAgentService.isMobile();
   }
 
   counter(size: number) {

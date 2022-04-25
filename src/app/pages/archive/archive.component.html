@@ -1,5 +1,5 @@
-<app-crumb *ngIf="showCrumb"></app-crumb>
-<div class="archive">
+<app-breadcrumb *ngIf="showCrumb"></app-breadcrumb>
+<div class="archive" [ngClass]="{'archive-desktop': !isMobile, 'archive-mobile': isMobile}">
   <header class="archive-header">
     <h1 class="archive-title">
       <a [routerLink]="['/archive']" title="文章归档" rel="bookmark">文章归档</a>
@@ -13,8 +13,13 @@
           <a [routerLink]="['/archive/' + item.dateText]" title="{{item.dateTitle}}">
             {{item.dateTitle}}({{item.count}})</a>
         </li>
-        <li *ngIf="archiveDateList[year].list.length % 3 === 1">&nbsp;</li>
-        <li *ngIf="archiveDateList[year].list.length % 3 > 0">&nbsp;</li>
+        <ng-container *ngIf="!isMobile">
+          <li *ngIf="archiveDateList[year].list.length % 3 === 1">&nbsp;</li>
+          <li *ngIf="archiveDateList[year].list.length % 3 > 0">&nbsp;</li>
+        </ng-container>
+        <ng-container *ngIf="isMobile">
+          <li *ngIf="archiveDateList[year].list.length % 2 === 1">&nbsp;</li>
+        </ng-container>
       </ul>
     </ng-container>
   </div>

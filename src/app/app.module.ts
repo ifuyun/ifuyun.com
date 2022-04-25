@@ -1,4 +1,4 @@
-import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
@@ -7,9 +7,10 @@ import { TransferHttpCacheModule } from '@nguniversal/common';
 import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highlightjs';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CrumbComponent } from './components/crumb/crumb.component';
+import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
+import { LayoutComponent } from './components/layout/layout.component';
 import { MessageModule } from './components/message/message.module';
 import { ModalComponent } from './components/modal/modal.component';
 import { PageBarComponent } from './components/page-bar/page-bar.component';
@@ -17,7 +18,6 @@ import { SiderComponent } from './components/sider/sider.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { httpInterceptorProviders } from './interceptors/http-interceptors';
 import { ArchiveComponent } from './pages/archive/archive.component';
-import { LayoutComponent } from './components/layout/layout.component';
 import { LoginComponent } from './pages/login/login.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PostListComponent } from './pages/post-list/post-list.component';
@@ -28,18 +28,18 @@ import { PipesModule } from './pipes/pipes.module';
   declarations: [
     AppComponent,
     LayoutComponent,
-    PostListComponent,
-    PostComponent,
-    LoginComponent,
     HeaderComponent,
-    CrumbComponent,
+    BreadcrumbComponent,
     SiderComponent,
     PageBarComponent,
     FooterComponent,
-    AutofocusDirective,
     ModalComponent,
+    PostListComponent,
+    PostComponent,
+    LoginComponent,
     ArchiveComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    AutofocusDirective
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),
@@ -47,10 +47,6 @@ import { PipesModule } from './pipes/pipes.module';
     TransferHttpCacheModule,
     AppRoutingModule,
     HttpClientModule,
-    HttpClientXsrfModule.withOptions({
-      cookieName: 'XSRF',
-      headerName: 'x-xsrf-token'
-    }),
     ReactiveFormsModule,
     BrowserAnimationsModule,
     PipesModule,

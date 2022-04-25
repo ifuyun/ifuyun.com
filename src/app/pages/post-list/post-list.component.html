@@ -1,12 +1,11 @@
-<app-crumb *ngIf="showCrumb"></app-crumb>
-<div class="sticky">
+<app-breadcrumb *ngIf="showCrumb"></app-breadcrumb>
+<div class="sticky" *ngIf="!isMobile">
   <ul>
-    <li>
-      <img src="/assets/img/cloud.jpg" alt="{{options['site_name']}}"/>
-    </li>
+    <li><img src="/assets/img/cloud.jpg" alt="{{options['site_name']}}"/></li>
   </ul>
 </div>
-<article id="postList" class="post" *ngFor="let post of postList?.posts">
+<article id="postList" class="post" [ngClass]="{'post-desktop': !isMobile, 'post-mobile': isMobile}"
+         *ngFor="let post of postList?.posts">
   <header>
     <h3>
       <a [routerLink]="[post.post.postGuid]" title="{{post.post.postTitle}}" rel="bookmark">{{post.post.postTitle}}</a>
@@ -32,7 +31,7 @@
     <span title="作者：{{post.meta['post_author'] || post.post.author.userNiceName}}">
       <i class='icon icon-person'></i><span>{{post.meta['post_author'] || post.post.author.userNiceName}}</span>
     </span>
-    <span class="desktop">
+    <span *ngIf="!isMobile">
       <i class='icon icon-folder'></i>
       <a *ngFor="let category of post.categories"
          [routerLink]="['/category/' + category.taxonomySlug]"
@@ -47,7 +46,7 @@
     <a class="read-more" [routerLink]="[post.post.postGuid]" title="{{post.post.postTitle}}">[阅读全文]</a>
   </p>
   <div class="post-meta post-meta-bottom">
-    <div class="post-meta-taxonomy mobile">
+    <div class="post-meta-taxonomy" *ngIf="isMobile">
       <div class="post-meta-icon"><i class='icon icon-folder'></i></div>
       <ul class="post-meta-info">
         <li *ngFor="let category of post.categories">

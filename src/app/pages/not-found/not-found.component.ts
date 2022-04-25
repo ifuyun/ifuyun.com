@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { PlatformService } from '../../core/platform.service';
 import { ResponseService } from '../../core/response.service';
 import { OptionEntity } from '../../interfaces/options';
-import { CustomMetaService } from '../../services/custom-meta.service';
+import { MetaService } from '../../core/meta.service';
 import { OptionsService } from '../../services/options.service';
 
 @Component({
@@ -22,7 +22,7 @@ export class NotFoundComponent implements OnInit, OnDestroy {
     private platform: PlatformService,
     private response: ResponseService,
     private optionsService: OptionsService,
-    private metaService: CustomMetaService,
+    private metaService: MetaService,
   ) {
   }
 

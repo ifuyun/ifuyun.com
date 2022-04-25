@@ -8,17 +8,18 @@ import { combineLatestWith, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { POST_EXCERPT_LENGTH } from '../../config/constants';
 import { PageComponent } from '../../core/page.component';
-import { CrumbEntity } from '../../components/crumb/crumb.interface';
+import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
+import { UserAgentService } from '../../core/user-agent.service';
 import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { HTMLMetaData } from '../../interfaces/meta';
 import { OptionEntity } from '../../interfaces/options';
 import { PaginatorEntity } from '../../interfaces/paginator';
 import { PostList, PostQueryParam } from '../../interfaces/posts';
-import { CrumbService } from '../../components/crumb/crumb.service';
-import { CustomMetaService } from '../../services/custom-meta.service';
+import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
+import { MetaService } from '../../core/meta.service';
 import { OptionsService } from '../../services/options.service';
 import { CommonService } from '../../core/common.service';
-import { PaginatorService } from '../../services/paginator.service';
+import { PaginatorService } from '../../core/paginator.service';
 import { PostsService } from '../../services/posts.service';
 
 @Component({
@@ -27,20 +28,21 @@ import { PostsService } from '../../services/posts.service';
   styleUrls: ['./post-list.component.less']
 })
 export class PostListComponent extends PageComponent implements OnInit, OnDestroy {
-  pageIndex: string = 'index';
+  isMobile = false;
+  pageIndex = 'index';
   options: OptionEntity = {};
-  page: number = 1;
-  keyword: string = '';
-  category: string = '';
-  tag: string = '';
-  year: string = '';
-  month: string = '';
+  page = 1;
+  keyword = '';
+  category = '';
+  tag = '';
+  year = '';
+  month = '';
   postList: PostList = {};
-  total: number = 0;
+  total = 0;
   paginatorData: PaginatorEntity | null = null;
-  pageUrl: string = '';
+  pageUrl = '';
   pageUrlParam: Params = {};
-  showCrumb: boolean = false;
+  showCrumb = false;
 
   private optionsListener!: Subscription;
   private paramListener!: Subscription;
@@ -53,11 +55,13 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
     private postsService: PostsService,
     private commonService: CommonService,
     private paginator: PaginatorService,
-    private crumbService: CrumbService,
-    private metaService: CustomMetaService,
+    private crumbService: BreadcrumbService,
+    private metaService: MetaService,
+    private userAgentService: UserAgentService,
     private scroller: ViewportScroller
   ) {
     super();
+    this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {
@@ -93,7 +97,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
     const param: PostQueryParam = {
       page: this.page
     };
-    let crumbs: CrumbEntity[];
+    let crumbs: BreadcrumbEntity[];
     if (this.keyword) {
       param.keyword = this.keyword;
     }

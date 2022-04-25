@@ -1,26 +1,30 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { CrumbEntity } from './crumb.interface';
+import { UserAgentService } from '../../core/user-agent.service';
+import { BreadcrumbEntity } from './breadcrumb.interface';
 import { OptionEntity } from '../../interfaces/options';
-import { CrumbService } from './crumb.service';
+import { BreadcrumbService } from './breadcrumb.service';
 import { OptionsService } from '../../services/options.service';
 
 @Component({
-  selector: 'app-crumb',
-  templateUrl: './crumb.component.html',
-  styleUrls: ['./crumb.component.less']
+  selector: 'app-breadcrumb',
+  templateUrl: './breadcrumb.component.html',
+  styleUrls: ['./breadcrumb.component.less']
 })
-export class CrumbComponent implements OnInit, OnDestroy {
-  crumbs: CrumbEntity[] = [];
+export class BreadcrumbComponent implements OnInit, OnDestroy {
+  isMobile = false;
+  crumbs: BreadcrumbEntity[] = [];
   options: OptionEntity | null = null;
 
   private crumbListener!: Subscription;
   private optionsListener!: Subscription;
 
   constructor(
-    private crumbService: CrumbService,
-    private optionsService: OptionsService
+    private crumbService: BreadcrumbService,
+    private optionsService: OptionsService,
+    private userAgentService: UserAgentService,
   ) {
+    this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {

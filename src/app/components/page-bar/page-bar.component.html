@@ -1,60 +1,77 @@
-<div *ngIf="paginator" class="paginator">
-  <ul class="desktop">
-    <li *ngIf="paginator.curPage > 1" class="paginator-page">
-      <a [routerLink]="[url + paginator.prevPage]" [queryParams]="param" title="上一页">&lt;</a>
-    </li>
-    <ng-container *ngIf="paginator.totalPage < 10">
-      <ng-container *ngFor="let v of counter(paginator.totalPage); let i = index">
-        <li *ngIf="i + 1 === paginator.curPage" class="paginator-page active"><span>{{i + 1}}</span></li>
-        <li *ngIf="i + 1 !== paginator.curPage" class="paginator-page">
-          <a [routerLink]="[url + (i + 1)]" [queryParams]="param" title="第{{i + 1}}页">{{i + 1}}</a>
-        </li>
-      </ng-container>
-    </ng-container>
-    <ng-container *ngIf="paginator.totalPage >= 10 && paginator.curPage <= 5">
-      <ng-container *ngFor="let v of counter(5); let i = index">
-        <li *ngIf="i + 1 === paginator.curPage" class="paginator-page active"><span>{{i + 1}}</span></li>
-        <li *ngIf="i + 1 !== paginator.curPage" class="paginator-page">
-          <a [routerLink]="[url + (i + 1)]" [queryParams]="param" title="第{{i + 1}}页">{{i + 1}}</a>
-        </li>
-      </ng-container>
-      <li><span>...</span></li>
-      <li class="paginator-page">
-        <a [routerLink]="[url + paginator.totalPage]"
-           [queryParams]="param" title="第{{paginator.totalPage}}页">{{paginator.totalPage}}</a>
+<ng-container *ngIf="paginator">
+  <div class="paginator paginator-desktop" *ngIf="!isMobile">
+    <ul>
+      <li *ngIf="paginator.curPage > 1" class="paginator-page">
+        <a [routerLink]="[url + paginator.prevPage]" [queryParams]="param" title="上一页">&lt;</a>
       </li>
-    </ng-container>
-    <ng-container *ngIf="paginator.totalPage >= 10 && paginator.curPage >= paginator.totalPage - 4">
-      <li class="paginator-page"><a [routerLink]="[url + 1]" [queryParams]="param" title="第1页">1</a></li>
-      <li><span>...</span></li>
-      <ng-container *ngFor="let v of counter(5); let i = index">
-        <li *ngIf="paginator.totalPage - 4 + i === paginator.curPage" class="paginator-page active">
-          <span>{{paginator.totalPage - 4 + i}}</span></li>
-        <li *ngIf="paginator.totalPage - 4 + i !== paginator.curPage" class="paginator-page">
-          <a [routerLink]="[url + (paginator.totalPage - 4 + i)]"
-             [queryParams]="param" title="第{{paginator.totalPage - 4 + i}}页">{{paginator.totalPage - 4 + i}}</a>
+      <ng-container *ngIf="paginator.totalPage < 10">
+        <ng-container *ngFor="let v of counter(paginator.totalPage); let i = index">
+          <li *ngIf="i + 1 === paginator.curPage" class="paginator-page active"><span>{{i + 1}}</span></li>
+          <li *ngIf="i + 1 !== paginator.curPage" class="paginator-page">
+            <a [routerLink]="[url + (i + 1)]" [queryParams]="param" title="第{{i + 1}}页">{{i + 1}}</a>
+          </li>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="paginator.totalPage >= 10 && paginator.curPage <= 5">
+        <ng-container *ngFor="let v of counter(5); let i = index">
+          <li *ngIf="i + 1 === paginator.curPage" class="paginator-page active"><span>{{i + 1}}</span></li>
+          <li *ngIf="i + 1 !== paginator.curPage" class="paginator-page">
+            <a [routerLink]="[url + (i + 1)]" [queryParams]="param" title="第{{i + 1}}页">{{i + 1}}</a>
+          </li>
+        </ng-container>
+        <li><span>...</span></li>
+        <li class="paginator-page">
+          <a [routerLink]="[url + paginator.totalPage]"
+             [queryParams]="param" title="第{{paginator.totalPage}}页">{{paginator.totalPage}}</a>
         </li>
       </ng-container>
-    </ng-container>
-    <ng-container *ngIf="paginator.totalPage >= 10 && paginator.curPage > 5 && paginator.curPage < paginator.totalPage - 4">
-      <li class="paginator-page"><a [routerLink]="[url + 1]" [queryParams]="param" title="第1页">1</a></li>
-      <li><span>...</span></li>
-      <ng-container *ngFor="let v of counter(5); let i = index">
-        <li *ngIf="paginator.curPage - 2 + i === paginator.curPage" class="paginator-page active">
-          <span>{{paginator.curPage - 2 + i}}</span></li>
-        <li *ngIf="paginator.curPage - 2 + i !== paginator.curPage" class="paginator-page">
-          <a [routerLink]="[url + (paginator.curPage - 2 + i)]"
-             [queryParams]="param" title="第{{paginator.curPage - 2 + i}}页">{{paginator.curPage - 2 + i}}</a>
+      <ng-container *ngIf="paginator.totalPage >= 10 && paginator.curPage >= paginator.totalPage - 4">
+        <li class="paginator-page"><a [routerLink]="[url + 1]" [queryParams]="param" title="第1页">1</a></li>
+        <li><span>...</span></li>
+        <ng-container *ngFor="let v of counter(5); let i = index">
+          <li *ngIf="paginator.totalPage - 4 + i === paginator.curPage" class="paginator-page active">
+            <span>{{paginator.totalPage - 4 + i}}</span></li>
+          <li *ngIf="paginator.totalPage - 4 + i !== paginator.curPage" class="paginator-page">
+            <a [routerLink]="[url + (paginator.totalPage - 4 + i)]"
+               [queryParams]="param" title="第{{paginator.totalPage - 4 + i}}页">{{paginator.totalPage - 4 + i}}</a>
+          </li>
+        </ng-container>
+      </ng-container>
+      <ng-container
+        *ngIf="paginator.totalPage >= 10 && paginator.curPage > 5 && paginator.curPage < paginator.totalPage - 4">
+        <li class="paginator-page"><a [routerLink]="[url + 1]" [queryParams]="param" title="第1页">1</a></li>
+        <li><span>...</span></li>
+        <ng-container *ngFor="let v of counter(5); let i = index">
+          <li *ngIf="paginator.curPage - 2 + i === paginator.curPage" class="paginator-page active">
+            <span>{{paginator.curPage - 2 + i}}</span></li>
+          <li *ngIf="paginator.curPage - 2 + i !== paginator.curPage" class="paginator-page">
+            <a [routerLink]="[url + (paginator.curPage - 2 + i)]"
+               [queryParams]="param" title="第{{paginator.curPage - 2 + i}}页">{{paginator.curPage - 2 + i}}</a>
+          </li>
+        </ng-container>
+        <li><span>...</span></li>
+        <li class="paginator-page">
+          <a [routerLink]="[url + paginator.totalPage]"
+             [queryParams]="param" title="第{{paginator.totalPage}}页">{{paginator.totalPage}}</a>
         </li>
       </ng-container>
-      <li><span>...</span></li>
-      <li class="paginator-page">
-        <a [routerLink]="[url + paginator.totalPage]"
-           [queryParams]="param" title="第{{paginator.totalPage}}页">{{paginator.totalPage}}</a>
+      <li *ngIf="paginator.curPage < paginator.endPage" class="paginator-page">
+        <a [routerLink]="[url + paginator.nextPage]" [queryParams]="param" title="下一页">&gt;</a>
       </li>
-    </ng-container>
-    <li *ngIf="paginator.curPage < paginator.endPage" class="paginator-page">
-      <a [routerLink]="[url + paginator.nextPage]" [queryParams]="param" title="下一页">&gt;</a>
-    </li>
-  </ul>
-</div>
+    </ul>
+  </div>
+  <div class="paginator paginator-mobile" *ngIf="isMobile">
+    <div>
+      <a *ngIf="paginator.curPage > 1"
+         [routerLink]="[url + paginator.prevPage]" [queryParams]="param" title="上一页">
+        <i class='icon icon-arrow-left'></i><span>上一页</span>
+      </a>
+    </div>
+    <div>
+      <a *ngIf="paginator.curPage < paginator.endPage"
+         [routerLink]="[url + paginator.nextPage]" [queryParams]="param" title="下一页">
+        <span>下一页</span><i class='icon icon-arrow-right'></i>
+      </a>
+    </div>
+  </div>
+</ng-container>

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CommonService } from '../../core/common.service';
+import { UserAgentService } from '../../core/user-agent.service';
 import { OptionEntity } from '../../interfaces/options';
 import { TaxonomyNode } from '../../interfaces/taxonomies';
 import { OptionsService } from '../../services/options.service';
@@ -12,6 +13,7 @@ import { TaxonomiesService } from '../../services/taxonomies.service';
   styleUrls: ['./header.component.less']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+  isMobile: boolean = false;
   options: OptionEntity = {};
   activePage: string = '';
   taxonomies: TaxonomyNode[] = [];
@@ -24,8 +26,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     private optionsService: OptionsService,
     private taxonomiesService: TaxonomiesService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private userAgentService: UserAgentService
   ) {
+    this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {

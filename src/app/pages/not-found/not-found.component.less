@@ -2,11 +2,14 @@
 
 .error {
   display: flex;
-  width: 100%;
-  height: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 320px;
+  min-height: 400px;
   text-align: center;
   overflow: hidden;
   z-index: 999;
@@ -15,24 +18,24 @@
     text-decoration: underline;
   }
 
-  .error-code {
+  &-code {
     margin: 0;
     color: @primary-color;
     font-size: 10em;
   }
 
-  .error-message, .error-link {
+  &-message, &-link {
     padding: 0 1em;
   }
 
-  .error-message {
+  &-message {
     margin: 0;
     color: #7c7c7c;
     font-size: 16px;
     font-weight: normal;
   }
 
-  .error-link {
+  &-link {
     margin-top: 2em;
     margin-bottom: 4em;
     color: #888;

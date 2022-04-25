@@ -1,5 +1,5 @@
-<footer class="footer">
-  <ul>
+<footer class="footer" [ngClass]="{'footer-desktop': !isMobile, 'footer-mobile': isMobile}">
+  <ul class="footer-link">
     <li><a [routerLink]="['/aboutme']" title="关于抚云">关于抚云</a></li>
     <li><a [routerLink]="['/feedback']" title="意见反馈">意见反馈</a></li>
     <li><a [routerLink]="['/contactus']" title="联系我们">联系我们</a></li>
@@ -8,9 +8,8 @@
   <ul>
     <li [innerHTML]="options['copyright_notice'] + '-' + curYear"></li>
   </ul>
-  <ul>
+  <ul class="footer-record" [ngClass]="{'footer-record-desktop': !isMobile, 'footer-record-mobile': isMobile}">
     <li><a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">{{options['icp_code']}}</a></li>
-    <li>|</li>
     <li>
       <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode={{options['record_code']}}"
          target="_blank" rel="nofollow">
