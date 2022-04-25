@@ -1,5 +1,5 @@
 <div class="login">
-  <div class="login-body">
+  <div class="login-body" [@shakeForm]="formStatus">
     <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()">
       <div class="login-form-row">
         <label class="login-form-label" for="username">用户名</label>

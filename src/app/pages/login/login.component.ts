@@ -1,3 +1,4 @@
+import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
 import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { RESPONSE } from '@nguniversal/express-engine/tokens';
@@ -14,10 +15,26 @@ import { AuthService } from '../../services/auth.service';
 import { CustomMetaService } from '../../services/custom-meta.service';
 import { OptionsService } from '../../services/options.service';
 
+const margin = 24;
+const offsets = [margin, 0, -margin, 0];
+const duration = 500; // ms
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.less']
+  styleUrls: ['./login.component.less'],
+  animations: [
+    trigger('shakeForm', [
+      state('normal', style({})),
+      state('shaking', style({})),
+
+      transition('* => shaking', [
+        animate(duration, keyframes(
+          offsets.concat(offsets.concat(offsets)).map((offset) => style({ marginLeft: `${offset}px` }))
+        ))
+      ])
+    ])
+  ]
 })
 export class LoginComponent implements OnInit, OnDestroy {
   loginForm = this.fb.group({
@@ -29,6 +46,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     username: true,
     password: false
   };
+  formStatus: 'normal' | 'shaking' = 'normal';
 
   private options: OptionEntity = {};
   private optionsListener!: Subscription;
@@ -88,9 +106,13 @@ export class LoginComponent implements OnInit, OnDestroy {
       }).subscribe((res) => {
         if (res.accessToken) {
           location.href = '/admin';
+        } else {
+          this.shakeForm();
         }
       });
     } else {
+      this.shakeForm();
+
       const formLabels: Record<string, string> = {
         username: '用户名',
         password: '密码'
@@ -110,7 +132,12 @@ export class LoginComponent implements OnInit, OnDestroy {
           }
         });
       });
-      msgs.forEach((msg) => this.message.error(msg));
+      msgs.length > 0 && this.message.error(msgs[0]);
     }
+  }
+
+  private shakeForm() {
+    this.formStatus = 'shaking';
+    setTimeout(() => this.formStatus = 'normal', duration);
   }
 }
