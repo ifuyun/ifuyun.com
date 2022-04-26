@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LinkEntity } from '../../interfaces/links';
 import { PostArchiveDate, PostEntity } from '../../interfaces/posts';
@@ -16,6 +17,7 @@ export class SiderComponent implements OnInit, OnDestroy {
   hotPosts: PostEntity[] = [];
   randomPosts: PostEntity[] = [];
   friendLinks: LinkEntity[] = [];
+  keyword = '';
 
   private archiveListener!: Subscription;
   private hotPostsListener!: Subscription;
@@ -26,7 +28,8 @@ export class SiderComponent implements OnInit, OnDestroy {
   constructor(
     private postsService: PostsService,
     private urlService: UrlService,
-    private linksService: LinksService
+    private linksService: LinksService,
+    private router: Router
   ) {
   }
 
@@ -48,5 +51,12 @@ export class SiderComponent implements OnInit, OnDestroy {
     this.randomPostsListener.unsubscribe();
     this.urlListener.unsubscribe();
     this.linksListener.unsubscribe();
+  }
+
+  search() {
+    this.keyword = this.keyword.trim();
+    if (this.keyword) {
+      this.router.navigate(['/'], { queryParams: { keyword: this.keyword } });
+    }
   }
 }

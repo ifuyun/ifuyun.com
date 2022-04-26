@@ -60,7 +60,7 @@
       </li>
     </ul>
   </div>
-  <div class="paginator paginator-mobile" *ngIf="isMobile">
+  <div class="paginator paginator-mobile" *ngIf="isMobile && paginator.totalPage > 1">
     <div>
       <a *ngIf="paginator.curPage > 1"
          [routerLink]="[url + paginator.prevPage]" [queryParams]="param" title="上一页">

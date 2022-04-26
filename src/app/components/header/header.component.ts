@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonService } from '../../core/common.service';
 import { UserAgentService } from '../../core/user-agent.service';
@@ -13,11 +14,13 @@ import { TaxonomiesService } from '../../services/taxonomies.service';
   styleUrls: ['./header.component.less']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  isMobile: boolean = false;
+  isMobile = false;
   options: OptionEntity = {};
-  activePage: string = '';
+  activePage = '';
   taxonomies: TaxonomyNode[] = [];
-  isLogin: boolean = false;
+  isLogin = false;
+  showSearch = false;
+  keyword = '';
 
   private optionsListener!: Subscription;
   private taxonomiesListener!: Subscription;
@@ -27,7 +30,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private optionsService: OptionsService,
     private taxonomiesService: TaxonomiesService,
     private commonService: CommonService,
-    private userAgentService: UserAgentService
+    private userAgentService: UserAgentService,
+    private router: Router
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }
@@ -43,5 +47,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.optionsListener.unsubscribe();
     this.taxonomiesListener.unsubscribe();
     this.commonListener.unsubscribe();
+  }
+
+  toggleSearchStatus() {
+    this.showSearch = !this.showSearch;
+  }
+
+  search() {
+    this.keyword = this.keyword.trim();
+    if (this.keyword) {
+      this.router.navigate(['/'], { queryParams: { keyword: this.keyword } });
+    }
   }
 }
