@@ -1,0 +1,30 @@
+<div class="sider" [ngClass]="{'open': siderOpen}">
+  <aside class="sider-body">
+    <div class="sider-info">
+      <div class="sider-info-logo">
+        <img src="/logo.png" alt="{{options['site_name']}}"/>
+      </div>
+      <div class="sider-info-profile">
+        <h2 class="sider-info-profile-name">{{options['site_name']}}</h2>
+        <div class="sider-info-profile-slogan">{{options['site_slogan']}}</div>
+      </div>
+    </div>
+    <nav class="sider-nav">
+      <ul class="sider-nav-list">
+        <li *ngFor="let taxonomy of taxonomies" [ngClass]="{'active': activePage == taxonomy.taxonomySlug}">
+          <a [routerLink]="['/category/'+taxonomy.taxonomySlug]" title="{{taxonomy.taxonomyDescription}}">
+            <i class="icon icon-{{taxonomy.taxonomyIcon || 'folder'}}"></i>
+            <span>{{taxonomy.taxonomyName}}</span>
+          </a>
+        </li>
+        <li><a routerLink="/archive"><i class="icon icon-archive"></i><span>归档</span></a></li>
+        <li><a routerLink="/aboutme"><i class="icon icon-person-heart"></i><span>关于</span></a></li>
+        <li>
+          <a href="https://github.com/ifuyun" title="Follow me on GitHub" target="_blank">
+            <i class="icon icon-github"></i><span>GitHub</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+</div>

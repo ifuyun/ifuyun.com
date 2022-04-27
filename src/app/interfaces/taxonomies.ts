@@ -1,7 +1,8 @@
 export interface TaxonomyEntity {
   taxonomyName: string;
-  taxonomyDescription?: string;
   taxonomySlug: string;
+  taxonomyDescription?: string;
+  taxonomyIcon?: string;
   taxonomyId: string;
   taxonomyParent?: string;
   taxonomyStatus?: number;

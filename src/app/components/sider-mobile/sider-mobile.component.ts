@@ -1,6 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CommonService } from '../../core/common.service';
 import { UserAgentService } from '../../core/user-agent.service';
@@ -9,20 +7,17 @@ import { TaxonomyNode } from '../../interfaces/taxonomies';
 import { OptionsService } from '../../services/options.service';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.less']
+  selector: 'app-sider-mobile',
+  templateUrl: './sider-mobile.component.html',
+  styleUrls: ['./sider-mobile.component.less']
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class SiderMobileComponent implements OnInit, OnDestroy {
   @Input() taxonomies: TaxonomyNode[] = [];
   @Input() siderOpen = false;
-  @Output() siderOpenChange = new EventEmitter<boolean>();
 
   isMobile = false;
   activePage = '';
   options: OptionEntity = {};
-  showSearch = false;
-  keyword = '';
 
   private optionsListener!: Subscription;
   private commonListener!: Subscription;
@@ -30,9 +25,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     private optionsService: OptionsService,
     private commonService: CommonService,
-    private userAgentService: UserAgentService,
-    private router: Router,
-    @Inject(DOCUMENT) private document: Document
+    private userAgentService: UserAgentService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }
@@ -45,23 +38,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.optionsListener.unsubscribe();
     this.commonListener.unsubscribe();
-  }
-
-  toggleSearchStatus() {
-    this.showSearch = !this.showSearch;
-  }
-
-  search() {
-    this.keyword = this.keyword.trim();
-    if (this.keyword) {
-      this.showSearch = false;
-      this.router.navigate(['/'], { queryParams: { keyword: this.keyword } });
-    }
-  }
-
-  toggleSiderOpen() {
-    this.siderOpen = !this.siderOpen;
-    this.siderOpenChange.emit(this.siderOpen);
-    this.document.body.style.overflow = 'hidden';
   }
 }

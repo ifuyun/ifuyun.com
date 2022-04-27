@@ -14,6 +14,7 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { MessageModule } from './components/message/message.module';
 import { ModalComponent } from './components/modal/modal.component';
 import { PageBarComponent } from './components/page-bar/page-bar.component';
+import { SiderMobileComponent } from './components/sider-mobile/sider-mobile.component';
 import { SiderComponent } from './components/sider/sider.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { httpInterceptorProviders } from './interceptors/http-interceptors';
@@ -39,7 +40,8 @@ import { PipesModule } from './pipes/pipes.module';
     LoginComponent,
     ArchiveComponent,
     NotFoundComponent,
-    AutofocusDirective
+    AutofocusDirective,
+    SiderMobileComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),

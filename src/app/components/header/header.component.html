@@ -1,7 +1,7 @@
 <ng-container *ngIf="!isMobile">
   <header class="header header-desktop">
     <div class="header-bg"></div>
-    <div class="nav">
+    <nav class="nav">
       <a class="logo" [routerLink]="['/']" title="{{options['site_name']}}">
         <img src="/assets/img/logo.png" alt="{{options['site_name']}}"/>
       </a>
@@ -9,20 +9,18 @@
         <li [ngClass]="{'active': activePage == 'index'}">
           <a title="{{options['site_name']}}首页" [routerLink]="['/']">首页</a>
         </li>
-        <ng-container *ngFor="let taxonomy of taxonomies">
-          <li [ngClass]="{'active': activePage == taxonomy.taxonomySlug}">
-            <a title="{{taxonomy.taxonomyDescription}}"
-               [routerLink]="['/category/'+taxonomy.taxonomySlug]">{{taxonomy.taxonomyName}}</a>
-            <ul class="sub-nav-list" *ngIf="!taxonomy.isLeaf">
-              <ng-container *ngFor="let subTaxonomy of taxonomy.children">
-                <li>
-                  <a title="{{subTaxonomy.taxonomyDescription}}"
-                     [routerLink]="['/category/'+subTaxonomy.taxonomySlug]">{{subTaxonomy.taxonomyName}}</a>
-                </li>
-              </ng-container>
-            </ul>
-          </li>
-        </ng-container>
+        <li *ngFor="let taxonomy of taxonomies" [ngClass]="{'active': activePage == taxonomy.taxonomySlug}">
+          <a [routerLink]="['/category/'+taxonomy.taxonomySlug]"
+             title="{{taxonomy.taxonomyDescription}}">{{taxonomy.taxonomyName}}</a>
+          <ul class="sub-nav-list" *ngIf="!taxonomy.isLeaf">
+            <ng-container *ngFor="let subTaxonomy of taxonomy.children">
+              <li>
+                <a [routerLink]="['/category/'+subTaxonomy.taxonomySlug]"
+                   title="{{subTaxonomy.taxonomyDescription}}">{{subTaxonomy.taxonomyName}}</a>
+              </li>
+            </ng-container>
+          </ul>
+        </li>
       </ul>
       <ul class="link-list">
         <li>
@@ -31,25 +29,27 @@
           </a>
         </li>
       </ul>
-    </div>
+    </nav>
   </header>
 </ng-container>
 <ng-container *ngIf="isMobile">
-  <header class="header header-mobile">
-    <ng-container *ngIf="!showSearch">
-      <i class="icon icon-list"></i>
-      <a class="logo" [routerLink]="['/']" title="{{options['site_name']}}">
-        <img src="/assets/img/logo.png" alt="{{options['site_name']}}"/>
-      </a>
-      <i class="icon icon-search" (click)="toggleSearchStatus()"></i>
-    </ng-container>
-    <ng-container *ngIf="showSearch">
-      <form method="get" action="/" (submit)="search()">
-        <input type="text" class="header-input" name="keyword" [(ngModel)]="keyword" autocomplete="off"
-               placeholder="探索新世界……"/>
-        <input type="submit" class="header-button" value="搜索"/>
-      </form>
-      <div class="mask-search" (click)="toggleSearchStatus()"></div>
-    </ng-container>
+  <header class="header">
+    <div class="header-mobile">
+      <ng-container *ngIf="!showSearch">
+        <i class="icon icon-list" (click)="toggleSiderOpen()"></i>
+        <a class="logo" [routerLink]="['/']" title="{{options['site_name']}}">
+          <img src="/assets/img/logo.png" alt="{{options['site_name']}}"/>
+        </a>
+        <i class="icon icon-search" (click)="toggleSearchStatus()"></i>
+      </ng-container>
+      <ng-container *ngIf="showSearch">
+        <form method="get" action="/" (submit)="search()">
+          <input type="text" class="header-input" name="keyword" [(ngModel)]="keyword" autocomplete="off"
+                 placeholder="探索新世界……"/>
+          <input type="submit" class="header-button" value="搜索"/>
+        </form>
+        <div class="mask mask-search" (click)="toggleSearchStatus()"></div>
+      </ng-container>
+    </div>
   </header>
 </ng-container>

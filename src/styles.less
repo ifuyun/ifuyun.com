@@ -41,7 +41,7 @@ a, a:hover, a:focus {
   box-shadow: @content-box-shadow;
   text-align: center;
   color: rgba(0, 0, 0, 0.85);
-  background: #fff;
+  background: @content-background-color;
   -webkit-appearance: button;
   cursor: pointer;
 
@@ -58,12 +58,21 @@ a, a:hover, a:focus {
 
 .button-submit {
   border-color: @primary-color;
-  color: #fff;
+  color: @content-background-color;
   background-color: @primary-color;
 
   &:hover {
     border-color: @active-color;
-    color: #fff;
+    color: @content-background-color;
     background-color: @active-color;
   }
+}
+
+.mask {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: @m-header-background-color;
+  touch-action: none;
 }

@@ -8,7 +8,7 @@
 
 .sticky {
   position: relative;
-  margin: @box-shadow-width;
+  margin: @box-shadow-width @box-shadow-width @primary-margin;
   border-radius: @border-radius;
 
   li {
@@ -21,19 +21,29 @@
   }
 }
 
+.post-list-desktop {
+  margin: 0 @box-shadow-width;
+}
+
 .post {
   @post-header-height: 32px;
   border-radius: @border-radius;
   line-height: @post-line-height;
 
+  &:not(:last-child) {
+    margin-bottom: @primary-margin;
+  }
+
+  &:not(:first-child) {
+    margin-top: @primary-margin;
+  }
+
   &-desktop {
-    margin: @primary-margin @box-shadow-width @box-shadow-width @box-shadow-width;
     padding: 12px 20px;
   }
 
   &-mobile {
-    margin: @primary-margin 0;
-    padding: 12px @m-primary-margin;
+    padding: @m-content-margin @m-primary-margin;
   }
 
   &:hover {
@@ -51,7 +61,7 @@
       font-size: 16px;
       line-height: @post-header-height;
       height: @post-header-height;
-      margin-right: 120px;
+      margin-right: 108px;
 
       a {
         display: inline-block;

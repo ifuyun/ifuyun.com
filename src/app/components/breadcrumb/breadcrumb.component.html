@@ -2,9 +2,8 @@
   <span>当前位置：</span>
   <ng-container *ngFor="let crumb of crumbs; let i = index">
     <ng-container *ngIf="i > 0"><span class="separator">/</span></ng-container>
-    <a *ngIf="crumb.url !== '' && !crumb.isHeader" title="{{crumb.tooltip}}" [routerLink]="[crumb.url]">
-      {{crumb.label}}
-    </a>
+    <a *ngIf="crumb.url !== '' && !crumb.isHeader"
+       [routerLink]="[crumb.url]" title="{{crumb.tooltip}}">{{crumb.label}}</a>
     <h3 *ngIf="crumb.url !== '' && crumb.isHeader">
       <a title="{{crumb.tooltip}}" [routerLink]="[crumb.url]">{{crumb.label}}</a>
     </h3>
