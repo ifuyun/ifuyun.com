@@ -1,10 +1,10 @@
 @import "../../../assets/style/variables";
 
 .post {
-  box-shadow: @content-box-shadow;
   margin: @box-shadow-width;
   border-radius: @border-radius;
   background-color: @content-background-color;
+  box-shadow: @content-box-shadow;
 
   &-desktop {
     .post-header {
@@ -494,6 +494,7 @@
 
       .input {
         flex-grow: 1;
+        min-width: 120px;
       }
     }
 
@@ -504,6 +505,7 @@
     .form-required {
       display: inline-block;
       width: 8px;
+      line-height: @input-line-height * @primary-font-size + 10;
       color: @input-required-color;
       font-weight: bold;
       text-align: center;

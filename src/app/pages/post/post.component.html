@@ -12,7 +12,7 @@
         <i class='icon icon-person'></i><span>{{postMeta['postAuthor']}}</span>
       </span>
       <ng-container *ngIf="!isMobile">
-        <span *ngIf="!isStandalone">
+        <span *ngIf="!isStandalone && postCategories.length > 0">
           <i class='icon icon-folder'></i>
           <a *ngFor="let cat of postCategories" [routerLink]="['/category/' + cat.taxonomySlug]"
              title="{{cat.taxonomyName}}" rel="category">{{cat.taxonomyName}}</a>
@@ -48,7 +48,7 @@
   </ng-container>
   <footer class="post-footer">
     <div>
-      <div class="post-meta" *ngIf="!isStandalone && isMobile">
+      <div class="post-meta" *ngIf="!isStandalone && isMobile && postCategories.length > 0">
         <div class="post-meta-icon"><i class='icon icon-folder'></i></div>
         <ul class="post-meta-info">
           <li *ngFor="let cat of postCategories">

@@ -1,23 +1,32 @@
 @import "../../../assets/style/variables";
 
 .search {
-  @search-btn-width: 60px;
   margin-bottom: @primary-margin;
 
-  .input-search {
-    width: @sider-width - @search-btn-width - @input-padding-horizontal * 2 - 2;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
+  form {
+    display: flex;
 
-  .button-submit {
-    width: @search-btn-width;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+    .input-search {
+      flex-grow: 1;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      border-right: none;
+      border-color: transparent;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      box-shadow: @content-box-shadow;
+
+      &:focus {
+        border-color: @primary-color;
+      }
+    }
+
+    .button-submit {
+      padding-top: 8px;
+      padding-bottom: 8px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
   }
 }
 
@@ -25,8 +34,8 @@
   margin-top: @primary-margin;
   border: 1px solid transparent;
   border-radius: @border-radius;
-  box-shadow: @content-box-shadow;
   background-color: @content-background-color;
+  box-shadow: @content-box-shadow;
 }
 
 .widget {

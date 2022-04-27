@@ -16,16 +16,15 @@ a, a:hover, a:focus {
 }
 
 .input, .button {
-  line-height: 1.57142857;
+  line-height: @input-line-height;
   outline: 0;
   border-radius: @border-radius;
   font-size: @primary-font-size;
 }
 
 .input {
-  padding: 4px @input-padding-horizontal;
-  border: 1px solid transparent;
-  box-shadow: @content-box-shadow;
+  padding: 4px 11px;
+  border: 1px solid @input-border-color;
   color: #6a6a6a;
   background: @content-background-color;
 
@@ -37,8 +36,7 @@ a, a:hover, a:focus {
 
 .button {
   padding: 4px 16px;
-  border: 1px solid #d9d9d9;
-  box-shadow: @content-box-shadow;
+  border: 1px solid @input-border-color;
   text-align: center;
   color: rgba(0, 0, 0, 0.85);
   background: @content-background-color;
@@ -74,5 +72,7 @@ a, a:hover, a:focus {
   width: 100vw;
   height: 100vh;
   background: @m-header-background-color;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
   touch-action: none;
 }

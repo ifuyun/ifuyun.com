@@ -33,7 +33,7 @@
       <span title="作者：{{post.meta['post_author'] || post.post.author.userNiceName}}">
         <i class='icon icon-person'></i><span>{{post.meta['post_author'] || post.post.author.userNiceName}}</span>
       </span>
-      <span *ngIf="!isMobile">
+      <span *ngIf="!isMobile && post.categories.length > 0">
         <i class='icon icon-folder'></i>
         <a *ngFor="let category of post.categories"
            [routerLink]="['/category/' + category.taxonomySlug]"
@@ -47,8 +47,8 @@
       <span [innerHTML]="post.post.postExcerpt"></span>
       <a class="read-more" [routerLink]="[post.post.postGuid]" title="{{post.post.postTitle}}">[阅读全文]</a>
     </p>
-    <div class="post-meta post-meta-bottom">
-      <div class="post-meta-taxonomy" *ngIf="isMobile">
+    <div class="post-meta post-meta-bottom" *ngIf="post.categories.length > 0 || post.tags.length > 0">
+      <div class="post-meta-taxonomy" *ngIf="isMobile && post.categories.length > 0">
         <div class="post-meta-icon"><i class='icon icon-folder'></i></div>
         <ul class="post-meta-info">
           <li *ngFor="let category of post.categories">
@@ -57,7 +57,7 @@
           </li>
         </ul>
       </div>
-      <div class="post-meta-taxonomy">
+      <div class="post-meta-taxonomy" *ngIf="post.tags.length > 0">
         <div class="post-meta-icon"><i class='icon icon-tag'></i></div>
         <ul class="post-meta-info">
           <li *ngFor="let tag of post.tags">

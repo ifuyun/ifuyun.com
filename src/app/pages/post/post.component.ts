@@ -309,8 +309,10 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
             }
           }
         }
-        // unescape tag name & arrow function
-        codeStr = codeStr.replace(/&lt;([\s\S]*?)&gt;/ig, '<$1>').replace(/=&gt;/ig, '=>');
+        // unescape: ><&
+        codeStr = codeStr.replace(/&lt;/ig, '<')
+          .replace(/&gt;/ig, '>')
+          .replace(/&amp;/ig, '&');
         const lines = codeStr.split(/\r\n|\r|\n/i).map((str, i) => `<li>${i + 1}</li>`).join('');
         const codes = language
           ? highlight.highlight(codeStr, { language }).value
