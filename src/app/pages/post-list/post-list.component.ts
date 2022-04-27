@@ -185,6 +185,9 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
         description += `(第${this.page}页)`;
       }
       description += `。${this.options['site_description']}`;
+      if (titles.length === 1) {
+        titles.unshift(this.options['site_slogan']);
+      }
       const metaData: HTMLMetaData = {
         title: titles.join(' - '),
         description,

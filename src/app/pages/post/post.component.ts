@@ -27,7 +27,7 @@ import { UserAgentService } from '../../core/user-agent.service';
 import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { CommentEntity, CommentModel } from '../../interfaces/comments';
 import { OptionEntity } from '../../interfaces/options';
-import { PostEntity, PostModel } from '../../interfaces/posts';
+import { Post, PostEntity, PostModel } from '../../interfaces/posts';
 import { TaxonomyEntity } from '../../interfaces/taxonomies';
 import { LoginUserEntity } from '../../interfaces/users';
 import { CommentsService } from '../../services/comments.service';
@@ -75,7 +75,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   @ViewChild('captchaImg') captchaImg!: ElementRef;
   @ViewChild('qrcodeCanvas') qrcodeCanvas!: ElementRef;
-  @ViewChild('postContent', { static: false }) postContentEle!: ElementRef;
+  @ViewChild('postEle', { static: false }) postEle!: ElementRef;
 
   commentForm = this.fb.group({
     author: ['', [Validators.required, Validators.maxLength(8)]],
@@ -127,8 +127,9 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         this.commentForm.get('email')?.setValue(user.userEmail);
       });
     }
-    this.unlistenImgClick = this.renderer.listen(this.postContentEle.nativeElement, 'click', ((e: MouseEvent) => {
+    this.unlistenImgClick = this.renderer.listen(this.postEle.nativeElement, 'click', ((e: MouseEvent) => {
       if (e.target instanceof HTMLImageElement) {
+        // todo: if image is in <a> link
         this.clickedImage = e.target;
         this.showImgModal = true;
       }
@@ -238,20 +239,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private fetchPost() {
     this.postsService.getPostById(this.postId, this.referer).subscribe((post) => {
       if (post && post.post && post.post.postId) {
-        this.post = post.post;
-        this.post.postExcerpt = this.post.postExcerpt || cutStr(filterHtmlTag(this.post.postContent), POST_EXCERPT_LENGTH);
-        this.postMeta = post.meta;
-        this.postTags = post.tags;
-        this.postCategories = post.categories;
-        this.pageIndex = post.crumbs?.[0].slug || '';
-        this.updateActivePage();
-        this.crumbs = post.crumbs || [];
-        this.crumbService.updateCrumb(this.crumbs);
-        this.showCrumb = true;
-        this.isStandalone = false;
-        this.initMeta();
-        this.parseHtml();
-        this.fetchComments();
+        this.initData(post, false);
       }
     });
     this.postsService.getPostsOfPrevAndNext(this.postId).subscribe((res) => {
@@ -263,18 +251,29 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private fetchPostStandalone() {
     this.postsService.getPostBySlug(this.postSlug).subscribe((post) => {
       if (post && post.post && post.post.postId) {
-        this.post = post.post;
-        this.postId = this.post?.postId;
-        this.postMeta = post.meta;
-        this.postTags = post.tags;
-        this.updateActivePage();
-        this.showCrumb = false;
-        this.isStandalone = true;
-        this.initMeta();
-        this.parseHtml();
-        this.fetchComments();
+        this.initData(post, true);
       }
     });
+  }
+
+  private initData(post: Post, isStandalone: boolean) {
+    this.post = post.post;
+    this.post.postExcerpt = this.post.postExcerpt || cutStr(filterHtmlTag(this.post.postContent), POST_EXCERPT_LENGTH);
+    this.postId = this.post?.postId;
+    this.postMeta = post.meta;
+    this.postTags = post.tags;
+    this.postCategories = post.categories;
+    this.pageIndex = (isStandalone ? post.post.postName : post.crumbs?.[0].slug) || '';
+    this.updateActivePage();
+    if (!isStandalone) {
+      this.crumbs = post.crumbs || [];
+      this.crumbService.updateCrumb(this.crumbs);
+    }
+    this.showCrumb = !isStandalone;
+    this.isStandalone = isStandalone;
+    this.initMeta();
+    this.parseHtml();
+    this.fetchComments();
   }
 
   private fetchComments(cb?: Function) {

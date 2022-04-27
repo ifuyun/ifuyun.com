@@ -133,8 +133,14 @@
       margin: @primary-margin 0;
     }
 
-    a:hover {
-      text-decoration: underline;
+    a {
+      &:hover {
+        text-decoration: underline;
+      }
+
+      img {
+        cursor: pointer;
+      }
     }
 
     img {
@@ -432,6 +438,7 @@
     img {
       width: 420px;
       max-width: 100%;
+      cursor: zoom-in;
     }
   }
 

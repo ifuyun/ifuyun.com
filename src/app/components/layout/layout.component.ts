@@ -32,6 +32,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
       filter((event) => event instanceof NavigationEnd)
     ).subscribe((event) => {
       this.siderOpen = false;
+      this.document.body.style.overflow = '';
     });
     this.taxonomiesListener = this.taxonomiesService.getTaxonomies()
       .subscribe((taxonomies) => this.taxonomies = taxonomies);
@@ -43,6 +44,6 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   toggleSiderOpen() {
     this.siderOpen = !this.siderOpen;
-    this.document.body.style.overflow = '';
+    this.document.body.style.overflow = this.siderOpen ? 'hidden' : '';
   }
 }

@@ -11,14 +11,21 @@
     </div>
     <nav class="sider-nav">
       <ul class="sider-nav-list">
+        <li [ngClass]="{'active': activePage === 'index'}">
+          <a routerLink="/"><i class="icon icon-home"></i><span>首页</span></a>
+        </li>
         <li *ngFor="let taxonomy of taxonomies" [ngClass]="{'active': activePage == taxonomy.taxonomySlug}">
           <a [routerLink]="['/category/'+taxonomy.taxonomySlug]" title="{{taxonomy.taxonomyDescription}}">
             <i class="icon icon-{{taxonomy.taxonomyIcon || 'folder'}}"></i>
             <span>{{taxonomy.taxonomyName}}</span>
           </a>
         </li>
-        <li><a routerLink="/archive"><i class="icon icon-archive"></i><span>归档</span></a></li>
-        <li><a routerLink="/aboutme"><i class="icon icon-person-heart"></i><span>关于</span></a></li>
+        <li [ngClass]="{'active': activePage === 'archive'}">
+          <a routerLink="/archive"><i class="icon icon-archive"></i><span>归档</span></a>
+        </li>
+        <li [ngClass]="{'active': activePage === 'aboutme'}">
+          <a routerLink="/aboutme"><i class="icon icon-person-heart"></i><span>关于</span></a>
+        </li>
         <li>
           <a href="https://github.com/ifuyun" title="Follow me on GitHub" target="_blank">
             <i class="icon icon-github"></i><span>GitHub</span>
