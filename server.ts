@@ -53,7 +53,7 @@ export async function app(): Promise<express.Express> {
 }
 
 function run() {
-  const port = process.env['PORT'] || 4000;
+  const port = env.server.port || 4000;
 
   // Start up the Node server
   app().then((server) => {

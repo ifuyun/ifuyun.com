@@ -52,25 +52,27 @@ export default function md5(a: string): string {
   }
 
   function l(a) {
-    for (var b, c = a.length, d = c + 8, e = (d - d % 64) / 64, f = 16 * (e + 1), g = new Array(f - 1), h = 0, i = 0; c > i;)
-      b = (i - i % 4) / 4,
-        h = i % 4 * 8,
-        g[b] = g[b] | a.charCodeAt(i) << h,
-        i++;
-    return b = (i - i % 4) / 4,
-      h = i % 4 * 8,
-      g[b] = g[b] | 128 << h,
-      g[f - 2] = c << 3,
-      g[f - 1] = c >>> 29,
-      g;
+    for (var b, c = a.length, d = c + 8, e = (d - d % 64) / 64, f = 16 * (e + 1), g = new Array(f - 1), h = 0, i = 0; c > i;) {
+      b = (i - i % 4) / 4;
+      h = i % 4 * 8;
+      g[b] = g[b] | a.charCodeAt(i) << h;
+      i++;
+    }
+    b = (i - i % 4) / 4;
+    h = i % 4 * 8;
+    g[b] = g[b] | 128 << h;
+    g[f - 2] = c << 3;
+    g[f - 1] = c >>> 29;
+    return g;
   }
 
   function m(a) {
     var b, c, d = '', e = '';
-    for (c = 0; 3 >= c; c++)
-      b = a >>> 8 * c & 255,
-        e = '0' + b.toString(16),
-        d += e.substr(e.length - 2, 2);
+    for (c = 0; 3 >= c; c++) {
+      b = a >>> 8 * c & 255;
+      e = '0' + b.toString(16);
+      d += e.substr(e.length - 2, 2);
+    }
     return d;
   }
 

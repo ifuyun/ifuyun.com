@@ -22,7 +22,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "dev:ssr": "ng run ifuyun.com:serve-ssr",
-    "serve:ssr": "node dist/ifuyun.com/server/main.js",
+    "serve:ssr": "node dist/server/main.js",
     "build:ssr": "ng build && ng run ifuyun.com:server",
     "prerender": "ng run ifuyun.com:prerender"
   },

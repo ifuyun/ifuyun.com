@@ -1,0 +1,18 @@
+{
+  "apps": [
+    {
+      "name": "ifuyun.com",
+      "script": "./dist/server/main.js",
+      "watch": false,
+      "env": {
+        "ENV": "production"
+      },
+      "env_production": {
+        "ENV": "production"
+      },
+      "env_development": {
+        "ENV": "development"
+      }
+    }
+  ]
+}
