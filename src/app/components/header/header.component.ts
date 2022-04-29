@@ -23,6 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   options: OptionEntity = {};
   showSearch = false;
   keyword = '';
+  focusSearch = false;
 
   private optionsListener!: Subscription;
   private commonListener!: Subscription;
@@ -49,6 +50,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleSearchStatus() {
     this.showSearch = !this.showSearch;
+    this.focusSearch = this.showSearch;
   }
 
   search() {

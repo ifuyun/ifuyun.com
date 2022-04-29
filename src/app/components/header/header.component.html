@@ -44,8 +44,8 @@
       </ng-container>
       <ng-container *ngIf="showSearch">
         <form method="get" action="/" (submit)="search()">
-          <input type="text" class="header-input" name="keyword" [(ngModel)]="keyword" autocomplete="off"
-                 placeholder="探索新世界……"/>
+          <input type="text" class="header-input" [(ngModel)]="keyword" [autofocus]="focusSearch"
+                 name="keyword" autocomplete="off" placeholder="探索新世界……"/>
           <input type="submit" class="header-button" value="搜索"/>
         </form>
         <div class="mask mask-search" (click)="toggleSearchStatus()"></div>

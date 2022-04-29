@@ -4,6 +4,7 @@
 * {
   margin: 0;
   padding: 0;
+  outline: 0;
 }
 
 html, body {
@@ -13,16 +14,16 @@ html, body {
 
 html {
   font-size: @base-font-size;
-  -webkit-text-size-adjust: auto;
-  -ms-text-size-adjust: auto;
-  -moz-text-size-adjust: auto;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
 }
 
 body {
   line-height: 1.42857143;
   background-color: @base-background-color;
-  font-size: @primary-font-size;
   font-family: SpecialSymbol, DINRegular, -apple-system, BlinkMacSystemFont, PingFang SC, Helvetica Neue, Hiragino Sans GB, Segoe UI, Microsoft YaHei, \5fae\8f6f\96c5\9ed1, sans-serif;
+  font-size: @primary-font-size;
   color: @base-color;
 }
 
