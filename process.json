@@ -3,6 +3,7 @@
     {
       "name": "ifuyun.com",
       "script": "./dist/server/main.js",
+      "out_file": "/dev/null",
       "watch": false,
       "env": {
         "ENV": "production"

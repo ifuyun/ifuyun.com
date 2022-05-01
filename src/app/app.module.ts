@@ -76,9 +76,9 @@ import { PipesModule } from './pipes/pipes.module';
           php: () => import('highlight.js/lib/languages/php'),
           java: () => import('highlight.js/lib/languages/java'),
           python: () => import('highlight.js/lib/languages/python'),
+          ruby: () => import('highlight.js/lib/languages/ruby'),
           sql: () => import('highlight.js/lib/languages/sql'),
           bash: () => import('highlight.js/lib/languages/bash'),
-          shell: () => import('highlight.js/lib/languages/shell'),
           nginx: () => import('highlight.js/lib/languages/nginx'),
           ini: () => import('highlight.js/lib/languages/ini')
         }

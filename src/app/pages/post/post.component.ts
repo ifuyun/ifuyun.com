@@ -45,6 +45,10 @@ import { VotesService } from '../../services/votes.service';
   styleUrls: ['./post.component.less']
 })
 export class PostComponent extends PageComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('captchaImg') captchaImg!: ElementRef;
+  @ViewChild('qrcodeCanvas') qrcodeCanvas!: ElementRef;
+  @ViewChild('postEle', { static: false }) postEle!: ElementRef;
+
   isMobile = false;
   pageIndex: string = '';
   prevPost: PostEntity | null = null;
@@ -72,10 +76,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private urlListener!: Subscription;
   private paramListener!: Subscription;
   private userListener!: Subscription;
-
-  @ViewChild('captchaImg') captchaImg!: ElementRef;
-  @ViewChild('qrcodeCanvas') qrcodeCanvas!: ElementRef;
-  @ViewChild('postEle', { static: false }) postEle!: ElementRef;
 
   commentForm = this.fb.group({
     author: ['', [Validators.required, Validators.maxLength(8)]],

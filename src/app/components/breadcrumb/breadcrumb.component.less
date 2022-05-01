@@ -1,4 +1,4 @@
-@import "../../../assets/style/variables";
+@import "../../../styles/variables";
 
 .breadcrumb {
   line-height: 40px;
@@ -14,6 +14,9 @@
   &-mobile {
     margin-bottom: @m-primary-margin;
     padding: 0 @m-primary-margin;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .separator {
@@ -25,7 +28,7 @@
   }
 
   h3 {
-    display: inline-block;
+    display: inline;
     font-size: @primary-font-size;
     font-weight: normal;
   }
