@@ -38,9 +38,9 @@ const duration = 500; // ms
 })
 export class LoginComponent implements OnInit, OnDestroy {
   loginForm = this.fb.group({
-    username: [this.cookieService.get('username') || '', [Validators.required, Validators.maxLength(20)]],
+    username: [this.cookieService.get('user') || '', [Validators.required, Validators.maxLength(20)]],
     password: [null, [Validators.required, Validators.maxLength(20)]],
-    rememberMe: [this.cookieService.get('rememberMe') === '1']
+    rememberMe: [this.cookieService.get('remember') === '1']
   });
   autoFocus = {
     username: true,
@@ -76,12 +76,12 @@ export class LoginComponent implements OnInit, OnDestroy {
       };
       this.metaService.updateHTMLMeta(metaData);
     });
-    const username = this.cookieService.get('username');
+    const username = this.cookieService.get('user');
     if (username) {
       this.autoFocus.username = false;
       this.autoFocus.password = true;
     }
-    const rememberMe = this.cookieService.get('rememberMe');
+    const rememberMe = this.cookieService.get('remember');
     /* 登录状态直接跳转后台首页 */
     if (rememberMe === '1' && this.authService.isLoggedIn()) {
       if (this.platform.isBrowser) {

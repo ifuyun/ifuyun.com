@@ -46,12 +46,12 @@ export class AuthService {
       localStorage?.setItem('token', authResult.accessToken);
       localStorage?.setItem('token_expires', authResult.expiresAt.toString());
       if (loginData.rememberMe) {
-        this.cookieService.set('username', loginData.username, {
+        this.cookieService.set('user', loginData.username, {
           path: '/',
           domain: environment.cookie.domain,
           expires: environment.cookie.expires
         });
-        this.cookieService.set('rememberMe', '1', {
+        this.cookieService.set('remember', '1', {
           path: '/',
           domain: environment.cookie.domain,
           expires: environment.cookie.expires

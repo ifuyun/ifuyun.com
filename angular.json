@@ -20,6 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "baseHref": "http://cdn.ifuyun.com/",
             "outputPath": "dist/browser",
             "index": "src/index.html",
             "main": "src/main.ts",

@@ -1,3 +1,4 @@
+import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -5,6 +6,7 @@ import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-bro
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TransferHttpCacheModule } from '@nguniversal/common';
 import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highlightjs';
+import { environment as env } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
@@ -58,13 +60,12 @@ import { PipesModule } from './pipes/pipes.module';
   ],
   providers: [
     httpInterceptorProviders,
+    { provide: APP_BASE_HREF, useValue: env.host },
     {
       provide: HIGHLIGHT_OPTIONS,
       useValue: <HighlightOptions>{
-        lineNumbers: true,
+        lineNumbers: false,
         coreLibraryLoader: () => import('highlight.js/lib/core'),
-        // @ts-ignore
-        lineNumbersLoader: () => import('highlightjs-line-numbers.js'),
         languages: {
           typescript: () => import('highlight.js/lib/languages/typescript'),
           javascript: () => import('highlight.js/lib/languages/javascript'),
