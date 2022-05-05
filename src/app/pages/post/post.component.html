@@ -147,8 +147,8 @@
         </div>
         <div class="form-row">
           <input type="text" class="input" formControlName="captcha" maxlength="4" placeholder="验证码"/>
-          <img #captchaImg class="captcha" src="/api/captcha" title="点击刷新验证码" alt="验证码"
-               onclick="this.src='/api/captcha?r='+Math.random()"/>
+          <img #captchaImg [src]="captchaUrl" (click)="refreshCaptcha($event)"
+               class="captcha" title="点击刷新验证码" alt="验证码"/>
           <span class="form-required">*</span>
         </div>
         <div class="form-row form-row-long">

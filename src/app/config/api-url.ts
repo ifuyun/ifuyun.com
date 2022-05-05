@@ -15,4 +15,5 @@ export enum ApiUrl {
   SAVE_VOTES = '/votes',
   LOGIN = '/users/login',
   GET_LOGIN_USER = '/users/login-user',
+  CAPTCHA = '/captcha'
 }

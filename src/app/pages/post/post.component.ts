@@ -18,23 +18,22 @@ import { Subscription } from 'rxjs';
 import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
 import { MessageService } from '../../components/message/message.service';
+import { ApiUrl } from '../../config/api-url';
 import { VoteType } from '../../config/common.enum';
-import { POST_EXCERPT_LENGTH } from '../../config/constants';
 import { CommonService } from '../../core/common.service';
+import { MetaService } from '../../core/meta.service';
 import { PageComponent } from '../../core/page.component';
 import { PlatformService } from '../../core/platform.service';
+import { UrlService } from '../../core/url.service';
 import { UserAgentService } from '../../core/user-agent.service';
-import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { CommentEntity, CommentModel } from '../../interfaces/comments';
 import { OptionEntity } from '../../interfaces/options';
 import { Post, PostEntity, PostModel } from '../../interfaces/posts';
 import { TaxonomyEntity } from '../../interfaces/taxonomies';
 import { LoginUserEntity } from '../../interfaces/users';
 import { CommentsService } from '../../services/comments.service';
-import { MetaService } from '../../core/meta.service';
 import { OptionsService } from '../../services/options.service';
 import { PostsService } from '../../services/posts.service';
-import { UrlService } from '../../core/url.service';
 import { UsersService } from '../../services/users.service';
 import { VotesService } from '../../services/votes.service';
 
@@ -65,6 +64,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   clickedImage!: HTMLImageElement;
   showImgModal: boolean = false;
   isStandalone: boolean = false;
+  captchaUrl = '';
 
   private postId: string = '';
   private postSlug: string = '';
@@ -183,7 +183,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
           const msg = res.data.status === 'success' ? '评论成功' : '评论成功，审核通过后将显示在页面上';
           this.message.success(msg);
           this.resetCommentForm();
-          this.captchaImg.nativeElement.src = `${this.captchaImg.nativeElement.src}?r=${Math.random()}`;
+          this.captchaImg.nativeElement.src = `${this.captchaUrl}?r=${Math.random()}`;
           this.fetchComments(() => {
             this.scroller.scrollToAnchor('comments');
           });
@@ -218,6 +218,10 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.scroller.scrollToAnchor('respond');
   }
 
+  refreshCaptcha(e: MouseEvent) {
+    (e.target as HTMLImageElement).src = `${this.captchaUrl}?r=${Math.random()}`;
+  }
+
   protected updateActivePage(): void {
     this.commonService.updateActivePage(this.pageIndex);
   }
@@ -225,6 +229,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private initMeta() {
     this.optionsService.options$.subscribe((options) => {
       this.options = options;
+      this.captchaUrl = `${this.options['site_url']}${ApiUrl.API_URL_PREFIX}${ApiUrl.CAPTCHA}`;
+
       const keywords: string[] = (options['site_keywords'] || '').split(',');
       this.metaService.updateHTMLMeta({
         title: `${this.post.postTitle} - ${options?.['site_name']}`,
@@ -232,6 +238,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         author: options?.['site_author'],
         keywords: uniq(this.postTags.map((item) => item.taxonomyName).concat(keywords)).join(',')
       });
+
       !this.isStandalone && this.initQrcode();
     });
   }
@@ -258,7 +265,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   private initData(post: Post, isStandalone: boolean) {
     this.post = post.post;
-    this.post.postExcerpt = this.post.postExcerpt || cutStr(filterHtmlTag(this.post.postContent), POST_EXCERPT_LENGTH);
     this.postId = this.post?.postId;
     this.postMeta = post.meta;
     this.postTags = post.tags;

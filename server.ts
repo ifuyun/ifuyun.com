@@ -4,6 +4,7 @@ import * as compress from 'compression';
 import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
 import { existsSync } from 'fs';
+import helmet from 'helmet';
 import { join } from 'path';
 import 'zone.js/dist/zone-node';
 import { environment as env } from './src/environments/environment';
@@ -23,6 +24,13 @@ export async function app(): Promise<express.Express> {
   server.set('view engine', 'html');
   server.set('views', distFolder);
 
+  server.use(helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+    crossOriginOpenerPolicy: false,
+    originAgentCluster: false,
+    dnsPrefetchControl: false
+  }));
   server.use(compress());
   server.use(cookieParser(env.cookie.secret));
   server.enable('trust proxy');

@@ -19,7 +19,7 @@ export class ApiRequestInterceptor implements HttpInterceptor {
         headers: httpRequest.headers.set('Authorization', 'Bearer ' + token)
       });
     }
-    if (isApiRequest && this.platform.isServer) {
+    if (isApiRequest) {
       httpRequest = httpRequest.clone({
         url: env.api.host + httpRequest.url
       });

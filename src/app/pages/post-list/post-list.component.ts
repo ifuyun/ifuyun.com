@@ -6,20 +6,18 @@ import { Response } from 'express';
 import { uniq } from 'lodash';
 import { combineLatestWith, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { POST_EXCERPT_LENGTH } from '../../config/constants';
-import { PageComponent } from '../../core/page.component';
 import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
+import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
+import { CommonService } from '../../core/common.service';
+import { MetaService } from '../../core/meta.service';
+import { PageComponent } from '../../core/page.component';
+import { PaginatorService } from '../../core/paginator.service';
 import { UserAgentService } from '../../core/user-agent.service';
-import { cutStr, filterHtmlTag } from '../../helpers/helper';
 import { HTMLMetaData } from '../../interfaces/meta';
 import { OptionEntity } from '../../interfaces/options';
 import { PaginatorEntity } from '../../interfaces/paginator';
 import { PostList, PostQueryParam } from '../../interfaces/posts';
-import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
-import { MetaService } from '../../core/meta.service';
 import { OptionsService } from '../../services/options.service';
-import { CommonService } from '../../core/common.service';
-import { PaginatorService } from '../../core/paginator.service';
 import { PostsService } from '../../services/posts.service';
 
 @Component({
@@ -147,9 +145,6 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
       this.postList = res.postList || {};
       this.page = this.postList.page || 1;
       this.total = this.postList.total || 0;
-      this.postList.posts?.map((item) => {
-        item.post.postExcerpt = item.post.postExcerpt || cutStr(filterHtmlTag(item.post.postContent), POST_EXCERPT_LENGTH);
-      });
 
       const siteName: string = this.options['site_name'] || '';
       let description: string = siteName;
