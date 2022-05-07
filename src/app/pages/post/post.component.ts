@@ -239,7 +239,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         keywords: uniq(this.postTags.map((item) => item.taxonomyName).concat(keywords)).join(',')
       });
 
-      !this.isStandalone && this.initQrcode();
+      this.post && !this.isStandalone && this.initQrcode();
     });
   }
 
@@ -332,8 +332,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   private initQrcode() {
-    const siteUrl = this.options?.['site_url'].replace(/\/$/i, '');
-    const postGuid = this.post?.postGuid.replace(/^\//i, '');
+    const siteUrl = this.options['site_url'].replace(/\/$/i, '');
+    const postGuid = this.post.postGuid.replace(/^\//i, '');
     this.shareUrl = siteUrl + '/' + postGuid + '?ref=qrcode';
     QRCode.toCanvas(this.shareUrl, {
       width: 164,

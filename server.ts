@@ -5,6 +5,7 @@ import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
 import { existsSync } from 'fs';
 import helmet from 'helmet';
+import * as moment from 'moment';
 import { join } from 'path';
 import 'zone.js/dist/zone-node';
 import { environment as env } from './src/environments/environment';
@@ -66,7 +67,7 @@ function run() {
   // Start up the Node server
   app().then((server) => {
     server.listen(port, () => {
-      console.log(`Node Express server listening on http://localhost:${port}`);
+      console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}]ifuyun.com listening on http://localhost:${port}`);
     });
   });
 }

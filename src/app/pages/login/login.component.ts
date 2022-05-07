@@ -48,6 +48,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   };
   formStatus: 'normal' | 'shaking' = 'normal';
 
+  private adminUrl = '';
   private options: OptionEntity = {};
   private optionsListener!: Subscription;
 
@@ -75,20 +76,22 @@ export class LoginComponent implements OnInit, OnDestroy {
         keywords: uniq(keywords).join(',')
       };
       this.metaService.updateHTMLMeta(metaData);
+
+      this.adminUrl = `${this.options['site_url']}/admin`;
+      const rememberMe = this.cookieService.get('remember');
+      /* 登录状态直接跳转后台首页 */
+      if (rememberMe === '1' && this.authService.isLoggedIn()) {
+        if (this.platform.isBrowser) {
+          location.href = this.adminUrl;
+        } else {
+          this.response.redirect(this.adminUrl);
+        }
+      }
     });
     const username = this.cookieService.get('user');
     if (username) {
       this.autoFocus.username = false;
       this.autoFocus.password = true;
-    }
-    const rememberMe = this.cookieService.get('remember');
-    /* 登录状态直接跳转后台首页 */
-    if (rememberMe === '1' && this.authService.isLoggedIn()) {
-      if (this.platform.isBrowser) {
-        location.href = '/admin';
-      } else {
-        this.response.redirect('/admin');
-      }
     }
   }
 
@@ -105,7 +108,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         rememberMe
       }).subscribe((res) => {
         if (res.accessToken) {
-          location.href = '/admin';
+          location.href = this.adminUrl;
         } else {
           this.shakeForm();
         }
