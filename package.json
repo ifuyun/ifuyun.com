@@ -23,8 +23,9 @@
     "test": "ng test",
     "dev:ssr": "ng run ifuyun.com:serve-ssr",
     "serve:ssr": "node dist/server/main.js",
-    "build:ssr": "ng build && ng run ifuyun.com:server",
-    "prerender": "ng run ifuyun.com:prerender"
+    "build:ssr": "ng build && ng run ifuyun.com:server && gulp compress",
+    "prerender": "ng run ifuyun.com:prerender",
+    "compress": "gulp compress"
   },
   "dependencies": {
     "@angular/animations": "~13.3.5",
@@ -68,6 +69,8 @@
     "@types/node": "^17.0.30",
     "@types/qrcode": "^1.4.2",
     "@types/ua-parser-js": "^0.7.36",
+    "gulp": "^4.0.2",
+    "gulp-gzip": "^1.4.2",
     "jasmine-core": "~4.1.0",
     "karma": "~6.3.19",
     "karma-chrome-launcher": "~3.1.1",
