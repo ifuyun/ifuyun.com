@@ -30,7 +30,8 @@ export async function app(): Promise<express.Express> {
     crossOriginEmbedderPolicy: false,
     crossOriginOpenerPolicy: false,
     originAgentCluster: false,
-    dnsPrefetchControl: false
+    dnsPrefetchControl: false,
+    referrerPolicy: false
   }));
   server.use(compress());
   server.use(cookieParser(env.cookie.secret));
