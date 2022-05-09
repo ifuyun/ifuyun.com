@@ -20,7 +20,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "baseHref": "http://cdn.ifuyun.com/",
             "outputPath": "dist/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -52,6 +51,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "http://cdn.ifuyun.com/",
               "budgets": [
                 {
                   "type": "initial",
@@ -73,6 +73,7 @@
               "outputHashing": "all"
             },
             "development": {
+              "baseHref": "/",
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,

@@ -21,11 +21,12 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "compress": "gulp compress",
     "dev:ssr": "ng run ifuyun.com:serve-ssr",
     "serve:ssr": "node dist/server/main.js",
-    "build:ssr": "ng build && ng run ifuyun.com:server && gulp compress",
-    "prerender": "ng run ifuyun.com:prerender",
-    "compress": "gulp compress"
+    "build:ssr": "ng build && ng run ifuyun.com:server",
+    "build:ssr:prod": "npm run build:ssr && npm run compress",
+    "prerender": "ng run ifuyun.com:prerender"
   },
   "dependencies": {
     "@angular/animations": "~13.3.5",
