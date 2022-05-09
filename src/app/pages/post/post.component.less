@@ -5,6 +5,14 @@
   background-color: @content-background-color;
   box-shadow: @content-box-shadow;
 
+  .icon, .icon-custom {
+    margin-right: 4px;
+  }
+
+  .icon-custom {
+    font-style: normal;
+  }
+
   &-desktop {
     margin: @box-shadow-width;
 
@@ -65,10 +73,6 @@
         justify-content: center !important;
       }
     }
-  }
-
-  .icon {
-    margin-right: 4px;
   }
 
   &-header {
@@ -267,7 +271,7 @@
   }
 
   &-footer {
-    .icon {
+    .icon, .icon-custom {
       line-height: @post-line-height + @tag-row-span * 2;
     }
 
@@ -293,7 +297,7 @@
         margin-right: 8px;
       }
 
-      a {
+      ul a {
         padding: 4px 8px;
         border-radius: 2px;
         color: @minor-color;

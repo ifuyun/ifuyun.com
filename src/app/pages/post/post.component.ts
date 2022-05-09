@@ -339,6 +339,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       width: 164,
       margin: 0
     }).then((canvas) => {
+      this.qrcodeCanvas.nativeElement.innerHTML = '';
       this.qrcodeCanvas.nativeElement.appendChild(canvas);
     }).catch((err) => {
       this.message.error(err);

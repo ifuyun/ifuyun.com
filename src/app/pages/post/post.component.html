@@ -21,12 +21,14 @@
           <span title="{{post?.author?.userNiceName}}原创">
             <i class='icon icon-pencil'></i><span>原创</span>
           </span>
-          <span title="{{postMeta['copyright_type'] | copyrightType}}">
-            <ng-container *ngIf="postMeta['copyright_type'] === '0'">
-              <i class='icon icon-shield'></i><span>{{postMeta['copyright_type'] | copyrightType}}</span>
+          <span title="许可协议：{{postMeta['copyright_type'] | copyrightTypeDesc}}">
+            <ng-container *ngIf="postMeta['copyright_type'] !== '2'">
+              <i class='icon-custom'>&copy;</i><span>{{postMeta['copyright_type'] | copyrightType}}</span>
             </ng-container>
-            <ng-container *ngIf="postMeta['copyright_type'] !== '0'">
-              <i class='icon icon-share'></i><span>{{postMeta['copyright_type'] | copyrightType}}</span>
+            <ng-container *ngIf="postMeta['copyright_type'] === '2'">
+              <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" target="_blank" rel="license">
+                <i class='icon-custom'>&copy;</i><span>{{postMeta['copyright_type'] | copyrightType}}</span>
+              </a>
             </ng-container>
           </span>
         </ng-container>
@@ -72,11 +74,23 @@
         <div class="post-meta-icon"><i class='icon icon-book'></i></div>
         <div class="post-meta-info">
           <span class="post-meta-info-text" *ngIf="post?.postOriginal === 1"
-                title="来源: {{post?.author?.userNiceName}}原创">
-            来源：{{post?.author?.userNiceName}}原创
+                title="来源: {{post?.author?.userNiceName}}原创">来源：{{post?.author?.userNiceName}}原创</span>
+          <span class="post-meta-info-text" *ngIf="post?.postOriginal !== 1"
+                title="来源: {{postMeta['post_source']}}">来源：{{postMeta['post_source']}}</span>
+        </div>
+      </div>
+      <div class="post-meta" *ngIf="post?.postOriginal === 1 && !isStandalone && isMobile">
+        <div class="post-meta-icon"><i class='icon-custom'>&copy;</i></div>
+        <div class="post-meta-info">
+          <span *ngIf="postMeta['copyright_type'] !== '2'"
+                class="post-meta-info-text" title="许可协议：{{postMeta['copyright_type'] | copyrightTypeDesc}}">
+            许可：{{postMeta['copyright_type'] | copyrightType}}
           </span>
-          <span *ngIf="post?.postOriginal !== 1" title="来源: {{postMeta['post_source']}}">
-            来源：{{postMeta['post_source']}}
+          <span *ngIf="postMeta['copyright_type'] === '2'"
+                class="post-meta-info-text" title="许可协议：{{postMeta['copyright_type'] | copyrightTypeDesc}}">
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" target="_blank" rel="license">
+              许可：{{postMeta['copyright_type'] | copyrightTypeDesc}}
+            </a>
           </span>
         </div>
       </div>
@@ -90,9 +104,10 @@
       </div>
     </div>
     <div class="post-qrcode" *ngIf="!isStandalone">
-      <div #qrcodeCanvas class="post-qrcode-box post-qrcode-share"
+      <div class="post-qrcode-box post-qrcode-share"
            [ngStyle]="{display: showShareQrcode ? 'block' : 'none'}">
         <div class="post-qrcode-arrow"><i></i><i></i></div>
+        <div #qrcodeCanvas></div>
       </div>
       <div class="post-qrcode-box post-qrcode-reward" [ngStyle]="{display: showRewardQrcode ? 'block' : 'none'}">
         <div class="post-qrcode-arrow"><i></i><i></i></div>
