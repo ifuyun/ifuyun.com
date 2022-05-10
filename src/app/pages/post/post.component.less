@@ -1,22 +1,36 @@
 @import "../../../styles/variables";
 
-.post {
+.post, .comment {
   border-radius: @border-radius;
   background-color: @content-background-color;
   box-shadow: @content-box-shadow;
 
+  &-desktop {
+    margin: @box-shadow-width;
+
+    .divider {
+      margin: 0 20px;
+    }
+  }
+
+  &-mobile {
+    .divider {
+      margin: 0 @m-primary-margin;
+    }
+  }
+}
+
+.post {
   .icon-custom {
     font-style: normal;
   }
 
   &-desktop {
-    margin: @box-shadow-width;
-
     .post-header {
       padding: @content-margin @content-margin 4px;
     }
 
-    .post-content, .comment-list, .comment-form {
+    .post-content {
       padding: @content-margin;
     }
 
@@ -24,22 +38,8 @@
       padding: 0 @content-margin @content-margin;
     }
 
-    .divider {
-      margin: 0 20px;
-    }
-
     .wechat-card {
       margin: @content-margin 0;
-    }
-
-    .comment-form {
-      .form-row {
-        width: 280px;
-      }
-
-      .form-row-long {
-        width: 400px;
-      }
     }
   }
 
@@ -48,7 +48,7 @@
       padding: @m-primary-margin @m-primary-margin 4px;
     }
 
-    .post-content, .comment-list, .comment-form {
+    .post-content {
       padding: @m-primary-margin;
     }
 
@@ -56,18 +56,8 @@
       padding: 0 @m-primary-margin @m-primary-margin;
     }
 
-    .divider {
-      margin: 0 @m-primary-margin;
-    }
-
     .wechat-card {
       margin: @m-primary-margin;
-    }
-
-    .comment-form {
-      .form-btns {
-        justify-content: center !important;
-      }
     }
   }
 
@@ -88,6 +78,7 @@
         }
       }
     }
+
     .icon, .icon-custom {
       margin-right: 4px;
     }
@@ -425,6 +416,38 @@
       cursor: zoom-in;
     }
   }
+}
+
+.comment {
+  margin-top: @content-margin;
+
+  &-desktop {
+    .comment-list, .comment-form {
+      padding: @content-margin;
+    }
+
+    .comment-form {
+      .form-row {
+        width: 280px;
+      }
+
+      .form-row-long {
+        width: 400px;
+      }
+    }
+  }
+
+  &-mobile {
+    .comment-list, .comment-form {
+      padding: @m-primary-margin;
+    }
+
+    .comment-form {
+      .form-btns {
+        justify-content: center !important;
+      }
+    }
+  }
 
   .comment-list {
     line-height: @post-line-height;
@@ -455,6 +478,7 @@
           cursor: pointer;
           text-decoration: underline;
         }
+
         a.voted {
           cursor: not-allowed;
         }

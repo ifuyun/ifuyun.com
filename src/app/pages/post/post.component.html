@@ -128,8 +128,9 @@
       </div>
     </div>
   </footer>
+</div>
+<div class="comment" [ngClass]="{'comment-desktop': !isMobile, 'comment-mobile': isMobile}">
   <ng-container *ngIf="post?.commentFlag !== 'close' && comments.length > 0">
-    <div class="divider"></div>
     <div class="comment-list" id="comments">
       <ng-container *ngFor="let comment of comments; let i = index">
         <div *ngIf="i > 0" class="divider divider-dashed"></div>
@@ -147,38 +148,36 @@
         </div>
       </ng-container>
     </div>
-  </ng-container>
-  <ng-container *ngIf="post?.commentFlag !== 'close'">
     <div class="divider"></div>
-    <div class="comment-form" id="respond">
-      <form [formGroup]="commentForm" (ngSubmit)="saveComment()">
-        <div class="form-row">
-          <input type="text" class="input" formControlName="author" maxlength="8" placeholder="昵称"/>
-          <span class="form-required">*</span>
-        </div>
-        <div class="form-row">
-          <input type="text" class="input" formControlName="email" maxlength="100" placeholder="Email"/>
-          <span class="form-required">*</span>
-        </div>
-        <div class="form-row">
-          <input type="text" class="input" formControlName="captcha" maxlength="4" placeholder="验证码"/>
-          <img #captchaImg [src]="captchaUrl" (click)="refreshCaptcha($event)"
-               class="captcha" title="点击刷新验证码" alt="验证码"/>
-          <span class="form-required">*</span>
-        </div>
-        <div class="form-row form-row-long">
-          <textarea class="input input-textarea" formControlName="content" rows="4"
-                    maxlength="400" placeholder="评论内容"></textarea>
-          <span class="form-required">*</span>
-        </div>
-        <div class="form-row form-btns">
-          <input type="hidden" formControlName="commentParent"/>
-          <input type="submit" class="button button-submit" value="提交"/>
-          <input type="reset" class="button" value="重置"/>
-        </div>
-      </form>
-    </div>
   </ng-container>
+  <div class="comment-form" id="respond" *ngIf="post?.commentFlag !== 'close'">
+    <form [formGroup]="commentForm" (ngSubmit)="saveComment()">
+      <div class="form-row">
+        <input type="text" class="input" formControlName="author" maxlength="8" placeholder="昵称"/>
+        <span class="form-required">*</span>
+      </div>
+      <div class="form-row">
+        <input type="text" class="input" formControlName="email" maxlength="100" placeholder="Email"/>
+        <span class="form-required">*</span>
+      </div>
+      <div class="form-row">
+        <input type="text" class="input" formControlName="captcha" maxlength="4" placeholder="验证码"/>
+        <img #captchaImg [src]="captchaUrl" (click)="refreshCaptcha($event)"
+             class="captcha" title="点击刷新验证码" alt="验证码"/>
+        <span class="form-required">*</span>
+      </div>
+      <div class="form-row form-row-long">
+        <textarea class="input input-textarea" formControlName="content" rows="4"
+                  maxlength="400" placeholder="评论内容"></textarea>
+        <span class="form-required">*</span>
+      </div>
+      <div class="form-row form-btns">
+        <input type="hidden" formControlName="commentParent"/>
+        <input type="submit" class="button button-submit" value="提交"/>
+        <input type="reset" class="button" value="重置"/>
+      </div>
+    </form>
+  </div>
 </div>
 <app-modal *ngIf="showImgModal"
            [imgEle]="clickedImage" (toggleModal)="toggleImgModal($event)" [padding]="imgModalPadding"></app-modal>
