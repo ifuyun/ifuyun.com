@@ -17,6 +17,7 @@ export interface CommentModel extends CommentEntity {
   commentIp?: string;
   commentAgent?: string;
   userId?: string;
+  voted?: boolean;
 }
 
 export interface CommentList {

@@ -17,7 +17,8 @@ import {
   styleUrls: ['./modal.component.less']
 })
 export class ModalComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input('imgEle') imgEle!: HTMLImageElement;
+  @Input('imgEle') imgEle!: HTMLImageElement | string;
+  @Input('padding') padding: number = 0;
   @Output() toggleModal = new EventEmitter<boolean>();
 
   @ViewChild('modal') modal!: ElementRef;
@@ -27,7 +28,9 @@ export class ModalComponent implements OnInit, OnDestroy, AfterViewInit {
   private unlistenInput!: Function;
   private bodyEle!: ElementRef;
 
-  constructor(private renderer: Renderer2) {
+  constructor(
+    private renderer: Renderer2
+  ) {
   }
 
   ngOnInit(): void {
@@ -51,11 +54,23 @@ export class ModalComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
     this.renderer.setStyle(this.bodyEle, 'overflow', 'hidden');
+    if (this.padding > 0) {
+      this.modalBody.nativeElement.setAttribute('style', `padding: ${this.padding}px; background-color:#fff;`);
+    }
 
-    const imgNode = this.imgEle.cloneNode(true);
-    this.renderer.setStyle(imgNode, 'max-width', '100%');
-    this.renderer.removeAttribute(imgNode, 'width');
-    this.renderer.appendChild(this.modalBody.nativeElement, imgNode);
+    if (this.imgEle) {
+      let imgNode: HTMLImageElement;
+      if (typeof this.imgEle === 'string') {
+        imgNode = this.renderer.createElement('img');
+        imgNode.src = this.imgEle;
+      } else {
+        imgNode = <HTMLImageElement>this.imgEle.cloneNode(true);
+        this.renderer.removeAttribute(imgNode, 'width');
+        this.renderer.removeAttribute(imgNode, 'id');
+      }
+      this.renderer.setStyle(imgNode, 'max-width', '100%');
+      this.renderer.appendChild(this.modalBody.nativeElement, imgNode);
+    }
   }
 
   ngOnDestroy() {

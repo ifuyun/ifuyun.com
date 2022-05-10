@@ -5,10 +5,6 @@
   background-color: @content-background-color;
   box-shadow: @content-box-shadow;
 
-  .icon, .icon-custom {
-    margin-right: 4px;
-  }
-
   .icon-custom {
     font-style: normal;
   }
@@ -91,6 +87,9 @@
           color: @primary-color;
         }
       }
+    }
+    .icon, .icon-custom {
+      margin-right: 4px;
     }
   }
 
@@ -272,6 +271,7 @@
 
   &-footer {
     .icon, .icon-custom {
+      margin-right: 4px;
       line-height: @post-line-height + @tag-row-span * 2;
     }
 
@@ -310,93 +310,67 @@
       }
     }
 
-    .post-qrcode {
-      @qrcode-label-spacing: 2px;
-      @qrcode-label-width: 50px;
-      @qrcode-width: 164px;
-      @qrcode-padding: 12px;
-      @qrcode-arrow-height: 8px;
-      @qrcode-border-color: #d0d0d0;
-
-      display: flex;
+    .post-actions {
+      @button-primary-color: #ff6838;
+      @button-height: 36px;
       position: relative;
       margin: @content-margin;
-      flex-direction: row;
-      justify-content: center;
       text-align: center;
 
-      .post-qrcode-item {
-        width: @qrcode-label-width - @qrcode-label-spacing;
-        height: @qrcode-label-width;
-        padding-left: @qrcode-label-spacing;
-        line-height: @qrcode-label-width;
-        border: 0;
-        border-radius: 2px;
-        background: @primary-color;
-        color: @content-background-color;
-        letter-spacing: @qrcode-label-spacing;
+      button {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        height: @button-height;
+        padding: 0 12px;
+        border-width: 1px 0 1px 1px;
+        border-style: solid;
+        border-color: @button-primary-color;
+        line-height: @button-height;
+        background: transparent;
+        color: @button-primary-color;
         cursor: pointer;
+        transition: background-color .1s, color .1s;
+        -webkit-appearance: button;
+
+        &:first-child {
+          border-top-left-radius: @border-radius;
+          border-bottom-left-radius: @border-radius;
+        }
+
+        &:last-child {
+          border-right-width: 1px;
+          border-top-right-radius: @border-radius;
+          border-bottom-right-radius: @border-radius;
+        }
 
         &:hover {
-          background-color: @active-color;
+          background-color: @button-primary-color;
+          color: #fff;
         }
 
-        &:not(:last-child) {
-          margin-right: @content-margin;
+        &.liked {
+          background-color: @button-primary-color;
+          color: #fff;
+          opacity: .8;
+          cursor: not-allowed;
+        }
+
+        .icon {
+          margin: 0;
+          line-height: @button-height - 2px;
+          font-size: 16px;
+        }
+
+        .text {
+          margin-left: 8px;
+          font-size: @primary-font-size;
+          font-weight: 700;
         }
       }
 
-      .post-qrcode-box {
+      .images-wrapper {
         display: none;
-        position: absolute;
-        width: @qrcode-width;
-        height: @qrcode-width;
-        bottom: 0;
-        left: 50%;
-        margin-bottom: @qrcode-label-width + @qrcode-arrow-height + 2px;
-        padding: @qrcode-padding;
-        border: 1px solid @qrcode-border-color;
-        border-radius: @border-radius;
-        background: @content-background-color;
-      }
-
-      .post-qrcode-share {
-        margin-left: -((@qrcode-width + @qrcode-padding * 2 + 2 + @qrcode-label-width + @content-margin) / 2);
-      }
-
-      .post-qrcode-reward {
-        margin-left: -((@qrcode-width + @qrcode-padding * 2 + 2 - @qrcode-label-width - @content-margin) / 2);
-
-        img {
-          width: @qrcode-width;
-        }
-      }
-
-      .post-qrcode-arrow {
-        position: absolute;
-        width: @qrcode-arrow-height * 2;
-        height: @qrcode-arrow-height;
-        bottom: 0;
-        left: 50%;
-        margin-left: -@qrcode-arrow-height;
-        margin-bottom: -@qrcode-arrow-height;
-
-        i {
-          position: absolute;
-          display: block;
-          width: 0;
-          height: 0;
-          border-top: @qrcode-arrow-height solid @content-background-color;
-          border-bottom: @qrcode-arrow-height solid transparent;
-          border-left: @qrcode-arrow-height solid transparent;
-          border-right: @qrcode-arrow-height solid transparent;
-          overflow: hidden;
-
-          &:first-child {
-            top: 1px;
-            border-top: @qrcode-arrow-height solid @qrcode-border-color;
-          }
-        }
       }
     }
 
@@ -477,9 +451,12 @@
           margin-right: 12px;
         }
 
-        a:hover {
+        a:hover:not(.voted) {
           cursor: pointer;
           text-decoration: underline;
+        }
+        a.voted {
+          cursor: not-allowed;
         }
       }
     }

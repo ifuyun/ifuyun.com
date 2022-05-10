@@ -9,9 +9,14 @@ export enum CommentFlag {
   CLOSE = 'close'
 }
 
-export enum VoteType {
+export enum VoteValue {
   LIKE = 'like',
   DISLIKE = 'dislike'
+}
+
+export enum VoteType {
+  POST = 'post',
+  COMMENT = 'comment'
 }
 
 export enum CopyrightType {

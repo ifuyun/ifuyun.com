@@ -103,18 +103,17 @@
         </div>
       </div>
     </div>
-    <div class="post-qrcode" *ngIf="!isStandalone">
-      <div class="post-qrcode-box post-qrcode-share"
-           [ngStyle]="{display: showShareQrcode ? 'block' : 'none'}">
-        <div class="post-qrcode-arrow"><i></i><i></i></div>
-        <div #qrcodeCanvas></div>
-      </div>
-      <div class="post-qrcode-box post-qrcode-reward" [ngStyle]="{display: showRewardQrcode ? 'block' : 'none'}">
-        <div class="post-qrcode-arrow"><i></i><i></i></div>
-        <img src="/assets/images/reward.jpg" alt="reward"/>
-      </div>
-      <div class="post-qrcode-item" (mouseover)="toggleShareQrcode()" (mouseout)="toggleShareQrcode()">分享</div>
-      <div class="post-qrcode-item" (mouseover)="toggleRewardQrcode()" (mouseout)="toggleRewardQrcode()">打赏</div>
+    <div class="post-actions" *ngIf="!isStandalone">
+      <button [ngClass]="{liked: postVoted}" (click)="votePost(true)">
+        <i class='icon icon-like'></i>
+        <span class="text">真棒！{{postMeta['post_vote'] || ''}}</span>
+      </button>
+      <button (click)="showReward('/assets/images/reward.jpg')">
+        <i class='icon icon-heart-fill'></i>
+      </button>
+      <button *ngIf="!isMobile" (click)="showShareQrcode()">
+        <i class='icon icon-share-fill'></i>
+      </button>
     </div>
     <div class="post-link" *ngIf="!isStandalone">
       <div class="post-link-prev">
@@ -141,7 +140,8 @@
           </p>
           <p>{{comment.commentContent}}</p>
           <p class="comment-item-action">
-            <a (click)="saveVote(comment, true)">赞(<span>{{comment.commentVote}}</span>)</a>
+            <a [ngClass]="{voted: comment.voted}"
+               (click)="voteComment(comment, true)">赞(<span>{{comment.commentVote}}</span>)</a>
             <a (click)="replyComment(comment)">回复</a>
           </p>
         </div>
@@ -180,4 +180,5 @@
     </div>
   </ng-container>
 </div>
-<app-modal *ngIf="showImgModal" [imgEle]="clickedImage" (toggleModal)="toggleImgModal($event)"></app-modal>
+<app-modal *ngIf="showImgModal"
+           [imgEle]="clickedImage" (toggleModal)="toggleImgModal($event)" [padding]="imgModalPadding"></app-modal>

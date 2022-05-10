@@ -1,8 +1,9 @@
-import { ViewportScroller } from '@angular/common';
+import { DOCUMENT, ViewportScroller } from '@angular/common';
 import {
   AfterViewInit,
   Component,
   ElementRef,
+  Inject,
   OnDestroy,
   OnInit,
   Renderer2,
@@ -19,7 +20,7 @@ import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interfa
 import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
 import { MessageService } from '../../components/message/message.service';
 import { ApiUrl } from '../../config/api-url';
-import { VoteType } from '../../config/common.enum';
+import { VoteType, VoteValue } from '../../config/common.enum';
 import { CommonService } from '../../core/common.service';
 import { MetaService } from '../../core/meta.service';
 import { PageComponent } from '../../core/page.component';
@@ -45,7 +46,6 @@ import { VotesService } from '../../services/votes.service';
 })
 export class PostComponent extends PageComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('captchaImg') captchaImg!: ElementRef;
-  @ViewChild('qrcodeCanvas') qrcodeCanvas!: ElementRef;
   @ViewChild('postEle', { static: false }) postEle!: ElementRef;
 
   isMobile = false;
@@ -59,12 +59,12 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   postCategories: TaxonomyEntity[] = [];
   crumbs: BreadcrumbEntity[] = [];
   showCrumb: boolean = true;
-  showShareQrcode: boolean = false;
-  showRewardQrcode: boolean = false;
-  clickedImage!: HTMLImageElement;
+  clickedImage!: HTMLImageElement | string;
   showImgModal: boolean = false;
+  imgModalPadding = 0;
   isStandalone: boolean = false;
   captchaUrl = '';
+  postVoted = false;
 
   private postId: string = '';
   private postSlug: string = '';
@@ -101,7 +101,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     private message: MessageService,
     private platform: PlatformService,
     private scroller: ViewportScroller,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -130,6 +131,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.unlistenImgClick = this.renderer.listen(this.postEle.nativeElement, 'click', ((e: MouseEvent) => {
       if (e.target instanceof HTMLImageElement) {
         // todo: if image is in <a> link
+        this.imgModalPadding = 0;
         this.clickedImage = e.target;
         this.showImgModal = true;
       }
@@ -192,24 +194,43 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     }
   }
 
-  toggleShareQrcode() {
-    this.showShareQrcode = !this.showShareQrcode;
-  }
-
-  toggleRewardQrcode() {
-    this.showRewardQrcode = !this.showRewardQrcode;
-  }
-
   toggleImgModal(status: boolean) {
     this.showImgModal = status;
   }
 
-  saveVote(comment: CommentModel, like: boolean) {
+  votePost(like: boolean) {
+    if (this.postVoted) {
+      return;
+    }
+    this.votesService.saveVote({
+      objectId: this.postId,
+      value: like ? VoteValue.LIKE : VoteValue.DISLIKE,
+      type: VoteType.POST
+    }).subscribe((res) => {
+      this.postMeta['post_vote'] = res.vote.toString();
+      this.postVoted = true;
+
+      const likedPosts = (localStorage.getItem('liked_posts') || '').split(',');
+      likedPosts.push(this.postId);
+      localStorage.setItem('liked_posts', uniq(likedPosts.filter((item) => !!item)).join(','));
+    });
+  }
+
+  voteComment(comment: CommentModel, like: boolean) {
+    if ((localStorage.getItem('liked_comments') || '').split(',').includes(comment.commentId)) {
+      return;
+    }
     this.votesService.saveVote({
       objectId: comment.commentId,
-      type: like ? VoteType.LIKE : VoteType.DISLIKE
+      value: like ? VoteValue.LIKE : VoteValue.DISLIKE,
+      type: VoteType.COMMENT
     }).subscribe((res) => {
       comment.commentVote = res.vote;
+      comment.voted = true;
+
+      const likedComments = (localStorage.getItem('liked_comments') || '').split(',');
+      likedComments.push(comment.commentId);
+      localStorage.setItem('liked_comments', uniq(likedComments.filter((item) => !!item)).join(','));
     });
   }
 
@@ -220,6 +241,19 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   refreshCaptcha(e: MouseEvent) {
     (e.target as HTMLImageElement).src = `${this.captchaUrl}?r=${Math.random()}`;
+  }
+
+  showReward(src: string) {
+    this.clickedImage = src;
+    this.imgModalPadding = 16;
+    this.showImgModal = true;
+  }
+
+  showShareQrcode() {
+    this.clickedImage = '';
+    this.imgModalPadding = 16;
+    this.showImgModal = true;
+    setTimeout(() => this.generateShareQrcode(), 0);
   }
 
   protected updateActivePage(): void {
@@ -238,8 +272,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         author: options?.['site_author'],
         keywords: uniq(this.postTags.map((item) => item.taxonomyName).concat(keywords)).join(',')
       });
-
-      this.post && !this.isStandalone && this.initQrcode();
     });
   }
 
@@ -278,6 +310,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.showCrumb = !isStandalone;
     this.isStandalone = isStandalone;
     this.initMeta();
+    this.updatePostVoted();
     this.parseHtml();
     this.fetchComments();
   }
@@ -285,6 +318,14 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private fetchComments(cb?: Function) {
     this.commentsService.getCommentsByPostId(this.postId).subscribe((comments) => {
       this.comments = comments.comments || [];
+      if (this.platform.isBrowser) {
+        const likedComments = (localStorage.getItem('liked_comments') || '').split(',');
+        this.comments.forEach((item) => {
+          if (likedComments.includes(item.commentId)) {
+            item.voted = true;
+          }
+        });
+      }
       cb && cb();
     });
   }
@@ -331,18 +372,26 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     );
   }
 
-  private initQrcode() {
+  private generateShareQrcode() {
     const siteUrl = this.options['site_url'].replace(/\/$/i, '');
     const postGuid = this.post.postGuid.replace(/^\//i, '');
     this.shareUrl = siteUrl + '/' + postGuid + '?ref=qrcode';
+
     QRCode.toCanvas(this.shareUrl, {
-      width: 164,
+      width: 320,
       margin: 0
     }).then((canvas) => {
-      this.qrcodeCanvas.nativeElement.innerHTML = '';
-      this.qrcodeCanvas.nativeElement.appendChild(canvas);
+      const modalEle = this.document.querySelector('.modal-content-body');
+      modalEle?.appendChild(canvas);
     }).catch((err) => {
       this.message.error(err);
     });
+  }
+
+  private updatePostVoted() {
+    if (this.platform.isBrowser) {
+      const likedPosts = (localStorage.getItem('liked_posts') || '').split(',');
+      this.postVoted = likedPosts.includes(this.postId);
+    }
   }
 }
