@@ -1,5 +1,5 @@
 <app-breadcrumb *ngIf="showCrumb"></app-breadcrumb>
-<div class="post" [ngClass]="{'post-desktop': !isMobile, 'post-mobile': isMobile}" id="article">
+<div class="post" [ngClass]="{'post-desktop': !isMobile, 'post-mobile': isMobile}">
   <div class="original-sign" *ngIf="post?.postOriginal === 1 && !isPage">原创</div>
   <header class="post-header">
     <h1 class="post-title">
@@ -81,16 +81,19 @@
       </div>
     </div>
     <div class="post-actions" *ngIf="!isPage">
-      <button [ngClass]="{liked: postVoted}" (click)="votePost(true)">
-        <i class='icon icon-like'></i>
-        <span class="text">真棒！{{postMeta['post_vote'] || ''}}</span>
-      </button>
-      <button (click)="showReward('/assets/images/reward.jpg')">
-        <i class='icon icon-heart-fill'></i>
-      </button>
-      <button *ngIf="!isMobile" (click)="showShareQrcode()">
-        <i class='icon icon-share-fill'></i>
-      </button>
+      <div>
+        <button class="button-like" [ngClass]="{liked: postVoted}" (click)="votePost(true)">
+          <i class='icon icon-like'></i>
+          <span class="text">真棒！{{postMeta['post_vote'] || ''}}</span>
+          <span class="parkinson-mask"><i class='icon icon-like'></i></span>
+        </button>
+        <button (click)="showReward('/assets/images/reward.jpg')">
+          <i class='icon icon-heart-fill'></i>
+        </button>
+        <button *ngIf="!isMobile" (click)="showShareQrcode()">
+          <i class='icon icon-share-fill'></i>
+        </button>
+      </div>
     </div>
     <div class="post-link" *ngIf="!isPage">
       <div class="post-link-prev">

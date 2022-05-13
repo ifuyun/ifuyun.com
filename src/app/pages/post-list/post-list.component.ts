@@ -78,7 +78,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
       })
     ).subscribe(() => {
       this.fetchPosts();
-      this.scroller.scrollToAnchor('postList');
+      this.scroller.scrollToPosition([0, 0]);
     });
   }
 

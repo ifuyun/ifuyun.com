@@ -331,16 +331,22 @@
     .post-actions {
       @button-primary-color: #ff6838;
       @button-height: 36px;
+      @button-padding: 12px;
+      display: flex;
       position: relative;
       margin: @content-margin;
-      text-align: center;
+      justify-content: center;
+
+      > div {
+        position: relative;
+      }
 
       button {
         display: inline-flex;
         justify-content: center;
         align-items: center;
         height: @button-height;
-        padding: 0 12px;
+        padding: 0 @button-padding;
         border-width: 1px 0 1px 1px;
         border-style: solid;
         border-color: @button-primary-color;
@@ -362,7 +368,7 @@
           border-bottom-right-radius: @border-radius;
         }
 
-        &:hover {
+        &:not(.button-like):hover {
           background-color: @button-primary-color;
           color: #fff;
         }
@@ -376,7 +382,7 @@
 
         .icon {
           margin: 0;
-          line-height: @button-height - 2px;
+          line-height: @button-height;
           font-size: 16px;
         }
 
@@ -387,8 +393,38 @@
         }
       }
 
-      .images-wrapper {
-        display: none;
+      .button-like:not(.liked):hover {
+        .parkinson-mask {
+          visibility: visible;
+          transition: opacity .25s, visibility .25s;
+          transition-delay: .1s;
+          opacity: 1;
+
+          .icon {
+            margin-left: 50%;
+            transition: transform .25s, margin .25s;
+            transition-delay: .5s;
+            animation: pre-like-icon .2s infinite;
+            animation-delay: .75s;
+            transform: translateY(-2px) translate(-50%);
+          }
+        }
+      }
+
+      .parkinson-mask {
+        box-sizing: border-box;
+        display: flex;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        padding: 0 @button-padding + 1;
+        border-radius: 4px;
+        background-color: #ff5722;
+        color: #fff;
+        opacity: 0;
+        visibility: hidden;
       }
     }
 
@@ -569,5 +605,31 @@
 
   &-dashed {
     border-top-style: dashed;
+  }
+}
+
+@keyframes pre-like-icon {
+  0% {
+    transform: translateY(-2px) translate(-40%)
+  }
+
+  20% {
+    transform: translateY(0) translate(-43%)
+  }
+
+  40% {
+    transform: translateY(-3px) translate(-48%)
+  }
+
+  60% {
+    transform: translateY(0) translate(-43%)
+  }
+
+  80% {
+    transform: translateY(2px) translate(-50%)
+  }
+
+  to {
+    transform: translateY(-2px) translate(-42%)
   }
 }

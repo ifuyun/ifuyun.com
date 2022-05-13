@@ -4,7 +4,7 @@
     <li><img src="/assets/images/cloud.jpg" alt="{{options['site_name']}}"/></li>
   </ul>
 </div>
-<div id="postList" [ngClass]="{'post-list-desktop': !isMobile}">
+<div [ngClass]="{'post-list-desktop': !isMobile}">
   <article class="post" [ngClass]="{'post-desktop': !isMobile, 'post-mobile': isMobile}"
            *ngFor="let post of postList?.posts">
     <header>

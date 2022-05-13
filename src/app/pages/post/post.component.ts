@@ -116,7 +116,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       this.postId = params['postId']?.trim();
       this.postSlug = params['postSlug']?.trim();
       this.postSlug ? this.fetchPage() : this.fetchPost();
-      this.scroller.scrollToAnchor('article');
+      this.scroller.scrollToPosition([0, 0]);
     });
   }
 
