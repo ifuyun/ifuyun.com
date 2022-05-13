@@ -4,7 +4,8 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'numberView'
 })
 export class NumberViewPipe implements PipeTransform {
-  transform(value: number, precision?: string): string | number {
+  transform(value: number | undefined, precision?: string): string | number {
+    value = value || 0;
     if (value < 1000) {
       return value;
     }

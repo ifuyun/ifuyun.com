@@ -1,5 +1,6 @@
 <app-breadcrumb *ngIf="showCrumb"></app-breadcrumb>
 <div class="post" [ngClass]="{'post-desktop': !isMobile, 'post-mobile': isMobile}" id="article">
+  <div class="original-sign" *ngIf="post?.postOriginal === 1 && !isStandalone">原创</div>
   <header class="post-header">
     <h1 class="post-title">
       <a [routerLink]="[post?.postGuid]" title="{{post?.postTitle}}" rel="bookmark">{{post?.postTitle}}</a>
@@ -11,33 +12,9 @@
       <span title="作者：{{postMeta['postAuthor']}}">
         <i class='icon icon-person'></i><span>{{postMeta['postAuthor']}}</span>
       </span>
-      <ng-container *ngIf="!isMobile">
-        <span *ngIf="!isStandalone && postCategories.length > 0">
-          <i class='icon icon-folder'></i>
-          <a *ngFor="let cat of postCategories" [routerLink]="['/category/' + cat.taxonomySlug]"
-             title="{{cat.taxonomyName}}" rel="category">{{cat.taxonomyName}}</a>
-        </span>
-        <ng-container *ngIf="post?.postOriginal === 1 && !isStandalone">
-          <span title="{{post?.author?.userNiceName}}原创">
-            <i class='icon icon-pencil'></i><span>原创</span>
-          </span>
-          <span title="许可协议：{{postMeta['copyright_type'] | copyrightTypeDesc}}">
-            <ng-container *ngIf="postMeta['copyright_type'] !== '2'">
-              <i class='icon-custom'>&copy;</i><span>{{postMeta['copyright_type'] | copyrightType}}</span>
-            </ng-container>
-            <ng-container *ngIf="postMeta['copyright_type'] === '2'">
-              <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" target="_blank" rel="license">
-                <i class='icon-custom'>&copy;</i><span>{{postMeta['copyright_type'] | copyrightType}}</span>
-              </a>
-            </ng-container>
-          </span>
-        </ng-container>
-        <ng-container *ngIf="post?.postOriginal !== 1 && !isStandalone">
-          <span title="来源：{{postMeta['post_source']}}">
-            <i class='icon icon-book'></i><span>{{postMeta['post_source']}}</span>
-          </span>
-        </ng-container>
-      </ng-container>
+      <span title="阅读：{{post?.postViewCount | numberView}}">
+        <i class='icon icon-eye'></i><span>{{post?.postViewCount | numberView}} 次阅读</span>
+      </span>
     </div>
   </header>
   <div class="divider"></div>
@@ -52,7 +29,7 @@
   </div>
   <footer class="post-footer">
     <div>
-      <div class="post-meta" *ngIf="!isStandalone && isMobile && postCategories.length > 0">
+      <div class="post-meta" *ngIf="!isStandalone && postCategories.length > 0">
         <div class="post-meta-icon"><i class='icon icon-folder'></i></div>
         <ul class="post-meta-info">
           <li *ngFor="let cat of postCategories">
@@ -70,7 +47,7 @@
           </li>
         </ul>
       </div>
-      <div class="post-meta" *ngIf="!isStandalone && isMobile">
+      <div class="post-meta" *ngIf="!isStandalone">
         <div class="post-meta-icon"><i class='icon icon-book'></i></div>
         <div class="post-meta-info">
           <span class="post-meta-info-text" *ngIf="post?.postOriginal === 1"
@@ -79,7 +56,7 @@
                 title="来源: {{postMeta['post_source']}}">来源：{{postMeta['post_source']}}</span>
         </div>
       </div>
-      <div class="post-meta" *ngIf="post?.postOriginal === 1 && !isStandalone && isMobile">
+      <div class="post-meta" *ngIf="post?.postOriginal === 1 && !isStandalone">
         <div class="post-meta-icon"><i class='icon-custom'>&copy;</i></div>
         <div class="post-meta-info">
           <span *ngIf="postMeta['copyright_type'] !== '2'"

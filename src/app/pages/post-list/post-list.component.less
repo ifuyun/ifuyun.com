@@ -105,8 +105,13 @@
     padding: 8px 0;
 
     &-top {
-      span:not(:last-child) {
-        margin-right: 20px;
+      > span:not(:last-child):after {
+        content: '|';
+        display: inline-block;
+        position: relative;
+        top: -2px;
+        margin: 0 10px;
+        vertical-align: middle;
       }
 
       a:not(:last-child) {

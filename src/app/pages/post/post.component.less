@@ -21,13 +21,35 @@
 }
 
 .post {
+  position: relative;
+  overflow: hidden;
+
   .icon-custom {
     font-style: normal;
   }
 
+  .original-sign {
+    @sign-offset: 24px;
+    @sign-height: 24px;
+    @sign-width: @sign-offset * 2 * 1.41421356 + @sign-height;
+    position: absolute;
+    top: @sign-offset - (@sign-height / 2);
+    left: @sign-offset - (@sign-width / 2);
+    width: @sign-width;
+    height: @sign-height;
+    line-height: @sign-height;
+    transform: rotate(-45deg);
+    transform-origin: center;
+    text-align: center;
+    background-color: @primary-color;
+    color: #fff;
+    font-size: @minor-font-size;
+    font-weight: 700;
+  }
+
   &-desktop {
     .post-header {
-      padding: @content-margin @content-margin 4px;
+      padding: @content-header-margin @content-margin 4px;
     }
 
     .post-content {
@@ -45,7 +67,7 @@
 
   &-mobile {
     .post-header {
-      padding: @m-primary-margin @m-primary-margin 4px;
+      padding: @m-content-header-margin @m-primary-margin 4px;
     }
 
     .post-content {
@@ -86,15 +108,20 @@
 
   &-meta {
     line-height: @post-line-height;
-    color: @minor-color;
+    color: @meta-color;
     font-size: @minor-font-size;
 
     &-top {
       margin-bottom: 8px;
       padding: 0 @content-margin;
 
-      span:not(:last-child) {
-        margin-right: 20px;
+      > span:not(:last-child):after {
+        content: '|';
+        display: inline-block;
+        position: relative;
+        top: -2px;
+        margin: 0 10px;
+        vertical-align: middle;
       }
 
       a:not(:last-child) {
@@ -103,7 +130,7 @@
     }
 
     a {
-      color: @minor-color;
+      color: @meta-color;
 
       &:hover {
         color: @primary-color;
@@ -155,11 +182,11 @@
       font-size: 16px;
     }
 
-    h2, h3 {
+    h2 {
       font-size: 15px;
     }
 
-    h4, h5, h6 {
+    h3, h4, h5, h6 {
       font-size: @primary-font-size;
     }
 
