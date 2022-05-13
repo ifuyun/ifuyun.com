@@ -1,6 +1,6 @@
 <app-breadcrumb *ngIf="showCrumb"></app-breadcrumb>
 <div class="post" [ngClass]="{'post-desktop': !isMobile, 'post-mobile': isMobile}" id="article">
-  <div class="original-sign" *ngIf="post?.postOriginal === 1 && !isStandalone">原创</div>
+  <div class="original-sign" *ngIf="post?.postOriginal === 1 && !isPage">原创</div>
   <header class="post-header">
     <h1 class="post-title">
       <a [routerLink]="[post?.postGuid]" title="{{post?.postTitle}}" rel="bookmark">{{post?.postTitle}}</a>
@@ -29,7 +29,7 @@
   </div>
   <footer class="post-footer">
     <div>
-      <div class="post-meta" *ngIf="!isStandalone && postCategories.length > 0">
+      <div class="post-meta" *ngIf="!isPage && postCategories.length > 0">
         <div class="post-meta-icon"><i class='icon icon-folder'></i></div>
         <ul class="post-meta-info">
           <li *ngFor="let cat of postCategories">
@@ -47,7 +47,7 @@
           </li>
         </ul>
       </div>
-      <div class="post-meta" *ngIf="!isStandalone">
+      <div class="post-meta" *ngIf="!isPage">
         <div class="post-meta-icon"><i class='icon icon-book'></i></div>
         <div class="post-meta-info">
           <span class="post-meta-info-text" *ngIf="post?.postOriginal === 1"
@@ -56,7 +56,7 @@
                 title="来源: {{postMeta['post_source']}}">来源：{{postMeta['post_source']}}</span>
         </div>
       </div>
-      <div class="post-meta" *ngIf="post?.postOriginal === 1 && !isStandalone">
+      <div class="post-meta" *ngIf="post?.postOriginal === 1 && !isPage">
         <div class="post-meta-icon"><i class='icon-custom'>&copy;</i></div>
         <div class="post-meta-info">
           <span *ngIf="postMeta['copyright_type'] !== '2'"
@@ -80,7 +80,7 @@
         </div>
       </div>
     </div>
-    <div class="post-actions" *ngIf="!isStandalone">
+    <div class="post-actions" *ngIf="!isPage">
       <button [ngClass]="{liked: postVoted}" (click)="votePost(true)">
         <i class='icon icon-like'></i>
         <span class="text">真棒！{{postMeta['post_vote'] || ''}}</span>
@@ -92,7 +92,7 @@
         <i class='icon icon-share-fill'></i>
       </button>
     </div>
-    <div class="post-link" *ngIf="!isStandalone">
+    <div class="post-link" *ngIf="!isPage">
       <div class="post-link-prev">
         <a *ngIf="prevPost" [routerLink]="[prevPost.postGuid]" title="{{prevPost.postTitle}}">
           <span class="post-link-text">上一篇：{{prevPost.postTitle}}</span>

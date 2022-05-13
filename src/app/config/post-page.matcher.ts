@@ -1,6 +1,6 @@
 import { Route, UrlSegment, UrlSegmentGroup } from '@angular/router';
 
-export function postStandaloneUrlMatcher(url: UrlSegment[], group: UrlSegmentGroup, route: Route) {
+export function postPageUrlMatcher(url: UrlSegment[], group: UrlSegmentGroup, route: Route) {
   const nameReg = /^[a-zA-Z0-9]+(?:[~@$%&*\-_=+;:,]+[a-zA-Z0-9]+)*$/i;
   if (url.length > 2 || url.length < 1) {
     return null;

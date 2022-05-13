@@ -1,6 +1,6 @@
 import { Route, UrlSegment, UrlSegmentGroup } from '@angular/router';
 
-export function postUrlMatcher(url: UrlSegment[], group: UrlSegmentGroup, route: Route) {
+export function postArticleUrlMatcher(url: UrlSegment[], group: UrlSegmentGroup, route: Route) {
   if (url.length !== 2 || url[0].path !== 'post') {
     return null;
   }

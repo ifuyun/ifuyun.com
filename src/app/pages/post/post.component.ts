@@ -62,7 +62,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   clickedImage!: HTMLImageElement | string;
   showImgModal: boolean = false;
   imgModalPadding = 0;
-  isStandalone: boolean = false;
+  isPage: boolean = false;
   captchaUrl = '';
   postVoted = false;
 
@@ -115,7 +115,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.paramListener = this.route.params.subscribe((params) => {
       this.postId = params['postId']?.trim();
       this.postSlug = params['postSlug']?.trim();
-      this.postSlug ? this.fetchPostStandalone() : this.fetchPost();
+      this.postSlug ? this.fetchPage() : this.fetchPost();
       this.scroller.scrollToAnchor('article');
     });
   }
@@ -287,7 +287,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     });
   }
 
-  private fetchPostStandalone() {
+  private fetchPage() {
     this.postsService.getPostBySlug(this.postSlug).subscribe((post) => {
       if (post && post.post && post.post.postId) {
         this.initData(post, true);
@@ -295,20 +295,20 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     });
   }
 
-  private initData(post: Post, isStandalone: boolean) {
+  private initData(post: Post, isPage: boolean) {
     this.post = post.post;
     this.postId = this.post?.postId;
     this.postMeta = post.meta;
     this.postTags = post.tags;
     this.postCategories = post.categories;
-    this.pageIndex = (isStandalone ? post.post.postName : post.crumbs?.[0].slug) || '';
+    this.pageIndex = (isPage ? post.post.postName : post.crumbs?.[0].slug) || '';
     this.updateActivePage();
-    if (!isStandalone) {
+    if (!isPage) {
       this.crumbs = post.crumbs || [];
       this.crumbService.updateCrumb(this.crumbs);
     }
-    this.showCrumb = !isStandalone;
-    this.isStandalone = isStandalone;
+    this.showCrumb = !isPage;
+    this.isPage = isPage;
     this.initMeta();
     this.updatePostVoted();
     this.parseHtml();
