@@ -83,7 +83,7 @@
     }
   }
 
-  &-header {
+  .post-header {
     text-align: center;
 
     .post-title {
@@ -106,7 +106,7 @@
     }
   }
 
-  &-meta {
+  .post-meta {
     line-height: @post-line-height;
     color: @meta-color;
     font-size: @minor-font-size;
@@ -138,7 +138,7 @@
     }
   }
 
-  &-content {
+  .post-content {
     line-height: 1.71428571em;
     word-wrap: break-word;
     text-align: justify;
@@ -287,7 +287,7 @@
     }
   }
 
-  &-footer {
+  .post-footer {
     .icon, .icon-custom {
       margin-right: 4px;
       line-height: @post-line-height + @tag-row-span * 2;
@@ -429,8 +429,11 @@
     }
 
     .post-link {
-      margin-top: @content-margin;
+      @link-padding: 6px;
       display: flex;
+      margin-top: @content-margin;
+      margin-left: -@link-padding;
+      margin-right: -@link-padding;
       flex-direction: row;
       justify-content: space-between;
 
@@ -439,7 +442,9 @@
       }
 
       .post-link-prev, .post-link-next {
-        width: 49%;
+        box-sizing: border-box;
+        width: 50%;
+        padding: 0 @link-padding;
       }
 
       .post-link-prev a {

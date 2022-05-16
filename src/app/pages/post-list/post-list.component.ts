@@ -147,7 +147,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
       this.total = this.postList.total || 0;
 
       const siteName: string = this.options['site_name'] || '';
-      let description: string = siteName;
+      let description: string = '';
       const titles: string[] = [siteName];
       const taxonomies: string[] = [];
       const keywords: string[] = (this.options['site_keywords'] || '').split(',');
@@ -167,19 +167,23 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
         titles.unshift(label);
         description += label;
       }
-      description += '文章';
       if (this.keyword) {
-        titles.unshift(`"${this.keyword}"搜索结果`);
-        description += `搜索「${this.keyword}」结果`;
+        titles.unshift(this.keyword, '搜索');
+        description += `「${this.keyword}」搜索结果`;
         keywords.unshift(this.keyword);
       } else {
-        description += '列表';
+        description += '文章列表';
       }
       if (this.page > 1) {
         titles.unshift(`第${this.page}页`);
         description += `(第${this.page}页)`;
       }
-      description += `。${this.options['site_description']}`;
+      if (description === '文章列表') {
+        description = '';
+      } else {
+        description += '。';
+      }
+      description += `${this.options['site_description']}`;
       if (titles.length === 1) {
         titles.unshift(this.options['site_slogan']);
       }

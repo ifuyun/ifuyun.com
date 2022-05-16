@@ -4,15 +4,15 @@
     <li><img src="/assets/images/cloud.jpg" alt="{{options['site_name']}}"/></li>
   </ul>
 </div>
-<div [ngClass]="{'post-list-desktop': !isMobile}">
-  <article class="post" [ngClass]="{'post-desktop': !isMobile, 'post-mobile': isMobile}"
+<div [ngClass]="{'article-list-desktop': !isMobile}">
+  <article class="article" [ngClass]="{'article-desktop': !isMobile, 'article-mobile': isMobile}"
            *ngFor="let post of postList?.posts">
     <header>
       <h3>
         <a [routerLink]="[post.post.postGuid]" title="{{post.post.postTitle}}"
            rel="bookmark">{{post.post.postTitle}}</a>
       </h3>
-      <div class="post-stat">
+      <div class="article-stat">
         <ng-container *ngIf="post.post.commentFlag !== 'close'">
           <a [routerLink]="[post.post.postGuid]" fragment="comments" title="《{{post.post.postTitle}}》评论">
             <ng-container *ngIf="post.post.commentCount > 0">
@@ -26,7 +26,7 @@
         <span><i class="icon icon-eye"></i><span>{{post.post.postViewCount | numberView}}</span></span>
       </div>
     </header>
-    <div class="post-meta post-meta-top">
+    <div class="article-meta article-meta-top">
       <span title="写于: {{post.post.postDate | date:'yyyy-MM-dd'}}">
         <i class='icon icon-calendar'></i><span>{{post.post.postDate | date:'yyyy-MM-dd'}}</span>
       </span>
@@ -43,23 +43,23 @@
         <i class='icon icon-pencil'></i><span>原创</span>
       </span>
     </div>
-    <p class="post-excerpt">
+    <p class="article-excerpt">
       <span [innerHTML]="post.post.postExcerpt"></span>
       <a class="read-more" [routerLink]="[post.post.postGuid]" title="{{post.post.postTitle}}">[阅读全文]</a>
     </p>
-    <div class="post-meta post-meta-bottom" *ngIf="post.categories.length > 0 || post.tags.length > 0">
-      <div class="post-meta-taxonomy" *ngIf="isMobile && post.categories.length > 0">
-        <div class="post-meta-icon"><i class='icon icon-folder'></i></div>
-        <ul class="post-meta-info">
+    <div class="article-meta article-meta-bottom" *ngIf="post.categories.length > 0 || post.tags.length > 0">
+      <div class="article-meta-taxonomy" *ngIf="isMobile && post.categories.length > 0">
+        <div class="article-meta-icon"><i class='icon icon-folder'></i></div>
+        <ul class="article-meta-info">
           <li *ngFor="let category of post.categories">
             <a [routerLink]="['/category/' + category.taxonomySlug]"
                title="{{category.taxonomyName}}" rel="category">{{category.taxonomyName}}</a>
           </li>
         </ul>
       </div>
-      <div class="post-meta-taxonomy" *ngIf="post.tags.length > 0">
-        <div class="post-meta-icon"><i class='icon icon-tag'></i></div>
-        <ul class="post-meta-info">
+      <div class="article-meta-taxonomy" *ngIf="post.tags.length > 0">
+        <div class="article-meta-icon"><i class='icon icon-tag'></i></div>
+        <ul class="article-meta-info">
           <li *ngFor="let tag of post.tags">
             <a [routerLink]="['/tag/' + tag.taxonomySlug]"
                title="{{tag.taxonomyName}}" rel="category">{{tag.taxonomyName}}</a>

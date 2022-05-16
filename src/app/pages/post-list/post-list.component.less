@@ -1,6 +1,6 @@
 @import "../../../styles/variables";
 
-.sticky, .post {
+.sticky, .article {
   border-radius: @border-radius;
   background-color: @content-background-color;
   box-shadow: @content-box-shadow;
@@ -21,14 +21,18 @@
   }
 }
 
-.post-list-desktop {
+.article-list-desktop {
   margin: 0 @box-shadow-width;
 }
 
-.post {
-  @post-header-height: 32px;
+.article {
+  @article-header-height: 32px;
   border-radius: @border-radius;
   line-height: @post-line-height;
+
+  &:hover {
+    background-color: #fafafa;
+  }
 
   &:not(:last-child) {
     margin-bottom: @primary-margin;
@@ -46,10 +50,6 @@
     padding: @m-content-margin @m-primary-margin;
   }
 
-  &:hover {
-    background-color: #fafafa;
-  }
-
   .icon {
     margin-right: 4px;
   }
@@ -59,8 +59,8 @@
 
     h3 {
       font-size: 16px;
-      line-height: @post-header-height;
-      height: @post-header-height;
+      line-height: @article-header-height;
+      height: @article-header-height;
       margin-right: 108px;
 
       a {
@@ -77,7 +77,7 @@
     }
   }
 
-  &-stat, &-meta {
+  .article-stat, .article-meta {
     color: @minor-color;
     font-size: @minor-font-size;
 
@@ -90,18 +90,18 @@
     }
   }
 
-  &-stat {
+  .article-stat {
     position: absolute;
     top: 0;
     right: 0;
-    line-height: @post-header-height;
+    line-height: @article-header-height;
 
     > :not(:last-child) {
       margin-right: 12px;
     }
   }
 
-  &-meta {
+  .article-meta {
     padding: 8px 0;
 
     &-top {
@@ -128,20 +128,20 @@
         line-height: @post-line-height + @tag-row-span * 2;
       }
 
-      .post-meta-taxonomy {
+      .article-meta-taxonomy {
         &:not(:last-child) {
           margin-bottom: 4px;
         }
 
-        .post-meta-icon {
+        .article-meta-icon {
           float: left;
         }
 
-        .post-meta-info {
+        .article-meta-info {
           padding-left: 20px;
         }
 
-        ul li, .post-meta-info-text {
+        ul li, .article-meta-info-text {
           display: inline-block;
           padding: @tag-row-span 0;
         }
@@ -165,7 +165,7 @@
     }
   }
 
-  &-excerpt {
+  .article-excerpt {
     word-wrap: break-word;
 
     a:hover {
