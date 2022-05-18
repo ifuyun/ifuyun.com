@@ -65,6 +65,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   isPage: boolean = false;
   captchaUrl = '';
   postVoted = false;
+  saveLoading = false;
 
   private postId: string = '';
   private postSlug: string = '';
@@ -180,7 +181,9 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         commentAuthor: author,
         commentAuthorEmail: email
       };
+      this.saveLoading = true;
       this.commentsService.saveComment(commentDto).subscribe((res) => {
+        this.saveLoading = false;
         if (res.code === 0) {
           const msg = res.data.status === 'success' ? '评论成功' : '评论成功，审核通过后将显示在页面上';
           this.message.success(msg);
