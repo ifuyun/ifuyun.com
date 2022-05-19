@@ -1,55 +1,59 @@
 @font-face {
-  font-family: "icons";
-  src: url("/assets/fonts/icons.woff2?524846017b983fc8ded9325d94ed40f3") format("woff2"), url("/assets/fonts/icons.woff?524846017b983fc8ded9325d94ed40f3") format("woff");
+  font-family: 'ifuyun';
+  src: url('/assets/fonts/icons.eot?agu40g#iefix') format('embedded-opentype'),
+  url('/assets/fonts/icons.ttf?agu40g') format('truetype'),
+  url('/assets/fonts/icons.woff?agu40g') format('woff'),
+  url('/assets/fonts/icons.svg?agu40g#ifuyun') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
 }
 
 .icon::before, [class^="icon-"]::before, [class*=" icon-"]::before {
   display: inline-block;
-  font-family: icons !important;
+  font-family: 'ifuyun' !important;
   font-style: normal;
-  font-weight: normal !important;
+  font-weight: normal;
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-  vertical-align: -.125em;
+  vertical-align: -.077em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon {
-  &-success::before { content: "\F26B"; }
-  &-error::before { content: "\F623"; }
-  &-warning::before { content: "\F333"; }
-  &-info::before { content: "\F431"; }
-  &-github::before { content: "\F3ED"; }
-  &-calendar::before { content: "\F1E4"; }
-  &-person::before { content: "\F4E1"; }
-  &-folder::before { content: "\F3D7"; }
-  &-tag::before { content: "\F5B0"; }
-  &-chat::before { content: "\F265"; }
-  &-chat-dot::before { content: "\F25F"; }
-  &-heart::before { content: "\F417"; }
-  &-heart-fill::before { content: "\F415"; }
-  &-archive::before { content: "\F10D"; }
-  &-star::before { content: "\F588"; }
-  &-shuffle::before { content: "\F544"; }
-  &-link::before { content: "\F470"; }
-  &-book::before { content: "\F194"; }
-  &-pencil::before { content: "\F4CB"; }
-  &-share::before { content: "\F52E"; }
-  &-share-fill::before { content: "\F52D"; }
-  &-clock::before { content: "\F293"; }
-  &-close::before { content: "\F62A"; }
-  &-eye::before { content: "\F341"; }
-  &-list::before { content: "\F479"; }
-  &-search::before { content: "\F52A"; }
-  &-arrow-left::before { content: "\F12F"; }
-  &-arrow-right::before { content: "\F138"; }
-  &-home::before { content: "\F425"; }
-  &-code::before { content: "\F2C6"; }
-  &-bulb::before { content: "\F46B"; }
-  &-images::before { content: "\F42B"; }
-  &-person-heart::before { content: "\F77A"; }
-  &-like::before { content: "\F406"; }
-  &-loading::before { content: "\F130"; }
-}
+.icon-archive:before { content: "\e900"; }
+.icon-arrow-left:before { content: "\e901"; }
+.icon-arrow-right:before { content: "\e902"; }
+.icon-book:before { content: "\e903"; }
+.icon-bulb:before { content: "\e904"; }
+.icon-calendar:before { content: "\e905"; }
+.icon-chat-dots:before { content: "\e906"; }
+.icon-chat:before { content: "\e907"; }
+.icon-clock:before { content: "\e908"; }
+.icon-close:before { content: "\e909"; }
+.icon-code:before { content: "\e90a"; }
+.icon-copyright:before { content: "\e90b"; }
+.icon-error:before { content: "\e90c"; }
+.icon-eye:before { content: "\e90d"; }
+.icon-folder:before { content: "\e90e"; }
+.icon-github:before { content: "\e90f"; }
+.icon-heart-fill:before { content: "\e910"; }
+.icon-heart:before { content: "\e911"; }
+.icon-home:before { content: "\e912"; }
+.icon-images:before { content: "\e913"; }
+.icon-info:before { content: "\e914"; }
+.icon-like:before { content: "\e915"; }
+.icon-link-45deg:before { content: "\e916"; }
+.icon-loading:before { content: "\e917"; }
+.icon-menu:before { content: "\e918"; }
+.icon-pencil:before { content: "\e919"; }
+.icon-person-heart:before { content: "\e91a"; }
+.icon-search:before { content: "\e91b"; }
+.icon-share-fill:before { content: "\e91c"; }
+.icon-shuffle:before { content: "\e91d"; }
+.icon-star:before { content: "\e91e"; }
+.icon-success:before { content: "\e91f"; }
+.icon-tag:before { content: "\e920"; }
+.icon-user:before { content: "\e921"; }
+.icon-warning:before { content: "\e922"; }

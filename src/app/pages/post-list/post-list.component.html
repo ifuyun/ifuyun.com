@@ -16,7 +16,7 @@
         <ng-container *ngIf="post.post.commentFlag !== 'close'">
           <a [routerLink]="[post.post.postGuid]" fragment="comments" title="《{{post.post.postTitle}}》评论">
             <ng-container *ngIf="post.post.commentCount > 0">
-              <i class='icon icon-chat-dot'></i><span>{{post.post.commentCount | numberView:'K'}}</span>
+              <i class='icon icon-chat-dots'></i><span>{{post.post.commentCount | numberView:'K'}}</span>
             </ng-container>
             <ng-container *ngIf="post.post.commentCount < 1">
               <i class='icon icon-chat'></i><span>0</span>
@@ -31,7 +31,7 @@
         <i class='icon icon-calendar'></i><span>{{post.post.postDate | date:'yyyy-MM-dd'}}</span>
       </span>
       <span title="作者：{{post.meta['post_author'] || post.post.author.userNiceName}}">
-        <i class='icon icon-person'></i><span>{{post.meta['post_author'] || post.post.author.userNiceName}}</span>
+        <i class='icon icon-user'></i><span>{{post.meta['post_author'] || post.post.author.userNiceName}}</span>
       </span>
       <span *ngIf="!isMobile && post.categories.length > 0">
         <i class='icon icon-folder'></i>
