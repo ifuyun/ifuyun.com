@@ -20,3 +20,8 @@ export interface LoginUserEntity {
   meta?: Record<string, string>;
   isAdmin?: boolean;
 }
+
+export interface Guest {
+  name: string;
+  email: string;
+}

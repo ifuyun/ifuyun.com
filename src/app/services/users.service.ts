@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ApiService } from '../core/api.service';
 import { ApiUrl } from '../config/api-url';
-import { LoginUserEntity } from '../interfaces/users';
+import { STORAGE_USER_KEY } from '../config/constants';
+import { ApiService } from '../core/api.service';
+import { Guest, LoginUserEntity } from '../interfaces/users';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +19,13 @@ export class UsersService {
     return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_LOGIN_USER)).pipe(
       map((res) => res?.data || {})
     );
+  }
+
+  getCommentUser(): Guest | null {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_USER_KEY) || '');
+    } catch (e) {
+      return null;
+    }
   }
 }

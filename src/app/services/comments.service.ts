@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiUrl } from '../config/api-url';
+import { STORAGE_USER_KEY } from '../config/constants';
 import { ApiService } from '../core/api.service';
+import { PlatformService } from '../core/platform.service';
 import { CommentEntity, CommentList } from '../interfaces/comments';
 import { HttpResponseEntity } from '../interfaces/http-response';
 
@@ -11,7 +13,8 @@ import { HttpResponseEntity } from '../interfaces/http-response';
 })
 export class CommentsService {
   constructor(
-    private apiService: ApiService
+    private apiService: ApiService,
+    private platform: PlatformService
   ) {
   }
 
@@ -24,6 +27,12 @@ export class CommentsService {
   }
 
   saveComment(comment: CommentEntity): Observable<HttpResponseEntity> {
+    if (this.platform.isBrowser) {
+      localStorage.setItem(STORAGE_USER_KEY, JSON.stringify({
+        name: comment.commentAuthor,
+        email: comment.commentAuthorEmail
+      }));
+    }
     return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_COMMENTS), comment);
   }
 }

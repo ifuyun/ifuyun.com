@@ -21,6 +21,8 @@ import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.servic
 import { MessageService } from '../../components/message/message.service';
 import { ApiUrl } from '../../config/api-url';
 import { VoteType, VoteValue } from '../../config/common.enum';
+import { STORAGE_LIKED_COMMENT_KEY, STORAGE_LIKED_POSTS_KEY } from '../../config/constants';
+import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { MetaService } from '../../core/meta.service';
 import { PageComponent } from '../../core/page.component';
@@ -31,7 +33,8 @@ import { CommentEntity, CommentModel } from '../../interfaces/comments';
 import { OptionEntity } from '../../interfaces/options';
 import { Post, PostEntity, PostModel } from '../../interfaces/posts';
 import { TaxonomyEntity } from '../../interfaces/taxonomies';
-import { LoginUserEntity } from '../../interfaces/users';
+import { Guest, LoginUserEntity } from '../../interfaces/users';
+import { VoteEntity } from '../../interfaces/votes';
 import { CommentsService } from '../../services/comments.service';
 import { OptionsService } from '../../services/options.service';
 import { PostsService } from '../../services/posts.service';
@@ -69,7 +72,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   private postId: string = '';
   private postSlug: string = '';
-  private loginUser: LoginUserEntity = {};
+  private user: Guest | null = null;
   private shareUrl: string = '';
   private options: OptionEntity = {};
   private unlistenImgClick!: Function;
@@ -123,11 +126,23 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   ngAfterViewInit() {
     if (this.platform.isBrowser) {
-      this.userListener = this.usersService.getLoginUser().subscribe((user) => {
-        this.loginUser = user;
-        this.commentForm.get('author')?.setValue(user.userName);
-        this.commentForm.get('email')?.setValue(user.userEmail);
-      });
+      const user = this.usersService.getCommentUser();
+      if (user) {
+        this.user = user;
+        this.commentForm.get('author')?.setValue(user.name);
+        this.commentForm.get('email')?.setValue(user.email);
+      } else {
+        this.userListener = this.usersService.getLoginUser().subscribe((user) => {
+          if (user.userName) {
+            this.user = {
+              name: user.userName,
+              email: user.userEmail || ''
+            };
+            this.commentForm.get('author')?.setValue(this.user.name);
+            this.commentForm.get('email')?.setValue(this.user.email);
+          }
+        });
+      }
     }
     this.unlistenImgClick = this.renderer.listen(this.postEle.nativeElement, 'click', ((e: MouseEvent) => {
       if (e.target instanceof HTMLImageElement) {
@@ -205,35 +220,47 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     if (this.postVoted) {
       return;
     }
-    this.votesService.saveVote({
+    const voteData: VoteEntity = {
       objectId: this.postId,
       value: like ? VoteValue.LIKE : VoteValue.DISLIKE,
       type: VoteType.POST
-    }).subscribe((res) => {
-      this.postMeta['post_vote'] = res.vote.toString();
-      this.postVoted = true;
+    };
+    if (this.user) {
+      voteData.user = this.user;
+    }
+    this.votesService.saveVote(voteData).subscribe((res) => {
+      if (res.code === ResponseCode.SUCCESS) {
+        this.postMeta['post_vote'] = res.data.vote.toString();
+        this.postVoted = true;
 
-      const likedPosts = (localStorage.getItem('liked_posts') || '').split(',');
-      likedPosts.push(this.postId);
-      localStorage.setItem('liked_posts', uniq(likedPosts.filter((item) => !!item)).join(','));
+        const likedPosts = (localStorage.getItem(STORAGE_LIKED_POSTS_KEY) || '').split(',');
+        likedPosts.push(this.postId);
+        localStorage.setItem(STORAGE_LIKED_POSTS_KEY, uniq(likedPosts.filter((item) => !!item)).join(','));
+      }
     });
   }
 
   voteComment(comment: CommentModel, like: boolean) {
-    if ((localStorage.getItem('liked_comments') || '').split(',').includes(comment.commentId)) {
+    if ((localStorage.getItem(STORAGE_LIKED_COMMENT_KEY) || '').split(',').includes(comment.commentId)) {
       return;
     }
-    this.votesService.saveVote({
+    const voteData: VoteEntity = {
       objectId: comment.commentId,
       value: like ? VoteValue.LIKE : VoteValue.DISLIKE,
       type: VoteType.COMMENT
-    }).subscribe((res) => {
-      comment.commentVote = res.vote;
-      comment.voted = true;
+    };
+    if (this.user) {
+      voteData.user = this.user;
+    }
+    this.votesService.saveVote(voteData).subscribe((res) => {
+      if (res.code === ResponseCode.SUCCESS) {
+        comment.commentVote = res.data.vote;
+        comment.voted = true;
 
-      const likedComments = (localStorage.getItem('liked_comments') || '').split(',');
-      likedComments.push(comment.commentId);
-      localStorage.setItem('liked_comments', uniq(likedComments.filter((item) => !!item)).join(','));
+        const likedComments = (localStorage.getItem(STORAGE_LIKED_COMMENT_KEY) || '').split(',');
+        likedComments.push(comment.commentId);
+        localStorage.setItem(STORAGE_LIKED_COMMENT_KEY, uniq(likedComments.filter((item) => !!item)).join(','));
+      }
     });
   }
 
@@ -322,7 +349,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.commentsService.getCommentsByPostId(this.postId).subscribe((comments) => {
       this.comments = comments.comments || [];
       if (this.platform.isBrowser) {
-        const likedComments = (localStorage.getItem('liked_comments') || '').split(',');
+        const likedComments = (localStorage.getItem(STORAGE_LIKED_COMMENT_KEY) || '').split(',');
         this.comments.forEach((item) => {
           if (likedComments.includes(item.commentId)) {
             item.voted = true;
@@ -393,7 +420,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   private updatePostVoted() {
     if (this.platform.isBrowser) {
-      const likedPosts = (localStorage.getItem('liked_posts') || '').split(',');
+      const likedPosts = (localStorage.getItem(STORAGE_LIKED_POSTS_KEY) || '').split(',');
       this.postVoted = likedPosts.includes(this.postId);
     }
   }
