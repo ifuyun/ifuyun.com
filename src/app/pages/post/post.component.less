@@ -393,25 +393,34 @@
         }
       }
 
-      .button-like:not(.liked):hover {
-        .parkinson-mask {
-          visibility: visible;
-          transition: opacity .25s, visibility .25s;
-          transition-delay: .1s;
-          opacity: 1;
+      .button-like {
+        &:not(.liked):hover {
+          .parkinson-mask {
+            visibility: visible;
+            transition: opacity .25s, visibility .25s;
+            transition-delay: .1s;
+            opacity: 1;
 
-          .icon {
-            margin-left: 50%;
-            transition: transform .25s, margin .25s;
-            transition-delay: .5s;
-            animation: pre-like-icon .2s infinite;
-            animation-delay: .75s;
-            transform: translateY(-2px) translate(-50%);
+            .icon {
+              margin-left: 50%;
+              transition: transform .25s, margin .25s;
+              transition-delay: .5s;
+              animation: pre-like-icon .2s infinite;
+              animation-delay: .75s;
+              transform: translateY(-2px) translate(-50%);
+            }
+          }
+        }
+
+        &.loading {
+          .loading-mask {
+            visibility: visible;
+            opacity: 1;
           }
         }
       }
 
-      .parkinson-mask {
+      .parkinson-mask, .loading-mask {
         box-sizing: border-box;
         display: flex;
         position: absolute;
@@ -425,6 +434,10 @@
         color: #fff;
         opacity: 0;
         visibility: hidden;
+      }
+
+      .loading-mask {
+        justify-content: center;
       }
     }
 

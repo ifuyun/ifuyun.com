@@ -69,6 +69,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   captchaUrl = '';
   postVoted = false;
   saveLoading = false;
+  voteLoading = false;
 
   private postId: string = '';
   private postSlug: string = '';
@@ -217,7 +218,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   votePost(like: boolean) {
-    if (this.postVoted) {
+    if (this.postVoted || this.voteLoading) {
       return;
     }
     const voteData: VoteEntity = {
@@ -228,7 +229,9 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     if (this.user) {
       voteData.user = this.user;
     }
+    this.voteLoading = true;
     this.votesService.saveVote(voteData).subscribe((res) => {
+      this.voteLoading = false;
       if (res.code === ResponseCode.SUCCESS) {
         this.postMeta['post_vote'] = res.data.vote.toString();
         this.postVoted = true;

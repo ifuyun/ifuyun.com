@@ -82,10 +82,11 @@
     </div>
     <div class="post-actions" *ngIf="!isPage">
       <div>
-        <button class="button-like" [ngClass]="{liked: postVoted}" (click)="votePost(true)">
+        <button class="button-like" [ngClass]="{liked: postVoted, loading: voteLoading}" (click)="votePost(true)">
           <i class='icon icon-like'></i>
           <span class="text">真棒！{{postMeta['post_vote'] || ''}}</span>
-          <span class="parkinson-mask"><i class='icon icon-like'></i></span>
+          <span class="parkinson-mask" *ngIf="!voteLoading"><i class='icon icon-like'></i></span>
+          <span class="loading-mask" *ngIf="voteLoading"><i class='icon icon-loading'></i></span>
         </button>
         <button (click)="showReward('/assets/images/reward.jpg')">
           <i class='icon icon-heart-fill'></i>
