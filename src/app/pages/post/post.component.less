@@ -108,7 +108,7 @@
 
   .post-meta {
     line-height: @post-line-height;
-    color: @meta-color;
+    color: @minor-meta-color;
     font-size: @minor-font-size;
 
     &-top {
@@ -130,7 +130,7 @@
     }
 
     a {
-      color: @meta-color;
+      color: @minor-meta-color;
 
       &:hover {
         color: @primary-color;
@@ -538,30 +538,74 @@
     }
 
     .comment-item {
-      padding: 0 8px;
+      @avatar-size: 50px;
 
       &-meta {
+        display: flex;
+        justify-content: space-between;
         color: @minor-color;
+
+        .info {
+          display: flex;
+        }
+
+        .avatar {
+          margin-right: 8px;
+
+          img {
+            width: @avatar-size;
+            height: @avatar-size;
+            border-radius: @border-radius;
+          }
+        }
+
+        .author {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+        }
+
+        .name {
+          margin-right: 8px;
+          color: @primary-meta-color;
+        }
+
+        .location, .time, .hash {
+          font-size: @meta-font-size;
+        }
+
+        .hash {
+          width: 100px;
+          text-align: right;
+        }
       }
 
-      &-time {
-        float: right;
+      &-content {
+        margin: @primary-margin 0;
       }
 
-      &-action {
-        text-align: right;
+      &-actions {
+        font-size: @meta-font-size;
 
         > :not(:last-child) {
           margin-right: 12px;
         }
 
-        a:hover:not(.voted) {
-          cursor: pointer;
-          text-decoration: underline;
+        a {
+          color: @minor-color;
+
+          &:not(.voted):hover {
+            color: @primary-color;
+            cursor: pointer;
+          }
+
+          &.voted {
+            cursor: not-allowed;
+          }
         }
 
-        a.voted {
-          cursor: not-allowed;
+        .icon {
+          margin-right: 4px;
         }
       }
     }

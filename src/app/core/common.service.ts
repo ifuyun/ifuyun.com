@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { MetaData } from '../interfaces/common';
 
 @Injectable({
   providedIn: 'root'
@@ -10,5 +11,11 @@ export class CommonService {
 
   updateActivePage(activePage: string) {
     this.pageIndex.next(activePage);
+  }
+
+  transformMeta(meta: MetaData[]): Record<string, string> {
+    const result: Record<string, string> = {};
+    meta.forEach((item) => result[item.metaKey] = item.metaValue);
+    return result;
   }
 }

@@ -1,22 +1,27 @@
+import { IPLocation, MetaData } from './common';
+
 export interface CommentEntity {
   postId: string;
   commentParent?: string;
-  commentAuthor: string;
-  commentAuthorEmail: string;
+  commentTop?: string;
+  authorName: string;
+  authorEmail: string;
   commentContent: string;
   captchaCode?: string;
 }
 
 export interface CommentModel extends CommentEntity {
   commentId: string;
-  commentStatus: string;
   commentCreated: Date;
-  commentModified: Date;
-  commentVote: number;
-  commentAuthorLink?: string;
-  commentIp?: string;
-  commentAgent?: string;
-  userId?: string;
+  authorEmailHash: string;
+  authorAvatar?: string;
+  authorLink?: string;
+  authorIp?: string;
+  userLocation: IPLocation;
+  commentLikes: number;
+  commentDislikes: number;
+  commentMeta?: MetaData[];
+  commentMetaMap?: Record<string, string>;
   voted?: boolean;
 }
 

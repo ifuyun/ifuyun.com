@@ -1,7 +1,8 @@
 export const DEFAULT_COPYRIGHT_TYPE = '1';
 export const STORAGE_USER_KEY = 'user';
-export const STORAGE_LIKED_POSTS_KEY = 'liked_posts';
-export const STORAGE_LIKED_COMMENT_KEY = 'liked_comments';
+export const STORAGE_VOTED_POSTS_KEY = 'voted_posts';
+export const STORAGE_VOTED_COMMENTS_KEY = 'voted_comments';
+export const AVATAR_API_URL = 'https://cravatar.cn/avatar/$0.png?d=retro';
 export const COPYRIGHT_TYPE: Record<string, string> = Object.freeze({
   '0': '禁止转载',
   '1': '转载需授权',

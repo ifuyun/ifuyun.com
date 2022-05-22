@@ -29,8 +29,8 @@ export class CommentsService {
   saveComment(comment: CommentEntity): Observable<HttpResponseEntity> {
     if (this.platform.isBrowser) {
       localStorage.setItem(STORAGE_USER_KEY, JSON.stringify({
-        name: comment.commentAuthor,
-        email: comment.commentAuthorEmail
+        name: comment.authorName,
+        email: comment.authorEmail
       }));
     }
     return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_COMMENTS), comment);

@@ -83,9 +83,9 @@
     <div class="post-actions" *ngIf="!isPage">
       <div>
         <button class="button-like" [ngClass]="{liked: postVoted, loading: voteLoading}" (click)="votePost(true)">
-          <i class='icon icon-like'></i>
+          <i class='icon icon-like-fill'></i>
           <span class="text">真棒！{{postMeta['post_vote'] || ''}}</span>
-          <span class="parkinson-mask" *ngIf="!voteLoading"><i class='icon icon-like'></i></span>
+          <span class="parkinson-mask" *ngIf="!voteLoading"><i class='icon icon-like-fill'></i></span>
           <span class="loading-mask" *ngIf="voteLoading"><i class='icon icon-loading'></i></span>
         </button>
         <button (click)="showReward('/assets/images/reward.jpg')">
@@ -116,22 +116,39 @@
       <ng-container *ngFor="let comment of comments; let i = index">
         <div *ngIf="i > 0" class="divider divider-dashed"></div>
         <div class="comment-item">
-          <p class="comment-item-meta">
-            <span>{{comment.commentAuthor}}</span>
-            <span class="comment-item-time">{{comment.commentCreated | date:'yyyy-MM-dd HH:mm'}}</span>
-          </p>
-          <p>{{comment.commentContent}}</p>
-          <p class="comment-item-action">
-            <a [ngClass]="{voted: comment.voted}"
-               (click)="voteComment(comment, true)">赞(<span>{{comment.commentVote}}</span>)</a>
-            <a (click)="replyComment(comment)">回复</a>
-          </p>
+          <div class="comment-item-meta">
+            <div class="info">
+              <div class="avatar"><img src="{{comment.authorAvatar}}" alt="{{comment.authorName}}"/></div>
+              <div class="author">
+                <span>
+                  <span class="name">{{comment.authorName}}</span>
+                  <span class="location">from {{
+                    comment.userLocation.region ? comment.userLocation.region + ' · ' + comment.userLocation.city : 'unknown'
+                    }}</span>
+                </span>
+                <span class="time">{{comment.commentCreated | date:'yyyy-MM-dd HH:mm'}}</span>
+              </div>
+            </div>
+            <div class="hash" [id]="comment.commentId">#{{i + 1}}</div>
+          </div>
+          <div class="comment-item-content">{{comment.commentContent}}</div>
+          <div class="comment-item-actions">
+            <a [ngClass]="{voted: comment.voted}" (click)="voteComment(comment, true)">
+              <i class="icon icon-like-fill"></i><span>赞 ({{comment.commentLikes}})</span>
+            </a>
+            <a [ngClass]="{voted: comment.voted}" (click)="voteComment(comment, false)">
+              <i class="icon icon-dislike-fill"></i><span>踩 ({{comment.commentDislikes}})</span>
+            </a>
+            <a>
+              <i class="icon icon-reply-fill"></i><span>回复</span>
+            </a>
+          </div>
         </div>
       </ng-container>
     </div>
     <div class="divider"></div>
   </ng-container>
-  <div class="comment-form" id="respond" *ngIf="post?.commentFlag !== 'close'">
+  <div class="comment-form" *ngIf="post?.commentFlag !== 'close'">
     <form [formGroup]="commentForm" (ngSubmit)="saveComment()">
       <div class="form-row">
         <input type="text" class="input" formControlName="author" maxlength="8" placeholder="昵称"/>
