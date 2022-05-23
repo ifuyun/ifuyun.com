@@ -30,7 +30,7 @@ import { PlatformService } from '../../core/platform.service';
 import { UrlService } from '../../core/url.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { format } from '../../helpers/helper';
-import { CommentEntity, CommentModel } from '../../interfaces/comments';
+import { Comment, CommentEntity, CommentModel } from '../../interfaces/comments';
 import { OptionEntity } from '../../interfaces/options';
 import { Post, PostEntity, PostModel } from '../../interfaces/posts';
 import { TaxonomyEntity } from '../../interfaces/taxonomies';
@@ -56,7 +56,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   pageIndex: string = '';
   prevPost: PostEntity | null = null;
   nextPost: PostEntity | null = null;
-  comments: CommentModel[] = [];
+  comments: Comment[] = [];
   post!: PostModel;
   postMeta: Record<string, string> = {};
   postTags: TaxonomyEntity[] = [];
@@ -79,6 +79,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private options: OptionEntity = {};
   private unlistenImgClick!: Function;
   private referer = '';
+  private optionsListener!: Subscription;
   private urlListener!: Subscription;
   private paramListener!: Subscription;
   private userListener!: Subscription;
@@ -119,6 +120,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.urlListener = this.urlService.urlInfo$.subscribe((url) => {
       this.referer = url.previous;
     });
+    this.initOptions();
     this.paramListener = this.route.params.subscribe((params) => {
       this.postId = params['postId']?.trim();
       this.postSlug = params['postSlug']?.trim();
@@ -160,6 +162,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   ngOnDestroy() {
+    this.optionsListener.unsubscribe();
     this.urlListener.unsubscribe();
     this.paramListener.unsubscribe();
     this.userListener?.unsubscribe();
@@ -300,18 +303,22 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.commonService.updateActivePage(this.pageIndex);
   }
 
-  private initMeta() {
-    this.optionsService.options$.subscribe((options) => {
+  private initOptions() {
+    this.optionsListener = this.optionsService.options$.subscribe((options) => {
       this.options = options;
-      this.captchaUrl = `${this.options['site_url']}${ApiUrl.API_URL_PREFIX}${ApiUrl.CAPTCHA}`;
+      if (this.options['site_url']) {
+        this.captchaUrl = `${this.options['site_url']}${ApiUrl.API_URL_PREFIX}${ApiUrl.CAPTCHA}`;
+      }
+    });
+  }
 
-      const keywords: string[] = (options['site_keywords'] || '').split(',');
-      this.metaService.updateHTMLMeta({
-        title: `${this.post.postTitle} - ${options?.['site_name']}`,
-        description: this.post.postExcerpt,
-        author: options?.['site_author'],
-        keywords: uniq(this.postTags.map((item) => item.taxonomyName).concat(keywords)).join(',')
-      });
+  private initMeta() {
+    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    this.metaService.updateHTMLMeta({
+      title: `${this.post.postTitle} - ${this.options['site_name']}`,
+      description: this.post.postExcerpt,
+      author: this.options['site_author'],
+      keywords: uniq(this.postTags.map((item) => item.taxonomyName).concat(keywords)).join(',')
     });
   }
 
@@ -355,17 +362,26 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.fetchComments();
   }
 
+  private initComment(comment: Comment) {
+    const initialFn = (data: Comment) => {
+      data.authorAvatar = format(AVATAR_API_URL, data.authorEmailHash);
+      data.commentMetaMap = this.commonService.transformMeta(data.commentMeta || []);
+      try {
+        data.userLocation = JSON.parse(data.commentMetaMap['user_location']);
+      } catch (e) {
+        data.userLocation = {};
+      }
+    };
+    initialFn(comment);
+    comment.children.forEach((item) => initialFn(item));
+  }
+
   private fetchComments(cb?: Function) {
-    this.commentsService.getCommentsByPostId(this.postId).subscribe((comments) => {
-      this.comments = comments.comments || [];
+    this.commentsService.getCommentsByPostId(this.postId).subscribe((res) => {
+      this.comments = res.comments || [];
       this.comments.forEach((item) => {
-        item.authorAvatar = format(AVATAR_API_URL, item.authorEmailHash);
-        item.commentMetaMap = this.commonService.transformMeta(item.commentMeta || []);
-        try {
-          item.userLocation = JSON.parse(item.commentMetaMap['user_location']);
-        } catch (e) {
-          item.userLocation = {};
-        }
+        this.initComment(item);
+        item.children = this.generateCommentTree(item.children);
       });
       if (this.platform.isBrowser) {
         const votedComments = (localStorage.getItem(STORAGE_VOTED_COMMENTS_KEY) || '').split(',');
@@ -377,6 +393,46 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       }
       cb && cb();
     });
+  }
+
+  private generateCommentTree(comments: Comment[]) {
+    let depth = Number(this.options['thread_comments_depth']) || 3;
+    const copies = [...comments];
+    let tree = copies.filter((father) => {
+      father.children = copies.filter((child) => father.commentId === child.commentParent);
+      father.isLeaf = father.children.length < 1;
+      return father.commentParent === father.commentTop;
+    });
+    const flattenIterator = (nodes: Comment[], list: Comment[]) => {
+      nodes.forEach((node) => {
+        list.push({ ...node, isLeaf: true, level: depth, children: [] });
+        if (node.children.length > 0) {
+          flattenIterator(node.children, list);
+        }
+      });
+      return list;
+    };
+    const iterator = (nodes: Comment[], level: number) => {
+      if (depth === 2) {
+        nodes = flattenIterator(nodes, []).sort((a, b) => a.commentCreated > b.commentCreated ? 1 : -1);
+      } else {
+        nodes.forEach((node) => {
+          node.level = level;
+          if (node.children.length > 0) {
+            if (level < depth - 1) {
+              node.children = iterator(node.children, level + 1);
+            } else {
+              node.children = flattenIterator(node.children, [])
+                .sort((a, b) => a.commentCreated > b.commentCreated ? 1 : -1);
+            }
+          }
+        });
+      }
+      return nodes;
+    };
+    tree = iterator(tree, 2);
+
+    return tree;
   }
 
   private resetCommentForm() {

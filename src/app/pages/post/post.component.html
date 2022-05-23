@@ -113,38 +113,43 @@
 <div class="comment" [ngClass]="{'comment-desktop': !isMobile, 'comment-mobile': isMobile}">
   <ng-container *ngIf="post?.commentFlag !== 'close' && comments.length > 0">
     <div class="comment-list" id="comments">
-      <ng-container *ngFor="let comment of comments; let i = index">
-        <div *ngIf="i > 0" class="divider divider-dashed"></div>
-        <div class="comment-item">
-          <div class="comment-item-meta">
-            <div class="info">
-              <div class="avatar"><img src="{{comment.authorAvatar}}" alt="{{comment.authorName}}"/></div>
-              <div class="author">
-                <span>
-                  <span class="name">{{comment.authorName}}</span>
-                  <span class="location">from {{
-                    comment.userLocation.region ? comment.userLocation.region + ' · ' + comment.userLocation.city : 'unknown'
-                    }}</span>
-                </span>
-                <span class="time">{{comment.commentCreated | date:'yyyy-MM-dd HH:mm'}}</span>
+      <ng-template #commentsTpl let-comments>
+        <ng-container *ngFor="let comment of comments; let i = index">
+          <div class="comment-item" [ngStyle]="{'padding-left': (comment.level - 1) * 50 + 'px'}">
+            <div class="comment-item-meta">
+              <div class="info">
+                <div class="avatar"><img src="{{comment.authorAvatar}}" alt="{{comment.authorName}}"/></div>
+                <div class="author">
+                  <span>
+                    <span class="name">{{comment.authorName}}</span>
+                    <span class="location">from {{
+                      comment.userLocation?.region ? comment.userLocation.region + ' · ' + comment.userLocation.city : 'unknown'
+                      }}</span>
+                  </span>
+                  <span class="time">{{comment.commentCreated | date:'yyyy-MM-dd HH:mm'}}</span>
+                </div>
               </div>
+              <div class="hash" [id]="comment.commentId">#{{comment.commentId | commentHash}}</div>
             </div>
-            <div class="hash" [id]="comment.commentId">#{{i + 1}}</div>
+            <div class="comment-item-content">{{comment.commentContent}}</div>
+            <div class="comment-item-actions">
+              <a [ngClass]="{voted: comment.voted}" (click)="voteComment(comment, true)">
+                <i class="icon icon-like-fill"></i><span>赞 ({{comment.commentLikes}})</span>
+              </a>
+              <a [ngClass]="{voted: comment.voted}" (click)="voteComment(comment, false)">
+                <i class="icon icon-dislike-fill"></i><span>踩 ({{comment.commentDislikes}})</span>
+              </a>
+              <a (click)="replyComment(comment)">
+                <i class="icon icon-reply-fill"></i><span>回复</span>
+              </a>
+            </div>
           </div>
-          <div class="comment-item-content">{{comment.commentContent}}</div>
-          <div class="comment-item-actions">
-            <a [ngClass]="{voted: comment.voted}" (click)="voteComment(comment, true)">
-              <i class="icon icon-like-fill"></i><span>赞 ({{comment.commentLikes}})</span>
-            </a>
-            <a [ngClass]="{voted: comment.voted}" (click)="voteComment(comment, false)">
-              <i class="icon icon-dislike-fill"></i><span>踩 ({{comment.commentDislikes}})</span>
-            </a>
-            <a>
-              <i class="icon icon-reply-fill"></i><span>回复</span>
-            </a>
-          </div>
-        </div>
-      </ng-container>
+          <ng-container *ngIf="comment.children.length > 0">
+            <ng-container *ngTemplateOutlet="commentsTpl; context: { $implicit: comment.children }"></ng-container>
+          </ng-container>
+        </ng-container>
+      </ng-template>
+      <ng-container *ngTemplateOutlet="commentsTpl; context: { $implicit: comments }"></ng-container>
     </div>
     <div class="divider"></div>
   </ng-container>
@@ -155,7 +160,7 @@
         <span class="form-required">*</span>
       </div>
       <div class="form-row">
-        <input type="text" class="input" formControlName="email" maxlength="100" placeholder="Email"/>
+        <input type="text" class="input" formControlName="email" maxlength="100" placeholder="邮箱"/>
         <span class="form-required">*</span>
       </div>
       <div class="form-row">

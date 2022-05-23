@@ -25,8 +25,14 @@ export interface CommentModel extends CommentEntity {
   voted?: boolean;
 }
 
+export interface Comment extends CommentModel {
+  children: Comment[];
+  level?: number;
+  isLeaf: boolean;
+}
+
 export interface CommentList {
-  comments?: CommentModel[];
+  comments?: Comment[];
   page?: number;
   total?: number;
 }

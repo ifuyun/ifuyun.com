@@ -531,14 +531,15 @@
   }
 
   .comment-list {
+    @avatar-size: 50px;
     line-height: @post-line-height;
 
-    .divider {
-      margin: @primary-margin 0;
-    }
-
     .comment-item {
-      @avatar-size: 50px;
+      &:not(:first-child) {
+        margin-top: @primary-margin;
+        padding-top: @primary-margin;
+        border-top: 1px dashed @primary-border-color;
+      }
 
       &-meta {
         display: flex;
@@ -612,16 +613,18 @@
   }
 
   .comment-form {
+    @form-item-margin: 12px;
+
     .form-row {
       display: flex;
       justify-content: space-between;
 
       &:not(:last-child) {
-        margin-bottom: @primary-margin;
+        margin-bottom: @form-item-margin;
       }
 
       &:not(:first-child) {
-        margin-top: @primary-margin;
+        margin-top: @form-item-margin;
       }
 
       > :not(:last-child) {
