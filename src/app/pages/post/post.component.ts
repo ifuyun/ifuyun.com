@@ -10,7 +10,7 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import highlight from 'highlight.js';
 import { uniq } from 'lodash';
@@ -71,6 +71,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   postVoted = false;
   saveLoading = false;
   voteLoading = false;
+  replyMode = false;
+  replyVisibleMap: Record<string, boolean> = {};
 
   private postId = '';
   private postSlug = '';
@@ -83,15 +85,17 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private urlListener!: Subscription;
   private paramListener!: Subscription;
   private userListener!: Subscription;
-
-  commentForm = this.fb.group({
+  private commentFormConfig = {
     author: ['', [Validators.required, Validators.maxLength(8)]],
     email: ['', [Validators.required, Validators.maxLength(100), Validators.email]],
     captcha: ['', [Validators.required, Validators.maxLength(4)]],
     content: ['', [Validators.required, Validators.maxLength(400)]],
     commentParent: [],
     commentTop: []
-  });
+  };
+
+  commentForm = this.fb.group(this.commentFormConfig);
+  replyForm = this.fb.group(this.commentFormConfig);
 
   constructor(
     private postsService: PostsService,
@@ -137,6 +141,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         setTimeout(() => {
           this.commentForm.get('author')?.setValue(this.user?.name);
           this.commentForm.get('email')?.setValue(this.user?.email);
+          this.replyForm.get('author')?.setValue(this.user?.name);
+          this.replyForm.get('email')?.setValue(this.user?.email);
         }, 0);
       } else {
         this.userListener = this.usersService.getLoginUser().subscribe((user) => {
@@ -147,6 +153,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
             };
             this.commentForm.get('author')?.setValue(this.user.name);
             this.commentForm.get('email')?.setValue(this.user.email);
+            this.replyForm.get('author')?.setValue(this.user.name);
+            this.replyForm.get('email')?.setValue(this.user.email);
           }
         });
       }
@@ -169,8 +177,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.unlistenImgClick();
   }
 
-  saveComment() {
-    if (!this.commentForm.valid) {
+  saveComment(form: FormGroup) {
+    if (!form.valid) {
       const formLabels: Record<string, string> = {
         author: '昵称',
         email: 'Email',
@@ -178,8 +186,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         content: '评论内容'
       };
       const msgs: string[] = [];
-      Object.keys(this.commentForm.controls).forEach((key) => {
-        const ctrl = this.commentForm.get(key);
+      Object.keys(form.controls).forEach((key) => {
+        const ctrl = form.get(key);
         const errors = ctrl?.errors;
         errors && ctrl?.markAsTouched({ onlySelf: true });
         errors && Object.keys(errors).forEach((type) => {
@@ -195,7 +203,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       });
       msgs.length > 0 && this.message.error(msgs[0]);
     } else {
-      const { author, email, captcha, content, commentParent, commentTop } = this.commentForm.value;
+      const { author, email, captcha, content, commentParent, commentTop } = form.value;
       const commentDto: CommentEntity = {
         postId: this.postId,
         commentParent: commentParent || '',
@@ -211,10 +219,13 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         if (res.code === 0) {
           const msg = res.data.status === 'success' ? '评论成功' : '评论成功，审核通过后将显示在页面上';
           this.message.success(msg);
-          this.resetCommentForm();
-          this.captchaImg.nativeElement.src = `${this.captchaUrl}?r=${Math.random()}`;
+          const cachedReplyMode = this.replyMode;
+          this.replyMode = false;
+          this.resetCommentForm(form);
+          this.resetReplyVisible();
+          this.refreshCaptcha();
           this.fetchComments(() => {
-            this.scroller.scrollToAnchor('comments');
+            !cachedReplyMode && this.scroller.scrollToAnchor('comments');
           });
         }
       });
@@ -276,14 +287,29 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     });
   }
 
-  replyComment(comment: CommentModel) {
-    this.commentForm.get('commentParent')?.setValue(comment.commentId);
-    this.commentForm.get('commentTop')?.setValue(comment.commentTop);
-    this.scroller.scrollToAnchor('respond');
+  replyComment(comment: CommentModel, form: FormGroup) {
+    this.resetReplyVisible();
+    this.replyVisibleMap[comment.commentId] = true;
+    this.replyMode = true;
+    this.resetCommentForm(form);
+    form.get('commentParent')?.setValue(comment.commentId);
+    form.get('commentTop')?.setValue(comment.commentTop);
+    this.refreshCaptcha();
   }
 
-  refreshCaptcha(e: MouseEvent) {
-    (e.target as HTMLImageElement).src = `${this.captchaUrl}?r=${Math.random()}`;
+  cancelReply() {
+    this.resetReplyVisible();
+    this.refreshCaptcha();
+    this.replyMode = false;
+  }
+
+  refreshCaptcha(e?: MouseEvent) {
+    const captchaUrl = this.captchaUrl.split('?')[0];
+    if (e) {
+      (e.target as HTMLImageElement).src = `${captchaUrl}?r=${Math.random()}`;
+    } else {
+      setTimeout(() => this.captchaImg.nativeElement.src = `${captchaUrl}?r=${Math.random()}`);
+    }
   }
 
   showReward(src: string) {
@@ -307,7 +333,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.optionsListener = this.optionsService.options$.subscribe((options) => {
       this.options = options;
       if (this.options['site_url']) {
-        this.captchaUrl = `${this.options['site_url']}${ApiUrl.API_URL_PREFIX}${ApiUrl.CAPTCHA}`;
+        this.captchaUrl = `${this.options['site_url']}${ApiUrl.API_URL_PREFIX}${ApiUrl.CAPTCHA}?r=${Math.random()}`;
       }
     });
   }
@@ -435,11 +461,15 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     return tree;
   }
 
-  private resetCommentForm() {
-    this.commentForm.markAsUntouched();
-    this.commentForm.markAsPristine();
-    this.commentForm.get('captcha')?.setValue('');
-    this.commentForm.get('content')?.setValue('');
+  private resetCommentForm = (form: FormGroup) => {
+    form.markAsUntouched();
+    form.markAsPristine();
+    form.get('captcha')?.setValue('');
+    form.get('content')?.setValue('');
+  };
+
+  private resetReplyVisible() {
+    Object.keys(this.replyVisibleMap).forEach((key) => this.replyVisibleMap[key] = false);
   }
 
   private parseHtml() {

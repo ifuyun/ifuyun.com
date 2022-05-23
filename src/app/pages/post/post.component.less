@@ -506,27 +506,11 @@
     .comment-list, .comment-form {
       padding: @content-margin;
     }
-
-    .comment-form {
-      .form-row {
-        width: 280px;
-      }
-
-      .form-row-long {
-        width: 400px;
-      }
-    }
   }
 
   &-mobile {
     .comment-list, .comment-form {
       padding: @m-primary-margin;
-    }
-
-    .comment-form {
-      .form-btns {
-        justify-content: center !important;
-      }
     }
   }
 
@@ -610,44 +594,70 @@
         }
       }
     }
+
+    .comment-form {
+      margin-top: @primary-margin;
+      padding: @primary-margin 0 0;
+      border-top: 1px dashed @primary-border-color;
+    }
   }
 
   .comment-form {
-    @form-item-margin: 12px;
+    @form-row-margin: 12px;
+    @form-item-margin: 8px;
+    @form-item-border-radius: 2px;
+    @captcha-input-width: 120px;
+    @captcha-img-width: 80px;
 
     .form-row {
       display: flex;
       justify-content: space-between;
 
+      &:not(.form-btns) {
+        margin: 0 -(@form-item-margin / 2);
+
+        > * {
+          width: 100%;
+          padding: 0 (@form-item-margin / 2);
+        }
+      }
+
       &:not(:last-child) {
-        margin-bottom: @form-item-margin;
+        margin-bottom: @form-row-margin;
       }
 
       &:not(:first-child) {
-        margin-top: @form-item-margin;
+        margin-top: @form-row-margin;
       }
 
-      > :not(:last-child) {
-        margin-right: 8px;
-      }
-
-      .input {
+      .flex {
         flex-grow: 1;
-        min-width: 120px;
+        flex-shrink: 1;
+
+        .input {
+          width: 100%;
+        }
       }
     }
 
     .form-btns {
-      justify-content: flex-start;
+      justify-content: center;
     }
 
-    .form-required {
-      display: inline-block;
-      width: 8px;
-      line-height: @input-line-height * @primary-font-size + 10;
-      color: @input-required-color;
-      font-weight: bold;
-      text-align: center;
+    .captcha-wrapper {
+      display: flex;
+      flex-basis: @captcha-input-width + @captcha-img-width + @form-item-margin;
+    }
+
+    .input, .button, .captcha {
+      box-sizing: border-box;
+      border-radius: @form-item-border-radius;
+    }
+
+    .input-captcha {
+      min-width: @captcha-input-width;
+      max-width: @captcha-input-width;
+      margin-right: @form-item-margin;
     }
 
     .captcha {
