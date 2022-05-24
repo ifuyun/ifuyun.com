@@ -21,7 +21,12 @@ import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.servic
 import { MessageService } from '../../components/message/message.service';
 import { ApiUrl } from '../../config/api-url';
 import { VoteType, VoteValue } from '../../config/common.enum';
-import { AVATAR_API_URL, STORAGE_VOTED_COMMENTS_KEY, STORAGE_VOTED_POSTS_KEY } from '../../config/constants';
+import {
+  AVATAR_API_URL,
+  STORAGE_DISLIKED_COMMENTS_KEY,
+  STORAGE_LIKED_COMMENTS_KEY,
+  STORAGE_VOTED_POSTS_KEY
+} from '../../config/constants';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { MetaService } from '../../core/meta.service';
@@ -86,7 +91,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private paramListener!: Subscription;
   private userListener!: Subscription;
   private commentFormConfig = {
-    author: ['', [Validators.required, Validators.maxLength(8)]],
+    author: ['', [Validators.required, Validators.maxLength(10)]],
     email: ['', [Validators.required, Validators.maxLength(100), Validators.email]],
     captcha: ['', [Validators.required, Validators.maxLength(4)]],
     content: ['', [Validators.required, Validators.maxLength(400)]],
@@ -263,7 +268,10 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   voteComment(comment: CommentModel, like: boolean) {
-    if ((localStorage.getItem(STORAGE_VOTED_COMMENTS_KEY) || '').split(',').includes(comment.commentId)) {
+    const likedComments = (localStorage.getItem(STORAGE_LIKED_COMMENTS_KEY) || '').split(',');
+    const dislikedComments = (localStorage.getItem(STORAGE_DISLIKED_COMMENTS_KEY) || '').split(',');
+    const votedComments = uniq(likedComments.concat(dislikedComments));
+    if (votedComments.includes(comment.commentId)) {
       return;
     }
     const voteData: VoteEntity = {
@@ -278,11 +286,15 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       if (res.code === ResponseCode.SUCCESS) {
         comment.commentLikes = res.data.likes;
         comment.commentDislikes = res.data.dislikes;
-        comment.voted = true;
-
-        const votedComments = (localStorage.getItem(STORAGE_VOTED_COMMENTS_KEY) || '').split(',');
-        votedComments.push(comment.commentId);
-        localStorage.setItem(STORAGE_VOTED_COMMENTS_KEY, uniq(votedComments.filter((item) => !!item)).join(','));
+        if (like) {
+          comment.liked = true;
+          likedComments.push(comment.commentId);
+          localStorage.setItem(STORAGE_LIKED_COMMENTS_KEY, uniq(likedComments.filter((item) => !!item)).join(','));
+        } else {
+          comment.disliked = true;
+          dislikedComments.push(comment.commentId);
+          localStorage.setItem(STORAGE_DISLIKED_COMMENTS_KEY, uniq(dislikedComments.filter((item) => !!item)).join(','));
+        }
       }
     });
   }
@@ -410,11 +422,11 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         item.children = this.generateCommentTree(item.children);
       });
       if (this.platform.isBrowser) {
-        const votedComments = (localStorage.getItem(STORAGE_VOTED_COMMENTS_KEY) || '').split(',');
+        const likedComments = (localStorage.getItem(STORAGE_LIKED_COMMENTS_KEY) || '').split(',');
+        const dislikedComments = (localStorage.getItem(STORAGE_DISLIKED_COMMENTS_KEY) || '').split(',');
         this.comments.forEach((item) => {
-          if (votedComments.includes(item.commentId)) {
-            item.voted = true;
-          }
+          likedComments.includes(item.commentId) && (item.liked = true);
+          dislikedComments.includes(item.commentId) && (item.disliked = true);
         });
       }
       cb && cb();
@@ -422,7 +434,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   private generateCommentTree(comments: Comment[]) {
-    let depth = Number(this.options['thread_comments_depth']) || 3;
+    const depth = this.isMobile ? 2 : (Number(this.options['thread_comments_depth']) || 3);
     const copies = [...comments];
     let tree = copies.filter((father) => {
       father.children = copies.filter((child) => father.commentId === child.commentParent);

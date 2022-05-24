@@ -115,12 +115,13 @@
     <div class="comment-list" id="comments">
       <ng-template #commentsTpl let-comments>
         <ng-container *ngFor="let comment of comments; let i = index">
-          <div class="comment-item" [ngStyle]="{'padding-left': (comment.level - 1) * 50 + 'px'}">
-            <div class="comment-item-meta">
+          <div class="comment-item comment-item-desktop" *ngIf="!isMobile" [id]="comment.commentId | commentHash"
+               [ngStyle]="{'padding-left': (comment.level - 1) * 50 + 'px'}">
+            <div class="meta">
               <div class="info">
                 <div class="avatar"><img src="{{comment.authorAvatar}}" alt="{{comment.authorName}}"/></div>
                 <div class="author">
-                  <span>
+                  <span class="from">
                     <span class="name">{{comment.authorName}}</span>
                     <span class="location">from {{
                       comment.userLocation?.region ? comment.userLocation.region + ' · ' + comment.userLocation.city : 'unknown'
@@ -129,22 +130,62 @@
                   <span class="time">{{comment.commentCreated | date:'yyyy-MM-dd HH:mm'}}</span>
                 </div>
               </div>
-              <div class="hash" [id]="comment.commentId">#{{comment.commentId | commentHash}}</div>
+              <div class="hash" *ngIf="!isMobile" [id]="comment.commentId">
+                <a [routerLink]="['.']" [fragment]="comment.commentId | commentHash">#{{comment.commentId | commentHash}}</a>
+              </div>
             </div>
-            <div class="comment-item-content">{{comment.commentContent}}</div>
-            <div class="comment-item-actions">
-              <a [ngClass]="{voted: comment.voted}" (click)="voteComment(comment, true)">
-                <i class="icon icon-like-fill"></i><span>赞 ({{comment.commentLikes}})</span>
+            <div class="content">{{comment.commentContent}}</div>
+            <div class="actions">
+              <a [ngClass]="{voted: comment.liked, disabled: comment.liked || comment.disliked}"
+                 (click)="voteComment(comment, true)">
+                <i [ngClass]="{'icon-like-fill': comment.liked, 'icon-like': !comment.liked}"
+                   class="icon"></i><span>{{comment.commentLikes}}</span>
               </a>
-              <a [ngClass]="{voted: comment.voted}" (click)="voteComment(comment, false)">
-                <i class="icon icon-dislike-fill"></i><span>踩 ({{comment.commentDislikes}})</span>
+              <a [ngClass]="{voted: comment.disliked, disabled: comment.liked || comment.disliked}"
+                 (click)="voteComment(comment, false)">
+                <i [ngClass]="{'icon-dislike-fill': comment.disliked, 'icon-dislike': !comment.disliked}"
+                   class="icon"></i><span>{{comment.commentDislikes}}</span>
               </a>
               <a *ngIf="!replyVisibleMap[comment.commentId]" (click)="replyComment(comment, replyForm)">
-                <i class="icon icon-reply-fill"></i><span>回复</span>
+                <i class="icon icon-chat"></i><span>回复</span>
               </a>
               <a *ngIf="replyVisibleMap[comment.commentId]" (click)="cancelReply()">
-                <i class="icon icon-close"></i><span>取消回复</span>
+                <i class="icon icon-close"></i><span>取消</span>
               </a>
+            </div>
+          </div>
+          <div class="comment-item comment-item-mobile" *ngIf="isMobile"
+               [ngStyle]="{'padding-left': (comment.level - 1) * 32 + 'px'}">
+            <div class="avatar"><img src="{{comment.authorAvatar}}" alt="{{comment.authorName}}"/></div>
+            <div class="body">
+              <div class="from">
+                <span class="name">{{comment.authorName}}</span>
+                <span class="location">from {{
+                  comment.userLocation?.region ? comment.userLocation.region + ' · ' + comment.userLocation.city : 'unknown'
+                  }}</span>
+              </div>
+              <div class="content">{{comment.commentContent}}</div>
+              <div class="meta">
+                <span class="time">{{comment.commentCreated | date:'yy-MM-dd HH:mm'}}</span>
+                <div class="actions">
+                  <a [ngClass]="{voted: comment.liked, disabled: comment.liked || comment.disliked}"
+                     (click)="voteComment(comment, true)">
+                    <i [ngClass]="{'icon-like-fill': comment.liked, 'icon-like': !comment.liked}"
+                       class="icon"></i><span>{{comment.commentLikes}}</span>
+                  </a>
+                  <a [ngClass]="{voted: comment.disliked, disabled: comment.liked || comment.disliked}"
+                     (click)="voteComment(comment, false)">
+                    <i [ngClass]="{'icon-dislike-fill': comment.disliked, 'icon-dislike': !comment.disliked}"
+                       class="icon"></i><span>{{comment.commentDislikes}}</span>
+                  </a>
+                  <a *ngIf="!replyVisibleMap[comment.commentId]" (click)="replyComment(comment, replyForm)">
+                    <i class="icon icon-chat"></i>
+                  </a>
+                  <a *ngIf="replyVisibleMap[comment.commentId]" (click)="cancelReply()">
+                    <i class="icon icon-close"></i>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
           <div *ngIf="replyVisibleMap[comment.commentId]" [ngStyle]="{'padding-left': (comment.level - 1) * 50 + 'px'}">
@@ -163,7 +204,7 @@
       <form [formGroup]="form" (ngSubmit)="saveComment(form)">
         <div class="form-row">
           <span class="flex">
-            <input type="text" class="input" formControlName="author" maxlength="8" placeholder="昵称（必填）"/>
+            <input type="text" class="input" formControlName="author" maxlength="10" placeholder="昵称（必填）"/>
           </span>
           <span class="flex">
             <input type="text" class="input" formControlName="email" maxlength="100" placeholder="邮箱（必填）"/>

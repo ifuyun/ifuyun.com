@@ -22,7 +22,8 @@ export interface CommentModel extends CommentEntity {
   commentDislikes: number;
   commentMeta?: MetaData[];
   commentMetaMap?: Record<string, string>;
-  voted?: boolean;
+  liked?: boolean;
+  disliked?: boolean;
 }
 
 export interface Comment extends CommentModel {
