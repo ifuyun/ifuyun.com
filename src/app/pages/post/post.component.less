@@ -504,9 +504,10 @@
   @form-item-border-radius: 2px;
   @captcha-input-width: 120px;
   @captcha-img-width: 80px;
-  margin-top: @content-margin;
 
   &-desktop {
+    margin-top: @content-margin;
+
     .comment-list, .comment-form {
       padding: @content-margin;
     }
@@ -535,6 +536,8 @@
   }
 
   &-mobile {
+    margin-top: @m-primary-margin;
+
     .comment-list, .comment-form {
       padding: @m-primary-margin;
     }
@@ -575,22 +578,41 @@
 
       .from {
         display: inline-flex;
-      }
 
-      .name {
-        margin-right: 8px;
-        color: @primary-meta-color;
-        white-space: nowrap;
-      }
+        .name {
+          margin-right: 8px;
+          color: @primary-meta-color;
+          white-space: nowrap;
+        }
 
-      .location {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+        .location {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
       }
 
       .location, .time, .hash {
         font-size: @meta-font-size;
+      }
+
+      .parent {
+        margin-bottom: 8px;
+        padding-left: 8px;
+        border-left: 4px solid rgba(0, 0, 0, .3);
+        font-size: @minor-font-size;
+
+        .text {
+          margin-right: 4px;
+          color: @minor-meta-color;
+        }
+
+        .author {
+          &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+          }
+        }
       }
 
       .actions {
@@ -657,6 +679,14 @@
         .hash {
           width: 100px;
           text-align: right;
+
+          a {
+            color: @minor-color;
+
+            &:hover {
+              color: @primary-color;
+            }
+          }
         }
       }
 

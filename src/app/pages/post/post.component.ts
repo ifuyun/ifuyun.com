@@ -78,6 +78,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   voteLoading = false;
   replyMode = false;
   replyVisibleMap: Record<string, boolean> = {};
+  commentVoteLoading: Record<string, boolean> = {};
 
   private postId = '';
   private postSlug = '';
@@ -98,6 +99,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     commentParent: [],
     commentTop: []
   };
+
+  private readonly headerHeight!: number;
 
   commentForm = this.fb.group(this.commentFormConfig);
   replyForm = this.fb.group(this.commentFormConfig);
@@ -123,6 +126,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
+    this.headerHeight = this.isMobile ? 56 : 60;
   }
 
   ngOnInit(): void {
@@ -271,9 +275,10 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     const likedComments = (localStorage.getItem(STORAGE_LIKED_COMMENTS_KEY) || '').split(',');
     const dislikedComments = (localStorage.getItem(STORAGE_DISLIKED_COMMENTS_KEY) || '').split(',');
     const votedComments = uniq(likedComments.concat(dislikedComments));
-    if (votedComments.includes(comment.commentId)) {
+    if (votedComments.includes(comment.commentId) || this.commentVoteLoading[comment.commentId]) {
       return;
     }
+    this.commentVoteLoading[comment.commentId] = true;
     const voteData: VoteEntity = {
       objectId: comment.commentId,
       value: like ? VoteValue.LIKE : VoteValue.DISLIKE,
@@ -283,6 +288,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       voteData.user = this.user;
     }
     this.votesService.saveVote(voteData).subscribe((res) => {
+      this.commentVoteLoading[comment.commentId] = false;
       if (res.code === ResponseCode.SUCCESS) {
         comment.commentLikes = res.data.likes;
         comment.commentDislikes = res.data.dislikes;
@@ -321,6 +327,14 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       (e.target as HTMLImageElement).src = `${captchaUrl}?r=${Math.random()}`;
     } else {
       setTimeout(() => this.captchaImg.nativeElement.src = `${captchaUrl}?r=${Math.random()}`);
+    }
+  }
+
+  scrollToComment(e: MouseEvent) {
+    const hash = (e.target as HTMLElement).dataset['hash'] || '';
+    const offsetTop = this.document.getElementById(hash)?.offsetTop || 0;
+    if (offsetTop > 0) {
+      this.scroller.scrollToPosition([0, offsetTop - this.headerHeight]);
     }
   }
 
@@ -414,21 +428,27 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     comment.children.forEach((item) => initialFn(item));
   }
 
+  private initCommentStatus(comments: Comment[]) {
+    if (this.platform.isBrowser) {
+      const likedComments = (localStorage.getItem(STORAGE_LIKED_COMMENTS_KEY) || '').split(',');
+      const dislikedComments = (localStorage.getItem(STORAGE_DISLIKED_COMMENTS_KEY) || '').split(',');
+      comments.forEach((item) => {
+        likedComments.includes(item.commentId) && (item.liked = true);
+        dislikedComments.includes(item.commentId) && (item.disliked = true);
+      });
+    }
+  }
+
   private fetchComments(cb?: Function) {
     this.commentsService.getCommentsByPostId(this.postId).subscribe((res) => {
       this.comments = res.comments || [];
       this.comments.forEach((item) => {
         this.initComment(item);
+        this.initCommentStatus(item.children);
         item.children = this.generateCommentTree(item.children);
+        item.children.forEach((child) => child.parent = item);
       });
-      if (this.platform.isBrowser) {
-        const likedComments = (localStorage.getItem(STORAGE_LIKED_COMMENTS_KEY) || '').split(',');
-        const dislikedComments = (localStorage.getItem(STORAGE_DISLIKED_COMMENTS_KEY) || '').split(',');
-        this.comments.forEach((item) => {
-          likedComments.includes(item.commentId) && (item.liked = true);
-          dislikedComments.includes(item.commentId) && (item.disliked = true);
-        });
-      }
+      this.initCommentStatus(this.comments);
       cb && cb();
     });
   }
@@ -437,7 +457,13 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     const depth = this.isMobile ? 2 : (Number(this.options['thread_comments_depth']) || 3);
     const copies = [...comments];
     let tree = copies.filter((father) => {
-      father.children = copies.filter((child) => father.commentId === child.commentParent);
+      father.children = copies.filter((child) => {
+        if(father.commentId === child.commentParent) {
+          child.parent = father;
+          return true;
+        }
+        return false;
+      });
       father.isLeaf = father.children.length < 1;
       return father.commentParent === father.commentTop;
     });

@@ -28,6 +28,7 @@ export interface CommentModel extends CommentEntity {
 
 export interface Comment extends CommentModel {
   children: Comment[];
+  parent?: Comment;
   level?: number;
   isLeaf: boolean;
 }
