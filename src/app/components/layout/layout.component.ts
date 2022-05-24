@@ -1,7 +1,8 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
+import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { TaxonomyNode } from '../../interfaces/taxonomies';
 import { TaxonomiesService } from '../../services/taxonomies.service';
@@ -11,8 +12,8 @@ import { TaxonomiesService } from '../../services/taxonomies.service';
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.less']
 })
-export class LayoutComponent implements OnInit, OnDestroy {
-  isMobile: boolean = false;
+export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
+  isMobile = false;
   taxonomies: TaxonomyNode[] = [];
   siderOpen = false;
 
@@ -22,6 +23,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     private userAgentService: UserAgentService,
     private taxonomiesService: TaxonomiesService,
     private router: Router,
+    private platform: PlatformService,
     @Inject(DOCUMENT) private document: Document
   ) {
     this.isMobile = this.userAgentService.isMobile();
@@ -36,6 +38,21 @@ export class LayoutComponent implements OnInit, OnDestroy {
     });
     this.taxonomiesListener = this.taxonomiesService.getTaxonomies()
       .subscribe((taxonomies) => this.taxonomies = taxonomies);
+  }
+
+  ngAfterViewInit() {
+    if (this.platform.isBrowser) {
+      const siderEle = this.document.getElementById('sider') as HTMLElement;
+      window.addEventListener('scroll', (e) => {
+        if (document.documentElement.scrollTop > siderEle.scrollHeight - document.documentElement.clientHeight) {
+          siderEle.style.position = 'sticky';
+          siderEle.style.top = (document.documentElement.clientHeight - siderEle.scrollHeight - 16) + 'px';
+        } else {
+          siderEle.style.position = 'relative';
+          siderEle.style.top = '';
+        }
+      });
+    }
   }
 
   ngOnDestroy(): void {
