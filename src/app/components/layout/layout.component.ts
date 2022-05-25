@@ -43,7 +43,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     if (this.platform.isBrowser) {
       const siderEle = this.document.getElementById('sider') as HTMLElement;
-      window.addEventListener('scroll', (e) => {
+      const scrollFn = (siderEle: HTMLElement) => {
         if (document.documentElement.scrollTop > siderEle.scrollHeight - document.documentElement.clientHeight) {
           siderEle.style.position = 'sticky';
           siderEle.style.top = (document.documentElement.clientHeight - siderEle.scrollHeight - 16) + 'px';
@@ -51,7 +51,9 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
           siderEle.style.position = 'relative';
           siderEle.style.top = '';
         }
-      });
+      };
+      window.addEventListener('scroll', () => scrollFn(siderEle));
+      window.addEventListener('resize', () => scrollFn(siderEle));
     }
   }
 
