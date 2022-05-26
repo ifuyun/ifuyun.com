@@ -41,12 +41,13 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (this.platform.isBrowser) {
+    if (this.platform.isBrowser && !this.isMobile) {
       const siderEle = this.document.getElementById('sider') as HTMLElement;
+      const documentEle = this.document.documentElement;
       const scrollFn = (siderEle: HTMLElement) => {
-        if (document.documentElement.scrollTop > siderEle.scrollHeight - document.documentElement.clientHeight) {
+        if (documentEle.scrollTop > 0 && documentEle.scrollTop > siderEle.scrollHeight - documentEle.clientHeight) {
           siderEle.style.position = 'sticky';
-          siderEle.style.top = (document.documentElement.clientHeight - siderEle.scrollHeight - 16) + 'px';
+          siderEle.style.top = (documentEle.clientHeight - siderEle.scrollHeight - 16) + 'px';
         } else {
           siderEle.style.position = 'relative';
           siderEle.style.top = '';

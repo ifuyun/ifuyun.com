@@ -139,6 +139,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       this.postSlug = params['postSlug']?.trim();
       this.postSlug ? this.fetchPage() : this.fetchPost();
       this.scroller.scrollToPosition([0, 0]);
+      this.resetCommentForm(this.commentForm);
+      this.resetReplyStatus();
     });
   }
 
@@ -190,7 +192,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     if (!form.valid) {
       const formLabels: Record<string, string> = {
         author: '昵称',
-        email: 'Email',
+        email: '邮箱',
         captcha: '验证码',
         content: '评论内容'
       };
@@ -506,8 +508,13 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     form.get('content')?.setValue('');
   };
 
+  private resetReplyStatus() {
+    this.resetReplyVisible();
+    this.replyMode = false;
+  }
+
   private resetReplyVisible() {
-    Object.keys(this.replyVisibleMap).forEach((key) => this.replyVisibleMap[key] = false);
+    this.replyVisibleMap = {};
   }
 
   private parseHtml() {
