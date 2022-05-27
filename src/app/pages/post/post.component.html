@@ -84,7 +84,7 @@
       <div>
         <button class="button-like" [ngClass]="{liked: postVoted, loading: voteLoading}" (click)="votePost(true)">
           <i class='icon icon-like-fill'></i>
-          <span class="text">真棒！{{postMeta['post_vote'] || ''}}</span>
+          <span class="text">真棒！{{post && post.postLikes > 0 ? post.postLikes : ''}}</span>
           <span class="parkinson-mask" *ngIf="!voteLoading"><i class='icon icon-like-fill'></i></span>
           <span class="loading-mask" *ngIf="voteLoading"><i class='icon icon-loading'></i></span>
         </button>

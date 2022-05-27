@@ -263,7 +263,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.votesService.saveVote(voteData).subscribe((res) => {
       this.voteLoading = false;
       if (res.code === ResponseCode.SUCCESS) {
-        this.postMeta['post_vote'] = res.data.likes.toString();
+        this.post.postLikes = res.data.likes;
         this.postVoted = true;
 
         const likedPosts = (localStorage.getItem(STORAGE_VOTED_POSTS_KEY) || '').split(',');

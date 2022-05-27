@@ -20,6 +20,7 @@ export interface PostEntity {
   postType: PostType;
   commentCount: number;
   postViewCount: number;
+  postLikes: number;
   author: UserEntity;
 }
 
