@@ -14,6 +14,7 @@ export interface PostEntity {
   postStatus: string;
   commentFlag: CommentFlag;
   postOriginal: number;
+  postSticky: number;
   postModified: Date;
   postCreated: Date;
   postParent: string;

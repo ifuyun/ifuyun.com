@@ -1,12 +1,12 @@
 @import "../../../styles/variables";
 
-.sticky, .article {
+.banner, .article {
   border-radius: @border-radius;
   background-color: @content-background-color;
   box-shadow: @content-box-shadow;
 }
 
-.sticky {
+.banner {
   position: relative;
   margin: @box-shadow-width @box-shadow-width @primary-margin;
   border-radius: @border-radius;
@@ -58,10 +58,12 @@
     position: relative;
 
     h3 {
-      font-size: 16px;
-      line-height: @article-header-height;
+      display: flex;
       height: @article-header-height;
       margin-right: 108px;
+      align-items: center;
+      font-size: 16px;
+      line-height: @article-header-height;
 
       a {
         display: inline-block;
@@ -75,6 +77,19 @@
         }
       }
     }
+  }
+
+  .article-sticky {
+    flex-shrink: 0;
+    margin-right: 8px;
+    padding: 4px 8px;
+    border-radius: 2px;
+    line-height: 1;
+    background-color: @action-color-light;
+    color: @action-color;
+    font-size: @minor-font-size;
+    font-weight: normal;
+
   }
 
   .article-stat, .article-meta {

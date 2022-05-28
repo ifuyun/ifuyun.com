@@ -1,5 +1,5 @@
 <app-breadcrumb *ngIf="showCrumb"></app-breadcrumb>
-<div class="sticky" *ngIf="!isMobile">
+<div class="banner" *ngIf="!isMobile">
   <ul>
     <li><img src="/assets/images/cloud.jpg" alt="{{options['site_name']}}"/></li>
   </ul>
@@ -9,8 +9,8 @@
            *ngFor="let post of postList?.posts">
     <header>
       <h3>
-        <a [routerLink]="[post.post.postGuid]" title="{{post.post.postTitle}}"
-           rel="bookmark">{{post.post.postTitle}}</a>
+        <span class="article-sticky" *ngIf="post.post.postSticky">置顶</span>
+        <a [routerLink]="[post.post.postGuid]" title="{{post.post.postTitle}}" rel="bookmark">{{post.post.postTitle}}</a>
       </h3>
       <div class="article-stat">
         <ng-container *ngIf="post.post.commentFlag !== 'close'">
