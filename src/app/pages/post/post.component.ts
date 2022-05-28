@@ -418,7 +418,11 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   private initComment(comment: Comment) {
     const initialFn = (data: Comment) => {
-      data.authorAvatar = format(AVATAR_API_URL, data.authorEmailHash);
+      let defaultAvatar = this.options['avatar_default'];
+      if (!defaultAvatar || defaultAvatar === 'logo') {
+        defaultAvatar = this.options['site_url'] + '/logo.png';
+      }
+      data.authorAvatar = format(AVATAR_API_URL, data.authorEmailHash, defaultAvatar);
       data.commentMetaMap = this.commonService.transformMeta(data.commentMeta || []);
       try {
         data.userLocation = JSON.parse(data.commentMetaMap['user_location']);
