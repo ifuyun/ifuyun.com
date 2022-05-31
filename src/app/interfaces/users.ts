@@ -7,18 +7,11 @@ export interface UserEntity {
 }
 
 export interface UserModel extends UserEntity {
-  userLogin: string;
-  userPass: string;
-  userPassSalt: string;
-  userLink: string;
-  userActivationKey: string;
-}
-
-export interface LoginUserEntity {
-  userName?: string;
-  userEmail?: string;
-  meta?: Record<string, string>;
+  userLogin?: string;
+  userLink?: string;
+  userEmailHash?: string;
   isAdmin?: boolean;
+  meta?: Record<string, string>;
 }
 
 export interface Guest {

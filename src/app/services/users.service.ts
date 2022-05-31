@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 import { ApiUrl } from '../config/api-url';
 import { STORAGE_USER_KEY } from '../config/constants';
 import { ApiService } from '../core/api.service';
-import { Guest, LoginUserEntity } from '../interfaces/users';
+import { Guest, UserModel } from '../interfaces/users';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class UsersService {
   ) {
   }
 
-  getLoginUser(): Observable<LoginUserEntity> {
+  getLoginUser(): Observable<UserModel> {
     return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_LOGIN_USER)).pipe(
       map((res) => res?.data || {})
     );

@@ -23,7 +23,7 @@ export class AuthService {
   login(loginData: LoginEntity): Observable<LoginResponse> {
     return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.LOGIN), loginData).pipe(
       map((res) => res?.data || {}),
-      tap((res) => this.setSession(res, loginData))
+      tap((res) => this.setAuth(res, loginData))
     );
   }
 
@@ -41,7 +41,33 @@ export class AuthService {
     return 0;
   }
 
-  private setSession(authResult: LoginResponse, loginData: LoginEntity) {
+  clearAuth() {
+    localStorage?.removeItem('token');
+    localStorage?.removeItem('token_expires');
+  }
+
+  isLoggedIn(): boolean {
+    // API层守卫会拦截失效、无效token，因此client不做进一步校验
+    const isLoggedIn = !!this.getToken() && moment().isBefore(this.getExpiration());
+
+    if (!isLoggedIn) {
+      this.clearAuth();
+      return false;
+    }
+
+    return true;
+  }
+
+  isLoggedOut(): boolean {
+    return !this.isLoggedIn();
+  }
+
+  logout() {
+    // todo: destroy token in server side
+    this.clearAuth();
+  }
+
+  private setAuth(authResult: LoginResponse, loginData: LoginEntity) {
     if (authResult.accessToken) {
       localStorage?.setItem('token', authResult.accessToken);
       localStorage?.setItem('token_expires', authResult.expiresAt.toString());
@@ -58,31 +84,5 @@ export class AuthService {
         });
       }
     }
-  }
-
-  clearAuth() {
-    localStorage?.removeItem('token');
-    localStorage?.removeItem('token_expires');
-  }
-
-  logout() {
-    // todo: must request to server: logout
-    this.clearAuth();
-  }
-
-  isLoggedIn() {
-    // todo: warning: in client mode, should check token is valid, not only is existence.
-    const isLoggedIn = !!this.getToken() && moment().isBefore(this.getExpiration());
-
-    if (!isLoggedIn) {
-      this.clearAuth();
-      return false;
-    }
-
-    return true;
-  }
-
-  isLoggedOut() {
-    return !this.isLoggedIn();
   }
 }

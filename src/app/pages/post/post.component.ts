@@ -157,9 +157,9 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         }, 0);
       } else {
         this.userListener = this.usersService.getLoginUser().subscribe((user) => {
-          if (user.userName) {
+          if (user.userId) {
             this.user = {
-              name: user.userName,
+              name: user.userNiceName,
               email: user.userEmail || ''
             };
             this.commentForm.get('author')?.setValue(this.user.name);

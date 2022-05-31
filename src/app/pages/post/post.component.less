@@ -109,7 +109,7 @@
   .post-meta {
     line-height: @post-line-height;
     color: @minor-meta-color;
-    font-size: @minor-font-size;
+    font-size: @meta-font-size;
 
     &-top {
       margin-bottom: 8px;
@@ -229,6 +229,10 @@
         border-right: 1px solid @code-border-color;
         list-style: none;
         text-align: right;
+
+        li {
+          margin: 0;
+        }
       }
 
       code.i-code-text {
