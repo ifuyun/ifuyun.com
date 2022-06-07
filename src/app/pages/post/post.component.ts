@@ -63,7 +63,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   nextPost: PostEntity | null = null;
   comments: Comment[] = [];
   post!: PostModel;
-  postMeta: Record<string, string> = {};
+  postMeta: Record<string, any> = {};
   postTags: TaxonomyEntity[] = [];
   postCategories: TaxonomyEntity[] = [];
   crumbs: BreadcrumbEntity[] = [];

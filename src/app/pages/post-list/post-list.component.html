@@ -10,6 +10,7 @@
     <header>
       <h3>
         <span class="article-sticky" *ngIf="post.post.postSticky">置顶</span>
+        <span class="article-pay" *ngIf="post.post.postPayFlag">付费</span>
         <a [routerLink]="[post.post.postGuid]" title="{{post.post.postTitle}}" rel="bookmark">{{post.post.postTitle}}</a>
       </h3>
       <div class="article-stat">

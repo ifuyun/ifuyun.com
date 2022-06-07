@@ -85,11 +85,24 @@
     padding: 4px 8px;
     border-radius: 2px;
     line-height: 1;
-    background-color: @action-color-light;
-    color: @action-color;
+    background-color: @sticky-background-color;
+    color: @sticky-color;
+    border: 1px solid @sticky-border-color;
     font-size: @minor-font-size;
     font-weight: normal;
+  }
 
+  .article-pay {
+    flex-shrink: 0;
+    margin-right: 8px;
+    padding: 4px 8px;
+    border-radius: 2px;
+    line-height: 1;
+    background-color: @action-color-light;
+    color: @action-color;
+    border: 1px solid @action-color;
+    font-size: @minor-font-size;
+    font-weight: normal;
   }
 
   .article-stat, .article-meta {
