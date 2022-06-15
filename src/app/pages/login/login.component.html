@@ -22,6 +22,18 @@
           <input type="submit" class="button button-submit" tabindex="100" value="登录"/>
         </div>
       </div>
+      <div class="separator">
+        <div class="line"></div>
+        <div class="text-wrap">
+          <div class="text">其他登录方式</div>
+        </div>
+      </div>
+      <div class="login-types">
+        <i class='icon icon-wechat' (click)="getUser('wechat')"></i>
+        <i class='icon icon-qq' (click)="getUser('qq')"></i>
+        <i class='icon icon-alipay' (click)="getUser('alipay')"></i>
+        <i class='icon icon-weibo' (click)="getUser('weibo')"></i>
+      </div>
     </form>
   </div>
 </div>

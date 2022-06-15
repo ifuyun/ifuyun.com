@@ -7,7 +7,9 @@ import { uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscription } from 'rxjs';
 import { MessageService } from '../../components/message/message.service';
+import { ADMIN_URL, THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK } from '../../config/constants';
 import { PlatformService } from '../../core/platform.service';
+import { format, generateId } from '../../helpers/helper';
 import md5 from '../../helpers/md5';
 import { HTMLMetaData } from '../../interfaces/meta';
 import { OptionEntity } from '../../interfaces/options';
@@ -50,6 +52,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   private adminUrl = '';
   private options: OptionEntity = {};
+  private loginWindow: Window | null = null;
+  private readonly loginWindowName = 'login';
+
   private optionsListener!: Subscription;
 
   constructor(
@@ -67,17 +72,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.optionsListener = this.optionsService.options$.subscribe((options) => {
       this.options = options;
-      const titles = ['登录', this.options['site_name']];
-      const keywords: string[] = (this.options['site_keywords'] || '').split(',');
-      const metaData: HTMLMetaData = {
-        title: titles.join(' - '),
-        description: this.options['site_description'],
-        author: this.options['site_author'],
-        keywords: uniq(keywords).join(',')
-      };
-      this.metaService.updateHTMLMeta(metaData);
+      this.initMeta();
 
-      this.adminUrl = `${this.options['site_url']}/admin`;
+      this.adminUrl = `${this.options['site_url']}${ADMIN_URL}`;
       const rememberMe = this.cookieService.get('remember');
       /* 登录状态直接跳转后台首页 */
       if (rememberMe === '1' && this.authService.isLoggedIn()) {
@@ -137,6 +134,30 @@ export class LoginComponent implements OnInit, OnDestroy {
       });
       msgs.length > 0 && this.message.error(msgs[0]);
     }
+  }
+
+  getUser(type: string) {
+    if (type !== 'alipay') {
+      return this.message.warning('This feature is developing, please wait...');
+    }
+    this.loginWindow = window.open(format(
+      THIRD_LOGIN_API[type],
+      this.options['open_app_id_alipay'],
+      encodeURIComponent(`${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'alipay')}`),
+      generateId()
+    ), this.loginWindowName);
+  }
+
+  private initMeta() {
+    const titles = ['登录', this.options['site_name']];
+    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    const metaData: HTMLMetaData = {
+      title: titles.join(' - '),
+      description: this.options['site_description'],
+      author: this.options['site_author'],
+      keywords: uniq(keywords).join(',')
+    };
+    this.metaService.updateHTMLMeta(metaData);
   }
 
   private shakeForm() {

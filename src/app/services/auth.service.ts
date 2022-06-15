@@ -67,12 +67,12 @@ export class AuthService {
     this.clearAuth();
   }
 
-  private setAuth(authResult: LoginResponse, loginData: LoginEntity) {
+  setAuth(authResult: LoginResponse, loginData: LoginEntity) {
     if (authResult.accessToken) {
       localStorage?.setItem('token', authResult.accessToken);
       localStorage?.setItem('token_expires', authResult.expiresAt.toString());
       if (loginData.rememberMe) {
-        this.cookieService.set('user', loginData.username, {
+        this.cookieService.set('user', loginData.username || '', {
           path: '/',
           domain: environment.cookie.domain,
           expires: environment.cookie.expires

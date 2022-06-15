@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { ApiUrl } from '../config/api-url';
 import { STORAGE_USER_KEY } from '../config/constants';
 import { ApiService } from '../core/api.service';
+import { HttpResponseEntity } from '../interfaces/http-response';
 import { Guest, UserModel } from '../interfaces/users';
 
 @Injectable({
@@ -27,5 +28,9 @@ export class UsersService {
     } catch (e) {
       return null;
     }
+  }
+
+  getAlipayUser(authCode: string): Observable<HttpResponseEntity> {
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.THIRD_LOGIN), { authCode });
   }
 }

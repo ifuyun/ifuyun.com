@@ -26,6 +26,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PostListComponent } from './pages/post-list/post-list.component';
 import { PostComponent } from './pages/post/post.component';
 import { PipesModule } from './pipes/pipes.module';
+import { ThirdLoginComponent } from './pages/third-login/third-login.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { PipesModule } from './pipes/pipes.module';
     ArchiveComponent,
     NotFoundComponent,
     AutofocusDirective,
-    SiderMobileComponent
+    SiderMobileComponent,
+    ThirdLoginComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),

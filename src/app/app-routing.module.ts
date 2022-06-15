@@ -11,6 +11,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PostListComponent } from './pages/post-list/post-list.component';
 import { PostComponent } from './pages/post/post.component';
+import { ThirdLoginComponent } from './pages/third-login/third-login.component';
 
 const routes: Routes = [
   {
@@ -51,6 +52,9 @@ const routes: Routes = [
   }, {
     path: 'user/login',
     component: LoginComponent
+  }, {
+    path: 'user/login/callback',
+    component: ThirdLoginComponent
   }, {
     path: '**',
     component: NotFoundComponent
