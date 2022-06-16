@@ -37,23 +37,15 @@
           position: relative;
 
           > a {
-            display: block;
-            padding: 0 @primary-margin;
+            display: inline-flex;
+            align-items: center;
             line-height: @header-height;
-            font-size: 15px;
           }
         }
 
         li a {
           color: #555;
           background: transparent;
-        }
-
-        li.active, li:hover {
-          > a {
-            color: #fff;
-            background-color: @primary-color;
-          }
         }
       }
 
@@ -64,13 +56,36 @@
           &:hover .sub-nav-list {
             display: block;
           }
+
+          > a {
+            padding: 0 @primary-margin;
+            font-size: 15px;
+          }
+        }
+
+        li.active, li:hover {
+          > a {
+            color: #fff;
+            background-color: @primary-color;
+          }
         }
       }
 
       .link-list {
         float: right;
 
+        > li {
+          margin-left: @primary-margin;
+        }
+
+        li.active, li:hover {
+          > a {
+            color: @primary-color;
+          }
+        }
+
         .icon {
+          display: inline-flex;
           margin-right: 4px;
         }
       }
