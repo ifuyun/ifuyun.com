@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { ApiUrl } from '../config/api-url';
 import { STORAGE_USER_KEY } from '../config/constants';
 import { ApiService } from '../core/api.service';
@@ -11,14 +11,25 @@ import { Guest, UserModel } from '../interfaces/users';
   providedIn: 'root'
 })
 export class UsersService {
+  private loginUser: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>({ userId: '', userNiceName: '' });
+  loginUser$: Observable<UserModel> = this.loginUser.asObservable();
+  isLoggedIn = false;
+
   constructor(
     private apiService: ApiService
   ) {
   }
 
   getLoginUser(): Observable<UserModel> {
+    if (this.isLoggedIn) {
+      return this.loginUser$;
+    }
     return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_LOGIN_USER)).pipe(
-      map((res) => res?.data || {})
+      map((res) => res?.data || {}),
+      tap((user) => {
+        this.isLoggedIn = !!user.userId;
+        this.loginUser.next(user);
+      })
     );
   }
 

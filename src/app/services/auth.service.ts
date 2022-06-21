@@ -5,9 +5,11 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { ApiUrl } from '../config/api-url';
+import { ResponseCode } from '../config/response-code.enum';
 import { ApiService } from '../core/api.service';
 import { PlatformService } from '../core/platform.service';
 import { LoginEntity, LoginResponse } from '../interfaces/auth';
+import { HttpResponseEntity } from '../interfaces/http-response';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +29,16 @@ export class AuthService {
     );
   }
 
+  logout(): Observable<HttpResponseEntity> {
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.LOGOUT)).pipe(
+      tap((res) => {
+        if (res.code === ResponseCode.SUCCESS) {
+          this.clearAuth();
+        }
+      })
+    );
+  }
+
   getToken(): string {
     if (this.platform.isBrowser) {
       return localStorage.getItem('token') || '';
@@ -42,8 +54,10 @@ export class AuthService {
   }
 
   clearAuth() {
+    // todo: destroy token in server side
     localStorage?.removeItem('token');
     localStorage?.removeItem('token_expires');
+    this.cookieService.delete('user');
   }
 
   isLoggedIn(): boolean {
@@ -60,11 +74,6 @@ export class AuthService {
 
   isLoggedOut(): boolean {
     return !this.isLoggedIn();
-  }
-
-  logout() {
-    // todo: destroy token in server side
-    this.clearAuth();
   }
 
   setAuth(authResult: LoginResponse, loginData: LoginEntity) {

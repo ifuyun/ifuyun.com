@@ -1,6 +1,8 @@
 @import "../../../styles/variables";
 
 .sider {
+  @item-margin: 0.8rem;
+
   position: fixed;
   width: @m-sider-width;
   height: 100%;
@@ -86,7 +88,7 @@
       line-height: 4rem;
 
       &:not(:last-child) {
-        margin-bottom: 0.8rem;
+        margin-bottom: @item-margin;
       }
 
       &.active {
@@ -110,5 +112,10 @@
       width: 1.6rem;
       margin-right: 1.2rem;
     }
+  }
+
+  .separator {
+    margin: @item-margin 0;
+    border-bottom: 1px solid @m-sider-border-color;
   }
 }

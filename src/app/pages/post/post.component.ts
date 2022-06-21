@@ -58,6 +58,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   @ViewChild('postEle', { static: false }) postEle!: ElementRef;
 
   isMobile = false;
+  isLoggedIn = false;
   pageIndex: string = '';
   prevPost: PostEntity | null = null;
   nextPost: PostEntity | null = null;
@@ -142,6 +143,16 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       this.resetCommentForm(this.commentForm);
       this.resetReplyStatus();
     });
+    this.userListener = this.usersService.loginUser$.subscribe((user) => {
+      this.isLoggedIn = this.usersService.isLoggedIn;
+      if (!this.user?.name) {
+        this.user = {
+          name: user.userNiceName,
+          email: user.userEmail || ''
+        };
+        this.initCommentForm();
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -149,25 +160,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       const user = this.usersService.getCommentUser();
       if (user) {
         this.user = { ...user };
-        setTimeout(() => {
-          this.commentForm.get('author')?.setValue(this.user?.name);
-          this.commentForm.get('email')?.setValue(this.user?.email);
-          this.replyForm.get('author')?.setValue(this.user?.name);
-          this.replyForm.get('email')?.setValue(this.user?.email);
-        }, 0);
-      } else {
-        this.userListener = this.usersService.getLoginUser().subscribe((user) => {
-          if (user.userId) {
-            this.user = {
-              name: user.userNiceName,
-              email: user.userEmail || ''
-            };
-            this.commentForm.get('author')?.setValue(this.user.name);
-            this.commentForm.get('email')?.setValue(this.user.email);
-            this.replyForm.get('author')?.setValue(this.user.name);
-            this.replyForm.get('email')?.setValue(this.user.email);
-          }
-        });
+        setTimeout(() => this.initCommentForm(), 0);
       }
     }
     this.unlistenImgClick = this.renderer.listen(this.postEle.nativeElement, 'click', ((e: MouseEvent) => {
@@ -360,7 +353,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private initOptions() {
     this.optionsListener = this.optionsService.options$.subscribe((options) => {
       this.options = options;
-      if (this.options['site_url']) {
+      if (this.options['site_url'] && this.platform.isBrowser) {
         this.captchaUrl = `${this.options['site_url']}${ApiUrl.API_URL_PREFIX}${ApiUrl.CAPTCHA}?r=${Math.random()}`;
       }
     });
@@ -443,6 +436,13 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         dislikedComments.includes(item.commentId) && (item.disliked = true);
       });
     }
+  }
+
+  private initCommentForm() {
+    this.commentForm.get('author')?.setValue(this.user?.name);
+    this.commentForm.get('email')?.setValue(this.user?.email);
+    this.replyForm.get('author')?.setValue(this.user?.name);
+    this.replyForm.get('email')?.setValue(this.user?.email);
   }
 
   private fetchComments(cb?: Function) {

@@ -3,6 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { OptionsService } from './services/options.service';
 import { UrlService } from './core/url.service';
+import { UsersService } from './services/users.service';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,8 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private urlService: UrlService,
-    private optionsService: OptionsService
+    private optionsService: OptionsService,
+    private usersService: UsersService
   ) {
   }
 
@@ -30,5 +32,6 @@ export class AppComponent implements OnInit {
       this.currentUrl = (event as NavigationEnd).url;
     });
     this.optionsService.getOptions().subscribe();
+    this.usersService.getLoginUser().subscribe();
   }
 }

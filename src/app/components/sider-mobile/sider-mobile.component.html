@@ -31,11 +31,14 @@
             <i class="icon icon-github"></i><span>GitHub</span>
           </a>
         </li>
-        <li>
-          <a routerLink="/user/login" title="登录">
-            <i class='icon icon-login'></i><span>登录</span>
-          </a>
+        <div class="separator"></div>
+        <li *ngIf="!isLoggedIn">
+          <a routerLink="/user/login" title="登录"><i class='icon icon-login'></i><span>登录</span></a>
         </li>
+        <ng-container *ngIf="isLoggedIn">
+          <li><a href="/admin" target="_blank"><i class='icon icon-dashboard'></i><span>个人中心</span></a></li>
+          <li><a (click)="logout()"><i class='icon icon-logout'></i><span>退出登录</span></a></li>
+        </ng-container>
       </ul>
     </nav>
   </aside>

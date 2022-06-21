@@ -21,7 +21,7 @@
   <div #postEle>
     <article class="post-content" [ngStyle]="{'user-select': post?.postPayFlag ? 'none' : ''}"
              [innerHTML]="(post?.postContent || '') | safeHtml"></article>
-    <ng-container *ngIf="post?.postPayFlag">
+    <ng-container *ngIf="post?.postPayFlag || postMeta['should_login'] && !isLoggedIn">
       <div class="pay-mask"></div>
       <div class="pay-body">
         <div class="pay-separator">
@@ -32,7 +32,12 @@
         </div>
         <div class="pay-icon"><i class='icon icon-lock'></i></div>
         <div class="pay-tip">
-          <div>请扫描下方二维码关注公众号后，回复“<span class="keyword">{{postMeta['wechat_index']}}</span>”继续阅读。</div>
+          <ng-container *ngIf="post?.postPayFlag">
+            <div>请扫描下方二维码关注公众号后，回复“<span class="keyword">{{postMeta['wechat_index']}}</span>”继续阅读。</div>
+          </ng-container>
+          <ng-container *ngIf="postMeta['should_login']">
+            <div>本文仅限注册用户阅读，请先<a routerLink="/user/login" [queryParams]="{ref: post?.postGuid}" title="登录">登录</a>。</div>
+          </ng-container>
         </div>
       </div>
     </ng-container>

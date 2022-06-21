@@ -14,6 +14,7 @@ export enum ApiUrl {
   SAVE_COMMENTS = '/comments',
   SAVE_VOTES = '/votes',
   LOGIN = '/users/login',
+  LOGOUT = '/users/logout',
   GET_LOGIN_USER = '/users/login-user',
   THIRD_LOGIN = '/users/third-login',
   CAPTCHA = '/captcha'
