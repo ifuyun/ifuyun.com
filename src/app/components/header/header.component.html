@@ -38,7 +38,7 @@
             </a>
             <ul class="sub-nav-list">
               <li>
-                <a href="/admin" target="_blank"><i class='icon icon-dashboard'></i><span>个人中心</span></a>
+                <a [href]="options['site_url'] + '/admin'" target="_blank"><i class='icon icon-dashboard'></i><span>个人中心</span></a>
               </li>
               <li>
                 <a (click)="logout()"><i class='icon icon-logout'></i><span>退出登录</span></a>

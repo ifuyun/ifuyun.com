@@ -5,7 +5,7 @@ export const STORAGE_LIKED_COMMENTS_KEY = 'liked_comments';
 export const STORAGE_DISLIKED_COMMENTS_KEY = 'disliked_comments';
 export const AVATAR_API_URL = 'https://cravatar.cn/avatar/$0.png?d=$1';
 export const ADMIN_URL = '/admin';
-export const THIRD_LOGIN_CALLBACK = '/user/login/callback?ref=$0';
+export const THIRD_LOGIN_CALLBACK = '/user/login/callback?from=$0';
 
 export const COPYRIGHT_TYPE: Record<string, string> = Object.freeze({
   '0': '禁止转载',
