@@ -10,7 +10,7 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import highlight from 'highlight.js';
 import { uniq } from 'lodash';
@@ -39,7 +39,7 @@ import { Comment, CommentEntity, CommentModel } from '../../interfaces/comments'
 import { OptionEntity } from '../../interfaces/options';
 import { Post, PostEntity, PostModel } from '../../interfaces/posts';
 import { TaxonomyEntity } from '../../interfaces/taxonomies';
-import { Guest } from '../../interfaces/users';
+import { Guest, UserModel } from '../../interfaces/users';
 import { VoteEntity } from '../../interfaces/votes';
 import { CommentsService } from '../../services/comments.service';
 import { OptionsService } from '../../services/options.service';
@@ -59,6 +59,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   isMobile = false;
   isLoggedIn = false;
+  user!: UserModel;
   pageIndex: string = '';
   prevPost: PostEntity | null = null;
   nextPost: PostEntity | null = null;
@@ -83,7 +84,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   private postId = '';
   private postSlug = '';
-  private user: Guest | null = null;
+  private commentUser: Guest | null = null;
   private shareUrl = '';
   private options: OptionEntity = {};
   private unlistenImgClick!: Function;
@@ -144,23 +145,25 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       this.resetReplyStatus();
     });
     this.userListener = this.usersService.loginUser$.subscribe((user) => {
+      this.user = user;
       this.isLoggedIn = this.usersService.isLoggedIn;
-      if (!this.user?.name) {
-        this.user = {
-          name: user.userNiceName,
-          email: user.userEmail || ''
-        };
-        this.initCommentForm();
+      if (this.isLoggedIn) {
+        this.commentForm.setControl('author', new FormControl());
+        this.commentForm.setControl('email', new FormControl());
+        this.commentForm.setControl('captcha', new FormControl());
+        this.replyForm.setControl('author', new FormControl());
+        this.replyForm.setControl('email', new FormControl());
+        this.replyForm.setControl('captcha', new FormControl());
       }
     });
   }
 
   ngAfterViewInit() {
     if (this.platform.isBrowser) {
-      const user = this.usersService.getCommentUser();
-      if (user) {
-        this.user = { ...user };
-        setTimeout(() => this.initCommentForm(), 0);
+      const commentUser = this.usersService.getCommentUser();
+      if (commentUser) {
+        this.commentUser = { ...commentUser };
+        !this.isLoggedIn && setTimeout(() => this.initCommentForm(), 0);
       }
     }
     this.unlistenImgClick = this.renderer.listen(this.postEle.nativeElement, 'click', ((e: MouseEvent) => {
@@ -215,7 +218,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         captchaCode: captcha,
         commentContent: content,
         authorName: author,
-        authorEmail: email
+        authorEmail: email,
+        userId: this.user.userId
       };
       this.saveLoading = true;
       this.commentsService.saveComment(commentDto).subscribe((res) => {
@@ -249,8 +253,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       value: like ? VoteValue.LIKE : VoteValue.DISLIKE,
       type: VoteType.POST
     };
-    if (this.user) {
-      voteData.user = this.user;
+    if (this.commentUser && this.commentUser.name) {
+      voteData.user = this.commentUser;
     }
     this.voteLoading = true;
     this.votesService.saveVote(voteData).subscribe((res) => {
@@ -279,8 +283,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       value: like ? VoteValue.LIKE : VoteValue.DISLIKE,
       type: VoteType.COMMENT
     };
-    if (this.user) {
-      voteData.user = this.user;
+    if (this.commentUser && this.commentUser.name) {
+      voteData.user = this.commentUser;
     }
     this.votesService.saveVote(voteData).subscribe((res) => {
       this.commentVoteLoading[comment.commentId] = false;
@@ -415,7 +419,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       if (!defaultAvatar || defaultAvatar === 'logo') {
         defaultAvatar = this.options['site_url'] + '/logo.png';
       }
-      data.authorAvatar = format(AVATAR_API_URL, data.authorEmailHash, defaultAvatar);
+      data.authorAvatar = data.user?.userAvatar ||
+        format(AVATAR_API_URL, data.user?.userEmailHash || data.authorEmailHash, defaultAvatar);
       data.commentMetaMap = this.commonService.transformMeta(data.commentMeta || []);
       try {
         data.userLocation = JSON.parse(data.commentMetaMap['user_location']);
@@ -439,10 +444,10 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   private initCommentForm() {
-    this.commentForm.get('author')?.setValue(this.user?.name);
-    this.commentForm.get('email')?.setValue(this.user?.email);
-    this.replyForm.get('author')?.setValue(this.user?.name);
-    this.replyForm.get('email')?.setValue(this.user?.email);
+    this.commentForm.get('author')?.setValue(this.commentUser?.name);
+    this.commentForm.get('email')?.setValue(this.commentUser?.email);
+    this.replyForm.get('author')?.setValue(this.commentUser?.name);
+    this.replyForm.get('email')?.setValue(this.commentUser?.email);
   }
 
   private fetchComments(cb?: Function) {

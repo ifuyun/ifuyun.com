@@ -23,6 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @Output() siderOpenChange = new EventEmitter<boolean>();
 
   isMobile = false;
+  isFirefox = false;
   activePage = '';
   options: OptionEntity = {};
   showSearch = false;
@@ -46,6 +47,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document
   ) {
     this.isMobile = this.userAgentService.isMobile();
+    this.isFirefox = this.userAgentService.isFirefox();
   }
 
   ngOnInit(): void {

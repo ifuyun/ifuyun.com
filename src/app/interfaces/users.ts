@@ -10,6 +10,7 @@ export interface UserModel extends UserEntity {
   userLogin?: string;
   userLink?: string;
   userEmailHash?: string;
+  userAvatar?: string;
   isAdmin?: boolean;
   meta?: Record<string, string>;
 }

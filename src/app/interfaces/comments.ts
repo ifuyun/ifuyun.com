@@ -1,4 +1,5 @@
 import { IPLocation, MetaData } from './common';
+import { UserModel } from './users';
 
 export interface CommentEntity {
   postId: string;
@@ -8,6 +9,7 @@ export interface CommentEntity {
   authorEmail: string;
   commentContent: string;
   captchaCode?: string;
+  userId?: string;
 }
 
 export interface CommentModel extends CommentEntity {
@@ -17,6 +19,7 @@ export interface CommentModel extends CommentEntity {
   authorAvatar?: string;
   authorLink?: string;
   authorIp?: string;
+  user?: UserModel;
   userLocation: IPLocation;
   commentLikes: number;
   commentDislikes: number;

@@ -140,10 +140,10 @@
                [ngStyle]="{'padding-left': (comment.level - 1) * 50 + 'px'}">
             <div class="meta">
               <div class="info">
-                <div class="avatar"><img src="{{comment.authorAvatar}}" alt="{{comment.authorName}}"/></div>
+                <div class="avatar"><img src="{{comment.authorAvatar}}" alt="{{comment.user?.userNiceName || comment.authorName}}"/></div>
                 <div class="author">
                   <span class="from">
-                    <span class="name">{{comment.authorName}}</span>
+                    <span class="name">{{comment.user?.userNiceName || comment.authorName}}</span>
                     <span class="location">from {{
                       comment.userLocation?.region ? comment.userLocation.region + ' · ' + comment.userLocation.city : 'unknown'
                       }}</span>
@@ -161,7 +161,7 @@
                 <a class="author"
                    [attr.data-hash]="comment.parent.commentId | commentHash"
                    (click)="scrollToComment($event)"
-                >#{{comment.parent.commentId | commentHash}} @{{comment.parent.authorName}}</a>
+                >#{{comment.parent.commentId | commentHash}} @{{comment.parent.user?.userNiceName || comment.parent.authorName}}</a>
               </div>
               <div>{{comment.commentContent}}</div>
             </div>
@@ -190,10 +190,10 @@
           </div>
           <div class="comment-item comment-item-mobile" *ngIf="isMobile" id="{{comment.commentId | commentHash}}"
                [ngStyle]="{'padding-left': (comment.level - 1) * 32 + 'px'}">
-            <div class="avatar"><img src="{{comment.authorAvatar}}" alt="{{comment.authorName}}"/></div>
+            <div class="avatar"><img src="{{comment.authorAvatar}}" alt="{{comment.user?.userNiceName || comment.authorName}}"/></div>
             <div class="body">
               <div class="from">
-                <span class="name">{{comment.authorName}}</span>
+                <span class="name">{{comment.user?.userNiceName || comment.authorName}}</span>
                 <span class="location">from {{
                   comment.userLocation?.region ? comment.userLocation.region + ' · ' + comment.userLocation.city : 'unknown'
                   }}</span>
@@ -204,7 +204,7 @@
                   <a class="author"
                      [attr.data-hash]="comment.parent.commentId | commentHash"
                      (click)="scrollToComment($event)"
-                  >#{{comment.parent.commentId | commentHash}} @{{comment.parent.authorName}}</a>
+                  >#{{comment.parent.commentId | commentHash}} @{{comment.parent.user?.userNiceName || comment.parent.authorName}}</a>
                 </div>
                 <div>{{comment.commentContent}}</div>
               </div>
@@ -249,7 +249,7 @@
   <ng-template #commentFormTpl let-form>
     <div class="comment-form" *ngIf="post?.commentFlag !== 'close'">
       <form [formGroup]="form" (ngSubmit)="saveComment(form)">
-        <div class="form-row">
+        <div class="form-row" *ngIf="!isLoggedIn">
           <span class="flex">
             <input type="text" class="input" formControlName="author" maxlength="10" placeholder="昵称（必填）"/>
           </span>
