@@ -17,5 +17,6 @@ export enum ApiUrl {
   LOGOUT = '/users/logout',
   GET_LOGIN_USER = '/users/login-user',
   THIRD_LOGIN = '/users/third-login',
-  CAPTCHA = '/captcha'
+  CAPTCHA = '/captcha',
+  ADD_FAVORITE = '/favorites/add'
 }

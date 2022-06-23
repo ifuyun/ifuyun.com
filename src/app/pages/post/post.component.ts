@@ -27,6 +27,7 @@ import {
   STORAGE_LIKED_COMMENTS_KEY,
   STORAGE_VOTED_POSTS_KEY
 } from '../../config/constants';
+import { Message } from '../../config/message.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { MetaService } from '../../core/meta.service';
@@ -42,6 +43,7 @@ import { TaxonomyEntity } from '../../interfaces/taxonomies';
 import { Guest, UserModel } from '../../interfaces/users';
 import { VoteEntity } from '../../interfaces/votes';
 import { CommentsService } from '../../services/comments.service';
+import { FavoritesService } from '../../services/favorites.service';
 import { OptionsService } from '../../services/options.service';
 import { PostsService } from '../../services/posts.service';
 import { UsersService } from '../../services/users.service';
@@ -68,6 +70,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   postMeta: Record<string, any> = {};
   postTags: TaxonomyEntity[] = [];
   postCategories: TaxonomyEntity[] = [];
+  isFavorite = false;
   crumbs: BreadcrumbEntity[] = [];
   showCrumb = true;
   clickedImage!: HTMLImageElement | string;
@@ -78,6 +81,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   postVoted = false;
   saveLoading = false;
   voteLoading = false;
+  favoriteLoading = false;
   replyMode = false;
   replyVisibleMap: Record<string, boolean> = {};
   commentVoteLoading: Record<string, boolean> = {};
@@ -93,6 +97,9 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private urlListener!: Subscription;
   private paramListener!: Subscription;
   private userListener!: Subscription;
+  private postListener!: Subscription;
+  private prevAndNextListener!: Subscription;
+  private favoriteListener!: Subscription;
   private commentFormConfig = {
     author: ['', [Validators.required, Validators.maxLength(10)]],
     email: ['', [Validators.required, Validators.maxLength(100), Validators.email]],
@@ -108,17 +115,18 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   replyForm = this.fb.group(this.commentFormConfig);
 
   constructor(
-    private postsService: PostsService,
-    private commonService: CommonService,
-    private commentsService: CommentsService,
-    private votesService: VotesService,
+    private optionsService: OptionsService,
     private usersService: UsersService,
     private crumbService: BreadcrumbService,
-    private optionsService: OptionsService,
-    private route: ActivatedRoute,
+    private commonService: CommonService,
+    private postsService: PostsService,
+    private commentsService: CommentsService,
+    private votesService: VotesService,
+    private favoritesService: FavoritesService,
     private metaService: MetaService,
     private urlService: UrlService,
     private userAgentService: UserAgentService,
+    private route: ActivatedRoute,
     private fb: FormBuilder,
     private message: MessageService,
     private platform: PlatformService,
@@ -181,6 +189,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.urlListener.unsubscribe();
     this.paramListener.unsubscribe();
     this.userListener?.unsubscribe();
+    this.postListener.unsubscribe();
+    this.prevAndNextListener?.unsubscribe();
     this.unlistenImgClick();
   }
 
@@ -263,9 +273,11 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         this.post.postLikes = res.data.likes;
         this.postVoted = true;
 
-        const likedPosts = (localStorage.getItem(STORAGE_VOTED_POSTS_KEY) || '').split(',');
-        likedPosts.push(this.postId);
-        localStorage.setItem(STORAGE_VOTED_POSTS_KEY, uniq(likedPosts.filter((item) => !!item)).join(','));
+        if (!this.isLoggedIn) {
+          const likedPosts = (localStorage.getItem(STORAGE_VOTED_POSTS_KEY) || '').split(',');
+          likedPosts.push(this.postId);
+          localStorage.setItem(STORAGE_VOTED_POSTS_KEY, uniq(likedPosts.filter((item) => !!item)).join(','));
+        }
       }
     });
   }
@@ -350,6 +362,24 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     setTimeout(() => this.generateShareQrcode(), 0);
   }
 
+  addFavorite() {
+    if (this.favoriteLoading || this.isFavorite) {
+      return;
+    }
+    if (!this.isLoggedIn) {
+      this.message.error(Message.ADD_FAVORITE_MUST_LOGIN);
+      return;
+    }
+    this.favoriteLoading = true;
+    this.favoriteListener = this.favoritesService.addFavorite(this.postId).subscribe((res) => {
+      this.favoriteLoading = false;
+      if (res) {
+        this.message.success(Message.ADD_FAVORITE_SUCCESS);
+        this.isFavorite = true;
+      }
+    });
+  }
+
   protected updateActivePage(): void {
     this.commonService.updateActivePage(this.pageIndex);
   }
@@ -374,19 +404,19 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   private fetchPost() {
-    this.postsService.getPostById(this.postId, this.referer).subscribe((post) => {
+    this.postListener = this.postsService.getPostById(this.postId, this.referer).subscribe((post) => {
       if (post && post.post && post.post.postId) {
         this.initData(post, false);
       }
     });
-    this.postsService.getPostsOfPrevAndNext(this.postId).subscribe((res) => {
+    this.prevAndNextListener = this.postsService.getPostsOfPrevAndNext(this.postId).subscribe((res) => {
       this.prevPost = res.prevPost;
       this.nextPost = res.nextPost;
     });
   }
 
   private fetchPage() {
-    this.postsService.getPostBySlug(this.postSlug).subscribe((post) => {
+    this.postListener = this.postsService.getPostBySlug(this.postSlug).subscribe((post) => {
       if (post && post.post && post.post.postId) {
         this.initData(post, true);
       }
@@ -399,6 +429,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.postMeta = post.meta;
     this.postTags = post.tags;
     this.postCategories = post.categories;
+    this.isFavorite = post.isFavorite;
+    this.postVoted = post.voted;
     this.pageIndex = (isPage ? post.post.postName : post.crumbs?.[0].slug) || '';
     this.updateActivePage();
     if (!isPage) {
@@ -407,8 +439,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     }
     this.showCrumb = !isPage;
     this.isPage = isPage;
+    !this.postVoted && this.checkPostVoted();
     this.initMeta();
-    this.updatePostVoted();
     this.parseHtml();
     this.fetchComments();
   }
@@ -577,7 +609,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     });
   }
 
-  private updatePostVoted() {
+  private checkPostVoted() {
     if (this.platform.isBrowser) {
       const likedPosts = (localStorage.getItem(STORAGE_VOTED_POSTS_KEY) || '').split(',');
       this.postVoted = likedPosts.includes(this.postId);

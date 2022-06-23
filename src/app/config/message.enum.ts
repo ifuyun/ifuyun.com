@@ -8,5 +8,7 @@
  */
 export enum Message {
   // todo: internationalize
-  UNKNOWN_ERROR = 'Unknown error'
+  UNKNOWN_ERROR = 'Unknown error',
+  ADD_FAVORITE_MUST_LOGIN = '收藏文章请先登录',
+  ADD_FAVORITE_SUCCESS = '收藏成功'
 }

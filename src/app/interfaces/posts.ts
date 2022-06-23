@@ -38,6 +38,8 @@ export interface Post {
   tags: TaxonomyEntity[];
   categories: TaxonomyEntity[];
   crumbs?: BreadcrumbEntity[];
+  isFavorite: boolean;
+  voted: boolean;
 }
 
 export interface PostList {
