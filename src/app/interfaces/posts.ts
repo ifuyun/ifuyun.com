@@ -21,7 +21,7 @@ export interface PostEntity {
   postParent: string;
   postType: PostType;
   commentCount: number;
-  postViewCount: number;
+  viewCount: number;
   postLikes: number;
   author: UserEntity;
 }
