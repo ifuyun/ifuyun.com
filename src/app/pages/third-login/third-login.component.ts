@@ -61,7 +61,7 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
     if (this.from === 'alipay') {
       this.loginListener = this.usersService.getAlipayUser(this.authCode).subscribe((res) => {
         if (res.code === ResponseCode.SUCCESS) {
-          this.authService.setAuth(res.data, { rememberMe: false });
+          this.authService.setAuth(res.data, { username: '', password: '', rememberMe: false });
           const urlSearch = new URL(window.opener.location.href).search.split('?');
           let referer = '';
           if (urlSearch.length > 1) {

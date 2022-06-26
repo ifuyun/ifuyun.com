@@ -476,10 +476,10 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   private initCommentForm() {
-    this.commentForm.get('author')?.setValue(this.commentUser?.name);
-    this.commentForm.get('email')?.setValue(this.commentUser?.email);
-    this.replyForm.get('author')?.setValue(this.commentUser?.name);
-    this.replyForm.get('email')?.setValue(this.commentUser?.email);
+    this.commentForm.get('author')?.setValue(this.commentUser?.name || '');
+    this.commentForm.get('email')?.setValue(this.commentUser?.email || '');
+    this.replyForm.get('author')?.setValue(this.commentUser?.name || '');
+    this.replyForm.get('email')?.setValue(this.commentUser?.email || '');
   }
 
   private fetchComments(cb?: Function) {

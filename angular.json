@@ -201,5 +201,8 @@
       }
     }
   },
-  "defaultProject": "ifuyun.com"
+  "defaultProject": "ifuyun.com",
+  "cli": {
+    "analytics": false
+  }
 }

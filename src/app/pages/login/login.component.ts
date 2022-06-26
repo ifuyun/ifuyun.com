@@ -100,9 +100,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.loginForm.valid) {
       const { username, password, rememberMe } = this.loginForm.value;
       this.authService.login({
-        username,
-        password: md5(password),
-        rememberMe
+        username: username || '',
+        password: md5(password || ''),
+        rememberMe: rememberMe || false
       }).subscribe((res) => {
         if (res.accessToken) {
           location.href = this.adminUrl;
