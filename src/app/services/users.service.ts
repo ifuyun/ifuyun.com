@@ -41,7 +41,7 @@ export class UsersService {
     }
   }
 
-  getAlipayUser(authCode: string): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.THIRD_LOGIN), { authCode });
+  getThirdUser(authCode: string, from: string): Observable<HttpResponseEntity> {
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.THIRD_LOGIN), { authCode, from });
   }
 }

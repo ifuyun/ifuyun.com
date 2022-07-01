@@ -137,15 +137,28 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   getUser(type: string) {
-    if (type !== 'alipay') {
+    if (!['alipay', 'weibo'].includes(type)) {
       return this.message.warning('This feature is developing, please wait...');
     }
-    this.loginWindow = window.open(format(
-      THIRD_LOGIN_API[type],
-      this.options['open_app_id_alipay'],
-      encodeURIComponent(`${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'alipay')}`),
-      generateId()
-    ), this.loginWindowName);
+    let url = '';
+    switch (type) {
+      case 'alipay':
+        url = format(
+          THIRD_LOGIN_API[type],
+          this.options['open_alipay_app_id'],
+          encodeURIComponent(`${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'alipay')}`),
+          generateId()
+        );
+        break;
+      case 'weibo':
+        url = format(
+          THIRD_LOGIN_API[type],
+          this.options['open_weibo_app_key'],
+          encodeURIComponent(`${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'weibo')}`)
+        );
+        break;
+    }
+    this.loginWindow = window.open(url, this.loginWindowName);
   }
 
   private initMeta() {
