@@ -1,3 +1,4 @@
+import { ViewportScroller } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { uniq } from 'lodash';
 import { Subscription } from 'rxjs';
@@ -36,6 +37,7 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
     private crumbService: BreadcrumbService,
     private commonService: CommonService,
     private userAgentService: UserAgentService,
+    private scroller: ViewportScroller
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -70,6 +72,7 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
       this.archiveYearList = yearList;
       this.updateActivePage();
     });
+    this.scroller.scrollToPosition([0, 0]);
   }
 
   ngOnDestroy() {

@@ -7,7 +7,9 @@
   </header>
   <div class="archive-content">
     <ng-container *ngFor="let year of archiveYearList">
-      <h2>{{year}}年({{archiveDateList[year].countByYear}})</h2>
+      <h2>
+        <a [routerLink]="['/archive/' + year]" title="{{year}}年">{{year}}年({{archiveDateList[year].countByYear}})</a>
+      </h2>
       <ul class="archive-content-list">
         <li *ngFor="let item of archiveDateList[year].list">
           <a [routerLink]="['/archive/' + item.dateText]" title="{{item.dateTitle}}">
