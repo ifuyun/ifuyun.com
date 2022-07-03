@@ -50,6 +50,9 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
         } else if (this.from === 'weibo') {
           this.authCode = params.get('code')?.trim() || '';
           this.errCode = params.get('error_code')?.trim() || '';
+        } else if (this.from === 'github') {
+          this.authCode = params.get('code')?.trim() || '';
+          this.errCode = params.get('error')?.trim() || '';
         }
       })
     ).subscribe(() => {
@@ -66,6 +69,10 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.from === 'weibo' && this.errCode === '21330') { // cancel
+      window.close();
+      return;
+    }
+    if (this.from === 'github' && this.errCode === 'access_denied') { // cancel
       window.close();
       return;
     }

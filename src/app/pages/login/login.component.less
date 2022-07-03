@@ -96,15 +96,18 @@
     }
 
     .login-types {
+      display: flex;
+      justify-content: center;
       margin-top: 12px;
       text-align: center;
 
       .icon {
         display: inline-block;
         width: 32px;
+        height: 32px;
         line-height: 32px;
         border-radius: 50%;
-        font-size: 20px;
+        font-size: 22px;
         color: #fff;
         cursor: pointer;
 
@@ -113,7 +116,7 @@
         }
 
         &.disabled {
-          opacity: 0.6;
+          opacity: 0.5;
           cursor: not-allowed;
         }
       }
@@ -132,6 +135,12 @@
 
       .icon-weibo {
         background-color: #d52c2b;
+      }
+
+      .icon-github {
+        background-color: #fff;
+        color: #0d1117;
+        font-size: 32px;
       }
     }
   }

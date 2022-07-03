@@ -137,7 +137,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   getUser(type: string) {
-    if (!['alipay', 'weibo'].includes(type)) {
+    if (!['alipay', 'weibo', 'github'].includes(type)) {
       return this.message.warning('This feature is developing, please wait...');
     }
     let url = '';
@@ -155,6 +155,14 @@ export class LoginComponent implements OnInit, OnDestroy {
           THIRD_LOGIN_API[type],
           this.options['open_weibo_app_key'],
           encodeURIComponent(`${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'weibo')}`)
+        );
+        break;
+      case 'github':
+        url = format(
+          THIRD_LOGIN_API[type],
+          this.options['open_github_client_id'],
+          encodeURIComponent(`${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'github')}`),
+          generateId()
         );
         break;
     }
