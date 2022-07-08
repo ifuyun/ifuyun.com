@@ -56,13 +56,13 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
       };
       this.metaService.updateHTMLMeta(metaData);
     });
-    const crumbs: BreadcrumbEntity[] = [{
+    const breadcrumbs: BreadcrumbEntity[] = [{
       'label': '文章归档',
       'tooltip': '文章归档',
       'url': '/archive',
       'isHeader': true
     }];
-    this.crumbService.updateCrumb(crumbs);
+    this.crumbService.updateCrumb(breadcrumbs);
     this.archiveListener = this.postsService.getPostArchives({
       showCount: true,
       limit: 0

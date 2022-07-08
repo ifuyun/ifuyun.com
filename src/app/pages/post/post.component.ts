@@ -71,7 +71,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   postTags: TaxonomyEntity[] = [];
   postCategories: TaxonomyEntity[] = [];
   isFavorite = false;
-  crumbs: BreadcrumbEntity[] = [];
   showCrumb = true;
   clickedImage!: HTMLImageElement | string;
   showImgModal = false;
@@ -86,6 +85,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   replyVisibleMap: Record<string, boolean> = {};
   commentVoteLoading: Record<string, boolean> = {};
 
+  private breadcrumbs: BreadcrumbEntity[] = [];
   private postId = '';
   private postSlug = '';
   private commentUser: Guest | null = null;
@@ -431,11 +431,11 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.postCategories = post.categories;
     this.isFavorite = post.isFavorite;
     this.postVoted = post.voted;
-    this.pageIndex = (isPage ? post.post.postName : post.crumbs?.[0].slug) || '';
+    this.pageIndex = (isPage ? post.post.postName : post.breadcrumbs?.[0].slug) || '';
     this.updateActivePage();
     if (!isPage) {
-      this.crumbs = post.crumbs || [];
-      this.crumbService.updateCrumb(this.crumbs);
+      this.breadcrumbs = post.breadcrumbs || [];
+      this.crumbService.updateCrumb(this.breadcrumbs);
     }
     this.showCrumb = !isPage;
     this.isPage = isPage;

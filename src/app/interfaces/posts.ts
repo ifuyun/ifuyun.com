@@ -37,7 +37,7 @@ export interface Post {
   meta: Record<string, string>;
   tags: TaxonomyEntity[];
   categories: TaxonomyEntity[];
-  crumbs?: BreadcrumbEntity[];
+  breadcrumbs?: BreadcrumbEntity[];
   isFavorite: boolean;
   voted: boolean;
 }

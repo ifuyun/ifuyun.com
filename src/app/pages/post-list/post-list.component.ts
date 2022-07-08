@@ -95,7 +95,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
     const param: PostQueryParam = {
       page: this.page
     };
-    let crumbs: BreadcrumbEntity[];
+    let breadcrumbs: BreadcrumbEntity[];
     if (this.keyword) {
       param.keyword = this.keyword;
     }
@@ -105,7 +105,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
     if (this.tag) {
       this.pageIndex = 'tag';
       param.tag = this.tag;
-      crumbs = [{
+      breadcrumbs = [{
         label: '标签',
         tooltip: '标签',
         url: '',
@@ -120,7 +120,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
     if (this.year) {
       this.pageIndex = 'archive';
       param.year = this.year;
-      crumbs = [{
+      breadcrumbs = [{
         label: '文章归档',
         tooltip: '文章归档',
         url: '/archive',
@@ -133,7 +133,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
       }];
       if (this.month) {
         param.month = this.month;
-        crumbs.push({
+        breadcrumbs.push({
           label: `${parseInt(this.month, 10)}月`,
           tooltip: `${this.year}年${this.month}月`,
           url: `/archive/${this.year}/${this.month}`,
@@ -151,10 +151,10 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
       const titles: string[] = [siteName];
       const taxonomies: string[] = [];
       const keywords: string[] = (this.options['site_keywords'] || '').split(',');
-      if (this.category && res.crumbs && res.crumbs.length > 0) {
-        titles.unshift(res.crumbs[res.crumbs.length - 1].label);
-        taxonomies.push(res.crumbs[res.crumbs.length - 1].label);
-        keywords.unshift(res.crumbs[res.crumbs.length - 1].label);
+      if (this.category && res.breadcrumbs && res.breadcrumbs.length > 0) {
+        titles.unshift(res.breadcrumbs[res.breadcrumbs.length - 1].label);
+        taxonomies.push(res.breadcrumbs[res.breadcrumbs.length - 1].label);
+        keywords.unshift(res.breadcrumbs[res.breadcrumbs.length - 1].label);
       }
       if (this.tag) {
         titles.unshift(this.tag);
@@ -195,13 +195,13 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
       };
       this.metaService.updateHTMLMeta(metaData);
 
-      if (res.crumbs && res.crumbs.length > 0) {
-        crumbs = res.crumbs;
-        this.pageIndex = res.crumbs[0].slug || '';
+      if (res.breadcrumbs && res.breadcrumbs.length > 0) {
+        breadcrumbs = res.breadcrumbs;
+        this.pageIndex = res.breadcrumbs[0].slug || '';
       }
-      if (crumbs) {
+      if (breadcrumbs) {
         this.showCrumb = true;
-        this.crumbService.updateCrumb(crumbs);
+        this.crumbService.updateCrumb(breadcrumbs);
       }
       this.updateActivePage();
 

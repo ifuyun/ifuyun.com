@@ -16,7 +16,7 @@ export class PostsService {
   ) {
   }
 
-  getPosts(param: PostQueryParam): Observable<{ postList: PostList, crumbs: BreadcrumbEntity[] }> {
+  getPosts(param: PostQueryParam): Observable<{ postList: PostList, breadcrumbs: BreadcrumbEntity[] }> {
     return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS), param).pipe(
       map((res) => res?.data || {})
     );

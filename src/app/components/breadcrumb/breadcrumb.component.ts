@@ -13,10 +13,10 @@ import { OptionsService } from '../../services/options.service';
 })
 export class BreadcrumbComponent implements OnInit, OnDestroy {
   isMobile = false;
-  crumbs: BreadcrumbEntity[] = [];
-  options: OptionEntity | null = null;
+  breadcrumbs: BreadcrumbEntity[] = [];
+  options: OptionEntity = {};
 
-  private crumbListener!: Subscription;
+  private breadcrumbListener!: Subscription;
   private optionsListener!: Subscription;
 
   constructor(
@@ -31,9 +31,9 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     this.optionsListener = this.optionsService.options$.subscribe((options) => {
       this.options = options;
     });
-    this.crumbListener = this.crumbService.crumb$.subscribe((crumbs) => {
-      this.crumbs = [...crumbs];
-      this.crumbs.unshift({
+    this.breadcrumbListener = this.crumbService.crumb$.subscribe((breadcrumbs) => {
+      this.breadcrumbs = [...breadcrumbs];
+      this.breadcrumbs.unshift({
         'label': '首页',
         'url': '/',
         'tooltip': this.options && this.options['site_name'] || '',
@@ -43,7 +43,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.crumbListener.unsubscribe();
+    this.breadcrumbListener.unsubscribe();
     this.optionsListener.unsubscribe();
   }
 }
