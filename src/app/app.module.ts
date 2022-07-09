@@ -10,6 +10,7 @@ import { environment as env } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
+import { CarouselComponent } from './components/carousel/carousel.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { LayoutComponent } from './components/layout/layout.component';
@@ -25,14 +26,15 @@ import { LoginComponent } from './pages/login/login.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PostListComponent } from './pages/post-list/post-list.component';
 import { PostComponent } from './pages/post/post.component';
-import { PipesModule } from './pipes/pipes.module';
 import { ThirdLoginComponent } from './pages/third-login/third-login.component';
+import { PipesModule } from './pipes/pipes.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     LayoutComponent,
     HeaderComponent,
+    CarouselComponent,
     BreadcrumbComponent,
     SiderComponent,
     PageBarComponent,

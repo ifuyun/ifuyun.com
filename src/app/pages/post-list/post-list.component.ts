@@ -46,8 +46,6 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
   private paramListener!: Subscription;
 
   constructor(
-    @Inject(PLATFORM_ID) protected platform: Object,
-    @Optional() @Inject(RESPONSE) protected response: Response,
     private route: ActivatedRoute,
     private optionsService: OptionsService,
     private postsService: PostsService,

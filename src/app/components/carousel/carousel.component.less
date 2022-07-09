@@ -1,0 +1,155 @@
+@import "../../../styles/variables";
+
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: @border-radius;
+}
+
+.carousel {
+  display: flex;
+  overflow: hidden;
+  transition: transform 300ms ease 0s;
+
+  .carousel-slide {
+    transition: all .3s;
+    z-index: 1;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  padding: 16px 0;
+  background: rgba(51, 51, 51, .6);
+
+  .dots {
+    display: flex;
+    align-items: center;
+
+    li {
+      position: relative;
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin: 0 4px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, .4);
+      overflow: hidden;
+      cursor: pointer;
+
+      &.active {
+        width: 14px;
+        height: 14px;
+        background-color: transparent;
+
+        .before {
+          position: absolute;
+          top: 0;
+          width: 14px;
+          height: 7px;
+          background-color: #fff;
+          border-radius: 7px 7px 0 0;
+          animation: eat-haha-up .8s;
+          transform-origin: center bottom;
+        }
+
+        .before:after {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: -1px;
+          width: 100%;
+          height: 1px;
+          background-color: #fff;
+        }
+
+        .after {
+          position: absolute;
+          bottom: 0;
+          width: 14px;
+          height: 7px;
+          background-color: #fff;
+          border-radius: 0 0 7px 7px;
+          animation: eat-haha-down .8s;
+          transform-origin: center top;
+        }
+
+        .after:before {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: -1px;
+          width: 100%;
+          height: 1px;
+          background-color: #fff;
+        }
+      }
+
+      &.revert {
+        .before {
+          animation: eat-haha-down .8s;
+        }
+
+        .after {
+          animation: eat-haha-up .8s;
+        }
+      }
+    }
+  }
+}
+
+@keyframes eat-haha-up {
+  0% {
+    transform: rotate(0)
+  }
+
+  25% {
+    transform: rotate(-45deg)
+  }
+
+  50% {
+    transform: rotate(0)
+  }
+
+  75% {
+    transform: rotate(-45deg)
+  }
+
+  to {
+    transform: rotate(0)
+  }
+}
+
+@keyframes eat-haha-down {
+  0% {
+    transform: rotate(0)
+  }
+
+  25% {
+    transform: rotate(45deg)
+  }
+
+  50% {
+    transform: rotate(0)
+  }
+
+  75% {
+    transform: rotate(45deg)
+  }
+
+  to {
+    transform: rotate(0)
+  }
+}

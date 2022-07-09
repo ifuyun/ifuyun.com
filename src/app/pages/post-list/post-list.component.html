@@ -1,8 +1,6 @@
 <app-breadcrumb *ngIf="showCrumb"></app-breadcrumb>
 <div class="banner" *ngIf="!isMobile">
-  <ul>
-    <li><img src="/assets/images/cloud.jpg" alt="{{options['site_name']}}"/></li>
-  </ul>
+  <i-carousel></i-carousel>
 </div>
 <div [ngClass]="{'article-list-desktop': !isMobile}">
   <article class="article" [ngClass]="{'article-desktop': !isMobile, 'article-mobile': isMobile}"
