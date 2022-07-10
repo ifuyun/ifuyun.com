@@ -23,14 +23,23 @@
 }
 
 .indicator {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   position: absolute;
   width: 100%;
   bottom: 0;
-  padding: 16px 0;
+  padding: 16px @post-list-padding;
   background: rgba(51, 51, 51, .6);
+
+  .caption {
+    margin-right: 16px;
+    color: #fff;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 
   .dots {
     display: flex;

@@ -6,6 +6,9 @@
     </div>
   </div>
   <div class="indicator">
+    <div class="caption">
+      <span>{{imgList[activeIndex].caption}}</span>
+    </div>
     <ul class="dots">
       <li *ngFor="let img of imgList; let i = index"
           [ngClass]="{'active': activeIndex === i, 'revert': isRevert}"

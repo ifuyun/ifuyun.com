@@ -11,7 +11,7 @@ import { OptionsService } from '../../services/options.service';
 })
 export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   options: OptionEntity = {};
-  imgList: { url: string; title: string; }[] = [];
+  imgList: { url: string; title: string; caption: string; }[] = [];
   activeIndex = 0;
   isRevert = false;
   timer!: any;
@@ -29,16 +29,20 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       this.options = options;
       this.imgList = [{
         url: '/assets/banners/windmill.jpg',
-        title: this.options['site_name']
+        title: '风车',
+        caption: '舟山朱家尖·风车'
       }, {
         url: '/assets/banners/sunset.jpg',
-        title: this.options['site_name']
+        title: '日落',
+        caption: '飞机上的日落'
       }, {
         url: '/assets/banners/flowers.jpg',
-        title: this.options['site_name']
+        title: '花',
+        caption: '杭州植物园·菊花艺术节'
       }, {
         url: '/assets/banners/fireworks.jpg',
-        title: this.options['site_name']
+        title: '烟花',
+        caption: '西湖·烟花大会'
       }];
     });
   }
