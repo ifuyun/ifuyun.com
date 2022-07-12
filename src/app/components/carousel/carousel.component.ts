@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PlatformService } from '../../core/platform.service';
-import { OptionEntity } from '../../interfaces/options';
+import { CarouselVo, OptionEntity } from '../../interfaces/options';
 import { OptionsService } from '../../services/options.service';
 
 @Component({
@@ -11,12 +11,14 @@ import { OptionsService } from '../../services/options.service';
 })
 export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   options: OptionEntity = {};
-  imgList: { url: string; title: string; caption: string; }[] = [];
+  carousels: CarouselVo[] = [];
   activeIndex = 0;
   isRevert = false;
   timer!: any;
+  staticResourceHost = '';
 
   private optionsListener!: Subscription;
+  private carouselsListener!: Subscription;
 
   constructor(
     private optionsService: OptionsService,
@@ -27,28 +29,14 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     this.optionsListener = this.optionsService.options$.subscribe((options) => {
       this.options = options;
-      this.imgList = [{
-        url: '/assets/banners/windmill.jpg',
-        title: '风车',
-        caption: '舟山朱家尖·风车'
-      }, {
-        url: '/assets/banners/sunset.jpg',
-        title: '日落',
-        caption: '飞机上的日落'
-      }, {
-        url: '/assets/banners/flowers.jpg',
-        title: '花',
-        caption: '杭州植物园·菊花艺术节'
-      }, {
-        url: '/assets/banners/fireworks.jpg',
-        title: '烟花',
-        caption: '西湖·烟花大会'
-      }];
+      this.staticResourceHost = options['static_resource_host'];
+      this.fetchData();
     });
   }
 
   ngOnDestroy() {
     this.optionsListener.unsubscribe();
+    this.carouselsListener.unsubscribe();
     this.stop();
   }
 
@@ -69,8 +57,17 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.platform.isBrowser) {
       this.timer = setInterval(() => {
         this.isRevert = false;
-        this.activeIndex = this.activeIndex + 1 >= this.imgList.length ? 0 : this.activeIndex + 1;
+        this.activeIndex = this.activeIndex + 1 >= this.carousels.length ? 0 : this.activeIndex + 1;
       }, 3000);
     }
+  }
+
+  private fetchData() {
+    this.carouselsListener = this.optionsService.getCarousels().subscribe((res) => {
+      this.carousels = res;
+      this.carousels.forEach((item) => {
+        item.fullUrl = /^https?:\/\//i.test(item.url) ? item.url : this.staticResourceHost + item.url;
+      });
+    });
   }
 }

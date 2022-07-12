@@ -1,16 +1,19 @@
 <div class="carousel-container" (mouseover)="stop()" (mouseout)="start()">
   <div class="carousel"
-       [ngStyle]="{'width': (100 * imgList.length) + '%', 'transform': 'translateX(-' + (100 / imgList.length) * activeIndex + '%)'}">
-    <div class="carousel-slide" *ngFor="let img of imgList" [ngStyle]="{'width': (100 / imgList.length) + '%'}">
-      <img [src]="img.url" [alt]="img.title"/>
+       [ngStyle]="{'width': (100 * carousels.length) + '%', 'transform': 'translateX(-' + (100 / carousels.length) * activeIndex + '%)'}">
+    <div class="carousel-slide" *ngFor="let carousel of carousels" [ngStyle]="{'width': (100 / carousels.length) + '%'}">
+      <img *ngIf="!carousel.link" [src]="carousel.fullUrl" [alt]="carousel.title"/>
+      <a *ngIf="carousel.link" [href]="carousel.link" [target]="carousel.target">
+        <img [src]="carousel.fullUrl" [alt]="carousel.title"/>
+      </a>
     </div>
   </div>
   <div class="indicator">
     <div class="caption">
-      <span>{{imgList[activeIndex].caption}}</span>
+      <span [title]="carousels[activeIndex]?.caption">{{carousels[activeIndex]?.caption}}</span>
     </div>
     <ul class="dots">
-      <li *ngFor="let img of imgList; let i = index"
+      <li *ngFor="let carousel of carousels; let i = index"
           [ngClass]="{'active': activeIndex === i, 'revert': isRevert}"
           (click)="switchBanner(i)">
         <div class="before"></div>

@@ -24,3 +24,9 @@ export enum CopyrightType {
   AUTHORIZED = 1,
   CC = 2
 }
+
+export enum LinkTarget {
+  BLANK = '_blank',
+  SELF = '_self',
+  TOP = '_top'
+}

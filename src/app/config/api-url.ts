@@ -18,5 +18,6 @@ export enum ApiUrl {
   GET_LOGIN_USER = '/users/login-user',
   THIRD_LOGIN = '/users/third-login',
   CAPTCHA = '/captcha',
-  ADD_FAVORITE = '/favorites/add'
+  ADD_FAVORITE = '/favorites/add',
+  GET_CAROUSELS = '/options/carousels'
 }
