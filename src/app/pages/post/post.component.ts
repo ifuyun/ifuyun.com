@@ -13,7 +13,7 @@ import {
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import highlight from 'highlight.js';
-import { uniq } from 'lodash';
+import { cloneDeep, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
 import { Subscription } from 'rxjs';
 import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
@@ -489,7 +489,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         this.initComment(item);
         this.initCommentStatus(item.children);
         item.children = this.generateCommentTree(item.children);
-        item.children.forEach((child) => child.parent = item);
+        item.children.forEach((child) => child.parent = cloneDeep(item));
       });
       this.initCommentStatus(this.comments);
       cb && cb();
@@ -511,12 +511,12 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       return father.commentParent === father.commentTop;
     });
     const flattenIterator = (nodes: Comment[], list: Comment[]) => {
-      nodes.forEach((node) => {
+      for (let node of nodes) {
         list.push({ ...node, isLeaf: true, level: depth, children: [] });
         if (node.children.length > 0) {
           flattenIterator(node.children, list);
         }
-      });
+      }
       return list;
     };
     const iterator = (nodes: Comment[], level: number) => {

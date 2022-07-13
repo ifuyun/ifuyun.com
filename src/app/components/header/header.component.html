@@ -13,12 +13,10 @@
           <a [routerLink]="['/category/'+taxonomy.taxonomySlug]"
              title="{{taxonomy.taxonomyDescription}}">{{taxonomy.taxonomyName}}</a>
           <ul class="sub-nav-list" *ngIf="!taxonomy.isLeaf">
-            <ng-container *ngFor="let subTaxonomy of taxonomy.children">
-              <li>
-                <a [routerLink]="['/category/'+subTaxonomy.taxonomySlug]"
-                   title="{{subTaxonomy.taxonomyDescription}}">{{subTaxonomy.taxonomyName}}</a>
-              </li>
-            </ng-container>
+            <li *ngFor="let subTaxonomy of taxonomy.children">
+              <a [routerLink]="['/category/'+subTaxonomy.taxonomySlug]"
+                 title="{{subTaxonomy.taxonomyDescription}}">{{subTaxonomy.taxonomyName}}</a>
+            </li>
           </ul>
         </li>
       </ul>
@@ -41,7 +39,7 @@
                 <a [href]="options['site_url'] + '/admin'" target="_blank"><i class='icon icon-dashboard'></i><span>个人中心</span></a>
               </li>
               <li>
-                <a (click)="logout()"><i class='icon icon-logout'></i><span>退出登录</span></a>
+                <a href="javascript:" (click)="logout()"><i class='icon icon-logout'></i><span>退出登录</span></a>
               </li>
             </ul>
           </ng-container>

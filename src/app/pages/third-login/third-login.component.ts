@@ -17,7 +17,6 @@ import { UsersService } from '../../services/users.service';
 })
 export class ThirdLoginComponent implements OnInit, OnDestroy {
   private options: OptionEntity = {};
-  private adminUrl = '';
   private authCode = '';
   private appId = '';
   private scope = '';
@@ -40,7 +39,6 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
       combineLatestWith(this.optionsService.options$),
       tap(([params, options]) => {
         this.options = options;
-        this.adminUrl = `${this.options['site_url']}${ADMIN_URL}`;
 
         this.from = params.get('from')?.trim() || '';
         if (this.from === 'alipay') {
@@ -79,15 +77,7 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
     this.loginListener = this.usersService.getThirdUser(this.authCode, this.from).subscribe((res) => {
       if (res.code === ResponseCode.SUCCESS) {
         this.authService.setAuth(res.data, { username: '', password: '', rememberMe: false });
-        const urlSearch = new URL(window.opener.location.href).search.split('?');
-        let referer = '';
-        if (urlSearch.length > 1) {
-          const temp = urlSearch[1].split('&')
-            .map((item) => item.split('='))
-            .filter((item) => item[0] === 'ref');
-          referer = temp.length > 0 ? decodeURIComponent(temp[0][1]) : '';
-        }
-        window.opener.location.href = referer ? (this.options['site_url'] + referer) : this.adminUrl;
+        window.opener.postMessage({ login: true }, window.origin);
         window.close();
       }
     });

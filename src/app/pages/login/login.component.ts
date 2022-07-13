@@ -1,6 +1,7 @@
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
-import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Response } from 'express';
 import { uniq } from 'lodash';
@@ -38,7 +39,7 @@ const duration = 500; // ms
     ])
   ]
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   loginForm = this.fb.group({
     username: [this.cookieService.get('user') || '', [Validators.required, Validators.maxLength(20)]],
     password: [null, [Validators.required, Validators.maxLength(20)]],
@@ -54,8 +55,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   private options: OptionEntity = {};
   private loginWindow: Window | null = null;
   private readonly loginWindowName = 'login';
+  private referer = '';
 
   private optionsListener!: Subscription;
+  private paramListener!: Subscription;
 
   constructor(
     private optionsService: OptionsService,
@@ -65,7 +68,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private platform: PlatformService,
     private message: MessageService,
-    @Optional() @Inject(RESPONSE) protected response: Response
+    private route: ActivatedRoute,
+    @Optional() @Inject(RESPONSE) private response: Response
   ) {
   }
 
@@ -85,6 +89,9 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
       }
     });
+    this.paramListener = this.route.queryParamMap.subscribe((queryParams) => {
+      this.referer = decodeURIComponent(queryParams.get('ref')?.trim() || '');
+    });
     const username = this.cookieService.get('user');
     if (username) {
       this.autoFocus.username = false;
@@ -92,8 +99,22 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
+  ngAfterViewInit() {
+    if (this.platform.isBrowser) {
+      window.addEventListener('message', event => {
+        if (event.origin !== window.origin) {
+          return;
+        }
+        if (event.data.login) {
+          window.location.href = this.referer ? (this.options['site_url'] + this.referer) : this.adminUrl;
+        }
+      }, false);
+    }
+  }
+
   ngOnDestroy() {
     this.optionsListener.unsubscribe();
+    this.paramListener.unsubscribe();
   }
 
   login() {
