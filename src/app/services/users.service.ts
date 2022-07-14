@@ -13,7 +13,6 @@ import { Guest, UserModel } from '../interfaces/users';
 export class UsersService {
   private loginUser: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>({ userId: '', userNiceName: '' });
   loginUser$: Observable<UserModel> = this.loginUser.asObservable();
-  isLoggedIn = false;
 
   constructor(
     private apiService: ApiService
@@ -21,15 +20,9 @@ export class UsersService {
   }
 
   getLoginUser(): Observable<UserModel> {
-    if (this.isLoggedIn) {
-      return this.loginUser$;
-    }
     return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_LOGIN_USER)).pipe(
       map((res) => res?.data || {}),
-      tap((user) => {
-        this.isLoggedIn = !!user.userId;
-        this.loginUser.next(user);
-      })
+      tap((user) => this.loginUser.next(user))
     );
   }
 

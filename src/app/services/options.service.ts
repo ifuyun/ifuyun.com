@@ -18,7 +18,9 @@ export class OptionsService {
   }
 
   getOptions(): Observable<OptionEntity> {
-    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_OPTIONS)).pipe(
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_OPTIONS), {
+      autoload: 1
+    }).pipe(
       map((res) => res?.data || {}),
       tap((options) => {
         this.options.next(options);

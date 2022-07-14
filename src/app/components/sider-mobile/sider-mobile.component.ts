@@ -45,7 +45,7 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
     this.commonListener = this.commonService.pageIndex$.subscribe((pageIndex) => this.activePage = pageIndex);
     this.userListener = this.usersService.loginUser$.subscribe((user) => {
       this.user = user;
-      this.isLoggedIn = this.usersService.isLoggedIn;
+      this.isLoggedIn = !!this.user.userId;
     });
   }
 

@@ -154,7 +154,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     });
     this.userListener = this.usersService.loginUser$.subscribe((user) => {
       this.user = user;
-      this.isLoggedIn = this.usersService.isLoggedIn;
+      this.isLoggedIn = !!this.user.userId;
       if (this.isLoggedIn) {
         this.commentForm.setControl('author', new FormControl());
         this.commentForm.setControl('email', new FormControl());
