@@ -36,7 +36,7 @@
             <div>请扫描下方二维码关注公众号后，回复“<span class="keyword">{{postMeta['wechat_index']}}</span>”继续阅读。</div>
           </ng-container>
           <ng-container *ngIf="postMeta['should_login']">
-            <div>本文仅限注册用户阅读，请先<a routerLink="/user/login" [queryParams]="{ref: post?.postGuid}" title="登录">登录</a>。</div>
+            <div>本文仅限注册用户阅读，请先<a routerLink="/user/login" [queryParams]="{ref: post.postGuid}" title="登录">登录</a>。</div>
           </ng-container>
         </div>
       </div>
@@ -72,7 +72,7 @@
         <div class="post-meta-icon"><i class='icon icon-book'></i></div>
         <div class="post-meta-info">
           <span class="post-meta-info-text" *ngIf="post?.postOriginal === 1"
-                title="来源: {{post?.author?.userNiceName}}原创">来源：{{post?.author?.userNiceName}}原创</span>
+                title="来源: {{post.author?.userNiceName}}原创">来源：{{post.author?.userNiceName}}原创</span>
           <span class="post-meta-info-text" *ngIf="post?.postOriginal !== 1"
                 title="来源: {{postMeta['post_source']}}">来源：{{postMeta['post_source']}}</span>
         </div>

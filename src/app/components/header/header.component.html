@@ -27,12 +27,12 @@
           </a>
         </li>
         <li>
-          <a routerLink="/user/login" title="登录" *ngIf="!isLoggedIn">
+          <a routerLink="/user/login" title="登录" target="_blank" *ngIf="!isLoggedIn">
             <i class='icon icon-login'></i><span>登录</span>
           </a>
           <ng-container *ngIf="isLoggedIn">
             <a href="javascript:">
-              <i class='icon icon-user'></i><span>{{user?.userNiceName}}</span>
+              <i class='icon icon-user'></i><span>{{user.userNiceName}}</span>
             </a>
             <ul class="sub-nav-list">
               <li>

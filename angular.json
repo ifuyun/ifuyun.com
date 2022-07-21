@@ -27,7 +27,8 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "less",
             "allowedCommonJsDependencies": [
-              "qrcode"
+              "qrcode",
+              "ua-parser-js"
             ],
             "assets": [
               {
