@@ -21,7 +21,7 @@
   <div #postEle>
     <article class="post-content" [ngStyle]="{'user-select': post?.postPayFlag ? 'none' : ''}"
              [innerHTML]="(post?.postContent || '') | safeHtml"></article>
-    <ng-container *ngIf="post?.postPayFlag || postMeta['should_login'] && !isLoggedIn">
+    <ng-container *ngIf="post?.postPayFlag && !user.isAdmin && post?.postAuthor !== user.userId || postMeta['should_login'] && !isLoggedIn">
       <div class="pay-mask"></div>
       <div class="pay-body">
         <div class="pay-separator">
