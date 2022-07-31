@@ -1,0 +1,41 @@
+@import "../../../styles/variables";
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: @border-radius;
+  background-color: @content-background-color;
+  box-shadow: @content-box-shadow;
+  color: rgba(0, 0, 0, .25);
+
+  &-desktop {
+    padding: 12px @post-list-padding;
+  }
+
+  &-mobile {
+    padding: @m-content-margin @m-primary-margin;
+  }
+
+  .empty-body {
+    margin: 32px 0;
+    text-align: center;
+  }
+}
+
+.empty-img {
+  margin-bottom: 8px;
+
+  .empty-img-ellipse {
+    fill: #f5f5f5;
+  }
+
+  .empty-img-g {
+    stroke: #d9d9d9;
+  }
+
+  .empty-img-path {
+    fill: #fafafa;
+  }
+}

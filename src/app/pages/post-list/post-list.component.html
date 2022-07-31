@@ -1,5 +1,5 @@
 <app-breadcrumb *ngIf="showCrumb"></app-breadcrumb>
-<div class="banner" *ngIf="!isMobile">
+<div class="banner" *ngIf="!isMobile && showCarousel">
   <i-carousel></i-carousel>
 </div>
 <div [ngClass]="{'article-list-desktop': !isMobile}">
@@ -68,4 +68,5 @@
     </div>
   </article>
 </div>
-<app-page-bar [paginator]="paginatorData" [url]="pageUrl" [param]="pageUrlParam"></app-page-bar>
+<app-empty *ngIf="total < 1"></app-empty>
+<app-page-bar *ngIf="total > 0" [paginator]="paginatorData" [url]="pageUrl" [param]="pageUrlParam"></app-page-bar>

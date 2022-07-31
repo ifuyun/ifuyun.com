@@ -1,8 +1,6 @@
 import { ViewportScroller } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit, Optional, PLATFORM_ID } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { RESPONSE } from '@nguniversal/express-engine/tokens';
-import { Response } from 'express';
 import { uniq } from 'lodash';
 import { combineLatestWith, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -41,6 +39,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
   pageUrl = '';
   pageUrlParam: Params = {};
   showCrumb = false;
+  showCarousel = false;
 
   private optionsListener!: Subscription;
   private paramListener!: Subscription;
@@ -73,6 +72,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
         this.year = params.get('year')?.trim() || '';
         this.month = params.get('month')?.trim() || '';
         this.keyword = queryParams.get('keyword')?.trim() || '';
+        this.showCarousel = !this.category && !this.tag && !this.year && !this.keyword;
       })
     ).subscribe(() => {
       this.fetchPosts();

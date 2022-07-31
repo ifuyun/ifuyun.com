@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { CarouselComponent } from './components/carousel/carousel.component';
+import { EmptyComponent } from './components/empty/empty.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { LayoutComponent } from './components/layout/layout.component';
@@ -47,7 +48,8 @@ import { PipesModule } from './pipes/pipes.module';
     NotFoundComponent,
     AutofocusDirective,
     SiderMobileComponent,
-    ThirdLoginComponent
+    ThirdLoginComponent,
+    EmptyComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),
