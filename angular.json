@@ -27,6 +27,8 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "less",
             "allowedCommonJsDependencies": [
+              "lodash",
+              "moment",
               "qrcode",
               "ua-parser-js"
             ],

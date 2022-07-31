@@ -31,6 +31,12 @@
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
+    "extendedDiagnostics": {
+      "checks": {
+        "optionalChainNotNullable": "suppress"
+      },
+      "defaultCategory": "warning"
+    },
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
