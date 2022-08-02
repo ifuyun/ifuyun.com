@@ -40,11 +40,13 @@
 
 .widget {
   @widget-padding: 12px;
-  @widget-icon-width: 20px;
-  padding: @widget-padding;
+  @widget-icon-width: 24px;
+  padding: @widget-padding 0;
 
   .widget-title {
-    margin-bottom: 12px;
+    margin-bottom: @widget-padding;
+    padding: 0 @widget-padding @widget-padding;
+    border-bottom: 1px solid @primary-border-color;
     line-height: 24px;
     color: #444;
     font-size: @primary-font-size;
@@ -64,25 +66,72 @@
     width: @widget-icon-width;
   }
 
-  > ul > li {
-    height: 24px;
-    padding: 4px @widget-icon-width;
-    line-height: 24px;
-    border-bottom: 1px dashed #eaeaea;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  > ul {
+    padding: 0 @widget-padding;
 
-    &:hover {
-      background-color: @tag-background-color;
+    > li {
+      height: 24px;
+      padding: 4px 4px 4px @widget-icon-width;
+      line-height: 24px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      &:hover {
+        background-color: @tag-background-color;
+      }
+    }
+
+    > li > a {
+      color: @base-color;
+
+      &:hover {
+        color: @primary-color;
+      }
     }
   }
 
-  > ul > li > a {
-    color: @base-color;
+  .hot-list {
+    @num-width: 16px;
 
-    &:hover {
-      color: @primary-color;
+    > li {
+      display: flex;
+      align-items: center;
+      padding-left: 0;
+
+      &:nth-child(-n+3) .hot-num {
+        color: #fff;
+      }
+
+      &:nth-child(1) .hot-num {
+        background-color: @action-color;
+      }
+
+      &:nth-child(2) .hot-num {
+        background-color: rgba(76, 174, 79, .7);
+      }
+
+      &:nth-child(3) .hot-num {
+        background-color: @primary-color;
+      }
+    }
+
+    .hot-num {
+      display: inline-block;
+      flex-shrink: 0;
+      width: @num-width;
+      height: @num-width;
+      margin-right: 8px;
+      border-radius: 2px;
+      line-height: @num-width;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    a {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 }

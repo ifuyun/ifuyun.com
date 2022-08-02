@@ -11,8 +11,9 @@
   </div>
   <div class="widget">
     <h3 class="widget-title"><i class='icon icon-fire'></i><span>热门文章</span></h3>
-    <ul>
-      <li *ngFor="let post of hotPosts">
+    <ul class="hot-list">
+      <li *ngFor="let post of hotPosts; let i = index">
+        <span class="hot-num">{{i + 1}}</span>
         <a title="{{post.postTitle}}" [routerLink]="[post.postGuid]">{{post.postTitle}}</a>
       </li>
     </ul>

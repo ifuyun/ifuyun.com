@@ -18,26 +18,20 @@
     padding: @m-primary-margin 0;
   }
 
-  .footer-link {
-    li:not(:last-child) {
-      margin-right: 12px;
-    }
-  }
-
   .footer-record {
     display: flex;
     justify-content: center;
 
-    &-desktop {
-      li:not(:last-child):after {
-        content: '';
-        margin: 0 12px;
-        border-right: 1px solid @footer-color;
-      }
-    }
-
     &-mobile {
       flex-direction: column;
+    }
+  }
+
+  .footer-link, .footer-record-desktop {
+    li:not(:last-child):after {
+      content: '';
+      margin: 0 12px;
+      border-right: 1px solid @footer-color;
     }
   }
 
