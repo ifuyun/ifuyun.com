@@ -2,44 +2,52 @@
   <header class="header header-desktop" [ngClass]="{'header-firefox': isFirefox}">
     <div class="header-bg"></div>
     <nav class="nav">
-      <a class="logo" [routerLink]="['/']" title="{{options['site_name']}}">
-        <img src="/assets/images/logo.png" alt="{{options['site_name']}}"/>
-      </a>
-      <ul class="nav-list">
-        <li [ngClass]="{'active': activePage == 'index'}">
-          <a title="{{options['site_name']}}首页" [routerLink]="['/']">首页</a>
-        </li>
-        <li *ngFor="let taxonomy of taxonomies" [ngClass]="{'active': activePage == taxonomy.taxonomySlug}">
-          <a [routerLink]="['/category/'+taxonomy.taxonomySlug]"
-             title="{{taxonomy.taxonomyDescription}}">{{taxonomy.taxonomyName}}</a>
-          <ul class="sub-nav-list" *ngIf="!taxonomy.isLeaf">
-            <li *ngFor="let subTaxonomy of taxonomy.children">
-              <a [routerLink]="['/category/'+subTaxonomy.taxonomySlug]"
-                 title="{{subTaxonomy.taxonomyDescription}}">{{subTaxonomy.taxonomyName}}</a>
-            </li>
-          </ul>
-        </li>
-      </ul>
+      <div class="nav-wrap">
+        <a class="logo" [routerLink]="['/']" title="{{options['site_name']}}">
+          <img src="/assets/images/logo.png" alt="{{options['site_name']}}"/>
+        </a>
+        <ul class="nav-list">
+          <li [ngClass]="{'active': activePage == 'index'}">
+            <a class="nav-link" title="{{options['site_name']}}首页" [routerLink]="['/']">首页</a>
+          </li>
+          <li *ngFor="let taxonomy of taxonomies" [ngClass]="{'active': activePage == taxonomy.taxonomySlug}">
+            <a class="nav-link" [routerLink]="['/category/'+taxonomy.taxonomySlug]"
+               title="{{taxonomy.taxonomyDescription}}">
+              <span>{{taxonomy.taxonomyName}}</span><i class="nav-arrow" *ngIf="!taxonomy.isLeaf"></i>
+            </a>
+            <ul class="sub-nav-list" *ngIf="!taxonomy.isLeaf">
+              <li *ngFor="let subTaxonomy of taxonomy.children">
+                <a class="sub-nav-link" [routerLink]="['/category/'+subTaxonomy.taxonomySlug]"
+                   title="{{subTaxonomy.taxonomyDescription}}">{{subTaxonomy.taxonomyName}}</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
       <ul class="link-list">
         <li>
-          <a href="https://github.com/ifuyun" title="Follow me on GitHub" target="_blank">
+          <a class="nav-link" href="https://github.com/ifuyun" title="Follow me on GitHub" target="_blank">
             <i class='icon icon-github'></i><span>GitHub</span>
           </a>
         </li>
         <li>
-          <a routerLink="/user/login" title="登录" target="_blank" *ngIf="!isLoggedIn">
+          <a class="nav-link" routerLink="/user/login" title="登录" target="_blank" *ngIf="!isLoggedIn">
             <i class='icon icon-login'></i><span>登录</span>
           </a>
           <ng-container *ngIf="isLoggedIn">
-            <a href="javascript:">
-              <i class='icon icon-user'></i><span>{{user.userNiceName}}</span>
+            <a class="nav-link" href="javascript:">
+              <i class='icon icon-user'></i><span>{{user.userNiceName}}</span><i class="nav-arrow"></i>
             </a>
             <ul class="sub-nav-list">
               <li>
-                <a [href]="options['site_url'] + '/admin'" target="_blank"><i class='icon icon-dashboard'></i><span>个人中心</span></a>
+                <a class="sub-nav-link" [href]="options['site_url'] + '/admin'" target="_blank">
+                  <i class='icon icon-dashboard'></i><span>个人中心</span>
+                </a>
               </li>
               <li>
-                <a href="javascript:" (click)="logout()"><i class='icon icon-logout'></i><span>退出登录</span></a>
+                <a class="sub-nav-link" href="javascript:" (click)="logout()">
+                  <i class='icon icon-logout'></i><span>退出登录</span>
+                </a>
               </li>
             </ul>
           </ng-container>

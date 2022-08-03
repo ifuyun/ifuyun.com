@@ -1,6 +1,8 @@
 @import "../../../styles/variables";
 
 .header {
+  @header-color: #555;
+
   top: 0;
   position: fixed;
   width: 100%;
@@ -27,20 +29,41 @@
     }
 
     .nav {
+      display: flex;
+      justify-content: space-between;
       width: @body-width;
       margin: 0 auto;
 
+      .nav-wrap {
+        display: flex;
+      }
+
       .nav-list, .link-list {
+        display: flex;
+
         > li {
-          float: left;
           text-align: center;
           position: relative;
 
-          &:hover .sub-nav-list {
-            display: block;
+          &:hover {
+            .sub-nav-list {
+              display: block;
+            }
+
+            .nav-arrow {
+              transform: translateY(-2px);
+
+              &::before {
+                transform: rotate(45deg) translateX(2.5px);
+              }
+
+              &::after {
+                transform: rotate(-45deg) translateX(-2.5px);
+              }
+            }
           }
 
-          > a {
+          .nav-link {
             display: inline-flex;
             align-items: center;
             line-height: @header-height;
@@ -48,41 +71,39 @@
         }
 
         li.active, li:hover {
-          > a {
+          .nav-link {
+            color: @primary-color;
+            background-color: transparent;
+          }
+
+          > .sub-nav-link {
             color: #fff;
             background-color: @primary-color;
+          }
+
+          .nav-arrow {
+            &::before, &::after {
+              background-color: @primary-color;
+            }
           }
         }
 
         li a {
-          color: #555;
+          color: @header-color;
           background: transparent;
         }
       }
 
       .nav-list {
-        float: left;
-
-        > li {
-          > a {
-            padding: 0 @primary-margin;
-            font-size: 15px;
-          }
+        .nav-link {
+          padding: 0 @primary-margin;
+          font-size: 15px;
         }
       }
 
       .link-list {
-        float: right;
-
         > li {
           margin-left: @primary-margin;
-
-          &.active, &:hover {
-            > a {
-              color: @primary-color;
-              background-color: transparent;
-            }
-          }
         }
 
         .sub-nav-list {
@@ -115,6 +136,35 @@
 
         .icon {
           margin-right: 8px;
+        }
+      }
+
+      .nav-arrow {
+        display: block;
+        width: 10px;
+        margin-left: 8px;
+
+        &, &::before, &::after {
+          transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+
+        &::before, &::after {
+          box-sizing: border-box;
+          position: absolute;
+          display: block;
+          width: 6px;
+          height: 1.5px;
+          background-color: @header-color;
+          border-radius: 2px;
+          content: '';
+        }
+
+        &::before {
+          transform: rotate(-45deg) translateX(2.5px);
+        }
+
+        &::after {
+          transform: rotate(45deg) translateX(-2.5px);
         }
       }
     }
