@@ -6,11 +6,11 @@
     </form>
   </div>
   <div class="widget">
-    <h3 class="widget-title"><i class='icon icon-heart'></i><span>微信公众号（黑匣子思维）</span></h3>
+    <h3 class="widget-title"><div><i class='icon icon-heart'></i><span>微信公众号（黑匣子思维）</span></div></h3>
     <div class="wechat-qrcode"></div>
   </div>
   <div class="widget">
-    <h3 class="widget-title"><i class='icon icon-fire'></i><span>热门文章</span></h3>
+    <h3 class="widget-title"><div><i class='icon icon-fire'></i><span>热门文章</span></div></h3>
     <ul class="hot-list">
       <li *ngFor="let post of hotPosts; let i = index">
         <span class="hot-num">{{i + 1}}</span>
@@ -19,16 +19,20 @@
     </ul>
   </div>
   <div class="widget">
-    <h3 class="widget-title"><i class='icon icon-archive'></i><span>文章归档</span></h3>
+    <h3 class="widget-title">
+      <div><i class='icon icon-archive'></i><span>文章归档</span></div>
+      <div class="more">
+        <a [routerLink]="['/archive']" title="查看全部归档"><span>更多</span><i class="icon icon-double-right"></i></a>
+      </div>
+    </h3>
     <ul>
       <li *ngFor="let item of archiveDates">
         <a [routerLink]="['/archive/'+item.dateText]" title="{{item.dateTitle}}">{{item.dateTitle}}({{item.count}})</a>
       </li>
-      <li *ngIf="archiveDates.length >= 10"><a [routerLink]="['/archive']" title="查看全部归档">……</a></li>
     </ul>
   </div>
   <div class="widget">
-    <h3 class="widget-title"><i class='icon icon-shuffle'></i><span>手气不错</span></h3>
+    <h3 class="widget-title"><div><i class='icon icon-shuffle'></i><span>手气不错</span></div></h3>
     <ul>
       <li *ngFor="let post of randomPosts">
         <a title="{{post.postTitle}}" [routerLink]="[post.postGuid]">{{post.postTitle}}</a>
@@ -36,7 +40,7 @@
     </ul>
   </div>
   <div class="widget" *ngIf="friendLinks.length > 0">
-    <h3 class="widget-title"><i class='icon icon-link-45deg'></i><span>友情链接</span></h3>
+    <h3 class="widget-title"><div><i class='icon icon-link-45deg'></i><span>友情链接</span></div></h3>
     <ul>
       <li *ngFor="let link of friendLinks">
         <a title="{{link.linkDescription}}" href="{{link.linkUrl}}" target="{{link.linkTarget}}">{{link.linkName}}</a>

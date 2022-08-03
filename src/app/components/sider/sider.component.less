@@ -44,6 +44,8 @@
   padding: @widget-padding 0;
 
   .widget-title {
+    display: flex;
+    justify-content: space-between;
     margin-bottom: @widget-padding;
     padding: 0 @widget-padding @widget-padding;
     border-bottom: 1px solid @primary-border-color;
@@ -51,6 +53,15 @@
     color: #444;
     font-size: @primary-font-size;
     font-weight: 600;
+
+    .more {
+      font-size: 13px;
+      font-weight: normal;
+
+      .icon {
+        margin-left: 4px;
+      }
+    }
   }
 
   .wechat-qrcode {
@@ -63,7 +74,12 @@
 
   .icon {
     display: inline-block;
-    width: @widget-icon-width;
+    width: @primary-font-size;
+    font-weight: normal;
+
+    + span {
+      margin-left: @widget-icon-width - @primary-font-size;
+    }
   }
 
   > ul {
