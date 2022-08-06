@@ -89,9 +89,6 @@
       height: 24px;
       padding: 4px 4px 4px @widget-icon-width;
       line-height: 24px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
 
       &:hover {
         background-color: @tag-background-color;
@@ -99,6 +96,11 @@
     }
 
     > li > a {
+      display: inline-block;
+      max-width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       color: @base-color;
 
       &:hover {
@@ -142,12 +144,6 @@
       line-height: @num-width;
       font-size: 12px;
       text-align: center;
-    }
-
-    a {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
     }
   }
 }
