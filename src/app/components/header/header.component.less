@@ -46,7 +46,7 @@
           position: relative;
 
           &:hover {
-            .sub-nav-list {
+            .sub-nav-group {
               display: block;
             }
 
@@ -106,8 +106,13 @@
           margin-left: @primary-margin;
         }
 
-        .sub-nav-list {
+        .sub-nav-group {
           right: 0;
+
+          .sub-nav-list::before {
+            right: 24px;
+            left: initial;
+          }
         }
 
         .icon {
@@ -116,21 +121,54 @@
         }
       }
 
-      .sub-nav-list {
+      .sub-nav-group {
+        @group-border-radius: 4px;
+
         display: none;
         position: absolute;
-        border-bottom-left-radius: 2px;
-        border-bottom-right-radius: 2px;
-        background-color: @tag-background-color;
-        box-shadow: @content-box-shadow;
 
-        > li > a {
+        .sub-nav-list {
+          margin-top: 8px;
+          box-shadow: @content-box-shadow;
+          border-radius: @group-border-radius;
+
+          &::before {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 8px;
+            height: 8px;
+            top: 0;
+            left: 24px;
+            transform: translate(0, 50%) rotate(45deg);
+            background: #fff;
+            box-shadow: @content-box-shadow;
+          }
+        }
+
+        ul {
+          position: relative;
+          border-radius: @group-border-radius;
+          background-color: #fff;
+
+          li:first-child, li:first-child a {
+            border-top-left-radius: @group-border-radius;
+            border-top-right-radius: @group-border-radius;
+          }
+
+          li:last-child, li:last-child a {
+            border-bottom-left-radius: @group-border-radius;
+            border-bottom-right-radius: @group-border-radius;
+          }
+        }
+
+        li > a {
           display: inline-flex;
           align-items: center;
           min-width: 80px;
           padding: 6px @primary-margin;
           line-height: 24px;
-          font-size: @minor-font-size;
+          font-size: @primary-font-size;
           text-align: left;
         }
 

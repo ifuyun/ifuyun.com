@@ -15,12 +15,16 @@
                title="{{taxonomy.taxonomyDescription}}">
               <span>{{taxonomy.taxonomyName}}</span><i class="nav-arrow" *ngIf="!taxonomy.isLeaf"></i>
             </a>
-            <ul class="sub-nav-list" *ngIf="!taxonomy.isLeaf">
-              <li *ngFor="let subTaxonomy of taxonomy.children">
-                <a class="sub-nav-link" [routerLink]="['/category/'+subTaxonomy.taxonomySlug]"
-                   title="{{subTaxonomy.taxonomyDescription}}">{{subTaxonomy.taxonomyName}}</a>
-              </li>
-            </ul>
+            <div class="sub-nav-group" *ngIf="!taxonomy.isLeaf">
+              <div class="sub-nav-list">
+                <ul>
+                  <li *ngFor="let subTaxonomy of taxonomy.children">
+                    <a class="sub-nav-link" [routerLink]="['/category/'+subTaxonomy.taxonomySlug]"
+                       title="{{subTaxonomy.taxonomyDescription}}">{{subTaxonomy.taxonomyName}}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </li>
         </ul>
       </div>
@@ -38,18 +42,22 @@
             <a class="nav-link" href="javascript:">
               <i class='icon icon-user'></i><span>{{user.userNiceName}}</span><i class="nav-arrow"></i>
             </a>
-            <ul class="sub-nav-list">
-              <li>
-                <a class="sub-nav-link" [href]="options['site_url'] + '/admin'" target="_blank">
-                  <i class='icon icon-dashboard'></i><span>个人中心</span>
-                </a>
-              </li>
-              <li>
-                <a class="sub-nav-link" href="javascript:" (click)="logout()">
-                  <i class='icon icon-logout'></i><span>退出登录</span>
-                </a>
-              </li>
-            </ul>
+            <div class="sub-nav-group">
+              <div class="sub-nav-list">
+                <ul>
+                  <li>
+                    <a class="sub-nav-link" [href]="options['site_url'] + '/admin'" target="_blank">
+                      <i class='icon icon-dashboard'></i><span>个人中心</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="sub-nav-link" href="javascript:" (click)="logout()">
+                      <i class='icon icon-logout'></i><span>退出登录</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </ng-container>
         </li>
       </ul>
