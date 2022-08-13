@@ -7,8 +7,17 @@
   box-shadow: @content-box-shadow;
 
   &-desktop {
+    display: flex;
     margin: @box-shadow-width @box-shadow-width @primary-margin;
     padding: 0 @content-margin;
+
+    > * {
+      display: inline-block;
+      max-width: 8em;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
 
   &-mobile {
@@ -28,7 +37,7 @@
   }
 
   h3 {
-    display: inline;
+    display: inline-block;
     font-size: @primary-font-size;
     font-weight: normal;
   }

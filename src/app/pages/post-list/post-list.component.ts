@@ -93,8 +93,9 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
     const param: PostQueryParam = {
       page: this.page
     };
-    let breadcrumbs: BreadcrumbEntity[];
+    let breadcrumbs: BreadcrumbEntity[] = [];
     if (this.keyword) {
+      this.pageIndex = 'search';
       param.keyword = this.keyword;
     }
     if (this.category) {
@@ -149,6 +150,11 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
       const titles: string[] = [siteName];
       const taxonomies: string[] = [];
       const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+
+      if (res.breadcrumbs && res.breadcrumbs.length > 0) {
+        breadcrumbs = res.breadcrumbs;
+        this.pageIndex = res.breadcrumbs[0].slug || '';
+      }
       if (this.category && res.breadcrumbs && res.breadcrumbs.length > 0) {
         titles.unshift(res.breadcrumbs[res.breadcrumbs.length - 1].label);
         taxonomies.push(res.breadcrumbs[res.breadcrumbs.length - 1].label);
@@ -169,12 +175,31 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
         titles.unshift(this.keyword, '搜索');
         description += `「${this.keyword}」搜索结果`;
         keywords.unshift(this.keyword);
+        breadcrumbs.push({
+          label: `搜索`,
+          tooltip: `搜索`,
+          url: '',
+          isHeader: false
+        }, {
+          label: this.keyword,
+          tooltip: this.keyword,
+          url: '',
+          isHeader: false
+        });
       } else {
         description += '文章列表';
       }
       if (this.page > 1) {
         titles.unshift(`第${this.page}页`);
         description += `(第${this.page}页)`;
+        if (breadcrumbs.length > 0) {
+          breadcrumbs.push({
+            label: `第${this.page}页`,
+            tooltip: `第${this.page}页`,
+            url: '',
+            isHeader: false
+          });
+        }
       }
       if (description === '文章列表') {
         description = '';
@@ -193,11 +218,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
       };
       this.metaService.updateHTMLMeta(metaData);
 
-      if (res.breadcrumbs && res.breadcrumbs.length > 0) {
-        breadcrumbs = res.breadcrumbs;
-        this.pageIndex = res.breadcrumbs[0].slug || '';
-      }
-      if (breadcrumbs) {
+      if (breadcrumbs && breadcrumbs.length > 0) {
         this.showCrumb = true;
         this.crumbService.updateCrumb(breadcrumbs);
       }
