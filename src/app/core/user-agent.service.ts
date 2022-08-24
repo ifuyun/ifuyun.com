@@ -1,7 +1,8 @@
 import { Inject, Injectable, Optional } from '@angular/core';
 import { REQUEST } from '@nguniversal/express-engine/tokens';
 import { Request } from 'express';
-import { IBrowser, IDevice, IOS, IResult, UAParser } from 'ua-parser-js';
+import { IBrowser, ICPU, IDevice, IEngine, IOS, IResult, UAParser } from 'ua-parser-js';
+import { UserAgentData } from '../interfaces/common';
 import { PlatformService } from './platform.service';
 
 @Injectable({
@@ -10,7 +11,7 @@ import { PlatformService } from './platform.service';
 export class UserAgentService {
   public readonly userAgent!: IResult;
 
-  private userAgentString: string = '';
+  private userAgentString = '';
 
   constructor(
     private platform: PlatformService,
@@ -24,6 +25,10 @@ export class UserAgentService {
     return this.userAgent.browser;
   }
 
+  get engine(): IEngine {
+    return this.userAgent.engine;
+  }
+
   get os(): IOS {
     return this.userAgent.os;
   }
@@ -32,8 +37,27 @@ export class UserAgentService {
     return this.userAgent.device;
   }
 
+  get cpu(): ICPU {
+    return this.userAgent.cpu;
+  }
+
   getUserAgentString() {
     return this.userAgentString;
+  }
+
+  getUserAgentInfo(): UserAgentData {
+    return {
+      os: this.os.name || '',
+      osVersion: this.os.version || '',
+      architecture: this.cpu.architecture || '',
+      browser: this.browser.name || '',
+      browserVersion: this.browser.version || '',
+      engine: this.engine.name || '',
+      engineVersion: this.engine.version || '',
+      isMobile: this.isMobile(),
+      isCrawler: this.isCrawler(),
+      userAgent: this.userAgentString
+    };
   }
 
   isIE() {
@@ -78,6 +102,10 @@ export class UserAgentService {
 
   isDesktop() {
     return !this.isMobile();
+  }
+
+  isCrawler() {
+    return /spider|googlebot/ig.test(this.userAgentString);
   }
 
   private checkBrowser(browserNames: string[]) {

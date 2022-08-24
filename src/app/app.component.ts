@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
-import { OptionsService } from './services/options.service';
+import { PlatformService } from './core/platform.service';
 import { UrlService } from './core/url.service';
+import { LogService } from './services/log.service';
+import { OptionsService } from './services/options.service';
 import { UsersService } from './services/users.service';
 
 @Component({
@@ -11,13 +13,16 @@ import { UsersService } from './services/users.service';
   styleUrls: ['./app.component.less']
 })
 export class AppComponent implements OnInit {
-  private currentUrl: string = '';
+  private currentUrl = '';
+  private initialized = false;
 
   constructor(
     private router: Router,
     private urlService: UrlService,
     private optionsService: OptionsService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private logService: LogService,
+    private platform: PlatformService
   ) {
   }
 
@@ -25,11 +30,19 @@ export class AppComponent implements OnInit {
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd)
     ).subscribe((event) => {
-      this.urlService.updatePreviousUrl({
-        previous: this.currentUrl,
-        current: (event as NavigationEnd).url
-      });
-      this.currentUrl = (event as NavigationEnd).url;
+      const previous = this.currentUrl.split('#')[0];
+      const current = (event as NavigationEnd).url.split('#')[0];
+      if (previous !== current) {
+        this.urlService.updatePreviousUrl({
+          previous: this.currentUrl,
+          current: (event as NavigationEnd).url
+        });
+        this.currentUrl = (event as NavigationEnd).url;
+        if (this.platform.isBrowser) {
+          this.logService.logAccess(this.logService.parseAccessLog(this.initialized)).subscribe();
+        }
+      }
+      this.initialized = true;
     });
     this.optionsService.getOptions().subscribe();
     this.usersService.getLoginUser().subscribe();
