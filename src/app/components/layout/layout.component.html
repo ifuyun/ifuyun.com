@@ -11,7 +11,7 @@
   <app-footer></app-footer>
 </ng-container>
 <ng-container *ngIf="isMobile">
-  <app-sider-mobile [taxonomies]="taxonomies" [siderOpen]="siderOpen"></app-sider-mobile>
+  <app-sider-mobile [taxonomies]="taxonomies" [(siderOpen)]="siderOpen"></app-sider-mobile>
   <main class="main main-mobile" [ngClass]="{'open': siderOpen}">
     <div class="mask mask-sider" *ngIf="siderOpen" (click)="toggleSiderOpen()"></div>
     <app-header [taxonomies]="taxonomies" [(siderOpen)]="siderOpen"></app-header>

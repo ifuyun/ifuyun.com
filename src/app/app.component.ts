@@ -37,10 +37,10 @@ export class AppComponent implements OnInit {
           previous: this.currentUrl,
           current: (event as NavigationEnd).url
         });
-        this.currentUrl = (event as NavigationEnd).url;
         if (this.platform.isBrowser) {
-          this.logService.logAccess(this.logService.parseAccessLog(this.initialized)).subscribe();
+          this.logService.logAccess(this.logService.parseAccessLog(this.initialized, this.currentUrl)).subscribe();
         }
+        this.currentUrl = (event as NavigationEnd).url;
       }
       this.initialized = true;
     });

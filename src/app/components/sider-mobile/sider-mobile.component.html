@@ -28,6 +28,9 @@
           <a routerLink="/aboutme"><i class="icon icon-person-heart"></i><span>关于</span></a>
         </li>
         <li>
+          <a href="javascript:" (click)="showWechatQrcode()"><i class="icon icon-heart"></i><span>公众号</span></a>
+        </li>
+        <li>
           <a href="https://github.com/ifuyun" title="Follow me on GitHub" target="_blank">
             <i class="icon icon-github"></i><span>GitHub</span>
           </a>
@@ -44,3 +47,5 @@
     </nav>
   </aside>
 </div>
+<app-modal *ngIf="imageModalVisible"
+           [imgEle]="imageUrl" (toggleModal)="toggleImgModal($event)" [padding]="0" [margin]="16"></app-modal>

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
@@ -18,12 +18,15 @@ import { UsersService } from '../../services/users.service';
 export class SiderMobileComponent implements OnInit, OnDestroy {
   @Input() taxonomies: TaxonomyNode[] = [];
   @Input() siderOpen = false;
+  @Output() siderOpenChange = new EventEmitter<boolean>();
 
   isMobile = false;
   activePage = '';
   options: OptionEntity = {};
   user!: UserModel;
   isLoggedIn = false;
+  imageModalVisible = false;
+  imageUrl = '';
 
   private optionsListener!: Subscription;
   private commonListener!: Subscription;
@@ -62,5 +65,16 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
         location.reload();
       }
     });
+  }
+
+  toggleImgModal(visible: boolean) {
+    this.imageModalVisible = visible;
+  }
+
+  showWechatQrcode() {
+    this.imageUrl = '/assets/images/wechat.jpg';
+    this.siderOpen = false;
+    this.siderOpenChange.emit(this.siderOpen);
+    this.imageModalVisible = true;
   }
 }

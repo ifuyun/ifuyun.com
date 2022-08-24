@@ -16,11 +16,11 @@ export class LogService {
   ) {
   }
 
-  parseAccessLog(initialized: boolean): AccessLog {
+  parseAccessLog(initialized: boolean, referer: string): AccessLog {
     return {
       ...this.userAgentService.getUserAgentInfo(),
       requestUrl: location.href,
-      referer: document.referrer,
+      referer: initialized ? referer : document.referrer,
       site: 'web',
       resolution: window.screen.width + 'x' + window.screen.height,
       colorDepth: window.screen.colorDepth.toString(),

@@ -18,7 +18,8 @@ import {
 })
 export class ModalComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input('imgEle') imgEle!: HTMLImageElement | string;
-  @Input('padding') padding: number = 0;
+  @Input('padding') padding = 0;
+  @Input('margin') margin = 0;
   @Output() toggleModal = new EventEmitter<boolean>();
 
   @ViewChild('modal') modal!: ElementRef;
@@ -56,6 +57,9 @@ export class ModalComponent implements OnInit, OnDestroy, AfterViewInit {
     this.renderer.setStyle(this.bodyEle, 'overflow', 'hidden');
     if (this.padding > 0) {
       this.modalBody.nativeElement.setAttribute('style', `padding: ${this.padding}px; background-color:#fff;`);
+    }
+    if (this.margin > 0) {
+      this.modalBody.nativeElement.setAttribute('style', `margin-left: ${this.margin}px; margin-right: ${this.margin}px;`);
     }
 
     if (this.imgEle) {
