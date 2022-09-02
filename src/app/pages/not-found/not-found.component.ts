@@ -22,9 +22,8 @@ export class NotFoundComponent implements OnInit, OnDestroy {
     private platform: PlatformService,
     private response: ResponseService,
     private optionsService: OptionsService,
-    private metaService: MetaService,
-  ) {
-  }
+    private metaService: MetaService
+  ) {}
 
   ngOnInit(): void {
     if (this.platform.isServer) {

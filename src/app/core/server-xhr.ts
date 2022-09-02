@@ -1,5 +1,4 @@
 import { XhrFactory } from '@angular/common';
-// @ts-ignore
 import * as XHR2 from 'xhr2';
 
 // activate cookie for server-side rendering

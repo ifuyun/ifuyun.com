@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatestWith, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { ADMIN_URL } from '../../config/constants';
 import { ResponseCode } from '../../config/response-code.enum';
 import { PlatformService } from '../../core/platform.service';
 import { OptionEntity } from '../../interfaces/options';
@@ -31,31 +30,32 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
     private usersService: UsersService,
     private authService: AuthService,
     private platform: PlatformService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.paramListener = this.route.queryParamMap.pipe(
-      combineLatestWith(this.optionsService.options$),
-      tap(([params, options]) => {
-        this.options = options;
+    this.paramListener = this.route.queryParamMap
+      .pipe(
+        combineLatestWith(this.optionsService.options$),
+        tap(([params, options]) => {
+          this.options = options;
 
-        this.from = params.get('from')?.trim() || '';
-        if (this.from === 'alipay') {
-          this.authCode = params.get('auth_code')?.trim() || '';
-          this.appId = params.get('app_id')?.trim() || '';
-          this.scope = params.get('scope')?.trim() || '';
-        } else if (this.from === 'weibo') {
-          this.authCode = params.get('code')?.trim() || '';
-          this.errCode = params.get('error_code')?.trim() || '';
-        } else if (this.from === 'github') {
-          this.authCode = params.get('code')?.trim() || '';
-          this.errCode = params.get('error')?.trim() || '';
-        }
-      })
-    ).subscribe(() => {
-      this.thirdLogin();
-    });
+          this.from = params.get('from')?.trim() || '';
+          if (this.from === 'alipay') {
+            this.authCode = params.get('auth_code')?.trim() || '';
+            this.appId = params.get('app_id')?.trim() || '';
+            this.scope = params.get('scope')?.trim() || '';
+          } else if (this.from === 'weibo') {
+            this.authCode = params.get('code')?.trim() || '';
+            this.errCode = params.get('error_code')?.trim() || '';
+          } else if (this.from === 'github') {
+            this.authCode = params.get('code')?.trim() || '';
+            this.errCode = params.get('error')?.trim() || '';
+          }
+        })
+      )
+      .subscribe(() => {
+        this.thirdLogin();
+      });
   }
 
   ngOnDestroy(): void {
@@ -66,11 +66,13 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
     if (this.platform.isServer) {
       return;
     }
-    if (this.from === 'weibo' && this.errCode === '21330') { // cancel
+    if (this.from === 'weibo' && this.errCode === '21330') {
+      // cancel
       window.close();
       return;
     }
-    if (this.from === 'github' && this.errCode === 'access_denied') { // cancel
+    if (this.from === 'github' && this.errCode === 'access_denied') {
+      // cancel
       window.close();
       return;
     }

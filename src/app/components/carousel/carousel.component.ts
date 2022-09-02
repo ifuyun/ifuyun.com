@@ -20,11 +20,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   private optionsListener!: Subscription;
   private carouselsListener!: Subscription;
 
-  constructor(
-    private optionsService: OptionsService,
-    private platform: PlatformService
-  ) {
-  }
+  constructor(private optionsService: OptionsService, private platform: PlatformService) {}
 
   ngOnInit(): void {
     this.optionsListener = this.optionsService.options$.subscribe((options) => {

@@ -9,9 +9,7 @@ import { UserAgentService } from '../../core/user-agent.service';
 export class EmptyComponent {
   isMobile = false;
 
-  constructor(
-    private userAgentService: UserAgentService
-  ) {
+  constructor(private userAgentService: UserAgentService) {
     this.isMobile = this.userAgentService.isMobile();
   }
 }

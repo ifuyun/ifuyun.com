@@ -30,18 +30,19 @@ export class SiderComponent implements OnInit, OnDestroy {
     private urlService: UrlService,
     private linksService: LinksService,
     private router: Router
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.archiveListener = this.postsService.getPostArchives({
-      showCount: true
-    }).subscribe((res) => this.archiveDates = res);
-    this.hotPostsListener = this.postsService.getHotPosts().subscribe((res) => this.hotPosts = res);
-    this.randomPostsListener = this.postsService.getRandomPosts().subscribe((res) => this.randomPosts = res);
+    this.archiveListener = this.postsService
+      .getPostArchives({
+        showCount: true
+      })
+      .subscribe((res) => (this.archiveDates = res));
+    this.hotPostsListener = this.postsService.getHotPosts().subscribe((res) => (this.hotPosts = res));
+    this.randomPostsListener = this.postsService.getRandomPosts().subscribe((res) => (this.randomPosts = res));
     this.urlListener = this.urlService.urlInfo$.subscribe((url) => {
       const isHome = url.current.split('?')[0] === '/';
-      this.linksListener = this.linksService.getFriendLinks(isHome).subscribe((res) => this.friendLinks = res);
+      this.linksListener = this.linksService.getFriendLinks(isHome).subscribe((res) => (this.friendLinks = res));
     });
   }
 

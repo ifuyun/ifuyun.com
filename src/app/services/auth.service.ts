@@ -19,8 +19,7 @@ export class AuthService {
     private apiService: ApiService,
     private platform: PlatformService,
     private readonly cookieService: CookieService
-  ) {
-  }
+  ) {}
 
   login(loginData: LoginEntity): Observable<LoginResponse> {
     return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.LOGIN), loginData).pipe(

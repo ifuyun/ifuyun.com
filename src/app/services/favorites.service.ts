@@ -8,14 +8,11 @@ import { ApiService } from '../core/api.service';
   providedIn: 'root'
 })
 export class FavoritesService {
-  constructor(
-    private apiService: ApiService
-  ) {
-  }
+  constructor(private apiService: ApiService) {}
 
   addFavorite(postId: string): Observable<boolean> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.ADD_FAVORITE), { postId }).pipe(
-      map((res) => res?.data || false)
-    );
+    return this.apiService
+      .httpPost(this.apiService.getApiUrl(ApiUrl.ADD_FAVORITE), { postId })
+      .pipe(map((res) => res?.data || false));
   }
 }

@@ -1,6 +1,6 @@
-import { Route, UrlSegment, UrlSegmentGroup } from '@angular/router';
+import { UrlSegment } from '@angular/router';
 
-export function taxonomyUrlMatcher(url: UrlSegment[], group: UrlSegmentGroup, route: Route) {
+export function taxonomyUrlMatcher(url: UrlSegment[]) {
   const types = ['category', 'tag'];
   if (url.length < 2 || url.length > 3 || !types.includes(url[0].path)) {
     return null;
@@ -15,7 +15,7 @@ export function taxonomyUrlMatcher(url: UrlSegment[], group: UrlSegmentGroup, ro
   const params: {
     [name: string]: UrlSegment;
   } = {
-    [url[0].path]: new UrlSegment(url[1].path, {}),
+    [url[0].path]: new UrlSegment(url[1].path, {})
   };
   if (page) {
     params['page'] = new UrlSegment(page, {});

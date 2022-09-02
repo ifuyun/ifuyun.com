@@ -5,7 +5,6 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
-  OnInit,
   Output,
   Renderer2,
   ViewChild
@@ -16,26 +15,20 @@ import {
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.less']
 })
-export class ModalComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input('imgEle') imgEle!: HTMLImageElement | string;
-  @Input('padding') padding = 0;
-  @Input('margin') margin = 0;
+export class ModalComponent implements OnDestroy, AfterViewInit {
+  @Input() imgEle!: HTMLImageElement | string;
+  @Input() padding = 0;
+  @Input() margin = 0;
   @Output() toggleModal = new EventEmitter<boolean>();
 
   @ViewChild('modal') modal!: ElementRef;
   @ViewChild('modalBody') modalBody!: ElementRef;
 
-  private unlistenClick!: Function;
-  private unlistenInput!: Function;
+  private unlistenClick!: () => void;
+  private unlistenInput!: () => void;
   private bodyEle!: ElementRef;
 
-  constructor(
-    private renderer: Renderer2
-  ) {
-  }
-
-  ngOnInit(): void {
-  }
+  constructor(private renderer: Renderer2) {}
 
   ngAfterViewInit(): void {
     this.bodyEle = this.renderer.selectRootElement('body', true);
@@ -59,7 +52,10 @@ export class ModalComponent implements OnInit, OnDestroy, AfterViewInit {
       this.modalBody.nativeElement.setAttribute('style', `padding: ${this.padding}px; background-color:#fff;`);
     }
     if (this.margin > 0) {
-      this.modalBody.nativeElement.setAttribute('style', `margin-left: ${this.margin}px; margin-right: ${this.margin}px;`);
+      this.modalBody.nativeElement.setAttribute(
+        'style',
+        `margin-left: ${this.margin}px; margin-right: ${this.margin}px;`
+      );
     }
 
     if (this.imgEle) {

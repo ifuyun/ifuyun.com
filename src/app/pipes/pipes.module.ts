@@ -6,21 +6,8 @@ import { NumberViewPipe } from './number-view.pipe';
 import { CommentHashPipe } from './comment-hash.pipe';
 
 @NgModule({
-  declarations: [
-    SafeHtmlPipe,
-    CopyrightTypePipe,
-    CopyrightTypeDescPipe,
-    NumberViewPipe,
-    CommentHashPipe
-  ],
+  declarations: [SafeHtmlPipe, CopyrightTypePipe, CopyrightTypeDescPipe, NumberViewPipe, CommentHashPipe],
   imports: [],
-  exports: [
-    SafeHtmlPipe,
-    CopyrightTypePipe,
-    CopyrightTypeDescPipe,
-    NumberViewPipe,
-    CommentHashPipe
-  ]
+  exports: [SafeHtmlPipe, CopyrightTypePipe, CopyrightTypeDescPipe, NumberViewPipe, CommentHashPipe]
 })
-export class PipesModule {
-}
+export class PipesModule {}

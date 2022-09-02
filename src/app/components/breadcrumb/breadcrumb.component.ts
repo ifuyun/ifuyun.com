@@ -22,7 +22,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   constructor(
     private crumbService: BreadcrumbService,
     private optionsService: OptionsService,
-    private userAgentService: UserAgentService,
+    private userAgentService: UserAgentService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }
@@ -34,10 +34,10 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     this.breadcrumbListener = this.crumbService.crumb$.subscribe((breadcrumbs) => {
       this.breadcrumbs = [...breadcrumbs];
       this.breadcrumbs.unshift({
-        'label': '首页',
-        'url': '/',
-        'tooltip': this.options && this.options['site_name'] || '',
-        'isHeader': false
+        label: '首页',
+        url: '/',
+        tooltip: (this.options && this.options['site_name']) || '',
+        isHeader: false
       });
     });
   }

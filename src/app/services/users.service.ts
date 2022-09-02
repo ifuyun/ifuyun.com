@@ -14,10 +14,7 @@ export class UsersService {
   private loginUser: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>({ userId: '', userNiceName: '' });
   loginUser$: Observable<UserModel> = this.loginUser.asObservable();
 
-  constructor(
-    private apiService: ApiService
-  ) {
-  }
+  constructor(private apiService: ApiService) {}
 
   getLoginUser(): Observable<UserModel> {
     return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_LOGIN_USER)).pipe(

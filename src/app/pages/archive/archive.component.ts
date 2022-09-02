@@ -21,10 +21,10 @@ import { PostsService } from '../../services/posts.service';
 })
 export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy {
   isMobile = false;
-  pageIndex: string = 'archive';
+  pageIndex = 'archive';
   archiveDateList!: PostArchiveDateMap;
   archiveYearList: string[] = [];
-  showCrumb: boolean = true;
+  showCrumb = true;
 
   private options: OptionEntity = {};
   private optionsListener!: Subscription;
@@ -56,22 +56,26 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
       };
       this.metaService.updateHTMLMeta(metaData);
     });
-    const breadcrumbs: BreadcrumbEntity[] = [{
-      'label': '文章归档',
-      'tooltip': '文章归档',
-      'url': '/archive',
-      'isHeader': true
-    }];
+    const breadcrumbs: BreadcrumbEntity[] = [
+      {
+        label: '文章归档',
+        tooltip: '文章归档',
+        url: '/archive',
+        isHeader: true
+      }
+    ];
     this.crumbService.updateCrumb(breadcrumbs);
-    this.archiveListener = this.postsService.getPostArchives({
-      showCount: true,
-      limit: 0
-    }).subscribe((res) => {
-      const { dateList, yearList } = this.postsService.transformArchiveDates(res);
-      this.archiveDateList = dateList;
-      this.archiveYearList = yearList;
-      this.updateActivePage();
-    });
+    this.archiveListener = this.postsService
+      .getPostArchives({
+        showCount: true,
+        limit: 0
+      })
+      .subscribe((res) => {
+        const { dateList, yearList } = this.postsService.transformArchiveDates(res);
+        this.archiveDateList = dateList;
+        this.archiveYearList = yearList;
+        this.updateActivePage();
+      });
     this.scroller.scrollToPosition([0, 0]);
   }
 

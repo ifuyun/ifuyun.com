@@ -1,13 +1,12 @@
-import { Directive, ElementRef, Input } from '@angular/core';
+import { AfterContentInit, Directive, ElementRef, Input } from '@angular/core';
 
 @Directive({
   selector: '[autofocus]'
 })
-export class AutofocusDirective {
+export class AutofocusDirective implements AfterContentInit {
   @Input() autofocus = false;
 
-  constructor(private host: ElementRef) {
-  }
+  constructor(private host: ElementRef) {}
 
   ngAfterContentInit() {
     if (this.autofocus) {

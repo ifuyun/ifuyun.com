@@ -13,11 +13,8 @@ export class UserAgentService {
 
   private userAgentString = '';
 
-  constructor(
-    private platform: PlatformService,
-    @Optional() @Inject(REQUEST) private request: Request
-  ) {
-    this.userAgentString = this.platform.isBrowser ? navigator.userAgent : (this.request.headers['user-agent'] || '');
+  constructor(private platform: PlatformService, @Optional() @Inject(REQUEST) private request: Request) {
+    this.userAgentString = this.platform.isBrowser ? navigator.userAgent : this.request.headers['user-agent'] || '';
     this.userAgent = UAParser(this.userAgentString);
   }
 
@@ -105,7 +102,7 @@ export class UserAgentService {
   }
 
   isCrawler() {
-    return /spider|googlebot/ig.test(this.userAgentString);
+    return /spider|googlebot/gi.test(this.userAgentString);
   }
 
   private checkBrowser(browserNames: string[]) {

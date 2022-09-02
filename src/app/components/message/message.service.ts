@@ -12,8 +12,8 @@ export class MessageService extends MessageBaseService {
   protected override container!: MessageContainerComponent;
   protected componentKey = 'message';
 
-  constructor(nzSingletonService: SingletonService, overlay: Overlay, injector: Injector) {
-    super(nzSingletonService, overlay, injector);
+  constructor(singleton: SingletonService, overlay: Overlay, injector: Injector) {
+    super(singleton, overlay, injector);
   }
 
   success(content: string, options?: MessageDataOptions) {

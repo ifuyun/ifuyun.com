@@ -9,14 +9,11 @@ import { TaxonomyNode } from '../interfaces/taxonomies';
   providedIn: 'root'
 })
 export class TaxonomiesService {
-  constructor(
-    private apiService: ApiService
-  ) {
-  }
+  constructor(private apiService: ApiService) {}
 
-  getTaxonomies():Observable<TaxonomyNode[]> {
-    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_TAXONOMY_TREE)).pipe(
-      map((res) => res?.data || [])
-    );
+  getTaxonomies(): Observable<TaxonomyNode[]> {
+    return this.apiService
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_TAXONOMY_TREE))
+      .pipe(map((res) => res?.data || []));
   }
 }

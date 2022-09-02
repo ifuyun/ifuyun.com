@@ -8,7 +8,7 @@ export function generateId() {
   // 1e12 + 0x4ba0000000
   const idLen = 16;
   const hex = 16;
-  const timeBased = 1324806901760;// 2011-12-25 17:55:01
+  const timeBased = 1324806901760; // 2011-12-25 17:55:01
   const timeStamp = Date.now() - timeBased;
   const id = timeStamp.toString(hex);
   let randomStr = '';
@@ -37,7 +37,5 @@ export function format(str: string, ...params: (string | number)[]): string {
   if (Array.isArray(params[0])) {
     params = params[0];
   }
-  return str.replace(/\$(\d+)/ig, (matched, index) =>
-    params[index] && params[index].toString() || matched
-  );
+  return str.replace(/\$(\d+)/gi, (matched, index) => (params[index] && params[index].toString()) || matched);
 }

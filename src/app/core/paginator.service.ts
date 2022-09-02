@@ -6,8 +6,8 @@ import { PaginatorEntity, PaginatorRange } from '../interfaces/paginator';
 })
 export class PaginatorService {
   // todo: get from db:options
-  private pageSize: number = 10;
-  private paginationSize: number = 9;
+  private pageSize = 10;
+  private paginationSize = 9;
 
   getPageSize(): number {
     return this.pageSize;
@@ -32,16 +32,20 @@ export class PaginatorService {
     // 中间页到两边的间距页数，偶数情况距离低页再减一，距离高页不变
     const ceilPage = Math.ceil((paginationSize - 1) / 2);
 
-    if (pages <= paginationSize) {// 总页数小于一屏输出页数
+    if (pages <= paginationSize) {
+      // 总页数小于一屏输出页数
       pageData.start = 1;
       pageData.end = pages;
-    } else if (page <= floorPage) {// 第一屏
+    } else if (page <= floorPage) {
+      // 第一屏
       pageData.start = 1;
       pageData.end = paginationSize;
-    } else if (page > floorPage && (page + ceilPage) <= pages) {// 非第一屏，且非最后一屏
-      pageData.start = page - ceilPage + (paginationSize + 1) % 2;
+    } else if (page > floorPage && page + ceilPage <= pages) {
+      // 非第一屏，且非最后一屏
+      pageData.start = page - ceilPage + ((paginationSize + 1) % 2);
       pageData.end = page + ceilPage;
-    } else {// 最后一屏
+    } else {
+      // 最后一屏
       pageData.start = pages - paginationSize + 1;
       pageData.end = pages;
     }
@@ -58,8 +62,9 @@ export class PaginatorService {
    * @since 1.0.0
    */
   getPaginator(page: string | number, total: number): PaginatorEntity {
-    let pages = Math.ceil(total / this.pageSize);// 总页数
-    if (typeof page === 'string') {// page是字符串
+    let pages = Math.ceil(total / this.pageSize); // 总页数
+    if (typeof page === 'string') {
+      // page是字符串
       page = parseInt(page, 10);
     }
     pages = pages || 1;
@@ -70,8 +75,8 @@ export class PaginatorService {
     return {
       startPage: pageData.start,
       endPage: pageData.end,
-      prevPage: page <= 1 ? 0 : (page - 1),
-      nextPage: page >= pages ? 0 : (page + 1),
+      prevPage: page <= 1 ? 0 : page - 1,
+      nextPage: page >= pages ? 0 : page + 1,
       curPage: page,
       totalPage: pages,
       pageLimit: this.pageSize,

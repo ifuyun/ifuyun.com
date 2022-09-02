@@ -14,7 +14,7 @@
         <li [ngClass]="{'active': activePage === 'index'}">
           <a routerLink="/"><i class="icon icon-home"></i><span>首页</span></a>
         </li>
-        <li *ngFor="let taxonomy of taxonomies" [ngClass]="{'active': activePage == taxonomy.taxonomySlug}">
+        <li *ngFor="let taxonomy of taxonomies" [ngClass]="{'active': activePage === taxonomy.taxonomySlug}">
           <a [routerLink]="['/category/'+taxonomy.taxonomySlug]" title="{{taxonomy.taxonomyDescription}}">
             <i class="icon icon-{{taxonomy.taxonomyIcon || 'folder'}}"></i>
             <span>{{taxonomy.taxonomyName}}</span>

@@ -8,11 +8,7 @@ import { PlatformService } from '../core/platform.service';
 
 @Injectable()
 export class ApiRequestInterceptor implements HttpInterceptor {
-  constructor(
-    private platform: PlatformService,
-    @Optional() @Inject(REQUEST) private request: Request
-  ) {
-  }
+  constructor(private platform: PlatformService, @Optional() @Inject(REQUEST) private request: Request) {}
 
   intercept(httpRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const isApiRequest = httpRequest.url.startsWith('/api');

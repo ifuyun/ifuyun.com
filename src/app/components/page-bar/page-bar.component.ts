@@ -10,14 +10,12 @@ import { PaginatorEntity } from '../../interfaces/paginator';
 })
 export class PageBarComponent {
   @Input() paginator: PaginatorEntity | null = null;
-  @Input() url: string = '';
+  @Input() url = '';
   @Input() param: Params = {};
 
   isMobile = false;
 
-  constructor(
-    private userAgentService: UserAgentService
-  ) {
+  constructor(private userAgentService: UserAgentService) {
     this.isMobile = this.userAgentService.isMobile();
   }
 

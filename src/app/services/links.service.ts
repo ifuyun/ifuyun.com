@@ -9,16 +9,13 @@ import { LinkEntity } from '../interfaces/links';
   providedIn: 'root'
 })
 export class LinksService {
-  constructor(
-    private apiService: ApiService
-  ) {
-  }
+  constructor(private apiService: ApiService) {}
 
   getFriendLinks(isHome: boolean): Observable<LinkEntity[]> {
-    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_LINKS_OF_FRIEND), {
-      isHome
-    }).pipe(
-      map((res) => res?.data || [])
-    );
+    return this.apiService
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_LINKS_OF_FRIEND), {
+        isHome
+      })
+      .pipe(map((res) => res?.data || []));
   }
 }

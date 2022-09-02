@@ -12,26 +12,25 @@ import { HttpResponseEntity } from '../interfaces/http-response';
   providedIn: 'root'
 })
 export class CommentsService {
-  constructor(
-    private apiService: ApiService,
-    private platform: PlatformService
-  ) {
-  }
+  constructor(private apiService: ApiService, private platform: PlatformService) {}
 
   getCommentsByPostId(postId: string): Observable<CommentList> {
-    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_COMMENTS), {
-      postId
-    }).pipe(
-      map((res) => res?.data || {})
-    );
+    return this.apiService
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_COMMENTS), {
+        postId
+      })
+      .pipe(map((res) => res?.data || {}));
   }
 
   saveComment(comment: CommentEntity): Observable<HttpResponseEntity> {
     if (this.platform.isBrowser) {
-      localStorage.setItem(STORAGE_USER_KEY, JSON.stringify({
-        name: comment.authorName,
-        email: comment.authorEmail
-      }));
+      localStorage.setItem(
+        STORAGE_USER_KEY,
+        JSON.stringify({
+          name: comment.authorName,
+          email: comment.authorEmail
+        })
+      );
     }
     return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_COMMENTS), comment);
   }

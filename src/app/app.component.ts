@@ -23,13 +23,10 @@ export class AppComponent implements OnInit {
     private usersService: UsersService,
     private logService: LogService,
     private platform: PlatformService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.router.events.pipe(
-      filter((event) => event instanceof NavigationEnd)
-    ).subscribe((event) => {
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
       const previous = this.currentUrl.split('#')[0];
       const current = (event as NavigationEnd).url.split('#')[0];
       if (previous !== current) {

@@ -30,14 +30,13 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.router.events.pipe(
-      filter((event) => event instanceof NavigationEnd)
-    ).subscribe((event) => {
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.siderOpen = false;
       this.document.body.style.overflow = '';
     });
-    this.taxonomiesListener = this.taxonomiesService.getTaxonomies()
-      .subscribe((taxonomies) => this.taxonomies = taxonomies);
+    this.taxonomiesListener = this.taxonomiesService
+      .getTaxonomies()
+      .subscribe((taxonomies) => (this.taxonomies = taxonomies));
   }
 
   ngAfterViewInit() {
@@ -47,7 +46,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       const scrollFn = (siderEle: HTMLElement) => {
         if (documentEle.scrollTop > 0 && documentEle.scrollTop > siderEle.scrollHeight - documentEle.clientHeight) {
           siderEle.style.position = 'sticky';
-          siderEle.style.top = (documentEle.clientHeight - siderEle.scrollHeight - 16) + 'px';
+          siderEle.style.top = documentEle.clientHeight - siderEle.scrollHeight - 16 + 'px';
         } else {
           siderEle.style.position = 'relative';
           siderEle.style.top = '';

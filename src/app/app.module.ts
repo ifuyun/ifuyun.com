@@ -94,5 +94,4 @@ import { PipesModule } from './pipes/pipes.module';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule {}

@@ -10,11 +10,7 @@ import { HttpResponseEntity } from '../interfaces/http-response';
   providedIn: 'root'
 })
 export class LogService {
-  constructor(
-    private apiService: ApiService,
-    private userAgentService: UserAgentService
-  ) {
-  }
+  constructor(private apiService: ApiService, private userAgentService: UserAgentService) {}
 
   parseAccessLog(initialized: boolean, referer: string): AccessLog {
     return {

@@ -32,9 +32,10 @@ const duration = 500; // ms
       state('shaking', style({})),
 
       transition('* => shaking', [
-        animate(duration, keyframes(
-          offsets.concat(offsets.concat(offsets)).map((offset) => style({ marginLeft: `${offset}px` }))
-        ))
+        animate(
+          duration,
+          keyframes(offsets.concat(offsets.concat(offsets)).map((offset) => style({ marginLeft: `${offset}px` })))
+        )
       ])
     ])
   ]
@@ -70,8 +71,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
     private message: MessageService,
     private route: ActivatedRoute,
     @Optional() @Inject(RESPONSE) private response: Response
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.optionsListener = this.optionsService.options$.subscribe((options) => {
@@ -101,14 +101,18 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     if (this.platform.isBrowser) {
-      window.addEventListener('message', event => {
-        if (event.origin !== window.origin) {
-          return;
-        }
-        if (event.data.login) {
-          window.location.href = this.referer ? (this.options['site_url'] + this.referer) : this.adminUrl;
-        }
-      }, false);
+      window.addEventListener(
+        'message',
+        (event) => {
+          if (event.origin !== window.origin) {
+            return;
+          }
+          if (event.data.login) {
+            window.location.href = this.referer ? this.options['site_url'] + this.referer : this.adminUrl;
+          }
+        },
+        false
+      );
     }
   }
 
@@ -120,17 +124,19 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   login() {
     if (this.loginForm.valid) {
       const { username, password, rememberMe } = this.loginForm.value;
-      this.authService.login({
-        username: username || '',
-        password: md5(password || ''),
-        rememberMe: rememberMe || false
-      }).subscribe((res) => {
-        if (res.accessToken) {
-          location.href = this.adminUrl;
-        } else {
-          this.shakeForm();
-        }
-      });
+      this.authService
+        .login({
+          username: username || '',
+          password: md5(password || ''),
+          rememberMe: rememberMe || false
+        })
+        .subscribe((res) => {
+          if (res.accessToken) {
+            location.href = this.adminUrl;
+          } else {
+            this.shakeForm();
+          }
+        });
     } else {
       this.shakeForm();
 
@@ -142,16 +148,19 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
       Object.keys(this.loginForm.controls).forEach((key) => {
         const ctrl = this.loginForm.get(key);
         const errors = ctrl?.errors;
-        errors && Object.keys(errors).forEach((type) => {
-          switch (type) {
-            case 'required':
-              msgs.push(`请输入${formLabels[key]}`);
-              break;
-            case 'maxlength':
-              msgs.push(`${formLabels[key]}长度应不大于${errors[type].requiredLength}字符，当前为${errors[type].actualLength}`);
-              break;
-          }
-        });
+        errors &&
+          Object.keys(errors).forEach((type) => {
+            switch (type) {
+              case 'required':
+                msgs.push(`请输入${formLabels[key]}`);
+                break;
+              case 'maxlength':
+                msgs.push(
+                  `${formLabels[key]}长度应不大于${errors[type].requiredLength}字符，当前为${errors[type].actualLength}`
+                );
+                break;
+            }
+          });
       });
       msgs.length > 0 && this.message.error(msgs[0]);
     }
@@ -204,6 +213,6 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private shakeForm() {
     this.formStatus = 'shaking';
-    setTimeout(() => this.formStatus = 'normal', duration);
+    setTimeout(() => (this.formStatus = 'normal'), duration);
   }
 }

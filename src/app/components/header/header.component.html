@@ -7,10 +7,10 @@
           <img src="/assets/images/logo.png" alt="{{options['site_name']}}"/>
         </a>
         <ul class="nav-list">
-          <li [ngClass]="{'active': activePage == 'index'}">
+          <li [ngClass]="{'active': activePage === 'index'}">
             <a class="nav-link" title="{{options['site_name']}}首页" [routerLink]="['/']">首页</a>
           </li>
-          <li *ngFor="let taxonomy of taxonomies" [ngClass]="{'active': activePage == taxonomy.taxonomySlug}">
+          <li *ngFor="let taxonomy of taxonomies" [ngClass]="{'active': activePage === taxonomy.taxonomySlug}">
             <a class="nav-link" [routerLink]="['/category/'+taxonomy.taxonomySlug]"
                title="{{taxonomy.taxonomyDescription}}">
               <span>{{taxonomy.taxonomyName}}</span><i class="nav-arrow" *ngIf="!taxonomy.isLeaf"></i>

@@ -62,7 +62,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   isMobile = false;
   isLoggedIn = false;
   user!: UserModel;
-  pageIndex: string = '';
+  pageIndex = '';
   prevPost: PostEntity | null = null;
   nextPost: PostEntity | null = null;
   comments: Comment[] = [];
@@ -91,7 +91,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private commentUser: Guest | null = null;
   private shareUrl = '';
   private options: OptionEntity = {};
-  private unlistenImgClick!: Function;
+  private unlistenImgClick!: () => void;
   private referer = '';
   private optionsListener!: Subscription;
   private urlListener!: Subscription;
@@ -175,14 +175,14 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         !this.isLoggedIn && setTimeout(() => this.initCommentForm(), 0);
       }
     }
-    this.unlistenImgClick = this.renderer.listen(this.postEle.nativeElement, 'click', ((e: MouseEvent) => {
+    this.unlistenImgClick = this.renderer.listen(this.postEle.nativeElement, 'click', (e: MouseEvent) => {
       if (e.target instanceof HTMLImageElement) {
         // todo: if image is in <a> link
         this.imgModalPadding = 0;
         this.clickedImage = e.target;
         this.showImgModal = true;
       }
-    }));
+    });
   }
 
   ngOnDestroy() {
@@ -208,16 +208,19 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         const ctrl = form.get(key);
         const errors = ctrl?.errors;
         errors && ctrl?.markAsTouched({ onlySelf: true });
-        errors && Object.keys(errors).forEach((type) => {
-          switch (type) {
-            case 'required':
-              msgs.push(`请输入${formLabels[key]}`);
-              break;
-            case 'maxlength':
-              msgs.push(`${formLabels[key]}长度应不大于${errors[type].requiredLength}字符，当前为${errors[type].actualLength}`);
-              break;
-          }
-        });
+        errors &&
+          Object.keys(errors).forEach((type) => {
+            switch (type) {
+              case 'required':
+                msgs.push(`请输入${formLabels[key]}`);
+                break;
+              case 'maxlength':
+                msgs.push(
+                  `${formLabels[key]}长度应不大于${errors[type].requiredLength}字符，当前为${errors[type].actualLength}`
+                );
+                break;
+            }
+          });
       });
       msgs.length > 0 && this.message.error(msgs[0]);
     } else {
@@ -311,7 +314,10 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         } else {
           comment.disliked = true;
           dislikedComments.push(comment.commentId);
-          localStorage.setItem(STORAGE_DISLIKED_COMMENTS_KEY, uniq(dislikedComments.filter((item) => !!item)).join(','));
+          localStorage.setItem(
+            STORAGE_DISLIKED_COMMENTS_KEY,
+            uniq(dislikedComments.filter((item) => !!item)).join(',')
+          );
         }
       }
     });
@@ -338,7 +344,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     if (e) {
       (e.target as HTMLImageElement).src = `${captchaUrl}?r=${Math.random()}`;
     } else {
-      setTimeout(() => this.captchaImg.nativeElement.src = `${captchaUrl}?r=${Math.random()}`);
+      setTimeout(() => (this.captchaImg.nativeElement.src = `${captchaUrl}?r=${Math.random()}`));
     }
   }
 
@@ -452,7 +458,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       if (!defaultAvatar || defaultAvatar === 'logo') {
         defaultAvatar = this.options['site_url'] + '/logo.png';
       }
-      data.authorAvatar = data.user?.userAvatar ||
+      data.authorAvatar =
+        data.user?.userAvatar ||
         format(AVATAR_API_URL, data.user?.userEmailHash || data.authorEmailHash, defaultAvatar);
       data.commentMetaMap = this.commonService.transformMeta(data.commentMeta || []);
       try {
@@ -483,14 +490,14 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.replyForm.get('email')?.setValue(this.commentUser?.email || '');
   }
 
-  private fetchComments(cb?: Function) {
+  private fetchComments(cb?: () => void) {
     this.commentsService.getCommentsByPostId(this.postId).subscribe((res) => {
       this.comments = res.comments || [];
       this.comments.forEach((item) => {
         this.initComment(item);
         this.initCommentStatus(item.children);
         item.children = this.generateCommentTree(item.children);
-        item.children.forEach((child) => child.parent = cloneDeep(item));
+        item.children.forEach((child) => (child.parent = cloneDeep(item)));
       });
       this.initCommentStatus(this.comments);
       cb && cb();
@@ -498,11 +505,11 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   private generateCommentTree(comments: Comment[]) {
-    const depth = this.isMobile ? 2 : (Number(this.options['thread_comments_depth']) || 3);
+    const depth = this.isMobile ? 2 : Number(this.options['thread_comments_depth']) || 3;
     const copies = [...comments];
     let tree = copies.filter((father) => {
       father.children = copies.filter((child) => {
-        if(father.commentId === child.commentParent) {
+        if (father.commentId === child.commentParent) {
           child.parent = father;
           return true;
         }
@@ -512,7 +519,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       return father.commentParent === father.commentTop;
     });
     const flattenIterator = (nodes: Comment[], list: Comment[]) => {
-      for (let node of nodes) {
+      for (const node of nodes) {
         list.push({ ...node, isLeaf: true, level: depth, children: [] });
         if (node.children.length > 0) {
           flattenIterator(node.children, list);
@@ -522,7 +529,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     };
     const iterator = (nodes: Comment[], level: number) => {
       if (depth === 2) {
-        nodes = flattenIterator(nodes, []).sort((a, b) => a.commentCreated > b.commentCreated ? 1 : -1);
+        nodes = flattenIterator(nodes, []).sort((a, b) => (a.commentCreated > b.commentCreated ? 1 : -1));
       } else {
         nodes.forEach((node) => {
           node.level = level;
@@ -530,8 +537,9 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
             if (level < depth - 1) {
               node.children = iterator(node.children, level + 1);
             } else {
-              node.children = flattenIterator(node.children, [])
-                .sort((a, b) => a.commentCreated > b.commentCreated ? 1 : -1);
+              node.children = flattenIterator(node.children, []).sort((a, b) => {
+                return a.commentCreated > b.commentCreated ? 1 : -1;
+              });
             }
           }
         });
@@ -561,16 +569,16 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   private parseHtml() {
     this.post.postContent = this.post.postContent.replace(
-      /<pre(?:\s+[^>]*)*>\s*<code(?:\s+[^>]*)?>([\s\S]*?)<\/code>\s*<\/pre>/ig,
+      /<pre(?:\s+[^>]*)*>\s*<code(?:\s+[^>]*)?>([\s\S]*?)<\/code>\s*<\/pre>/gi,
       (preStr, codeStr: string) => {
-        const langReg = /^<pre(?:\s+[^>]*)*\s+class="([^"]+)"(?:\s+[^>]*)*>/ig;
+        const langReg = /^<pre(?:\s+[^>]*)*\s+class="([^"]+)"(?:\s+[^>]*)*>/gi;
         const langResult = Array.from(preStr.matchAll(langReg));
         let langStr = '';
         let language = '';
         if (langResult.length > 0 && langResult[0].length === 2) {
-          const langClass = langResult[0][1].split(/\s+/i).filter(
-            (item) => item.split('-')[0].toLowerCase() === 'language'
-          );
+          const langClass = langResult[0][1]
+            .split(/\s+/i)
+            .filter((item) => item.split('-')[0].toLowerCase() === 'language');
           if (langClass.length > 0) {
             langStr = langClass[0].split('-')[1] || '';
             if (langStr && highlight.getLanguage(langStr)) {
@@ -579,17 +587,20 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
           }
         }
         // unescape: ><&
-        codeStr = codeStr.replace(/&lt;/ig, '<')
-          .replace(/&gt;/ig, '>')
-          .replace(/&amp;/ig, '&');
-        const lines = codeStr.split(/\r\n|\r|\n/i).map((str, i) => `<li>${i + 1}</li>`).join('');
+        codeStr = codeStr.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&amp;/gi, '&');
+        const lines = codeStr
+          .split(/\r\n|\r|\n/i)
+          .map((str, i) => `<li>${i + 1}</li>`)
+          .join('');
         const codes = language
           ? highlight.highlight(codeStr, { language }).value
           : highlight.highlightAuto(codeStr).value;
 
-        return `<pre class="i-code"${langStr ? ' data-lang="' + langStr + '"' : ''}>` +
+        return (
+          `<pre class="i-code"${langStr ? ' data-lang="' + langStr + '"' : ''}>` +
           `<ul class="i-code-lines">${lines}</ul>` +
-          `<code class="i-code-text">${codes}</code></pre>`;
+          `<code class="i-code-text">${codes}</code></pre>`
+        );
       }
     );
   }
@@ -602,12 +613,12 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     QRCode.toCanvas(this.shareUrl, {
       width: 320,
       margin: 0
-    }).then((canvas) => {
-      const modalEle = this.document.querySelector('.modal-content-body');
-      modalEle?.appendChild(canvas);
-    }).catch((err) => {
-      this.message.error(err);
-    });
+    })
+      .then((canvas) => {
+        const modalEle = this.document.querySelector('.modal-content-body');
+        modalEle?.appendChild(canvas);
+      })
+      .catch((err) => this.message.error(err));
   }
 
   private checkPostVoted() {

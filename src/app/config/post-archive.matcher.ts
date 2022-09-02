@@ -1,6 +1,6 @@
-import { Route, UrlSegment, UrlSegmentGroup } from '@angular/router';
+import { UrlSegment } from '@angular/router';
 
-export function archiveUrlMatcher(url: UrlSegment[], group: UrlSegmentGroup, route: Route) {
+export function archiveUrlMatcher(url: UrlSegment[]) {
   if (url.length < 2 || url.length > 4 || url[0].path !== 'archive') {
     return null;
   }
@@ -17,7 +17,7 @@ export function archiveUrlMatcher(url: UrlSegment[], group: UrlSegmentGroup, rou
         return null;
       }
       month = url[2].path;
-      page = url[3] && url[3].path.split('-')[1] || '';
+      page = (url[3] && url[3].path.split('-')[1]) || '';
     } else {
       return null;
     }

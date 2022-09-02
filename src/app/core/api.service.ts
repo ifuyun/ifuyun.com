@@ -23,8 +23,7 @@ export class ApiService {
     private router: Router,
     private platform: PlatformService,
     @Optional() @Inject(RESPONSE) private response: Response
-  ) {
-  }
+  ) {}
 
   getApiUrl(path: string): string {
     return `${this.apiUrlPrefix}${path}`;
@@ -32,9 +31,12 @@ export class ApiService {
 
   getApiUrlWithParam(path: string, ...args: string[]): string {
     let idx = 0;
-    return this.apiUrlPrefix + path.replace(/(:[a-zA-Z0-9\-_]+)/ig, (matched) => {
-      return args[idx++] || matched;
-    });
+    return (
+      this.apiUrlPrefix +
+      path.replace(/(:[a-zA-Z0-9\-_]+)/gi, (matched) => {
+        return args[idx++] || matched;
+      })
+    );
   }
 
   private handleError<T>() {
@@ -54,33 +56,35 @@ export class ApiService {
   }
 
   httpGet<T extends HttpResponseEntity>(url: string, param: Record<string, any> = {}): Observable<T> {
-    return this.http.get<T>(url, {
-      params: new HttpParams({
-        fromObject: param
-      }),
-      observe: 'body'
-    }).pipe(
-      catchError(this.handleError<T>())
-    );
+    return this.http
+      .get<T>(url, {
+        params: new HttpParams({
+          fromObject: param
+        }),
+        observe: 'body'
+      })
+      .pipe(catchError(this.handleError<T>()));
   }
 
   httpGetData<T extends HttpResponseEntity>(url: string, param: Record<string, any> = {}): Observable<any> {
-    return this.http.get<T>(url, {
-      params: new HttpParams({
-        fromObject: param
-      }),
-      observe: 'body'
-    }).pipe(
-      map((res) => res?.data),
-      catchError(this.handleError<T>())
-    );
+    return this.http
+      .get<T>(url, {
+        params: new HttpParams({
+          fromObject: param
+        }),
+        observe: 'body'
+      })
+      .pipe(
+        map((res) => res?.data),
+        catchError(this.handleError<T>())
+      );
   }
 
   httpPost<T extends HttpResponseEntity>(url: string, body: Record<string, any> | FormData = {}): Observable<T> {
-    return this.http.post<T>(url, body, {
-      observe: 'body'
-    }).pipe(
-      catchError(this.handleError<T>())
-    );
+    return this.http
+      .post<T>(url, body, {
+        observe: 'body'
+      })
+      .pipe(catchError(this.handleError<T>()));
   }
 }

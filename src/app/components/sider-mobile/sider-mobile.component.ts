@@ -44,8 +44,8 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$.subscribe((options) => this.options = options);
-    this.commonListener = this.commonService.pageIndex$.subscribe((pageIndex) => this.activePage = pageIndex);
+    this.optionsListener = this.optionsService.options$.subscribe((options) => (this.options = options));
+    this.commonListener = this.commonService.pageIndex$.subscribe((pageIndex) => (this.activePage = pageIndex));
     this.userListener = this.usersService.loginUser$.subscribe((user) => {
       this.user = user;
       this.isLoggedIn = !!this.user.userId;

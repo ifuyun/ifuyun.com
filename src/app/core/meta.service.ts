@@ -6,11 +6,7 @@ import { HTMLMetaData } from '../interfaces/meta';
   providedIn: 'root'
 })
 export class MetaService {
-  constructor(
-    private meta: Meta,
-    private title: Title
-  ) {
-  }
+  constructor(private meta: Meta, private title: Title) {}
 
   updateHTMLMeta(metaData: HTMLMetaData) {
     if (metaData.title) {

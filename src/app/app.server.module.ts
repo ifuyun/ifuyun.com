@@ -6,13 +6,8 @@ import { AppComponent } from './app.component';
 import { ServerXhr } from './core/server-xhr';
 
 @NgModule({
-  imports: [
-    AppModule,
-    ServerModule,
-    ServerTransferStateModule
-  ],
+  imports: [AppModule, ServerModule, ServerTransferStateModule],
   providers: [{ provide: XhrFactory, useClass: ServerXhr }],
   bootstrap: [AppComponent]
 })
-export class AppServerModule {
-}
+export class AppServerModule {}

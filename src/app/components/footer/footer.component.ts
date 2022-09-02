@@ -10,21 +10,18 @@ import { OptionsService } from '../../services/options.service';
   styleUrls: ['./footer.component.less']
 })
 export class FooterComponent implements OnInit, OnDestroy {
-  isMobile: boolean = false;
+  isMobile = false;
   options: OptionEntity = {};
   curYear = new Date().getFullYear();
 
   private optionsListener!: Subscription;
 
-  constructor(
-    private optionsService: OptionsService,
-    private userAgentService: UserAgentService
-  ) {
+  constructor(private optionsService: OptionsService, private userAgentService: UserAgentService) {
     this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$.subscribe((options) => this.options = options);
+    this.optionsListener = this.optionsService.options$.subscribe((options) => (this.options = options));
   }
 
   ngOnDestroy(): void {

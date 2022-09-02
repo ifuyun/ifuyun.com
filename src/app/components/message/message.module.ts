@@ -6,13 +6,8 @@ import { MessageContainerComponent } from './message-container.component';
 import { MessageComponent } from './message.component';
 
 @NgModule({
-  imports: [
-    BidiModule,
-    CommonModule,
-    OverlayModule
-  ],
+  imports: [BidiModule, CommonModule, OverlayModule],
   declarations: [MessageContainerComponent, MessageComponent],
   entryComponents: [MessageContainerComponent]
 })
-export class MessageModule {
-}
+export class MessageModule {}

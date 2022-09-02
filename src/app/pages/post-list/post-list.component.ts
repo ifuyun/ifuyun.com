@@ -63,21 +63,23 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
     this.optionsListener = this.optionsService.options$.subscribe((options) => {
       this.options = options;
     });
-    this.paramListener = this.route.paramMap.pipe(
-      combineLatestWith(this.route.queryParamMap),
-      tap(([params, queryParams]) => {
-        this.page = Number(params.get('page')) || 1;
-        this.category = params.get('category')?.trim() || '';
-        this.tag = params.get('tag')?.trim() || '';
-        this.year = params.get('year')?.trim() || '';
-        this.month = params.get('month')?.trim() || '';
-        this.keyword = queryParams.get('keyword')?.trim() || '';
-        this.showCarousel = !this.category && !this.tag && !this.year && !this.keyword;
-      })
-    ).subscribe(() => {
-      this.fetchPosts();
-      this.scroller.scrollToPosition([0, 0]);
-    });
+    this.paramListener = this.route.paramMap
+      .pipe(
+        combineLatestWith(this.route.queryParamMap),
+        tap(([params, queryParams]) => {
+          this.page = Number(params.get('page')) || 1;
+          this.category = params.get('category')?.trim() || '';
+          this.tag = params.get('tag')?.trim() || '';
+          this.year = params.get('year')?.trim() || '';
+          this.month = params.get('month')?.trim() || '';
+          this.keyword = queryParams.get('keyword')?.trim() || '';
+          this.showCarousel = !this.category && !this.tag && !this.year && !this.keyword;
+        })
+      )
+      .subscribe(() => {
+        this.fetchPosts();
+        this.scroller.scrollToPosition([0, 0]);
+      });
   }
 
   ngOnDestroy() {
@@ -104,32 +106,38 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
     if (this.tag) {
       this.pageIndex = 'tag';
       param.tag = this.tag;
-      breadcrumbs = [{
-        label: '标签',
-        tooltip: '标签',
-        url: '',
-        isHeader: false
-      }, {
-        label: this.tag,
-        tooltip: this.tag,
-        url: '/tag/' + this.tag,
-        isHeader: true
-      }];
+      breadcrumbs = [
+        {
+          label: '标签',
+          tooltip: '标签',
+          url: '',
+          isHeader: false
+        },
+        {
+          label: this.tag,
+          tooltip: this.tag,
+          url: '/tag/' + this.tag,
+          isHeader: true
+        }
+      ];
     }
     if (this.year) {
       this.pageIndex = 'archive';
       param.year = this.year;
-      breadcrumbs = [{
-        label: '文章归档',
-        tooltip: '文章归档',
-        url: '/archive',
-        isHeader: false
-      }, {
-        label: `${this.year}年`,
-        tooltip: `${this.year}年`,
-        url: '/archive/' + this.year,
-        isHeader: !this.year
-      }];
+      breadcrumbs = [
+        {
+          label: '文章归档',
+          tooltip: '文章归档',
+          url: '/archive',
+          isHeader: false
+        },
+        {
+          label: `${this.year}年`,
+          tooltip: `${this.year}年`,
+          url: '/archive/' + this.year,
+          isHeader: !this.year
+        }
+      ];
       if (this.month) {
         param.month = this.month;
         breadcrumbs.push({
@@ -146,7 +154,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
       this.total = this.postList.total || 0;
 
       const siteName: string = this.options['site_name'] || '';
-      let description: string = '';
+      let description = '';
       const titles: string[] = [siteName];
       const taxonomies: string[] = [];
       const keywords: string[] = (this.options['site_keywords'] || '').split(',');
@@ -175,17 +183,20 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
         titles.unshift(this.keyword, '搜索');
         description += `「${this.keyword}」搜索结果`;
         keywords.unshift(this.keyword);
-        breadcrumbs.push({
-          label: `搜索`,
-          tooltip: `搜索`,
-          url: '',
-          isHeader: false
-        }, {
-          label: this.keyword,
-          tooltip: this.keyword,
-          url: '',
-          isHeader: false
-        });
+        breadcrumbs.push(
+          {
+            label: `搜索`,
+            tooltip: `搜索`,
+            url: '',
+            isHeader: false
+          },
+          {
+            label: this.keyword,
+            tooltip: this.keyword,
+            url: '',
+            isHeader: false
+          }
+        );
       } else {
         description += '文章列表';
       }
