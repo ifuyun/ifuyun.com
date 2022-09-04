@@ -1,4 +1,5 @@
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
+import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -78,7 +79,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
       this.options = options;
       this.initMeta();
 
-      this.adminUrl = `${this.options['site_url']}${ADMIN_URL}`;
+      this.adminUrl = `${this.options['site_url'] || (location.protocol + '//' + location.host)}${ADMIN_URL}`;
       const rememberMe = this.cookieService.get('remember');
       /* 登录状态直接跳转后台首页 */
       if (rememberMe === '1' && this.authService.isLoggedIn()) {
@@ -148,7 +149,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
       Object.keys(this.loginForm.controls).forEach((key) => {
         const ctrl = this.loginForm.get(key);
         const errors = ctrl?.errors;
-        errors &&
+        if (errors) {
           Object.keys(errors).forEach((type) => {
             switch (type) {
               case 'required':
@@ -161,6 +162,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
                 break;
             }
           });
+        }
       });
       msgs.length > 0 && this.message.error(msgs[0]);
     }
