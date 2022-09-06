@@ -1,7 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { isEmpty } from 'lodash';
+import { skipWhile, Subscription } from 'rxjs';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { UserAgentService } from '../../core/user-agent.service';
@@ -51,7 +52,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$.subscribe((options) => (this.options = options));
+    this.optionsListener = this.optionsService.options$
+      .pipe(skipWhile((options) => isEmpty(options)))
+      .subscribe((options) => (this.options = options));
     this.commonListener = this.commonService.pageIndex$.subscribe((pageIndex) => (this.activePage = pageIndex));
     this.userListener = this.usersService.loginUser$.subscribe((user) => {
       this.user = user;

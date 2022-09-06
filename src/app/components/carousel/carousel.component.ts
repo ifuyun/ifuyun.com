@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { isEmpty } from 'lodash';
+import { skipWhile, Subscription } from 'rxjs';
 import { PlatformService } from '../../core/platform.service';
 import { CarouselVo, OptionEntity } from '../../interfaces/options';
 import { OptionsService } from '../../services/options.service';
@@ -23,11 +24,13 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(private optionsService: OptionsService, private platform: PlatformService) {}
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$.subscribe((options) => {
-      this.options = options;
-      this.staticResourceHost = options['static_resource_host'];
-      this.fetchData();
-    });
+    this.optionsListener = this.optionsService.options$
+      .pipe(skipWhile((options) => isEmpty(options)))
+      .subscribe((options) => {
+        this.options = options;
+        this.staticResourceHost = options['static_resource_host'];
+        this.fetchData();
+      });
   }
 
   ngOnDestroy() {

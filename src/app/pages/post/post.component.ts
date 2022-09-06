@@ -13,9 +13,9 @@ import {
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import highlight from 'highlight.js';
-import { cloneDeep, uniq } from 'lodash';
+import { cloneDeep, isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
-import { Subscription } from 'rxjs';
+import { skipWhile, Subscription } from 'rxjs';
 import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
 import { MessageService } from '../../components/message/message.service';
@@ -207,8 +207,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       Object.keys(form.controls).forEach((key) => {
         const ctrl = form.get(key);
         const errors = ctrl?.errors;
-        errors && ctrl?.markAsTouched({ onlySelf: true });
-        errors &&
+        if (errors) {
+          ctrl?.markAsTouched({ onlySelf: true });
           Object.keys(errors).forEach((type) => {
             switch (type) {
               case 'required':
@@ -221,6 +221,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
                 break;
             }
           });
+        }
       });
       msgs.length > 0 && this.message.error(msgs[0]);
     } else {
@@ -392,12 +393,14 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   private initOptions() {
-    this.optionsListener = this.optionsService.options$.subscribe((options) => {
-      this.options = options;
-      if (this.options['site_url'] && this.platform.isBrowser) {
-        this.captchaUrl = `${this.options['site_url']}${ApiUrl.API_URL_PREFIX}${ApiUrl.CAPTCHA}?r=${Math.random()}`;
-      }
-    });
+    this.optionsListener = this.optionsService.options$
+      .pipe(skipWhile((options) => isEmpty(options)))
+      .subscribe((options) => {
+        this.options = options;
+        if (this.options['site_url'] && this.platform.isBrowser) {
+          this.captchaUrl = `${this.options['site_url']}${ApiUrl.API_URL_PREFIX}${ApiUrl.CAPTCHA}?r=${Math.random()}`;
+        }
+      });
   }
 
   private initMeta() {

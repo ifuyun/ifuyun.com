@@ -1,10 +1,12 @@
 import { HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
+import { makeStateKey, StateKey, TransferState } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Response } from 'express';
+import * as qs from 'qs';
 import { EMPTY, Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { MessageService } from '../components/message/message.service';
 import { ApiUrl } from '../config/api-url';
 import { Message } from '../config/message.enum';
@@ -16,12 +18,14 @@ import { PlatformService } from './platform.service';
 })
 export class ApiService {
   private apiUrlPrefix: string = ApiUrl.API_URL_PREFIX;
+  private stateKeys: Record<string, StateKey<any>> = {};
 
   constructor(
     private http: HttpClient,
     private message: MessageService,
     private router: Router,
     private platform: PlatformService,
+    private state: TransferState,
     @Optional() @Inject(RESPONSE) private response: Response
   ) {}
 
@@ -56,6 +60,12 @@ export class ApiService {
   }
 
   httpGet<T extends HttpResponseEntity>(url: string, param: Record<string, any> = {}): Observable<T> {
+    const fullUrl = `${url}?${qs.stringify(param)}`;
+    this.stateKeys[fullUrl] = this.stateKeys[fullUrl] || makeStateKey(fullUrl);
+    const cached = this.state.get(this.stateKeys[fullUrl], null);
+    if (cached) {
+      return of(cached);
+    }
     return this.http
       .get<T>(url, {
         params: new HttpParams({
@@ -63,10 +73,19 @@ export class ApiService {
         }),
         observe: 'body'
       })
-      .pipe(catchError(this.handleError<T>()));
+      .pipe(
+        tap((res) => this.state.set(this.stateKeys[fullUrl], res)),
+        catchError(this.handleError<T>())
+      );
   }
 
   httpGetData<T extends HttpResponseEntity>(url: string, param: Record<string, any> = {}): Observable<any> {
+    const fullUrl = `${url}?${qs.stringify(param)}`;
+    this.stateKeys[fullUrl] = this.stateKeys[fullUrl] || makeStateKey(fullUrl);
+    const cached = this.state.get(this.stateKeys[fullUrl], null);
+    if (cached) {
+      return of(cached);
+    }
     return this.http
       .get<T>(url, {
         params: new HttpParams({
@@ -76,6 +95,7 @@ export class ApiService {
       })
       .pipe(
         map((res) => res?.data),
+        tap((res) => this.state.set(this.stateKeys[fullUrl], res)),
         catchError(this.handleError<T>())
       );
   }

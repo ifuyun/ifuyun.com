@@ -1,7 +1,7 @@
 import { ViewportScroller } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { uniq } from 'lodash';
-import { Subscription } from 'rxjs';
+import { isEmpty, uniq } from 'lodash';
+import { skipWhile, Subscription } from 'rxjs';
 import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
 import { PageComponent } from '../../core/page.component';
@@ -44,18 +44,20 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
   }
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$.subscribe((options) => {
-      this.options = options;
-      const titles = ['文章归档', this.options['site_name']];
-      const keywords: string[] = (this.options['site_keywords'] || '').split(',');
-      const metaData: HTMLMetaData = {
-        title: titles.join(' - '),
-        description: `${this.options['site_name']}文章归档。${this.options['site_description']}`,
-        author: this.options['site_author'],
-        keywords: uniq(keywords).join(',')
-      };
-      this.metaService.updateHTMLMeta(metaData);
-    });
+    this.optionsListener = this.optionsService.options$
+      .pipe(skipWhile((options) => isEmpty(options)))
+      .subscribe((options) => {
+        this.options = options;
+        const titles = ['文章归档', this.options['site_name']];
+        const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+        const metaData: HTMLMetaData = {
+          title: titles.join(' - '),
+          description: `${this.options['site_name']}文章归档。${this.options['site_description']}`,
+          author: this.options['site_author'],
+          keywords: uniq(keywords).join(',')
+        };
+        this.metaService.updateHTMLMeta(metaData);
+      });
     const breadcrumbs: BreadcrumbEntity[] = [
       {
         label: '文章归档',

@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { isEmpty } from 'lodash';
+import { skipWhile, Subscription } from 'rxjs';
 import { UserAgentService } from '../../core/user-agent.service';
 import { OptionEntity } from '../../interfaces/options';
 import { OptionsService } from '../../services/options.service';
@@ -21,7 +22,9 @@ export class FooterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$.subscribe((options) => (this.options = options));
+    this.optionsListener = this.optionsService.options$
+      .pipe(skipWhile((options) => isEmpty(options)))
+      .subscribe((options) => (this.options = options));
   }
 
   ngOnDestroy(): void {

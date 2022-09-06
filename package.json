@@ -1,6 +1,6 @@
 {
   "name": "ifuyun.com",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "description": "Website of ifuyun.com",
   "author": {
     "name": "Fuyun",
@@ -52,6 +52,7 @@
     "ngx-cookie-service": "^14.0.1",
     "ngx-highlightjs": "^7.0.1",
     "qrcode": "^1.5.1",
+    "qs": "^6.11.0",
     "rxjs": "^7.5.6",
     "tslib": "^2.4.0",
     "ua-parser-js": "^1.0.2",

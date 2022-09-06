@@ -1,8 +1,8 @@
 import { ViewportScroller } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { uniq } from 'lodash';
-import { combineLatestWith, Subscription } from 'rxjs';
+import { isEmpty, uniq } from 'lodash';
+import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
@@ -60,9 +60,9 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
   }
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$.subscribe((options) => {
-      this.options = options;
-    });
+    this.optionsListener = this.optionsService.options$
+      .pipe(skipWhile((options) => isEmpty(options)))
+      .subscribe((options) => (this.options = options));
     this.paramListener = this.route.paramMap
       .pipe(
         combineLatestWith(this.route.queryParamMap),

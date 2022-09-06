@@ -1,6 +1,7 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { isEmpty } from 'lodash';
+import { skipWhile, Subscription } from 'rxjs';
 import { PlatformService } from '../../core/platform.service';
 import { ResponseService } from '../../core/response.service';
 import { OptionEntity } from '../../interfaces/options';
@@ -29,15 +30,17 @@ export class NotFoundComponent implements OnInit, OnDestroy {
     if (this.platform.isServer) {
       this.response.setStatus(HttpStatusCode.NotFound);
     }
-    this.optionsListener = this.optionsService.options$.subscribe((options) => {
-      this.options = options;
-      this.metaService.updateHTMLMeta({
-        title: `404 - ${options?.['site_name']}`,
-        description: options['site_description'],
-        author: options?.['site_author'],
-        keywords: options?.['site_keywords']
+    this.optionsListener = this.optionsService.options$
+      .pipe(skipWhile((options) => isEmpty(options)))
+      .subscribe((options) => {
+        this.options = options;
+        this.metaService.updateHTMLMeta({
+          title: `404 - ${options?.['site_name']}`,
+          description: options['site_description'],
+          author: options?.['site_author'],
+          keywords: options?.['site_keywords']
+        });
       });
-    });
   }
 
   ngOnDestroy(): void {

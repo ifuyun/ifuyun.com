@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { isEmpty } from 'lodash';
+import { skipWhile, Subscription } from 'rxjs';
 import { UserAgentService } from '../../core/user-agent.service';
 import { BreadcrumbEntity } from './breadcrumb.interface';
 import { OptionEntity } from '../../interfaces/options';
@@ -28,9 +29,9 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$.subscribe((options) => {
-      this.options = options;
-    });
+    this.optionsListener = this.optionsService.options$
+      .pipe(skipWhile((options) => isEmpty(options)))
+      .subscribe((options) => (this.options = options));
     this.breadcrumbListener = this.crumbService.crumb$.subscribe((breadcrumbs) => {
       this.breadcrumbs = [...breadcrumbs];
       this.breadcrumbs.unshift({

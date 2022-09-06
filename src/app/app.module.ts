@@ -2,7 +2,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TransferHttpCacheModule } from '@nguniversal/common';
 import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highlightjs';
@@ -53,7 +53,6 @@ import { PipesModule } from './pipes/pipes.module';
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),
-    BrowserTransferStateModule,
     TransferHttpCacheModule,
     AppRoutingModule,
     HttpClientModule,

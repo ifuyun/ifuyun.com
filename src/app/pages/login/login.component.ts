@@ -5,9 +5,9 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Response } from 'express';
-import { uniq } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
-import { Subscription } from 'rxjs';
+import { skipWhile, Subscription } from 'rxjs';
 import { MessageService } from '../../components/message/message.service';
 import { ADMIN_URL, THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK } from '../../config/constants';
 import { PlatformService } from '../../core/platform.service';
@@ -75,21 +75,23 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$.subscribe((options) => {
-      this.options = options;
-      this.initMeta();
+    this.optionsListener = this.optionsService.options$
+      .pipe(skipWhile((options) => isEmpty(options)))
+      .subscribe((options) => {
+        this.options = options;
+        this.initMeta();
 
-      this.adminUrl = `${this.options['site_url'] || (location.protocol + '//' + location.host)}${ADMIN_URL}`;
-      const rememberMe = this.cookieService.get('remember');
-      /* 登录状态直接跳转后台首页 */
-      if (rememberMe === '1' && this.authService.isLoggedIn()) {
-        if (this.platform.isBrowser) {
-          location.href = this.adminUrl;
-        } else {
-          this.response.redirect(this.adminUrl);
+        this.adminUrl = `${this.options['site_url'] || (location.protocol + '//' + location.host)}${ADMIN_URL}`;
+        const rememberMe = this.cookieService.get('remember');
+        /* 登录状态直接跳转后台首页 */
+        if (rememberMe === '1' && this.authService.isLoggedIn()) {
+          if (this.platform.isBrowser) {
+            location.href = this.adminUrl;
+          } else {
+            this.response.redirect(this.adminUrl);
+          }
         }
-      }
-    });
+      });
     this.paramListener = this.route.queryParamMap.subscribe((queryParams) => {
       this.referer = decodeURIComponent(queryParams.get('ref')?.trim() || '');
     });
