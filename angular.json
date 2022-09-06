@@ -30,8 +30,7 @@
               "lodash",
               "moment",
               "qrcode",
-              "ua-parser-js",
-              "qs"
+              "ua-parser-js"
             ],
             "assets": [
               {

@@ -1,14 +1,20 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
+import { makeStateKey, StateKey, TransferState } from '@angular/platform-browser';
 import { REQUEST } from '@nguniversal/express-engine/tokens';
 import { Request } from 'express';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { environment as env } from '../../environments/environment';
 import { PlatformService } from '../core/platform.service';
 
 @Injectable()
 export class ApiRequestInterceptor implements HttpInterceptor {
-  constructor(private platform: PlatformService, @Optional() @Inject(REQUEST) private request: Request) {}
+  constructor(
+    private platform: PlatformService,
+    private state: TransferState,
+    @Optional() @Inject(REQUEST) private request: Request
+  ) {}
 
   intercept(httpRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const isApiRequest = httpRequest.url.startsWith('/api');
@@ -30,6 +36,28 @@ export class ApiRequestInterceptor implements HttpInterceptor {
         });
       }
     }
-    return next.handle(httpRequest);
+    if (httpRequest.method !== 'GET') {
+      return next.handle(httpRequest);
+    }
+
+    const key: StateKey<string> = makeStateKey<string>(`${httpRequest.url}?${httpRequest.params.toString()}`);
+
+    if (this.platform.isServer) {
+      return next.handle(httpRequest).pipe(
+        tap((event) => {
+          this.state.set(key, (<HttpResponse<any>>event).body);
+        })
+      );
+    } else {
+      const storedResponse = this.state.get<any>(key, null);
+      if (storedResponse) {
+        const response = new HttpResponse({ body: storedResponse, status: 200 });
+        this.state.remove(key);
+
+        return of(response);
+      } else {
+        return next.handle(httpRequest);
+      }
+    }
   }
 }

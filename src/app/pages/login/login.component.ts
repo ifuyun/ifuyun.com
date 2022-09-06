@@ -1,5 +1,4 @@
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
-import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -10,13 +9,13 @@ import { CookieService } from 'ngx-cookie-service';
 import { skipWhile, Subscription } from 'rxjs';
 import { MessageService } from '../../components/message/message.service';
 import { ADMIN_URL, THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK } from '../../config/constants';
+import { MetaService } from '../../core/meta.service';
 import { PlatformService } from '../../core/platform.service';
 import { format, generateId } from '../../helpers/helper';
 import md5 from '../../helpers/md5';
 import { HTMLMetaData } from '../../interfaces/meta';
 import { OptionEntity } from '../../interfaces/options';
 import { AuthService } from '../../services/auth.service';
-import { MetaService } from '../../core/meta.service';
 import { OptionsService } from '../../services/options.service';
 
 const margin = 24;
@@ -81,7 +80,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
         this.options = options;
         this.initMeta();
 
-        this.adminUrl = `${this.options['site_url'] || (location.protocol + '//' + location.host)}${ADMIN_URL}`;
+        this.adminUrl = `${this.options['site_url'] || location.protocol + '//' + location.host}${ADMIN_URL}`;
         const rememberMe = this.cookieService.get('remember');
         /* 登录状态直接跳转后台首页 */
         if (rememberMe === '1' && this.authService.isLoggedIn()) {
