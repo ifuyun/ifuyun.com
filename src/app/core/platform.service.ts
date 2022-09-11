@@ -8,5 +8,5 @@ export class PlatformService {
   isBrowser = this.platformId ? isPlatformBrowser(this.platformId) : typeof document === 'object' && !!document;
   isServer = !this.isBrowser;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: unknown) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: any) {}
 }

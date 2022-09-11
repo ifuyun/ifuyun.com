@@ -9,6 +9,7 @@ import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highli
 import { environment as env } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { BackTopModule } from './components/back-top/back-top.module';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { CarouselComponent } from './components/carousel/carousel.component';
 import { EmptyComponent } from './components/empty/empty.component';
@@ -61,7 +62,8 @@ import { PipesModule } from './pipes/pipes.module';
     BrowserAnimationsModule,
     PipesModule,
     HighlightModule,
-    MessageModule
+    MessageModule,
+    BackTopModule
   ],
   providers: [
     httpInterceptorProviders,
