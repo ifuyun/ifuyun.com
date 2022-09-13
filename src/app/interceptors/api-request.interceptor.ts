@@ -48,16 +48,16 @@ export class ApiRequestInterceptor implements HttpInterceptor {
           this.state.set(key, (<HttpResponse<any>>event).body);
         })
       );
-    } else {
-      const storedResponse = this.state.get<any>(key, null);
-      if (storedResponse) {
-        const response = new HttpResponse({ body: storedResponse, status: 200 });
-        this.state.remove(key);
+    }
 
-        return of(response);
-      } else {
-        return next.handle(httpRequest);
-      }
+    const storedResponse = this.state.get<any>(key, null);
+    if (storedResponse) {
+      const response = new HttpResponse({ body: storedResponse, status: 200 });
+      this.state.remove(key);
+
+      return of(response);
+    } else {
+      return next.handle(httpRequest);
     }
   }
 }

@@ -39,22 +39,6 @@ export class ApiService {
     );
   }
 
-  private handleError<T>() {
-    return (error: HttpErrorResponse): Observable<T> => {
-      if (error.status !== HttpStatusCode.NotFound) {
-        this.message.error(error.error?.message || error.message || Message.UNKNOWN_ERROR);
-        // Let the app keep running by returning an empty result.
-        return of(error.error as T);
-      }
-      if (this.platform.isBrowser) {
-        this.router.navigate(['404']);
-      } else {
-        this.response.redirect('/404');
-      }
-      return EMPTY;
-    };
-  }
-
   httpGet<T extends HttpResponseEntity>(url: string, param: Record<string, any> = {}): Observable<T> {
     return this.http
       .get<T>(url, {
@@ -86,5 +70,21 @@ export class ApiService {
         observe: 'body'
       })
       .pipe(catchError(this.handleError<T>()));
+  }
+
+  private handleError<T>() {
+    return (error: HttpErrorResponse): Observable<T> => {
+      if (error.status !== HttpStatusCode.NotFound) {
+        this.message.error(error.error?.message || error.message || Message.UNKNOWN_ERROR);
+        // Let the app keep running by returning an empty result.
+        return of(error.error as T);
+      }
+      if (this.platform.isBrowser) {
+        this.router.navigate(['404']);
+      } else {
+        this.response.redirect('/404');
+      }
+      return EMPTY;
+    };
   }
 }
