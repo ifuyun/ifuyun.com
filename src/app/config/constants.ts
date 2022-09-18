@@ -1,3 +1,11 @@
+export const SITE_INFO = Object.freeze({
+  title: '爱浮云',
+  slogan: '心之所向，素履以往',
+  url: 'http://www.ifuyun.com',
+  domain: 'ifuyun.com',
+  author: '抚云',
+  startYear: 2014
+});
 export const DEFAULT_COPYRIGHT_TYPE = '1';
 export const STORAGE_USER_KEY = 'user';
 export const STORAGE_VOTED_POSTS_KEY = 'voted_posts';

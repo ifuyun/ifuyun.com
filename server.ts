@@ -7,8 +7,13 @@ import { existsSync } from 'fs';
 import helmet from 'helmet';
 import * as moment from 'moment';
 import { join } from 'path';
+import * as RSS from 'rss';
 import 'zone.js/dist/zone-node';
+import { ApiUrl } from './src/app/config/api-url';
+import { SITE_INFO } from './src/app/config/constants';
+import { Post } from './src/app/interfaces/posts';
 import { environment as env } from './src/environments/environment';
+import { fetchJson } from './src/fetch';
 import { AppServerModule } from './src/main.server';
 
 // The Express app is exported so that it can be used by serverless Functions.
@@ -36,6 +41,53 @@ export async function app(): Promise<express.Express> {
   server.use(compress());
   server.use(cookieParser(env.cookie.secret));
   server.enable('trust proxy');
+
+  server.get('/rss.xml', async (req, res) => {
+    const paramPage = typeof req.query['page'] === 'string' ? req.query['page'] : '';
+    const paramSize = typeof req.query['size'] === 'string' ? req.query['size'] : '';
+    const page = Math.max(parseInt(paramPage, 10) || 1, 1);
+    // between 1 and 100
+    const size = Math.max(Math.min(parseInt(paramSize, 10) || 10, 100), 1);
+    const detail = req.query['detail'] === '1' ? 1 : 0;
+    const apiUrl = `${ApiUrl.API_URL_PREFIX}${ApiUrl.GET_POSTS}?page=${page}&pageSize=${size}&detail=${detail}`;
+    try {
+      const result = await fetchJson(apiUrl);
+      const posts: Post[] = result.data.postList.posts || [];
+      const feed = new RSS({
+        title: SITE_INFO.title,
+        description: SITE_INFO.slogan,
+        generator: SITE_INFO.domain,
+        feed_url: `${SITE_INFO.url}/rss.xml`,
+        site_url: SITE_INFO.url,
+        image_url: `${SITE_INFO.url}/logo.png`,
+        managingEditor: SITE_INFO.author,
+        webMaster: SITE_INFO.author,
+        copyright: `${SITE_INFO.startYear}-${new Date().getFullYear()} ${SITE_INFO.domain}`,
+        language: 'zh-cn',
+        pubDate: new Date(),
+        ttl: 60
+      });
+      posts.forEach((item) => {
+        const post = item.post;
+        feed.item({
+          title: post.postTitle,
+          description: detail ? post.postContent : post.postExcerpt,
+          url: SITE_INFO.url + post.postGuid,
+          guid: post.postId,
+          categories: item.categories.map((category) => category.taxonomySlug),
+          author: item.meta['post_author'] || post.author.userNiceName,
+          date: post.postDate
+        });
+      });
+      const xmlData = feed.xml({ indent: true });
+      res.status(200).header('Content-Type', 'application/xml').send(xmlData);
+    } catch (e) {
+      res.status(500).json({
+        code: 500,
+        message: e.message || 'Request Failed.'
+      });
+    }
+  });
 
   // Serve static files from /browser
   server.get('*.*', express.static(distFolder, {

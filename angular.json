@@ -167,7 +167,7 @@
         "serve-ssr": {
           "builder": "@nguniversal/builders:ssr-dev-server",
           "options": {
-            "port": 2022,
+            "port": 2008,
             "proxyConfig": "proxy.conf.js"
           },
           "configurations": {
