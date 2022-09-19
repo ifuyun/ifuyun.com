@@ -20,5 +20,6 @@ export enum ApiUrl {
   CAPTCHA = '/captcha',
   ADD_FAVORITE = '/favorites/add',
   GET_CAROUSELS = '/options/carousels',
-  SAVE_ACCESS_LOG = '/logs/access'
+  SAVE_ACCESS_LOG = '/logs/access',
+  GET_WALLPAPERS = '/util/wallpapers'
 }

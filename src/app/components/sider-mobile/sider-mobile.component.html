@@ -51,5 +51,4 @@
     </nav>
   </aside>
 </div>
-<app-modal *ngIf="imageModalVisible"
-           [imgEle]="imageUrl" (toggleModal)="toggleImgModal($event)" [padding]="0" [margin]="16"></app-modal>
+<i-modal [template]="imageUrl" [(visible)]="imageModalVisible" [padding]="0" [margin]="16"></i-modal>

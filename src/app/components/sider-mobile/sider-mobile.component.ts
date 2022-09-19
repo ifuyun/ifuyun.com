@@ -70,10 +70,6 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
     });
   }
 
-  toggleImgModal(visible: boolean) {
-    this.imageModalVisible = visible;
-  }
-
   showWechatQrcode() {
     this.imageUrl = '/assets/images/wechat.jpg';
     this.siderOpen = false;

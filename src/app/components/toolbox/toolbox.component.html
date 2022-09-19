@@ -1,10 +1,11 @@
 <div class="toolbox">
   <div class="toolbox-body">
-    <div class="toolbox-item">
-      <a href="javascript:"><i class='icon icon-images'></i></a>
+    <div class="toolbox-item toolbox-wallpaper">
+      <a href="javascript:" (click)="openWallpaper()"><i class='icon icon-images'></i></a>
     </div>
-    <div class="toolbox-item">
+    <div class="toolbox-item toolbox-rss">
       <a [href]="options['site_url'] + '/rss.xml'" target="_blank" title="RSS"><i class='icon icon-rss-fill'></i></a>
     </div>
   </div>
 </div>
+<i-wallpaper [(visible)]="wallpaperVisible"></i-wallpaper>

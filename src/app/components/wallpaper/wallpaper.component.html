@@ -1,0 +1,28 @@
+<i-modal [template]="wallpaperTpl"
+         [(visible)]="visible"
+         (visibleChange)="changeVisible($event)"
+         [loading]="loading"
+         [showClose]="true"></i-modal>
+<ng-template #wallpaperTpl>
+  <div class="wallpaper">
+    <div class="image-box" [style.background-image]="'url(' + activeWallpaper?.fullUrl + ')'"></div>
+    <div class="caption-box">
+      <div class="image-info">
+        <h2 class="image-title">
+          <span>{{activeWallpaper.title}}</span>
+          <a [href]="activeWallpaper.fullCopyrightUrl"
+             [title]="activeWallpaper.title" target="_blank"><i class='icon icon-link-45deg'></i></a>
+        </h2>
+        <div class="image-desc">{{activeWallpaper.copyright}}</div>
+      </div>
+      <div class="indicator">
+        <i class="icon icon-left"
+           [ngClass]="{'disabled': activeIndex === 0 || !wallpapers.length}"
+           (click)="prevImage()"></i>
+        <i class="icon icon-right"
+           [ngClass]="{'disabled': activeIndex === wallpapers.length - 1 || !wallpapers.length}"
+           (click)="nextImage()"></i>
+      </div>
+    </div>
+  </div>
+</ng-template>

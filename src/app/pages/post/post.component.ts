@@ -73,7 +73,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   isFavorite = false;
   showCrumb = true;
   clickedImage!: HTMLImageElement | string;
-  showImgModal = false;
+  imgModalVisible = false;
   imgModalPadding = 0;
   isPage = false;
   captchaUrl = '';
@@ -148,7 +148,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       this.postId = params['postId']?.trim();
       this.postSlug = params['postSlug']?.trim();
       this.postSlug ? this.fetchPage() : this.fetchPost();
-      this.showImgModal = false;
+      this.imgModalVisible = false;
       this.scroller.scrollToPosition([0, 0]);
       this.resetCommentForm(this.commentForm);
       this.resetReplyStatus();
@@ -178,9 +178,9 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.unlistenImgClick = this.renderer.listen(this.postEle.nativeElement, 'click', (e: MouseEvent) => {
       if (e.target instanceof HTMLImageElement) {
         // todo: if image is in <a> link
-        this.imgModalPadding = 0;
         this.clickedImage = e.target;
-        this.showImgModal = true;
+        this.imgModalPadding = 0;
+        this.imgModalVisible = true;
       }
     });
   }
@@ -253,10 +253,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         }
       });
     }
-  }
-
-  toggleImgModal(status: boolean) {
-    this.showImgModal = status;
   }
 
   votePost(like: boolean) {
@@ -360,13 +356,13 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   showReward(src: string) {
     this.clickedImage = src;
     this.imgModalPadding = 16;
-    this.showImgModal = true;
+    this.imgModalVisible = true;
   }
 
   showShareQrcode() {
     this.clickedImage = '';
     this.imgModalPadding = 16;
-    this.showImgModal = true;
+    this.imgModalVisible = true;
     setTimeout(() => this.generateShareQrcode(), 0);
   }
 
@@ -618,8 +614,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       margin: 0
     })
       .then((canvas) => {
-        const modalEle = this.document.querySelector('.modal-content-body');
-        modalEle?.appendChild(canvas);
+        this.clickedImage = canvas.toDataURL();
       })
       .catch((err) => this.message.error(err));
   }

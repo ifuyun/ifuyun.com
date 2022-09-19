@@ -80,7 +80,7 @@ export async function app(): Promise<express.Express> {
         });
       });
       const xmlData = feed.xml({ indent: true });
-      res.status(200).header('Content-Type', 'application/xml').send(xmlData);
+      res.status(200).header('Content-Type', 'text/xml').send(xmlData);
     } catch (e) {
       res.status(500).json({
         code: 500,

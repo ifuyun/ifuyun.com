@@ -20,13 +20,7 @@
     > a {
       display: inline-block;
       padding: 8px;
-      color: @base-color;
       cursor: pointer;
-
-      &:hover {
-        background: @primary-color;
-        color: #fff;
-      }
     }
 
     &:first-child > a {
@@ -41,6 +35,24 @@
 
     &:not(:first-child) {
       border-top: 1px dashed @minor-border-color;
+    }
+  }
+
+  &-wallpaper > a {
+    color: @primary-color;
+
+    &:hover {
+      background: @primary-color;
+      color: #fff;
+    }
+  }
+
+  &-rss > a {
+    color: @action-color;
+
+    &:hover {
+      background: @action-color;
+      color: #fff;
     }
   }
 }

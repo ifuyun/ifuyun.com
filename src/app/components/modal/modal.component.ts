@@ -4,25 +4,35 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   Output,
   Renderer2,
+  SimpleChanges,
+  TemplateRef,
   ViewChild
 } from '@angular/core';
 
 @Component({
-  selector: 'app-modal',
+  selector: 'i-modal',
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.less']
 })
-export class ModalComponent implements OnDestroy, AfterViewInit {
-  @Input() imgEle!: HTMLImageElement | string;
+export class ModalComponent implements OnDestroy, AfterViewInit, OnChanges {
+  @Input() template!: string | HTMLImageElement | TemplateRef<any>;
   @Input() padding = 0;
   @Input() margin = 0;
-  @Output() toggleModal = new EventEmitter<boolean>();
+  @Input() visible = false;
+  @Output() visibleChange = new EventEmitter<boolean>();
+  @Input() loading = false;
+  @Input() showClose = true;
 
   @ViewChild('modal') modal!: ElementRef;
   @ViewChild('modalBody') modalBody!: ElementRef;
+
+  imageUrl = '';
+  imageTitle = '';
+  templateRef: TemplateRef<any> | null = null;
 
   private unlistenClick!: () => void;
   private unlistenInput!: () => void;
@@ -38,7 +48,7 @@ export class ModalComponent implements OnDestroy, AfterViewInit {
         // in case of: SVGPathElement
         classNames = Array.from(((e.target as HTMLElement).parentNode as HTMLElement).classList);
       }
-      if (classNames.some((name) => ['modal-mask', 'modal-container', 'modal-close', 'icon-close'].includes(name))) {
+      if (classNames.some((name) => ['modal', 'modal-close', 'icon-close'].includes(name))) {
         this.hideModal();
       }
     });
@@ -47,29 +57,11 @@ export class ModalComponent implements OnDestroy, AfterViewInit {
         this.hideModal();
       }
     });
-    this.renderer.setStyle(this.bodyEle, 'overflow', 'hidden');
-    if (this.padding > 0) {
-      this.modalBody.nativeElement.setAttribute('style', `padding: ${this.padding}px; background-color:#fff;`);
-    }
-    if (this.margin > 0) {
-      this.modalBody.nativeElement.setAttribute(
-        'style',
-        `margin-left: ${this.margin}px; margin-right: ${this.margin}px;`
-      );
-    }
+  }
 
-    if (this.imgEle) {
-      let imgNode: HTMLImageElement;
-      if (typeof this.imgEle === 'string') {
-        imgNode = this.renderer.createElement('img');
-        imgNode.src = this.imgEle;
-      } else {
-        imgNode = <HTMLImageElement>this.imgEle.cloneNode(true);
-        this.renderer.removeAttribute(imgNode, 'width');
-        this.renderer.removeAttribute(imgNode, 'id');
-      }
-      this.renderer.setStyle(imgNode, 'max-width', '100%');
-      this.renderer.appendChild(this.modalBody.nativeElement, imgNode);
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.visible && this.template) {
+      this.renderModal();
     }
   }
 
@@ -78,8 +70,24 @@ export class ModalComponent implements OnDestroy, AfterViewInit {
     this.unlistenInput();
   }
 
+  private renderModal() {
+    this.renderer.setStyle(this.bodyEle, 'overflow', 'hidden');
+    if (typeof this.template === 'string') {
+      this.imageUrl = this.template;
+    } else if (this.template instanceof HTMLImageElement) {
+      this.imageUrl = this.template.src;
+      this.imageTitle = this.template.alt;
+    } else {
+      this.templateRef = this.template;
+    }
+  }
+
   private hideModal() {
-    this.toggleModal.emit(false);
+    this.resetStyles();
+    this.visibleChange.emit(false);
+  }
+
+  private resetStyles() {
     this.renderer.removeStyle(this.bodyEle, 'overflow');
   }
 }

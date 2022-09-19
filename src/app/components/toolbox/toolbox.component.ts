@@ -11,6 +11,7 @@ import { OptionsService } from '../../services/options.service';
 })
 export class ToolboxComponent implements OnInit, OnDestroy {
   options: OptionEntity = {};
+  wallpaperVisible = false;
 
   private optionsListener!: Subscription;
 
@@ -24,5 +25,9 @@ export class ToolboxComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.optionsListener.unsubscribe();
+  }
+
+  openWallpaper() {
+    this.wallpaperVisible = true;
   }
 }

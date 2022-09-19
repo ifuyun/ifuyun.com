@@ -287,5 +287,4 @@
     <ng-container *ngTemplateOutlet="commentFormTpl; context: { $implicit: commentForm }"></ng-container>
   </ng-container>
 </div>
-<app-modal *ngIf="showImgModal"
-           [imgEle]="clickedImage" (toggleModal)="toggleImgModal($event)" [padding]="imgModalPadding"></app-modal>
+<i-modal [template]="clickedImage" [(visible)]="imgModalVisible" [padding]="imgModalPadding"></i-modal>

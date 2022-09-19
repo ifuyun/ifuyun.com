@@ -1,14 +1,25 @@
-<div class="modal" #modal>
-  <div class="modal-mask"></div>
-  <div class="modal-container">
-    <div class="modal-body">
-      <div class="modal-content">
-        <div class="modal-close">
-          <i class='icon icon-close'></i>
-        </div>
-        <div class="modal-content-body" #modalBody>
-        </div>
-      </div>
+<div class="modal" [style.display]="visible ? '' : 'none'" #modal>
+  <div class="modal-body"
+       [style.padding]="padding + 'px'"
+       [style.background-color]="padding > 0 ? '#fff' : ''"
+       [style.margin-left]="margin + 'px'"
+       [style.margin-right]="margin + 'px'">
+    <div class="modal-close" *ngIf="showClose">
+      <i class='icon icon-close'></i>
+    </div>
+    <div class="modal-content" #modalBody>
+      <i *ngIf="loading" class="icon icon-loading"></i>
+      <ng-container *ngIf="!loading">
+        <ng-container *ngIf="imageUrl">
+          <ng-template [ngTemplateOutlet]="imageTpl"></ng-template>
+        </ng-container>
+        <ng-container *ngIf="templateRef">
+          <ng-template [ngTemplateOutlet]="templateRef"></ng-template>
+        </ng-container>
+      </ng-container>
     </div>
   </div>
 </div>
+<ng-template #imageTpl>
+  <img [src]="imageUrl" style="max-width: 100%;" alt=""/>
+</ng-template>

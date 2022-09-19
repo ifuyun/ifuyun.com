@@ -22,6 +22,7 @@ import { PageBarComponent } from './components/page-bar/page-bar.component';
 import { SiderMobileComponent } from './components/sider-mobile/sider-mobile.component';
 import { SiderComponent } from './components/sider/sider.component';
 import { ToolboxComponent } from './components/toolbox/toolbox.component';
+import { WallpaperComponent } from './components/wallpaper/wallpaper.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { httpInterceptorProviders } from './interceptors/http-interceptors';
 import { ArchiveComponent } from './pages/archive/archive.component';
@@ -52,7 +53,8 @@ import { PipesModule } from './pipes/pipes.module';
     SiderMobileComponent,
     ThirdLoginComponent,
     EmptyComponent,
-    ToolboxComponent
+    ToolboxComponent,
+    WallpaperComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),
