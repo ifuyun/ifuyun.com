@@ -21,6 +21,7 @@ import { ModalComponent } from './components/modal/modal.component';
 import { PageBarComponent } from './components/page-bar/page-bar.component';
 import { SiderMobileComponent } from './components/sider-mobile/sider-mobile.component';
 import { SiderComponent } from './components/sider/sider.component';
+import { ToolboxComponent } from './components/toolbox/toolbox.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { httpInterceptorProviders } from './interceptors/http-interceptors';
 import { ArchiveComponent } from './pages/archive/archive.component';
@@ -50,7 +51,8 @@ import { PipesModule } from './pipes/pipes.module';
     AutofocusDirective,
     SiderMobileComponent,
     ThirdLoginComponent,
-    EmptyComponent
+    EmptyComponent,
+    ToolboxComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),
