@@ -8,7 +8,6 @@ import {
   OnDestroy,
   Output,
   Renderer2,
-  SimpleChanges,
   TemplateRef,
   ViewChild
 } from '@angular/core';
@@ -19,7 +18,8 @@ import {
   styleUrls: ['./modal.component.less']
 })
 export class ModalComponent implements OnDestroy, AfterViewInit, OnChanges {
-  @Input() template!: string | HTMLImageElement | TemplateRef<any>;
+  @Input() template?: string | HTMLImageElement;
+  @Input() templateRef?: TemplateRef<void>;
   @Input() padding = 0;
   @Input() margin = 0;
   @Input() visible = false;
@@ -32,7 +32,6 @@ export class ModalComponent implements OnDestroy, AfterViewInit, OnChanges {
 
   imageUrl = '';
   imageTitle = '';
-  templateRef: TemplateRef<any> | null = null;
 
   private unlistenClick!: () => void;
   private unlistenInput!: () => void;
@@ -59,8 +58,8 @@ export class ModalComponent implements OnDestroy, AfterViewInit, OnChanges {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (this.visible && this.template) {
+  ngOnChanges() {
+    if (this.visible && (this.template || this.templateRef)) {
       this.renderModal();
     }
   }
@@ -74,11 +73,10 @@ export class ModalComponent implements OnDestroy, AfterViewInit, OnChanges {
     this.renderer.setStyle(this.bodyEle, 'overflow', 'hidden');
     if (typeof this.template === 'string') {
       this.imageUrl = this.template;
+      this.imageTitle = '';
     } else if (this.template instanceof HTMLImageElement) {
       this.imageUrl = this.template.src;
       this.imageTitle = this.template.alt;
-    } else {
-      this.templateRef = this.template;
     }
   }
 

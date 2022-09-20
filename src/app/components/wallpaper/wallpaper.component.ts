@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Wallpaper } from '../../interfaces/common';
 import { UtilService } from '../../services/util.service';
@@ -8,7 +8,7 @@ import { UtilService } from '../../services/util.service';
   templateUrl: './wallpaper.component.html',
   styleUrls: ['./wallpaper.component.less']
 })
-export class WallpaperComponent implements OnInit, OnDestroy, OnChanges {
+export class WallpaperComponent implements OnDestroy, OnChanges {
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
 
@@ -21,9 +21,7 @@ export class WallpaperComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(private utilService: UtilService) {}
 
-  ngOnInit(): void {}
-
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges() {
     if (this.visible && this.wallpapers.length < 1) {
       this.fetchData();
     }

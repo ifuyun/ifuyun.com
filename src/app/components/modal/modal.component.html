@@ -9,6 +9,9 @@
     </div>
     <div class="modal-content" #modalBody>
       <i *ngIf="loading" class="icon icon-loading"></i>
+      <ng-template #imageTpl>
+        <img [src]="imageUrl" style="max-width: 100%;" [alt]="imageTitle"/>
+      </ng-template>
       <ng-container *ngIf="!loading">
         <ng-container *ngIf="imageUrl">
           <ng-template [ngTemplateOutlet]="imageTpl"></ng-template>
@@ -20,6 +23,3 @@
     </div>
   </div>
 </div>
-<ng-template #imageTpl>
-  <img [src]="imageUrl" style="max-width: 100%;" alt=""/>
-</ng-template>
