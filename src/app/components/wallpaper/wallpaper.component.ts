@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { PlatformService } from '../../core/platform.service';
 import { Wallpaper } from '../../interfaces/common';
 import { UtilService } from '../../services/util.service';
 
@@ -16,12 +17,19 @@ export class WallpaperComponent implements OnDestroy, OnChanges {
   wallpapers: Wallpaper[] = [];
   activeWallpaper!: Wallpaper;
   activeIndex = 0;
+  isBrowser: boolean;
 
   private wallpaperListener!: Subscription;
 
-  constructor(private utilService: UtilService) {}
+  constructor(private utilService: UtilService, private platform: PlatformService) {
+    this.isBrowser = platform.isBrowser;
+  }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
+    const { visible } = changes;
+    if (visible && this.visible) {
+      this.resetImage();
+    }
     if (this.visible && this.wallpapers.length < 1) {
       this.fetchData();
     }
@@ -56,8 +64,13 @@ export class WallpaperComponent implements OnDestroy, OnChanges {
     this.loading = true;
     this.wallpaperListener = this.utilService.getWallpapers({ size: 8 }).subscribe((res) => {
       this.wallpapers = res;
-      this.activeWallpaper = this.wallpapers[0];
+      this.resetImage();
       this.loading = false;
     });
+  }
+
+  private resetImage() {
+    this.activeIndex = 0;
+    this.activeWallpaper = this.wallpapers[this.activeIndex];
   }
 }

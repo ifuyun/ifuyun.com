@@ -11,6 +11,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
+import { PlatformService } from '../../core/platform.service';
 
 @Component({
   selector: 'i-modal',
@@ -32,41 +33,46 @@ export class ModalComponent implements OnDestroy, AfterViewInit, OnChanges {
 
   imageUrl = '';
   imageTitle = '';
+  isBrowser: boolean;
 
   private unlistenClick!: () => void;
   private unlistenInput!: () => void;
   private bodyEle!: ElementRef;
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2, private platform: PlatformService) {
+    this.isBrowser = platform.isBrowser;
+  }
 
   ngAfterViewInit(): void {
-    this.bodyEle = this.renderer.selectRootElement('body', true);
-    this.unlistenClick = this.renderer.listen(this.modal.nativeElement, 'click', (e: MouseEvent) => {
-      let classNames = Array.from((e.target as HTMLElement).classList);
-      if (classNames.length < 1) {
-        // in case of: SVGPathElement
-        classNames = Array.from(((e.target as HTMLElement).parentNode as HTMLElement).classList);
-      }
-      if (classNames.some((name) => ['modal', 'modal-close', 'icon-close'].includes(name))) {
-        this.hideModal();
-      }
-    });
-    this.unlistenInput = this.renderer.listen(this.bodyEle, 'keyup', (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        this.hideModal();
-      }
-    });
+    if (this.platform.isBrowser) {
+      this.bodyEle = this.renderer.selectRootElement('body', true);
+      this.unlistenClick = this.renderer.listen(this.modal.nativeElement, 'click', (e: MouseEvent) => {
+        let classNames = Array.from((e.target as HTMLElement).classList);
+        if (classNames.length < 1) {
+          // in case of: SVGPathElement
+          classNames = Array.from(((e.target as HTMLElement).parentNode as HTMLElement).classList);
+        }
+        if (classNames.some((name) => ['modal', 'modal-close', 'icon-close'].includes(name))) {
+          this.hideModal();
+        }
+      });
+      this.unlistenInput = this.renderer.listen(this.bodyEle, 'keyup', (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          this.hideModal();
+        }
+      });
+    }
   }
 
   ngOnChanges() {
-    if (this.visible && (this.template || this.templateRef)) {
+    if (this.platform.isBrowser && this.visible && (this.template || this.templateRef)) {
       this.renderModal();
     }
   }
 
   ngOnDestroy() {
-    this.unlistenClick();
-    this.unlistenInput();
+    this.unlistenClick && this.unlistenClick();
+    this.unlistenInput && this.unlistenInput();
   }
 
   private renderModal() {
@@ -81,6 +87,8 @@ export class ModalComponent implements OnDestroy, AfterViewInit, OnChanges {
   }
 
   private hideModal() {
+    this.imageUrl = '';
+    this.imageTitle = '';
     this.resetStyles();
     this.visibleChange.emit(false);
   }

@@ -1,4 +1,5 @@
-<i-modal [templateRef]="wallpaperTpl"
+<i-modal *ngIf="isBrowser"
+         [templateRef]="wallpaperTpl"
          [(visible)]="visible"
          (visibleChange)="changeVisible($event)"
          [loading]="loading"
