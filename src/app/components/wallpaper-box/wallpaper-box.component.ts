@@ -1,15 +1,15 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PlatformService } from '../../core/platform.service';
-import { Wallpaper } from '../../interfaces/common';
-import { UtilService } from '../../services/util.service';
+import { Wallpaper } from '../../interfaces/wallpaper';
+import { WallpaperService } from '../../services/wallpaper.service';
 
 @Component({
-  selector: 'i-wallpaper',
-  templateUrl: './wallpaper.component.html',
-  styleUrls: ['./wallpaper.component.less']
+  selector: 'i-wallpaper-box',
+  templateUrl: './wallpaper-box.component.html',
+  styleUrls: ['./wallpaper-box.component.less']
 })
-export class WallpaperComponent implements OnDestroy, OnChanges {
+export class WallpaperBoxComponent implements OnDestroy, OnChanges {
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
 
@@ -21,7 +21,7 @@ export class WallpaperComponent implements OnDestroy, OnChanges {
 
   private wallpaperListener!: Subscription;
 
-  constructor(private utilService: UtilService, private platform: PlatformService) {
+  constructor(private wallpaperService: WallpaperService, private platform: PlatformService) {
     this.isBrowser = platform.isBrowser;
   }
 
@@ -62,7 +62,7 @@ export class WallpaperComponent implements OnDestroy, OnChanges {
 
   private fetchData() {
     this.loading = true;
-    this.wallpaperListener = this.utilService.getWallpapers({ size: 8 }).subscribe((res) => {
+    this.wallpaperListener = this.wallpaperService.getBingWallpapers({ size: 8 }).subscribe((res) => {
       this.wallpapers = res;
       this.resetImage();
       this.loading = false;

@@ -42,30 +42,3 @@ export interface AccessLog extends UserAgentData {
   colorDepth: string;
   isAjax: boolean;
 }
-
-export interface WallpaperQueryParam {
-  size: number;
-  offset: number;
-  ensearch: number;
-  lang: string;
-  format: 'js' | 'xml' | 'rss';
-  resolution: string;
-}
-
-export interface Wallpaper {
-  title: string;
-  desc?: string;
-  caption?: string;
-  url: string;
-  urlbase: string;
-  fullUrl: string;
-  quiz: string;
-  date?: string;
-  startdate: string;
-  enddate: string;
-  copyright: string;
-  copyrightlink: string;
-  fullCopyrightUrl: string;
-  copyrightonly?: string;
-  wp: boolean;
-}

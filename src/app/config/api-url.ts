@@ -21,5 +21,5 @@ export enum ApiUrl {
   ADD_FAVORITE = '/favorites/add',
   GET_CAROUSELS = '/options/carousels',
   SAVE_ACCESS_LOG = '/logs/access',
-  GET_WALLPAPERS = '/util/wallpapers'
+  GET_BING_WALLPAPERS = '/wallpapers/bing'
 }

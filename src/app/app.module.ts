@@ -22,7 +22,7 @@ import { PageBarComponent } from './components/page-bar/page-bar.component';
 import { SiderMobileComponent } from './components/sider-mobile/sider-mobile.component';
 import { SiderComponent } from './components/sider/sider.component';
 import { ToolboxComponent } from './components/toolbox/toolbox.component';
-import { WallpaperComponent } from './components/wallpaper/wallpaper.component';
+import { WallpaperBoxComponent } from './components/wallpaper-box/wallpaper-box.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { httpInterceptorProviders } from './interceptors/http-interceptors';
 import { ArchiveComponent } from './pages/archive/archive.component';
@@ -54,7 +54,7 @@ import { PipesModule } from './pipes/pipes.module';
     ThirdLoginComponent,
     EmptyComponent,
     ToolboxComponent,
-    WallpaperComponent
+    WallpaperBoxComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'blogApp' }),
