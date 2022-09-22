@@ -1,1 +1,20 @@
-<router-outlet></router-outlet>
+<ng-container *ngIf="!isMobile">
+  <app-header [taxonomies]="taxonomies"></app-header>
+  <div class="body-wrap">
+    <router-outlet></router-outlet>
+    <app-footer></app-footer>
+  </div>
+  <i-toolbox></i-toolbox>
+</ng-container>
+<ng-container *ngIf="isMobile">
+  <app-sider-mobile [taxonomies]="taxonomies" [(siderOpen)]="siderOpen"></app-sider-mobile>
+  <main class="main-mobile" [ngClass]="{'open': siderOpen}">
+    <div class="mask mask-sider" *ngIf="siderOpen" (click)="toggleSiderOpen()"></div>
+    <app-header [taxonomies]="taxonomies" [(siderOpen)]="siderOpen"></app-header>
+    <div class="body-wrap">
+      <router-outlet></router-outlet>
+      <app-footer></app-footer>
+    </div>
+  </main>
+</ng-container>
+<i-back-top></i-back-top>

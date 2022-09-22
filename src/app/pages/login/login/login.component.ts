@@ -9,7 +9,9 @@ import { CookieService } from 'ngx-cookie-service';
 import { skipWhile, Subscription } from 'rxjs';
 import { MessageService } from '../../../components/message/message.service';
 import { ADMIN_URL, THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK } from '../../../config/constants';
+import { CommonService } from '../../../core/common.service';
 import { MetaService } from '../../../core/meta.service';
+import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
 import { format, generateId } from '../../../helpers/helper';
 import md5 from '../../../helpers/md5';
@@ -40,7 +42,7 @@ const duration = 500; // ms
     ])
   ]
 })
-export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
+export class LoginComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy {
   loginForm = this.fb.group({
     username: [this.cookieService.get('user') || '', [Validators.required, Validators.maxLength(20)]],
     password: [null, [Validators.required, Validators.maxLength(20)]],
@@ -52,6 +54,8 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   };
   formStatus: 'normal' | 'shaking' = 'normal';
 
+  protected pageIndex = 'login';
+
   private adminUrl = '';
   private options: OptionEntity = {};
   private loginWindow: Window | null = null;
@@ -62,16 +66,19 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   private paramListener!: Subscription;
 
   constructor(
+    private fb: FormBuilder,
     private optionService: OptionService,
     private metaService: MetaService,
-    private fb: FormBuilder,
     private cookieService: CookieService,
+    private commonService: CommonService,
     private authService: AuthService,
     private platform: PlatformService,
     private message: MessageService,
     private route: ActivatedRoute,
     @Optional() @Inject(RESPONSE) private response: Response
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.optionsListener = this.optionService.options$
@@ -79,6 +86,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((options) => {
         this.options = options;
         this.initMeta();
+        this.updateActivePage();
 
         this.adminUrl = `${this.options['site_url'] || location.protocol + '//' + location.host}${ADMIN_URL}`;
         const rememberMe = this.cookieService.get('remember');
@@ -200,6 +208,10 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
     }
     this.loginWindow = window.open(url, this.loginWindowName);
+  }
+
+  protected updateActivePage(): void {
+    this.commonService.updateActivePage(this.pageIndex);
   }
 
   private initMeta() {

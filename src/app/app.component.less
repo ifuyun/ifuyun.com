@@ -1,0 +1,26 @@
+@import "../styles/variables";
+
+.body-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.main-mobile {
+  position: relative;
+  height: 100%;
+  margin: 0 auto;
+  transition: all .38s ease-out;
+
+  &.open {
+    transform: translate3d(@m-sider-width, 0, 0);
+  }
+}
+
+.mask-sider {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  z-index: 99;
+}

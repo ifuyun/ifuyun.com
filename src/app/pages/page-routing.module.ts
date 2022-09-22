@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LayoutComponent } from '../components/layout/layout.component';
+import { LayoutComponent } from './post/layout/layout.component';
 
 const routes: Routes = [
   { path: '', component: LayoutComponent, loadChildren: () => import('./post/post.module').then((m) => m.PostModule) },

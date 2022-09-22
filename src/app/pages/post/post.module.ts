@@ -7,12 +7,13 @@ import { ComponentModule } from '../../components/component.module';
 import { MessageModule } from '../../components/message/message.module';
 import { PipesModule } from '../../pipes/pipes.module';
 import { ArchiveComponent } from './archive/archive.component';
+import { LayoutComponent } from './layout/layout.component';
 import { PostListComponent } from './post-list/post-list.component';
 import { PostRoutingModule } from './post-routing.module';
 import { PostComponent } from './post/post.component';
 
 @NgModule({
-  declarations: [PostListComponent, PostComponent, ArchiveComponent],
+  declarations: [LayoutComponent, PostListComponent, PostComponent, ArchiveComponent],
   imports: [
     CommonModule,
     PostRoutingModule,

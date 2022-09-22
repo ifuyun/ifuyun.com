@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { PlatformService } from './core/platform.service';
 import { UrlService } from './core/url.service';
+import { UserAgentService } from './core/user-agent.service';
+import { TaxonomyNode } from './interfaces/taxonomy.interface';
 import { LogService } from './services/log.service';
 import { OptionService } from './services/option.service';
+import { TaxonomyService } from './services/taxonomy.service';
 import { UserService } from './services/user.service';
 
 @Component({
@@ -13,6 +17,10 @@ import { UserService } from './services/user.service';
   styleUrls: ['./app.component.less']
 })
 export class AppComponent implements OnInit {
+  isMobile = false;
+  taxonomies: TaxonomyNode[] = [];
+  siderOpen = false;
+
   private currentUrl = '';
   private initialized = false;
 
@@ -21,9 +29,14 @@ export class AppComponent implements OnInit {
     private urlService: UrlService,
     private optionService: OptionService,
     private userService: UserService,
+    private taxonomyService: TaxonomyService,
     private logService: LogService,
-    private platform: PlatformService
-  ) {}
+    private platform: PlatformService,
+    private userAgentService: UserAgentService,
+    @Inject(DOCUMENT) private document: Document
+  ) {
+    this.isMobile = this.userAgentService.isMobile();
+  }
 
   ngOnInit(): void {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
@@ -40,8 +53,18 @@ export class AppComponent implements OnInit {
         this.currentUrl = (event as NavigationEnd).url;
       }
       this.initialized = true;
+      this.siderOpen = false;
+      this.document.body.style.overflow = '';
     });
     this.optionService.getOptions().subscribe();
     this.userService.getLoginUser().subscribe();
+    this.taxonomyService
+      .getTaxonomies()
+      .subscribe((taxonomies) => (this.taxonomies = taxonomies));
+  }
+
+  toggleSiderOpen() {
+    this.siderOpen = !this.siderOpen;
+    this.document.body.style.overflow = this.siderOpen ? 'hidden' : '';
   }
 }

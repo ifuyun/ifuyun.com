@@ -1,7 +1,6 @@
 @import "../../../styles/variables";
 
 .error {
-  position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,7 +8,6 @@
   width: 100%;
   height: 100%;
   min-width: 320px;
-  min-height: 400px;
   text-align: center;
   overflow: hidden;
   z-index: 999;
@@ -24,27 +22,10 @@
     font-size: 10em;
   }
 
-  .error-message, .error-link {
-    padding: 0 1em;
-  }
-
   .error-message {
-    margin-bottom: 120px;
+    padding: 0 1em;
     color: #7c7c7c;
     font-size: 14px;
     font-weight: normal;
-  }
-
-  .error-link {
-    margin-top: 2em;
-    margin-bottom: 4em;
-    color: #888;
-  }
-
-  .copyright {
-    position: absolute;
-    bottom: 2em;
-    color: #7e7e7e;
-    font-size: 13px;
   }
 }
