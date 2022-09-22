@@ -4,9 +4,9 @@ import { isEmpty } from 'lodash';
 import { skipWhile, Subscription } from 'rxjs';
 import { PlatformService } from '../../core/platform.service';
 import { ResponseService } from '../../core/response.service';
-import { OptionEntity } from '../../interfaces/options';
+import { OptionEntity } from '../../interfaces/option.interface';
 import { MetaService } from '../../core/meta.service';
-import { OptionsService } from '../../services/options.service';
+import { OptionService } from '../../services/option.service';
 
 @Component({
   selector: 'app-not-found',
@@ -22,7 +22,7 @@ export class NotFoundComponent implements OnInit, OnDestroy {
   constructor(
     private platform: PlatformService,
     private response: ResponseService,
-    private optionsService: OptionsService,
+    private optionService: OptionService,
     private metaService: MetaService
   ) {}
 
@@ -30,7 +30,7 @@ export class NotFoundComponent implements OnInit, OnDestroy {
     if (this.platform.isServer) {
       this.response.setStatus(HttpStatusCode.NotFound);
     }
-    this.optionsListener = this.optionsService.options$
+    this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => {
         this.options = options;

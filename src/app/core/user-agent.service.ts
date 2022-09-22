@@ -2,7 +2,7 @@ import { Inject, Injectable, Optional } from '@angular/core';
 import { REQUEST } from '@nguniversal/express-engine/tokens';
 import { Request } from 'express';
 import { IBrowser, ICPU, IDevice, IEngine, IOS, IResult, UAParser } from 'ua-parser-js';
-import { UserAgentData } from '../interfaces/common';
+import { UserAgentData } from './common.interface';
 import { PlatformService } from './platform.service';
 
 @Injectable({

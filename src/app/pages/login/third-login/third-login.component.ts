@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatestWith, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { ResponseCode } from '../../config/response-code.enum';
-import { PlatformService } from '../../core/platform.service';
-import { OptionEntity } from '../../interfaces/options';
-import { AuthService } from '../../services/auth.service';
-import { OptionsService } from '../../services/options.service';
-import { UsersService } from '../../services/users.service';
+import { ResponseCode } from '../../../config/response-code.enum';
+import { PlatformService } from '../../../core/platform.service';
+import { OptionEntity } from '../../../interfaces/option.interface';
+import { AuthService } from '../../../services/auth.service';
+import { OptionService } from '../../../services/option.service';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-third-login',
@@ -26,8 +26,8 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private optionsService: OptionsService,
-    private usersService: UsersService,
+    private optionService: OptionService,
+    private userService: UserService,
     private authService: AuthService,
     private platform: PlatformService
   ) {}
@@ -35,7 +35,7 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.paramListener = this.route.queryParamMap
       .pipe(
-        combineLatestWith(this.optionsService.options$),
+        combineLatestWith(this.optionService.options$),
         tap(([params, options]) => {
           this.options = options;
 
@@ -76,7 +76,7 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
       window.close();
       return;
     }
-    this.loginListener = this.usersService.getThirdUser(this.authCode, this.from).subscribe((res) => {
+    this.loginListener = this.userService.getThirdUser(this.authCode, this.from).subscribe((res) => {
       if (res.code === ResponseCode.SUCCESS) {
         this.authService.setAuth(res.data, { username: '', password: '', rememberMe: false });
         window.opener.postMessage({ login: true }, window.origin);

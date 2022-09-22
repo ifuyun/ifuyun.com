@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { MetaData } from '../interfaces/common';
+import { MetaData } from './common.interface';
 
 @Injectable({
   providedIn: 'root'

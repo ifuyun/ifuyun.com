@@ -1,8 +1,12 @@
 import { UrlSegment } from '@angular/router';
+import { POST_SLUG_PREFIX_BLACKLIST } from './constants';
 
 export function postPageUrlMatcher(url: UrlSegment[]) {
   const nameReg = /^[a-zA-Z0-9]+(?:[~@$%&*\-_=+;:,]+[a-zA-Z0-9]+)*$/i;
   if (url.length > 2 || url.length < 1) {
+    return null;
+  }
+  if (POST_SLUG_PREFIX_BLACKLIST.includes(url[0].path)) {
     return null;
   }
   if (url.length === 1 && (!nameReg.test(url[0].path) || /^\d+$/i.test(url[0].path))) {

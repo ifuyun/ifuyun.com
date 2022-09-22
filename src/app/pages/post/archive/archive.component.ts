@@ -2,17 +2,17 @@ import { ViewportScroller } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
 import { skipWhile, Subscription } from 'rxjs';
-import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
-import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
-import { PageComponent } from '../../core/page.component';
-import { CommonService } from '../../core/common.service';
-import { UserAgentService } from '../../core/user-agent.service';
-import { HTMLMetaData } from '../../interfaces/meta';
-import { OptionEntity } from '../../interfaces/options';
-import { PostArchiveDateMap } from '../../interfaces/posts';
-import { MetaService } from '../../core/meta.service';
-import { OptionsService } from '../../services/options.service';
-import { PostsService } from '../../services/posts.service';
+import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
+import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { PageComponent } from '../../../core/page.component';
+import { CommonService } from '../../../core/common.service';
+import { UserAgentService } from '../../../core/user-agent.service';
+import { HTMLMetaData } from '../../../core/meta.interface';
+import { OptionEntity } from '../../../interfaces/option.interface';
+import { PostArchiveDateMap } from '../post.interface';
+import { MetaService } from '../../../core/meta.service';
+import { OptionService } from '../../../services/option.service';
+import { PostService } from '../post.service';
 
 @Component({
   selector: 'app-archive',
@@ -31,10 +31,10 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
   private archiveListener!: Subscription;
 
   constructor(
-    private optionsService: OptionsService,
+    private optionService: OptionService,
     private metaService: MetaService,
-    private postsService: PostsService,
-    private crumbService: BreadcrumbService,
+    private postService: PostService,
+    private breadcrumbService: BreadcrumbService,
     private commonService: CommonService,
     private userAgentService: UserAgentService,
     private scroller: ViewportScroller
@@ -44,7 +44,7 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
   }
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$
+    this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => {
         this.options = options;
@@ -66,14 +66,14 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
         isHeader: true
       }
     ];
-    this.crumbService.updateCrumb(breadcrumbs);
-    this.archiveListener = this.postsService
+    this.breadcrumbService.updateCrumb(breadcrumbs);
+    this.archiveListener = this.postService
       .getPostArchives({
         showCount: true,
         limit: 0
       })
       .subscribe((res) => {
-        const { dateList, yearList } = this.postsService.transformArchiveDates(res);
+        const { dateList, yearList } = this.postService.transformArchiveDates(res);
         this.archiveDateList = dateList;
         this.archiveYearList = yearList;
         this.updateActivePage();

@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { skipWhile, Subscription } from 'rxjs';
-import { OptionEntity } from '../../interfaces/options';
-import { OptionsService } from '../../services/options.service';
+import { OptionEntity } from '../../interfaces/option.interface';
+import { OptionService } from '../../services/option.service';
 
 @Component({
   selector: 'i-toolbox',
@@ -15,10 +15,10 @@ export class ToolboxComponent implements OnInit, OnDestroy {
 
   private optionsListener!: Subscription;
 
-  constructor(private optionsService: OptionsService) {}
+  constructor(private optionService: OptionService) {}
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$
+    this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => (this.options = options));
   }

@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import { ApiUrl } from '../config/api-url';
 import { ApiService } from '../core/api.service';
 import { UserAgentService } from '../core/user-agent.service';
-import { AccessLog } from '../interfaces/common';
-import { HttpResponseEntity } from '../interfaces/http-response';
+import { AccessLog } from '../core/common.interface';
+import { HttpResponseEntity } from '../core/http-response.interface';
 
 @Injectable({
   providedIn: 'root'

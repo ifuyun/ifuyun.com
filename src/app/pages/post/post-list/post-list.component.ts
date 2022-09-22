@@ -4,19 +4,19 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
-import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
-import { CommonService } from '../../core/common.service';
-import { MetaService } from '../../core/meta.service';
-import { PageComponent } from '../../core/page.component';
-import { PaginatorService } from '../../core/paginator.service';
-import { UserAgentService } from '../../core/user-agent.service';
-import { HTMLMetaData } from '../../interfaces/meta';
-import { OptionEntity } from '../../interfaces/options';
-import { PaginatorEntity } from '../../interfaces/paginator';
-import { PostList, PostQueryParam } from '../../interfaces/posts';
-import { OptionsService } from '../../services/options.service';
-import { PostsService } from '../../services/posts.service';
+import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
+import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { CommonService } from '../../../core/common.service';
+import { MetaService } from '../../../core/meta.service';
+import { PageComponent } from '../../../core/page.component';
+import { PaginatorService } from '../../../core/paginator.service';
+import { UserAgentService } from '../../../core/user-agent.service';
+import { HTMLMetaData } from '../../../core/meta.interface';
+import { OptionEntity } from '../../../interfaces/option.interface';
+import { PaginatorEntity } from '../../../core/paginator.interface';
+import { PostList, PostQueryParam } from '../post.interface';
+import { OptionService } from '../../../services/option.service';
+import { PostService } from '../post.service';
 
 @Component({
   selector: 'app-post-list',
@@ -46,11 +46,11 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
 
   constructor(
     private route: ActivatedRoute,
-    private optionsService: OptionsService,
-    private postsService: PostsService,
+    private optionService: OptionService,
+    private postService: PostService,
     private commonService: CommonService,
     private paginator: PaginatorService,
-    private crumbService: BreadcrumbService,
+    private breadcrumbService: BreadcrumbService,
     private metaService: MetaService,
     private userAgentService: UserAgentService,
     private scroller: ViewportScroller
@@ -60,7 +60,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
   }
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$
+    this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => (this.options = options));
     this.paramListener = this.route.paramMap
@@ -148,7 +148,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
         });
       }
     }
-    this.postsService.getPosts(param).subscribe((res) => {
+    this.postService.getPosts(param).subscribe((res) => {
       this.postList = res.postList || {};
       this.page = this.postList.page || 1;
       this.total = this.postList.total || 0;
@@ -231,7 +231,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
 
       if (breadcrumbs && breadcrumbs.length > 0) {
         this.showCrumb = true;
-        this.crumbService.updateCrumb(breadcrumbs);
+        this.breadcrumbService.updateCrumb(breadcrumbs);
       }
       this.updateActivePage();
 

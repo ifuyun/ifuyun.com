@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { skipWhile, Subscription } from 'rxjs';
 import { UserAgentService } from '../../core/user-agent.service';
-import { OptionEntity } from '../../interfaces/options';
-import { OptionsService } from '../../services/options.service';
+import { OptionEntity } from '../../interfaces/option.interface';
+import { OptionService } from '../../services/option.service';
 
 @Component({
   selector: 'app-footer',
@@ -17,12 +17,12 @@ export class FooterComponent implements OnInit, OnDestroy {
 
   private optionsListener!: Subscription;
 
-  constructor(private optionsService: OptionsService, private userAgentService: UserAgentService) {
+  constructor(private optionService: OptionService, private userAgentService: UserAgentService) {
     this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$
+    this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => (this.options = options));
   }

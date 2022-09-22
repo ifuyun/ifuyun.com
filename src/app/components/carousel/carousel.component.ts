@@ -2,8 +2,8 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { skipWhile, Subscription } from 'rxjs';
 import { PlatformService } from '../../core/platform.service';
-import { CarouselVo, OptionEntity } from '../../interfaces/options';
-import { OptionsService } from '../../services/options.service';
+import { CarouselVo, OptionEntity } from '../../interfaces/option.interface';
+import { OptionService } from '../../services/option.service';
 
 @Component({
   selector: 'i-carousel',
@@ -21,10 +21,10 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   private optionsListener!: Subscription;
   private carouselsListener!: Subscription;
 
-  constructor(private optionsService: OptionsService, private platform: PlatformService) {}
+  constructor(private optionService: OptionService, private platform: PlatformService) {}
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$
+    this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => {
         this.options = options;
@@ -62,7 +62,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private fetchData() {
-    this.carouselsListener = this.optionsService.getCarousels().subscribe((res) => {
+    this.carouselsListener = this.optionService.getCarousels().subscribe((res) => {
       this.carousels = res;
       this.carousels.forEach((item) => {
         item.fullUrl = /^https?:\/\//i.test(item.url) ? item.url : this.staticResourceHost + item.url;

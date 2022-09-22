@@ -8,7 +8,7 @@ import { catchError, map } from 'rxjs/operators';
 import { MessageService } from '../components/message/message.service';
 import { ApiUrl } from '../config/api-url';
 import { Message } from '../config/message.enum';
-import { HttpResponseEntity } from '../interfaces/http-response';
+import { HttpResponseEntity } from './http-response.interface';
 import { PlatformService } from './platform.service';
 
 @Injectable({

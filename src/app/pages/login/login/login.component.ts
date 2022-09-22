@@ -7,16 +7,16 @@ import { Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
 import { skipWhile, Subscription } from 'rxjs';
-import { MessageService } from '../../components/message/message.service';
-import { ADMIN_URL, THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK } from '../../config/constants';
-import { MetaService } from '../../core/meta.service';
-import { PlatformService } from '../../core/platform.service';
-import { format, generateId } from '../../helpers/helper';
-import md5 from '../../helpers/md5';
-import { HTMLMetaData } from '../../interfaces/meta';
-import { OptionEntity } from '../../interfaces/options';
-import { AuthService } from '../../services/auth.service';
-import { OptionsService } from '../../services/options.service';
+import { MessageService } from '../../../components/message/message.service';
+import { ADMIN_URL, THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK } from '../../../config/constants';
+import { MetaService } from '../../../core/meta.service';
+import { PlatformService } from '../../../core/platform.service';
+import { format, generateId } from '../../../helpers/helper';
+import md5 from '../../../helpers/md5';
+import { HTMLMetaData } from '../../../core/meta.interface';
+import { OptionEntity } from '../../../interfaces/option.interface';
+import { AuthService } from '../../../services/auth.service';
+import { OptionService } from '../../../services/option.service';
 
 const margin = 24;
 const offsets = [margin, 0, -margin, 0];
@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   private paramListener!: Subscription;
 
   constructor(
-    private optionsService: OptionsService,
+    private optionService: OptionService,
     private metaService: MetaService,
     private fb: FormBuilder,
     private cookieService: CookieService,
@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$
+    this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => {
         this.options = options;

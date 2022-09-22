@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ApiUrl } from '../config/api-url';
 import { ApiService } from '../core/api.service';
-import { BingWallpaperQueryParam, Wallpaper } from '../interfaces/wallpaper';
+import { ApiUrl } from '../config/api-url';
+import { TaxonomyNode } from '../interfaces/taxonomy.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class WallpaperService {
+export class TaxonomyService {
   constructor(private apiService: ApiService) {}
 
-  getBingWallpapers(param: Partial<BingWallpaperQueryParam>): Observable<Wallpaper[]> {
+  getTaxonomies(): Observable<TaxonomyNode[]> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_BING_WALLPAPERS), param)
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_TAXONOMY_TREE))
       .pipe(map((res) => res?.data || []));
   }
 }

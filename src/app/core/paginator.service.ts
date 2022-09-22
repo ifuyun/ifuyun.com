@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PaginatorEntity, PaginatorRange } from '../interfaces/paginator';
+import { PaginatorEntity, PaginatorRange } from './paginator.interface';
 
 @Injectable({
   providedIn: 'root'

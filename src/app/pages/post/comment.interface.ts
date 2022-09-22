@@ -1,5 +1,5 @@
-import { IPLocation, MetaData } from './common';
-import { UserModel } from './users';
+import { IPLocation, MetaData } from '../../core/common.interface';
+import { UserModel } from '../../interfaces/user.interface';
 
 export interface CommentEntity {
   postId: string;

@@ -3,9 +3,9 @@ import { isEmpty } from 'lodash';
 import { skipWhile, Subscription } from 'rxjs';
 import { UserAgentService } from '../../core/user-agent.service';
 import { BreadcrumbEntity } from './breadcrumb.interface';
-import { OptionEntity } from '../../interfaces/options';
+import { OptionEntity } from '../../interfaces/option.interface';
 import { BreadcrumbService } from './breadcrumb.service';
-import { OptionsService } from '../../services/options.service';
+import { OptionService } from '../../services/option.service';
 
 @Component({
   selector: 'app-breadcrumb',
@@ -21,18 +21,18 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   private optionsListener!: Subscription;
 
   constructor(
-    private crumbService: BreadcrumbService,
-    private optionsService: OptionsService,
+    private breadcrumbService: BreadcrumbService,
+    private optionService: OptionService,
     private userAgentService: UserAgentService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$
+    this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => (this.options = options));
-    this.breadcrumbListener = this.crumbService.crumb$.subscribe((breadcrumbs) => {
+    this.breadcrumbListener = this.breadcrumbService.crumb$.subscribe((breadcrumbs) => {
       this.breadcrumbs = [...breadcrumbs];
       this.breadcrumbs.unshift({
         label: '首页',

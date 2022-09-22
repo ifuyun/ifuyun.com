@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Params } from '@angular/router';
 import { UserAgentService } from '../../core/user-agent.service';
-import { PaginatorEntity } from '../../interfaces/paginator';
+import { PaginatorEntity } from '../../core/paginator.interface';
 
 @Component({
   selector: 'app-page-bar',

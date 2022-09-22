@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ApiUrl } from '../config/api-url';
-import { STORAGE_USER_KEY } from '../config/constants';
-import { ApiService } from '../core/api.service';
-import { PlatformService } from '../core/platform.service';
-import { CommentEntity, CommentList } from '../interfaces/comments';
-import { HttpResponseEntity } from '../interfaces/http-response';
+import { ApiUrl } from '../../config/api-url';
+import { STORAGE_USER_KEY } from '../../config/constants';
+import { ApiService } from '../../core/api.service';
+import { PlatformService } from '../../core/platform.service';
+import { CommentEntity, CommentList } from './comment.interface';
+import { HttpResponseEntity } from '../../core/http-response.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CommentsService {
+export class CommentService {
   constructor(private apiService: ApiService, private platform: PlatformService) {}
 
   getCommentsByPostId(postId: string): Observable<CommentList> {

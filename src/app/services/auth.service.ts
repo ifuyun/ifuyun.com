@@ -8,8 +8,8 @@ import { ApiUrl } from '../config/api-url';
 import { ResponseCode } from '../config/response-code.enum';
 import { ApiService } from '../core/api.service';
 import { PlatformService } from '../core/platform.service';
-import { LoginEntity, LoginResponse } from '../interfaces/auth';
-import { HttpResponseEntity } from '../interfaces/http-response';
+import { LoginEntity, LoginResponse } from '../interfaces/auth.interface';
+import { HttpResponseEntity } from '../core/http-response.interface';
 
 @Injectable({
   providedIn: 'root'

@@ -16,38 +16,38 @@ import highlight from 'highlight.js';
 import { cloneDeep, isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
 import { skipWhile, Subscription } from 'rxjs';
-import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
-import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
-import { MessageService } from '../../components/message/message.service';
-import { ApiUrl } from '../../config/api-url';
-import { VoteType, VoteValue } from '../../config/common.enum';
+import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
+import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { MessageService } from '../../../components/message/message.service';
+import { ApiUrl } from '../../../config/api-url';
+import { VoteType, VoteValue } from '../../../config/common.enum';
 import {
   AVATAR_API_URL,
   STORAGE_DISLIKED_COMMENTS_KEY,
   STORAGE_LIKED_COMMENTS_KEY,
   STORAGE_VOTED_POSTS_KEY
-} from '../../config/constants';
-import { Message } from '../../config/message.enum';
-import { ResponseCode } from '../../config/response-code.enum';
-import { CommonService } from '../../core/common.service';
-import { MetaService } from '../../core/meta.service';
-import { PageComponent } from '../../core/page.component';
-import { PlatformService } from '../../core/platform.service';
-import { UrlService } from '../../core/url.service';
-import { UserAgentService } from '../../core/user-agent.service';
-import { format } from '../../helpers/helper';
-import { Comment, CommentEntity, CommentModel } from '../../interfaces/comments';
-import { OptionEntity } from '../../interfaces/options';
-import { Post, PostEntity, PostModel } from '../../interfaces/posts';
-import { TaxonomyEntity } from '../../interfaces/taxonomies';
-import { Guest, UserModel } from '../../interfaces/users';
-import { VoteEntity } from '../../interfaces/votes';
-import { CommentsService } from '../../services/comments.service';
-import { FavoritesService } from '../../services/favorites.service';
-import { OptionsService } from '../../services/options.service';
-import { PostsService } from '../../services/posts.service';
-import { UsersService } from '../../services/users.service';
-import { VotesService } from '../../services/votes.service';
+} from '../../../config/constants';
+import { Message } from '../../../config/message.enum';
+import { ResponseCode } from '../../../config/response-code.enum';
+import { CommonService } from '../../../core/common.service';
+import { MetaService } from '../../../core/meta.service';
+import { PageComponent } from '../../../core/page.component';
+import { PlatformService } from '../../../core/platform.service';
+import { UrlService } from '../../../core/url.service';
+import { UserAgentService } from '../../../core/user-agent.service';
+import { format } from '../../../helpers/helper';
+import { Comment, CommentEntity, CommentModel } from '../comment.interface';
+import { OptionEntity } from '../../../interfaces/option.interface';
+import { Post, PostEntity, PostModel } from '../post.interface';
+import { TaxonomyEntity } from '../../../interfaces/taxonomy.interface';
+import { Guest, UserModel } from '../../../interfaces/user.interface';
+import { VoteEntity } from '../vote.interface';
+import { CommentService } from '../comment.service';
+import { FavoriteService } from '../favorite.service';
+import { OptionService } from '../../../services/option.service';
+import { PostService } from '../post.service';
+import { UserService } from '../../../services/user.service';
+import { VoteService } from '../vote.service';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -115,14 +115,14 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   replyForm = this.fb.group(this.commentFormConfig);
 
   constructor(
-    private optionsService: OptionsService,
-    private usersService: UsersService,
-    private crumbService: BreadcrumbService,
+    private optionService: OptionService,
+    private userService: UserService,
+    private breadcrumbService: BreadcrumbService,
     private commonService: CommonService,
-    private postsService: PostsService,
-    private commentsService: CommentsService,
-    private votesService: VotesService,
-    private favoritesService: FavoritesService,
+    private postService: PostService,
+    private commentService: CommentService,
+    private voteService: VoteService,
+    private favoriteService: FavoriteService,
     private metaService: MetaService,
     private urlService: UrlService,
     private userAgentService: UserAgentService,
@@ -153,7 +153,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       this.resetCommentForm(this.commentForm);
       this.resetReplyStatus();
     });
-    this.userListener = this.usersService.loginUser$.subscribe((user) => {
+    this.userListener = this.userService.loginUser$.subscribe((user) => {
       this.user = user;
       this.isLoggedIn = !!this.user.userId;
       if (this.isLoggedIn) {
@@ -169,7 +169,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   ngAfterViewInit() {
     if (this.platform.isBrowser) {
-      const commentUser = this.usersService.getCommentUser();
+      const commentUser = this.userService.getCommentUser();
       if (commentUser) {
         this.commentUser = { ...commentUser };
         !this.isLoggedIn && setTimeout(() => this.initCommentForm(), 0);
@@ -237,7 +237,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         userId: this.user.userId
       };
       this.saveLoading = true;
-      this.commentsService.saveComment(commentDto).subscribe((res) => {
+      this.commentService.saveComment(commentDto).subscribe((res) => {
         this.saveLoading = false;
         if (res.code === 0) {
           const msg = res.data.status === 'success' ? '评论成功' : '评论成功，审核通过后将显示在页面上';
@@ -268,7 +268,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       voteData.user = this.commentUser;
     }
     this.voteLoading = true;
-    this.votesService.saveVote(voteData).subscribe((res) => {
+    this.voteService.saveVote(voteData).subscribe((res) => {
       this.voteLoading = false;
       if (res.code === ResponseCode.SUCCESS) {
         this.post.postLikes = res.data.likes;
@@ -299,7 +299,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     if (this.commentUser && this.commentUser.name) {
       voteData.user = this.commentUser;
     }
-    this.votesService.saveVote(voteData).subscribe((res) => {
+    this.voteService.saveVote(voteData).subscribe((res) => {
       this.commentVoteLoading[comment.commentId] = false;
       if (res.code === ResponseCode.SUCCESS) {
         comment.commentLikes = res.data.likes;
@@ -375,7 +375,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       return;
     }
     this.favoriteLoading = true;
-    this.favoriteListener = this.favoritesService.addFavorite(this.postId).subscribe((res) => {
+    this.favoriteListener = this.favoriteService.addFavorite(this.postId).subscribe((res) => {
       this.favoriteLoading = false;
       if (res) {
         this.message.success(Message.ADD_FAVORITE_SUCCESS);
@@ -389,7 +389,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   private initOptions() {
-    this.optionsListener = this.optionsService.options$
+    this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => {
         this.options = options;
@@ -410,19 +410,19 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   private fetchPost() {
-    this.postListener = this.postsService.getPostById(this.postId, this.referer).subscribe((post) => {
+    this.postListener = this.postService.getPostById(this.postId, this.referer).subscribe((post) => {
       if (post && post.post && post.post.postId) {
         this.initData(post, false);
       }
     });
-    this.prevAndNextListener = this.postsService.getPostsOfPrevAndNext(this.postId).subscribe((res) => {
+    this.prevAndNextListener = this.postService.getPostsOfPrevAndNext(this.postId).subscribe((res) => {
       this.prevPost = res.prevPost;
       this.nextPost = res.nextPost;
     });
   }
 
   private fetchPage() {
-    this.postListener = this.postsService.getPostBySlug(this.postSlug).subscribe((post) => {
+    this.postListener = this.postService.getPostBySlug(this.postSlug).subscribe((post) => {
       if (post && post.post && post.post.postId) {
         this.initData(post, true);
       }
@@ -441,7 +441,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.updateActivePage();
     if (!isPage) {
       this.breadcrumbs = post.breadcrumbs || [];
-      this.crumbService.updateCrumb(this.breadcrumbs);
+      this.breadcrumbService.updateCrumb(this.breadcrumbs);
     }
     this.showCrumb = !isPage;
     this.isPage = isPage;
@@ -490,7 +490,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   private fetchComments(cb?: () => void) {
-    this.commentsService.getCommentsByPostId(this.postId).subscribe((res) => {
+    this.commentService.getCommentsByPostId(this.postId).subscribe((res) => {
       this.comments = res.comments || [];
       this.comments.forEach((item) => {
         this.initComment(item);

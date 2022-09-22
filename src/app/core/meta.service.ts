@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import { HTMLMetaData } from '../interfaces/meta';
+import { HTMLMetaData } from './meta.interface';
 
 @Injectable({
   providedIn: 'root'

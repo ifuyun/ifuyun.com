@@ -4,8 +4,8 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
-import { TaxonomyNode } from '../../interfaces/taxonomies';
-import { TaxonomiesService } from '../../services/taxonomies.service';
+import { TaxonomyNode } from '../../interfaces/taxonomy.interface';
+import { TaxonomyService } from '../../services/taxonomy.service';
 
 @Component({
   selector: 'app-layout',
@@ -21,7 +21,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private userAgentService: UserAgentService,
-    private taxonomiesService: TaxonomiesService,
+    private taxonomyService: TaxonomyService,
     private router: Router,
     private platform: PlatformService,
     @Inject(DOCUMENT) private document: Document
@@ -34,7 +34,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       this.siderOpen = false;
       this.document.body.style.overflow = '';
     });
-    this.taxonomiesListener = this.taxonomiesService
+    this.taxonomiesListener = this.taxonomyService
       .getTaxonomies()
       .subscribe((taxonomies) => (this.taxonomies = taxonomies));
   }

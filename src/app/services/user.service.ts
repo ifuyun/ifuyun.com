@@ -4,13 +4,13 @@ import { map, tap } from 'rxjs/operators';
 import { ApiUrl } from '../config/api-url';
 import { STORAGE_USER_KEY } from '../config/constants';
 import { ApiService } from '../core/api.service';
-import { HttpResponseEntity } from '../interfaces/http-response';
-import { Guest, UserModel } from '../interfaces/users';
+import { HttpResponseEntity } from '../core/http-response.interface';
+import { Guest, UserModel } from '../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UsersService {
+export class UserService {
   private loginUser: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>({ userId: '', userNiceName: '' });
   loginUser$: Observable<UserModel> = this.loginUser.asObservable();
 

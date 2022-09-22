@@ -6,6 +6,16 @@ export const SITE_INFO = Object.freeze({
   author: '抚云',
   startYear: 2014
 });
+export const POST_SLUG_PREFIX_BLACKLIST = Object.freeze([
+  'category',
+  'tag',
+  'archive',
+  'comment',
+  'user',
+  'wallpapers',
+  'admin',
+  'api'
+]);
 export const DEFAULT_COPYRIGHT_TYPE = '1';
 export const STORAGE_USER_KEY = 'user';
 export const STORAGE_VOTED_POSTS_KEY = 'voted_posts';

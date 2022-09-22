@@ -6,12 +6,12 @@ import { skipWhile, Subscription } from 'rxjs';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { UserAgentService } from '../../core/user-agent.service';
-import { OptionEntity } from '../../interfaces/options';
-import { TaxonomyNode } from '../../interfaces/taxonomies';
-import { UserModel } from '../../interfaces/users';
+import { OptionEntity } from '../../interfaces/option.interface';
+import { TaxonomyNode } from '../../interfaces/taxonomy.interface';
+import { UserModel } from '../../interfaces/user.interface';
 import { AuthService } from '../../services/auth.service';
-import { OptionsService } from '../../services/options.service';
-import { UsersService } from '../../services/users.service';
+import { OptionService } from '../../services/option.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-header',
@@ -39,10 +39,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private logoutListener!: Subscription;
 
   constructor(
-    private optionsService: OptionsService,
+    private optionService: OptionService,
     private commonService: CommonService,
     private userAgentService: UserAgentService,
-    private usersService: UsersService,
+    private userService: UserService,
     private authService: AuthService,
     private router: Router,
     @Inject(DOCUMENT) private document: Document
@@ -52,11 +52,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.optionsListener = this.optionsService.options$
+    this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => (this.options = options));
     this.commonListener = this.commonService.pageIndex$.subscribe((pageIndex) => (this.activePage = pageIndex));
-    this.userListener = this.usersService.loginUser$.subscribe((user) => {
+    this.userListener = this.userService.loginUser$.subscribe((user) => {
       this.user = user;
       this.isLoggedIn = !!this.user.userId;
     });

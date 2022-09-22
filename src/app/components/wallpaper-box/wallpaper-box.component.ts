@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PlatformService } from '../../core/platform.service';
-import { Wallpaper } from '../../interfaces/wallpaper';
-import { WallpaperService } from '../../services/wallpaper.service';
+import { Wallpaper } from '../../pages/wallpaper/wallpaper.interface';
+import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
 
 @Component({
   selector: 'i-wallpaper-box',

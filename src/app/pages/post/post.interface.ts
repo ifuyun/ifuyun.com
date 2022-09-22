@@ -1,7 +1,7 @@
-import { BreadcrumbEntity } from '../components/breadcrumb/breadcrumb.interface';
-import { CommentFlag, PostType } from '../config/common.enum';
-import { TaxonomyEntity } from './taxonomies';
-import { UserEntity } from './users';
+import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
+import { CommentFlag, PostType } from '../../config/common.enum';
+import { TaxonomyEntity } from '../../interfaces/taxonomy.interface';
+import { UserEntity } from '../../interfaces/user.interface';
 
 export interface PostEntity {
   postId: string;

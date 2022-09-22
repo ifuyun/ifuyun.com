@@ -11,7 +11,7 @@ import * as RSS from 'rss';
 import 'zone.js/dist/zone-node';
 import { ApiUrl } from './src/app/config/api-url';
 import { SITE_INFO } from './src/app/config/constants';
-import { Post } from './src/app/interfaces/posts';
+import { Post } from './src/app/pages/post/post.interface';
 import { environment as env } from './src/environments/environment';
 import { fetchJson } from './src/fetch';
 import { AppServerModule } from './src/main.server';

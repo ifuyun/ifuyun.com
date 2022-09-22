@@ -4,8 +4,8 @@ import { filter } from 'rxjs';
 import { PlatformService } from './core/platform.service';
 import { UrlService } from './core/url.service';
 import { LogService } from './services/log.service';
-import { OptionsService } from './services/options.service';
-import { UsersService } from './services/users.service';
+import { OptionService } from './services/option.service';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -19,8 +19,8 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private urlService: UrlService,
-    private optionsService: OptionsService,
-    private usersService: UsersService,
+    private optionService: OptionService,
+    private userService: UserService,
     private logService: LogService,
     private platform: PlatformService
   ) {}
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
       }
       this.initialized = true;
     });
-    this.optionsService.getOptions().subscribe();
-    this.usersService.getLoginUser().subscribe();
+    this.optionService.getOptions().subscribe();
+    this.userService.getLoginUser().subscribe();
   }
 }

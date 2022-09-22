@@ -3,12 +3,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ApiService } from '../core/api.service';
 import { ApiUrl } from '../config/api-url';
-import { CarouselVo, OptionEntity } from '../interfaces/options';
+import { CarouselVo, OptionEntity } from '../interfaces/option.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OptionsService {
+export class OptionService {
   private options: BehaviorSubject<OptionEntity> = new BehaviorSubject<OptionEntity>({});
   public options$: Observable<OptionEntity> = this.options.asObservable();
 

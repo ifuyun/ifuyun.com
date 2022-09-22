@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ApiUrl } from '../config/api-url';
-import { ApiService } from '../core/api.service';
+import { ApiUrl } from '../../config/api-url';
+import { ApiService } from '../../core/api.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FavoritesService {
+export class FavoriteService {
   constructor(private apiService: ApiService) {}
 
   addFavorite(postId: string): Observable<boolean> {
