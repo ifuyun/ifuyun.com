@@ -5,7 +5,12 @@ import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { VoteType, VoteValue } from '../../../config/common.enum';
-import { STORAGE_LIKED_WALLPAPER_KEY, WALLPAPER_KEYWORDS } from '../../../config/constants';
+import {
+  BING_DOMAIN,
+  DEFAULT_WALLPAPER_RESOLUTION,
+  STORAGE_KEY_LIKED_WALLPAPER,
+  WALLPAPER_KEYWORDS
+} from '../../../config/constants';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { MetaService } from '../../../core/meta.service';
@@ -28,9 +33,6 @@ import { WallpaperService } from '../wallpaper.service';
   styleUrls: ['./wallpaper-list.component.less']
 })
 export class WallpaperListComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy {
-  readonly bingDomain = 'https://www.bing.com';
-  readonly resolution = '1920x1080';
-
   options: OptionEntity = {};
   page = 1;
   lang = WallpaperLang.CN;
@@ -103,7 +105,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   }
 
   voteWallpaper(wallpaper: Wallpaper, like = true) {
-    const likedWallpapers = (localStorage.getItem(STORAGE_LIKED_WALLPAPER_KEY) || '').split(',');
+    const likedWallpapers = (localStorage.getItem(STORAGE_KEY_LIKED_WALLPAPER) || '').split(',');
     if (likedWallpapers.includes(wallpaper.wallpaperId) || this.voteLoadingMap[wallpaper.wallpaperId]) {
       return;
     }
@@ -123,7 +125,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         if (like) {
           wallpaper.liked = true;
           likedWallpapers.push(wallpaper.wallpaperId);
-          localStorage.setItem(STORAGE_LIKED_WALLPAPER_KEY, uniq(likedWallpapers.filter((item) => !!item)).join(','));
+          localStorage.setItem(STORAGE_KEY_LIKED_WALLPAPER, uniq(likedWallpapers.filter((item) => !!item)).join(','));
         }
       }
     });
@@ -153,8 +155,8 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     this.wallpapersListener = this.wallpaperService.getWallpapers(param).subscribe((res) => {
       this.wallpapers = (res.wallpapers || []).map((item) => ({
         ...item,
-        fullUrl: `${this.bingDomain}${item.urlBase}_${this.resolution}.${item.imageFormat}`,
-        fullCopyrightUrl: `${this.bingDomain}${item.copyrightLink}`
+        fullUrl: `${BING_DOMAIN}${item.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${item.imageFormat}`,
+        fullCopyrightUrl: `${BING_DOMAIN}${item.copyrightLink}`
       }));
       this.initWallpaperStatus(this.wallpapers);
       this.page = res.page || 1;
@@ -166,7 +168,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
 
   private initWallpaperStatus(wallpapers: Wallpaper[]) {
     if (this.platform.isBrowser) {
-      const likedWallpapers = (localStorage.getItem(STORAGE_LIKED_WALLPAPER_KEY) || '').split(',');
+      const likedWallpapers = (localStorage.getItem(STORAGE_KEY_LIKED_WALLPAPER) || '').split(',');
       wallpapers.forEach((item) => {
         likedWallpapers.includes(item.wallpaperId) && (item.liked = true);
       });

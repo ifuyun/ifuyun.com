@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ApiUrl } from '../config/api-url';
-import { STORAGE_USER_KEY } from '../config/constants';
+import { STORAGE_KEY_USER } from '../config/constants';
 import { ApiService } from '../core/api.service';
 import { HttpResponseEntity } from '../core/http-response.interface';
 import { Guest, UserModel } from '../interfaces/user.interface';
@@ -25,7 +25,7 @@ export class UserService {
 
   getCommentUser(): Guest | null {
     try {
-      return JSON.parse(localStorage.getItem(STORAGE_USER_KEY) || '');
+      return JSON.parse(localStorage.getItem(STORAGE_KEY_USER) || '');
     } catch (e) {
       return null;
     }

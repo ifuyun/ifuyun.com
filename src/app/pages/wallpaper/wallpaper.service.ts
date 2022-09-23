@@ -3,7 +3,13 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiUrl } from '../../config/api-url';
 import { ApiService } from '../../core/api.service';
-import { BingWallpaper, BingWallpaperQueryParam, WallpaperList, WallpaperQueryParam } from './wallpaper.interface';
+import {
+  BingWallpaper,
+  BingWallpaperQueryParam,
+  Wallpaper,
+  WallpaperList,
+  WallpaperQueryParam
+} from './wallpaper.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +27,11 @@ export class WallpaperService {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_WALLPAPERS), param)
       .pipe(map((res) => res?.data || {}));
+  }
+
+  getRandomWallpapers(size: number): Observable<Wallpaper[]> {
+    return this.apiService
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_WALLPAPERS_BY_RANDOM), { size })
+      .pipe(map((res) => res?.data || []));
   }
 }

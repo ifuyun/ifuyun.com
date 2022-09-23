@@ -4,7 +4,7 @@ export enum ApiUrl {
   GET_POST_BY_ID = '/posts/:postId',
   GET_POST_BY_PARAM = '/posts/post',
   GET_POSTS_OF_HOT = '/posts/hot',
-  GET_POSTS_OF_RANDOM = '/posts/random',
+  GET_POSTS_BY_RANDOM = '/posts/random',
   GET_POSTS_OF_PREV_AND_NEXT = '/posts/prev-and-next',
   GET_POST_ARCHIVES = '/posts/archives',
   GET_OPTIONS = '/options',
@@ -21,7 +21,8 @@ export enum ApiUrl {
   ADD_FAVORITE = '/favorites/add',
   GET_CAROUSELS = '/options/carousels',
   SAVE_ACCESS_LOG = '/logs/access',
-  GET_BING_WALLPAPERS = '/wallpapers/bing',
   GET_WALLPAPERS = '/wallpapers',
+  GET_BING_WALLPAPERS = '/wallpapers/bing',
+  GET_WALLPAPERS_BY_RANDOM = '/wallpapers/random',
   GET_WALLPAPER_BY_ID = '/wallpapers/:wid'
 }

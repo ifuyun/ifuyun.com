@@ -89,7 +89,7 @@ export class PostService {
 
   getRandomPosts(): Observable<PostEntity[]> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS_OF_RANDOM))
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS_BY_RANDOM))
       .pipe(map((res) => res?.data || []));
   }
 }

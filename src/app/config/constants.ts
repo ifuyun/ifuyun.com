@@ -17,14 +17,16 @@ export const POST_SLUG_PREFIX_BLACKLIST = Object.freeze([
   'api'
 ]);
 export const DEFAULT_COPYRIGHT_TYPE = '1';
-export const STORAGE_USER_KEY = 'user';
-export const STORAGE_VOTED_POSTS_KEY = 'voted_posts';
-export const STORAGE_LIKED_COMMENTS_KEY = 'liked_comments';
-export const STORAGE_DISLIKED_COMMENTS_KEY = 'disliked_comments';
-export const STORAGE_LIKED_WALLPAPER_KEY = 'liked_wallpapers';
+export const STORAGE_KEY_USER = 'user';
+export const STORAGE_KEY_VOTED_POSTS = 'voted_posts';
+export const STORAGE_KEY_LIKED_COMMENTS = 'liked_comments';
+export const STORAGE_KEY_DISLIKED_COMMENTS = 'disliked_comments';
+export const STORAGE_KEY_LIKED_WALLPAPER = 'liked_wallpapers';
 export const AVATAR_API_URL = 'https://cravatar.cn/avatar/$0.png?d=$1';
 export const ADMIN_URL = '/admin';
 export const THIRD_LOGIN_CALLBACK = '/user/login/callback?from=$0';
+export const BING_DOMAIN = 'https://www.bing.com';
+export const DEFAULT_WALLPAPER_RESOLUTION = '1920x1080';
 
 export const COPYRIGHT_TYPE: Record<string, string> = Object.freeze({
   '0': '禁止转载',
@@ -44,7 +46,6 @@ export const THIRD_LOGIN_API: Record<string, string> = Object.freeze({
   weibo: 'https://api.weibo.com/oauth2/authorize?client_id=$0&response_type=code&redirect_uri=$1',
   github: 'https://github.com/login/oauth/authorize?client_id=$0&redirect_uri=$1&state=$2'
 });
-
 export const WALLPAPER_KEYWORDS = Object.freeze([
   '高清壁纸',
   '4K 壁纸',

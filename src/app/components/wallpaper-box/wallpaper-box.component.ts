@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { BING_DOMAIN, DEFAULT_WALLPAPER_RESOLUTION } from '../../config/constants';
 import { PlatformService } from '../../core/platform.service';
-import { BingWallpaper } from '../../pages/wallpaper/wallpaper.interface';
+import { Wallpaper } from '../../pages/wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
 
 @Component({
@@ -14,8 +15,8 @@ export class WallpaperBoxComponent implements OnDestroy, OnChanges {
   @Output() visibleChange = new EventEmitter<boolean>();
 
   loading = false;
-  wallpapers: BingWallpaper[] = [];
-  activeWallpaper!: BingWallpaper;
+  wallpapers: Wallpaper[] = [];
+  activeWallpaper!: Wallpaper;
   activeIndex = 0;
   isBrowser: boolean;
 
@@ -62,8 +63,12 @@ export class WallpaperBoxComponent implements OnDestroy, OnChanges {
 
   private fetchData() {
     this.loading = true;
-    this.wallpaperListener = this.wallpaperService.getBingWallpapers({ size: 8 }).subscribe((res) => {
-      this.wallpapers = res;
+    this.wallpaperListener = this.wallpaperService.getRandomWallpapers(8).subscribe((res) => {
+      this.wallpapers = res.map((item) => ({
+        ...item,
+        fullUrl: `${BING_DOMAIN}${item.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${item.imageFormat}`,
+        fullCopyrightUrl: `${BING_DOMAIN}${item.copyrightLink}`
+      }));
       this.resetImage();
       this.loading = false;
     });

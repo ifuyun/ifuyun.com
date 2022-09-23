@@ -23,9 +23,9 @@ import { ApiUrl } from '../../../config/api-url';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import {
   AVATAR_API_URL,
-  STORAGE_DISLIKED_COMMENTS_KEY,
-  STORAGE_LIKED_COMMENTS_KEY,
-  STORAGE_VOTED_POSTS_KEY
+  STORAGE_KEY_DISLIKED_COMMENTS,
+  STORAGE_KEY_LIKED_COMMENTS,
+  STORAGE_KEY_VOTED_POSTS
 } from '../../../config/constants';
 import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
@@ -275,17 +275,17 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         this.postVoted = true;
 
         if (!this.isLoggedIn) {
-          const likedPosts = (localStorage.getItem(STORAGE_VOTED_POSTS_KEY) || '').split(',');
+          const likedPosts = (localStorage.getItem(STORAGE_KEY_VOTED_POSTS) || '').split(',');
           likedPosts.push(this.postId);
-          localStorage.setItem(STORAGE_VOTED_POSTS_KEY, uniq(likedPosts.filter((item) => !!item)).join(','));
+          localStorage.setItem(STORAGE_KEY_VOTED_POSTS, uniq(likedPosts.filter((item) => !!item)).join(','));
         }
       }
     });
   }
 
   voteComment(comment: CommentModel, like: boolean) {
-    const likedComments = (localStorage.getItem(STORAGE_LIKED_COMMENTS_KEY) || '').split(',');
-    const dislikedComments = (localStorage.getItem(STORAGE_DISLIKED_COMMENTS_KEY) || '').split(',');
+    const likedComments = (localStorage.getItem(STORAGE_KEY_LIKED_COMMENTS) || '').split(',');
+    const dislikedComments = (localStorage.getItem(STORAGE_KEY_DISLIKED_COMMENTS) || '').split(',');
     const votedComments = uniq(likedComments.concat(dislikedComments));
     if (votedComments.includes(comment.commentId) || this.commentVoteLoading[comment.commentId]) {
       return;
@@ -307,12 +307,12 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         if (like) {
           comment.liked = true;
           likedComments.push(comment.commentId);
-          localStorage.setItem(STORAGE_LIKED_COMMENTS_KEY, uniq(likedComments.filter((item) => !!item)).join(','));
+          localStorage.setItem(STORAGE_KEY_LIKED_COMMENTS, uniq(likedComments.filter((item) => !!item)).join(','));
         } else {
           comment.disliked = true;
           dislikedComments.push(comment.commentId);
           localStorage.setItem(
-            STORAGE_DISLIKED_COMMENTS_KEY,
+            STORAGE_KEY_DISLIKED_COMMENTS,
             uniq(dislikedComments.filter((item) => !!item)).join(',')
           );
         }
@@ -473,8 +473,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   private initCommentStatus(comments: Comment[]) {
     if (this.platform.isBrowser) {
-      const likedComments = (localStorage.getItem(STORAGE_LIKED_COMMENTS_KEY) || '').split(',');
-      const dislikedComments = (localStorage.getItem(STORAGE_DISLIKED_COMMENTS_KEY) || '').split(',');
+      const likedComments = (localStorage.getItem(STORAGE_KEY_LIKED_COMMENTS) || '').split(',');
+      const dislikedComments = (localStorage.getItem(STORAGE_KEY_DISLIKED_COMMENTS) || '').split(',');
       comments.forEach((item) => {
         likedComments.includes(item.commentId) && (item.liked = true);
         dislikedComments.includes(item.commentId) && (item.disliked = true);
@@ -621,7 +621,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   private checkPostVoted() {
     if (this.platform.isBrowser) {
-      const likedPosts = (localStorage.getItem(STORAGE_VOTED_POSTS_KEY) || '').split(',');
+      const likedPosts = (localStorage.getItem(STORAGE_KEY_VOTED_POSTS) || '').split(',');
       this.postVoted = likedPosts.includes(this.postId);
     }
   }

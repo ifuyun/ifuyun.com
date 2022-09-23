@@ -18,13 +18,6 @@
     }
 
     .lang {
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 80px;
-      height: 32px;
-      padding: 4px 8px;
       font-size: 15px;
 
       &:first-child {
@@ -39,12 +32,27 @@
         border-bottom-right-radius: @border-radius;
       }
 
+      &:hover {
+        background: #fff;
+      }
+
       a {
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 32px;
+        padding: 4px 8px;
         color: @base-color;
       }
 
       &.active {
         background: @primary-color;
+
+        &:hover {
+          background: @active-color;
+        }
 
         a {
           color: #fff;
