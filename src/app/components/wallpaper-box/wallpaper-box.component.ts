@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PlatformService } from '../../core/platform.service';
-import { Wallpaper } from '../../pages/wallpaper/wallpaper.interface';
+import { BingWallpaper } from '../../pages/wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
 
 @Component({
@@ -14,8 +14,8 @@ export class WallpaperBoxComponent implements OnDestroy, OnChanges {
   @Output() visibleChange = new EventEmitter<boolean>();
 
   loading = false;
-  wallpapers: Wallpaper[] = [];
-  activeWallpaper!: Wallpaper;
+  wallpapers: BingWallpaper[] = [];
+  activeWallpaper!: BingWallpaper;
   activeIndex = 0;
   isBrowser: boolean;
 

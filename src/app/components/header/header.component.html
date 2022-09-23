@@ -26,6 +26,9 @@
               </div>
             </div>
           </li>
+          <li [ngClass]="{'active': activePage === 'wallpaper'}">
+            <a class="nav-link" [routerLink]="['/wallpapers']" title="高清壁纸">壁纸</a>
+          </li>
         </ul>
       </div>
       <ul class="link-list">

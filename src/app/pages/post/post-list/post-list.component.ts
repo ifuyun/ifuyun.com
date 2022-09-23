@@ -47,11 +47,11 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
   constructor(
     private route: ActivatedRoute,
     private optionService: OptionService,
-    private postService: PostService,
     private commonService: CommonService,
-    private paginator: PaginatorService,
-    private breadcrumbService: BreadcrumbService,
     private metaService: MetaService,
+    private breadcrumbService: BreadcrumbService,
+    private postService: PostService,
+    private paginator: PaginatorService,
     private userAgentService: UserAgentService,
     private scroller: ViewportScroller
   ) {
@@ -224,8 +224,8 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
       const metaData: HTMLMetaData = {
         title: titles.join(' - '),
         description,
-        author: this.options['site_author'],
-        keywords: uniq(keywords).join(',')
+        keywords: uniq(keywords).join(','),
+        author: this.options['site_author']
       };
       this.metaService.updateHTMLMeta(metaData);
 

@@ -20,9 +20,12 @@
             <span>{{taxonomy.taxonomyName}}</span>
           </a>
         </li>
+        <li [ngClass]="{'active': activePage === 'wallpaper'}">
+          <a routerLink="/wallpapers" title="高清壁纸"><i class="icon icon-images"></i><span>壁纸</span></a>
+        </li>
         <div class="separator"></div>
         <li [ngClass]="{'active': activePage === 'archive'}">
-          <a routerLink="/archive"><i class="icon icon-archive"></i><span>归档</span></a>
+          <a routerLink="/archive" title="文章归档"><i class="icon icon-archive"></i><span>归档</span></a>
         </li>
         <li [ngClass]="{'active': activePage === 'aboutme'}">
           <a routerLink="/aboutme"><i class="icon icon-person-heart"></i><span>关于</span></a>

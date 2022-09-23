@@ -1,0 +1,160 @@
+@import "../../../../styles/variables";
+
+.wallpaper {
+  position: relative;
+  margin: @header-height + @header-bg-height + @primary-margin auto 8px;
+
+  .switcher {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 0 32px;
+
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: @content-box-shadow;
+    }
+
+    .lang {
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 32px;
+      padding: 4px 8px;
+      font-size: 15px;
+
+      &:first-child {
+        border-right: none;
+        border-top-left-radius: @border-radius;
+        border-bottom-left-radius: @border-radius;
+      }
+
+      &:last-child {
+        border-left: none;
+        border-top-right-radius: @border-radius;
+        border-bottom-right-radius: @border-radius;
+      }
+
+      a {
+        color: @base-color;
+      }
+
+      &.active {
+        background: @primary-color;
+
+        a {
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  .list {
+    display: flex;
+    flex: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: start;
+  }
+
+  .wallpaper-item {
+    position: relative;
+    width: 33.33333333%;
+
+    .link {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      z-index: 2;
+    }
+
+    .content {
+      display: none;
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      color: #efefef;
+      z-index: 1;
+
+      .info {
+        text-shadow: 0 0 0 #efefef, 0 0 2px rgb(0 0 0 / 60%), 0 0 4px rgb(0 0 0 / 60%);
+      }
+
+      .meta {
+        display: flex;
+        margin-top: 8px;
+        font-size: @minor-font-size;
+
+        .icon {
+          margin-right: 8px;
+        }
+
+        > div:not(:last-child) {
+          margin-right: 16px;
+        }
+      }
+
+      h2 {
+        font-size: @primary-font-size;
+        font-weight: 400;
+      }
+    }
+
+    .actions {
+      display: none;
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      z-index: 3;
+
+      .action-item {
+        padding: 4px 8px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, .8);
+        color: @action-color;
+
+        &:hover {
+          cursor: pointer;
+          background: #fff;
+        }
+
+        &.disabled {
+          cursor: not-allowed;
+        }
+      }
+
+      .icon {
+        margin-right: 8px;
+      }
+    }
+
+    &:hover {
+      z-index: 9;
+
+      .photo {
+        transition: transform .5s;
+        transform: scale(1.08);
+      }
+
+      .content, .actions {
+        display: block;
+      }
+    }
+  }
+
+  img {
+    width: 100%;
+  }
+}
+
+.paginator-box {
+  padding-top: 8px;
+  text-align: center;
+}

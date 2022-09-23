@@ -16,7 +16,8 @@ export enum VoteValue {
 
 export enum VoteType {
   POST = 'post',
-  COMMENT = 'comment'
+  COMMENT = 'comment',
+  WALLPAPER = 'wallpaper'
 }
 
 export enum CopyrightType {
@@ -29,4 +30,10 @@ export enum LinkTarget {
   BLANK = '_blank',
   SELF = '_self',
   TOP = '_top'
+}
+
+export enum WallpaperPlatform {
+  PC = 'pc',
+  MOBILE = 'mobile',
+  PAD = 'pad'
 }

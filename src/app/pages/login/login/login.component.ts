@@ -100,7 +100,12 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
         }
       });
     this.paramListener = this.route.queryParamMap.subscribe((queryParams) => {
-      this.referer = decodeURIComponent(queryParams.get('ref')?.trim() || '');
+      const ref = queryParams.get('ref')?.trim() || '';
+      try {
+        this.referer = decodeURIComponent(ref);
+      } catch (e) {
+        this.referer = ref;
+      }
     });
     const username = this.cookieService.get('user');
     if (username) {

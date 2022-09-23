@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { PlatformService } from './core/platform.service';
@@ -58,9 +58,7 @@ export class AppComponent implements OnInit {
     });
     this.optionService.getOptions().subscribe();
     this.userService.getLoginUser().subscribe();
-    this.taxonomyService
-      .getTaxonomies()
-      .subscribe((taxonomies) => (this.taxonomies = taxonomies));
+    this.taxonomyService.getTaxonomies().subscribe((taxonomies) => (this.taxonomies = taxonomies));
   }
 
   toggleSiderOpen() {

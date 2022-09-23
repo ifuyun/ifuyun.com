@@ -144,7 +144,9 @@
                [ngStyle]="{'padding-left': (comment.level - 1) * 50 + 'px'}">
             <div class="meta">
               <div class="info">
-                <div class="avatar"><img src="{{comment.authorAvatar}}" alt="{{comment.user?.userNiceName || comment.authorName}}"/></div>
+                <div class="avatar">
+                  <img src="{{comment.authorAvatar}}" alt="{{comment.user?.userNiceName || comment.authorName}}"/>
+                </div>
                 <div class="author">
                   <span class="from">
                     <span class="name">{{comment.user?.userNiceName || comment.authorName}}</span>
@@ -170,19 +172,21 @@
               <div>{{comment.commentContent}}</div>
             </div>
             <div class="actions">
-              <a
-                [ngClass]="{voted: comment.liked, disabled: comment.liked || comment.disliked || commentVoteLoading[comment.commentId]}"
-                (click)="voteComment(comment, true)">
-                <i
-                  [ngClass]="{'icon-like-fill': comment.liked, 'icon-like': !comment.liked, 'icon-loading': commentVoteLoading[comment.commentId]}"
-                  class="icon"></i><span>{{comment.commentLikes}}</span>
+              <a [class.voted]="comment.liked"
+                 [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
+                 (click)="voteComment(comment, true)">
+                <i class="icon"
+                   [class.icon-like-fill]="comment.liked"
+                   [class.icon-like]="!comment.liked"
+                   [class.icon-loading]="commentVoteLoading[comment.commentId]"></i><span>{{comment.commentLikes}}</span>
               </a>
-              <a
-                [ngClass]="{voted: comment.disliked, disabled: comment.liked || comment.disliked || commentVoteLoading[comment.commentId]}"
-                (click)="voteComment(comment, false)">
-                <i
-                  [ngClass]="{'icon-dislike-fill': comment.disliked, 'icon-dislike': !comment.disliked, 'icon-loading': commentVoteLoading[comment.commentId]}"
-                  class="icon"></i><span>{{comment.commentDislikes}}</span>
+              <a [class.voted]="comment.disliked"
+                 [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
+                 (click)="voteComment(comment, false)">
+                <i class="icon"
+                   [class.icon-dislike-fill]="comment.disliked"
+                   [class.icon-dislike]="!comment.disliked"
+                   [class.icon-loading]="commentVoteLoading[comment.commentId]"></i><span>{{comment.commentDislikes}}</span>
               </a>
               <a *ngIf="!replyVisibleMap[comment.commentId]" (click)="replyComment(comment, replyForm)">
                 <i class="icon icon-chat"></i><span>回复</span>
@@ -194,7 +198,9 @@
           </div>
           <div class="comment-item comment-item-mobile" *ngIf="isMobile" id="{{comment.commentId | commentHash}}"
                [ngStyle]="{'padding-left': (comment.level - 1) * 32 + 'px'}">
-            <div class="avatar"><img src="{{comment.authorAvatar}}" alt="{{comment.user?.userNiceName || comment.authorName}}"/></div>
+            <div class="avatar">
+              <img src="{{comment.authorAvatar}}" alt="{{comment.user?.userNiceName || comment.authorName}}"/>
+            </div>
             <div class="body">
               <div class="from">
                 <span class="name">{{comment.user?.userNiceName || comment.authorName}}</span>
@@ -215,19 +221,23 @@
               <div class="meta">
                 <span class="time">{{comment.commentCreated | date:'yy-MM-dd HH:mm'}}</span>
                 <div class="actions">
-                  <a
-                    [ngClass]="{voted: comment.liked, disabled: comment.liked || comment.disliked || commentVoteLoading[comment.commentId]}"
-                    (click)="voteComment(comment, true)">
-                    <i
-                      [ngClass]="{'icon-like-fill': comment.liked, 'icon-like': !comment.liked, 'icon-loading': commentVoteLoading[comment.commentId]}"
-                      class="icon"></i><span>{{comment.commentLikes}}</span>
+                  <a [class.voted]="comment.liked"
+                     [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
+                     (click)="voteComment(comment, true)">
+                    <i class="icon"
+                       [class.icon-like-fill]="comment.liked"
+                       [class.icon-like]="!comment.liked"
+                       [class.icon-loading]="commentVoteLoading[comment.commentId]"
+                    ></i><span>{{comment.commentLikes}}</span>
                   </a>
-                  <a
-                    [ngClass]="{voted: comment.disliked, disabled: comment.liked || comment.disliked || commentVoteLoading[comment.commentId]}"
-                    (click)="voteComment(comment, false)">
-                    <i
-                      [ngClass]="{'icon-dislike-fill': comment.disliked, 'icon-dislike': !comment.disliked, 'icon-loading': commentVoteLoading[comment.commentId]}"
-                      class="icon"></i><span>{{comment.commentDislikes}}</span>
+                  <a [class.voted]="comment.disliked"
+                     [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
+                     (click)="voteComment(comment, false)">
+                    <i class="icon"
+                       [class.icon-dislike-fill]="comment.disliked"
+                       [class.icon-dislike]="!comment.disliked"
+                       [class.icon-loading]="commentVoteLoading[comment.commentId]"
+                    ></i><span>{{comment.commentDislikes}}</span>
                   </a>
                   <a *ngIf="!replyVisibleMap[comment.commentId]" (click)="replyComment(comment, replyForm)">
                     <i class="icon icon-chat"></i>
