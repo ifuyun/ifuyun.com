@@ -19,8 +19,10 @@
           <div class="info">
             <h2>{{lang === 'cn' ? wallpaper.copyright : wallpaper.copyrightEn}}</h2>
             <div class="meta">
-              <div><i class='icon icon-calendar'></i><span>{{wallpaper.date}}</span></div>
-              <div><span>{{wallpaper.copyrightAuthor}}</span></div>
+              <div class="date" [title]="wallpaper.date">
+                <i class='icon icon-calendar'></i><span>{{wallpaper.date}}</span>
+              </div>
+              <div class="author" [title]="wallpaper.copyrightAuthor"><span>{{wallpaper.copyrightAuthor}}</span></div>
             </div>
           </div>
         </div>
@@ -39,6 +41,10 @@
     </div>
   </div>
   <div class="paginator-box" *ngIf="total > 0">
-    <app-page-bar [isPath]="false" [paginator]="paginatorData" [url]="pageUrl" [param]="pageUrlParam"></app-page-bar>
+    <app-page-bar [isPath]="false"
+                  [showBackground]="false"
+                  [paginator]="paginatorData"
+                  [url]="pageUrl"
+                  [param]="pageUrlParam"></app-page-bar>
   </div>
 </div>

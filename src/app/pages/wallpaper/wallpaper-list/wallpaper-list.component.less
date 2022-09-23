@@ -2,6 +2,7 @@
 
 .wallpaper {
   position: relative;
+  width: @body-width;
   margin: @header-height + @header-bg-height + @primary-margin auto 8px;
 
   .switcher {
@@ -98,14 +99,24 @@
       .meta {
         display: flex;
         margin-top: 8px;
-        font-size: @minor-font-size;
+        font-size: @meta-font-size;
+
+        .date {
+          flex-shrink: 0;
+        }
+
+        .author {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
 
         .icon {
           margin-right: 8px;
         }
 
         > div:not(:last-child) {
-          margin-right: 16px;
+          margin-right: 12px;
         }
       }
 

@@ -1,5 +1,5 @@
 <ng-container *ngIf="paginator">
-  <div class="paginator paginator-desktop" *ngIf="!isMobile">
+  <div *ngIf="!isMobile" class="paginator paginator-desktop" [class.paginator-box]="showBackground">
     <ul>
       <li *ngIf="paginator.curPage > 1" class="paginator-page">
         <a [routerLink]="getRouterLink(paginator.prevPage)"
@@ -71,7 +71,9 @@
       </li>
     </ul>
   </div>
-  <div class="paginator paginator-mobile" *ngIf="isMobile && paginator.totalPage > 1">
+  <div *ngIf="isMobile && paginator.totalPage > 1"
+       class="paginator paginator-mobile"
+       [class.paginator-box]="showBackground">
     <div>
       <a *ngIf="paginator.curPage > 1"
          [routerLink]="getRouterLink(paginator.prevPage)"
