@@ -140,9 +140,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   ngOnInit(): void {
-    this.urlListener = this.urlService.urlInfo$.subscribe((url) => {
-      this.referer = url.previous;
-    });
+    this.updatePageOptions();
     this.initOptions();
     this.paramListener = this.route.params.subscribe((params) => {
       this.postId = params['postId']?.trim();
@@ -152,6 +150,9 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       this.scroller.scrollToPosition([0, 0]);
       this.resetCommentForm(this.commentForm);
       this.resetReplyStatus();
+    });
+    this.urlListener = this.urlService.urlInfo$.subscribe((url) => {
+      this.referer = url.previous;
     });
     this.userListener = this.userService.loginUser$.subscribe((user) => {
       this.user = user;
@@ -388,6 +389,15 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.commonService.updateActivePage(this.pageIndex);
   }
 
+  protected updatePageOptions(): void {
+    this.commonService.updatePageOptions({
+      showHeader: true,
+      showFooter: true,
+      showMobileHeader: true,
+      showMobileFooter: true
+    });
+  }
+
   private initOptions() {
     this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
@@ -404,8 +414,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.metaService.updateHTMLMeta({
       title: `${this.post.postTitle} - ${this.options['site_name']}`,
       description: this.post.postExcerpt,
-      author: this.options['site_author'],
-      keywords: uniq(this.postTags.map((item) => item.taxonomyName).concat(keywords)).join(',')
+      keywords: uniq(this.postTags.map((item) => item.taxonomyName).concat(keywords)).join(','),
+      author: this.options['site_author']
     });
   }
 

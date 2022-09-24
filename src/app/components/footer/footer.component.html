@@ -1,4 +1,5 @@
-<footer class="footer" [ngClass]="{'footer-desktop': !isMobile, 'footer-mobile': isMobile}">
+<footer *ngIf="!isMobile && showFooter || isMobile && showMobileFooter"
+        class="footer" [class.footer-desktop]="!isMobile" [class.footer-mobile]="isMobile">
   <ul class="footer-link">
     <li><a routerLink="/aboutme" title="关于抚云">关于抚云</a></li>
     <li><a routerLink="/feedback" title="意见反馈">意见反馈</a></li>

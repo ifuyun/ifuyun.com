@@ -25,10 +25,10 @@ export class NotFoundComponent extends PageComponent implements OnInit, OnDestro
 
   constructor(
     private platform: PlatformService,
-    private response: ResponseService,
-    private optionService: OptionService,
+    private metaService: MetaService,
     private commonService: CommonService,
-    private metaService: MetaService
+    private optionService: OptionService,
+    private response: ResponseService
   ) {
     super();
   }
@@ -37,6 +37,8 @@ export class NotFoundComponent extends PageComponent implements OnInit, OnDestro
     if (this.platform.isServer) {
       this.response.setStatus(HttpStatusCode.NotFound);
     }
+    this.updateActivePage();
+    this.updatePageOptions();
     this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => {
@@ -47,7 +49,6 @@ export class NotFoundComponent extends PageComponent implements OnInit, OnDestro
           author: options?.['site_author'],
           keywords: options?.['site_keywords']
         });
-        this.updateActivePage();
       });
   }
 
@@ -57,5 +58,14 @@ export class NotFoundComponent extends PageComponent implements OnInit, OnDestro
 
   protected updateActivePage(): void {
     this.commonService.updateActivePage(this.pageIndex);
+  }
+
+  protected updatePageOptions(): void {
+    this.commonService.updatePageOptions({
+      showHeader: true,
+      showFooter: true,
+      showMobileHeader: true,
+      showMobileFooter: true
+    });
   }
 }

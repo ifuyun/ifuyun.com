@@ -34,4 +34,14 @@ export class WallpaperService {
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_WALLPAPERS_BY_RANDOM), { size })
       .pipe(map((res) => res?.data || []));
   }
+
+  getWallpaperById(wid: string): Observable<Wallpaper> {
+    return this.apiService
+      .httpGet(this.apiService.getApiUrlWithParam(ApiUrl.GET_WALLPAPER_BY_ID, wid))
+      .pipe(map((res) => res?.data || {}));
+  }
+
+  getDownloadUrl(path: string): string {
+    return `${this.apiService.getApiUrl(ApiUrl.DOWNLOAD_WALLPAPER)}?path=${path}`;
+  }
 }

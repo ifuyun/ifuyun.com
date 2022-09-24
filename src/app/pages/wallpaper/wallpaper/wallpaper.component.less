@@ -1,0 +1,80 @@
+@import "../../../../styles/variables";
+
+.wallpaper {
+  width: 100%;
+  height: 100%;
+
+  .photo {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    top: 24px;
+    left: 36px;
+    right: 36px;
+
+    .action-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, .8);
+      cursor: pointer;
+
+      > a, > div {
+        padding: 6px 8px;
+      }
+
+      &, a {
+        color: @base-color;
+      }
+
+      &:hover {
+        background: #fff;
+      }
+
+      &.disabled {
+        cursor: not-allowed;
+      }
+
+      &:not(:last-child) {
+        margin-right: 8px;
+      }
+
+      &.action-like {
+        color: @action-color;
+      }
+
+      &.action-text {
+        cursor: default;
+      }
+
+      .icon {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: auto;
+    padding: 24px 36px;
+    background-color: rgba(255, 255, 255, .5);
+    color: #efefef;
+    text-shadow: 0 0 0 #efefef, 0 0 2px rgb(0 0 0 / 60%), 0 0 4px rgb(0 0 0 / 60%);
+
+    .title {
+      margin-bottom: 16px;
+      font-size: 20px;
+    }
+  }
+}

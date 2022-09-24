@@ -9,7 +9,7 @@
       <ng-container *ngIf="activeWallpaper">
         <div class="image-box" [style.background-image]="'url(' + (activeWallpaper.fullUrl || '') + ')'"></div>
         <div class="caption-box">
-          <div class="image-info">
+          <div>
             <h2 class="image-title">
               <span>{{activeWallpaper.title}}</span>
               <a [href]="activeWallpaper.fullCopyrightUrl"

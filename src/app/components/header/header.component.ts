@@ -32,6 +32,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   focusSearch = false;
   user!: UserModel;
   isLoggedIn = false;
+  showHeader = true;
+  showMobileHeader = true;
 
   private optionsListener!: Subscription;
   private commonListener!: Subscription;
@@ -56,6 +58,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => (this.options = options));
     this.commonListener = this.commonService.pageIndex$.subscribe((pageIndex) => (this.activePage = pageIndex));
+    this.commonService.pageOptions$.subscribe((options) => {
+      this.showHeader = options.showHeader;
+      this.showMobileHeader = options.showMobileHeader;
+    });
     this.userListener = this.userService.loginUser$.subscribe((user) => {
       this.user = user;
       this.isLoggedIn = !!this.user.userId;

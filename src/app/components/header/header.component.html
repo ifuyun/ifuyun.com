@@ -1,4 +1,4 @@
-<ng-container *ngIf="!isMobile">
+<ng-container *ngIf="!isMobile && showHeader">
   <header class="header header-desktop" [ngClass]="{'header-firefox': isFirefox}">
     <div class="header-bg"></div>
     <nav class="nav">
@@ -27,7 +27,7 @@
             </div>
           </li>
           <li [ngClass]="{'active': activePage === 'wallpaper'}">
-            <a class="nav-link" [routerLink]="['/wallpapers']" title="高清壁纸">壁纸</a>
+            <a class="nav-link" [routerLink]="['/wallpaper']" title="高清壁纸">壁纸</a>
           </li>
         </ul>
       </div>
@@ -67,7 +67,7 @@
     </nav>
   </header>
 </ng-container>
-<ng-container *ngIf="isMobile">
+<ng-container *ngIf="isMobile && showMobileHeader">
   <header class="header">
     <div class="header-mobile">
       <ng-container *ngIf="!showSearch">

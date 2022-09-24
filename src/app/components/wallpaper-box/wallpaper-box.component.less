@@ -25,7 +25,7 @@
     right: 0;
     bottom: 0;
     height: auto;
-    padding: 24px 48px;
+    padding: 24px 36px;
     background-color: rgba(255, 255, 255, .5);
 
     .image-title, .image-title a, .image-desc {
@@ -44,7 +44,6 @@
 
     .indicator {
       font-size: 20px;
-      cursor: pointer;
 
       .icon {
         display: inline-flex;
@@ -52,11 +51,12 @@
         justify-content: center;
         width: 32px;
         height: 32px;
-        border-radius: 2px;
-        background: rgba(255, 255, 255, .6);
+        border-radius: 4px;
+        background: rgba(255, 255, 255, .8);
+        cursor: pointer;
 
         &:hover {
-          background: #e8e8e8;
+          background: #fff;
         }
 
         &:not(:first-child) {

@@ -33,9 +33,9 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
   constructor(
     private optionService: OptionService,
     private metaService: MetaService,
-    private postService: PostService,
-    private breadcrumbService: BreadcrumbService,
     private commonService: CommonService,
+    private breadcrumbService: BreadcrumbService,
+    private postService: PostService,
     private userAgentService: UserAgentService,
     private scroller: ViewportScroller
   ) {
@@ -44,6 +44,8 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
   }
 
   ngOnInit(): void {
+    this.updateActivePage();
+    this.updatePageOptions();
     this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => {
@@ -76,7 +78,6 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
         const { dateList, yearList } = this.postService.transformArchiveDates(res);
         this.archiveDateList = dateList;
         this.archiveYearList = yearList;
-        this.updateActivePage();
       });
     this.scroller.scrollToPosition([0, 0]);
   }
@@ -88,5 +89,14 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
 
   protected updateActivePage(): void {
     this.commonService.updateActivePage(this.pageIndex);
+  }
+
+  protected updatePageOptions(): void {
+    this.commonService.updatePageOptions({
+      showHeader: true,
+      showFooter: true,
+      showMobileHeader: true,
+      showMobileFooter: true
+    });
   }
 }

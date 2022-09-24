@@ -1,1 +1,35 @@
-<p>wallpaper works!</p>
+<div class="wallpaper">
+  <div class="photo" [style.background-image]="'url(' + (wallpaper?.fullUrl || '') + ')'"></div>
+  <div class="actions">
+    <div class="return">
+      <div class="action-item action-text">
+        <a routerLink="../" title="返回壁纸列表"><i class="icon icon-left"></i><span>返回</span></a>
+      </div>
+    </div>
+    <div class="actions-list">
+      <div class="action-item action-like"
+           [class.disabled]="wallpaper?.liked || voteLoading"
+           (click)="voteWallpaper()">
+        <div>
+          <i class="icon icon-heart"
+             [class.icon-heart]="!wallpaper?.liked"
+             [class.icon-heart-fill]="wallpaper?.liked"
+             [class.icon-loading]="voteLoading"></i><span>{{wallpaper?.likes}}</span>
+        </div>
+      </div>
+      <div class="action-item action-text">
+        <div><i class="icon icon-eye"></i><span>{{wallpaper?.views | numberView}}</span></div>
+      </div>
+      <div class="action-item action-download" (click)="download()">
+        <div><i class="icon icon-cloud-download"></i><span>1920x1080</span></div>
+      </div>
+      <div class="action-item action-download" (click)="download(true)">
+        <div><i class="icon icon-cloud-download"></i><span>UHD</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <h2 class="title">{{wallpaper?.title}}</h2>
+    <div class="description">{{wallpaper?.copyright}} ({{wallpaper?.copyrightAuthor}})</div>
+  </div>
+</div>

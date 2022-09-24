@@ -1,3 +1,10 @@
+export interface PageOptions {
+  showHeader: boolean;
+  showFooter: boolean;
+  showMobileHeader: boolean;
+  showMobileFooter: boolean;
+}
+
 export interface MetaData {
   metaKey: string;
   metaValue: string;

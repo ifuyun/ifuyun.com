@@ -60,6 +60,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
   }
 
   ngOnInit(): void {
+    this.updatePageOptions();
     this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => (this.options = options));
@@ -89,6 +90,14 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
 
   protected updateActivePage(): void {
     this.commonService.updateActivePage(this.pageIndex);
+  }
+  protected updatePageOptions(): void {
+    this.commonService.updatePageOptions({
+      showHeader: true,
+      showFooter: true,
+      showMobileHeader: true,
+      showMobileFooter: true
+    });
   }
 
   private fetchPosts() {

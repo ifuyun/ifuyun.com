@@ -12,7 +12,7 @@ export const POST_SLUG_PREFIX_BLACKLIST = Object.freeze([
   'archive',
   'comment',
   'user',
-  'wallpapers',
+  'wallpaper',
   'admin',
   'api'
 ]);
@@ -46,7 +46,7 @@ export const THIRD_LOGIN_API: Record<string, string> = Object.freeze({
   weibo: 'https://api.weibo.com/oauth2/authorize?client_id=$0&response_type=code&redirect_uri=$1',
   github: 'https://github.com/login/oauth/authorize?client_id=$0&redirect_uri=$1&state=$2'
 });
-export const WALLPAPER_KEYWORDS = Object.freeze([
+export const WALLPAPER_PAGE_KEYWORDS = Object.freeze([
   '高清壁纸',
   '4K 壁纸',
   '壁纸下载',
@@ -56,3 +56,4 @@ export const WALLPAPER_KEYWORDS = Object.freeze([
   'Bing wallpaper',
   '手机壁纸'
 ]);
+export const WALLPAPER_PAGE_DESCRIPTION = '高清壁纸频道提供高清壁纸、4K壁纸、必应壁纸查找、下载。';

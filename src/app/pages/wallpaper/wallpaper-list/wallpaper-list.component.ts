@@ -3,13 +3,13 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import {
   BING_DOMAIN,
   DEFAULT_WALLPAPER_RESOLUTION,
   STORAGE_KEY_LIKED_WALLPAPER,
-  WALLPAPER_KEYWORDS
+  WALLPAPER_PAGE_DESCRIPTION,
+  WALLPAPER_PAGE_KEYWORDS
 } from '../../../config/constants';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
@@ -33,15 +33,15 @@ import { WallpaperService } from '../wallpaper.service';
   styleUrls: ['./wallpaper-list.component.less']
 })
 export class WallpaperListComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy {
+  showCrumb = false;
   options: OptionEntity = {};
   page = 1;
   lang = WallpaperLang.CN;
   keyword = '';
-  showCrumb = false;
   wallpapers: Wallpaper[] = [];
   total = 0;
   paginatorData: PaginatorEntity | null = null;
-  pageUrl = '/wallpapers';
+  pageUrl = '/wallpaper';
   pageUrlParam: Params = {};
   voteLoadingMap: Record<string, boolean> = {};
 
@@ -57,7 +57,6 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     private optionService: OptionService,
     private commonService: CommonService,
     private metaService: MetaService,
-    private breadcrumbService: BreadcrumbService,
     private wallpaperService: WallpaperService,
     private paginator: PaginatorService,
     private platform: PlatformService,
@@ -68,6 +67,8 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   }
 
   ngOnInit(): void {
+    this.updateActivePage();
+    this.updatePageOptions();
     this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => {
@@ -86,7 +87,6 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       .subscribe(() => {
         this.fetchWallpapers();
       });
-    this.updateActivePage();
   }
 
   ngAfterViewInit() {
@@ -180,7 +180,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     let description = '';
     const titles: string[] = ['高清壁纸', siteName];
     const keywords: string[] = (this.options['site_keywords'] || '').split(',');
-    keywords.unshift(...WALLPAPER_KEYWORDS);
+    keywords.unshift(...WALLPAPER_PAGE_KEYWORDS);
 
     if (this.keyword) {
       titles.unshift(this.keyword, '搜索');
@@ -198,13 +198,22 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     } else {
       description += '。';
     }
-    description += `${siteName}高清壁纸频道提供高清壁纸、4K壁纸、必应壁纸查找、下载。`;
+    description += `${siteName}${WALLPAPER_PAGE_DESCRIPTION}`;
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
       description,
       keywords: uniq(keywords).join(','),
       author: this.options['site_author']
+    });
+  }
+
+  protected updatePageOptions(): void {
+    this.commonService.updatePageOptions({
+      showHeader: true,
+      showFooter: true,
+      showMobileHeader: true,
+      showMobileFooter: true
     });
   }
 }
