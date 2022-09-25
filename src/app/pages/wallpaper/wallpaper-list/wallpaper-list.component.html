@@ -13,7 +13,7 @@
     <div class="wallpaper-item" *ngFor="let wallpaper of wallpapers">
       <div class="photo">
         <img [src]="wallpaper.fullUrl" [alt]="lang === 'cn' ? wallpaper.copyright : wallpaper.copyrightEn"/>
-        <a class="link" [routerLink]="[wallpaper.wallpaperId]"
+        <a class="link" [routerLink]="[wallpaper.wallpaperId]" [queryParams]="getLangParams()"
            [title]="lang === 'cn' ? wallpaper.copyright : wallpaper.copyrightEn"></a>
         <div class="content">
           <div class="info">

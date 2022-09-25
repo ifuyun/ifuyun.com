@@ -148,7 +148,7 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
         })
         .subscribe((res) => {
           if (res.accessToken) {
-            location.href = this.adminUrl;
+            window.location.href = this.referer ? this.options['site_url'] + this.referer : this.adminUrl;
           } else {
             this.shakeForm();
           }

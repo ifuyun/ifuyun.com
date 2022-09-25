@@ -3,8 +3,8 @@
   <i-carousel></i-carousel>
 </div>
 <div [ngClass]="{'article-list-desktop': !isMobile}">
-  <article class="article" [ngClass]="{'article-desktop': !isMobile, 'article-mobile': isMobile}"
-           *ngFor="let post of postList?.posts">
+  <article *ngFor="let post of postList?.posts"
+           class="article" [class.article-desktop]="!isMobile" [class.article-mobile]="isMobile">
     <header>
       <h3>
         <span class="meta-tag meta-tag-sticky" *ngIf="post.post.postSticky">置顶</span>

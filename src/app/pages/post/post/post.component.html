@@ -81,23 +81,22 @@
         <div class="post-meta-icon"><i class='icon icon-copyright'></i></div>
         <div class="post-meta-info">
           <span *ngIf="postMeta['copyright_type'] !== '2'"
-                class="post-meta-info-text" title="许可协议：{{postMeta['copyright_type'] | copyrightTypeDesc}}">
-            许可：{{postMeta['copyright_type'] | copyrightType}}
-          </span>
+                class="post-meta-info-text"
+                title="许可协议：{{postMeta['copyright_type'] | copyrightTypeDesc}}"
+          >许可：{{postMeta['copyright_type'] | copyrightType}}</span>
           <span *ngIf="postMeta['copyright_type'] === '2'"
                 class="post-meta-info-text" title="许可协议：{{postMeta['copyright_type'] | copyrightTypeDesc}}">
-            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" target="_blank" rel="license">
-              许可：{{postMeta['copyright_type'] | copyrightTypeDesc}}
-            </a>
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh"
+               target="_blank" rel="license">许可：{{postMeta['copyright_type'] | copyrightTypeDesc}}</a>
           </span>
         </div>
       </div>
       <div class="post-meta">
         <div class="post-meta-icon"><i class='icon icon-clock'></i></div>
         <div class="post-meta-info">
-        <span class="post-meta-info-text" title="更新于: {{post?.postModified | date:'yyyy-MM-dd HH:mm'}}">
-          最后更新：{{post?.postModified | date:'yyyy-MM-dd HH:mm'}}
-        </span>
+        <span class="post-meta-info-text"
+              title="更新于: {{post?.postModified | date:'yyyy-MM-dd HH:mm'}}"
+        >最后更新：{{post?.postModified | date:'yyyy-MM-dd HH:mm'}}</span>
         </div>
       </div>
     </div>

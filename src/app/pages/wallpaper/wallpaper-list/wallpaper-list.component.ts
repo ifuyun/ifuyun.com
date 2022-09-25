@@ -138,6 +138,10 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     return { lang };
   }
 
+  getLangParams(): Params {
+    return this.lang === WallpaperLang.CN ? {} : { lang: this.lang };
+  }
+
   protected updateActivePage(): void {
     this.commonService.updateActivePage(this.pageIndex);
   }

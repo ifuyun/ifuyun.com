@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { MessageService } from '../../../components/message/message.service';
 import { ApiUrl } from '../../../config/api-url';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import {
@@ -40,6 +41,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   wallpaperId = '';
   wallpaper!: Wallpaper;
   voteLoading = false;
+  isLoggedIn = false;
 
   protected pageIndex = 'wallpaper';
 
@@ -47,6 +49,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   private optionsListener!: Subscription;
   private paramListener!: Subscription;
   private wallpaperListener!: Subscription;
+  private userListener!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -56,7 +59,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     private wallpaperService: WallpaperService,
     private platform: PlatformService,
     private voteService: VoteService,
-    private userService: UserService
+    private userService: UserService,
+    private message: MessageService
   ) {
     super();
   }
@@ -80,6 +84,9 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
       .subscribe(() => {
         this.fetchWallpaper();
       });
+    this.userListener = this.userService.loginUser$.subscribe((user) => {
+      this.isLoggedIn = !!user.userId;
+    });
   }
 
   ngAfterViewInit() {
@@ -98,7 +105,14 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   }
 
   download(uhd = false) {
-    const url = `${BING_DOMAIN}${this.wallpaper.urlBase}_${uhd ? 'UHD' : '1920x1080'}.${this.wallpaper.imageFormat}`;
+    const url = uhd ? this.wallpaper.fullUhdUrl : this.wallpaper.fullUrl;
+    if (!this.isLoggedIn && uhd) {
+      return this.message.error('下载 4k 超高清壁纸请先登录');
+    }
+    if (!this.isLoggedIn) {
+      window.open(url);
+      return;
+    }
     window.location.href = `${this.options['site_url']}${this.wallpaperService.getDownloadUrl(url)}`;
   }
 
@@ -139,6 +153,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         this.wallpaper = {
           ...wallpaper,
           fullUrl: `${BING_DOMAIN}${wallpaper.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${wallpaper.imageFormat}`,
+          fullUhdUrl: `${BING_DOMAIN}${wallpaper.urlBase}_UHD.${wallpaper.imageFormat}`,
           fullCopyrightUrl: `${BING_DOMAIN}${wallpaper.copyrightLink}`
         };
       }

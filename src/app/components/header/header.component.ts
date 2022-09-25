@@ -64,7 +64,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
     this.userListener = this.userService.loginUser$.subscribe((user) => {
       this.user = user;
-      this.isLoggedIn = !!this.user.userId;
+      this.isLoggedIn = !!user.userId;
     });
   }
 

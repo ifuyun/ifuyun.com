@@ -30,6 +30,7 @@ export interface Wallpaper {
   url: string;
   urlBase: string;
   fullUrl: string;
+  fullUhdUrl: string;
   imageFormat: string;
   platform: WallpaperPlatform;
   quiz: string;
