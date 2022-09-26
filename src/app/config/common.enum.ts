@@ -31,9 +31,3 @@ export enum LinkTarget {
   SELF = '_self',
   TOP = '_top'
 }
-
-export enum WallpaperPlatform {
-  PC = 'pc',
-  MOBILE = 'mobile',
-  PAD = 'pad'
-}

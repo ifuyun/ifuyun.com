@@ -1,4 +1,4 @@
-<div class="wallpaper">
+<div class="wallpaper" [class.wallpaper-desktop]="!isMobile" [class.wallpaper-mobile]="isMobile">
   <div class="switcher">
     <div>
       <div class="lang" [class.active]="lang === 'cn'">

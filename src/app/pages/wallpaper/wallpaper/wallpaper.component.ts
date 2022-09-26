@@ -4,7 +4,6 @@ import { isEmpty, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { MessageService } from '../../../components/message/message.service';
-import { ApiUrl } from '../../../config/api-url';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import {
   BING_DOMAIN,
@@ -18,6 +17,7 @@ import { CommonService } from '../../../core/common.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
+import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { Guest } from '../../../interfaces/user.interface';
 import { OptionService } from '../../../services/option.service';
@@ -36,6 +36,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   readonly bingDomain = BING_DOMAIN;
 
   showCrumb = false;
+  isMobile = false;
   options: OptionEntity = {};
   lang = WallpaperLang.CN;
   wallpaperId = '';
@@ -60,9 +61,11 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     private platform: PlatformService,
     private voteService: VoteService,
     private userService: UserService,
-    private message: MessageService
+    private message: MessageService,
+    private userAgentService: UserAgentService
   ) {
     super();
+    this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {
@@ -175,13 +178,15 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     const keywords: string[] = (this.options['site_keywords'] || '').split(',');
     let description = '';
 
-    if (this.lang === WallpaperLang.CN) {
-      titles.unshift(this.wallpaper.copyright);
-      description += `${this.wallpaper.copyright} (${this.wallpaper.copyrightAuthor})。`;
-    } else {
-      titles.unshift(this.wallpaper.copyrightEn || this.wallpaper.copyright);
-      description +=
-        this.wallpaper.description + ' ' || `${this.wallpaper.copyrightEn} (${this.wallpaper.copyrightAuthor})。`;
+    if (this.wallpaper) {
+      if (this.lang === WallpaperLang.CN) {
+        titles.unshift(this.wallpaper.copyright);
+        description += `${this.wallpaper.copyright} (${this.wallpaper.copyrightAuthor})。`;
+      } else {
+        titles.unshift(this.wallpaper.copyrightEn || this.wallpaper.copyright);
+        description +=
+          this.wallpaper.description + ' ' || `${this.wallpaper.copyrightEn} (${this.wallpaper.copyrightAuthor})。`;
+      }
     }
 
     this.metaService.updateHTMLMeta({
@@ -197,7 +202,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
       showHeader: false,
       showFooter: false,
       showMobileHeader: true,
-      showMobileFooter: true
+      showMobileFooter: false
     });
   }
 }

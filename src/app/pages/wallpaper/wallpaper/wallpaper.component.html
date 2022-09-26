@@ -1,8 +1,8 @@
-<div class="wallpaper">
+<div class="wallpaper" [class.wallpaper-desktop]="!isMobile" [class.wallpaper-mobile]="isMobile">
   <div class="photo" [style.background-image]="'url(' + (wallpaper?.fullUrl || '') + ')'"></div>
   <div class="actions">
     <div class="return">
-      <div class="action-item action-text">
+      <div class="action-item action-text" *ngIf="!isMobile">
         <a routerLink="../" title="返回壁纸列表"><i class="icon icon-left"></i><span>返回</span></a>
       </div>
     </div>
@@ -26,10 +26,10 @@
       <div class="action-item action-download" (click)="download()">
         <div title="下载高清壁纸"><i class="icon icon-cloud-download"></i><span>1920x1080</span></div>
       </div>
-      <div class="action-item action-download" (click)="download(true)">
+      <div class="action-item action-download-4k" *ngIf="!isMobile" (click)="download(true)">
         <div title="下载 4k 超高清壁纸"><i class="icon icon-cloud-download"></i><span>4K 超高清</span></div>
       </div>
-      <div class="action-item action-login" *ngIf="!isLoggedIn">
+      <div class="action-item action-login" *ngIf="!isLoggedIn && !isMobile">
         <a routerLink="/user/login"
            [queryParams]="{ref: '/wallpaper/' + wallpaper?.wallpaperId + '?lang=' + lang}"
            title="登录"><i class="icon icon-login"></i><span>登录</span></a>

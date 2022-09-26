@@ -18,6 +18,7 @@ import { PageComponent } from '../../../core/page.component';
 import { PaginatorEntity } from '../../../core/paginator.interface';
 import { PaginatorService } from '../../../core/paginator.service';
 import { PlatformService } from '../../../core/platform.service';
+import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { Guest } from '../../../interfaces/user.interface';
 import { OptionService } from '../../../services/option.service';
@@ -34,6 +35,7 @@ import { WallpaperService } from '../wallpaper.service';
 })
 export class WallpaperListComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy {
   showCrumb = false;
+  isMobile = false;
   options: OptionEntity = {};
   page = 1;
   lang = WallpaperLang.CN;
@@ -61,9 +63,11 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     private paginator: PaginatorService,
     private platform: PlatformService,
     private voteService: VoteService,
-    private userService: UserService
+    private userService: UserService,
+    private userAgentService: UserAgentService
   ) {
     super();
+    this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {

@@ -1,12 +1,42 @@
 @import "../../../../styles/variables";
 
 .wallpaper {
+  @content-padding-horizontal: 36px;
+  @content-padding-vertical: 24px;
+  @m-content-padding-horizontal: 2.4rem;
+  @m-content-padding-vertical: 1.6rem;
+
   width: 100%;
   height: 100%;
+
+  &.wallpaper-desktop {
+    .actions {
+      top: @content-padding-vertical;
+      left: @content-padding-horizontal;
+      right: @content-padding-horizontal;
+    }
+
+    .content {
+      padding: @content-padding-vertical @content-padding-horizontal;
+    }
+  }
+
+  &.wallpaper-mobile {
+    .actions {
+      top: @m-content-padding-vertical + @m-header-height;
+      left: @m-content-padding-horizontal;
+      right: @m-content-padding-horizontal;
+    }
+
+    .content {
+      padding: @m-content-padding-vertical @m-content-padding-horizontal;
+    }
+  }
 
   .photo {
     width: 100%;
     height: 100%;
+    background-position: center;
     background-size: cover;
   }
 
@@ -15,9 +45,6 @@
     align-items: center;
     justify-content: space-between;
     position: absolute;
-    top: 24px;
-    left: 36px;
-    right: 36px;
 
     .action-item {
       display: inline-flex;
@@ -67,7 +94,6 @@
     right: 0;
     bottom: 0;
     height: auto;
-    padding: 24px 36px;
     background-color: rgba(51, 51, 51, .5);
     color: #efefef;
     text-shadow: 0 0 0 #efefef, 0 0 2px rgb(0 0 0 / 60%), 0 0 4px rgb(0 0 0 / 60%);

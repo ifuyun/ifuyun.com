@@ -1,4 +1,8 @@
-import { WallpaperPlatform } from '../../config/common.enum';
+export enum WallpaperPlatform {
+  PC = 'pc',
+  MOBILE = 'mobile',
+  PAD = 'pad'
+}
 
 export enum BingRequestFormat {
   JS = 'js',

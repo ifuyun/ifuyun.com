@@ -1,9 +1,84 @@
 @import "../../../../styles/variables";
 
 .wallpaper {
+  @content-padding: 16px;
+  @m-content-padding-horizontal: 2.4rem;
+  @m-content-padding-vertical: 1.6rem;
+
   position: relative;
-  width: @body-width;
-  margin: @header-height + @header-bg-height + @primary-margin auto 8px;
+  margin: @header-height + @header-bg-height + @primary-margin auto 0;
+
+  &.wallpaper-desktop {
+    width: @body-width;
+
+    .wallpaper-item {
+      width: 33.33333333%;
+
+      &:hover {
+        z-index: 9;
+
+        .photo {
+          transition: transform .5s;
+          transform: scale(1.12);
+        }
+
+        .content, .actions {
+          display: block;
+        }
+      }
+
+      .content {
+        display: none;
+        top: @content-padding;
+        left: @content-padding;
+        right: @content-padding;
+      }
+
+      .actions {
+        display: none;
+        bottom: @content-padding;
+        right: @content-padding;
+      }
+    }
+
+    .paginator-box {
+      padding-top: 8px;
+      text-align: center;
+    }
+  }
+
+  &.wallpaper-mobile {
+    .wallpaper-item {
+      &:not(:last-child) {
+        margin-bottom: 1.6rem;
+      }
+
+      .content {
+        top: @m-content-padding-vertical;
+        left: @m-content-padding-horizontal;
+        right: @m-content-padding-horizontal;
+
+        h2 {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+
+        .author {
+          display: none;
+        }
+      }
+
+      .actions {
+        bottom: @m-content-padding-vertical;
+        right: @m-content-padding-horizontal;
+      }
+    }
+
+    .paginator-box {
+      margin-bottom: 1.6rem;
+    }
+  }
 
   .switcher {
     display: flex;
@@ -72,7 +147,6 @@
 
   .wallpaper-item {
     position: relative;
-    width: 33.33333333%;
 
     .link {
       position: absolute;
@@ -84,11 +158,7 @@
     }
 
     .content {
-      display: none;
       position: absolute;
-      top: 16px;
-      left: 16px;
-      right: 16px;
       color: #efefef;
       z-index: 1;
 
@@ -127,10 +197,7 @@
     }
 
     .actions {
-      display: none;
       position: absolute;
-      bottom: 16px;
-      right: 16px;
       z-index: 3;
 
       .action-item {
@@ -153,27 +220,9 @@
         margin-right: 8px;
       }
     }
-
-    &:hover {
-      z-index: 9;
-
-      .photo {
-        transition: transform .5s;
-        transform: scale(1.12);
-      }
-
-      .content, .actions {
-        display: block;
-      }
-    }
   }
 
   img {
     width: 100%;
   }
-}
-
-.paginator-box {
-  padding-top: 8px;
-  text-align: center;
 }
