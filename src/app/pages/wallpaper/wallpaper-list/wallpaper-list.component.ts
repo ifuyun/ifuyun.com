@@ -49,6 +49,8 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
 
   protected pageIndex = 'wallpaper';
 
+  private readonly pageSize = 9;
+
   private commentUser: Guest | null = null;
   private optionsListener!: Subscription;
   private paramListener!: Subscription;
@@ -169,7 +171,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       this.initWallpaperStatus(this.wallpapers);
       this.page = res.page || 1;
       this.total = res.total || 0;
-      this.paginatorData = this.paginator.getPaginator(this.page, this.total);
+      this.paginatorData = this.paginator.getPaginator(this.page, this.total, this.pageSize);
       this.updatePageInfo();
     });
   }

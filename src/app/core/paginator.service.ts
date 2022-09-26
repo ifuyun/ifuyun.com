@@ -5,13 +5,8 @@ import { PaginatorEntity, PaginatorRange } from './paginator.interface';
   providedIn: 'root'
 })
 export class PaginatorService {
-  // todo: get from db:options
-  private pageSize = 10;
-  private paginationSize = 9;
-
-  getPageSize(): number {
-    return this.pageSize;
-  }
+  private readonly defaultPageSize = 10;
+  private readonly paginationSize = 9;
 
   /**
    * 获取分页数据
@@ -57,12 +52,14 @@ export class PaginatorService {
    * 生成分页对象
    * @param {number|string} [page=1] 请求页
    * @param {number} [total] 总记录数
+   * @param {number} [size] 每页显示记录数
    * @return {PaginatorEntity} 分页对象
    * @version 1.0.0
    * @since 1.0.0
    */
-  getPaginator(page: string | number, total: number): PaginatorEntity {
-    let pages = Math.ceil(total / this.pageSize); // 总页数
+  getPaginator(page: string | number, total: number, size?: number): PaginatorEntity {
+    const pageSize = size || this.defaultPageSize;
+    let pages = Math.ceil(total / pageSize); // 总页数
     if (typeof page === 'string') {
       // page是字符串
       page = parseInt(page, 10);
@@ -79,7 +76,7 @@ export class PaginatorService {
       nextPage: page >= pages ? 0 : page + 1,
       curPage: page,
       totalPage: pages,
-      pageLimit: this.pageSize,
+      pageLimit: pageSize,
       total
     };
   }
