@@ -116,7 +116,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
       window.open(url);
       return;
     }
-    window.location.href = `${this.options['site_url']}${this.wallpaperService.getDownloadUrl(url)}`;
+    window.location.href = `${this.options['site_url']}${this.wallpaperService.getDownloadUrl(this.wallpaperId, uhd)}`;
   }
 
   voteWallpaper(like = true) {

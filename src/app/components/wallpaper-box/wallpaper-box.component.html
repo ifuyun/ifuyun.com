@@ -15,7 +15,8 @@
               <a [href]="activeWallpaper.fullCopyrightUrl"
                  [title]="activeWallpaper.title" target="_blank"><i class='icon icon-link-45deg'></i></a>
             </h2>
-            <div class="image-desc">{{activeWallpaper.copyright}} ({{activeWallpaper.copyrightAuthor}})</div>
+            <div class="image-desc">{{
+              activeWallpaper.copyright || activeWallpaper.copyrightEn}} ({{activeWallpaper.copyrightAuthor}})</div>
           </div>
           <div class="indicator">
             <i class="icon icon-left"

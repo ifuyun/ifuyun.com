@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiUrl } from '../../config/api-url';
 import { ApiService } from '../../core/api.service';
+import { ResultList } from '../../core/common.interface';
 import {
   BingWallpaper,
   BingWallpaperQueryParam,
@@ -23,7 +24,7 @@ export class WallpaperService {
       .pipe(map((res) => res?.data || []));
   }
 
-  getWallpapers(param: WallpaperQueryParam): Observable<WallpaperList> {
+  getWallpapers(param: WallpaperQueryParam): Observable<ResultList<Wallpaper>> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_WALLPAPERS), param)
       .pipe(map((res) => res?.data || {}));
@@ -41,7 +42,7 @@ export class WallpaperService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  getDownloadUrl(path: string): string {
-    return `${this.apiService.getApiUrl(ApiUrl.DOWNLOAD_WALLPAPER)}?path=${path}`;
+  getDownloadUrl(wallpaperId: string, isUhd: boolean): string {
+    return `${this.apiService.getApiUrl(ApiUrl.DOWNLOAD_WALLPAPER)}?wallpaperId=${wallpaperId}&uhd=${isUhd ? 1 : 0}`;
   }
 }

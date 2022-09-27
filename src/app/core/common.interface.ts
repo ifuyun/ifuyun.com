@@ -10,6 +10,19 @@ export interface MetaData {
   metaValue: string;
 }
 
+export interface QueryParam {
+  page: number;
+  pageSize?: number;
+  keyword?: string;
+  orderBy?: string[][];
+}
+
+export interface ResultList<T> {
+  list?: T[];
+  page?: number;
+  total?: number;
+}
+
 export interface IPLocation {
   IP?: string;
   country?: string;

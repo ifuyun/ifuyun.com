@@ -42,6 +42,17 @@ export async function app(): Promise<express.Express> {
   server.use(cookieParser(env.cookie.secret));
   server.enable('trust proxy');
 
+  server.use((req, res, next) => {
+    try {
+      decodeURIComponent(req.path);
+    } catch (e) {
+      console.log(moment().format('YYYY-MM-DD HH:mm:ss'), req.url);
+      console.error(e);
+      return res.redirect('/404');
+    }
+    next();
+  });
+
   server.get('/rss.xml', async (req, res) => {
     const paramPage = typeof req.query['page'] === 'string' ? req.query['page'] : '';
     const paramSize = typeof req.query['size'] === 'string' ? req.query['size'] : '';

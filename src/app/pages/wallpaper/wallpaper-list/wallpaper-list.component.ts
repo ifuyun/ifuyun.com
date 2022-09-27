@@ -163,7 +163,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       param.keyword = this.keyword;
     }
     this.wallpapersListener = this.wallpaperService.getWallpapers(param).subscribe((res) => {
-      this.wallpapers = (res.wallpapers || []).map((item) => ({
+      this.wallpapers = (res.list || []).map((item) => ({
         ...item,
         fullUrl: `${BING_DOMAIN}${item.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${item.imageFormat}`,
         fullCopyrightUrl: `${BING_DOMAIN}${item.copyrightLink}`
