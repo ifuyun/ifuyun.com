@@ -6,16 +6,17 @@ import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { ResultList } from '../../../core/common.interface';
 import { CommonService } from '../../../core/common.service';
+import { HTMLMetaData } from '../../../core/meta.interface';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
+import { PaginatorEntity } from '../../../core/paginator.interface';
 import { PaginatorService } from '../../../core/paginator.service';
 import { UserAgentService } from '../../../core/user-agent.service';
-import { HTMLMetaData } from '../../../core/meta.interface';
 import { OptionEntity } from '../../../interfaces/option.interface';
-import { PaginatorEntity } from '../../../core/paginator.interface';
-import { PostList, PostQueryParam } from '../post.interface';
 import { OptionService } from '../../../services/option.service';
+import { Post, PostQueryParam } from '../post.interface';
 import { PostService } from '../post.service';
 
 @Component({
@@ -33,7 +34,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
   tag = '';
   year = '';
   month = '';
-  postList: PostList = {};
+  postList: ResultList<Post> = {};
   total = 0;
   paginatorData: PaginatorEntity | null = null;
   pageUrl = '';

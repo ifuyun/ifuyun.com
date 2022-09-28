@@ -4,13 +4,7 @@ import { map } from 'rxjs/operators';
 import { ApiUrl } from '../../config/api-url';
 import { ApiService } from '../../core/api.service';
 import { ResultList } from '../../core/common.interface';
-import {
-  BingWallpaper,
-  BingWallpaperQueryParam,
-  Wallpaper,
-  WallpaperList,
-  WallpaperQueryParam
-} from './wallpaper.interface';
+import { BingWallpaperQueryParam, Wallpaper, WallpaperQueryParam } from './wallpaper.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +12,7 @@ import {
 export class WallpaperService {
   constructor(private apiService: ApiService) {}
 
-  getBingWallpapers(param: Partial<BingWallpaperQueryParam>): Observable<BingWallpaper[]> {
+  getBingWallpapers(param: Partial<BingWallpaperQueryParam>): Observable<Wallpaper[]> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_BING_WALLPAPERS), param)
       .pipe(map((res) => res?.data || []));

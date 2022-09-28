@@ -3,7 +3,7 @@
   <i-carousel></i-carousel>
 </div>
 <div [ngClass]="{'article-list-desktop': !isMobile}">
-  <article *ngFor="let post of postList?.posts"
+  <article *ngFor="let post of postList?.list"
            class="article" [class.article-desktop]="!isMobile" [class.article-mobile]="isMobile">
     <header>
       <h3>

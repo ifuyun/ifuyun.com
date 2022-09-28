@@ -1,5 +1,6 @@
 import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
 import { CommentFlag, PostType } from '../../config/common.enum';
+import { QueryParam } from '../../core/common.interface';
 import { TaxonomyEntity } from '../../interfaces/taxonomy.interface';
 import { UserEntity } from '../../interfaces/user.interface';
 
@@ -42,12 +43,6 @@ export interface Post {
   voted: boolean;
 }
 
-export interface PostList {
-  posts?: Post[];
-  page?: number;
-  total?: number;
-}
-
 export interface PostArchiveDate {
   dateText: string;
   dateTitle: string;
@@ -66,9 +61,7 @@ export interface PostArchiveDateList {
   yearList: string[];
 }
 
-export interface PostQueryParam {
-  page: number;
-  keyword?: string;
+export interface PostQueryParam extends QueryParam {
   category?: string;
   tag?: string;
   year?: string;

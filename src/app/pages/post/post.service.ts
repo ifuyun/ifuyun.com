@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ApiService } from '../../core/api.service';
+import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
 import { ApiUrl } from '../../config/api-url';
 import { PostType } from '../../config/common.enum';
-import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
+import { ApiService } from '../../core/api.service';
+import { ResultList } from '../../core/common.interface';
 import {
   Post,
   PostArchiveDate,
   PostArchiveDateList,
   PostArchiveDateMap,
   PostEntity,
-  PostList,
   PostQueryParam
 } from './post.interface';
 
@@ -21,7 +21,7 @@ import {
 export class PostService {
   constructor(private apiService: ApiService) {}
 
-  getPosts(param: PostQueryParam): Observable<{ postList: PostList; breadcrumbs: BreadcrumbEntity[] }> {
+  getPosts(param: PostQueryParam): Observable<{ postList: ResultList<Post>; breadcrumbs: BreadcrumbEntity[] }> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS), param)
       .pipe(map((res) => res?.data || {}));

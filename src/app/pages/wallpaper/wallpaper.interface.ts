@@ -1,3 +1,5 @@
+import { QueryParam } from '../../core/common.interface';
+
 export enum WallpaperPlatform {
   PC = 'pc',
   MOBILE = 'mobile',
@@ -15,10 +17,8 @@ export enum WallpaperLang {
   CN = 'cn'
 }
 
-export interface WallpaperQueryParam {
-  page: number;
+export interface WallpaperQueryParam extends QueryParam {
   lang?: WallpaperLang;
-  keyword?: string;
 }
 
 export interface Wallpaper {
@@ -49,12 +49,6 @@ export interface Wallpaper {
   liked?: boolean;
 }
 
-export interface WallpaperList {
-  wallpapers: Wallpaper[];
-  page: number;
-  total: number;
-}
-
 export interface BingWallpaperQueryParam {
   size: number;
   offset: number;
@@ -62,19 +56,4 @@ export interface BingWallpaperQueryParam {
   lang: string;
   format: BingRequestFormat;
   resolution: string;
-}
-
-export interface BingWallpaper {
-  title: string;
-  description?: string;
-  caption?: string;
-  url: string;
-  urlBase: string;
-  fullUrl: string;
-  quiz: string;
-  date?: Date;
-  copyright: string;
-  copyrightLink: string;
-  copyrightAuthor: string;
-  fullCopyrightUrl: string;
 }
