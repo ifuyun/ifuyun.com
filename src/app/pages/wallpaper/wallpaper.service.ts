@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { ApiUrl } from '../../config/api-url';
 import { ApiService } from '../../core/api.service';
 import { ResultList } from '../../core/common.interface';
+import { HttpResponseEntity } from '../../core/http-response.interface';
 import { BingWallpaperQueryParam, Wallpaper, WallpaperQueryParam } from './wallpaper.interface';
 
 @Injectable({
@@ -38,5 +39,9 @@ export class WallpaperService {
 
   getDownloadUrl(wallpaperId: string, isUhd: boolean): string {
     return `${this.apiService.getApiUrl(ApiUrl.DOWNLOAD_WALLPAPER)}?wallpaperId=${wallpaperId}&uhd=${isUhd ? 1 : 0}`;
+  }
+
+  increaseDownload(wallpaperId: string): Observable<HttpResponseEntity> {
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.DOWNLOAD_WALLPAPER), { wallpaperId });
   }
 }

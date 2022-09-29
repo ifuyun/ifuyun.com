@@ -113,6 +113,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
       return this.message.error('下载 4k 超高清壁纸请先登录');
     }
     if (!this.isLoggedIn) {
+      this.wallpaperService.increaseDownload(this.wallpaperId).subscribe();
       window.open(url);
       return;
     }
@@ -184,8 +185,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         description += `${this.wallpaper.copyright} (${this.wallpaper.copyrightAuthor})。`;
       } else {
         titles.unshift(this.wallpaper.copyrightEn || this.wallpaper.copyright);
-        description +=
-          this.wallpaper.description + ' ' || `${this.wallpaper.copyrightEn} (${this.wallpaper.copyrightAuthor})。`;
+        description += `${this.wallpaper.copyrightEn} (${this.wallpaper.copyrightAuthor}). `;
       }
     }
 
