@@ -1,5 +1,9 @@
+@import "../../../styles/variables";
+
 .wallpaper {
   @box-padding: 8px;
+  @content-padding-horizontal: 36px;
+  @content-padding-vertical: 24px;
 
   display: flex;
   align-items: center;
@@ -11,7 +15,7 @@
   border-radius: 4px;
   background: #fff;
 
-  .image-box {
+  .photo {
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -19,7 +23,46 @@
     background-size: cover;
   }
 
-  .caption-box {
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: absolute;
+    top: @box-padding + @content-padding-vertical;
+    left: @box-padding + @content-padding-horizontal;
+    right: @box-padding + @content-padding-horizontal;
+
+    .action-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      background: @wallpaper-action-background-color;
+      cursor: pointer;
+
+      > a, > div {
+        padding: 6px 10px;
+      }
+
+      &, a {
+        color: @base-color;
+      }
+
+      &:hover {
+        background: #fff;
+      }
+
+      &:not(:last-child) {
+        margin-right: 8px;
+      }
+
+      .icon {
+        margin-left: 8px;
+      }
+    }
+  }
+
+  .content {
     display: flex;
     justify-content: space-between;
     position: absolute;
@@ -27,12 +70,12 @@
     right: @box-padding;
     bottom: @box-padding;
     height: auto;
-    padding: 24px 36px;
-    background-color: rgba(51, 51, 51, .5);
+    padding: @content-padding-vertical @content-padding-horizontal;
+    background-color: @wallpaper-content-background-color;
 
     .image-title, .image-title a, .image-desc {
-      color: #efefef;
-      text-shadow: 0 0 0 #efefef, 0 0 2px rgb(0 0 0 / 60%), 0 0 4px rgb(0 0 0 / 60%);
+      color: @wallpaper-content-color;
+      text-shadow: @wallpaper-content-text-shadow;
     }
 
     .image-title {
@@ -62,8 +105,8 @@
           background: #fff;
         }
 
-        &:not(:first-child) {
-          margin-left: 16px;
+        &:not(:last-child) {
+          margin-right: 16px;
         }
 
         &.disabled {

@@ -37,8 +37,12 @@
     </div>
   </div>
   <div class="content">
-    <h2 class="title"
-        [title]="lang === 'cn' ? wallpaper?.title : wallpaper?.titleEn">{{lang === 'cn' ? wallpaper?.title : wallpaper?.titleEn}}</h2>
+    <h2 class="title" [title]="lang === 'cn' ? wallpaper?.title : wallpaper?.titleEn">
+      <span>{{lang === 'cn' ? wallpaper?.title : wallpaper?.titleEn}}</span>
+      <a [href]="wallpaper?.fullCopyrightUrl"
+         [title]="lang === 'cn' ? wallpaper?.title : wallpaper?.titleEn"
+         target="_blank"><i class='icon icon-link-45deg'></i></a>
+    </h2>
     <div class="description">{{lang === 'cn' ? wallpaper?.copyright : wallpaper?.copyrightEn}} ({{wallpaper?.copyrightAuthor}})</div>
   </div>
 </div>

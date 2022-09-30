@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BING_DOMAIN, DEFAULT_WALLPAPER_RESOLUTION } from '../../config/constants';
 import { PlatformService } from '../../core/platform.service';
@@ -22,7 +23,7 @@ export class WallpaperBoxComponent implements OnDestroy, OnChanges {
 
   private wallpaperListener!: Subscription;
 
-  constructor(private wallpaperService: WallpaperService, private platform: PlatformService) {
+  constructor(private wallpaperService: WallpaperService, private platform: PlatformService, private router: Router) {
     this.isBrowser = platform.isBrowser;
   }
 
@@ -59,6 +60,12 @@ export class WallpaperBoxComponent implements OnDestroy, OnChanges {
     const size = Math.min(this.wallpapers.length, 8);
     this.activeIndex = this.activeIndex > size - 2 ? size - 1 : this.activeIndex + 1;
     this.activeWallpaper = this.wallpapers[this.activeIndex];
+  }
+
+  gotoWallpaper() {
+    this.visible = false;
+    this.visibleChange.emit(false);
+    this.router.navigate(['/wallpaper']);
   }
 
   private fetchData() {

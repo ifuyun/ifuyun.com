@@ -7,13 +7,19 @@
   <ng-template #wallpaperTpl>
     <div class="wallpaper">
       <ng-container *ngIf="activeWallpaper">
-        <div class="image-box" [style.background-image]="'url(' + (activeWallpaper.fullUrl || '') + ')'"></div>
-        <div class="caption-box">
+        <div class="photo" [style.background-image]="'url(' + (activeWallpaper.fullUrl || '') + ')'"></div>
+        <div class="actions">
+          <div class="action-item">
+            <a (click)="gotoWallpaper()" title="高清壁纸"><span>更多壁纸</span><i class="icon icon-double-right"></i></a>
+          </div>
+        </div>
+        <div class="content">
           <div>
             <h2 class="image-title">
-              <span>{{activeWallpaper.title}}</span>
+              <span>{{activeWallpaper.title || activeWallpaper.titleEn}}</span>
               <a [href]="activeWallpaper.fullCopyrightUrl"
-                 [title]="activeWallpaper.title" target="_blank"><i class='icon icon-link-45deg'></i></a>
+                 [title]="activeWallpaper.title || activeWallpaper.titleEn"
+                 target="_blank"><i class='icon icon-link-45deg'></i></a>
             </h2>
             <div class="image-desc">{{
               activeWallpaper.copyright || activeWallpaper.copyrightEn}} ({{activeWallpaper.copyrightAuthor}})</div>
@@ -21,9 +27,11 @@
           <div class="indicator">
             <i class="icon icon-left"
                [ngClass]="{'disabled': activeIndex === 0 || !wallpapers.length}"
+               [title]="activeIndex > 0 ? '上一张' : ''"
                (click)="prevImage()"></i>
             <i class="icon icon-right"
                [ngClass]="{'disabled': activeIndex === wallpapers.length - 1 || !wallpapers.length}"
+               [title]="activeIndex < wallpapers.length - 1 ? '下一张' : ''"
                (click)="nextImage()"></i>
           </div>
         </div>
