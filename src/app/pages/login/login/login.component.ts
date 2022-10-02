@@ -2,8 +2,8 @@ import { animate, keyframes, state, style, transition, trigger } from '@angular/
 import { AfterViewInit, Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { RESPONSE } from '@nguniversal/express-engine/tokens';
-import { Response } from 'express';
+import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
+import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
 import { skipWhile, Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ import { CommonService } from '../../../core/common.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
+import { UserAgentService } from '../../../core/user-agent.service';
 import { format, generateId } from '../../../helpers/helper';
 import md5 from '../../../helpers/md5';
 import { HTMLMetaData } from '../../../core/meta.interface';
@@ -43,6 +44,7 @@ const duration = 500; // ms
   ]
 })
 export class LoginComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy {
+  isMobile = false;
   loginForm = this.fb.group({
     username: [this.cookieService.get('user') || '', [Validators.required, Validators.maxLength(20)]],
     password: [null, [Validators.required, Validators.maxLength(20)]],
@@ -66,18 +68,21 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
   private paramListener!: Subscription;
 
   constructor(
+    @Optional() @Inject(RESPONSE) private response: Response,
+    @Optional() @Inject(REQUEST) private request: Request,
     private fb: FormBuilder,
+    private route: ActivatedRoute,
     private optionService: OptionService,
     private metaService: MetaService,
     private cookieService: CookieService,
     private commonService: CommonService,
     private authService: AuthService,
-    private platform: PlatformService,
     private message: MessageService,
-    private route: ActivatedRoute,
-    @Optional() @Inject(RESPONSE) private response: Response
+    private platform: PlatformService,
+    private userAgentService: UserAgentService
   ) {
     super();
+    this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {
@@ -89,7 +94,11 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
         this.initMeta();
         this.updateActivePage();
 
-        this.adminUrl = `${this.options['site_url'] || location.protocol + '//' + location.host}${ADMIN_URL}`;
+        if (this.platform.isBrowser) {
+          this.adminUrl = `${this.options['site_url'] || location.protocol + '//' + location.host}${ADMIN_URL}`;
+        } else {
+          this.adminUrl = `${this.options['site_url'] || this.request.protocol + '//' + this.request.hostname}${ADMIN_URL}`;
+        }
         const rememberMe = this.cookieService.get('remember');
         /* 登录状态直接跳转后台首页 */
         if (rememberMe === '1' && this.authService.isLoggedIn()) {
@@ -185,30 +194,41 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
 
   getUser(type: string) {
     if (!['alipay', 'weibo', 'github'].includes(type)) {
-      return this.message.warning('This feature is developing, please wait...');
+      return this.message.warning('Sorry, we are stepping up our efforts to launch this feature, please wait...');
     }
     let url = '';
     switch (type) {
       case 'alipay':
-        url = format(
-          THIRD_LOGIN_API[type],
-          this.options['open_alipay_app_id'],
-          encodeURIComponent(`${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'alipay')}`),
-          generateId()
-        );
+        if (this.isMobile) {
+          const redirectUrl = `${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'm_alipay', this.referer)}`;
+          const authUrl = format(
+            THIRD_LOGIN_API[type],
+            this.options['open_alipay_app_id'],
+            encodeURIComponent(redirectUrl),
+            generateId()
+          );
+          url = `alipays://platformapi/startapp?appId=20000067&url=${encodeURIComponent(authUrl)}`;
+        } else {
+          url = format(
+            THIRD_LOGIN_API[type],
+            this.options['open_alipay_app_id'],
+            encodeURIComponent(`${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'alipay', '')}`),
+            generateId()
+          );
+        }
         break;
       case 'weibo':
         url = format(
           THIRD_LOGIN_API[type],
           this.options['open_weibo_app_key'],
-          encodeURIComponent(`${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'weibo')}`)
+          encodeURIComponent(`${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'weibo', '')}`)
         );
         break;
       case 'github':
         url = format(
           THIRD_LOGIN_API[type],
           this.options['open_github_client_id'],
-          encodeURIComponent(`${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'github')}`),
+          encodeURIComponent(`${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'github', '')}`),
           generateId()
         );
         break;

@@ -24,7 +24,7 @@ export const STORAGE_KEY_DISLIKED_COMMENTS = 'disliked_comments';
 export const STORAGE_KEY_LIKED_WALLPAPER = 'liked_wallpapers';
 export const AVATAR_API_URL = 'https://cravatar.cn/avatar/$0.png?d=$1';
 export const ADMIN_URL = '/admin';
-export const THIRD_LOGIN_CALLBACK = '/user/login/callback?from=$0';
+export const THIRD_LOGIN_CALLBACK = '/user/login/callback?from=$0&ref=$1';
 export const BING_DOMAIN = 'https://www.bing.com';
 export const DEFAULT_WALLPAPER_RESOLUTION = '1920x1080';
 

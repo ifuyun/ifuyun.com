@@ -1,7 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
+import { Request, Response } from 'express';
 import { combineLatestWith, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { ADMIN_URL } from '../../../config/constants';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { PlatformService } from '../../../core/platform.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
@@ -20,11 +23,16 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
   private appId = '';
   private scope = '';
   private from = '';
+  private referer = '';
   private errCode = '';
+  private adminUrl = '';
+
   private paramListener!: Subscription;
   private loginListener!: Subscription;
 
   constructor(
+    @Optional() @Inject(RESPONSE) private response: Response,
+    @Optional() @Inject(REQUEST) private request: Request,
     private route: ActivatedRoute,
     private optionService: OptionService,
     private userService: UserService,
@@ -38,9 +46,21 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
         combineLatestWith(this.optionService.options$),
         tap(([params, options]) => {
           this.options = options;
+          if (this.platform.isBrowser) {
+            this.adminUrl = `${this.options['site_url'] || location.protocol + '//' + location.host}${ADMIN_URL}`;
+          } else {
+            this.adminUrl = `${this.options['site_url'] || this.request.protocol + '//' + this.request.hostname}${ADMIN_URL}`;
+          }
+
+          const ref = params.get('ref')?.trim() || '';
+          try {
+            this.referer = decodeURIComponent(ref);
+          } catch (e) {
+            this.referer = ref;
+          }
 
           this.from = params.get('from')?.trim() || '';
-          if (this.from === 'alipay') {
+          if (this.from === 'alipay' || this.from === 'm_alipay') {
             this.authCode = params.get('auth_code')?.trim() || '';
             this.appId = params.get('app_id')?.trim() || '';
             this.scope = params.get('scope')?.trim() || '';
@@ -78,6 +98,11 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
     }
     this.loginListener = this.userService.getThirdUser(this.authCode, this.from).subscribe((res) => {
       if (res.code === ResponseCode.SUCCESS) {
+        if (this.from === 'm_alipay') {
+          const redirectUrl = this.referer ? this.options['site_url'] + this.referer : this.adminUrl;
+          location.replace(redirectUrl);
+          return;
+        }
         this.authService.setAuth(res.data, { username: '', password: '', rememberMe: false });
         window.opener.postMessage({ login: true }, window.origin);
         window.close();

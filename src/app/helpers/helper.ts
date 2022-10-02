@@ -37,5 +37,5 @@ export function format(str: string, ...params: (string | number)[]): string {
   if (Array.isArray(params[0])) {
     params = params[0];
   }
-  return str.replace(/\$(\d+)/gi, (matched, index) => (params[index] && params[index].toString()) || matched);
+  return str.replace(/\$(\d+)/gi, (matched, index) => (params[index] && params[index].toString()) || '');
 }
