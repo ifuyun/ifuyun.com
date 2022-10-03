@@ -100,7 +100,7 @@
         </div>
       </div>
     </div>
-    <div class="post-actions" *ngIf="!isPage">
+    <div class="post-actions">
       <div>
         <button class="button-like" [ngClass]="{liked: postVoted, loading: voteLoading}" (click)="votePost(true)">
           <i class='icon icon-like-fill'></i>
@@ -111,7 +111,7 @@
         <button (click)="showReward('/assets/images/reward.jpg')">
           <i class='icon icon-heart-fill'></i>
         </button>
-        <button (click)="addFavorite()" [ngClass]="{liked: isFavorite}">
+        <button *ngIf="!isPage" (click)="addFavorite()" [ngClass]="{liked: isFavorite}">
           <i class='icon icon-star-fill' *ngIf="!favoriteLoading"></i>
           <i class='icon icon-loading' *ngIf="favoriteLoading"></i>
         </button>

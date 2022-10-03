@@ -36,17 +36,17 @@ import { PlatformService } from '../../../core/platform.service';
 import { UrlService } from '../../../core/url.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { format } from '../../../helpers/helper';
-import { Comment, CommentEntity, CommentModel } from '../comment.interface';
 import { OptionEntity } from '../../../interfaces/option.interface';
-import { Post, PostEntity, PostModel } from '../post.interface';
 import { TaxonomyEntity } from '../../../interfaces/taxonomy.interface';
 import { Guest, UserModel } from '../../../interfaces/user.interface';
-import { VoteEntity } from '../vote.interface';
+import { OptionService } from '../../../services/option.service';
+import { UserService } from '../../../services/user.service';
+import { Comment, CommentEntity, CommentModel } from '../comment.interface';
 import { CommentService } from '../comment.service';
 import { FavoriteService } from '../favorite.service';
-import { OptionService } from '../../../services/option.service';
+import { Post, PostEntity, PostModel } from '../post.interface';
 import { PostService } from '../post.service';
-import { UserService } from '../../../services/user.service';
+import { VoteEntity } from '../vote.interface';
 import { VoteService } from '../vote.service';
 
 @Component({
@@ -263,7 +263,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     const voteData: VoteEntity = {
       objectId: this.postId,
       value: like ? VoteValue.LIKE : VoteValue.DISLIKE,
-      type: VoteType.POST
+      type: this.isPage ? VoteType.PAGE : VoteType.POST
     };
     if (this.commentUser && this.commentUser.name) {
       voteData.user = this.commentUser;

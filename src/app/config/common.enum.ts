@@ -16,6 +16,7 @@ export enum VoteValue {
 
 export enum VoteType {
   POST = 'post',
+  PAGE = 'page',
   COMMENT = 'comment',
   WALLPAPER = 'wallpaper'
 }
