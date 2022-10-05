@@ -14,7 +14,7 @@
     </div>
     <ul class="dots">
       <li *ngFor="let carousel of carousels; let i = index"
-          [ngClass]="{'active': activeIndex === i, 'revert': isRevert}"
+          [ngClass]="{'active': activeIndex === i, 'revert': isRevert && activeIndex === i}"
           (click)="switchBanner(i)">
         <div class="before"></div>
         <div class="after"></div>
