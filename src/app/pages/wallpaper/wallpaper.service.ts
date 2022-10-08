@@ -31,9 +31,9 @@ export class WallpaperService {
       .pipe(map((res) => res?.data || []));
   }
 
-  getWallpaperById(wid: string): Observable<Wallpaper> {
+  getWallpaperById(wallpaperId: string): Observable<Wallpaper> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrlWithParam(ApiUrl.GET_WALLPAPER_BY_ID, wid))
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_WALLPAPER_BY_ID), { wallpaperId })
       .pipe(map((res) => res?.data || {}));
   }
 

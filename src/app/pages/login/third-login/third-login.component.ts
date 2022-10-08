@@ -49,7 +49,9 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
           if (this.platform.isBrowser) {
             this.adminUrl = `${this.options['site_url'] || location.protocol + '//' + location.host}${ADMIN_URL}`;
           } else {
-            this.adminUrl = `${this.options['site_url'] || this.request.protocol + '//' + this.request.hostname}${ADMIN_URL}`;
+            this.adminUrl = `${
+              this.options['site_url'] || this.request.protocol + '//' + this.request.hostname
+            }${ADMIN_URL}`;
           }
 
           const ref = params.get('ref')?.trim() || '';

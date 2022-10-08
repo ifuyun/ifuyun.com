@@ -501,7 +501,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   private fetchComments(cb?: () => void) {
     this.commentService.getCommentsByPostId(this.postId).subscribe((res) => {
-      this.comments = res.comments || [];
+      this.comments = res.list || [];
       this.comments.forEach((item) => {
         this.initComment(item);
         this.initCommentStatus(item.children);

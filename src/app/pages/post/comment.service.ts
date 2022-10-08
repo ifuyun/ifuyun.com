@@ -4,9 +4,10 @@ import { map } from 'rxjs/operators';
 import { ApiUrl } from '../../config/api-url';
 import { STORAGE_KEY_USER } from '../../config/constants';
 import { ApiService } from '../../core/api.service';
-import { PlatformService } from '../../core/platform.service';
-import { CommentEntity, CommentList } from './comment.interface';
+import { ResultList } from '../../core/common.interface';
 import { HttpResponseEntity } from '../../core/http-response.interface';
+import { PlatformService } from '../../core/platform.service';
+import { Comment, CommentEntity } from './comment.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ import { HttpResponseEntity } from '../../core/http-response.interface';
 export class CommentService {
   constructor(private apiService: ApiService, private platform: PlatformService) {}
 
-  getCommentsByPostId(postId: string): Observable<CommentList> {
+  getCommentsByPostId(postId: string): Observable<ResultList<Comment>> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_COMMENTS), {
         postId
@@ -32,6 +33,6 @@ export class CommentService {
         })
       );
     }
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_COMMENTS), comment);
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_COMMENT), comment);
   }
 }

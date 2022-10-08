@@ -2,6 +2,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import * as compress from 'compression';
 import * as cookieParser from 'cookie-parser';
+import { Request, Response } from 'express';
 import * as express from 'express';
 import { existsSync } from 'fs';
 import helmet from 'helmet';
@@ -29,6 +30,7 @@ export async function app(): Promise<express.Express> {
 
   server.set('view engine', 'html');
   server.set('views', distFolder);
+  server.enable('trust proxy');
 
   server.use(helmet({
     contentSecurityPolicy: false,
@@ -40,20 +42,19 @@ export async function app(): Promise<express.Express> {
   }));
   server.use(compress());
   server.use(cookieParser(env.cookie.secret));
-  server.enable('trust proxy');
 
-  server.use((req, res, next) => {
+  server.use((req: Request, res: Response, next) => {
     try {
       decodeURIComponent(req.path);
     } catch (e) {
-      console.log(moment().format('YYYY-MM-DD HH:mm:ss'), req.url);
+      console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] [decode] ${req.url}`);
       console.error(e);
       return res.redirect('/404');
     }
     next();
   });
 
-  server.get('/rss.xml', async (req, res) => {
+  server.get('/rss.xml', async (req: Request, res: Response) => {
     const paramPage = typeof req.query['page'] === 'string' ? req.query['page'] : '';
     const paramSize = typeof req.query['size'] === 'string' ? req.query['size'] : '';
     const page = Math.max(parseInt(paramPage, 10) || 1, 1);
@@ -106,7 +107,7 @@ export async function app(): Promise<express.Express> {
   }));
 
   // All regular routes use the Universal engine
-  server.get('*', (req, res) => {
+  server.get('*', (req: Request, res: Response) => {
     res.render(indexHtml, {
       req,
       res,
@@ -122,6 +123,14 @@ export async function app(): Promise<express.Express> {
     });
   });
 
+  server.use((err: Error, req: Request, res: Response) => {
+    if (err) {
+      console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] [final] ${req.url}`);
+      console.error(err);
+      return res.redirect('/404');
+    }
+  });
+
   return server;
 }
 
@@ -131,7 +140,7 @@ function run() {
   // Start up the Node server
   app().then((server) => {
     server.listen(port, () => {
-      console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}]ifuyun.com listening on http://localhost:${port}`);
+      console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ifuyun.com listening on http://localhost:${port}`);
     });
   });
 }

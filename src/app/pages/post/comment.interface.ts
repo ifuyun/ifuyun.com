@@ -35,9 +35,3 @@ export interface Comment extends CommentModel {
   level?: number;
   isLeaf: boolean;
 }
-
-export interface CommentList {
-  comments?: Comment[];
-  page?: number;
-  total?: number;
-}

@@ -97,7 +97,9 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
         if (this.platform.isBrowser) {
           this.adminUrl = `${this.options['site_url'] || location.protocol + '//' + location.host}${ADMIN_URL}`;
         } else {
-          this.adminUrl = `${this.options['site_url'] || this.request.protocol + '//' + this.request.hostname}${ADMIN_URL}`;
+          this.adminUrl = `${
+            this.options['site_url'] || this.request.protocol + '//' + this.request.hostname
+          }${ADMIN_URL}`;
         }
         const rememberMe = this.cookieService.get('remember');
         /* 登录状态直接跳转后台首页 */
