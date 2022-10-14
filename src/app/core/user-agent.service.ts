@@ -102,7 +102,7 @@ export class UserAgentService {
   }
 
   isCrawler() {
-    return /spider|googlebot/gi.test(this.userAgentString);
+    return /spider|googlebot/i.test(this.userAgentString);
   }
 
   private checkBrowser(browserNames: string[]) {
