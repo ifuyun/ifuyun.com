@@ -10,6 +10,7 @@ import { UserModel } from '../../interfaces/user.interface';
 import { AuthService } from '../../services/auth.service';
 import { OptionService } from '../../services/option.service';
 import { UserService } from '../../services/user.service';
+import { ImageService } from '../image/image.service';
 
 @Component({
   selector: 'app-sider-mobile',
@@ -26,8 +27,6 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
   options: OptionEntity = {};
   user!: UserModel;
   isLoggedIn = false;
-  imageModalVisible = false;
-  imageUrl = '';
 
   private optionsListener!: Subscription;
   private commonListener!: Subscription;
@@ -39,7 +38,8 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private userAgentService: UserAgentService,
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
+    private imageService: ImageService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }
@@ -71,9 +71,10 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
   }
 
   showWechatQrcode() {
-    this.imageUrl = '/assets/images/wechat.jpg';
     this.siderOpen = false;
     this.siderOpenChange.emit(this.siderOpen);
-    this.imageModalVisible = true;
+    this.imageService.preview([{
+      src: '/assets/images/wechat.jpg'
+    }]);
   }
 }

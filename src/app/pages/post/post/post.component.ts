@@ -18,6 +18,7 @@ import * as QRCode from 'qrcode';
 import { skipWhile, Subscription } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { ImageService } from '../../../components/image/image.service';
 import { MessageService } from '../../../components/message/message.service';
 import { ApiUrl } from '../../../config/api-url';
 import { VoteType, VoteValue } from '../../../config/common.enum';
@@ -72,9 +73,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   postCategories: TaxonomyEntity[] = [];
   isFavorite = false;
   showCrumb = true;
-  clickedImage!: HTMLImageElement | string;
-  imgModalVisible = false;
-  imgModalPadding = 0;
   isPage = false;
   captchaUrl = '';
   postVoted = false;
@@ -115,6 +113,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   replyForm = this.fb.group(this.commentFormConfig);
 
   constructor(
+    @Inject(DOCUMENT) private document: Document,
     private optionService: OptionService,
     private userService: UserService,
     private breadcrumbService: BreadcrumbService,
@@ -126,13 +125,13 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     private metaService: MetaService,
     private urlService: UrlService,
     private userAgentService: UserAgentService,
+    private imageService: ImageService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private message: MessageService,
     private platform: PlatformService,
     private scroller: ViewportScroller,
     private renderer: Renderer2,
-    @Inject(DOCUMENT) private document: Document
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -146,7 +145,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       this.postId = params['postId']?.trim();
       this.postSlug = params['postSlug']?.trim();
       this.postSlug ? this.fetchPage() : this.fetchPost();
-      this.imgModalVisible = false;
       this.scroller.scrollToPosition([0, 0]);
       this.resetCommentForm(this.commentForm);
       this.resetReplyStatus();
@@ -179,9 +177,9 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.unlistenImgClick = this.renderer.listen(this.postEle.nativeElement, 'click', (e: MouseEvent) => {
       if (e.target instanceof HTMLImageElement) {
         // todo: if image is in <a> link
-        this.clickedImage = e.target;
-        this.imgModalPadding = 0;
-        this.imgModalVisible = true;
+        this.imageService.preview([{
+          src: e.target.src
+        }]);
       }
     });
   }
@@ -355,16 +353,26 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   showReward(src: string) {
-    this.clickedImage = src;
-    this.imgModalPadding = 16;
-    this.imgModalVisible = true;
+    this.imageService.preview([{
+      src
+    }]);
   }
 
   showShareQrcode() {
-    this.clickedImage = '';
-    this.imgModalPadding = 16;
-    this.imgModalVisible = true;
-    setTimeout(() => this.generateShareQrcode(), 0);
+    const siteUrl = this.options['site_url'].replace(/\/$/i, '');
+    const postGuid = this.post.postGuid.replace(/^\//i, '');
+    this.shareUrl = siteUrl + '/' + postGuid + '?ref=qrcode';
+
+    QRCode.toCanvas(this.shareUrl, {
+      width: 320,
+      margin: 0
+    })
+      .then((canvas) => {
+        this.imageService.preview([{
+          src: canvas.toDataURL()
+        }]);
+      })
+      .catch((err) => this.message.error(err));
   }
 
   addFavorite() {
@@ -612,21 +620,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         );
       }
     );
-  }
-
-  private generateShareQrcode() {
-    const siteUrl = this.options['site_url'].replace(/\/$/i, '');
-    const postGuid = this.post.postGuid.replace(/^\//i, '');
-    this.shareUrl = siteUrl + '/' + postGuid + '?ref=qrcode';
-
-    QRCode.toCanvas(this.shareUrl, {
-      width: 320,
-      margin: 0
-    })
-      .then((canvas) => {
-        this.clickedImage = canvas.toDataURL();
-      })
-      .catch((err) => this.message.error(err));
   }
 
   private checkPostVoted() {

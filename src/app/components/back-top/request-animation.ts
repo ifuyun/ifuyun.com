@@ -1,11 +1,8 @@
-/* eslint-disable no-invalid-this */
-import { SafeAny } from './base';
-
 const availablePrefixes = ['moz', 'ms', 'webkit'];
 
 function requestAnimationFramePolyfill(): typeof requestAnimationFrame {
   let lastTime = 0;
-  return function (callback: FrameRequestCallback): SafeAny {
+  return function (callback: FrameRequestCallback): any {
     const currTime = new Date().getTime();
     const timeToCall = Math.max(0, 16 - (currTime - lastTime));
     const id = setTimeout(() => {
@@ -26,7 +23,7 @@ function getRequestAnimationFrame(): typeof requestAnimationFrame {
 
   const prefix = availablePrefixes.filter((key) => `${key}RequestAnimationFrame` in window)[0];
 
-  return prefix ? (window as SafeAny)[`${prefix}RequestAnimationFrame`] : requestAnimationFramePolyfill();
+  return prefix ? (window as any)[`${prefix}RequestAnimationFrame`] : requestAnimationFramePolyfill();
 }
 
 export const reqAnimFrame = getRequestAnimationFrame();

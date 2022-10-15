@@ -1,6 +1,5 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable, NgZone } from '@angular/core';
-import { SafeAny } from './base';
 import { reqAnimFrame } from './request-animation';
 
 export type EasyingFn = (t: number, b: number, c: number, d: number) => number;
@@ -30,7 +29,7 @@ export interface ScrollToOptions {
 export class ScrollService {
   private doc: Document;
 
-  constructor(private ngZone: NgZone, @Inject(DOCUMENT) doc: SafeAny) {
+  constructor(private ngZone: NgZone, @Inject(DOCUMENT) doc: any) {
     this.doc = doc;
   }
 
@@ -85,7 +84,7 @@ export class ScrollService {
     return result;
   }
 
-  isWindow(obj: SafeAny): boolean {
+  isWindow(obj: any): boolean {
     return obj !== null && obj !== undefined && obj === obj.window;
   }
 

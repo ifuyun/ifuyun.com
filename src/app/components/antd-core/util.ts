@@ -1,7 +1,12 @@
-import { _isNumberValue } from '@angular/cdk/coercion';
+import { _isNumberValue, coerceBooleanProperty } from '@angular/cdk/coercion';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type SafeAny = any;
+export function isNotNil<T>(value: T): value is NonNullable<T> {
+  return typeof value !== 'undefined' && value !== null;
+}
+
+export function toBoolean(value: boolean | string): boolean {
+  return coerceBooleanProperty(value);
+}
 
 export function toNumber(value: number | string): number;
 export function toNumber<D>(value: number | string, fallback: D): number | D;
@@ -9,12 +14,12 @@ export function toNumber(value: number | string, fallbackValue = 0): number {
   return _isNumberValue(value) ? Number(value) : fallbackValue;
 }
 
-function propDecoratorFactory<T, D>(name: string, fallback: (v: T) => D): (target: SafeAny, propName: string) => void {
+function propDecoratorFactory<T, D>(name: string, fallback: (v: T) => D): (target: any, propName: string) => void {
   function propDecorator(
-    target: SafeAny,
+    target: any,
     propName: string,
-    originalDescriptor?: TypedPropertyDescriptor<SafeAny>
-  ): SafeAny {
+    originalDescriptor?: TypedPropertyDescriptor<any>
+  ): any {
     const privatePropName = `$$__propDecorator__${propName}`;
 
     Object.defineProperty(target, privatePropName, {
@@ -40,6 +45,10 @@ function propDecoratorFactory<T, D>(name: string, fallback: (v: T) => D): (targe
   return propDecorator;
 }
 
-export function InputNumber(fallbackValue?: SafeAny): SafeAny {
+export function InputBoolean(): any {
+  return propDecoratorFactory('InputBoolean', toBoolean);
+}
+
+export function InputNumber(fallbackValue?: any): any {
   return propDecoratorFactory('InputNumber', (value: string | number) => toNumber(value, fallbackValue));
 }

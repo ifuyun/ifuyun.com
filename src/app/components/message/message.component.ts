@@ -10,7 +10,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { PlatformService } from '../../core/platform.service';
-import { moveUpMotion } from './animation';
+import { moveUpMotion } from '../antd-core/animation';
 import { MessageBaseComponent } from './base';
 import { MessageData } from './message.interface';
 

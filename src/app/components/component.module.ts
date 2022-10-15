@@ -10,6 +10,7 @@ import { CarouselComponent } from './carousel/carousel.component';
 import { EmptyComponent } from './empty/empty.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
+import { ImageModule } from './image/image.module';
 import { MessageModule } from './message/message.module';
 import { ModalComponent } from './modal/modal.component';
 import { PageBarComponent } from './page-bar/page-bar.component';
@@ -20,34 +21,34 @@ import { WallpaperBoxComponent } from './wallpaper-box/wallpaper-box.component';
 
 @NgModule({
   declarations: [
-    HeaderComponent,
-    CarouselComponent,
-    BreadcrumbComponent,
-    SiderComponent,
-    PageBarComponent,
-    FooterComponent,
-    ModalComponent,
-    EmptyComponent,
     AutofocusDirective,
+    BreadcrumbComponent,
+    CarouselComponent,
+    EmptyComponent,
+    FooterComponent,
+    HeaderComponent,
+    ModalComponent,
+    PageBarComponent,
+    SiderComponent,
     SiderMobileComponent,
     ToolboxComponent,
     WallpaperBoxComponent
   ],
-  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MessageModule, BackTopModule],
+  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MessageModule, BackTopModule, ImageModule],
   exports: [
-    HeaderComponent,
-    CarouselComponent,
-    BreadcrumbComponent,
-    SiderComponent,
-    PageBarComponent,
-    FooterComponent,
-    ModalComponent,
-    EmptyComponent,
     AutofocusDirective,
+    BackTopComponent,
+    BreadcrumbComponent,
+    CarouselComponent,
+    EmptyComponent,
+    FooterComponent,
+    HeaderComponent,
+    ModalComponent,
+    PageBarComponent,
+    SiderComponent,
     SiderMobileComponent,
     ToolboxComponent,
-    WallpaperBoxComponent,
-    BackTopComponent
+    WallpaperBoxComponent
   ]
 })
 export class ComponentModule {}

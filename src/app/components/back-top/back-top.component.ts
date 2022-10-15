@@ -22,9 +22,9 @@ import {
 } from '@angular/core';
 import { fromEvent, Subject, Subscription } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
-import { fadeMotion } from './animation';
-import { InputNumber, SafeAny } from './base';
-import { DestroyService } from './destroy';
+import { fadeMotion } from '../antd-core/animation';
+import { DestroyService } from '../antd-core/destroy';
+import { InputNumber } from '../antd-core/util';
 import { ScrollService } from './scroll';
 
 const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: true });
@@ -84,7 +84,7 @@ export class BackTopComponent implements OnInit, OnDestroy, OnChanges {
   private backTopClickSubscription = Subscription.EMPTY;
 
   constructor(
-    @Inject(DOCUMENT) private doc: SafeAny,
+    @Inject(DOCUMENT) private doc: any,
     private scrollSrv: ScrollService,
     private platform: Platform,
     private cd: ChangeDetectorRef,
