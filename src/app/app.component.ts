@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
       }
       this.initialized = true;
       this.siderOpen = false;
-      this.document.body.style.overflow = '';
+      this.onSiderOpenChange(false);
     });
     this.optionService.getOptions().subscribe();
     this.userService.getLoginUser().subscribe();
@@ -63,6 +63,15 @@ export class AppComponent implements OnInit {
 
   toggleSiderOpen() {
     this.siderOpen = !this.siderOpen;
-    this.document.body.style.overflow = this.siderOpen ? 'hidden' : '';
+    this.onSiderOpenChange(this.siderOpen);
+  }
+
+  onSiderOpenChange(open: boolean) {
+    const htmlNode = this.document.getElementsByTagName('html')[0];
+    if (open) {
+      htmlNode.classList.add('cdk-global-scrollblock');
+    } else {
+      htmlNode.classList.remove('cdk-global-scrollblock');
+    }
   }
 }

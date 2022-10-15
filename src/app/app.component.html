@@ -7,10 +7,12 @@
   <i-toolbox></i-toolbox>
 </ng-container>
 <ng-container *ngIf="isMobile">
-  <app-sider-mobile [taxonomies]="taxonomies" [(siderOpen)]="siderOpen"></app-sider-mobile>
+  <app-sider-mobile [taxonomies]="taxonomies"
+                    [(siderOpen)]="siderOpen" (siderOpenChange)="onSiderOpenChange($event)"></app-sider-mobile>
   <main class="main-mobile" [ngClass]="{'open': siderOpen}">
     <div class="mask mask-sider" *ngIf="siderOpen" (click)="toggleSiderOpen()"></div>
-    <app-header [taxonomies]="taxonomies" [(siderOpen)]="siderOpen"></app-header>
+    <app-header [taxonomies]="taxonomies"
+                [(siderOpen)]="siderOpen" (siderOpenChange)="onSiderOpenChange($event)"></app-header>
     <div class="body-wrap">
       <div class="router-wrap"><router-outlet></router-outlet></div>
       <app-footer></app-footer>

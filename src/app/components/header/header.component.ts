@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { skipWhile, Subscription } from 'rxjs';
@@ -46,8 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private userAgentService: UserAgentService,
     private userService: UserService,
     private authService: AuthService,
-    private router: Router,
-    @Inject(DOCUMENT) private document: Document
+    private router: Router
   ) {
     this.isMobile = this.userAgentService.isMobile();
     this.isFirefox = this.userAgentService.isFirefox();
@@ -91,7 +89,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   toggleSiderOpen() {
     this.siderOpen = !this.siderOpen;
     this.siderOpenChange.emit(this.siderOpen);
-    this.document.body.style.overflow = 'hidden';
   }
 
   logout() {
