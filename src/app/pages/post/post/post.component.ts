@@ -354,7 +354,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   showReward(src: string) {
     this.imageService.preview([{
-      src
+      src,
+      padding: 16
     }]);
   }
 
@@ -369,7 +370,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     })
       .then((canvas) => {
         this.imageService.preview([{
-          src: canvas.toDataURL()
+          src: canvas.toDataURL(),
+          padding: 16
         }]);
       })
       .catch((err) => this.message.error(err));

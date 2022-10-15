@@ -73,6 +73,9 @@ const initialPosition = {
                 [attr.alt]="image.alt"
                 [style.width]="image.width"
                 [style.height]="image.height"
+                [style.padding]="image.padding + 'px'"
+                [style.border-radius]="image.padding ? image.borderRadius || '4px' : ''"
+                [style.background-color]="image.padding ? '#fff' : ''"
                 [style.transform]="previewImageTransform"
               />
             </ng-container>

@@ -17,4 +17,6 @@ export interface Image {
   alt?: string;
   width?: string | number;
   height?: string | number;
+  padding?: number;
+  borderRadius?: number;
 }
