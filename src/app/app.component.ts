@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
+import { BLOCK_SCROLL_CLASS } from './config/constants';
 import { PlatformService } from './core/platform.service';
 import { UrlService } from './core/url.service';
 import { UserAgentService } from './core/user-agent.service';
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit {
   private initialized = false;
 
   constructor(
+    @Inject(DOCUMENT) private document: Document,
     private router: Router,
     private urlService: UrlService,
     private optionService: OptionService,
@@ -32,8 +34,7 @@ export class AppComponent implements OnInit {
     private taxonomyService: TaxonomyService,
     private logService: LogService,
     private platform: PlatformService,
-    private userAgentService: UserAgentService,
-    @Inject(DOCUMENT) private document: Document
+    private userAgentService: UserAgentService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }
@@ -69,9 +70,9 @@ export class AppComponent implements OnInit {
   onSiderOpenChange(open: boolean) {
     const htmlNode = this.document.getElementsByTagName('html')[0];
     if (open) {
-      htmlNode.classList.add('cdk-global-scrollblock');
+      htmlNode.classList.add(BLOCK_SCROLL_CLASS);
     } else {
-      htmlNode.classList.remove('cdk-global-scrollblock');
+      htmlNode.classList.remove(BLOCK_SCROLL_CLASS);
     }
   }
 }

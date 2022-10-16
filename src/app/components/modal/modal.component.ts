@@ -1,8 +1,9 @@
+import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   Component,
   ElementRef,
-  EventEmitter,
+  EventEmitter, Inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -11,6 +12,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
+import { BLOCK_SCROLL_CLASS } from '../../config/constants';
 import { PlatformService } from '../../core/platform.service';
 
 @Component({
@@ -19,10 +21,7 @@ import { PlatformService } from '../../core/platform.service';
   styleUrls: ['./modal.component.less']
 })
 export class ModalComponent implements OnDestroy, AfterViewInit, OnChanges {
-  @Input() template?: string | HTMLImageElement;
-  @Input() templateRef?: TemplateRef<void>;
-  @Input() padding = 0;
-  @Input() margin = 0;
+  @Input() content!: TemplateRef<void>;
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Input() loading = false;
@@ -39,7 +38,11 @@ export class ModalComponent implements OnDestroy, AfterViewInit, OnChanges {
   private unlistenInput!: () => void;
   private bodyEle!: ElementRef;
 
-  constructor(private renderer: Renderer2, private platform: PlatformService) {
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private renderer: Renderer2,
+    private platform: PlatformService
+  ) {
     this.isBrowser = platform.isBrowser;
   }
 
@@ -53,20 +56,20 @@ export class ModalComponent implements OnDestroy, AfterViewInit, OnChanges {
           classNames = Array.from(((e.target as HTMLElement).parentNode as HTMLElement).classList);
         }
         if (classNames.some((name) => ['modal', 'modal-close', 'icon-close'].includes(name))) {
-          this.hideModal();
+          this.toggleModal(false);
         }
       });
       this.unlistenInput = this.renderer.listen(this.bodyEle, 'keyup', (e: KeyboardEvent) => {
         if (e.key === 'Escape') {
-          this.hideModal();
+          this.toggleModal(false);
         }
       });
     }
   }
 
   ngOnChanges() {
-    if (this.platform.isBrowser && this.visible && (this.template || this.templateRef)) {
-      this.renderModal();
+    if (this.platform.isBrowser && this.content && this.visible) {
+      this.toggleModal(true);
     }
   }
 
@@ -75,25 +78,13 @@ export class ModalComponent implements OnDestroy, AfterViewInit, OnChanges {
     this.unlistenInput && this.unlistenInput();
   }
 
-  private renderModal() {
-    this.renderer.setStyle(this.bodyEle, 'overflow', 'hidden');
-    if (typeof this.template === 'string') {
-      this.imageUrl = this.template;
-      this.imageTitle = '';
-    } else if (this.template instanceof HTMLImageElement) {
-      this.imageUrl = this.template.src;
-      this.imageTitle = this.template.alt;
+  private toggleModal(visible: boolean) {
+    const htmlNode = this.document.getElementsByTagName('html')[0];
+    if (visible) {
+      htmlNode.classList.add(BLOCK_SCROLL_CLASS);
+    } else {
+      htmlNode.classList.remove(BLOCK_SCROLL_CLASS);
+      this.visibleChange.emit(false);
     }
-  }
-
-  private hideModal() {
-    this.imageUrl = '';
-    this.imageTitle = '';
-    this.resetStyles();
-    this.visibleChange.emit(false);
-  }
-
-  private resetStyles() {
-    this.renderer.removeStyle(this.bodyEle, 'overflow');
   }
 }

@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { BING_DOMAIN, DEFAULT_WALLPAPER_RESOLUTION } from '../../config/constants';
 import { PlatformService } from '../../core/platform.service';
+import { BING_DOMAIN, DEFAULT_WALLPAPER_RESOLUTION } from '../../pages/wallpaper/wallpaper.constant';
 import { Wallpaper } from '../../pages/wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
 

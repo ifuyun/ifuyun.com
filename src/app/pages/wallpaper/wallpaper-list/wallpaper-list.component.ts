@@ -4,13 +4,7 @@ import { isEmpty, omit, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { VoteType, VoteValue } from '../../../config/common.enum';
-import {
-  BING_DOMAIN,
-  DEFAULT_WALLPAPER_RESOLUTION,
-  STORAGE_KEY_LIKED_WALLPAPER,
-  WALLPAPER_PAGE_DESCRIPTION,
-  WALLPAPER_PAGE_KEYWORDS
-} from '../../../config/constants';
+import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/constants';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { MetaService } from '../../../core/meta.service';
@@ -25,6 +19,12 @@ import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
 import { VoteEntity } from '../../post/vote.interface';
 import { VoteService } from '../../post/vote.service';
+import {
+  BING_DOMAIN,
+  DEFAULT_WALLPAPER_RESOLUTION,
+  WALLPAPER_PAGE_DESCRIPTION,
+  WALLPAPER_PAGE_KEYWORDS
+} from '../wallpaper.constant';
 import { Wallpaper, WallpaperLang, WallpaperQueryParam } from '../wallpaper.interface';
 import { WallpaperService } from '../wallpaper.service';
 

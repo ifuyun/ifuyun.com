@@ -1,25 +1,12 @@
 <div class="modal" *ngIf="isBrowser" [style.display]="visible ? '' : 'none'" #modal>
-  <div class="modal-body"
-       [style.margin-left]="margin + 'px'"
-       [style.margin-right]="margin + 'px'"
-       [style.padding]="padding + 'px'"
-       [style.background-color]="padding > 0 ? '#fff' : ''"
-       [style.border-radius]="padding > 0 ? '4px' : ''">
+  <div class="modal-body">
     <div class="modal-close" *ngIf="showClose">
       <i class='icon icon-close'></i>
     </div>
     <div class="modal-content" #modalBody>
       <i *ngIf="loading" class="icon icon-loading"></i>
-      <ng-template #imageTpl>
-        <img [src]="imageUrl" style="max-width: 100%;" [alt]="imageTitle"/>
-      </ng-template>
       <ng-container *ngIf="!loading">
-        <ng-container *ngIf="imageUrl">
-          <ng-template [ngTemplateOutlet]="imageTpl"></ng-template>
-        </ng-container>
-        <ng-container *ngIf="templateRef">
-          <ng-template [ngTemplateOutlet]="templateRef"></ng-template>
-        </ng-container>
+        <ng-template [ngTemplateOutlet]="content"></ng-template>
       </ng-container>
     </div>
   </div>

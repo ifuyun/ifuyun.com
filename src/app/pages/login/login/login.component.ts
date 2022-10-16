@@ -8,7 +8,7 @@ import { isEmpty, uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
 import { skipWhile, Subscription } from 'rxjs';
 import { MessageService } from '../../../components/message/message.service';
-import { ADMIN_URL, THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK } from '../../../config/constants';
+import { ADMIN_URL } from '../../../config/constants';
 import { CommonService } from '../../../core/common.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
@@ -20,6 +20,7 @@ import { HTMLMetaData } from '../../../core/meta.interface';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { AuthService } from '../../../services/auth.service';
 import { OptionService } from '../../../services/option.service';
+import { THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK } from '../login.constant';
 
 const margin = 24;
 const offsets = [margin, 0, -margin, 0];
