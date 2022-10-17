@@ -1,7 +1,7 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
 import { makeStateKey, StateKey, TransferState } from '@angular/platform-browser';
-import { REQUEST } from '@nguniversal/express-engine/tokens';
+import { REQUEST } from '@nestjs/ng-universal/dist/tokens';
 import { Request } from 'express';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';

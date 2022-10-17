@@ -41,6 +41,10 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# Logs
+logs
+*.log
+
 # Project
 package-lock.json
 /src/environments

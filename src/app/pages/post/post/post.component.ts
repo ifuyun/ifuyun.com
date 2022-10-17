@@ -131,7 +131,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     private message: MessageService,
     private platform: PlatformService,
     private scroller: ViewportScroller,
-    private renderer: Renderer2,
+    private renderer: Renderer2
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -177,9 +177,11 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.unlistenImgClick = this.renderer.listen(this.postEle.nativeElement, 'click', (e: MouseEvent) => {
       if (e.target instanceof HTMLImageElement) {
         // todo: if image is in <a> link
-        this.imageService.preview([{
-          src: e.target.src
-        }]);
+        this.imageService.preview([
+          {
+            src: e.target.src
+          }
+        ]);
       }
     });
   }
@@ -353,10 +355,12 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   showReward(src: string) {
-    this.imageService.preview([{
-      src,
-      padding: 16
-    }]);
+    this.imageService.preview([
+      {
+        src,
+        padding: 16
+      }
+    ]);
   }
 
   showShareQrcode() {
@@ -369,10 +373,12 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       margin: 0
     })
       .then((canvas) => {
-        this.imageService.preview([{
-          src: canvas.toDataURL(),
-          padding: 16
-        }]);
+        this.imageService.preview([
+          {
+            src: canvas.toDataURL(),
+            padding: 16
+          }
+        ]);
       })
       .catch((err) => this.message.error(err));
   }

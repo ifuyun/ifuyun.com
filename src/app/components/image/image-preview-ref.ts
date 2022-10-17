@@ -18,13 +18,13 @@ export class NzImagePreviewRef {
       .keydownEvents()
       .pipe(
         filter(
-          event =>
+          (event) =>
             (this.config.nzKeyboard as boolean) &&
             (event.keyCode === ESCAPE || event.keyCode === LEFT_ARROW || event.keyCode === RIGHT_ARROW) &&
             !hasModifierKey(event)
         )
       )
-      .subscribe(event => {
+      .subscribe((event) => {
         event.preventDefault();
         if (event.keyCode === ESCAPE) {
           this.close();
@@ -51,7 +51,7 @@ export class NzImagePreviewRef {
 
     previewInstance.animationStateChanged
       .pipe(
-        filter(event => event.phaseName === 'done' && event.toState === 'leave'),
+        filter((event) => event.phaseName === 'done' && event.toState === 'leave'),
         take(1)
       )
       .subscribe(() => {

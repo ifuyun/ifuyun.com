@@ -40,7 +40,7 @@ module.exports = {
           'error',
           {
             'type': 'element',
-            'prefix': ['app', 'i'],
+            'prefix': ['app', 'i', 'nz'],
             'style': 'kebab-case'
           }
         ]

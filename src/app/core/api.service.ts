@@ -1,7 +1,8 @@
 import { HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
 import { Router } from '@angular/router';
-import { RESPONSE } from '@nguniversal/express-engine/tokens';
+// todo: remove from allowedCommonJsDependencies, since @nestjs/ng-universal/tokens is not exist
+import { RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Response } from 'express';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';

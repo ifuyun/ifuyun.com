@@ -15,11 +15,7 @@ export function toNumber(value: number | string, fallbackValue = 0): number {
 }
 
 function propDecoratorFactory<T, D>(name: string, fallback: (v: T) => D): (target: any, propName: string) => void {
-  function propDecorator(
-    target: any,
-    propName: string,
-    originalDescriptor?: TypedPropertyDescriptor<any>
-  ): any {
+  function propDecorator(target: any, propName: string, originalDescriptor?: TypedPropertyDescriptor<any>): any {
     const privatePropName = `$$__propDecorator__${propName}`;
 
     Object.defineProperty(target, privatePropName, {

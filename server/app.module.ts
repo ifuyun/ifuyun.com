@@ -1,0 +1,37 @@
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER } from '@nestjs/core';
+import { AngularUniversalModule } from '@nestjs/ng-universal';
+import { join } from 'path';
+import { AppServerModule } from '../src/main.server';
+import { ExceptionService } from './common/exception.service';
+import APP_CONFIG from './config/app.config';
+import ENV_CONFIG from './config/env.config';
+import { AllExceptionsFilter } from './filters/all-exceptions.filter';
+import { LoggerService } from './logger/logger.service';
+import { RssModule } from './rss/rss.module';
+
+@Module({
+  imports: [
+    AngularUniversalModule.forRoot({
+      bootstrap: AppServerModule,
+      viewsPath: join(process.cwd(), 'dist/browser')
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [ENV_CONFIG, APP_CONFIG]
+    }),
+    RssModule
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter
+    },
+    ConfigService,
+    LoggerService,
+    ExceptionService
+  ],
+  controllers: []
+})
+export class AppModule {}

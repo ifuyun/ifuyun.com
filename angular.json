@@ -25,12 +25,14 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
+            "aot": true,
             "inlineStyleLanguage": "less",
             "allowedCommonJsDependencies": [
               "lodash",
               "moment",
               "qrcode",
-              "ua-parser-js"
+              "ua-parser-js",
+              "@nestjs/ng-universal/dist/tokens"
             ],
             "assets": [
               {
@@ -144,7 +146,15 @@
             "outputPath": "dist/server",
             "main": "server.ts",
             "tsConfig": "tsconfig.server.json",
-            "inlineStyleLanguage": "less"
+            "inlineStyleLanguage": "less",
+            "externalDependencies": [
+              "@nestjs/microservices",
+              "@nestjs/microservices/microservices-module",
+              "@nestjs/websockets",
+              "@nestjs/websockets/socket-module",
+              "cache-manager",
+              "log4js"
+            ]
           },
           "configurations": {
             "production": {

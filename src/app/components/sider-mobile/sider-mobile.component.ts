@@ -73,8 +73,10 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
   showWechatQrcode() {
     this.siderOpen = false;
     this.siderOpenChange.emit(this.siderOpen);
-    this.imageService.preview([{
-      src: '/assets/images/wechat.jpg'
-    }]);
+    this.imageService.preview([
+      {
+        src: '/assets/images/wechat.jpg'
+      }
+    ]);
   }
 }

@@ -31,7 +31,7 @@ export type ImageStatusType = 'error' | 'loading' | 'normal';
 export class ImageDirective implements OnInit, OnChanges, OnDestroy {
   @Input() nzSrc = '';
   @Input() nzSrcset = '';
-  @Input() @InputBoolean() nzDisablePreview: boolean = false;
+  @Input() @InputBoolean() nzDisablePreview = false;
   @Input() nzFallback: string | null = null;
   @Input() nzPlaceholder: string | null = null;
 
@@ -80,9 +80,9 @@ export class ImageDirective implements OnInit, OnChanges, OnDestroy {
 
     if (this.parentGroup) {
       // preview inside image group
-      const previewAbleImages = this.parentGroup.images.filter(e => e.previewable);
-      const previewImages = previewAbleImages.map(e => ({ src: e.nzSrc, srcset: e.nzSrcset }));
-      const previewIndex = previewAbleImages.findIndex(el => this === el);
+      const previewAbleImages = this.parentGroup.images.filter((e) => e.previewable);
+      const previewImages = previewAbleImages.map((e) => ({ src: e.nzSrc, srcset: e.nzSrcset }));
+      const previewIndex = previewAbleImages.findIndex((el) => this === el);
       const previewRef = this.imageService.preview(previewImages, { nzDirection: this.dir });
       previewRef.switchTo(previewIndex);
     } else {

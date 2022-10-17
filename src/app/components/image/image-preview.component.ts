@@ -51,7 +51,7 @@ const initialPosition = {
               (click)="option.onClick()"
               *ngFor="let option of operations"
             >
-              <span class="image-preview-operations-icon icon icon-{{option.icon}}"></span>
+              <span class="image-preview-operations-icon icon icon-{{ option.icon }}"></span>
             </li>
           </ul>
           <div
@@ -205,7 +205,7 @@ export class ImagePreviewComponent implements OnInit {
     this.ngZone.runOutsideAngular(() => {
       fromEvent(this.host.nativeElement, 'click')
         .pipe(takeUntil(this.destroy$))
-        .subscribe(event => {
+        .subscribe((event) => {
           if (event.target === event.currentTarget && this.maskClosable && this.containerClick.observers.length) {
             this.ngZone.run(() => this.containerClick.emit());
           }
