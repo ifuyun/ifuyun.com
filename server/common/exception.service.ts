@@ -13,7 +13,7 @@ export class ExceptionService {
 
   async handleException(
     exception: CustomException | HttpException | Error | unknown,
-    visitorInfo = ''
+    visitor = ''
   ): Promise<{ resStatus: number; resData: HttpResponseEntity }> {
     const isDev = this.configService.get('env.isDev');
     // 返回给终端的响应数据
@@ -34,7 +34,7 @@ export class ExceptionService {
           const logData: LogData = {
             message: (errLog ? errLog.message : '') || resData.message,
             data: (errLog ? errLog.data : null) || resData.data,
-            visitorInfo,
+            visitor,
             stack: (shouldNotice && ((errLog ? errLog.stack : null) || exception.stack)) || ''
           };
           this.logger.error(logData);
@@ -58,7 +58,7 @@ export class ExceptionService {
       } else {
         const logData: LogData = {
           message: msg,
-          visitorInfo,
+          visitor,
           stack: stack || ''
         };
         this.logger.error(logData);
@@ -76,7 +76,7 @@ export class ExceptionService {
         } else {
           const logData = {
             message: exception.message,
-            visitorInfo,
+            visitor,
             stack: exception.stack
           };
           this.logger.error(logData);

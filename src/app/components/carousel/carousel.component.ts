@@ -35,7 +35,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.optionsListener.unsubscribe();
-    this.carouselsListener.unsubscribe();
+    this.carouselsListener?.unsubscribe();
     this.stop();
   }
 

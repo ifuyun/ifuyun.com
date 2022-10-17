@@ -11,10 +11,10 @@ export class AllExceptionsFilter<T> implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const req = ctx.getRequest();
     const res = ctx.getResponse();
-    const visitorInfo = getIPAndUserAgent(req);
+    const visitor = getIPAndUserAgent(req);
     const { resStatus, resData } = await this.exceptionService.handleException(
       exception as CustomException | HttpException | Error,
-      visitorInfo
+      visitor
     );
 
     res.header('Content-Type', 'application/json').status(resStatus).json(resData);
