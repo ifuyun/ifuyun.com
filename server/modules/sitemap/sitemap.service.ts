@@ -2,10 +2,10 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { lastValueFrom } from 'rxjs';
-import { ApiUrl } from '../../src/app/config/api-url';
-import { HttpResponseEntity } from '../common/http-response.interface';
-import { ResponseCode } from '../common/response-code.enum';
-import { InternalServerErrorException } from '../exceptions/internal-server-error.exception';
+import { ApiUrl } from '../../../src/app/config/api-url';
+import { HttpResponseEntity } from '../../common/http-response.interface';
+import { ResponseCode } from '../../common/response-code.enum';
+import { InternalServerErrorException } from '../../exceptions/internal-server-error.exception';
 import { SitemapData } from './sitemap.interface';
 
 @Injectable()

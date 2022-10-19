@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import * as moment from 'moment';
 import { EnumChangefreq, SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
-import { PostType, TaxonomyType } from '../../src/app/config/common.enum';
+import { PostType, TaxonomyType } from '../../../src/app/config/common.enum';
 import { SitemapItem } from './sitemap.interface';
 import { SitemapService } from './sitemap.service';
 

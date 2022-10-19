@@ -1,10 +1,10 @@
 import { Controller, Get, Header, Query } from '@nestjs/common';
 import * as RSS from 'rss';
-import { SITE_INFO } from '../../src/app/config/constants';
-import { Post } from '../../src/app/pages/post/post.interface';
-import { PageSizePipe } from '../pipes/page-size.pipe';
-import { ParseIntPipe } from '../pipes/parse-int.pipe';
-import { TrimPipe } from '../pipes/trim.pipe';
+import { SITE_INFO } from '../../../src/app/config/constants';
+import { Post } from '../../../src/app/pages/post/post.interface';
+import { PageSizePipe } from '../../pipes/page-size.pipe';
+import { ParseIntPipe } from '../../pipes/parse-int.pipe';
+import { TrimPipe } from '../../pipes/trim.pipe';
 import { RssService } from './rss.service';
 
 @Controller()

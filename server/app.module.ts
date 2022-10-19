@@ -9,8 +9,8 @@ import APP_CONFIG from './config/app.config';
 import ENV_CONFIG from './config/env.config';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 import { LoggerService } from './logger/logger.service';
-import { RssModule } from './rss/rss.module';
-import { SitemapModule } from './sitemap/sitemap.module';
+import { RssModule } from './modules/rss/rss.module';
+import { SitemapModule } from './modules/sitemap/sitemap.module';
 
 @Module({
   imports: [
