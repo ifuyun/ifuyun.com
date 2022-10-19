@@ -38,7 +38,7 @@ const duration = 500; // ms
       transition('* => shaking', [
         animate(
           duration,
-          keyframes(offsets.concat(offsets.concat(offsets)).map((offset) => style({ marginLeft: `${offset}px` })))
+          keyframes(offsets.concat(offsets, offsets).map((offset) => style({ marginLeft: `${offset}px` })))
         )
       ])
     ])

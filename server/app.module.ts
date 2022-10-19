@@ -10,6 +10,7 @@ import ENV_CONFIG from './config/env.config';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 import { LoggerService } from './logger/logger.service';
 import { RssModule } from './rss/rss.module';
+import { SitemapModule } from './sitemap/sitemap.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { RssModule } from './rss/rss.module';
       isGlobal: true,
       load: [ENV_CONFIG, APP_CONFIG]
     }),
-    RssModule
+    RssModule,
+    SitemapModule
   ],
   providers: [
     {

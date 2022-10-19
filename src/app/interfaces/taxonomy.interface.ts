@@ -1,11 +1,14 @@
+import { TaxonomyStatus, TaxonomyType } from '../config/common.enum';
+
 export interface TaxonomyEntity {
+  taxonomyId: string;
+  taxonomyType: TaxonomyType;
   taxonomyName: string;
   taxonomySlug: string;
   taxonomyDescription?: string;
   taxonomyIcon?: string;
-  taxonomyId: string;
   taxonomyParent?: string;
-  taxonomyStatus?: number;
+  taxonomyStatus?: TaxonomyStatus;
   objectCount?: number;
 }
 

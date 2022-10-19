@@ -1,6 +1,6 @@
 {
   "name": "ifuyun.com",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Website of ifuyun.com",
   "author": {
     "name": "Fuyun",
@@ -63,6 +63,7 @@
     "qrcode": "^1.5.1",
     "rss": "^1.2.2",
     "rxjs": "^7.5.7",
+    "sitemap": "^7.1.1",
     "tslib": "^2.4.0",
     "ua-parser-js": "^1.0.32",
     "xhr2": "^0.2.1",

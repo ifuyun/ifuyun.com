@@ -24,5 +24,6 @@ export enum ApiUrl {
   GET_BING_WALLPAPERS = '/wallpapers/bing',
   GET_WALLPAPERS_BY_RANDOM = '/wallpapers/random',
   GET_WALLPAPER_BY_ID = '/wallpapers/wallpaper',
-  DOWNLOAD_WALLPAPER = '/wallpapers/download'
+  DOWNLOAD_WALLPAPER = '/wallpapers/download',
+  GET_SITEMAP = '/util/sitemap'
 }

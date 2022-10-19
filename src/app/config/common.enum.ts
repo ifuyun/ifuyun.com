@@ -3,6 +3,19 @@ export enum PostType {
   PAGE = 'page'
 }
 
+export enum TaxonomyType {
+  POST = 'post',
+  LINK = 'link',
+  TAG = 'tag',
+  MENU = 'menu'
+}
+
+export enum TaxonomyStatus {
+  PUBLISH = 'publish',
+  PRIVATE = 'private',
+  TRASH = 'trash'
+}
+
 export enum CommentFlag {
   OPEN = 'open',
   VERIFY = 'verify',
