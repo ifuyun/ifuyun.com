@@ -10,10 +10,14 @@ export function getIPAndUserAgent(req: Request): string {
   return getIP(req) + ' - "' + req.headers['user-agent'] + '"';
 }
 
+export function getRequestUrl(req: Request) {
+  return req.originalUrl || req.url;
+}
+
 export function parseRequestHeader(req: Request, res: Response) {
   return {
     ip: getIP(req),
-    url: req.originalUrl || req.url,
+    url: getRequestUrl(req),
     protocol: req.protocol,
     hostname: req.hostname,
     method: req.method,

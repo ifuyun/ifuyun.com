@@ -13,6 +13,7 @@ export class ExceptionService {
 
   async handleException(
     exception: CustomException | HttpException | Error | unknown,
+    url = '',
     visitor = ''
   ): Promise<{ resStatus: number; resData: HttpResponseEntity }> {
     const isDev = this.configService.get('env.isDev');
@@ -34,6 +35,7 @@ export class ExceptionService {
           const logData: LogData = {
             message: (errLog ? errLog.message : '') || resData.message,
             data: (errLog ? errLog.data : null) || resData.data,
+            url,
             visitor,
             stack: (shouldNotice && ((errLog ? errLog.stack : null) || exception.stack)) || ''
           };
@@ -58,6 +60,7 @@ export class ExceptionService {
       } else {
         const logData: LogData = {
           message: msg,
+          url,
           visitor,
           stack: stack || ''
         };
@@ -76,6 +79,7 @@ export class ExceptionService {
         } else {
           const logData = {
             message: exception.message,
+            url,
             visitor,
             stack: exception.stack
           };

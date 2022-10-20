@@ -1,6 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
 import { CustomException } from '../exceptions/custom.exception';
-import { getIPAndUserAgent } from '../helpers/request-parser';
+import { getIPAndUserAgent, getRequestUrl } from '../helpers/request-parser';
 import { ExceptionService } from '../common/exception.service';
 
 @Catch()
@@ -14,9 +14,10 @@ export class AllExceptionsFilter<T> implements ExceptionFilter {
     const visitor = getIPAndUserAgent(req);
     const { resStatus, resData } = await this.exceptionService.handleException(
       exception as CustomException | HttpException | Error,
+      getRequestUrl(req),
       visitor
     );
 
-    res.header('Content-Type', 'application/json').status(resStatus).json(resData);
+    res.status(resStatus).json(resData);
   }
 }

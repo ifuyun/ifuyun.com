@@ -1,4 +1,5 @@
-import { Controller, Get, Header, Query } from '@nestjs/common';
+import { Controller, Get, Query, Res } from '@nestjs/common';
+import { Response } from 'express';
 import * as RSS from 'rss';
 import { SITE_INFO } from '../../../src/app/config/constants';
 import { Post } from '../../../src/app/pages/post/post.interface';
@@ -12,11 +13,11 @@ export class RssController {
   constructor(private readonly rssService: RssService) {}
 
   @Get('rss.xml')
-  @Header('Content-Type', 'text/xml')
   async generateRss(
     @Query('page', new ParseIntPipe(1)) page: number,
     @Query('size', new PageSizePipe(10, 100)) pageSize: number,
-    @Query('detail', new TrimPipe()) detail: '0' | '1'
+    @Query('detail', new TrimPipe()) detail: '0' | '1',
+    @Res() res: Response
   ) {
     const showDetail = detail === '1';
     const result = await this.rssService.getPosts(page, pageSize, showDetail);
@@ -47,6 +48,6 @@ export class RssController {
         date: post.postDate
       });
     });
-    return feed.xml({ indent: true });
+    res.header('Content-Type', 'text/xml').send(feed.xml({ indent: true }));
   }
 }

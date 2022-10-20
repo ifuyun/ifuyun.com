@@ -1,5 +1,6 @@
-import { Controller, Get, Header } from '@nestjs/common';
+import { Controller, Get, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
 import * as moment from 'moment';
 import { EnumChangefreq, SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
@@ -12,8 +13,7 @@ export class SitemapController {
   constructor(private readonly sitemapService: SitemapService, private readonly configService: ConfigService) {}
 
   @Get('sitemap.xml')
-  @Header('Content-Type', 'text/xml')
-  async generateRss() {
+  async generateRss(@Res() res: Response) {
     const data = await this.sitemapService.getSitemap();
     const siteUrl = this.configService.get('app.api.host');
     const sitemapStream = new SitemapStream({ hostname: siteUrl });
@@ -56,8 +56,8 @@ export class SitemapController {
       priority: 0.7
     }));
 
-    return streamToPromise(
+    streamToPromise(
       Readable.from(links.concat(pages, posts, wallpapers, archives, taxonomies)).pipe(sitemapStream)
-    ).then((data) => data.toString());
+    ).then((data) => res.header('Content-Type', 'text/xml').send(data.toString()));
   }
 }
