@@ -55,6 +55,7 @@ export class LoggerService {
       logStr = `[Msg] ${logData}`;
     } else {
       logStr += logData.message ? `[Msg] ${logData.message}` : '';
+      logStr += logData.url ? (logStr ? '\n' : '') + `[URL] ${logData.url}` : '';
       logStr += logData.data ? (logStr ? '\n' : '') + `[Data] ${JSON.stringify(logData.data)}` : '';
       logStr += logData.visitor ? (logStr ? '\n' : '') + `[User] ${logData.visitor}` : '';
       logStr += logData.stack ? (logStr ? '\n' : '') + `[Stack] ${logData.stack}` : '';
