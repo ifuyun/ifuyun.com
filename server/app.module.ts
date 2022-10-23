@@ -16,7 +16,8 @@ import { SitemapModule } from './modules/sitemap/sitemap.module';
   imports: [
     AngularUniversalModule.forRoot({
       bootstrap: AppServerModule,
-      viewsPath: join(process.cwd(), 'dist/browser')
+      viewsPath: join(process.cwd(), 'dist/browser'),
+      errorHandler: () => {}
     }),
     ConfigModule.forRoot({
       isGlobal: true,

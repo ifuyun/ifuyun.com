@@ -4,6 +4,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import * as cluster from 'cluster';
 import * as compress from 'compression';
 import * as cookieParser from 'cookie-parser';
+import { Request, Response } from 'express';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { getWorkerCount } from './helpers/helper';
