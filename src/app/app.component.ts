@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
       const previous = this.currentUrl.split('#')[0];
       const current = (event as NavigationEnd).url.split('#')[0];
       if (previous !== current) {
-        this.urlService.updatePreviousUrl({
+        this.urlService.updateUrlHistory({
           previous: this.currentUrl,
           current: (event as NavigationEnd).url
         });

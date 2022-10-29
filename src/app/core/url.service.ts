@@ -9,7 +9,7 @@ export class UrlService {
   private urlInfo: BehaviorSubject<UrlHistory> = new BehaviorSubject<UrlHistory>({ previous: '', current: '' });
   public urlInfo$: Observable<UrlHistory> = this.urlInfo.asObservable();
 
-  updatePreviousUrl(urlInfo: UrlHistory) {
+  updateUrlHistory(urlInfo: UrlHistory) {
     this.urlInfo.next(urlInfo);
   }
 }

@@ -49,7 +49,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
 
   protected pageIndex = 'wallpaper';
 
-  private readonly pageSize = 9;
+  private readonly pageSize = 12;
 
   private commentUser: Guest | null = null;
   private optionsListener!: Subscription;
@@ -154,7 +154,8 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
 
   private fetchWallpapers() {
     const param: WallpaperQueryParam = {
-      page: this.page
+      page: this.page,
+      pageSize: this.pageSize
     };
     if (this.lang) {
       param.lang = this.lang;
