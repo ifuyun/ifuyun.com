@@ -62,7 +62,7 @@ export class PostService {
         showCount: showCount ? 1 : 0,
         limit
       })
-      .pipe(map((res) => res?.data || []));
+      .pipe(map((res) => res?.data?.archives || []));
   }
 
   transformArchiveDates(archiveDates: PostArchiveDate[]): PostArchiveDateList {
