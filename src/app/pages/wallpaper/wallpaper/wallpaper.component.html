@@ -3,7 +3,10 @@
   <div class="actions">
     <div class="return">
       <div class="action-item action-text" *ngIf="!isMobile">
-        <a routerLink="../" title="返回壁纸列表"><i class="icon icon-left"></i><span>返回</span></a>
+        <a routerLink="/" title="返回{{options['site_name']}}首页"><i class="icon icon-home"></i><span>首页</span></a>
+      </div>
+      <div class="action-item action-text" *ngIf="!isMobile">
+        <a routerLink="../" [queryParams]="queryParams" title="返回壁纸列表"><i class="icon icon-left"></i><span>返回</span></a>
       </div>
     </div>
     <div class="actions-list">

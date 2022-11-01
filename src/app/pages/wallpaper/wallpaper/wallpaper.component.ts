@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -43,6 +43,15 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   wallpaper!: Wallpaper;
   voteLoading = false;
   isLoggedIn = false;
+
+  get queryParams(): Params {
+    if (this.lang === WallpaperLang.CN) {
+      return {};
+    }
+    return {
+      lang: this.lang
+    };
+  }
 
   protected pageIndex = 'wallpaper';
 
