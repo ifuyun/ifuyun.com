@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Cron } from '@nestjs/schedule';
 import { configure, getLogger, Logger } from 'log4js';
 import * as moment from 'moment';
 import { LogData } from './logger.interface';
@@ -7,7 +8,6 @@ import { LogData } from './logger.interface';
 @Injectable()
 export class LoggerService {
   private logger: Logger;
-  private logDay = moment().format('YYYY-MM-DD');
 
   constructor(private readonly configService: ConfigService) {
     const appenders = {
@@ -36,14 +36,16 @@ export class LoggerService {
     });
 
     this.logger = getLogger('system');
-    this.logger.addContext('logDay', this.logDay);
+    this.logger.addContext('logDay', moment().format('YYYY-MM-DD'));
   }
 
+  @Cron('0 0 * * *', {
+    name: 'updateLoggerContext'
+  })
   updateContext() {
     const today = moment().format('YYYY-MM-DD');
-    if (today !== this.logDay) {
-      this.logger.addContext('logDay', today);
-    }
+    this.logger.clearContext();
+    this.logger.addContext('logDay', today);
   }
 
   transformLogData(logData: string | LogData, ...args: any[]): Array<string | LogData> {

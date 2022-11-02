@@ -4,7 +4,6 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import * as cluster from 'cluster';
 import * as compress from 'compression';
 import * as cookieParser from 'cookie-parser';
-import { Request, Response } from 'express';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { getWorkerCount } from './helpers/helper';
@@ -51,11 +50,6 @@ async function bootstrap() {
         referrerPolicy: false
       })
     );
-
-    app.use((req: Request, res: Response, next: () => void) => {
-      logger.updateContext();
-      next();
-    });
 
     const port = process.env['PORT'] || config.get('app.port') || 2008;
     const host = config.get('app.host', 'localhost');
