@@ -6,12 +6,6 @@ export enum WallpaperPlatform {
   PAD = 'pad'
 }
 
-export enum BingRequestFormat {
-  JS = 'js',
-  XML = 'xml',
-  RSS = 'rss'
-}
-
 export enum WallpaperLang {
   EN = 'en',
   CN = 'cn'
@@ -47,13 +41,4 @@ export interface Wallpaper {
   likes: number;
   downloads: number;
   liked?: boolean;
-}
-
-export interface BingWallpaperQueryParam {
-  size: number;
-  offset: number;
-  enSearch: number;
-  lang: string;
-  format: BingRequestFormat;
-  resolution: string;
 }

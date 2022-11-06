@@ -18,7 +18,7 @@ export enum TaxonomyStatus {
 
 export enum CommentFlag {
   OPEN = 'open',
-  VERIFY = 'verify',
+  AUDIT = 'audit',
   CLOSE = 'close'
 }
 

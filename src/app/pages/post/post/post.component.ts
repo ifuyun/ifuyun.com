@@ -240,7 +240,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       this.saveLoading = true;
       this.commentService.saveComment(commentDto).subscribe((res) => {
         this.saveLoading = false;
-        if (res.code === 0) {
+        if (res.code === ResponseCode.SUCCESS) {
           const msg = res.data.status === 'success' ? '评论成功' : '评论成功，审核通过后将显示在页面上';
           this.message.success(msg);
           const cachedReplyMode = this.replyMode;

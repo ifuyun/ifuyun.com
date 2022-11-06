@@ -21,7 +21,6 @@ export enum ApiUrl {
   GET_CAROUSELS = '/options/carousels',
   SAVE_ACCESS_LOG = '/logs/access',
   GET_WALLPAPERS = '/wallpapers',
-  GET_BING_WALLPAPERS = '/wallpapers/bing',
   GET_WALLPAPERS_BY_RANDOM = '/wallpapers/random',
   GET_WALLPAPER_BY_ID = '/wallpapers/wallpaper',
   DOWNLOAD_WALLPAPER = '/wallpapers/download',

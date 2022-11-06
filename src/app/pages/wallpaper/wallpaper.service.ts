@@ -5,19 +5,13 @@ import { ApiUrl } from '../../config/api-url';
 import { ApiService } from '../../core/api.service';
 import { ResultList } from '../../core/common.interface';
 import { HttpResponseEntity } from '../../core/http-response.interface';
-import { BingWallpaperQueryParam, Wallpaper, WallpaperQueryParam } from './wallpaper.interface';
+import { Wallpaper, WallpaperQueryParam } from './wallpaper.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WallpaperService {
   constructor(private apiService: ApiService) {}
-
-  getBingWallpapers(param: Partial<BingWallpaperQueryParam>): Observable<Wallpaper[]> {
-    return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_BING_WALLPAPERS), param)
-      .pipe(map((res) => res?.data || []));
-  }
 
   getWallpapers(param: WallpaperQueryParam): Observable<ResultList<Wallpaper>> {
     return this.apiService
