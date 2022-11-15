@@ -29,6 +29,17 @@
           <li [ngClass]="{'active': activePage === 'wallpaper'}">
             <a class="nav-link" [routerLink]="['/wallpaper']" title="高清壁纸">壁纸</a>
           </li>
+          <li>
+            <div class="nav-link" title="实用工具"><span>工具</span><i class="nav-arrow"></i></div>
+            <div class="sub-nav-group">
+              <div class="sub-nav-list">
+                <ul>
+                  <li><a class="sub-nav-link" href="javascript:"
+                         (click)="showAlipayRedPacketQrcode()" title="支付宝扫码领红包">支付宝红包</a></li>
+                </ul>
+              </div>
+            </div>
+          </li>
         </ul>
       </div>
       <ul class="link-list">

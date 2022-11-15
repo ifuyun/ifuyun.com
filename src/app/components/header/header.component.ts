@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { isEmpty } from 'lodash';
+import * as QRCode from 'qrcode';
 import { skipWhile, Subscription } from 'rxjs';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
@@ -11,6 +12,8 @@ import { UserModel } from '../../interfaces/user.interface';
 import { AuthService } from '../../services/auth.service';
 import { OptionService } from '../../services/option.service';
 import { UserService } from '../../services/user.service';
+import { ImageService } from '../image/image.service';
+import { MessageService } from '../message/message.service';
 
 @Component({
   selector: 'app-header',
@@ -40,12 +43,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private logoutListener!: Subscription;
 
   constructor(
+    private router: Router,
     private optionService: OptionService,
     private commonService: CommonService,
     private userAgentService: UserAgentService,
     private userService: UserService,
     private authService: AuthService,
-    private router: Router
+    private imageService: ImageService,
+    private message: MessageService
   ) {
     this.isMobile = this.userAgentService.isMobile();
     this.isFirefox = this.userAgentService.isFirefox();
@@ -71,6 +76,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.commonListener.unsubscribe();
     this.userListener.unsubscribe();
     this.logoutListener?.unsubscribe();
+  }
+
+  showAlipayRedPacketQrcode() {
+    QRCode.toCanvas(this.options['alipay_red_packet_code'], {
+      width: 320,
+      margin: 0
+    })
+      .then((canvas) => {
+        this.imageService.preview([
+          {
+            src: canvas.toDataURL(),
+            padding: 16
+          }
+        ]);
+      })
+      .catch((err) => this.message.error(err));
   }
 
   toggleSearchStatus() {
