@@ -15,11 +15,19 @@
     <div class="promotion-list" *ngIf="promotion?.data?.shortURL || promotion?.data?.clickURL">
       <div class="promotion-item">
         <div class="label">长链：</div>
-        <div><a [href]="promotion?.data?.clickURL" target="_blank">{{promotion?.data?.clickURL}}</a></div>
+        <div>
+          <a *ngIf="promotion?.data?.clickURL"
+             [href]="promotion?.data?.clickURL" target="_blank">{{promotion?.data?.clickURL}}</a>
+          <span *ngIf="!promotion?.data?.clickURL">暂无</span>
+        </div>
       </div>
       <div class="promotion-item">
         <div class="label">短链：</div>
-        <div><a [href]="promotion?.data?.shortURL" target="_blank">{{promotion?.data?.shortURL}}</a></div>
+        <div>
+          <a *ngIf="promotion?.data?.shortURL"
+                [href]="promotion?.data?.shortURL" target="_blank">{{promotion?.data?.shortURL}}</a>
+          <span *ngIf="!promotion?.data?.shortURL">暂无</span>
+        </div>
       </div>
       <div class="promotion-item">
         <div class="label">二维码：</div><div id="promotionQrcode" #promotionQrcode></div>

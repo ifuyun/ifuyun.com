@@ -8,9 +8,24 @@
 
   &-desktop {
     margin: @box-shadow-width;
+
+    .promotion-item {
+      .label {
+        flex-basis: 80px;
+        flex-shrink: 0;
+      }
+    }
   }
 
   &-mobile {
+    .promotion-item {
+      flex-direction: column;
+
+      .label {
+        flex-basis: @post-line-height;
+        margin-bottom: 12px;
+      }
+    }
   }
 
   > :not(:last-child) {
@@ -24,9 +39,6 @@
     &::after {
       content: '：';
     }
-  }
-
-  .promotion-search {
   }
 
   .promotion-result {
@@ -44,8 +56,7 @@
         }
 
         .label {
-          flex-basis: 80px;
-          flex-shrink: 0;
+          font-weight: 500;
         }
       }
     }

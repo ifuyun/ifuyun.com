@@ -13,5 +13,5 @@ export const SHOPPING_PAGE_KEYWORDS = Object.freeze([
   '推客',
   '淘宝客'
 ]);
-export const SHOPPING_PAGE_DESCRIPTION = '电商工具栏目提供京东、天猫、唯品会、拼多多、美团、饿了么等电商平台的各种优惠券、红包，' +
+export const SHOPPING_PAGE_DESCRIPTION = '电商优惠券栏目提供京东、天猫、唯品会、拼多多、美团、饿了么等电商平台的各种优惠券、红包，' +
   '您可在线领取想要购买商品的优惠券，并参与各种优惠活动，实现专属于您的超级网购省钱计划。';
