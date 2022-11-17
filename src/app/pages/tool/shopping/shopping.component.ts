@@ -116,6 +116,9 @@ export class ShoppingComponent extends PageComponent implements OnInit, OnDestro
       })
         .then((canvas) => {
           setTimeout(() => {
+            canvas.removeAttribute('style');
+            canvas.style.width = '100%';
+            canvas.style.maxWidth = '200px';
             this.promotionQrcode.nativeElement.innerHTML = '';
             this.promotionQrcode.nativeElement.appendChild(canvas);
           }, 0);
