@@ -13,6 +13,7 @@ export const POST_SLUG_PREFIX_BLACKLIST = Object.freeze([
   'comment',
   'user',
   'wallpaper',
+  'tool',
   'admin',
   'api'
 ]);

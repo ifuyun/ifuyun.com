@@ -34,7 +34,6 @@ import { WallpaperService } from '../wallpaper.service';
   styleUrls: ['./wallpaper-list.component.less']
 })
 export class WallpaperListComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy {
-  showCrumb = false;
   isMobile = false;
   options: OptionEntity = {};
   page = 1;
@@ -152,6 +151,15 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     this.commonService.updateActivePage(this.pageIndex);
   }
 
+  protected updatePageOptions(): void {
+    this.commonService.updatePageOptions({
+      showHeader: true,
+      showFooter: true,
+      showMobileHeader: true,
+      showMobileFooter: true
+    });
+  }
+
   private fetchWallpapers() {
     const param: WallpaperQueryParam = {
       page: this.page,
@@ -216,15 +224,6 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       description,
       keywords: uniq(keywords).join(','),
       author: this.options['site_author']
-    });
-  }
-
-  protected updatePageOptions(): void {
-    this.commonService.updatePageOptions({
-      showHeader: true,
-      showFooter: true,
-      showMobileHeader: true,
-      showMobileFooter: true
     });
   }
 }

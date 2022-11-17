@@ -1,0 +1,31 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="promotion" [ngClass]="{'promotion-desktop': !isMobile, 'promotion-mobile': isMobile}">
+  <div class="promotion-search">
+    <div class="tip-text">请输入京东商品详情页地址或商品ID</div>
+    <form class="search-form" method="get" action="./" (submit)="search()">
+      <input type="text" class="input input-search"
+             name="keyword" [(ngModel)]="keyword"
+             autocomplete="off"
+             placeholder="京东商品详情页地址或商品ID"/>
+      <input type="submit" class="button button-submit" value="查询"/>
+    </form>
+  </div>
+  <div class="promotion-result">
+    <div class="tip-text">查询结果</div>
+    <div class="promotion-list" *ngIf="promotion?.data?.shortURL || promotion?.data?.clickURL">
+      <div class="promotion-item">
+        <div class="label">长链：</div>
+        <div><a [href]="promotion?.data?.clickURL" target="_blank">{{promotion?.data?.clickURL}}</a></div>
+      </div>
+      <div class="promotion-item">
+        <div class="label">短链：</div>
+        <div><a [href]="promotion?.data?.shortURL" target="_blank">{{promotion?.data?.shortURL}}</a></div>
+      </div>
+      <div class="promotion-item">
+        <div class="label">二维码：</div><div id="promotionQrcode" #promotionQrcode></div>
+      </div>
+    </div>
+    <app-empty *ngIf="!promotion?.data?.shortURL && !promotion?.data?.clickURL"></app-empty>
+  </div>
+</div>
+<div class="recommend-goods"></div>

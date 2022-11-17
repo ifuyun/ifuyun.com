@@ -24,9 +24,10 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
   pageIndex = 'archive';
   archiveDateList!: PostArchiveDateMap;
   archiveYearList: string[] = [];
-  showCrumb = true;
 
   private options: OptionEntity = {};
+  private breadcrumbs: BreadcrumbEntity[] = [];
+
   private optionsListener!: Subscription;
   private archiveListener!: Subscription;
 
@@ -46,39 +47,14 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
   ngOnInit(): void {
     this.updateActivePage();
     this.updatePageOptions();
+    this.updateBreadcrumb();
     this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => {
         this.options = options;
-        const titles = ['文章归档', this.options['site_name']];
-        const keywords: string[] = (this.options['site_keywords'] || '').split(',');
-        const metaData: HTMLMetaData = {
-          title: titles.join(' - '),
-          description: `${this.options['site_name']}文章归档。${this.options['site_description']}`,
-          author: this.options['site_author'],
-          keywords: uniq(keywords).join(',')
-        };
-        this.metaService.updateHTMLMeta(metaData);
+        this.updatePageInfo();
       });
-    const breadcrumbs: BreadcrumbEntity[] = [
-      {
-        label: '文章归档',
-        tooltip: '文章归档',
-        url: '/archive',
-        isHeader: true
-      }
-    ];
-    this.breadcrumbService.updateCrumb(breadcrumbs);
-    this.archiveListener = this.postService
-      .getPostArchives({
-        showCount: true,
-        limit: 0
-      })
-      .subscribe((res) => {
-        const { dateList, yearList } = this.postService.transformArchiveDates(res);
-        this.archiveDateList = dateList;
-        this.archiveYearList = yearList;
-      });
+    this.fetchArchiveData();
     this.scroller.scrollToPosition([0, 0]);
   }
 
@@ -98,5 +74,42 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
       showMobileHeader: true,
       showMobileFooter: true
     });
+  }
+
+  private fetchArchiveData() {
+    this.archiveListener = this.postService
+      .getPostArchives({
+        showCount: true,
+        limit: 0
+      })
+      .subscribe((res) => {
+        const { dateList, yearList } = this.postService.transformArchiveDates(res);
+        this.archiveDateList = dateList;
+        this.archiveYearList = yearList;
+      });
+  }
+
+  private updatePageInfo() {
+    const titles = ['文章归档', this.options['site_name']];
+    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    const metaData: HTMLMetaData = {
+      title: titles.join(' - '),
+      description: `${this.options['site_name']}文章归档。${this.options['site_description']}`,
+      author: this.options['site_author'],
+      keywords: uniq(keywords).join(',')
+    };
+    this.metaService.updateHTMLMeta(metaData);
+  }
+
+  private updateBreadcrumb(): void {
+    this.breadcrumbs = [
+      {
+        label: '文章归档',
+        tooltip: '文章归档',
+        url: '/archive',
+        isHeader: true
+      }
+    ];
+    this.breadcrumbService.updateCrumb(this.breadcrumbs);
   }
 }

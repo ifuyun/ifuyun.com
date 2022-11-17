@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, Component, Inject } from '@angular/core';
-import { PlatformService } from '../../../core/platform.service';
-import { UserAgentService } from '../../../core/user-agent.service';
+import { PlatformService } from '../../core/platform.service';
+import { UserAgentService } from '../../core/user-agent.service';
 
 @Component({
   selector: 'app-layout',
