@@ -9,8 +9,12 @@
     </div>
     <div class="encrypt-form-btns">
       <ng-container *ngIf="!isMobile">
-        <button type="button" class="button button-submit" (click)="encrypt()">MD5加密（小写）</button>
-        <button type="button" class="button button-submit" (click)="encrypt(true)">MD5加密（大写）</button>
+        <button type="button" class="button button-submit" [class.disabled]="!encryptContent"
+                [disabled]="!encryptContent"
+                (click)="encrypt()">MD5加密（小写）</button>
+        <button type="button" class="button button-submit" [class.disabled]="!encryptContent"
+                [disabled]="!encryptContent"
+                (click)="encrypt(true)">MD5加密（大写）</button>
         <button type="button" class="button button-submit" [class.disabled]="!encryptResult"
                 ngxClipboard
                 [cbContent]="encryptResult"
@@ -21,7 +25,9 @@
                 (click)="reset()">清空内容</button>
       </ng-container>
       <ng-container *ngIf="isMobile">
-        <button type="button" class="button button-submit" (click)="encrypt()">MD5加密</button>
+        <button type="button" class="button button-submit" [class.disabled]="!encryptContent"
+                [disabled]="!encryptContent"
+                (click)="encrypt()">MD5加密</button>
         <button type="button" class="button button-submit" [class.disabled]="!encryptResult"
                 ngxClipboard
                 [cbContent]="encryptResult"
