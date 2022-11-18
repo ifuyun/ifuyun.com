@@ -139,12 +139,10 @@ export class ShoppingComponent extends PageComponent implements OnInit, OnDestro
 
   private updatePageInfo() {
     const siteName: string = this.options['site_name'] || '';
-    let description = '';
     const titles: string[] = ['电商优惠券', siteName];
+    const description = `${siteName}${SHOPPING_PAGE_DESCRIPTION}`;
     const keywords: string[] = (this.options['site_keywords'] || '').split(',');
-
     keywords.unshift(...SHOPPING_PAGE_KEYWORDS);
-    description += `${siteName}${SHOPPING_PAGE_DESCRIPTION}`;
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
@@ -157,9 +155,9 @@ export class ShoppingComponent extends PageComponent implements OnInit, OnDestro
   private updateBreadcrumb(): void {
     this.breadcrumbs = [
       {
-        label: '工具',
-        tooltip: '工具',
-        url: '',
+        label: '百宝箱',
+        tooltip: '实用工具',
+        url: '/tool',
         isHeader: false
       },
       {

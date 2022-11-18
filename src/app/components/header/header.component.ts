@@ -9,6 +9,7 @@ import { UserAgentService } from '../../core/user-agent.service';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { TaxonomyNode } from '../../interfaces/taxonomy.interface';
 import { UserModel } from '../../interfaces/user.interface';
+import { TOOL_LINKS } from '../../pages/tool/tool.constant';
 import { AuthService } from '../../services/auth.service';
 import { OptionService } from '../../services/option.service';
 import { UserService } from '../../services/user.service';
@@ -36,6 +37,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   showHeader = true;
   showMobileHeader = true;
+  toolLinks = TOOL_LINKS;
 
   private optionsListener!: Subscription;
   private commonListener!: Subscription;

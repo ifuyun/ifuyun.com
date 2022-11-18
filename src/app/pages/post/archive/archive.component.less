@@ -1,21 +1,9 @@
 @import "../../../../styles/variables";
 
-.archive {
-  @header-padding-left: 12px;
-  @header-border-width: 4px;
-  border-radius: @border-radius;
-  background-color: @content-background-color;
-  box-shadow: @content-box-shadow;
-
+.content-box {
   &-desktop {
-    margin: @box-shadow-width;
-
-    .archive-header {
-      padding: @content-margin @content-margin 4px;
-    }
-
     .archive-content {
-      padding: @content-margin;
+      margin-top: @content-margin + 12;
     }
 
     .archive-content-list {
@@ -75,9 +63,9 @@
 
     h2 {
       margin: @content-margin 0;
-      border-left: @header-border-width solid @primary-color;
-      padding-left: @header-padding-left;
-      line-height: 1.6em;
+      border-left: @content-header-border-width solid @primary-color;
+      padding-left: @content-header-padding-left;
+      line-height: @post-line-height;
       font-size: 15px;
 
       a:hover {
@@ -90,7 +78,7 @@
       flex-wrap: wrap;
       flex-direction: row;
       justify-content: flex-start;
-      padding: 0 @header-padding-left + @header-border-width;
+      padding: 0 @content-header-padding-left + @content-header-border-width;
 
       > li {
         height: 32px;

@@ -265,7 +265,7 @@
     }
 
     ol, ul {
-      padding-left: 2.2em;
+      padding-left: @content-list-padding-left;
 
       p {
         margin: 0;
@@ -567,7 +567,7 @@
 }
 
 .comment {
-  @form-row-margin: 12px;
+  @form-row-margin: 16px;
   @form-item-margin: 8px;
   @form-item-border-radius: 2px;
   @captcha-input-width: 120px;
@@ -857,6 +857,10 @@
     .captcha {
       width: @captcha-img-width;
       cursor: pointer;
+    }
+
+    .input-textarea {
+      display: block;
     }
 
     .button:not(:last-child) {

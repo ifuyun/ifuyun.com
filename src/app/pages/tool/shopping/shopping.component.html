@@ -1,5 +1,5 @@
 <app-breadcrumb></app-breadcrumb>
-<div class="promotion" [ngClass]="{'promotion-desktop': !isMobile, 'promotion-mobile': isMobile}">
+<div class="content-box" [ngClass]="{'content-box-desktop': !isMobile, 'content-box-mobile': isMobile}">
   <div class="promotion-search">
     <div class="tip-text">请输入京东商品详情页地址或商品ID</div>
     <form class="search-form" method="get" action="./" (submit)="search()">

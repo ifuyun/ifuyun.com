@@ -17,6 +17,7 @@ import { SitemapModule } from './modules/sitemap/sitemap.module';
     AngularUniversalModule.forRoot({
       bootstrap: AppServerModule,
       viewsPath: join(process.cwd(), 'dist/browser'),
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       errorHandler: () => {}
     }),
     ConfigModule.forRoot({

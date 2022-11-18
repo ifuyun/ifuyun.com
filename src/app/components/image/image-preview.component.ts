@@ -105,6 +105,7 @@ const initialPosition = {
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  // eslint-disable-next-line @angular-eslint/no-host-metadata-property
   host: {
     class: 'image-preview-wrap',
     '[class.image-preview-moving]': 'isDragging',

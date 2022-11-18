@@ -1,6 +1,6 @@
 {
   "name": "ifuyun.com",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Website of ifuyun.com",
   "author": {
     "name": "Fuyun",
@@ -59,6 +59,7 @@
     "lodash": "^4.17.21",
     "log4js": "^6.7.0",
     "moment": "^2.29.4",
+    "ngx-clipboard": "^15.1.0",
     "ngx-cookie-service": "^14.0.1",
     "ngx-highlightjs": "^7.0.1",
     "qrcode": "^1.5.1",

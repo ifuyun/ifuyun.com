@@ -10,5 +10,6 @@ export const WALLPAPER_PAGE_KEYWORDS = Object.freeze([
   'Bing wallpaper',
   '手机壁纸'
 ]);
-export const WALLPAPER_PAGE_DESCRIPTION = '高清壁纸栏目提供高清壁纸、4K壁纸、必应壁纸、英文壁纸的查找、下载，' +
+export const WALLPAPER_PAGE_DESCRIPTION =
+  '高清壁纸栏目提供高清壁纸、4K壁纸、必应壁纸、英文壁纸的查找、下载，' +
   '你可在线浏览、搜索国内外的高清壁纸，了解壁纸背后的故事，并下载超高清壁纸。';

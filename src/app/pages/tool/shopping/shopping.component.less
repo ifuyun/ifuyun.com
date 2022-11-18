@@ -1,14 +1,7 @@
 @import "../../../../styles/variables";
 
-.promotion {
-  border-radius: @border-radius;
-  background-color: @content-background-color;
-  box-shadow: @content-box-shadow;
-  padding: @content-margin;
-
+.content-box {
   &-desktop {
-    margin: @box-shadow-width;
-
     .promotion-item {
       .label {
         flex-basis: 80px;
@@ -57,8 +50,8 @@
   .promotion-result {
     .promotion-list {
       padding: @primary-margin;
+      border: 1px solid @input-border-color;
       border-radius: @border-radius;
-      box-shadow: @content-box-shadow;
       word-break: break-all;
 
       .promotion-item {

@@ -23,6 +23,9 @@
         <li [ngClass]="{'active': activePage === 'wallpaper'}">
           <a routerLink="/wallpaper" title="高清壁纸"><i class="icon icon-images"></i><span>壁纸</span></a>
         </li>
+        <li [ngClass]="{'active': activePage === 'tool'}">
+          <a routerLink="/tool" title="实用工具"><i class="icon icon-tools"></i><span>百宝箱</span></a>
+        </li>
         <div class="separator"></div>
         <li [ngClass]="{'active': activePage === 'archive'}">
           <a routerLink="/archive" title="文章归档"><i class="icon icon-archive"></i><span>归档</span></a>

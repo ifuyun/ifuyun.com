@@ -24,6 +24,7 @@ export type ImageStatusType = 'error' | 'loading' | 'normal';
 @Directive({
   selector: 'img[nz-image]',
   exportAs: 'nzImage',
+  // eslint-disable-next-line @angular-eslint/no-host-metadata-property
   host: {
     '(click)': 'onPreview()'
   }

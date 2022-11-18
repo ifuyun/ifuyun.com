@@ -72,6 +72,17 @@ a, a:hover, a:focus {
       pointer-events: none;
     }
   }
+
+  &.disabled {
+    &, &:hover {
+      color: rgba(0, 0, 0, 0.25);
+      border-color: #d9d9d9;
+      background: #f5f5f5;
+      text-shadow: none;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+  }
 }
 
 .button-submit {
@@ -131,6 +142,17 @@ a, a:hover, a:focus {
 
   + span {
     margin-left: 8px;
+  }
+}
+
+.content-box {
+  border-radius: @border-radius;
+  background-color: @content-background-color;
+  box-shadow: @content-box-shadow;
+  padding: @content-margin;
+
+  &-desktop {
+    margin: @box-shadow-width;
   }
 }
 
