@@ -13,7 +13,7 @@ import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { OptionService } from '../../../services/option.service';
-import { SHOPPING_PAGE_DESCRIPTION, SHOPPING_PAGE_KEYWORDS } from '../tool.constant';
+import { REGEXP_JD_PRODUCT_DETAIL_URL, SHOPPING_PAGE_DESCRIPTION, SHOPPING_PAGE_KEYWORDS } from '../tool.constant';
 import { JdUnionPromotion } from '../tool.interface';
 import { ShoppingService } from './shopping.service';
 
@@ -130,7 +130,7 @@ export class ShoppingComponent extends PageComponent implements OnInit, OnDestro
   private checkKeyword(): boolean {
     this.keyword = this.keyword.trim().split('?')[0].split('#')[0];
 
-    if (!/^https?:\/\/([a-zA-Z0-9\-_]+\.)*jd\.com\/\d+\.html$/i.test(this.keyword) && !/^\d+$/i.test(this.keyword)) {
+    if (!REGEXP_JD_PRODUCT_DETAIL_URL.test(this.keyword) && !/^\d+$/i.test(this.keyword)) {
       this.message.error('输入内容有误，请重新输入有效的京东商品详情页地址或商品ID');
       return false;
     }
