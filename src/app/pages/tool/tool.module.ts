@@ -8,9 +8,10 @@ import { PipesModule } from '../../pipes/pipes.module';
 import { ToolRoutingModule } from './tool-routing.module';
 import { ShoppingComponent } from './shopping/shopping.component';
 import { Md5Component } from './md5/md5.component';
+import { ToolComponent } from './tool/tool.component';
 
 @NgModule({
-  declarations: [ShoppingComponent, Md5Component],
+  declarations: [ShoppingComponent, Md5Component, ToolComponent],
   imports: [
     CommonModule,
     ToolRoutingModule,

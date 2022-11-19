@@ -154,6 +154,31 @@ a, a:hover, a:focus {
   &-desktop {
     margin: @box-shadow-width;
   }
+
+  &-mobile {
+    .content-header {
+      padding: @m-primary-margin @m-primary-margin 0.4rem;
+    }
+  }
+
+  .content-header {
+    text-align: center;
+
+    .content-title {
+      margin-bottom: 12px;
+      line-height: 32px;
+      font-size: 20px;
+      font-weight: normal;
+
+      > a {
+        color: @base-color;
+
+        &:hover {
+          color: @primary-color;
+        }
+      }
+    }
+  }
 }
 
 @keyframes loading-circle {

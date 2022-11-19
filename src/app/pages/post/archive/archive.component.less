@@ -14,10 +14,6 @@
   }
 
   &-mobile {
-    .archive-header {
-      padding: @m-primary-margin @m-primary-margin 0.4rem;
-    }
-
     .archive-content {
       padding: @m-primary-margin;
     }
@@ -25,25 +21,6 @@
     .archive-content-list {
       li {
         width: 50%;
-      }
-    }
-  }
-
-  .archive-header {
-    text-align: center;
-
-    .archive-title {
-      margin-bottom: 12px;
-      line-height: 32px;
-      font-size: 20px;
-      font-weight: normal;
-
-      > a {
-        color: @base-color;
-
-        &:hover {
-          color: @primary-color;
-        }
       }
     }
   }
@@ -63,8 +40,8 @@
 
     h2 {
       margin: @content-margin 0;
-      border-left: @content-header-border-width solid @primary-color;
-      padding-left: @content-header-padding-left;
+      border-left: @content-h2-border-width solid @primary-color;
+      padding-left: @content-h2-padding-left;
       line-height: @post-line-height;
       font-size: 15px;
 
@@ -78,7 +55,7 @@
       flex-wrap: wrap;
       flex-direction: row;
       justify-content: flex-start;
-      padding: 0 @content-header-padding-left + @content-header-border-width;
+      padding: 0 @content-h2-padding-left + @content-h2-border-width;
 
       > li {
         height: 32px;

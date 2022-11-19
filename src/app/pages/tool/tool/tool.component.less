@@ -1,0 +1,31 @@
+@import "../../../../styles/variables";
+
+.content-box {
+  &-desktop {
+  }
+
+  &-mobile {
+  }
+
+  h2 {
+    margin: @content-margin 0;
+    border-left: @content-h2-border-width solid @primary-color;
+    padding-left: @content-h2-padding-left;
+    line-height: @post-line-height;
+    font-size: 15px;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 @content-h2-padding-left + @content-h2-border-width;
+
+    > li {
+      line-height: @post-line-height;
+
+      &:not(:last-child) {
+        margin-right: @primary-margin;
+      }
+    }
+  }
+}

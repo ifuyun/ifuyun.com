@@ -5,10 +5,8 @@
     display: flex;
     flex-direction: column;
 
-    > div, > h2 {
-      &:not(:last-child) {
-        margin-bottom: @primary-margin;
-      }
+    > :not(:last-child) {
+      margin-bottom: @primary-margin;
     }
 
     .input-textarea {
@@ -29,8 +27,8 @@
     }
 
     .encrypt-header {
-      border-left: @content-header-border-width solid @primary-color;
-      padding-left: @content-header-padding-left;
+      border-left: @content-h2-border-width solid @primary-color;
+      padding-left: @content-h2-padding-left;
       line-height: @post-line-height;
       font-size: 14px;
     }
