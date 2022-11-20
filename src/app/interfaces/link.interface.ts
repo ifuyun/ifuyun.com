@@ -6,3 +6,13 @@ export interface LinkEntity {
   linkDescription: string;
   linkRss: string;
 }
+
+export interface FavoriteLink {
+  taxonomyId: string;
+  taxonomyName: string;
+  taxonomySlug: string;
+  taxonomyDescription: string;
+  taxonomyParent: string;
+  taxonomyOrder: number;
+  links: LinkEntity[];
+}

@@ -75,15 +75,15 @@ export class SitemapController {
       changefreq: EnumChangefreq.MONTHLY,
       priority: 0.8
     }));
-    const taxonomies: SitemapItem[] = data.taxonomies.map((item) => ({
-      url: `${siteUrl}/${item.taxonomyType === TaxonomyType.POST ? 'category' : 'tag'}/${item.taxonomySlug}`,
-      changefreq: EnumChangefreq.DAILY,
-      priority: 0.7
-    }));
     const tools: SitemapItem[] = TOOL_LINKS.map((item) => ({
       url: siteUrl + item.url,
       changefreq: <EnumChangefreq>item.changefreq,
       priority: item.priority
+    }));
+    const taxonomies: SitemapItem[] = data.taxonomies.map((item) => ({
+      url: `${siteUrl}/${item.taxonomyType === TaxonomyType.POST ? 'category' : 'tag'}/${item.taxonomySlug}`,
+      changefreq: EnumChangefreq.DAILY,
+      priority: 0.7
     }));
 
     streamToPromise(

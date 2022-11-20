@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../core/api.service';
 import { ApiUrl } from '../config/api-url';
-import { LinkEntity } from '../interfaces/link.interface';
+import { FavoriteLink, LinkEntity } from '../interfaces/link.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +16,12 @@ export class LinkService {
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_LINKS_OF_FRIEND), {
         isHome
       })
+      .pipe(map((res) => res?.data || []));
+  }
+
+  getFavoriteLinks(): Observable<FavoriteLink[]> {
+    return this.apiService
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_LINKS_OF_FAVORITE))
       .pipe(map((res) => res?.data || []));
   }
 }

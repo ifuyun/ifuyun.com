@@ -11,7 +11,9 @@ import { CommonService } from '../../../core/common.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { UserAgentService } from '../../../core/user-agent.service';
+import { FavoriteLink } from '../../../interfaces/link.interface';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { LinkService } from '../../../services/link.service';
 import { OptionService } from '../../../services/option.service';
 import { TOOL_PAGE_DESCRIPTION, TOOL_PAGE_KEYWORDS } from '../tool.constant';
 
@@ -23,12 +25,14 @@ import { TOOL_PAGE_DESCRIPTION, TOOL_PAGE_KEYWORDS } from '../tool.constant';
 export class ToolComponent extends PageComponent implements OnInit, OnDestroy {
   isMobile = false;
   options: OptionEntity = {};
+  favoriteLinks: FavoriteLink[] = [];
 
   protected pageIndex = 'tool';
 
   private breadcrumbs: BreadcrumbEntity[] = [];
 
   private optionsListener!: Subscription;
+  private linksListener!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,7 +42,8 @@ export class ToolComponent extends PageComponent implements OnInit, OnDestroy {
     private metaService: MetaService,
     private userAgentService: UserAgentService,
     private imageService: ImageService,
-    private message: MessageService
+    private message: MessageService,
+    private linkService: LinkService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -54,10 +59,12 @@ export class ToolComponent extends PageComponent implements OnInit, OnDestroy {
         this.options = options;
         this.updatePageInfo();
       });
+    this.fetchFavoriteLinks();
   }
 
   ngOnDestroy(): void {
     this.optionsListener.unsubscribe();
+    this.linksListener.unsubscribe();
   }
 
   showAlipayRedPacketQrcode() {
@@ -86,6 +93,12 @@ export class ToolComponent extends PageComponent implements OnInit, OnDestroy {
       showFooter: true,
       showMobileHeader: true,
       showMobileFooter: true
+    });
+  }
+
+  private fetchFavoriteLinks() {
+    this.linksListener = this.linkService.getFavoriteLinks().subscribe((res) => {
+      this.favoriteLinks = res.filter((item) => item.taxonomySlug !== 'favorite-links');
     });
   }
 
