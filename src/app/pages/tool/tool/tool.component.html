@@ -6,16 +6,16 @@
     </h1>
   </header>
   <div class="content-body">
-    <h2>省钱计划</h2>
+    <h2 class="border-header">省钱计划</h2>
     <ul>
       <li><a href="javascript:" (click)="showAlipayRedPacketQrcode()" title="支付宝扫码领红包">支付宝红包</a></li>
       <li><a routerLink="/tool/shopping" title="电商优惠券">电商优惠券</a></li>
     </ul>
-    <h2>常用工具</h2>
+    <h2 class="border-header">常用工具</h2>
     <ul>
       <li><a routerLink="/tool/md5" title="MD5加密工具">MD5加密</a></li>
     </ul>
-    <h2>常用链接</h2>
+    <h2 class="border-header">常用链接</h2>
     <ng-container *ngFor="let data of favoriteLinks">
       <ng-container *ngIf="data.links.length > 0">
         <h3>{{data.taxonomyName}}</h3>

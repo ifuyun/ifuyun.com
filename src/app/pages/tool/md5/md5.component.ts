@@ -104,9 +104,7 @@ export class Md5Component extends PageComponent implements OnInit, OnDestroy {
     });
   }
   private initInput() {
-    const contentInput$: Observable<string> = this.contentChange$
-      .asObservable()
-      .pipe(debounceTime(500));
+    const contentInput$: Observable<string> = this.contentChange$.asObservable().pipe(debounceTime(500));
     this.inputListener = contentInput$.subscribe(() => {
       this.encryptResult = '';
     });

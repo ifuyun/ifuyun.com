@@ -27,5 +27,6 @@ export enum ApiUrl {
   DOWNLOAD_WALLPAPER = '/wallpapers/download',
   GET_SITEMAP = '/util/sitemap',
   GET_JD_SELLING_PROMOTION = '/tool/jd/selling-promotion',
-  GET_JD_PROMOTION_COMMON = '/tool/jd/promotion-common'
+  GET_JD_PROMOTION_COMMON = '/tool/jd/promotion-common',
+  GET_JD_GOODS_MATERIAL = '/tool/jd/goods-material'
 }

@@ -20,7 +20,9 @@
       }
     }
   }
+}
 
+.promotion {
   > :not(:last-child) {
     margin-bottom: @content-margin;
   }
@@ -50,7 +52,7 @@
   .promotion-result {
     .promotion-list {
       padding: @primary-margin;
-      border: 1px solid @input-border-color;
+      border: 1px solid @minor-border-color;
       border-radius: @border-radius;
       word-break: break-all;
 
@@ -69,6 +71,7 @@
   }
 }
 
-.recommend-goods {
-
+i-jd-union-goods:not(:last-child) {
+  display: block;
+  margin-bottom: @primary-margin;
 }

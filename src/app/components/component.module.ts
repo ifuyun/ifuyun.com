@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AutofocusDirective } from '../directives/autofocus.directive';
+import { PipesModule } from '../pipes/pipes.module';
 import { BackTopComponent } from './back-top/back-top.component';
 import { BackTopModule } from './back-top/back-top.module';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
@@ -18,6 +19,7 @@ import { SiderMobileComponent } from './sider-mobile/sider-mobile.component';
 import { SiderComponent } from './sider/sider.component';
 import { ToolboxComponent } from './toolbox/toolbox.component';
 import { WallpaperBoxComponent } from './wallpaper-box/wallpaper-box.component';
+import { JdUnionGoodsComponent } from './jd-union-goods/jd-union-goods.component';
 
 @NgModule({
   declarations: [
@@ -32,9 +34,19 @@ import { WallpaperBoxComponent } from './wallpaper-box/wallpaper-box.component';
     SiderComponent,
     SiderMobileComponent,
     ToolboxComponent,
-    WallpaperBoxComponent
+    WallpaperBoxComponent,
+    JdUnionGoodsComponent
   ],
-  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MessageModule, BackTopModule, ImageModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MessageModule,
+    BackTopModule,
+    ImageModule,
+    PipesModule
+  ],
   exports: [
     AutofocusDirective,
     BackTopComponent,
@@ -48,7 +60,8 @@ import { WallpaperBoxComponent } from './wallpaper-box/wallpaper-box.component';
     SiderComponent,
     SiderMobileComponent,
     ToolboxComponent,
-    WallpaperBoxComponent
+    WallpaperBoxComponent,
+    JdUnionGoodsComponent
   ]
 })
 export class ComponentModule {}

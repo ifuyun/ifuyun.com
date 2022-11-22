@@ -3,7 +3,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiUrl } from '../../../config/api-url';
 import { ApiService } from '../../../core/api.service';
-import { JdUnionPromotion } from '../tool.interface';
+import {
+  JdUnionParamGoodsMaterial,
+  JdUnionResponseGoodsMaterial,
+  JdUnionResponsePromotion
+} from '../jd-union.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -11,15 +15,21 @@ import { JdUnionPromotion } from '../tool.interface';
 export class ShoppingService {
   constructor(private apiService: ApiService) {}
 
-  getSellingPromotion(keyword: string): Observable<JdUnionPromotion> {
+  getSellingPromotion(keyword: string): Observable<JdUnionResponsePromotion> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_JD_SELLING_PROMOTION), { keyword })
       .pipe(map((res) => res?.data || {}));
   }
 
-  getPromotionCommon(keyword: string): Observable<JdUnionPromotion> {
+  getPromotionCommon(keyword: string): Observable<JdUnionResponsePromotion> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_JD_PROMOTION_COMMON), { keyword })
+      .pipe(map((res) => res?.data || {}));
+  }
+
+  getGoodsMaterial(param: JdUnionParamGoodsMaterial): Observable<JdUnionResponseGoodsMaterial> {
+    return this.apiService
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_JD_GOODS_MATERIAL), param)
       .pipe(map((res) => res?.data || {}));
   }
 }

@@ -13,8 +13,8 @@ import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { OptionService } from '../../../services/option.service';
+import { JdUnionResponsePromotion } from '../jd-union.interface';
 import { REGEXP_JD_PRODUCT_DETAIL_URL, SHOPPING_PAGE_DESCRIPTION, SHOPPING_PAGE_KEYWORDS } from '../tool.constant';
-import { JdUnionPromotion } from '../tool.interface';
 import { ShoppingService } from './shopping.service';
 
 @Component({
@@ -28,7 +28,7 @@ export class ShoppingComponent extends PageComponent implements OnInit, OnDestro
   isMobile = false;
   options: OptionEntity = {};
   keyword = '';
-  promotion!: JdUnionPromotion;
+  promotion!: JdUnionResponsePromotion;
 
   protected pageIndex = 'tool';
 

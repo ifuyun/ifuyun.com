@@ -1,0 +1,112 @@
+@import "../../../styles/variables";
+
+.goods-list {
+  display: flex;
+  margin: 0 -(@primary-margin / 2);
+
+  &-desktop {
+    .goods-item {
+      width: 33.3333%;
+    }
+  }
+
+  &-mobile {
+    flex-direction: column;
+
+    .goods-item {
+      width: 100%;
+
+      &:not(:last-child) {
+        margin-bottom: @primary-margin;
+      }
+    }
+  }
+
+  .goods-item {
+    box-sizing: border-box;
+    padding: 0 (@primary-margin / 2);
+  }
+
+  .goods-box {
+    @price-line-height: 24px;
+
+    flex-grow: 0;
+    border: 1px solid @minor-border-color;
+    border-radius: @border-radius;
+
+    .goods-info {
+      padding: 20px 8px 8px;
+      border-bottom: 1px solid @minor-border-color;
+    }
+
+    .goods-name {
+      margin-top: 20px;
+
+      a {
+        display: inline-block;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .goods-price {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 4px;
+      line-height: @price-line-height;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .goods-coupon {
+      display: inline-block;
+      width: @price-line-height;
+      height: @price-line-height;
+      margin-left: 4px;
+      border-radius: 50%;
+      background-color: @action-color;
+      color: #fff;
+      font-size: @meta-font-size;
+      font-weight: 400;
+    }
+
+    .goods-meta {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      color: @minor-color;
+      font-size: @meta-font-size;
+
+      > div {
+        width: 50%;
+        text-align: center;
+
+        &:not(:last-child) {
+          border-right: 1px solid @minor-border-color;
+        }
+      }
+
+      .icon {
+        margin-right: 4px;
+      }
+    }
+
+    img {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0 16px;
+
+      &:hover {
+        transition: transform .5s;
+        transform: scale(1.1);
+      }
+    }
+  }
+}

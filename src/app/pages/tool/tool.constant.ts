@@ -17,7 +17,8 @@ export const TOOL_LINKS = Object.freeze([
 ]);
 export const REGEXP_JD_PRODUCT_DETAIL_URL = /^https?:\/\/([a-zA-Z0-9\-_]+\.)*jd\.com\/(product\/)?\d+\.html$/i;
 
-export const TOOL_PAGE_DESCRIPTION = '百宝箱收藏了众多互联网好物，包括支付宝红包、网购优惠券等省钱工具，MD5加密工具，网址导航等。';
+export const TOOL_PAGE_DESCRIPTION =
+  '百宝箱收藏了众多互联网好物，包括支付宝红包、网购优惠券等省钱工具，MD5加密工具，网址导航等。';
 export const TOOL_PAGE_KEYWORDS = Object.freeze([
   '支付宝红包',
   '优惠券',
