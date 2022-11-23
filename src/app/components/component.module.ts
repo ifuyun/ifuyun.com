@@ -12,6 +12,8 @@ import { EmptyComponent } from './empty/empty.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { ImageModule } from './image/image.module';
+import { JdUnionGoodsGroupComponent } from './jd-union-goods-group/jd-union-goods-group.component';
+import { JdUnionGoodsComponent } from './jd-union-goods/jd-union-goods.component';
 import { MessageModule } from './message/message.module';
 import { ModalComponent } from './modal/modal.component';
 import { PageBarComponent } from './page-bar/page-bar.component';
@@ -19,7 +21,6 @@ import { SiderMobileComponent } from './sider-mobile/sider-mobile.component';
 import { SiderComponent } from './sider/sider.component';
 import { ToolboxComponent } from './toolbox/toolbox.component';
 import { WallpaperBoxComponent } from './wallpaper-box/wallpaper-box.component';
-import { JdUnionGoodsComponent } from './jd-union-goods/jd-union-goods.component';
 
 @NgModule({
   declarations: [
@@ -29,13 +30,14 @@ import { JdUnionGoodsComponent } from './jd-union-goods/jd-union-goods.component
     EmptyComponent,
     FooterComponent,
     HeaderComponent,
+    JdUnionGoodsComponent,
+    JdUnionGoodsGroupComponent,
     ModalComponent,
     PageBarComponent,
     SiderComponent,
     SiderMobileComponent,
     ToolboxComponent,
-    WallpaperBoxComponent,
-    JdUnionGoodsComponent
+    WallpaperBoxComponent
   ],
   imports: [
     CommonModule,
@@ -55,13 +57,14 @@ import { JdUnionGoodsComponent } from './jd-union-goods/jd-union-goods.component
     EmptyComponent,
     FooterComponent,
     HeaderComponent,
+    JdUnionGoodsComponent,
+    JdUnionGoodsGroupComponent,
     ModalComponent,
     PageBarComponent,
     SiderComponent,
     SiderMobileComponent,
     ToolboxComponent,
-    WallpaperBoxComponent,
-    JdUnionGoodsComponent
+    WallpaperBoxComponent
   ]
 })
 export class ComponentModule {}

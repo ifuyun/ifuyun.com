@@ -1,21 +1,26 @@
 <div class="content-box" *ngIf="goodsList.length > 0" [ngClass]="{'content-box-desktop': !isMobile, 'content-box-mobile': isMobile}">
   <h2 class="border-header" *ngIf="showHeader">
-    <span *ngIf="eliteId === 1">猜你喜欢</span>
-    <span *ngIf="eliteId === 2">热销商品</span>
-    <span *ngIf="eliteId === 3">大额券</span>
-    <span *ngIf="eliteId === 4">9.9包邮</span>
+    <ng-container *ngIf="!isJingfen">
+      <span *ngIf="eliteId === 1">猜你喜欢</span>
+      <span *ngIf="eliteId === 2">热销商品</span>
+      <span *ngIf="eliteId === 3">大额券</span>
+      <span *ngIf="eliteId === 4">9.9包邮</span>
+    </ng-container>
+    <ng-container *ngIf="isJingfen">
+      <span>精选商品</span>
+    </ng-container>
   </h2>
   <div class="goods-list" [ngClass]="{'goods-list-desktop': !isMobile, 'goods-list-mobile': isMobile}">
     <div class="goods-item" *ngFor="let goods of goodsList">
       <div class="goods-box">
         <div class="goods-info">
           <div class="goods-image">
-            <a [href]="goods.promotionInfo.clickURL"
+            <a [href]="goods.promotionInfo?.clickURL"
                [title]="goods.skuName"
                target="_blank"><img [src]="goods.imageInfo.imageList[0].url" [alt]="goods.skuName"/></a>
           </div>
           <div class="goods-name">
-            <a [href]="goods.promotionInfo.clickURL"
+            <a [href]="goods.promotionInfo?.clickURL"
                [title]="goods.skuName"
                target="_blank">{{goods.skuName}}</a>
           </div>

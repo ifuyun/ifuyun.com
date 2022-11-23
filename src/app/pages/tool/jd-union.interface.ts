@@ -1,23 +1,53 @@
-export interface JdUnionResponse {
+export interface JdUnionErrorResponse {
+  code: string;
+  errorMessage: string;
+  errorSolution: string;
+}
+
+export interface JdUnionSuccessResponse {
   code: number; //返回码
   message: string; //返回消息
+  data: any;
   requestId?: string;
 }
 
-export interface JdUnionResponsePromotion extends JdUnionResponse {
+export interface JdUnionResponsePromotion extends JdUnionSuccessResponse {
   data: {
     clickURL: string;
     shortURL: string;
   };
 }
 
-export interface JdUnionParamGoodsMaterial {
-  eliteId: number; //频道ID：1.猜你喜欢、2.实时热销、3.大额券、4.9.9包邮、1001.选品库
+export interface JdUnionParamGoods {
   page?: number;
   pageSize?: number;
+}
+
+export interface JdUnionParamGoodsMaterial extends JdUnionParamGoods {
+  eliteId: number; //频道ID：1.猜你喜欢、2.实时热销、3.大额券、4.9.9包邮、1001.选品库
   hasCoupon?: number; //1：只查询有最优券商品，不传值不做限制
   groupId?: number; //选品库id（仅对eliteId=1001有效，且必传）
   transfer?: 0 | 1; //是否强制转链，默认返回的长链为移动端地址，针对PC端需要再重新转换一次
+}
+
+export interface JdUnionParamGoodsJingfen extends JdUnionParamGoods {
+  // 频道ID
+  // 1-好券商品,2-精选卖场,10-9.9包邮,15-京东配送,
+  // 22-实时热销榜,23-为你推荐,24-数码家电,25-超市,26-母婴玩具,27-家具日用,28-美妆穿搭,
+  // 30-图书文具,31-今日必推,32-京东好物,33-京东秒杀,34-拼购商品,40-高收益榜,41-自营热卖榜,
+  // 108-秒杀进行中,109-新品首发,110-自营,112-京东爆品,125-首购商品,129-高佣榜单,130-视频商品,153-历史最低价商品榜,
+  // 210-极速版商品,238-新人价商品,247-京喜9.9,249-京喜秒杀,
+  // 315-秒杀未开始,340-时尚趋势品,341-3C新品,342-智能新品,343-3C长尾商品,345-时尚新品,346-时尚爆品,
+  // 426-京喜自营,1001-选品库,515-订单接龙商品,519-官方活动，536-577全球购
+  eliteId: number;
+  // 排序字段
+  // price：单价, commissionShare：佣金比例, commission：佣金，
+  // inOrderCount30DaysSku：sku维度30天引单量，comments：评论数，goodComments：好评数
+  sortName?: string;
+  // asc,desc升降序,默认降序
+  sort?: string;
+  // 订单接龙活动时间，当eliteId=515 订单接龙商品时，需要传入该字段，默认是0。0-当天，1-明天，2-后天。
+  timeType?: number;
 }
 
 export interface JdUnionCoupon {
@@ -31,6 +61,7 @@ export interface JdUnionCoupon {
   useStartTime: number; //券有效使用开始时间(时间戳，毫秒)
   useEndTime: number; //券有效使用结束时间(时间戳，毫秒)
   isBest: number; //最优优惠券，1：是；0：否，购买一件商品可使用的面额最大优惠券
+  hotValue: number; //券热度，值越大热度越高，区间:[0,10]
 }
 
 export interface JdUnionGoodsImage {
@@ -55,14 +86,13 @@ export interface JdUnionPromotionLabel {
   promotionLabelId: number; //促销ID
 }
 
-export interface JdUnionGoodsMaterial {
-  addCartPrice: number; //预留字段
+export interface JdUnionGoods {
   bestCoupon: JdUnionCoupon | null;
   bookInfo: {
     //图书信息
     isbn: string; //图书编号
   };
-  brandCode: string; //
+  brandCode: string; //品牌code
   brandName: string; //品牌名
   categoryInfo: {
     //类目信息
@@ -80,6 +110,9 @@ export interface JdUnionGoodsMaterial {
     commissionShare: number; //佣金比例
     couponCommission: number; //券后佣金，（促销价-优惠券面额）*佣金比例
     plusCommissionShare: number; //plus佣金比例，plus用户购买推广者能获取到的佣金比例
+    isLock: number; //是否锁定佣金比例：1是，0否
+    startTime: number; //计划开始时间（时间戳，毫秒）
+    endTime: number; //计划结束时间（时间戳，毫秒）
   };
   couponInfo: {
     //优惠券信息，返回内容为空说明该SKU无可用优惠券
@@ -126,6 +159,7 @@ export interface JdUnionGoodsMaterial {
     lowestPrice: number; //促销价
     lowestPriceType: number; //促销价类型，1：商品价格；2：拼购价格； 3：秒杀价格； 4：预售价格
     lowestCouponPrice: number; //券后价（有无券都返回此字段）
+    historyPriceDay: number; //历史最低价天数（例：当前券后价最近180天最低）
   };
   promotionInfo: {
     //推广信息
@@ -165,8 +199,8 @@ export interface JdUnionGoodsMaterial {
   skuLabelInfo: {
     is7ToReturn: number; //0：不支持； 1或null：支持7天无理由退货； 2：支持90天无理由退货； 4：支持15天无理由退货； 6：支持30天无理由退货；
     fxg: number; //1：放心购商品
-    //放心购商品子标签集合
     fxgServiceList: {
+      //放心购商品子标签集合
       serviceName: string; //服务名称
     }[];
   };
@@ -185,7 +219,36 @@ export interface JdUnionGoodsMaterial {
   };
 }
 
-export interface JdUnionResponseGoodsMaterial extends JdUnionResponse {
+export interface JdUnionGoodsMaterial extends JdUnionGoods {
+  addCartPrice: number; //预留字段
+}
+
+export interface JdUnionGoodsJingfen extends JdUnionGoods {
+  documentInfo: {
+    //段子信息
+    document: string; //描述文案
+    discount: string; //优惠力度文案
+  };
+  secondPriceInfoList: {
+    secondPriceType: number; //双价格类型：18新人价
+    secondPrice: number; //价格（资源位238新人价请使用此价格）
+  }[];
+  solitaireActivity: {
+    //订单接龙活动信息
+    //接龙活动id，订单接龙商品链接（推广订单接龙商品时用该链接转链）：https://item.jd.com/?activityId=xxxx%26skuId=xxxx%26page=chain
+    activityId: number;
+    groupPrice: number; //成团价
+    groupProgress: number; //成团进度（0-100）
+    reason: string; //推荐理由
+  };
+}
+
+export interface JdUnionResponseGoodsMaterial extends JdUnionSuccessResponse {
   data: JdUnionGoodsMaterial[];
+  totalCount: number; //有效商品总数量
+}
+
+export interface JdUnionResponseGoodsJingfen extends JdUnionSuccessResponse {
+  data: JdUnionGoodsJingfen[];
   totalCount: number; //有效商品总数量
 }
