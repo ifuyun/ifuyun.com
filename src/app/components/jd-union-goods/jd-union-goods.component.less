@@ -4,18 +4,10 @@
   display: flex;
   margin: 0 -(@primary-margin / 2);
 
-  &-desktop {
-    .goods-item {
-      width: 33.3333%;
-    }
-  }
-
   &-mobile {
     flex-direction: column;
 
     .goods-item {
-      width: 100%;
-
       &:not(:last-child) {
         margin-bottom: @primary-margin;
       }
@@ -31,12 +23,14 @@
     @price-line-height: 24px;
 
     flex-grow: 0;
-    border: 1px solid @minor-border-color;
-    border-radius: @border-radius;
+
+    &.goods-box-border {
+      border: 1px solid @minor-border-color;
+      border-radius: @border-radius;
+    }
 
     .goods-info {
       padding: 20px 8px 8px;
-      border-bottom: 1px solid @minor-border-color;
     }
 
     .goods-name {
@@ -81,6 +75,7 @@
       display: flex;
       justify-content: space-between;
       padding: 8px;
+      border-top: 1px solid @minor-border-color;
       color: @minor-color;
       font-size: @meta-font-size;
 

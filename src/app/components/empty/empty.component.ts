@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UserAgentService } from '../../core/user-agent.service';
 
 @Component({
@@ -7,6 +7,8 @@ import { UserAgentService } from '../../core/user-agent.service';
   styleUrls: ['./empty.component.less']
 })
 export class EmptyComponent {
+  @Input() showBorder = true;
+
   isMobile = false;
 
   constructor(private userAgentService: UserAgentService) {

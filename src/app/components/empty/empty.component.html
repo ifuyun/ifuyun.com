@@ -1,4 +1,7 @@
-<div class="empty" [ngClass]="{'empty-desktop': !isMobile, 'empty-mobile': isMobile}">
+<div class="empty"
+     [class.empty-desktop]="!isMobile"
+     [class.empty-mobile]="isMobile"
+     [class.empty-borer]="showBorder">
   <div class="empty-body">
     <div class="empty-img">
       <svg width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg">

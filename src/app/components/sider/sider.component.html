@@ -19,6 +19,15 @@
     </ul>
   </div>
   <div class="widget">
+    <h3 class="widget-title"><div><i class='icon icon-bag-heart'></i><span>热销商品</span></div></h3>
+    <div class="widget-goods">
+      <i-jd-union-goods
+        [isJingfen]="true" [isRandom]="true"
+        [showHeader]="false" [withBox]="false" [showComments]="false" [showBorder]="false"
+        [pageSize]="1" [rowSize]="1"></i-jd-union-goods>
+    </div>
+  </div>
+  <div class="widget">
     <h3 class="widget-title">
       <div><i class='icon icon-archive'></i><span>文章归档</span></div>
       <div class="more">

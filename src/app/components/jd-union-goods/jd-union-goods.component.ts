@@ -14,10 +14,14 @@ import { MessageService } from '../message/message.service';
 export class JdUnionGoodsComponent implements OnInit, OnDestroy {
   @Input() eliteId = 1;
   @Input() page = 1;
-  @Input() pageSize = 10;
+  @Input() pageSize = 3;
+  @Input() rowSize = 3;
   @Input() showHeader = true;
   @Input() isJingfen = false;
   @Input() isRandom = false;
+  @Input() showBorder = true;
+  @Input() showComments = true;
+  @Input() withBox = true;
 
   readonly materialEliteIds = Object.freeze([1, 2, 3, 4]);
   readonly jingfenEliteIds = Object.freeze([
