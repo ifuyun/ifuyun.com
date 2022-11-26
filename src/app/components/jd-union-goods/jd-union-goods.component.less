@@ -3,6 +3,7 @@
 .goods-list {
   display: flex;
   margin: 0 -(@primary-margin / 2);
+  overflow: hidden;
 
   &-mobile {
     flex-direction: column;
@@ -97,9 +98,9 @@
       box-sizing: border-box;
       width: 100%;
       padding: 0 16px;
+      transition: transform .5s;
 
       &:hover {
-        transition: transform .5s;
         transform: scale(1.1);
       }
     }

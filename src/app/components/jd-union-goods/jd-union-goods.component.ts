@@ -119,6 +119,9 @@ export class JdUnionGoodsComponent implements OnInit, OnDestroy {
               item.bestCoupon = item.couponInfo.couponList[0];
             }
           });
+          if (res.data.length > this.pageSize) {
+            res.data = res.data.slice(0, this.pageSize);
+          }
           this.goodsList = res.data;
         }
       });
