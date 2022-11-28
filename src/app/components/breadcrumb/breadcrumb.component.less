@@ -13,10 +13,13 @@
 
     > * {
       display: inline-block;
-      max-width: 8em;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+    }
+
+    :not(:last-child) {
+      flex-shrink: 0;
     }
   }
 

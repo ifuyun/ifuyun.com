@@ -1,51 +1,109 @@
-<div class="wallpaper" [class.wallpaper-desktop]="!isMobile" [class.wallpaper-mobile]="isMobile">
-  <div class="photo" [style.background-image]="'url(' + (wallpaper?.fullUrl || '') + ')'"></div>
-  <div class="actions">
-    <div class="return">
-      <div class="action-item action-text" *ngIf="!isMobile">
-        <a routerLink="/" title="返回{{options['site_name']}}首页"><i class="icon icon-home"></i><span>首页</span></a>
-      </div>
-      <div class="action-item action-text" *ngIf="!isMobile">
-        <a routerLink="../" [queryParams]="queryParams" title="返回壁纸列表"><i class="icon icon-left"></i><span>返回</span></a>
+<app-breadcrumb></app-breadcrumb>
+<div class="post" [ngClass]="{'post-desktop': !isMobile, 'post-mobile': isMobile}">
+  <header class="post-header">
+    <h1 class="post-title">
+      <a routerLink="." title="{{wallpaper?.title}}" rel="bookmark">{{wallpaper?.title}}</a>
+    </h1>
+    <div class="post-meta post-meta-top">
+      <span title="日期: {{wallpaper?.date}}">
+        <i class='icon icon-calendar'></i><span>{{wallpaper?.date}}</span>
+      </span>
+      <span title="作者：{{wallpaper?.copyrightAuthor}}">
+        <i class='icon icon-user'></i><span>{{wallpaper?.copyrightAuthor}}</span>
+      </span>
+      <span title="访问：{{wallpaper?.views | numberView}}">
+        <i class='icon icon-eye'></i><span>{{wallpaper?.views | numberView}} 次访问</span>
+      </span>
+    </div>
+  </header>
+  <div class="divider"></div>
+  <div class="post-content">
+    <div class="wallpaper">
+      <figure>
+        <div class="wallpaper-box" (click)="showWallpaper()">
+          <img [src]="wallpaper?.fullUrl" [alt]="wallpaper?.title"/>
+          <div class="wallpaper-overlay"></div>
+        </div>
+        <figcaption>{{wallpaper?.copyright}}</figcaption>
+      </figure>
+      <div class="wallpaper-actions">
+        <a class="button button-submit" (click)="showWallpaper()" title="查看大图">
+          <i class="icon icon-zoom-in"></i><span>查看大图</span>
+        </a>
+        <a class="button button-submit" (click)="download()" title="下载高清壁纸">
+          <i class="icon icon-cloud-download"></i><span>1920x1080</span>
+        </a>
+        <a class="button button-submit" *ngIf="!isMobile" (click)="download(true)" title="下载 4k 超高清壁纸">
+          <i class="icon icon-cloud-download"></i><span>4K 超高清</span>
+        </a>
       </div>
     </div>
-    <div class="actions-list">
-      <div class="action-item action-like"
-           title="喜欢：{{wallpaper?.likes}}"
-           [class.disabled]="wallpaper?.liked || voteLoading"
-           (click)="voteWallpaper()">
-        <div>
-          <i class="icon icon-heart"
-             [class.icon-heart]="!wallpaper?.liked"
-             [class.icon-heart-fill]="wallpaper?.liked"
-             [class.icon-loading]="voteLoading"></i><span>{{wallpaper?.likes}}</span>
+    <article [innerHTML]="(wallpaper?.story || '') | safeHtml"></article>
+  </div>
+  <footer class="post-footer">
+    <div>
+      <div class="post-meta">
+        <div class="post-meta-icon"><i class='icon icon-clock'></i></div>
+        <div class="post-meta-info">
+        <span class="post-meta-info-text"
+              title="更新于: {{wallpaper?.wallpaperModified | date:'yyyy-MM-dd HH:mm'}}"
+        >最后更新：{{wallpaper?.wallpaperModified | date:'yyyy-MM-dd HH:mm'}}</span>
         </div>
-      </div>
-      <div class="action-item action-text">
-        <div title="访问：{{wallpaper?.views | numberView}}">
-          <i class="icon icon-eye"></i><span>{{wallpaper?.views | numberView}}</span>
-        </div>
-      </div>
-      <div class="action-item action-download" (click)="download()">
-        <div title="下载高清壁纸"><i class="icon icon-cloud-download"></i><span>1920x1080</span></div>
-      </div>
-      <div class="action-item action-download-4k" *ngIf="!isMobile" (click)="download(true)">
-        <div title="下载 4k 超高清壁纸"><i class="icon icon-cloud-download"></i><span>4K 超高清</span></div>
-      </div>
-      <div class="action-item action-login" *ngIf="!isLoggedIn && !isMobile">
-        <a routerLink="/user/login"
-           [queryParams]="{ref: '/wallpaper/' + wallpaper?.wallpaperId + '?lang=' + lang}"
-           title="登录"><i class="icon icon-login"></i><span>登录</span></a>
       </div>
     </div>
-  </div>
-  <div class="content">
-    <h2 class="title" [title]="wallpaper?.title">
-      <span>{{wallpaper?.title}}</span>
-      <a [href]="wallpaper?.fullCopyrightUrl"
-         [title]="wallpaper?.title"
-         target="_blank"><i class='icon icon-link-45deg'></i></a>
-    </h2>
-    <div class="description">{{wallpaper?.copyright}} ({{wallpaper?.copyrightAuthor}})</div>
-  </div>
+    <div class="post-actions">
+      <div>
+        <button class="button-like" [ngClass]="{liked: wallpaper?.liked, loading: voteLoading}" (click)="voteWallpaper()">
+          <i class='icon icon-like-fill'></i>
+          <span class="text">真棒！{{wallpaper && wallpaper.likes > 0 ? wallpaper.likes : ''}}</span>
+          <span class="parkinson-mask" *ngIf="!voteLoading"><i class='icon icon-like-fill'></i></span>
+          <span class="loading-mask" *ngIf="voteLoading"><i class='icon icon-loading'></i></span>
+        </button>
+        <button (click)="showReward('/assets/images/reward.jpg')">
+          <i class='icon icon-heart-fill'></i>
+        </button>
+        <button *ngIf="!isMobile" (click)="showShareQrcode()">
+          <i class='icon icon-share-fill'></i>
+        </button>
+      </div>
+    </div>
+    <div class="post-more">
+      <div class="post-more-prev">
+        <ng-container *ngIf="prevWallpaper">
+          <div class="post-more-photo">
+            <div class="post-more-photo-content"
+                 [style.background-image]="'url(' + (prevWallpaper?.fullUrl || '') + ')'"></div>
+            <div class="post-more-photo-overlay"></div>
+          </div>
+          <div class="post-more-content">
+            <div class="post-more-content-title">{{prevWallpaper.title}}</div>
+            <div>上一篇</div>
+          </div>
+          <a class="post-more-link"
+             [routerLink]="['../' + prevWallpaper.wallpaperId]"
+             [queryParams]="getLangParams()"
+             [title]="prevWallpaper.title"></a>
+
+        </ng-container>
+      </div>
+      <div class="post-more-next">
+        <ng-container *ngIf="nextWallpaper">
+          <div class="post-more-photo">
+            <div class="post-more-photo-content"
+                 [style.background-image]="'url(' + (nextWallpaper?.fullUrl || '') + ')'"></div>
+            <div class="post-more-photo-overlay"></div>
+          </div>
+          <div class="post-more-content">
+            <div class="post-more-content-title">{{nextWallpaper.title}}</div>
+            <div>下一篇</div>
+          </div>
+          <a class="post-more-link"
+             [routerLink]="['../' + nextWallpaper.wallpaperId]"
+             [queryParams]="getLangParams()"
+             [title]="nextWallpaper.title"></a>
+
+        </ng-container>
+      </div>
+    </div>
+  </footer>
 </div>

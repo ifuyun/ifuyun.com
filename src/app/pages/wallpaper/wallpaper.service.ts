@@ -5,7 +5,7 @@ import { ApiUrl } from '../../config/api-url';
 import { ApiService } from '../../core/api.service';
 import { ResultList } from '../../core/common.interface';
 import { HttpResponseEntity } from '../../core/http-response.interface';
-import { Wallpaper, WallpaperQueryParam } from './wallpaper.interface';
+import { Wallpaper, WallpaperLang, WallpaperQueryParam } from './wallpaper.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +37,17 @@ export class WallpaperService {
 
   increaseDownload(wallpaperId: string): Observable<HttpResponseEntity> {
     return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.DOWNLOAD_WALLPAPER), { wallpaperId });
+  }
+
+  getWallpapersOfPrevAndNext(
+    wallpaperId: string,
+    lang: WallpaperLang
+  ): Observable<{ prevWallpaper: Wallpaper; nextWallpaper: Wallpaper }> {
+    return this.apiService
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_WALLPAPERS_OF_PREV_AND_NEXT), {
+        wallpaperId,
+        lang
+      })
+      .pipe(map((res) => res?.data || {}));
   }
 }

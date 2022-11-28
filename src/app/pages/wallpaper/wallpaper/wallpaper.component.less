@@ -1,113 +1,37 @@
 @import "../../../../styles/variables";
 
 .wallpaper {
-  @content-padding-horizontal: 36px;
-  @content-padding-vertical: 24px;
-  @m-content-padding-horizontal: 2.4rem;
-  @m-content-padding-vertical: 1.6rem;
+  .wallpaper-box {
+    position: relative;
+    cursor: zoom-in;
 
-  width: 100%;
-  height: 100%;
-
-  &.wallpaper-desktop {
-    .actions {
-      top: @content-padding-vertical;
-      left: @content-padding-horizontal;
-      right: @content-padding-horizontal;
-    }
-
-    .content {
-      padding: @content-padding-vertical @content-padding-horizontal;
+    &, img {
+      border-radius: @border-radius * 2;
     }
   }
 
-  &.wallpaper-mobile {
-    .actions {
-      top: @m-content-padding-vertical + @m-header-height;
-      left: @m-content-padding-horizontal;
-      right: @m-content-padding-horizontal;
-    }
-
-    .content {
-      padding: @m-content-padding-vertical @m-content-padding-horizontal;
-    }
-  }
-
-  .photo {
-    width: 100%;
-    height: 100%;
-    background-position: center;
-    background-size: cover;
-  }
-
-  .actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .wallpaper-overlay {
     position: absolute;
+    inset: 0;
+  }
 
-    .action-item {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 4px;
-      background: @wallpaper-action-background-color;
-      cursor: pointer;
+  .wallpaper-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
 
-      > a, > div {
-        padding: 6px 10px;
-      }
+    a:hover {
+      text-decoration: none;
+    }
 
-      &, a {
-        color: @base-color;
-      }
-
-      &:hover {
-        background: #fff;
-      }
-
-      &.disabled {
-        cursor: not-allowed;
-      }
-
+    .button {
       &:not(:last-child) {
         margin-right: 8px;
       }
-
-      &.action-like {
-        color: @action-color;
-      }
-
-      &.action-text {
-        cursor: default;
-      }
-
-      .icon {
-        margin-right: 8px;
-      }
-    }
-  }
-
-  .content {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: auto;
-    background-color: @wallpaper-content-background-color;
-
-    &, a {
-      color: @wallpaper-content-color;
-      text-shadow: @wallpaper-content-text-shadow;
     }
 
-    .title {
-      margin-bottom: 16px;
-      font-size: 20px;
-
-      a {
-        margin-left: 8px;
-      }
+    .icon {
+      margin-right: 4px;
     }
   }
 }

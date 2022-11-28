@@ -54,7 +54,7 @@ import { VoteService } from '../vote.service';
   encapsulation: ViewEncapsulation.None,
   selector: 'app-post',
   templateUrl: './post.component.html',
-  styleUrls: ['./post.component.less']
+  styleUrls: []
 })
 export class PostComponent extends PageComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('captchaImg') captchaImg!: ElementRef;
@@ -87,7 +87,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private postId = '';
   private postSlug = '';
   private commentUser: Guest | null = null;
-  private shareUrl = '';
   private options: OptionEntity = {};
   private unlistenImgClick!: () => void;
   private referer = '';
@@ -366,9 +365,9 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   showShareQrcode() {
     const siteUrl = this.options['site_url'].replace(/\/$/i, '');
     const postGuid = this.post.postGuid.replace(/^\//i, '');
-    this.shareUrl = siteUrl + '/' + postGuid + '?ref=qrcode';
+    const shareUrl = siteUrl + '/' + postGuid + '?ref=qrcode';
 
-    QRCode.toCanvas(this.shareUrl, {
+    QRCode.toCanvas(shareUrl, {
       width: 320,
       margin: 0
     })

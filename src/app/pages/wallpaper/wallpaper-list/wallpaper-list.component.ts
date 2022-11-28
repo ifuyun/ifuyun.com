@@ -3,6 +3,8 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
+import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/constants';
 import { ResponseCode } from '../../../config/response-code.enum';
@@ -50,7 +52,9 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
 
   private readonly pageSize = 12;
 
+  private breadcrumbs: BreadcrumbEntity[] = [];
   private commentUser: Guest | null = null;
+
   private optionsListener!: Subscription;
   private paramListener!: Subscription;
   private wallpapersListener!: Subscription;
@@ -59,6 +63,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     private route: ActivatedRoute,
     private optionService: OptionService,
     private commonService: CommonService,
+    private breadcrumbService: BreadcrumbService,
     private metaService: MetaService,
     private wallpaperService: WallpaperService,
     private paginator: PaginatorService,
@@ -182,6 +187,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       this.total = res.total || 0;
       this.paginatorData = this.paginator.getPaginator(this.page, this.total, this.pageSize);
       this.updatePageInfo();
+      this.updateBreadcrumb();
     });
   }
 
@@ -225,5 +231,25 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       keywords: uniq(keywords).join(','),
       author: this.options['site_author']
     });
+  }
+
+  private updateBreadcrumb(): void {
+    this.breadcrumbs = [
+      {
+        label: '壁纸',
+        tooltip: '高清壁纸',
+        url: '/wallpaper',
+        isHeader: true
+      }
+    ];
+    if (this.page > 1) {
+      this.breadcrumbs.push({
+        label: `第${this.page}页`,
+        tooltip: `第${this.page}页`,
+        url: '',
+        isHeader: false
+      });
+    }
+    this.breadcrumbService.updateCrumb(this.breadcrumbs);
   }
 }

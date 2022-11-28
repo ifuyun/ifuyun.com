@@ -23,6 +23,7 @@ export enum ApiUrl {
   SAVE_ACCESS_LOG = '/logs/access',
   GET_WALLPAPERS = '/wallpapers',
   GET_WALLPAPERS_BY_RANDOM = '/wallpapers/random',
+  GET_WALLPAPERS_OF_PREV_AND_NEXT = '/wallpapers/prev-and-next',
   GET_WALLPAPER_BY_ID = '/wallpapers/wallpaper',
   DOWNLOAD_WALLPAPER = '/wallpapers/download',
   GET_SITEMAP = '/util/sitemap',

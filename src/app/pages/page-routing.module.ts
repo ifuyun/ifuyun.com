@@ -4,7 +4,11 @@ import { LayoutComponent } from './layout/layout.component';
 
 const routes: Routes = [
   { path: '', component: LayoutComponent, loadChildren: () => import('./post/post.module').then((m) => m.PostModule) },
-  { path: 'wallpaper', loadChildren: () => import('./wallpaper/wallpaper.module').then((m) => m.WallpaperModule) },
+  {
+    path: 'wallpaper',
+    component: LayoutComponent,
+    loadChildren: () => import('./wallpaper/wallpaper.module').then((m) => m.WallpaperModule)
+  },
   {
     path: 'tool',
     component: LayoutComponent,

@@ -145,7 +145,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
           label: `${this.year}年`,
           tooltip: `${this.year}年`,
           url: '/archive/' + this.year,
-          isHeader: !this.year
+          isHeader: !this.month
         }
       ];
       if (this.month) {

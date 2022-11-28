@@ -15,11 +15,13 @@
 @content-h2-padding-left: 12px;
 @content-h2-border-width: @primary-margin - @content-h2-padding-left;
 @content-list-padding-left: 2.2em;
+@content-text-shadow: 0 0 0 #efefef, 0 0 2px rgb(0 0 0 / 60%), 0 0 4px rgb(0 0 0 / 60%);
 
 @base-font-size: 10px;
 @primary-font-size: 14px;
 @minor-font-size: 13px;
 @meta-font-size: 12px;
+@header-font-size: 15px;
 
 @base-color: #333;
 @base-background-color: #f6f6f6;
@@ -40,10 +42,14 @@
 @sticky-border-color: @primary-color;
 @highlight-color: @action-color;
 @img-figcaption-color: #aaa;
+@post-more-color: #efefef;
 
-@wallpaper-content-color: #efefef;
+@overlay-background-color: rgba(0, 0, 0, .45);
+@overlay-transition: opacity .3s ease-in-out;
+
+@wallpaper-content-color: @post-more-color;
 @wallpaper-content-background-color: rgba(51, 51, 51, .5);
-@wallpaper-content-text-shadow: 0 0 0 #efefef, 0 0 2px rgb(0 0 0 / 60%), 0 0 4px rgb(0 0 0 / 60%);
+@wallpaper-content-text-shadow: @content-text-shadow;
 @wallpaper-action-background-color: rgba(255, 255, 255, .8);
 
 @input-line-height: 1.57142857;

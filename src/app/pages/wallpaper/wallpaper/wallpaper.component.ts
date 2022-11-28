@@ -1,8 +1,12 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
+import * as QRCode from 'qrcode';
 import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
+import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { ImageService } from '../../../components/image/image.service';
 import { MessageService } from '../../../components/message/message.service';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/constants';
@@ -35,7 +39,6 @@ import { WallpaperService } from '../wallpaper.service';
 export class WallpaperComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly bingDomain = BING_DOMAIN;
 
-  showCrumb = false;
   isMobile = false;
   options: OptionEntity = {};
   lang = WallpaperLang.CN;
@@ -43,6 +46,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   wallpaper!: Wallpaper;
   voteLoading = false;
   isLoggedIn = false;
+  prevWallpaper: Wallpaper | null = null;
+  nextWallpaper: Wallpaper | null = null;
 
   get queryParams(): Params {
     if (this.lang === WallpaperLang.CN) {
@@ -55,23 +60,28 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
 
   protected pageIndex = 'wallpaper';
 
+  private breadcrumbs: BreadcrumbEntity[] = [];
   private commentUser: Guest | null = null;
+
   private optionsListener!: Subscription;
   private paramListener!: Subscription;
   private wallpaperListener!: Subscription;
   private userListener!: Subscription;
+  private prevAndNextListener!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private optionService: OptionService,
     private commonService: CommonService,
+    private breadcrumbService: BreadcrumbService,
     private metaService: MetaService,
     private wallpaperService: WallpaperService,
     private platform: PlatformService,
     private voteService: VoteService,
     private userService: UserService,
     private message: MessageService,
-    private userAgentService: UserAgentService
+    private userAgentService: UserAgentService,
+    private imageService: ImageService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -95,6 +105,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
       )
       .subscribe(() => {
         this.fetchWallpaper();
+        this.fetchPrevAndNext();
       });
     this.userListener = this.userService.loginUser$.subscribe((user) => {
       this.isLoggedIn = !!user.userId;
@@ -114,6 +125,14 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     this.optionsListener.unsubscribe();
     this.paramListener.unsubscribe();
     this.wallpaperListener.unsubscribe();
+  }
+
+  showWallpaper() {
+    this.imageService.preview([
+      {
+        src: this.wallpaper?.fullUrl
+      }
+    ]);
   }
 
   download(uhd = false) {
@@ -156,6 +175,39 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     });
   }
 
+  showReward(src: string) {
+    this.imageService.preview([
+      {
+        src,
+        padding: 16
+      }
+    ]);
+  }
+
+  showShareQrcode() {
+    const siteUrl = this.options['site_url'].replace(/\/$/i, '');
+    const langParam = this.lang === WallpaperLang.EN ? '&lang=' + this.lang : '';
+    const shareUrl = `${siteUrl}/wallpaper/${this.wallpaper.wallpaperId}?ref=qrcode${langParam}`;
+
+    QRCode.toCanvas(shareUrl, {
+      width: 320,
+      margin: 0
+    })
+      .then((canvas) => {
+        this.imageService.preview([
+          {
+            src: canvas.toDataURL(),
+            padding: 16
+          }
+        ]);
+      })
+      .catch((err) => this.message.error(err));
+  }
+
+  getLangParams(): Params {
+    return this.lang === WallpaperLang.CN ? {} : { lang: this.lang };
+  }
+
   protected updateActivePage(): void {
     this.commonService.updateActivePage(this.pageIndex);
   }
@@ -170,16 +222,51 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
           fullCopyrightUrl: `${BING_DOMAIN}${wallpaper.copyrightLink}`
         };
         if (this.lang === WallpaperLang.CN) {
-          this.wallpaper.title = wallpaper.title || wallpaper.titleEn || '';
-          this.wallpaper.copyright = wallpaper.copyright || wallpaper.copyrightEn || '';
+          this.wallpaper.title = wallpaper.title || wallpaper.titleEn;
+          this.wallpaper.copyright = wallpaper.copyright || wallpaper.copyrightEn;
+          this.wallpaper.story = wallpaper.story || wallpaper.storyEn;
         } else {
           this.wallpaper.title = wallpaper.titleEn || wallpaper.title;
           this.wallpaper.copyright = wallpaper.copyrightEn || wallpaper.copyright;
+          this.wallpaper.story = wallpaper.storyEn || wallpaper.story;
         }
       }
       this.updatePageInfo();
+      this.updateBreadcrumb();
       this.initWallpaperStatus();
     });
+  }
+
+  private fetchPrevAndNext() {
+    this.prevAndNextListener = this.wallpaperService
+      .getWallpapersOfPrevAndNext(this.wallpaperId, this.lang)
+      .subscribe((res) => {
+        this.prevWallpaper = null;
+        this.nextWallpaper = null;
+
+        if (res.prevWallpaper) {
+          this.prevWallpaper = {
+            ...res.prevWallpaper,
+            fullUrl: `${BING_DOMAIN}${res.prevWallpaper.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${res.prevWallpaper.imageFormat}`
+          };
+          if (this.lang === WallpaperLang.CN) {
+            this.prevWallpaper.title = this.prevWallpaper.title || this.prevWallpaper.titleEn;
+          } else {
+            this.prevWallpaper.title = this.prevWallpaper.titleEn || this.prevWallpaper.title;
+          }
+        }
+        if (res.nextWallpaper) {
+          this.nextWallpaper = {
+            ...res.nextWallpaper,
+            fullUrl: `${BING_DOMAIN}${res.nextWallpaper.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${res.nextWallpaper.imageFormat}`
+          };
+          if (this.lang === WallpaperLang.CN) {
+            this.nextWallpaper.title = this.nextWallpaper.title || this.nextWallpaper.titleEn;
+          } else {
+            this.nextWallpaper.title = this.nextWallpaper.titleEn || this.nextWallpaper.title;
+          }
+        }
+      });
   }
 
   private initWallpaperStatus() {
@@ -215,10 +302,30 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
 
   protected updatePageOptions(): void {
     this.commonService.updatePageOptions({
-      showHeader: false,
-      showFooter: false,
+      showHeader: true,
+      showFooter: true,
       showMobileHeader: true,
-      showMobileFooter: false
+      showMobileFooter: true
     });
+  }
+
+  private updateBreadcrumb(): void {
+    this.breadcrumbs = [
+      {
+        label: '壁纸',
+        tooltip: '高清壁纸',
+        url: '/wallpaper',
+        param: this.lang === WallpaperLang.EN ? { lang: WallpaperLang.EN } : {},
+        isHeader: false
+      },
+      {
+        label: this.wallpaper?.title,
+        tooltip: this.wallpaper?.title,
+        url: '.',
+        param: this.lang === WallpaperLang.EN ? { lang: WallpaperLang.EN } : {},
+        isHeader: true
+      }
+    ];
+    this.breadcrumbService.updateCrumb(this.breadcrumbs);
   }
 }

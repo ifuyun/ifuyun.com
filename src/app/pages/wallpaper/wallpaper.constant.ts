@@ -5,6 +5,7 @@ export const WALLPAPER_PAGE_KEYWORDS = Object.freeze([
   '4K 壁纸',
   '壁纸下载',
   '必应壁纸',
+  '壁纸故事',
   'Bing 壁纸',
   '风景壁纸',
   'Bing wallpaper',

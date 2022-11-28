@@ -1,50 +1,53 @@
-<div class="wallpaper" [class.wallpaper-desktop]="!isMobile" [class.wallpaper-mobile]="isMobile">
-  <div class="switcher">
-    <div>
-      <div class="lang" [class.active]="lang === 'cn'">
-        <a routerLink="./" [queryParams]="getQueryParams('cn')">中文</a>
-      </div>
-      <div class="lang" [class.active]="lang === 'en'">
-        <a routerLink="./" [queryParams]="getQueryParams('en')">English</a>
+<app-breadcrumb></app-breadcrumb>
+<div class="content-box" [ngClass]="{'content-box-desktop': !isMobile, 'content-box-mobile': isMobile}">
+  <div class="wallpaper" [class.wallpaper-desktop]="!isMobile" [class.wallpaper-mobile]="isMobile">
+    <div class="switcher">
+      <div>
+        <div class="lang" [class.active]="lang === 'cn'">
+          <a routerLink="./" [queryParams]="getQueryParams('cn')">中文</a>
+        </div>
+        <div class="lang" [class.active]="lang === 'en'">
+          <a routerLink="./" [queryParams]="getQueryParams('en')">English</a>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="list">
-    <div class="wallpaper-item" *ngFor="let wallpaper of wallpapers">
-      <div class="photo">
-        <img [src]="wallpaper.fullUrl" [alt]="lang === 'cn' ? wallpaper.copyright : wallpaper.copyrightEn"/>
-        <a class="link" [routerLink]="[wallpaper.wallpaperId]" [queryParams]="getLangParams()"
-           [title]="lang === 'cn' ? wallpaper.copyright : wallpaper.copyrightEn"></a>
+    <div class="wallpaper-list">
+      <div class="wallpaper-item" *ngFor="let wallpaper of wallpapers">
+        <div class="photo">
+          <a class="photo-link"
+             [routerLink]="[wallpaper.wallpaperId]"
+             [queryParams]="getLangParams()"
+             [title]="lang === 'cn' ? wallpaper.copyright : wallpaper.copyrightEn">
+            <img [src]="wallpaper.fullUrl" [alt]="lang === 'cn' ? wallpaper.copyright : wallpaper.copyrightEn"/>
+            <div class="overlay"></div>
+          </a>
+        </div>
         <div class="content">
-          <div class="info">
-            <h2>{{lang === 'cn' ? wallpaper.copyright : wallpaper.copyrightEn}}</h2>
-            <div class="meta">
-              <div class="date" [title]="wallpaper.date">
-                <i class='icon icon-calendar'></i><span>{{wallpaper.date}}</span>
+          <h2 [title]="lang === 'cn' ? wallpaper.copyright : wallpaper.copyrightEn">
+            {{lang === 'cn' ? wallpaper.copyright : wallpaper.copyrightEn}}</h2>
+          <div class="content-meta">
+            <div class="date" [title]="wallpaper.date">
+              <i class='icon icon-calendar'></i><span>{{wallpaper.date}}</span>
+            </div>
+            <div class="actions">
+              <div class="action-item" title="访问: {{wallpaper.views | numberView}}">
+                <i class="icon icon-eye"></i><span>{{wallpaper.views | numberView}}</span>
               </div>
-              <div class="author" [title]="wallpaper.copyrightAuthor"><span>{{wallpaper.copyrightAuthor}}</span></div>
+              <div class="action-item clickable"
+                   [class.disabled]="wallpaper.liked || voteLoadingMap[wallpaper.wallpaperId]"
+                   (click)="voteWallpaper(wallpaper)"
+                   title="喜欢: {{wallpaper.likes | numberView}}">
+                <i class='icon'
+                   [class.icon-heart]="!wallpaper.liked"
+                   [class.icon-heart-fill]="wallpaper.liked"
+                   [class.icon-loading]="voteLoadingMap[wallpaper.wallpaperId]"></i><span>{{wallpaper.likes | numberView}}</span>
+              </div>
             </div>
           </div>
         </div>
-        <div class="actions">
-          <div class="action-item"
-               [class.disabled]="wallpaper.liked || voteLoadingMap[wallpaper.wallpaperId]"
-               (click)="voteWallpaper(wallpaper)"
-               title="喜欢">
-            <i class='icon'
-               [class.icon-heart]="!wallpaper.liked"
-               [class.icon-heart-fill]="wallpaper.liked"
-               [class.icon-loading]="voteLoadingMap[wallpaper.wallpaperId]"></i><span>{{wallpaper.likes}}</span>
-          </div>
-        </div>
       </div>
     </div>
   </div>
-  <div class="paginator-box" *ngIf="total > 0">
-    <app-page-bar [isPath]="false"
-                  [showBackground]="false"
-                  [paginator]="paginatorData"
-                  [url]="pageUrl"
-                  [param]="pageUrlParam"></app-page-bar>
-  </div>
 </div>
+<app-page-bar *ngIf="total > 0"
+              [isPath]="false" [paginator]="paginatorData" [url]="pageUrl" [param]="pageUrlParam"></app-page-bar>

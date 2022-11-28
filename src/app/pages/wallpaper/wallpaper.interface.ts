@@ -22,7 +22,7 @@ export interface Wallpaper {
   bingIdEn?: string;
   date: Date;
   title: string;
-  titleEn?: string;
+  titleEn: string;
   description?: string;
   caption?: string;
   url: string;
@@ -33,12 +33,16 @@ export interface Wallpaper {
   platform: WallpaperPlatform;
   quiz: string;
   copyright: string;
-  copyrightEn?: string;
+  copyrightEn: string;
   copyrightLink: string;
+  copyrightLinkEn: string;
   copyrightAuthor: string;
   fullCopyrightUrl: string;
+  story: string;
+  storyEn: string;
   views: number;
   likes: number;
   downloads: number;
   liked?: boolean;
+  wallpaperModified: Date;
 }
