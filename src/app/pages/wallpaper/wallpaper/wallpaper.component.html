@@ -8,9 +8,6 @@
       <span title="日期: {{wallpaper?.date}}">
         <i class='icon icon-calendar'></i><span>{{wallpaper?.date}}</span>
       </span>
-      <span title="作者：{{wallpaper?.copyrightAuthor}}">
-        <i class='icon icon-user'></i><span>{{wallpaper?.copyrightAuthor}}</span>
-      </span>
       <span title="访问：{{wallpaper?.views | numberView}}">
         <i class='icon icon-eye'></i><span>{{wallpaper?.views | numberView}} 次访问</span>
       </span>
@@ -24,7 +21,7 @@
           <img [src]="wallpaper?.fullUrl" [alt]="wallpaper?.title"/>
           <div class="wallpaper-overlay"></div>
         </div>
-        <figcaption>{{wallpaper?.copyright}}</figcaption>
+        <figcaption>{{wallpaper?.copyright}}({{wallpaper?.copyrightAuthor}})</figcaption>
       </figure>
       <div class="wallpaper-actions">
         <a class="button button-submit" (click)="showWallpaper()" title="查看大图">
@@ -41,16 +38,6 @@
     <article [innerHTML]="(wallpaper?.story || '') | safeHtml"></article>
   </div>
   <footer class="post-footer">
-    <div>
-      <div class="post-meta">
-        <div class="post-meta-icon"><i class='icon icon-clock'></i></div>
-        <div class="post-meta-info">
-        <span class="post-meta-info-text"
-              title="更新于: {{wallpaper?.wallpaperModified | date:'yyyy-MM-dd HH:mm'}}"
-        >最后更新：{{wallpaper?.wallpaperModified | date:'yyyy-MM-dd HH:mm'}}</span>
-        </div>
-      </div>
-    </div>
     <div class="post-actions">
       <div>
         <button class="button-like" [ngClass]="{liked: wallpaper?.liked, loading: voteLoading}" (click)="voteWallpaper()">

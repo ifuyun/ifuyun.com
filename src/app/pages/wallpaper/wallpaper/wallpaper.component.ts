@@ -221,7 +221,6 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
           fullUhdUrl: `${BING_DOMAIN}${wallpaper.urlBase}_UHD.${wallpaper.imageFormat}`,
           fullCopyrightUrl: `${BING_DOMAIN}${wallpaper.copyrightLink}`
         };
-        this.wallpaper.copyrightAuthor = this.wallpaper.copyrightAuthor.replace(/©\s*/gi, '');
         if (this.lang === WallpaperLang.CN) {
           this.wallpaper.title = wallpaper.title || wallpaper.titleEn;
           this.wallpaper.copyright = wallpaper.copyright || wallpaper.copyrightEn;

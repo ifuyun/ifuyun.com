@@ -53,11 +53,11 @@
     }
 
     .post-content {
-      padding: @content-margin;
+      margin: @content-margin;
     }
 
     .post-footer {
-      padding: 0 @content-margin @content-margin;
+      margin: @content-margin;
 
       .post-more-prev, .post-more-next {
         width: 50%;
@@ -79,11 +79,11 @@
     }
 
     .post-content {
-      padding: @m-primary-margin;
+      margin: @m-primary-margin;
     }
 
     .post-footer {
-      padding: 0 @m-primary-margin @m-primary-margin;
+      margin: @m-primary-margin;
 
       .post-more-prev, .post-more-next {
         width: 100%;
@@ -159,12 +159,14 @@
     word-wrap: break-word;
     text-align: justify;
 
-    > :first-child {
-      margin-top: 0;
-    }
+    &, article {
+      > :first-child {
+        margin-top: 0;
+      }
 
-    > :last-child {
-      margin-bottom: 0;
+      > :last-child {
+        margin-bottom: 0;
+      }
     }
 
     p, section, blockquote, pre, ol, ul {
@@ -362,9 +364,10 @@
     .post-actions {
       @button-height: 36px;
       @button-padding: 12px;
+
       display: flex;
       position: relative;
-      margin: @content-margin;
+      margin: @content-margin 0;
       justify-content: center;
 
       > div {
@@ -473,7 +476,7 @@
     }
 
     .post-link {
-      @link-padding: 6px;
+      @link-padding: (@primary-margin / 2);
 
       display: flex;
       margin-top: @content-margin;
@@ -522,7 +525,7 @@
     .post-more {
       display: flex;
       flex-wrap: wrap;
-      margin: (@content-margin - (@content-margin / 2)) -(@content-margin / 2) -(@content-margin / 2);
+      margin: 0 -(@primary-margin / 2) -(@primary-margin / 2);
 
       .post-more-prev, .post-more-next {
         box-sizing: border-box;
