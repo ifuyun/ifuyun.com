@@ -221,6 +221,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
           fullUhdUrl: `${BING_DOMAIN}${wallpaper.urlBase}_UHD.${wallpaper.imageFormat}`,
           fullCopyrightUrl: `${BING_DOMAIN}${wallpaper.copyrightLink}`
         };
+        this.wallpaper.copyrightAuthor = this.wallpaper.copyrightAuthor.replace(/©\s*/gi, '');
         if (this.lang === WallpaperLang.CN) {
           this.wallpaper.title = wallpaper.title || wallpaper.titleEn;
           this.wallpaper.copyright = wallpaper.copyright || wallpaper.copyrightEn;
@@ -281,15 +282,11 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     const titles: string[] = ['高清壁纸', siteName];
     const keywords: string[] = (this.options['site_keywords'] || '').split(',');
     let description = '';
+    const fullStop = this.lang === WallpaperLang.EN ? '. ' : '。';
 
     if (this.wallpaper) {
-      if (this.lang === WallpaperLang.CN) {
-        titles.unshift(this.wallpaper.copyright);
-        description += `${this.wallpaper.copyright} (${this.wallpaper.copyrightAuthor})。`;
-      } else {
-        titles.unshift(this.wallpaper.copyrightEn || this.wallpaper.copyright);
-        description += `${this.wallpaper.copyrightEn} (${this.wallpaper.copyrightAuthor}). `;
-      }
+      titles.unshift(this.wallpaper.title);
+      description += `${this.wallpaper.title} (${this.wallpaper.copyrightAuthor})${fullStop}${this.wallpaper.copyright}${fullStop}`;
     }
 
     this.metaService.updateHTMLMeta({
