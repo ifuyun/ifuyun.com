@@ -1,4 +1,5 @@
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
+import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -20,6 +21,9 @@ import { HTMLMetaData } from '../../../core/meta.interface';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { AuthService } from '../../../services/auth.service';
 import { OptionService } from '../../../services/option.service';
+import { BING_DOMAIN, DEFAULT_WALLPAPER_RESOLUTION } from '../../wallpaper/wallpaper.constant';
+import { Wallpaper } from '../../wallpaper/wallpaper.interface';
+import { WallpaperService } from '../../wallpaper/wallpaper.service';
 import { THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK } from '../login.constant';
 
 const margin = 24;
@@ -56,6 +60,7 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
     password: false
   };
   formStatus: 'normal' | 'shaking' = 'normal';
+  wallpaper: Wallpaper | null = null;
 
   protected pageIndex = 'login';
 
@@ -67,10 +72,12 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
 
   private optionsListener!: Subscription;
   private paramListener!: Subscription;
+  private wallpaperListener!: Subscription;
 
   constructor(
     @Optional() @Inject(RESPONSE) private response: Response,
     @Optional() @Inject(REQUEST) private request: Request,
+    @Inject(DOCUMENT) private document: Document,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private optionService: OptionService,
@@ -80,7 +87,8 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
     private authService: AuthService,
     private message: MessageService,
     private platform: PlatformService,
-    private userAgentService: UserAgentService
+    private userAgentService: UserAgentService,
+    private wallpaperService: WallpaperService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -125,6 +133,7 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
       this.autoFocus.username = false;
       this.autoFocus.password = true;
     }
+    this.fetchWallpaper();
   }
 
   ngAfterViewInit() {
@@ -145,8 +154,10 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
   }
 
   ngOnDestroy() {
+    this.clearStyles();
     this.optionsListener.unsubscribe();
     this.paramListener.unsubscribe();
+    this.wallpaperListener.unsubscribe();
   }
 
   login() {
@@ -250,6 +261,28 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
       showMobileHeader: true,
       showMobileFooter: true
     });
+  }
+
+  private fetchWallpaper() {
+    this.wallpaperListener = this.wallpaperService.getRandomWallpapers(1).subscribe((res) => {
+      this.wallpaper = res.map((item) => ({
+        ...item,
+        fullUrl: `${BING_DOMAIN}${item.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${item.imageFormat}`
+      }))[0] || null;
+      if (this.wallpaper) {
+        this.initStyles();
+      }
+    });
+  }
+
+  private initStyles() {
+    this.document.body.classList.add('bg-image');
+    this.document.body.style.backgroundImage = `url('${this.wallpaper?.fullUrl}')`;
+  }
+
+  private clearStyles() {
+    this.document.body.classList.remove('bg-image');
+    this.document.body.style.backgroundImage = '';
   }
 
   private initMeta() {

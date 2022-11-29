@@ -1,12 +1,12 @@
 @import "../../../styles/variables";
 
 .header {
-  @header-color: #555;
+  @header-color: #333;
 
   top: 0;
   position: fixed;
   width: 100%;
-  background-color: @m-header-background-color;
+  background-color: @header-background-color;
   box-shadow: @content-box-shadow;
   backdrop-filter: blur(5px);
   z-index: 19;
@@ -267,7 +267,7 @@
 
   &-firefox {
     // fix: firefox doesn't support backdrop-filter
-    background-color: @m-header-background-color-moz;
+    background-color: @header-background-color-moz;
   }
 
   .logo img {

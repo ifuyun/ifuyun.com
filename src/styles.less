@@ -129,7 +129,7 @@ a, a:hover, a:focus {
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: @m-header-background-color;
+  background: @header-background-color;
   backdrop-filter: blur(3px);
   touch-action: none;
 }
@@ -200,6 +200,12 @@ a, a:hover, a:focus {
     line-height: @post-line-height;
     font-size: 15px;
   }
+}
+
+.bg-image {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 @keyframes loading-circle {

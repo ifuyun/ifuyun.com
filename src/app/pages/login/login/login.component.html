@@ -1,4 +1,4 @@
-<div class="login">
+<div class="login" [class.login-desktop]="!isMobile" [class.login-mobile]="isMobile">
   <div class="login-body" [@shakeForm]="formStatus">
     <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()">
       <div class="login-form-row">
