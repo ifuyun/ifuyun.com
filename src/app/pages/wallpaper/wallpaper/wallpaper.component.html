@@ -94,3 +94,6 @@
     </div>
   </footer>
 </div>
+<ng-container *ngIf="options['wallpaper_comment_flag'] !== 'close'">
+  <i-comment [objectType]="commentObjectType"></i-comment>
+</ng-container>

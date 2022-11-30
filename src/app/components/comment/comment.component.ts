@@ -65,9 +65,9 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
+    private userAgentService: UserAgentService,
     private platform: PlatformService,
     private route: ActivatedRoute,
-    private userAgentService: UserAgentService,
     private fb: FormBuilder,
     private optionService: OptionService,
     private userService: UserService,
@@ -153,7 +153,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
       const { author, email, captcha, content, commentParent, commentTop } = form.value;
       const commentDto: CommentEntity = {
         objectId: this.objectId,
-        objectType: CommentObjectType.POST,
+        objectType: this.objectType,
         commentParent: commentParent || '',
         commentTop: commentTop || '',
         captchaCode: captcha,

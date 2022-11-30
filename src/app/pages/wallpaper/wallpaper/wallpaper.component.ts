@@ -6,6 +6,8 @@ import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { CommentObjectType } from '../../../components/comment/comment.enum';
+import { CommentService } from '../../../components/comment/comment.service';
 import { ImageService } from '../../../components/image/image.service';
 import { MessageService } from '../../../components/message/message.service';
 import { VoteType, VoteValue } from '../../../config/common.enum';
@@ -38,6 +40,7 @@ import { WallpaperService } from '../wallpaper.service';
 })
 export class WallpaperComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly bingDomain = BING_DOMAIN;
+  readonly commentObjectType = CommentObjectType.WALLPAPER;
 
   isMobile = false;
   options: OptionEntity = {};
@@ -70,17 +73,18 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   private prevAndNextListener!: Subscription;
 
   constructor(
+    private userAgentService: UserAgentService,
+    private platform: PlatformService,
     private route: ActivatedRoute,
     private optionService: OptionService,
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
     private metaService: MetaService,
     private wallpaperService: WallpaperService,
-    private platform: PlatformService,
+    private commentService: CommentService,
     private voteService: VoteService,
     private userService: UserService,
     private message: MessageService,
-    private userAgentService: UserAgentService,
     private imageService: ImageService
   ) {
     super();
@@ -101,6 +105,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         tap(([params, queryParams]) => {
           this.wallpaperId = params.get('wid')?.trim() || '';
           this.lang = <WallpaperLang>queryParams.get('lang')?.trim() || WallpaperLang.CN;
+          this.commentService.updateObjectId(this.wallpaperId);
         })
       )
       .subscribe(() => {
