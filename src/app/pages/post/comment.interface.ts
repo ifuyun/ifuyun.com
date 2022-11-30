@@ -1,8 +1,10 @@
 import { IPLocation, MetaData } from '../../core/common.interface';
 import { UserModel } from '../../interfaces/user.interface';
+import { CommentObjectType } from './comment.enum';
 
 export interface CommentEntity {
-  postId: string;
+  objectId: string;
+  objectType: CommentObjectType;
   commentParent?: string;
   commentTop?: string;
   authorName: string;

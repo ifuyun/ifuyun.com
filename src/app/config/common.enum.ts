@@ -16,12 +16,6 @@ export enum TaxonomyStatus {
   TRASH = 'trash'
 }
 
-export enum CommentFlag {
-  OPEN = 'open',
-  AUDIT = 'audit',
-  CLOSE = 'close'
-}
-
 export enum VoteValue {
   LIKE = 'like',
   DISLIKE = 'dislike'

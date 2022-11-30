@@ -7,6 +7,7 @@ import { ApiService } from '../../core/api.service';
 import { ResultList } from '../../core/common.interface';
 import { HttpResponseEntity } from '../../core/http-response.interface';
 import { PlatformService } from '../../core/platform.service';
+import { CommentObjectType } from './comment.enum';
 import { Comment, CommentEntity } from './comment.interface';
 
 @Injectable({
@@ -18,7 +19,17 @@ export class CommentService {
   getCommentsByPostId(postId: string): Observable<ResultList<Comment>> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_COMMENTS), {
-        postId
+        objectId: postId,
+        objectType: CommentObjectType.POST
+      })
+      .pipe(map((res) => res?.data || {}));
+  }
+
+  getCommentsByWallpaperId(wallpaperId: string): Observable<ResultList<Comment>> {
+    return this.apiService
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_COMMENTS), {
+        objectId: wallpaperId,
+        objectType: CommentObjectType.WALLPAPER
       })
       .pipe(map((res) => res?.data || {}));
   }

@@ -42,6 +42,7 @@ import { TaxonomyEntity } from '../../../interfaces/taxonomy.interface';
 import { Guest, UserModel } from '../../../interfaces/user.interface';
 import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
+import { CommentObjectType } from '../comment.enum';
 import { Comment, CommentEntity, CommentModel } from '../comment.interface';
 import { CommentService } from '../comment.service';
 import { FavoriteService } from '../favorite.service';
@@ -227,7 +228,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     } else {
       const { author, email, captcha, content, commentParent, commentTop } = form.value;
       const commentDto: CommentEntity = {
-        postId: this.postId,
+        objectId: this.postId,
+        objectType: CommentObjectType.POST,
         commentParent: commentParent || '',
         commentTop: commentTop || '',
         captchaCode: captcha,
@@ -337,11 +339,13 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   refreshCaptcha(e?: MouseEvent) {
-    const captchaUrl = this.captchaUrl.split('?')[0];
-    if (e) {
-      (e.target as HTMLImageElement).src = `${captchaUrl}?r=${Math.random()}`;
-    } else {
-      setTimeout(() => (this.captchaImg.nativeElement.src = `${captchaUrl}?r=${Math.random()}`));
+    if (!this.isLoggedIn) {
+      const captchaUrl = this.captchaUrl.split('?')[0];
+      if (e) {
+        (e.target as HTMLImageElement).src = `${captchaUrl}?r=${Math.random()}`;
+      } else {
+        setTimeout(() => (this.captchaImg.nativeElement.src = `${captchaUrl}?r=${Math.random()}`));
+      }
     }
   }
 
