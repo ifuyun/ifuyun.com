@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiUrl } from '../../config/api-url';
 import { STORAGE_KEY_USER } from '../../config/constants';
@@ -14,6 +14,13 @@ import { Comment, CommentEntity } from './comment.interface';
   providedIn: 'root'
 })
 export class CommentService {
+  private objectId: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  public objectId$: Observable<string> = this.objectId.asObservable();
+
+  updateObjectId(objectId: string) {
+    this.objectId.next(objectId);
+  }
+
   constructor(private apiService: ApiService, private platform: PlatformService) {}
 
   getCommentsByPostId(postId: string): Observable<ResultList<Comment>> {
@@ -32,6 +39,13 @@ export class CommentService {
         objectType: CommentObjectType.WALLPAPER
       })
       .pipe(map((res) => res?.data || {}));
+  }
+
+  getCommentsByObjectId(objectId: string, objectType: CommentObjectType): Observable<ResultList<Comment>> {
+    if (objectType === CommentObjectType.POST) {
+      return this.getCommentsByPostId(objectId);
+    }
+    return this.getCommentsByWallpaperId(objectId);
   }
 
   saveComment(comment: CommentEntity): Observable<HttpResponseEntity> {

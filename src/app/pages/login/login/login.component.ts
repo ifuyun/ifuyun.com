@@ -265,10 +265,11 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
 
   private fetchWallpaper() {
     this.wallpaperListener = this.wallpaperService.getRandomWallpapers(1).subscribe((res) => {
-      this.wallpaper = res.map((item) => ({
-        ...item,
-        fullUrl: `${BING_DOMAIN}${item.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${item.imageFormat}`
-      }))[0] || null;
+      this.wallpaper =
+        res.map((item) => ({
+          ...item,
+          fullUrl: `${BING_DOMAIN}${item.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${item.imageFormat}`
+        }))[0] || null;
       if (this.wallpaper) {
         this.initStyles();
       }

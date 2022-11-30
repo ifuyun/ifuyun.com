@@ -8,6 +8,7 @@ import { BackTopComponent } from './back-top/back-top.component';
 import { BackTopModule } from './back-top/back-top.module';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { CarouselComponent } from './carousel/carousel.component';
+import { CommentComponent } from './comment/comment.component';
 import { EmptyComponent } from './empty/empty.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
@@ -27,6 +28,7 @@ import { WallpaperBoxComponent } from './wallpaper-box/wallpaper-box.component';
     AutofocusDirective,
     BreadcrumbComponent,
     CarouselComponent,
+    CommentComponent,
     EmptyComponent,
     FooterComponent,
     HeaderComponent,
@@ -54,6 +56,7 @@ import { WallpaperBoxComponent } from './wallpaper-box/wallpaper-box.component';
     BackTopComponent,
     BreadcrumbComponent,
     CarouselComponent,
+    CommentComponent,
     EmptyComponent,
     FooterComponent,
     HeaderComponent,

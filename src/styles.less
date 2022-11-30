@@ -202,6 +202,35 @@ a, a:hover, a:focus {
   }
 }
 
+.post, .comment {
+  border-radius: @border-radius;
+  background-color: @content-background-color;
+  box-shadow: @content-box-shadow;
+
+  &-desktop {
+    margin: @box-shadow-width;
+
+    .divider {
+      margin: 0 20px;
+    }
+  }
+
+  &-mobile {
+    .divider {
+      margin: 0 @m-primary-margin;
+    }
+  }
+}
+
+.divider {
+  height: 1px;
+  border-top: 1px solid @primary-border-color;
+
+  &-dashed {
+    border-top-style: dashed;
+  }
+}
+
 .bg-image {
   background-position: center;
   background-size: cover;

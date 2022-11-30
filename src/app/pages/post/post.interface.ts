@@ -3,7 +3,7 @@ import { PostType } from '../../config/common.enum';
 import { QueryParam } from '../../core/common.interface';
 import { TaxonomyEntity } from '../../interfaces/taxonomy.interface';
 import { UserEntity } from '../../interfaces/user.interface';
-import { CommentFlag } from './comment.enum';
+import { CommentFlag } from '../../components/comment/comment.enum';
 
 export interface PostEntity {
   postId: string;
