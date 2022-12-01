@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ADMIN_URL } from '../config/constants';
+import { OptionEntity } from '../interfaces/option.interface';
 import { MetaData, PageOptions } from './common.interface';
 
 @Injectable({
@@ -29,5 +31,9 @@ export class CommonService {
     const result: Record<string, string> = {};
     meta.forEach((item) => (result[item.metaKey] = item.metaValue));
     return result;
+  }
+
+  getURL(options: OptionEntity, url: string) {
+    return `${options['site_url']}${url}`;
   }
 }

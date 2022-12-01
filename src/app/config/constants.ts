@@ -19,6 +19,7 @@ export const POST_SLUG_PREFIX_BLACKLIST = Object.freeze([
 ]);
 export const AVATAR_API_URL = 'https://cravatar.cn/avatar/$0.png?d=$1';
 export const ADMIN_URL = '/admin';
+export const LOGIN_URL = '/user/login';
 export const BLOCK_SCROLL_CLASS = 'cdk-global-scrollblock';
 
 export const STORAGE_KEY_USER = 'user';

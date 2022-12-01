@@ -4,7 +4,6 @@ import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { JdUnionGoodsJingfen, JdUnionGoodsMaterial } from '../../pages/tool/jd-union.interface';
 import { ShoppingService } from '../../pages/tool/shopping/shopping.service';
-import { MessageService } from '../message/message.service';
 
 @Component({
   selector: 'i-jd-union-goods',
@@ -42,8 +41,7 @@ export class JdUnionGoodsComponent implements OnInit, OnDestroy {
   constructor(
     private platform: PlatformService,
     private userAgentService: UserAgentService,
-    private shoppingService: ShoppingService,
-    private message: MessageService
+    private shoppingService: ShoppingService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }
@@ -86,9 +84,7 @@ export class JdUnionGoodsComponent implements OnInit, OnDestroy {
       })
       .subscribe((res) => {
         const code = Number(res.code);
-        if (code !== 0 && code !== 200) {
-          this.message.error(res.message);
-        } else {
+        if (code === 0 || code === 200) {
           res.data.forEach((item) => {
             item.bestCoupon = (item.couponInfo.couponList || []).filter((c) => !!c.isBest)[0] || null;
             if (!item.bestCoupon && item.couponInfo.couponList.length > 0) {
@@ -109,9 +105,7 @@ export class JdUnionGoodsComponent implements OnInit, OnDestroy {
       })
       .subscribe((res) => {
         const code = Number(res.code);
-        if (code !== 0 && code !== 200) {
-          this.message.error(res.message);
-        } else {
+        if (code === 0 || code === 200) {
           res.data.forEach((item) => {
             item.bestCoupon = (item.couponInfo.couponList || []).filter((c) => !!c.isBest)[0] || null;
             if (!item.bestCoupon && item.couponInfo.couponList.length > 0) {

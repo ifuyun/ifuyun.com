@@ -1,0 +1,46 @@
+@import "../../../../styles/variables";
+
+.login-info {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  line-height: 24px;
+
+  &-desktop {
+    padding-top: @header-height;
+  }
+
+  &-mobile {
+    padding-top: @m-header-height;
+  }
+
+  .login-loading, .login-failure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    > div {
+      margin: (@content-margin / 2) 0;
+    }
+  }
+
+  .icon {
+    font-size: 64px;
+  }
+
+  .icon-error {
+    color: @error-color;
+  }
+
+  .icon-loading {
+    color: @primary-color;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}

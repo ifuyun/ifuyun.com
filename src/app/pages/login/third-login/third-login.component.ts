@@ -2,22 +2,33 @@ import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
-import { combineLatestWith, Subscription } from 'rxjs';
+import { isEmpty } from 'lodash';
+import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { ADMIN_URL } from '../../../config/constants';
+import { MessageService } from '../../../components/message/message.service';
+import { ADMIN_URL, LOGIN_URL } from '../../../config/constants';
+import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
+import { CommonService } from '../../../core/common.service';
 import { PlatformService } from '../../../core/platform.service';
+import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { AuthService } from '../../../services/auth.service';
 import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
+import { LoginService } from '../login.service';
 
 @Component({
   selector: 'app-third-login',
-  template: ``,
-  styles: ['']
+  templateUrl: './third-login.component.html',
+  styleUrls: ['./third-login.component.less']
 })
 export class ThirdLoginComponent implements OnInit, OnDestroy {
+  isMobile = false;
+  loginStatus: 'loading' | 'success' | 'cancel' | 'failure' = 'loading';
+  loginURL = '';
+  countdown = 3; // 3s
+
   private options: OptionEntity = {};
   private authCode = '';
   private appId = '';
@@ -34,25 +45,26 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
     @Optional() @Inject(RESPONSE) private response: Response,
     @Optional() @Inject(REQUEST) private request: Request,
     private route: ActivatedRoute,
+    private userAgentService: UserAgentService,
     private optionService: OptionService,
     private userService: UserService,
     private authService: AuthService,
-    private platform: PlatformService
-  ) {}
+    private commonService: CommonService,
+    private loginService: LoginService,
+    private platform: PlatformService,
+    private message: MessageService
+  ) {
+    this.isMobile = this.userAgentService.isMobile();
+  }
 
   ngOnInit(): void {
     this.paramListener = this.route.queryParamMap
       .pipe(
         combineLatestWith(this.optionService.options$),
+        skipWhile(([params, options]) => isEmpty(options)),
         tap(([params, options]) => {
           this.options = options;
-          if (this.platform.isBrowser) {
-            this.adminUrl = `${this.options['site_url'] || location.protocol + '//' + location.host}${ADMIN_URL}`;
-          } else {
-            this.adminUrl = `${
-              this.options['site_url'] || this.request.protocol + '//' + this.request.hostname
-            }${ADMIN_URL}`;
-          }
+          this.adminUrl = `${this.options['site_url']}${ADMIN_URL}`;
 
           const ref = params.get('ref')?.trim() || '';
           try {
@@ -60,6 +72,8 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
           } catch (e) {
             this.referer = ref;
           }
+          const loginParam = ref ? `?ref=${ref}` : '';
+          this.loginURL = this.commonService.getURL(options, LOGIN_URL) + loginParam;
 
           this.from = params.get('from')?.trim() || '';
           if (this.from === 'alipay' || this.from === 'm_alipay') {
@@ -90,25 +104,37 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
     }
     if (this.from === 'weibo' && this.errCode === '21330') {
       // cancel
-      window.close();
+      this.loginStatus = 'cancel';
+      this.loginService.gotoLogin(this.loginURL);
       return;
     }
     if (this.from === 'github' && this.errCode === 'access_denied') {
       // cancel
-      window.close();
+      this.loginStatus = 'cancel';
+      this.loginService.gotoLogin(this.loginURL);
       return;
     }
     this.loginListener = this.userService.getThirdUser(this.authCode, this.from).subscribe((res) => {
       if (res.code === ResponseCode.SUCCESS) {
-        if (this.from === 'm_alipay') {
-          const redirectUrl = this.referer ? this.options['site_url'] + this.referer : this.adminUrl;
-          location.replace(redirectUrl);
-          return;
-        }
+        this.loginStatus = 'success';
         this.authService.setAuth(res.data, { username: '', password: '', rememberMe: false });
-        window.opener.postMessage({ login: true }, window.origin);
-        window.close();
+        const redirectUrl = this.referer ? this.options['site_url'] + this.referer : this.adminUrl;
+        location.replace(redirectUrl);
+      } else {
+        this.loginStatus = 'failure';
+        this.message.error(Message.LOGIN_ERROR);
+        this.startCountdown();
       }
     });
+  }
+
+  private startCountdown() {
+    const timer = setInterval(() => {
+      this.countdown -= 1;
+      if (this.countdown <= 0) {
+        clearInterval(timer);
+        this.loginService.gotoLogin(this.loginURL);
+      }
+    }, 1000);
   }
 }

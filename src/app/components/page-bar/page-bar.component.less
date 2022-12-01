@@ -1,7 +1,6 @@
 @import "../../../styles/variables";
 
 .paginator {
-  padding: @m-primary-margin @m-primary-padding;
   border-radius: @border-radius;
 
   &-box {
@@ -11,6 +10,7 @@
 
   &-desktop {
     margin: @primary-margin @box-shadow-width @box-shadow-width @box-shadow-width;
+    padding: @m-primary-margin @m-primary-padding;
 
     > ul {
       @item-size: 32px;
@@ -64,6 +64,7 @@
   &-mobile {
     display: flex;
     justify-content: space-between;
+    padding: @m-primary-margin;
 
     &.paginator-box {
       margin-top: @m-primary-margin;

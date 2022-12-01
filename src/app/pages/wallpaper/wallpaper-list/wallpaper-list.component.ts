@@ -1,8 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
-import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { skipWhile, Subscription } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { VoteType, VoteValue } from '../../../config/common.enum';
@@ -84,17 +83,12 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       .subscribe((options) => {
         this.options = options;
       });
-    this.paramListener = this.route.paramMap
-      .pipe(
-        combineLatestWith(this.route.queryParamMap),
-        tap(([, queryParams]) => {
-          this.page = Number(queryParams.get('page')) || 1;
-          this.keyword = queryParams.get('keyword')?.trim() || '';
-          this.lang = <WallpaperLang>queryParams.get('lang')?.trim() || WallpaperLang.CN;
-          this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
-        })
-      )
-      .subscribe(() => {
+    this.paramListener = this.route.queryParamMap
+      .subscribe((queryParams) => {
+        this.page = Number(queryParams.get('page')) || 1;
+        this.keyword = queryParams.get('keyword')?.trim() || '';
+        this.lang = <WallpaperLang>queryParams.get('lang')?.trim() || WallpaperLang.CN;
+        this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
         this.fetchWallpapers();
       });
   }

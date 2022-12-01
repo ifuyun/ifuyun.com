@@ -1,6 +1,6 @@
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
-import { AfterViewInit, Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
@@ -11,13 +11,13 @@ import { skipWhile, Subscription } from 'rxjs';
 import { MessageService } from '../../../components/message/message.service';
 import { ADMIN_URL } from '../../../config/constants';
 import { CommonService } from '../../../core/common.service';
+import { HTMLMetaData } from '../../../core/meta.interface';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { format, generateId } from '../../../helpers/helper';
 import md5 from '../../../helpers/md5';
-import { HTMLMetaData } from '../../../core/meta.interface';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { AuthService } from '../../../services/auth.service';
 import { OptionService } from '../../../services/option.service';
@@ -48,7 +48,7 @@ const duration = 500; // ms
     ])
   ]
 })
-export class LoginComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy {
+export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
   isMobile = false;
   loginForm = this.fb.group({
     username: [this.cookieService.get('user') || '', [Validators.required, Validators.maxLength(20)]],
@@ -61,13 +61,12 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
   };
   formStatus: 'normal' | 'shaking' = 'normal';
   wallpaper: Wallpaper | null = null;
+  pageLoaded = false;
 
   protected pageIndex = 'login';
 
   private adminUrl = '';
   private options: OptionEntity = {};
-  private loginWindow: Window | null = null;
-  private readonly loginWindowName = 'login';
   private referer = '';
 
   private optionsListener!: Subscription;
@@ -100,16 +99,11 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => {
         this.options = options;
+        this.pageLoaded = true;
         this.initMeta();
         this.updateActivePage();
 
-        if (this.platform.isBrowser) {
-          this.adminUrl = `${this.options['site_url'] || location.protocol + '//' + location.host}${ADMIN_URL}`;
-        } else {
-          this.adminUrl = `${
-            this.options['site_url'] || this.request.protocol + '//' + this.request.hostname
-          }${ADMIN_URL}`;
-        }
+        this.adminUrl = `${this.options['site_url']}${ADMIN_URL}`;
         const rememberMe = this.cookieService.get('remember');
         /* 登录状态直接跳转后台首页 */
         if (rememberMe === '1' && this.authService.isLoggedIn()) {
@@ -134,23 +128,6 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
       this.autoFocus.password = true;
     }
     this.fetchWallpaper();
-  }
-
-  ngAfterViewInit() {
-    if (this.platform.isBrowser) {
-      window.addEventListener(
-        'message',
-        (event) => {
-          if (event.origin !== window.origin) {
-            return;
-          }
-          if (event.data.login) {
-            window.location.href = this.referer ? this.options['site_url'] + this.referer : this.adminUrl;
-          }
-        },
-        false
-      );
-    }
   }
 
   ngOnDestroy() {
@@ -210,15 +187,17 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
     if (!['alipay', 'weibo', 'github'].includes(type)) {
       return this.message.warning('Sorry, we are stepping up our efforts to launch this feature, please wait...');
     }
+    if (isEmpty(this.options)) {
+      return;
+    }
     let url = '';
     switch (type) {
       case 'alipay':
         if (this.isMobile) {
-          const redirectUrl = `${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'm_alipay', this.referer)}`;
           const authUrl = format(
             THIRD_LOGIN_API[type],
             this.options['open_alipay_app_id'],
-            encodeURIComponent(redirectUrl),
+            encodeURIComponent(this.getCallbackURL('m_alipay')),
             generateId()
           );
           url = `alipays://platformapi/startapp?appId=20000067&url=${encodeURIComponent(authUrl)}`;
@@ -226,7 +205,7 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
           url = format(
             THIRD_LOGIN_API[type],
             this.options['open_alipay_app_id'],
-            encodeURIComponent(`${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'alipay', '')}`),
+            encodeURIComponent(this.getCallbackURL('alipay')),
             generateId()
           );
         }
@@ -235,19 +214,19 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
         url = format(
           THIRD_LOGIN_API[type],
           this.options['open_weibo_app_key'],
-          encodeURIComponent(`${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'weibo', '')}`)
+          encodeURIComponent(this.getCallbackURL('weibo'))
         );
         break;
       case 'github':
         url = format(
           THIRD_LOGIN_API[type],
           this.options['open_github_client_id'],
-          encodeURIComponent(`${this.options['site_url']}${format(THIRD_LOGIN_CALLBACK, 'github', '')}`),
+          encodeURIComponent(this.getCallbackURL('github')),
           generateId()
         );
         break;
     }
-    this.loginWindow = window.open(url, this.loginWindowName);
+    location.href = url;
   }
 
   protected updateActivePage(): void {
@@ -274,6 +253,10 @@ export class LoginComponent extends PageComponent implements OnInit, AfterViewIn
         this.initStyles();
       }
     });
+  }
+
+  private getCallbackURL(channel: string) {
+    return this.commonService.getURL(this.options, format(THIRD_LOGIN_CALLBACK, channel, this.referer));
   }
 
   private initStyles() {
