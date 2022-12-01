@@ -1,4 +1,4 @@
-import { DOCUMENT, ViewportScroller } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -103,7 +103,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     private route: ActivatedRoute,
     private message: MessageService,
     private platform: PlatformService,
-    private scroller: ViewportScroller,
     private renderer: Renderer2
   ) {
     super();
@@ -117,7 +116,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       this.postId = params['postId']?.trim();
       this.postSlug = params['postSlug']?.trim();
       this.postSlug ? this.fetchPage() : this.fetchPost();
-      this.scroller.scrollToPosition([0, 0]);
       this.commentService.updateObjectId(this.postId);
     });
     this.urlListener = this.urlService.urlInfo$.subscribe((url) => {

@@ -1,17 +1,16 @@
-import { ViewportScroller } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
 import { skipWhile, Subscription } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
-import { PageComponent } from '../../../core/page.component';
 import { CommonService } from '../../../core/common.service';
-import { UserAgentService } from '../../../core/user-agent.service';
 import { HTMLMetaData } from '../../../core/meta.interface';
-import { OptionEntity } from '../../../interfaces/option.interface';
-import { PostArchiveDateMap } from '../post.interface';
 import { MetaService } from '../../../core/meta.service';
+import { PageComponent } from '../../../core/page.component';
+import { UserAgentService } from '../../../core/user-agent.service';
+import { OptionEntity } from '../../../interfaces/option.interface';
 import { OptionService } from '../../../services/option.service';
+import { PostArchiveDateMap } from '../post.interface';
 import { PostService } from '../post.service';
 
 @Component({
@@ -37,8 +36,7 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
     private postService: PostService,
-    private userAgentService: UserAgentService,
-    private scroller: ViewportScroller
+    private userAgentService: UserAgentService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -55,7 +53,6 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
         this.updatePageInfo();
       });
     this.fetchArchiveData();
-    this.scroller.scrollToPosition([0, 0]);
   }
 
   ngOnDestroy() {

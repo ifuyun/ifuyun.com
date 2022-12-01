@@ -1,4 +1,3 @@
-import { ViewportScroller } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
@@ -53,8 +52,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
     private breadcrumbService: BreadcrumbService,
     private postService: PostService,
     private paginator: PaginatorService,
-    private userAgentService: UserAgentService,
-    private scroller: ViewportScroller
+    private userAgentService: UserAgentService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -80,7 +78,6 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
       )
       .subscribe(() => {
         this.fetchPosts();
-        this.scroller.scrollToPosition([0, 0]);
       });
   }
 
@@ -92,6 +89,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
   protected updateActivePage(): void {
     this.commonService.updateActivePage(this.pageIndex);
   }
+
   protected updatePageOptions(): void {
     this.commonService.updatePageOptions({
       showHeader: true,
