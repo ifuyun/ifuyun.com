@@ -55,42 +55,38 @@
       </div>
     </div>
     <div class="post-more">
-      <div class="post-more-prev">
-        <ng-container *ngIf="prevWallpaper">
-          <div class="post-more-photo">
-            <div class="post-more-photo-content"
-                 [style.background-image]="'url(' + (prevWallpaper?.fullUrl || '') + ')'"></div>
-            <div class="post-more-photo-overlay"></div>
-          </div>
-          <div class="post-more-content">
-            <div class="post-more-content-title">{{prevWallpaper.title}}</div>
-            <div>上一篇</div>
-          </div>
-          <a class="post-more-link"
-             [routerLink]="['../' + prevWallpaper.wallpaperId]"
-             [queryParams]="getLangParams()"
-             [title]="prevWallpaper.title"></a>
-
-        </ng-container>
+      <div class="post-more-prev" *ngIf="prevWallpaper">
+        <div class="post-more-photo">
+          <div class="post-more-photo-content"
+               [style.background-image]="'url(' + (prevWallpaper?.fullUrl || '') + ')'"></div>
+          <div class="post-more-photo-overlay"></div>
+        </div>
+        <div class="post-more-content">
+          <div class="post-more-content-title">{{prevWallpaper.title}}</div>
+          <div>上一篇</div>
+        </div>
+        <a class="post-more-link"
+           [routerLink]="['../' + prevWallpaper.wallpaperId]"
+           [queryParams]="getLangParams()"
+           [title]="prevWallpaper.title"></a>
       </div>
-      <div class="post-more-next">
-        <ng-container *ngIf="nextWallpaper">
-          <div class="post-more-photo">
-            <div class="post-more-photo-content"
-                 [style.background-image]="'url(' + (nextWallpaper?.fullUrl || '') + ')'"></div>
-            <div class="post-more-photo-overlay"></div>
-          </div>
-          <div class="post-more-content">
-            <div class="post-more-content-title">{{nextWallpaper.title}}</div>
-            <div>下一篇</div>
-          </div>
-          <a class="post-more-link"
-             [routerLink]="['../' + nextWallpaper.wallpaperId]"
-             [queryParams]="getLangParams()"
-             [title]="nextWallpaper.title"></a>
-
-        </ng-container>
+      <div *ngIf="!prevWallpaper"></div>
+      <div class="post-more-next" *ngIf="nextWallpaper">
+        <div class="post-more-photo">
+          <div class="post-more-photo-content"
+               [style.background-image]="'url(' + (nextWallpaper?.fullUrl || '') + ')'"></div>
+          <div class="post-more-photo-overlay"></div>
+        </div>
+        <div class="post-more-content">
+          <div class="post-more-content-title">{{nextWallpaper.title}}</div>
+          <div>下一篇</div>
+        </div>
+        <a class="post-more-link"
+           [routerLink]="['../' + nextWallpaper.wallpaperId]"
+           [queryParams]="getLangParams()"
+           [title]="nextWallpaper.title"></a>
       </div>
+      <div *ngIf="!nextWallpaper"></div>
     </div>
   </footer>
 </div>
