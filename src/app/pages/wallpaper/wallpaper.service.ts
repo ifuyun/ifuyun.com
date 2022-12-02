@@ -50,4 +50,21 @@ export class WallpaperService {
       })
       .pipe(map((res) => res?.data || {}));
   }
+
+  parseLocation(wallpaper: Wallpaper, lang: WallpaperLang): { copyright: string; location: string } {
+    const isCn = lang === WallpaperLang.CN && !!wallpaper.copyright || lang === WallpaperLang.EN && !wallpaper.copyrightEn;
+    const separator = isCn ? '，' : /,\s*/i;
+    const copyright = isCn ? wallpaper.copyright : wallpaper.copyrightEn;
+    const temp = copyright.split(separator);
+    if (temp.length < 2) {
+      return {
+        copyright,
+        location: '未知'
+      };
+    }
+    return {
+      copyright: temp.shift() || '',
+      location: temp.join(isCn ? '，' : ', ')
+    };
+  }
 }

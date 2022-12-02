@@ -220,19 +220,20 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   private fetchWallpaper() {
     this.wallpaperListener = this.wallpaperService.getWallpaperById(this.wallpaperId).subscribe((wallpaper) => {
       if (wallpaper && wallpaper.wallpaperId) {
+        const meta = this.wallpaperService.parseLocation(wallpaper, this.lang);
         this.wallpaper = {
           ...wallpaper,
+          copyright: meta.copyright,
+          location: meta.location,
           fullUrl: `${BING_DOMAIN}${wallpaper.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${wallpaper.imageFormat}`,
           fullUhdUrl: `${BING_DOMAIN}${wallpaper.urlBase}_UHD.${wallpaper.imageFormat}`,
           fullCopyrightUrl: `${BING_DOMAIN}${wallpaper.copyrightLink}`
         };
         if (this.lang === WallpaperLang.CN) {
           this.wallpaper.title = wallpaper.title || wallpaper.titleEn;
-          this.wallpaper.copyright = wallpaper.copyright || wallpaper.copyrightEn;
           this.wallpaper.story = wallpaper.story || wallpaper.storyEn;
         } else {
           this.wallpaper.title = wallpaper.titleEn || wallpaper.title;
-          this.wallpaper.copyright = wallpaper.copyrightEn || wallpaper.copyright;
           this.wallpaper.story = wallpaper.storyEn || wallpaper.story;
         }
       }
@@ -287,10 +288,11 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     const keywords: string[] = (this.options['site_keywords'] || '').split(',');
     let description = '';
     const fullStop = this.lang === WallpaperLang.EN ? '. ' : '。';
+    const comma = this.lang === WallpaperLang.EN ? ', ' : '，';
 
     if (this.wallpaper) {
-      titles.unshift(this.wallpaper.title);
-      description += `${this.wallpaper.title} (${this.wallpaper.copyrightAuthor})${fullStop}${this.wallpaper.copyright}${fullStop}`;
+      titles.unshift(this.wallpaper.copyright);
+      description += `${this.wallpaper.copyright}${comma}${this.wallpaper.location} (${this.wallpaper.copyrightAuthor})${fullStop}`;
     }
 
     this.metaService.updateHTMLMeta({

@@ -2,11 +2,14 @@
 <div class="post" [ngClass]="{'post-desktop': !isMobile, 'post-mobile': isMobile}">
   <header class="post-header">
     <h1 class="post-title">
-      <a routerLink="." title="{{wallpaper?.title}}" rel="bookmark">{{wallpaper?.title}}</a>
+      <a routerLink="." title="{{wallpaper?.copyright}}" rel="bookmark">{{wallpaper?.copyright}}</a>
     </h1>
     <div class="post-meta post-meta-top">
       <span title="日期: {{wallpaper?.date}}">
         <i class='icon icon-calendar'></i><span>{{wallpaper?.date}}</span>
+      </span>
+      <span *ngIf="!isMobile" title="地点: {{wallpaper?.location}}">
+        <i class='icon icon-geo-alt'></i><span>{{wallpaper?.location}}</span>
       </span>
       <span title="访问：{{wallpaper?.views | numberView}}">
         <i class='icon icon-eye'></i><span>{{wallpaper?.views | numberView}} 次访问</span>
@@ -35,9 +38,18 @@
         </a>
       </div>
     </div>
+    <h2>{{wallpaper?.title}}</h2>
     <article [innerHTML]="(wallpaper?.story || '') | safeHtml"></article>
   </div>
   <footer class="post-footer">
+    <div *ngIf="isMobile">
+      <div class="post-meta">
+        <div class="post-meta-icon"><i class='icon icon-geo-alt'></i></div>
+        <div class="post-meta-info">
+          <span class="post-meta-info-text" title="地点: {{wallpaper?.location}}">{{wallpaper?.location}}</span>
+        </div>
+      </div>
+    </div>
     <div class="post-actions">
       <div>
         <button class="button-like" [ngClass]="{liked: wallpaper?.liked, loading: voteLoading}" (click)="voteWallpaper()">

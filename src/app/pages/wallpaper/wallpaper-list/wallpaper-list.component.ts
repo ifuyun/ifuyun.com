@@ -171,11 +171,16 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       param.keyword = this.keyword;
     }
     this.wallpapersListener = this.wallpaperService.getWallpapers(param).subscribe((res) => {
-      this.wallpapers = (res.list || []).map((item) => ({
-        ...item,
-        fullUrl: `${BING_DOMAIN}${item.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${item.imageFormat}`,
-        fullCopyrightUrl: `${BING_DOMAIN}${item.copyrightLink}`
-      }));
+      this.wallpapers = (res.list || []).map((item) => {
+        const meta = this.wallpaperService.parseLocation(item, this.lang);
+        return {
+          ...item,
+          copyright: meta.copyright,
+          location: meta.location,
+          fullUrl: `${BING_DOMAIN}${item.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${item.imageFormat}`,
+          fullCopyrightUrl: `${BING_DOMAIN}${item.copyrightLink}`
+        };
+      });
       this.initWallpaperStatus(this.wallpapers);
       this.page = res.page || 1;
       this.total = res.total || 0;

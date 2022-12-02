@@ -23,8 +23,10 @@
           </a>
         </div>
         <div class="content">
-          <h2 [title]="lang === 'cn' ? wallpaper.title : wallpaper.titleEn">
-            {{lang === 'cn' ? wallpaper.title : wallpaper.titleEn}}</h2>
+          <h2 [title]="wallpaper.copyright">{{wallpaper.copyright}}</h2>
+          <div class="content-location">
+            <i class="icon icon-geo-alt"></i><span>{{wallpaper.location}}</span>
+          </div>
           <div class="content-meta">
             <div class="date" [title]="wallpaper.date">
               <i class='icon icon-calendar'></i><span>{{wallpaper.date}}</span>

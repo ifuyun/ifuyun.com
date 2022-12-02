@@ -23,6 +23,7 @@ export interface Wallpaper {
   date: Date;
   title: string;
   titleEn: string;
+  location: string;
   description?: string;
   caption?: string;
   url: string;
