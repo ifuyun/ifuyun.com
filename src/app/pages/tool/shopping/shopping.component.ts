@@ -76,7 +76,8 @@ export class ShoppingComponent extends PageComponent implements OnInit, OnDestro
     this.promotionListener?.unsubscribe();
   }
 
-  search() {
+  search(e: SubmitEvent) {
+    e.preventDefault();
     this.keyword = this.keyword.trim();
     if (this.keyword && this.checkKeyword()) {
       this.fetchPromotion();
