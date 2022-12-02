@@ -322,8 +322,12 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
             }
           }
         }
-        // unescape: ><&
-        codeStr = codeStr.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&amp;/gi, '&');
+        // unescape: ><&…, etc.
+        codeStr = codeStr
+          .replace(/&lt;/gi, '<')
+          .replace(/&gt;/gi, '>')
+          .replace(/&amp;/gi, '&')
+          .replace(/&hellip;/gi, '…');
         const lines = codeStr
           .split(/\r\n|\r|\n/i)
           .map((str, i) => `<li>${i + 1}</li>`)
