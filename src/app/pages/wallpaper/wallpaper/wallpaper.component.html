@@ -21,10 +21,10 @@
     <div class="wallpaper">
       <figure>
         <div class="wallpaper-box" (click)="showWallpaper()">
-          <img [src]="wallpaper?.fullUrl" [alt]="wallpaper?.title"/>
+          <img [src]="wallpaper?.fullUrl" [alt]="wallpaper?.copyright"/>
           <div class="wallpaper-overlay"></div>
         </div>
-        <figcaption>{{wallpaper?.copyright}}({{wallpaper?.copyrightAuthor}})</figcaption>
+        <figcaption>{{wallpaper?.copyright}} ({{wallpaper?.copyrightAuthor}})</figcaption>
       </figure>
       <div class="wallpaper-actions">
         <a class="button button-submit" (click)="showWallpaper()" title="查看大图">
@@ -74,13 +74,13 @@
           <div class="post-more-photo-overlay"></div>
         </div>
         <div class="post-more-content">
-          <div class="post-more-content-title">{{prevWallpaper.title}}</div>
+          <div class="post-more-content-title">{{prevWallpaper.copyright}}</div>
           <div>上一篇</div>
         </div>
         <a class="post-more-link"
            [routerLink]="['../' + prevWallpaper.wallpaperId]"
            [queryParams]="getLangParams()"
-           [title]="prevWallpaper.title"></a>
+           [title]="prevWallpaper.copyright"></a>
       </div>
       <div *ngIf="!prevWallpaper"></div>
       <div class="post-more-next" *ngIf="nextWallpaper">
@@ -90,13 +90,13 @@
           <div class="post-more-photo-overlay"></div>
         </div>
         <div class="post-more-content">
-          <div class="post-more-content-title">{{nextWallpaper.title}}</div>
+          <div class="post-more-content-title">{{nextWallpaper.copyright}}</div>
           <div>下一篇</div>
         </div>
         <a class="post-more-link"
            [routerLink]="['../' + nextWallpaper.wallpaperId]"
            [queryParams]="getLangParams()"
-           [title]="nextWallpaper.title"></a>
+           [title]="nextWallpaper.copyright"></a>
       </div>
       <div *ngIf="!nextWallpaper"></div>
     </div>

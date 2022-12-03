@@ -251,26 +251,22 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         this.nextWallpaper = null;
 
         if (res.prevWallpaper) {
+          const meta = this.wallpaperService.parseLocation(res.prevWallpaper, this.lang);
           this.prevWallpaper = {
             ...res.prevWallpaper,
+            copyright: meta.copyright,
+            location: meta.location,
             fullUrl: `${BING_DOMAIN}${res.prevWallpaper.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${res.prevWallpaper.imageFormat}`
           };
-          if (this.lang === WallpaperLang.CN) {
-            this.prevWallpaper.title = this.prevWallpaper.title || this.prevWallpaper.titleEn;
-          } else {
-            this.prevWallpaper.title = this.prevWallpaper.titleEn || this.prevWallpaper.title;
-          }
         }
         if (res.nextWallpaper) {
+          const meta = this.wallpaperService.parseLocation(res.nextWallpaper, this.lang);
           this.nextWallpaper = {
             ...res.nextWallpaper,
+            copyright: meta.copyright,
+            location: meta.location,
             fullUrl: `${BING_DOMAIN}${res.nextWallpaper.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${res.nextWallpaper.imageFormat}`
           };
-          if (this.lang === WallpaperLang.CN) {
-            this.nextWallpaper.title = this.nextWallpaper.title || this.nextWallpaper.titleEn;
-          } else {
-            this.nextWallpaper.title = this.nextWallpaper.titleEn || this.nextWallpaper.title;
-          }
         }
       });
   }
