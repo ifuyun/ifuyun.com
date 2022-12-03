@@ -318,8 +318,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         isHeader: false
       },
       {
-        label: this.wallpaper?.title,
-        tooltip: this.wallpaper?.title,
+        label: this.wallpaper?.copyright,
+        tooltip: this.wallpaper?.copyright,
         url: '.',
         param: this.lang === WallpaperLang.EN ? { lang: WallpaperLang.EN } : {},
         isHeader: true
