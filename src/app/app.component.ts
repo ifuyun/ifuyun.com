@@ -2,7 +2,7 @@ import { DOCUMENT, ViewportScroller } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
-import { BLOCK_SCROLL_CLASS } from './config/constants';
+import { BLOCK_SCROLL_CLASS } from './config/common.constant';
 import { PlatformService } from './core/platform.service';
 import { UrlService } from './core/url.service';
 import { UserAgentService } from './core/user-agent.service';

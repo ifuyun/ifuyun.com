@@ -11,7 +11,7 @@ import { CommentService } from '../../../components/comment/comment.service';
 import { ImageService } from '../../../components/image/image.service';
 import { MessageService } from '../../../components/message/message.service';
 import { VoteType, VoteValue } from '../../../config/common.enum';
-import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/constants';
+import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { MetaService } from '../../../core/meta.service';

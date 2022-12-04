@@ -6,7 +6,7 @@ import { cloneDeep, isEmpty, uniq } from 'lodash';
 import { skipWhile, Subscription } from 'rxjs';
 import { ApiUrl } from '../../config/api-url';
 import { VoteType, VoteValue } from '../../config/common.enum';
-import { AVATAR_API_URL, STORAGE_KEY_DISLIKED_COMMENTS, STORAGE_KEY_LIKED_COMMENTS } from '../../config/constants';
+import { AVATAR_API_URL, STORAGE_KEY_DISLIKED_COMMENTS, STORAGE_KEY_LIKED_COMMENTS } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { PlatformService } from '../../core/platform.service';

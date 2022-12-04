@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiUrl } from '../../config/api-url';
-import { STORAGE_KEY_USER } from '../../config/constants';
+import { STORAGE_KEY_USER } from '../../config/common.constant';
 import { ApiService } from '../../core/api.service';
 import { ResultList } from '../../core/common.interface';
 import { HttpResponseEntity } from '../../core/http-response.interface';

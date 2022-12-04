@@ -5,7 +5,7 @@ import { skipWhile, Subscription } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { VoteType, VoteValue } from '../../../config/common.enum';
-import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/constants';
+import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { MetaService } from '../../../core/meta.service';

@@ -65,7 +65,7 @@ export class WallpaperBoxComponent implements OnDestroy, OnChanges {
   gotoWallpaper() {
     this.visible = false;
     this.visibleChange.emit(false);
-    this.router.navigate(['/wallpaper']);
+    this.router.navigate(['/wallpaper'], { queryParams: { ref: 'toolbox' } });
   }
 
   private fetchData() {

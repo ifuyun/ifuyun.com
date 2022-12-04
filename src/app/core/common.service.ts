@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ADMIN_URL } from '../config/constants';
+import { ADMIN_URL } from '../config/common.constant';
 import { OptionEntity } from '../interfaces/option.interface';
 import { MetaData, PageOptions } from './common.interface';
 

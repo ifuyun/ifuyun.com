@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LOGIN_URL } from '../../config/constants';
+import { LOGIN_URL } from '../../config/common.constant';
 import { CommonService } from '../../core/common.service';
 import { OptionEntity } from '../../interfaces/option.interface';
 

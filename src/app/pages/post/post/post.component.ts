@@ -22,7 +22,7 @@ import { CommentService } from '../../../components/comment/comment.service';
 import { ImageService } from '../../../components/image/image.service';
 import { MessageService } from '../../../components/message/message.service';
 import { VoteType, VoteValue } from '../../../config/common.enum';
-import { STORAGE_KEY_VOTED_POSTS } from '../../../config/constants';
+import { STORAGE_KEY_VOTED_POSTS } from '../../../config/common.constant';
 import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';

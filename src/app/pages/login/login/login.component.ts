@@ -9,7 +9,7 @@ import { isEmpty, uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
 import { skipWhile, Subscription } from 'rxjs';
 import { MessageService } from '../../../components/message/message.service';
-import { ADMIN_URL } from '../../../config/constants';
+import { ADMIN_URL } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { HTMLMetaData } from '../../../core/meta.interface';
 import { MetaService } from '../../../core/meta.service';

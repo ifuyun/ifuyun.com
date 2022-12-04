@@ -1,7 +1,7 @@
 import { Controller, Get, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
 import * as RSS from 'rss';
-import { SITE_INFO } from '../../../src/app/config/constants';
+import { SITE_INFO } from '../../../src/app/config/common.constant';
 import { Post } from '../../../src/app/pages/post/post.interface';
 import { PageSizePipe } from '../../pipes/page-size.pipe';
 import { ParseIntPipe } from '../../pipes/parse-int.pipe';

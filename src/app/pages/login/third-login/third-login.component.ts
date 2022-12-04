@@ -6,7 +6,7 @@ import { isEmpty } from 'lodash';
 import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { MessageService } from '../../../components/message/message.service';
-import { ADMIN_URL, LOGIN_URL } from '../../../config/constants';
+import { ADMIN_URL, LOGIN_URL } from '../../../config/common.constant';
 import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';

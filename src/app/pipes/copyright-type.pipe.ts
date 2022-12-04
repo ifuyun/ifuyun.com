@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { COPYRIGHT_TYPE, DEFAULT_COPYRIGHT_TYPE } from '../config/constants';
+import { COPYRIGHT_TYPE, DEFAULT_COPYRIGHT_TYPE } from '../pages/post/post.constant';
 
 @Pipe({
   name: 'copyrightType'

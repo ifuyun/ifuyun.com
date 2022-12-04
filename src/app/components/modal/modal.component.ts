@@ -13,7 +13,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { BLOCK_SCROLL_CLASS } from '../../config/constants';
+import { BLOCK_SCROLL_CLASS } from '../../config/common.constant';
 import { PlatformService } from '../../core/platform.service';
 
 @Component({
