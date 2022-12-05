@@ -1,6 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { MEDIA_QUERY_THEME_DARK, MEDIA_QUERY_THEME_LIGHT, STORAGE_KEY_THEME } from '../config/common.constant';
 import { Theme } from '../config/common.enum';
 import { OptionEntity } from '../interfaces/option.interface';
@@ -22,7 +24,11 @@ export class CommonService {
   });
   public pageOptions$: Observable<PageOptions> = this.pageOptions.asObservable();
 
-  constructor(@Inject(DOCUMENT) private document: Document, private platform: PlatformService) {}
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private platform: PlatformService,
+    private readonly cookieService: CookieService
+  ) {}
 
   updateActivePage(activePage: string) {
     this.pageIndex.next(activePage);
@@ -43,21 +49,21 @@ export class CommonService {
   }
 
   getTheme(): Theme {
-    if (this.platform.isServer) {
-      // todo: read from cookie
-      return Theme.Light;
-    }
-    const cacheTheme = localStorage.getItem(STORAGE_KEY_THEME);
+    const cacheTheme = this.cookieService.get(STORAGE_KEY_THEME);
     if (cacheTheme) {
       return cacheTheme === Theme.Dark ? Theme.Dark : Theme.Light;
     }
-    if (window.matchMedia(MEDIA_QUERY_THEME_DARK).matches) {
-      return Theme.Dark;
+    if (this.platform.isBrowser) {
+      if (window.matchMedia(MEDIA_QUERY_THEME_DARK).matches) {
+        return Theme.Dark;
+      }
+      if (window.matchMedia(MEDIA_QUERY_THEME_LIGHT).matches) {
+        return Theme.Light;
+      }
     }
-    if (window.matchMedia(MEDIA_QUERY_THEME_LIGHT).matches) {
-      return Theme.Light;
-    }
-    return Theme.Light;
+    const curHour = new Date().getHours();
+    const isNight = curHour >= 19 || curHour <= 6;
+    return isNight ? Theme.Dark : Theme.Light;
   }
 
   setTheme(theme: Theme) {
@@ -66,9 +72,11 @@ export class CommonService {
   }
 
   cacheTheme(theme: Theme) {
-    if (this.platform.isBrowser) {
-      localStorage.setItem(STORAGE_KEY_THEME, theme);
-    }
+    this.cookieService.set(STORAGE_KEY_THEME, theme, {
+      path: '/',
+      domain: environment.cookie.domain,
+      expires: environment.cookie.expires
+    });
   }
 
   updateTheme(theme: Theme) {

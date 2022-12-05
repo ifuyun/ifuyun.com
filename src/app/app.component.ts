@@ -2,7 +2,8 @@ import { DOCUMENT, ViewportScroller } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
-import { BLOCK_SCROLL_CLASS } from './config/common.constant';
+import { BLOCK_SCROLL_CLASS, MEDIA_QUERY_THEME_DARK } from './config/common.constant';
+import { Theme } from './config/common.enum';
 import { CommonService } from './core/common.service';
 import { PlatformService } from './core/platform.service';
 import { UrlService } from './core/url.service';
@@ -62,6 +63,7 @@ export class AppComponent implements OnInit {
       this.scroller.scrollToPosition([0, 0]);
     });
     this.initTheme();
+    this.initThemeListener();
     this.optionService.getOptions().subscribe();
     this.userService.getLoginUser().subscribe();
     this.taxonomyService.getTaxonomies().subscribe((taxonomies) => (this.taxonomies = taxonomies));
@@ -84,5 +86,13 @@ export class AppComponent implements OnInit {
   private initTheme() {
     const theme = this.commonService.getTheme();
     this.commonService.setTheme(theme);
+  }
+
+  private initThemeListener() {
+    if (this.platform.isBrowser) {
+      window.matchMedia(MEDIA_QUERY_THEME_DARK).addEventListener('change', (event) => {
+        this.commonService.setTheme(event.matches ? Theme.Dark : Theme.Light);
+      });
+    }
   }
 }
