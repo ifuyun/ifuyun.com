@@ -8,7 +8,7 @@
   height: 100%;
   top: 0;
   left: 0;
-  background-color: @m-sider-background-color;
+  background-color: var(--m-sider-background-color);
   transform: translate3d(-100%, 0, 0);
   transition: all .38s ease-out;
   z-index: 9;
@@ -31,7 +31,7 @@
     margin: 0;
     transform: scale(.8);
     transition: all .38s ease-out;
-    color: @m-sider-font-color;
+    color: var(--m-sider-font-color);
     opacity: 0;
     overflow: auto;
   }
@@ -42,7 +42,7 @@
     display: flex;
     align-items: flex-start;
     padding: @sider-info-padding;
-    border-bottom: 1px solid @m-sider-border-color;
+    border-bottom: 1px solid var(--m-sider-border-color);
 
     .sider-info-logo {
       width: @sider-info-size;
@@ -52,9 +52,9 @@
       img {
         box-sizing: border-box;
         max-width: 100%;
-        border: 2px solid @m-sider-font-color;
+        border: 2px solid var(--m-sider-font-color);
         border-radius: 50%;
-        background-color: @m-sider-font-color;
+        background-color: var(--m-sider-font-color);
         overflow: hidden;
       }
     }
@@ -69,13 +69,13 @@
 
       &-name {
         margin-bottom: 0.8rem;
-        color: @m-sider-font-color;
+        color: var(--m-sider-font-color);
         font-size: 1.8rem;
         font-weight: 700;
       }
 
       &-slogan {
-        color: @primary-color;
+        color: var(--primary-color);
       }
     }
   }
@@ -92,10 +92,10 @@
       }
 
       &.active {
-        background-color: @base-background-color;
+        background-color: var(--content-background-color);
 
         a {
-          color: @primary-color;
+          color: var(--primary-color);
         }
       }
     }
@@ -103,7 +103,7 @@
     a {
       display: inline-block;
       width: 100%;
-      color: @m-sider-font-color;
+      color: var(--m-sider-font-color);
       text-decoration: none;
     }
 
@@ -116,6 +116,6 @@
 
   .separator {
     margin: @item-margin 0;
-    border-bottom: 1px solid @m-sider-border-color;
+    border-bottom: 1px solid var(--m-sider-border-color);
   }
 }

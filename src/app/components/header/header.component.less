@@ -1,20 +1,20 @@
 @import "../../../styles/variables";
 
 .header {
-  @header-color: #333;
-
   top: 0;
   position: fixed;
   width: 100%;
-  background-color: @header-background-color;
-  box-shadow: @content-box-shadow;
+  background-color: var(--header-background-color);
+  box-shadow: var(--content-box-shadow);
   backdrop-filter: blur(5px);
   z-index: 19;
 
   &-desktop {
+    border: var(--header-border);
+
     .header-bg {
       height: @header-bg-height;
-      background-color: @primary-color;
+      background-color: var(--primary-color);
     }
 
     .logo {
@@ -71,26 +71,31 @@
 
         li.active, li:hover {
           .nav-link {
-            color: @primary-color;
+            color: var(--primary-color);
             background-color: transparent;
             cursor: pointer;
           }
 
           > .sub-nav-link {
             color: #fff;
-            background-color: @primary-color;
+            background-color: var(--primary-color);
           }
 
           .nav-arrow {
             &::before, &::after {
-              background-color: @primary-color;
+              background-color: var(--primary-color);
             }
           }
         }
 
-        li a {
-          color: @header-color;
+        a.nav-link {
+          color: var(--header-color);
           background: transparent;
+        }
+
+        a.sub-nav-link {
+          color: var(--header-subnav-color);
+          background: var(--header-subnav-background);
         }
       }
 
@@ -128,7 +133,7 @@
         position: absolute;
 
         .sub-nav-list {
-          box-shadow: @content-box-shadow;
+          box-shadow: var(--content-box-shadow);
           border-radius: @group-border-radius;
 
           &::before {
@@ -140,15 +145,15 @@
             top: -10px;
             left: 24px;
             transform: translate(0, 50%) rotate(45deg);
-            background: #fff;
-            box-shadow: @content-box-shadow;
+            background-color: var(--header-subnav-background);
+            box-shadow: var(--content-box-shadow);
           }
         }
 
         ul {
           position: relative;
           border-radius: @group-border-radius;
-          background-color: #fff;
+          background-color: var(--header-subnav-background);
 
           li:first-child, li:first-child a {
             border-top-left-radius: @group-border-radius;
@@ -191,7 +196,7 @@
           display: block;
           width: 6px;
           height: 1.5px;
-          background-color: @header-color;
+          background-color: var(--header-color);
           border-radius: 2px;
           content: '';
         }
@@ -248,26 +253,26 @@
       padding: 0 1rem;
 
       &, &:focus {
-        border: 1px solid @primary-color;
+        border: 1px solid var(--primary-color);
       }
     }
 
     .header-button {
       width: @m-header-height * 2;
-      background: @primary-color;
-      color: @content-background-color;
+      background: var(--primary-color);
+      color: var(--btn-submit-color);
       cursor: pointer;
       -webkit-appearance: button;
 
       &:hover {
-        background-color: @active-color;
+        background-color: var(--active-color);
       }
     }
   }
 
   &-firefox {
     // fix: firefox doesn't support backdrop-filter
-    background-color: @header-background-color-moz;
+    background-color: var(--header-background-color-moz);
   }
 
   .logo img {

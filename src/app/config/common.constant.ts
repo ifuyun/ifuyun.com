@@ -27,3 +27,7 @@ export const STORAGE_KEY_VOTED_POSTS = 'voted_posts';
 export const STORAGE_KEY_LIKED_COMMENTS = 'liked_comments';
 export const STORAGE_KEY_DISLIKED_COMMENTS = 'disliked_comments';
 export const STORAGE_KEY_LIKED_WALLPAPER = 'liked_wallpapers';
+export const STORAGE_KEY_THEME = 'theme';
+
+export const MEDIA_QUERY_THEME_DARK = '(prefers-color-scheme: dark)';
+export const MEDIA_QUERY_THEME_LIGHT = '(prefers-color-scheme: light)';

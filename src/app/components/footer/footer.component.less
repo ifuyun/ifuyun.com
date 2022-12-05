@@ -1,14 +1,12 @@
 @import "../../../styles/variables";
 
 .footer {
-  @footer-color: #7e7e7e;
-
-  border-top: 1px solid @minor-border-color;
+  border-top: var(--footer-border);
   line-height: 28px;
   text-align: center;
   font-size: @minor-font-size;
-  background: #f3f3f3;
-  color: @footer-color;
+  background: var(--footer-background-color);
+  color: var(--footer-color);
 
   &-desktop {
     margin-top: @content-margin;
@@ -54,10 +52,10 @@
   }
 
   a {
-    color: @footer-color;
+    color: var(--footer-color);
 
     &:hover {
-      color: @primary-color;
+      color: var(--primary-color);
     }
   }
 }

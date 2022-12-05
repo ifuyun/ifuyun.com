@@ -12,6 +12,7 @@
     @sign-offset: 24px;
     @sign-height: 24px;
     @sign-width: @sign-offset * 2 * 1.41421356 + @sign-height;
+
     position: absolute;
     top: @sign-offset - (@sign-height / 2);
     left: @sign-offset - (@sign-width / 2);
@@ -21,7 +22,7 @@
     transform: rotate(-45deg);
     transform-origin: center;
     text-align: center;
-    background-color: @primary-color;
+    background-color: var(--primary-color);
     color: #fff;
     font-size: @minor-font-size;
     font-weight: 700;
@@ -89,10 +90,10 @@
       font-weight: normal;
 
       > a {
-        color: @base-color;
+        color: var(--base-color);
 
         &:hover {
-          color: @primary-color;
+          color: var(--primary-color);
         }
       }
     }
@@ -104,7 +105,7 @@
 
   .post-meta {
     line-height: @post-line-height;
-    color: @minor-meta-color;
+    color: var(--minor-meta-color);
     font-size: @meta-font-size;
 
     &-top {
@@ -126,10 +127,10 @@
     }
 
     a {
-      color: @minor-meta-color;
+      color: var(--minor-meta-color);
 
       &:hover {
-        color: @primary-color;
+        color: var(--primary-color);
       }
     }
   }
@@ -173,7 +174,7 @@
 
     figcaption {
       margin-top: 12px;
-      color: @img-figcaption-color;
+      color: var(--img-figcaption-color);
       font-size: 13px;
       text-align: center;
     }
@@ -197,7 +198,7 @@
 
     h2 {
       padding-left: 10px;
-      border-left: 4px solid @primary-color;
+      border-left: 4px solid var(--primary-color);
     }
 
     blockquote {
@@ -222,7 +223,7 @@
     pre {
       display: flex;
       border-radius: @border-radius;
-      box-shadow: @content-box-shadow;
+      border: 1px solid var(--code-border-color);
       overflow: hidden;
 
       ul.i-code-lines, code.i-code-text {
@@ -231,7 +232,7 @@
 
       ul.i-code-lines {
         margin: 0;
-        border-right: 1px solid @code-border-color;
+        border-right: 1px solid var(--code-border-color);
         list-style: none;
         text-align: right;
 
@@ -251,7 +252,7 @@
     code {
       padding: 2px 6px;
       border-radius: 2px;
-      color: @base-color;
+      color: var(--base-color);
     }
 
     ol, ul {
@@ -288,12 +289,12 @@
       }
 
       th {
-        background-color: @tag-background-color;
+        background-color: var(--tag-background-color);
       }
     }
 
     hr {
-      border-top: 1px solid @primary-border-color;
+      border-top: 1px solid var(--primary-border-color);
       border-bottom: none;
       border-left: none;
       border-right: none;
@@ -331,12 +332,12 @@
       ul a {
         padding: 4px 8px;
         border-radius: 2px;
-        color: @minor-color;
-        background-color: @tag-background-color;
+        color: var(--minor-color);
+        background-color: var(--tag-background-color);
 
         &:hover {
-          color: @content-background-color;
-          background-color: @primary-color;
+          color: var(--tag-active-color);
+          background-color: var(--primary-color);
         }
       }
     }
@@ -362,10 +363,10 @@
         padding: 0 @button-padding;
         border-width: 1px 0 1px 1px;
         border-style: solid;
-        border-color: @action-color;
+        border-color: var(--action-color);
         line-height: @button-height;
         background: transparent;
-        color: @action-color;
+        color: var(--action-color);
         cursor: pointer;
         transition: background-color .1s, color .1s;
         -webkit-appearance: button;
@@ -382,12 +383,12 @@
         }
 
         &:not(.button-like):hover {
-          background-color: @action-color;
+          background-color: var(--action-color);
           color: #fff;
         }
 
         &.liked {
-          background-color: @action-color;
+          background-color: var(--action-color);
           color: #fff;
           opacity: .8;
           cursor: not-allowed;
@@ -443,7 +444,7 @@
         left: 0;
         padding: 0 @button-padding + 1;
         border-radius: 4px;
-        background-color: #ff5722;
+        background-color: var(--action-color);
         color: #fff;
         opacity: 0;
         visibility: hidden;
@@ -554,7 +555,7 @@
           position: absolute;
           inset: 0;
           margin: (@primary-margin / 2);
-          background-color: @overlay-background-color;
+          background-color: var(--overlay-background-color);
           opacity: 0;
           transition: @overlay-transition;
         }
@@ -567,8 +568,8 @@
         position: absolute;
         inset: 0;
         padding: ((@content-margin / 2) + (@primary-margin / 2)) @content-margin;
-        color: @post-more-color;
-        text-shadow: @content-text-shadow;
+        color: var(--post-more-color);
+        text-shadow: var(--content-text-shadow);
 
         .post-more-content-title {
           width: 100%;
@@ -603,7 +604,7 @@
       .line {
         width: 240px;
         margin: 0 auto;
-        border-top: 1px dashed @primary-border-color;
+        border-top: 1px dashed var(--primary-border-color);
       }
 
       .text-wrap {
@@ -626,7 +627,7 @@
     }
 
     .keyword {
-      color: @highlight-color;
+      color: var(--highlight-color);
     }
   }
 

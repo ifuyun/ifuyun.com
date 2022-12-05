@@ -5,11 +5,11 @@
     <div class="promotion-search">
       <div class="tip-text">请输入京东商品详情页地址或商品ID</div>
       <form class="search-form" method="get" action="./" (submit)="search($event)">
-        <input type="text" class="input input-search"
+        <input type="text" class="input input-search input-dark"
                name="keyword" [(ngModel)]="keyword"
                autocomplete="off"
                placeholder="京东商品详情页地址或商品ID"/>
-        <input type="submit" class="button button-submit" value="查询"/>
+        <input type="submit" class="button button-search" value="查询"/>
       </form>
     </div>
     <div class="promotion-result">

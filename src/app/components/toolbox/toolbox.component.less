@@ -11,7 +11,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 1px solid @minor-border-color;
+    border: 1px solid var(--minor-border-color);
     border-radius: 4px;
     background: #fff;
     font-size: 15px;
@@ -19,7 +19,12 @@
 
   &-item {
     > a {
-      display: inline-block;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 32px;
+      height: 32px;
       padding: 8px;
       cursor: pointer;
     }
@@ -35,24 +40,24 @@
     }
 
     &:not(:first-child) {
-      border-top: 1px dashed @minor-border-color;
+      border-top: 1px dashed var(--toolbox-border-color);
     }
   }
 
-  &-wallpaper > a {
-    color: @primary-color;
+  > a {
+    color: var(--primary-color);
 
     &:hover {
-      background: @primary-color;
+      background: var(--primary-color);
       color: #fff;
     }
   }
 
   &-rss > a {
-    color: @action-color;
+    color: var(--action-color);
 
     &:hover {
-      background: @action-color;
+      background: var(--action-color);
       color: #fff;
     }
   }

@@ -1,6 +1,13 @@
 <div class="toolbox">
   <div class="toolbox-body">
-    <div class="toolbox-item toolbox-wallpaper">
+    <div class="toolbox-item">
+      <a href="javascript:"
+         (click)="changeTheme()"
+         [title]="darkMode ? '深色模式: 开启' : '深色模式: 关闭'"><i class='icon'
+                                         [class.icon-sun-fill]="!darkMode"
+                                         [class.icon-moon-fill]="darkMode"></i></a>
+    </div>
+    <div class="toolbox-item">
       <a href="javascript:" (click)="openWallpaper()" title="精美壁纸"><i class='icon icon-images'></i></a>
     </div>
     <div class="toolbox-item toolbox-rss">

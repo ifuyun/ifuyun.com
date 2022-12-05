@@ -38,7 +38,7 @@
       align-items: center;
       justify-content: center;
       border-radius: 4px;
-      background: @wallpaper-action-background-color;
+      background: var(--wallpaper-action-background-color);
       cursor: pointer;
 
       > a, > div {
@@ -46,7 +46,7 @@
       }
 
       &, a {
-        color: @base-color;
+        color: var(--base-color);
       }
 
       &:hover {
@@ -72,11 +72,11 @@
     bottom: @box-padding;
     height: auto;
     padding: @content-padding-vertical @content-padding-horizontal;
-    background-color: @wallpaper-content-background-color;
+    background-color: var(--wallpaper-content-background-color);
 
     .image-title, .image-title a, .image-desc {
-      color: @wallpaper-content-color;
-      text-shadow: @wallpaper-content-text-shadow;
+      color: var(--wallpaper-content-color);
+      text-shadow: var(--wallpaper-content-text-shadow);
     }
 
     .image-title {

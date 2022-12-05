@@ -40,11 +40,11 @@
     .input-search {
       box-sizing: border-box;
       width: 100%;
-      border-color: @input-border-color;
+      border-color: var(--input-border-color);
       box-shadow: none;
 
       &:focus {
-        border-color: @primary-color;
+        border-color: var(--primary-color);
       }
     }
   }
@@ -52,8 +52,9 @@
   .promotion-result {
     .promotion-list {
       padding: @primary-margin;
-      border: 1px solid @minor-border-color;
+      border: 1px solid var(--minor-border-color);
       border-radius: @border-radius;
+      background-color: var(--content-box-background-color);
       word-break: break-all;
 
       .promotion-item {

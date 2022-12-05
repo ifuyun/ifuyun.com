@@ -3,6 +3,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { BLOCK_SCROLL_CLASS } from './config/common.constant';
+import { CommonService } from './core/common.service';
 import { PlatformService } from './core/platform.service';
 import { UrlService } from './core/url.service';
 import { UserAgentService } from './core/user-agent.service';
@@ -30,6 +31,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     private urlService: UrlService,
     private optionService: OptionService,
+    private commonService: CommonService,
     private userService: UserService,
     private taxonomyService: TaxonomyService,
     private logService: LogService,
@@ -59,6 +61,7 @@ export class AppComponent implements OnInit {
       this.onSiderOpenChange(false);
       this.scroller.scrollToPosition([0, 0]);
     });
+    this.initTheme();
     this.optionService.getOptions().subscribe();
     this.userService.getLoginUser().subscribe();
     this.taxonomyService.getTaxonomies().subscribe((taxonomies) => (this.taxonomies = taxonomies));
@@ -76,5 +79,10 @@ export class AppComponent implements OnInit {
     } else {
       htmlNode.classList.remove(BLOCK_SCROLL_CLASS);
     }
+  }
+
+  private initTheme() {
+    const theme = this.commonService.getTheme();
+    this.commonService.setTheme(theme);
   }
 }

@@ -1,18 +1,20 @@
-@import '~highlight.js/styles/github.css';
 @import "./app/components/antd-core/style/index";
+@import "styles/reset";
 @import "styles/icons";
 @import "styles/variables";
-@import "styles/reset";
+@import "styles/theme";
+@import "styles/code-variables";
+@import "styles/code";
 @import "styles/post";
 
 a, a:hover, a:focus {
-  color: @primary-color;
+  color: var(--primary-color);
   text-decoration: none;
 }
 
 ::selection {
-  background: @primary-color;
-  color: @content-background-color;
+  background: var(--primary-color);
+  color: var(--content-selection-color);
   text-shadow: none;
 }
 
@@ -24,29 +26,33 @@ a, a:hover, a:focus {
 
 .input {
   padding: 4px 11px;
-  border: 1px solid @input-border-color;
+  border: 1px solid var(--input-border-color);
   color: #6a6a6a;
-  background: @content-background-color;
+  background-color: var(--content-background-color);
 
   &:focus {
     color: #585858;
-    border-color: @primary-color;
+    border-color: var(--primary-color);
+  }
+
+  &.input-dark {
+    background-color: var(--input-background-color);
   }
 }
 
 .button {
   position: relative;
   padding: 4px 16px;
-  border: 1px solid @input-border-color;
+  border: 1px solid var(--input-border-color);
   text-align: center;
-  color: rgba(0, 0, 0, 0.85);
-  background: @content-background-color;
+  color: var(--btn-color);
+  background: var(--btn-background-color);
   -webkit-appearance: button;
   cursor: pointer;
 
   &:hover {
-    color: @primary-color;
-    border-color: @primary-color;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
   }
 
   &::-moz-focus-inner { /*修复FF宽高不一致问题*/
@@ -76,9 +82,9 @@ a, a:hover, a:focus {
 
   &.disabled {
     &, &:hover {
-      color: rgba(0, 0, 0, 0.25);
-      border-color: #d9d9d9;
-      background: #f5f5f5;
+      color: var(--btn-disabled-color);
+      border-color: var(--btn-disabled-border-color);
+      background: var(--btn-disabled-background-color);
       text-shadow: none;
       box-shadow: none;
       cursor: not-allowed;
@@ -86,15 +92,15 @@ a, a:hover, a:focus {
   }
 }
 
-.button-submit {
-  border-color: @primary-color;
-  color: @content-background-color;
-  background-color: @primary-color;
+.button-submit, .button-search {
+  border-color: var(--primary-color);
+  color: var(--btn-submit-color);
+  background-color: var(--primary-color);
 
   &:hover {
-    border-color: @active-color;
-    color: @content-background-color;
-    background-color: @active-color;
+    border-color: var(--active-color);
+    color: var(--btn-submit-color);
+    background-color: var(--active-color);
   }
 }
 
@@ -109,14 +115,14 @@ a, a:hover, a:focus {
     border-color: transparent;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    box-shadow: @content-box-shadow;
+    box-shadow: var(--content-box-shadow);
 
     &:focus {
-      border-color: @primary-color;
+      border-color: var(--primary-color);
     }
   }
 
-  .button-submit {
+  .button-search {
     padding-top: 8px;
     padding-bottom: 8px;
     border-top-left-radius: 0;
@@ -129,7 +135,7 @@ a, a:hover, a:focus {
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: @header-background-color;
+  background: var(--mask-background-color);
   backdrop-filter: blur(3px);
   touch-action: none;
 }
@@ -148,8 +154,8 @@ a, a:hover, a:focus {
 
 .content-box {
   border-radius: @border-radius;
-  background-color: @content-background-color;
-  box-shadow: @content-box-shadow;
+  background-color: var(--content-background-color);
+  box-shadow: var(--content-box-shadow);
   padding: @content-margin;
 
   &-desktop {
@@ -172,10 +178,10 @@ a, a:hover, a:focus {
       font-weight: normal;
 
       > a {
-        color: @base-color;
+        color: var(--base-color);
 
         &:hover {
-          color: @primary-color;
+          color: var(--primary-color);
         }
       }
     }
@@ -195,7 +201,7 @@ a, a:hover, a:focus {
 
   .border-header {
     margin: @content-margin 0;
-    border-left: @content-h2-border-width solid @primary-color;
+    border-left: @content-h2-border-width solid var(--primary-color);
     padding-left: @content-h2-padding-left;
     line-height: @post-line-height;
     font-size: 15px;
@@ -204,8 +210,8 @@ a, a:hover, a:focus {
 
 .post, .comment {
   border-radius: @border-radius;
-  background-color: @content-background-color;
-  box-shadow: @content-box-shadow;
+  background-color: var(--content-background-color);
+  box-shadow: var(--content-box-shadow);
 
   &-desktop {
     margin: @box-shadow-width;
@@ -224,7 +230,7 @@ a, a:hover, a:focus {
 
 .divider {
   height: 1px;
-  border-top: 1px solid @primary-border-color;
+  border-top: 1px solid var(--primary-border-color);
 
   &-dashed {
     border-top-style: dashed;

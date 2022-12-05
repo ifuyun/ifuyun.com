@@ -6,12 +6,14 @@
   &.wallpaper-desktop {
     .wallpaper-item {
       width: (100% / @row-size);
+      padding: (@content-margin / 2);
     }
   }
 
   &.wallpaper-mobile {
     .wallpaper-item {
       width: 100%;
+      padding: (@content-margin / 2) 0;
     }
   }
 
@@ -24,10 +26,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: @content-box-shadow;
     }
 
     .lang {
+      border: 1px solid var(--minor-border-color);
       font-size: 15px;
 
       &:first-child {
@@ -43,7 +45,8 @@
       }
 
       &:hover {
-        background: #fff;
+        color: var(--primary-color);
+        border-color: var(--primary-color);
       }
 
       a {
@@ -54,14 +57,19 @@
         width: 80px;
         height: 32px;
         padding: 4px 8px;
-        color: @base-color;
+        color: var(--base-color);
+
+        &:hover {
+          color: var(--primary-color);
+        }
       }
 
       &.active {
-        background: @primary-color;
+        border-color: var(--primary-color);
+        background: var(--primary-color);
 
         &:hover {
-          background: @active-color;
+          background: var(--active-color);
         }
 
         a {
@@ -85,12 +93,17 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      padding: (@content-margin / 2);
 
       &:hover {
         .photo-link {
           transform: scale(1.08);
         }
+      }
+
+      .wallpaper-box {
+        border: 1px solid var(--minor-border-color);
+        border-radius: @border-radius;
+        background: var(--wallpaper-item-background-color);
       }
 
       .photo {
@@ -112,7 +125,7 @@
         .overlay {
           position: absolute;
           inset: 0;
-          background-color: @overlay-background-color;
+          background-color: var(--overlay-background-color);
           opacity: 0;
           transition: @overlay-transition;
         }
@@ -125,10 +138,6 @@
 
       .content {
         padding: (@content-margin / 2);
-        border: 1px solid @minor-border-color;
-        border-top: none;
-        border-bottom-left-radius: @border-radius;
-        border-bottom-right-radius: @border-radius;
         line-height: @post-line-height;
 
         h2 {
@@ -147,7 +156,7 @@
         }
 
         .content-location, .content-meta {
-          color: @minor-color;
+          color: var(--minor-color);
           font-size: @minor-font-size;
         }
 
@@ -161,7 +170,7 @@
         }
 
         .icon-heart-fill {
-          color: @action-color;
+          color: var(--action-color);
         }
 
         .actions {

@@ -24,7 +24,7 @@
   .login-body {
     border: solid 1px #e5e5e5;
     border-radius: @border-radius;
-    background-color: @content-background-color;
+    background-color: var(--content-background-color);
     box-shadow: 0 4px 10px -1px rgba(200, 200, 200, 0.7);
   }
 
@@ -86,7 +86,7 @@
 
       .line {
         margin: 0 auto;
-        border-top: 1px solid @primary-border-color;
+        border-top: 1px solid var(--primary-border-color);
       }
 
       .text-wrap {
@@ -154,6 +154,6 @@
   }
 
   .ng-touched .ng-invalid:not(form) {
-    border: 1px solid @input-invalid-color;
+    border: 1px solid var(--input-invalid-color);
   }
 }

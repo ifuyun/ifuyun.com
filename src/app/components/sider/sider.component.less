@@ -8,8 +8,8 @@
   margin-top: @primary-margin;
   border: 1px solid transparent;
   border-radius: @border-radius;
-  background-color: @content-background-color;
-  box-shadow: @content-box-shadow;
+  background-color: var(--content-background-color);
+  box-shadow: var(--content-box-shadow);
 }
 
 .widget {
@@ -22,9 +22,8 @@
     justify-content: space-between;
     margin-bottom: @widget-padding;
     padding: 0 @widget-padding @widget-padding;
-    border-bottom: 1px solid @minor-border-color;
+    border-bottom: 1px solid var(--minor-border-color);
     line-height: 24px;
-    color: #444;
     font-size: @primary-font-size;
     font-weight: 600;
 
@@ -65,7 +64,7 @@
       line-height: 24px;
 
       &:hover {
-        background-color: @tag-background-color;
+        background-color: var(--tag-background-color);
       }
     }
 
@@ -75,10 +74,10 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      color: @base-color;
+      color: var(--base-color);
 
       &:hover {
-        color: @primary-color;
+        color: var(--primary-color);
       }
     }
   }
@@ -96,7 +95,7 @@
       }
 
       &:nth-child(1) .hot-num {
-        background-color: @action-color;
+        background-color: var(--action-color);
       }
 
       &:nth-child(2) .hot-num {
@@ -104,7 +103,7 @@
       }
 
       &:nth-child(3) .hot-num {
-        background-color: @primary-color;
+        background-color: var(--primary-color);
       }
     }
 

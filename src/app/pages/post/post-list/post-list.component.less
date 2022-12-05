@@ -2,8 +2,8 @@
 
 .banner, .article {
   border-radius: @border-radius;
-  background-color: @content-background-color;
-  box-shadow: @content-box-shadow;
+  background-color: var(--content-background-color);
+  box-shadow: var(--content-box-shadow);
 }
 
 .banner {
@@ -17,10 +17,11 @@
 
 .article {
   @article-header-height: 32px;
+
   line-height: @post-line-height;
 
   &:hover {
-    background-color: #fafafa;
+    background-color: var(--post-item-hover-color);
   }
 
   &:not(:last-child) {
@@ -79,26 +80,26 @@
   }
 
   .meta-tag-sticky {
-    background-color: @sticky-background-color;
-    color: @sticky-color;
+    background-color: var(--sticky-background-color);
+    color: var(--sticky-color);
     font-size: @minor-font-size;
   }
 
   .meta-tag-pay, .meta-tag-vip {
-    background-color: @action-color-light;
-    color: @action-color;
-    border: 1px solid @action-color;
+    background-color: var(--action-color-light);
+    color: var(--action-color);
+    border: 1px solid var(--action-color);
   }
 
   .article-stat, .article-meta {
-    color: @minor-color;
+    color: var(--minor-color);
     font-size: @meta-font-size;
 
     a {
-      color: @minor-color;
+      color: var(--minor-color);
 
       &:hover {
-        color: @primary-color;
+        color: var(--primary-color);
       }
     }
   }
@@ -135,7 +136,7 @@
     &-bottom {
       margin-top: 8px;
       padding-bottom: 0;
-      border-top: 1px dashed @primary-border-color;
+      border-top: 1px dashed var(--primary-border-color);
 
       .icon {
         line-height: @post-line-height + @tag-row-span * 2;
@@ -166,12 +167,12 @@
         a {
           padding: 4px 8px;
           border-radius: 2px;
-          color: @minor-color;
-          background-color: @tag-background-color;
+          color: var(--minor-color);
+          background-color: var(--tag-background-color);
 
           &:hover {
-            color: @content-background-color;
-            background-color: @primary-color;
+            color: var(--tag-active-color);
+            background-color: var(--primary-color);
           }
         }
       }

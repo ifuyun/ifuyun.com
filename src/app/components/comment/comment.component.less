@@ -75,7 +75,7 @@
       overflow: hidden;
 
       &:not(:first-child) {
-        border-top: 1px dashed @primary-border-color;
+        border-top: 1px dashed var(--primary-border-color);
       }
 
       .from {
@@ -83,7 +83,7 @@
 
         .name {
           margin-right: 8px;
-          color: @primary-meta-color;
+          color: var(--primary-meta-color);
           white-space: nowrap;
         }
 
@@ -106,7 +106,7 @@
 
         .text {
           margin-right: 4px;
-          color: @minor-meta-color;
+          color: var(--minor-meta-color);
         }
 
         .author {
@@ -123,15 +123,15 @@
         }
 
         a {
-          color: @minor-color;
+          color: var(--minor-color);
 
           &:not(.disabled):hover {
-            color: @primary-color;
+            color: var(--primary-color);
             cursor: pointer;
           }
 
           &.voted {
-            color: @action-color;
+            color: var(--action-color);
           }
 
           &.disabled {
@@ -154,7 +154,7 @@
       .meta {
         display: flex;
         justify-content: space-between;
-        color: @minor-color;
+        color: var(--minor-color);
 
         .info {
           display: flex;
@@ -183,10 +183,10 @@
           text-align: right;
 
           a {
-            color: @minor-color;
+            color: var(--minor-color);
 
             &:hover {
-              color: @primary-color;
+              color: var(--primary-color);
             }
           }
         }
@@ -226,7 +226,7 @@
         overflow: hidden;
 
         .from, .meta {
-          color: @minor-color;
+          color: var(--minor-color);
         }
 
         .content {
@@ -247,7 +247,7 @@
     .comment-form {
       margin-top: @primary-margin;
       padding: @primary-margin 0 0;
-      border-top: 1px dashed @primary-border-color;
+      border-top: 1px dashed var(--primary-border-color);
     }
   }
 
@@ -302,7 +302,7 @@
     }
 
     .ng-touched.ng-invalid:not(form) {
-      border: 1px solid @input-invalid-color;
+      border: 1px solid var(--input-invalid-color);
     }
   }
 }
