@@ -30,7 +30,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isMobile = false;
   isFirefox = false;
-  darkMode = false;
   activePage = '';
   options: OptionEntity = {};
   showSearch = false;
@@ -43,6 +42,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   toolLinks = TOOL_LINKS;
   logoPath = LOGO_PATH;
 
+  private darkModeListener!: Subscription;
   private optionsListener!: Subscription;
   private commonListener!: Subscription;
   private userListener!: Subscription;
@@ -63,8 +63,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.darkMode = this.commonService.getTheme() === Theme.Dark;
-    this.logoPath = this.darkMode ? LOGO_DARK_PATH : LOGO_PATH;
+    this.darkModeListener = this.commonService.darkMode$.subscribe((darkMode) => {
+      this.logoPath = darkMode ? LOGO_DARK_PATH : LOGO_PATH;
+    });
     this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => (this.options = options));
@@ -80,6 +81,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.darkModeListener.unsubscribe();
     this.optionsListener.unsubscribe();
     this.commonListener.unsubscribe();
     this.userListener.unsubscribe();

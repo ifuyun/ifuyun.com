@@ -16,11 +16,15 @@ export class ToolboxComponent implements OnInit, OnDestroy {
   wallpaperVisible = false;
   darkMode = false;
 
+  private darkModeListener!: Subscription;
   private optionsListener!: Subscription;
 
   constructor(private optionService: OptionService, private commonService: CommonService) {}
 
   ngOnInit(): void {
+    this.darkModeListener = this.commonService.darkMode$.subscribe((darkMode) => {
+      this.darkMode = darkMode;
+    });
     this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => (this.options = options));
@@ -28,6 +32,7 @@ export class ToolboxComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.darkModeListener.unsubscribe();
     this.optionsListener.unsubscribe();
   }
 
@@ -38,6 +43,5 @@ export class ToolboxComponent implements OnInit, OnDestroy {
   changeTheme() {
     const theme = this.darkMode ? Theme.Light : Theme.Dark;
     this.commonService.updateTheme(theme);
-    this.darkMode = !this.darkMode;
   }
 }

@@ -16,6 +16,9 @@ export class CommonService {
   private pageIndex: BehaviorSubject<string> = new BehaviorSubject<string>('');
   public pageIndex$: Observable<string> = this.pageIndex.asObservable();
 
+  private darkMode: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public darkMode$: Observable<boolean> = this.darkMode.asObservable();
+
   private pageOptions: BehaviorSubject<PageOptions> = new BehaviorSubject<PageOptions>({
     showHeader: true,
     showFooter: true,
@@ -69,6 +72,7 @@ export class CommonService {
   setTheme(theme: Theme) {
     const htmlNode = this.document.getElementsByTagName('html')[0];
     htmlNode.setAttribute('data-theme', theme);
+    this.darkMode.next(theme === Theme.Dark);
   }
 
   cacheTheme(theme: Theme) {
