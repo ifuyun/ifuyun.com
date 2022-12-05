@@ -4,7 +4,7 @@
     <nav class="nav">
       <div class="nav-wrap">
         <a class="logo" [routerLink]="['/']" title="{{options['site_name']}}">
-          <img src="/assets/images/logo.png" alt="{{options['site_name']}}"/>
+          <img [src]="logoPath" alt="{{options['site_name']}}"/>
         </a>
         <ul class="nav-list">
           <li [ngClass]="{'active': activePage === 'index'}">
@@ -87,7 +87,7 @@
       <ng-container *ngIf="!showSearch">
         <i class="icon icon-menu" (click)="toggleSiderOpen()"></i>
         <a class="logo" [routerLink]="['/']" title="{{options['site_name']}}">
-          <img src="/assets/images/logo.png" alt="{{options['site_name']}}"/>
+          <img [src]="logoPath" alt="{{options['site_name']}}"/>
         </a>
         <i class="icon icon-search" (click)="toggleSearchStatus()"></i>
       </ng-container>

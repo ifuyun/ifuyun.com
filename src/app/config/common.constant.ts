@@ -17,6 +17,9 @@ export const POST_SLUG_PREFIX_BLACKLIST = Object.freeze([
   'admin',
   'api'
 ]);
+export const LOGO_PATH = '/assets/images/logo.png';
+export const LOGO_DARK_PATH = '/assets/images/logo-dark.png';
+export const WECHAT_QRCODE_PATH = '/assets/images/wechat.jpg';
 export const AVATAR_API_URL = 'https://cravatar.cn/avatar/$0.png?d=$1';
 export const ADMIN_URL = '/admin';
 export const LOGIN_URL = '/user/login';

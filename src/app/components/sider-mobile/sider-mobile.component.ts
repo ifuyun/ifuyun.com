@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { skipWhile, Subscription } from 'rxjs';
+import { WECHAT_QRCODE_PATH } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { UserAgentService } from '../../core/user-agent.service';
@@ -75,7 +76,7 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
     this.siderOpenChange.emit(this.siderOpen);
     this.imageService.preview([
       {
-        src: '/assets/images/wechat.jpg'
+        src: WECHAT_QRCODE_PATH
       }
     ]);
   }

@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { isEmpty } from 'lodash';
 import * as QRCode from 'qrcode';
 import { skipWhile, Subscription } from 'rxjs';
+import { LOGO_DARK_PATH, LOGO_PATH } from '../../config/common.constant';
+import { Theme } from '../../config/common.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { UserAgentService } from '../../core/user-agent.service';
@@ -28,6 +30,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isMobile = false;
   isFirefox = false;
+  darkMode = false;
   activePage = '';
   options: OptionEntity = {};
   showSearch = false;
@@ -38,6 +41,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showHeader = true;
   showMobileHeader = true;
   toolLinks = TOOL_LINKS;
+  logoPath = LOGO_PATH;
 
   private optionsListener!: Subscription;
   private commonListener!: Subscription;
@@ -59,6 +63,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.darkMode = this.commonService.getTheme() === Theme.Dark;
+    this.logoPath = this.darkMode ? LOGO_DARK_PATH : LOGO_PATH;
     this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => (this.options = options));
