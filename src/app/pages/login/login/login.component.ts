@@ -138,8 +138,9 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    if (this.loginForm.valid) {
-      const { username, password, rememberMe } = this.loginForm.value;
+    const { value, valid } = this.validateForm(this.loginForm);
+    if (valid) {
+      const { username, password, rememberMe } = value;
       this.authService
         .login({
           username: username || '',

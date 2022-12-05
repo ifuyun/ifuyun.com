@@ -3,12 +3,12 @@
     <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()">
       <div class="login-form-row">
         <label class="login-form-label" for="username">用户名</label>
-        <input type="text" formControlName="username" class="input" id="username" tabindex="10"
+        <input type="text" formControlName="username" class="input input-dark" id="username" tabindex="10"
                maxlength="20" autocomplete="off" [autofocus]="autoFocus.username"/>
       </div>
       <div class="login-form-row">
         <label class="login-form-label" for="password">密码</label>
-        <input type="password" formControlName="password" class="input" id="password" tabindex="20"
+        <input type="password" formControlName="password" class="input input-dark" id="password" tabindex="20"
                maxlength="20" [autofocus]="autoFocus.password"/>
       </div>
       <div class="login-form-row">
