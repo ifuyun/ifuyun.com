@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { isEmpty } from 'lodash';
 import { skipWhile, Subscription } from 'rxjs';
 import { WECHAT_QRCODE_PATH } from '../../config/common.constant';
+import { Theme } from '../../config/common.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { UserAgentService } from '../../core/user-agent.service';
@@ -23,12 +24,14 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
   @Input() siderOpen = false;
   @Output() siderOpenChange = new EventEmitter<boolean>();
 
+  darkMode = false;
   isMobile = false;
   activePage = '';
   options: OptionEntity = {};
   user!: UserModel;
   isLoggedIn = false;
 
+  private darkModeListener!: Subscription;
   private optionsListener!: Subscription;
   private commonListener!: Subscription;
   private userListener!: Subscription;
@@ -46,6 +49,9 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.darkModeListener = this.commonService.darkMode$.subscribe((darkMode) => {
+      this.darkMode = darkMode;
+    });
     this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => (this.options = options));
@@ -57,10 +63,16 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.darkModeListener.unsubscribe();
     this.optionsListener.unsubscribe();
     this.commonListener.unsubscribe();
     this.userListener.unsubscribe();
     this.logoutListener?.unsubscribe();
+  }
+
+  changeTheme() {
+    const theme = this.darkMode ? Theme.Light : Theme.Dark;
+    this.commonService.updateTheme(theme);
   }
 
   logout() {

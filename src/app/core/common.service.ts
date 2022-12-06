@@ -83,6 +83,10 @@ export class CommonService {
     });
   }
 
+  isThemeCached(): boolean {
+    return !!this.cookieService.get(STORAGE_KEY_THEME);
+  }
+
   updateTheme(theme: Theme) {
     this.setTheme(theme);
     this.cacheTheme(theme);

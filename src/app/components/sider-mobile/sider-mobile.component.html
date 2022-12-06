@@ -9,6 +9,11 @@
         <div class="sider-info-profile-slogan">{{options['site_slogan']}}</div>
       </div>
     </div>
+    <div class="sider-tool">
+      <div (click)="changeTheme()" [title]="darkMode ? '深色模式: 开启' : '深色模式: 关闭'">
+        <i class='icon' [class.icon-sun-fill]="!darkMode" [class.icon-moon-fill]="darkMode"></i>
+      </div>
+    </div>
     <nav class="sider-nav">
       <ul class="sider-nav-list">
         <li [ngClass]="{'active': activePage === 'index'}">

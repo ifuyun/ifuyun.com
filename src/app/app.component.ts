@@ -91,7 +91,9 @@ export class AppComponent implements OnInit {
   private initThemeListener() {
     if (this.platform.isBrowser) {
       window.matchMedia(MEDIA_QUERY_THEME_DARK).addEventListener('change', (event) => {
-        this.commonService.setTheme(event.matches ? Theme.Dark : Theme.Light);
+        if (!this.commonService.isThemeCached()) {
+          this.commonService.setTheme(event.matches ? Theme.Dark : Theme.Light);
+        }
       });
     }
   }
