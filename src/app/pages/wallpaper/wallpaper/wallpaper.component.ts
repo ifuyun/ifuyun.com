@@ -230,10 +230,10 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
           fullCopyrightUrl: `${BING_DOMAIN}${wallpaper.copyrightLink}`
         };
         if (this.lang === WallpaperLang.CN) {
-          this.wallpaper.title = wallpaper.title || wallpaper.titleEn;
+          this.wallpaper.storyTitle = wallpaper.storyTitle || wallpaper.storyTitleEn;
           this.wallpaper.story = wallpaper.story || wallpaper.storyEn;
         } else {
-          this.wallpaper.title = wallpaper.titleEn || wallpaper.title;
+          this.wallpaper.storyTitle = wallpaper.storyTitleEn || wallpaper.storyTitle;
           this.wallpaper.story = wallpaper.storyEn || wallpaper.story;
         }
       }

@@ -39,6 +39,8 @@ export interface Wallpaper {
   copyrightLinkEn: string;
   copyrightAuthor: string;
   fullCopyrightUrl: string;
+  storyTitle: string;
+  storyTitleEn: string;
   story: string;
   storyEn: string;
   views: number;
