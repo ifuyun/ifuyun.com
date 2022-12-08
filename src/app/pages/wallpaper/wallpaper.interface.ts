@@ -18,8 +18,8 @@ export interface WallpaperQueryParam extends QueryParam {
 export interface Wallpaper {
   wallpaperId: string;
   bingIdPrefix: string;
-  bingIdCn?: string;
-  bingIdEn?: string;
+  bingIdCn: string;
+  bingIdEn: string;
   date: Date;
   title: string;
   titleEn: string;
@@ -48,4 +48,5 @@ export interface Wallpaper {
   downloads: number;
   liked?: boolean;
   wallpaperModified: Date;
+  hasTranslation: boolean;
 }

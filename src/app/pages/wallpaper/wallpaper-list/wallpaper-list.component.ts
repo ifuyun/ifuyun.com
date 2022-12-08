@@ -83,14 +83,13 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       .subscribe((options) => {
         this.options = options;
       });
-    this.paramListener = this.route.queryParamMap
-      .subscribe((queryParams) => {
-        this.page = Number(queryParams.get('page')) || 1;
-        this.keyword = queryParams.get('keyword')?.trim() || '';
-        this.lang = <WallpaperLang>queryParams.get('lang')?.trim() || WallpaperLang.CN;
-        this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
-        this.fetchWallpapers();
-      });
+    this.paramListener = this.route.queryParamMap.subscribe((queryParams) => {
+      this.page = Number(queryParams.get('page')) || 1;
+      this.keyword = queryParams.get('keyword')?.trim() || '';
+      this.lang = <WallpaperLang>queryParams.get('lang')?.trim() || WallpaperLang.CN;
+      this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
+      this.fetchWallpapers();
+    });
   }
 
   ngAfterViewInit() {

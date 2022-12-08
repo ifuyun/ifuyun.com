@@ -41,6 +41,9 @@
     </div>
     <h2>{{wallpaper?.storyTitle}}</h2>
     <article [innerHTML]="wallpaper?.story | safeHtml"></article>
+    <p *ngIf="wallpaper?.hasTranslation">
+      <a routerLink="." [queryParams]="getTranslateLangParams()" title="查看翻译" rel="bookmark">查看翻译</a>
+    </p>
   </div>
   <footer class="post-footer">
     <div *ngIf="isMobile">

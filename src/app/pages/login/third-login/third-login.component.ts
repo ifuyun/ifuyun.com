@@ -61,7 +61,7 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
     this.paramListener = this.route.queryParamMap
       .pipe(
         combineLatestWith(this.optionService.options$),
-        skipWhile(([params, options]) => isEmpty(options)),
+        skipWhile(([, options]) => isEmpty(options)),
         tap(([params, options]) => {
           this.options = options;
           this.adminUrl = `${this.options['site_url']}${ADMIN_URL}`;

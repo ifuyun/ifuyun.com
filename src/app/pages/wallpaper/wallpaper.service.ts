@@ -52,7 +52,8 @@ export class WallpaperService {
   }
 
   parseLocation(wallpaper: Wallpaper, lang: WallpaperLang): { copyright: string; location: string } {
-    const isCn = lang === WallpaperLang.CN && !!wallpaper.copyright || lang === WallpaperLang.EN && !wallpaper.copyrightEn;
+    const isCn =
+      (lang === WallpaperLang.CN && !!wallpaper.copyright) || (lang === WallpaperLang.EN && !wallpaper.copyrightEn);
     const separator = isCn ? '，' : /,\s*/i;
     const copyright = isCn ? wallpaper.copyright : wallpaper.copyrightEn;
     const temp = copyright.split(separator);

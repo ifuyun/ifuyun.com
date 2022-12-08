@@ -4,7 +4,6 @@ import { isEmpty } from 'lodash';
 import * as QRCode from 'qrcode';
 import { skipWhile, Subscription } from 'rxjs';
 import { LOGO_DARK_PATH, LOGO_PATH } from '../../config/common.constant';
-import { Theme } from '../../config/common.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { UserAgentService } from '../../core/user-agent.service';

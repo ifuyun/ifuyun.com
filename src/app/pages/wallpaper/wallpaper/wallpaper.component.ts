@@ -10,8 +10,8 @@ import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
 import { ImageService } from '../../../components/image/image.service';
 import { MessageService } from '../../../components/message/message.service';
-import { VoteType, VoteValue } from '../../../config/common.enum';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
+import { VoteType, VoteValue } from '../../../config/common.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { MetaService } from '../../../core/meta.service';
@@ -51,15 +51,6 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   isLoggedIn = false;
   prevWallpaper: Wallpaper | null = null;
   nextWallpaper: Wallpaper | null = null;
-
-  get queryParams(): Params {
-    if (this.lang === WallpaperLang.CN) {
-      return {};
-    }
-    return {
-      lang: this.lang
-    };
-  }
 
   protected pageIndex = 'wallpaper';
 
@@ -213,6 +204,10 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     return this.lang === WallpaperLang.CN ? {} : { lang: this.lang };
   }
 
+  getTranslateLangParams(): Params {
+    return this.lang === WallpaperLang.CN ? { lang: WallpaperLang.EN } : {};
+  }
+
   protected updateActivePage(): void {
     this.commonService.updateActivePage(this.pageIndex);
   }
@@ -227,7 +222,10 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
           location: meta.location,
           fullUrl: `${BING_DOMAIN}${wallpaper.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${wallpaper.imageFormat}`,
           fullUhdUrl: `${BING_DOMAIN}${wallpaper.urlBase}_UHD.${wallpaper.imageFormat}`,
-          fullCopyrightUrl: `${BING_DOMAIN}${wallpaper.copyrightLink}`
+          fullCopyrightUrl: `${BING_DOMAIN}${wallpaper.copyrightLink}`,
+          hasTranslation:
+            (this.lang === WallpaperLang.CN && !!wallpaper.storyEn) ||
+            (this.lang === WallpaperLang.EN && !!wallpaper.story)
         };
         if (this.lang === WallpaperLang.CN) {
           this.wallpaper.storyTitle = wallpaper.storyTitle || wallpaper.storyTitleEn;
