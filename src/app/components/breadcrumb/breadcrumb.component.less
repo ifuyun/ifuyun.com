@@ -12,14 +12,18 @@
     padding: 0 @content-margin;
 
     > * {
-      display: inline-block;
+      display: inline-flex;
       overflow: hidden;
       white-space: nowrap;
-      text-overflow: ellipsis;
     }
 
     :not(:last-child) {
       flex-shrink: 0;
+    }
+
+    a, span {
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 
@@ -40,7 +44,6 @@
   }
 
   h3 {
-    display: inline-block;
     font-size: @primary-font-size;
     font-weight: normal;
   }

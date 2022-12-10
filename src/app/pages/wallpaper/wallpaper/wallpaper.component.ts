@@ -51,6 +51,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   isLoggedIn = false;
   prevWallpaper: Wallpaper | null = null;
   nextWallpaper: Wallpaper | null = null;
+  unknownLocation = '';
 
   protected pageIndex = 'wallpaper';
 
@@ -96,6 +97,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         tap(([params, queryParams]) => {
           this.wallpaperId = params.get('wid')?.trim() || '';
           this.lang = <WallpaperLang>queryParams.get('lang')?.trim() || WallpaperLang.CN;
+          this.unknownLocation = this.lang === WallpaperLang.CN ? '未知' : 'Unknown';
           this.commentService.updateObjectId(this.wallpaperId);
         })
       )
@@ -226,12 +228,12 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         };
         if (this.lang === WallpaperLang.CN) {
           this.wallpaper.copyright = wallpaper.copyright || wallpaper.copyrightEn;
-          this.wallpaper.location = wallpaper.location || wallpaper.locationEn || '未知';
+          this.wallpaper.location = wallpaper.location || wallpaper.locationEn;
           this.wallpaper.storyTitle = wallpaper.storyTitle || wallpaper.storyTitleEn;
           this.wallpaper.story = wallpaper.story || wallpaper.storyEn;
         } else {
           this.wallpaper.copyright = wallpaper.copyrightEn || wallpaper.copyright;
-          this.wallpaper.location = wallpaper.locationEn || wallpaper.location || 'Unknown';
+          this.wallpaper.location = wallpaper.locationEn || wallpaper.location;
           this.wallpaper.storyTitle = wallpaper.storyTitleEn || wallpaper.storyTitle;
           this.wallpaper.story = wallpaper.storyEn || wallpaper.story;
         }
@@ -278,12 +280,17 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     const titles: string[] = ['高清壁纸', siteName];
     const keywords: string[] = (this.options['site_keywords'] || '').split(',');
     let description = '';
-    const fullStop = this.lang === WallpaperLang.EN ? '. ' : '。';
+    const fullStop = this.lang === WallpaperLang.EN ? '.' : '。';
     const comma = this.lang === WallpaperLang.EN ? ', ' : '，';
+    const wallpaperLocation = this.wallpaper.location ? comma + this.wallpaper.location : '';
 
     if (this.wallpaper) {
       titles.unshift(this.wallpaper.copyright);
-      description += `${this.wallpaper.copyright}${comma}${this.wallpaper.location} (${this.wallpaper.copyrightAuthor})${fullStop}`;
+      description += `${this.wallpaper.copyright}${wallpaperLocation}`;
+      description += description.endsWith(fullStop) ? '' : fullStop;
+      if (this.lang === WallpaperLang.EN) {
+        description += ' ';
+      }
     }
 
     this.metaService.updateHTMLMeta({

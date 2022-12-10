@@ -9,8 +9,8 @@
       <span title="日期: {{wallpaper?.date}}">
         <i class='icon icon-calendar'></i><span>{{wallpaper?.date}}</span>
       </span>
-      <span *ngIf="!isMobile" title="地点: {{wallpaper?.location}}">
-        <i class='icon icon-geo-alt'></i><span>{{wallpaper?.location}}</span>
+      <span *ngIf="!isMobile" title="地点: {{wallpaper?.location || unknownLocation}}">
+        <i class='icon icon-geo-alt'></i><span>{{wallpaper?.location || unknownLocation}}</span>
       </span>
       <span title="访问：{{wallpaper?.views | numberView}}">
         <i class='icon icon-eye'></i><span>{{wallpaper?.views | numberView}} 次访问</span>
@@ -50,7 +50,8 @@
       <div class="post-meta">
         <div class="post-meta-icon"><i class='icon icon-geo-alt'></i></div>
         <div class="post-meta-info">
-          <span class="post-meta-info-text" title="地点: {{wallpaper?.location}}">{{wallpaper?.location}}</span>
+          <span class="post-meta-info-text"
+                title="地点: {{wallpaper?.location || unknownLocation}}">{{wallpaper?.location || unknownLocation}}</span>
         </div>
       </div>
     </div>
