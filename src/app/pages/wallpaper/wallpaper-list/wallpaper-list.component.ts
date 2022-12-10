@@ -4,8 +4,8 @@ import { isEmpty, omit, uniq } from 'lodash';
 import { skipWhile, Subscription } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
-import { VoteType, VoteValue } from '../../../config/common.enum';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
+import { VoteType, VoteValue } from '../../../config/common.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { MetaService } from '../../../core/meta.service';
@@ -171,11 +171,11 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     }
     this.wallpapersListener = this.wallpaperService.getWallpapers(param).subscribe((res) => {
       this.wallpapers = (res.list || []).map((item) => {
-        const meta = this.wallpaperService.parseLocation(item, this.lang);
+        const wallpaperLocation = this.lang === WallpaperLang.CN ? item.location || '未知' : item.locationEn || 'Unknown';
         return {
           ...item,
-          copyright: meta.copyright,
-          location: meta.location,
+          copyright: this.lang === WallpaperLang.CN ? item.copyright : item.copyrightEn,
+          location: wallpaperLocation,
           fullUrl: `${BING_DOMAIN}${item.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${item.imageFormat}`,
           fullCopyrightUrl: `${BING_DOMAIN}${item.copyrightLink}`
         };

@@ -215,11 +215,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   private fetchWallpaper() {
     this.wallpaperListener = this.wallpaperService.getWallpaperById(this.wallpaperId).subscribe((wallpaper) => {
       if (wallpaper && wallpaper.wallpaperId) {
-        const meta = this.wallpaperService.parseLocation(wallpaper, this.lang);
         this.wallpaper = {
           ...wallpaper,
-          copyright: meta.copyright,
-          location: meta.location,
           fullUrl: `${BING_DOMAIN}${wallpaper.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${wallpaper.imageFormat}`,
           fullUhdUrl: `${BING_DOMAIN}${wallpaper.urlBase}_UHD.${wallpaper.imageFormat}`,
           fullCopyrightUrl: `${BING_DOMAIN}${wallpaper.copyrightLink}`,
@@ -228,9 +225,13 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
             (this.lang === WallpaperLang.EN && !!wallpaper.story)
         };
         if (this.lang === WallpaperLang.CN) {
+          this.wallpaper.copyright = wallpaper.copyright || wallpaper.copyrightEn;
+          this.wallpaper.location = wallpaper.location || wallpaper.locationEn || '未知';
           this.wallpaper.storyTitle = wallpaper.storyTitle || wallpaper.storyTitleEn;
           this.wallpaper.story = wallpaper.story || wallpaper.storyEn;
         } else {
+          this.wallpaper.copyright = wallpaper.copyrightEn || wallpaper.copyright;
+          this.wallpaper.location = wallpaper.locationEn || wallpaper.location || 'Unknown';
           this.wallpaper.storyTitle = wallpaper.storyTitleEn || wallpaper.storyTitle;
           this.wallpaper.story = wallpaper.storyEn || wallpaper.story;
         }
@@ -249,20 +250,16 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         this.nextWallpaper = null;
 
         if (res.prevWallpaper) {
-          const meta = this.wallpaperService.parseLocation(res.prevWallpaper, this.lang);
           this.prevWallpaper = {
             ...res.prevWallpaper,
-            copyright: meta.copyright,
-            location: meta.location,
+            copyright: this.lang === WallpaperLang.CN ? res.prevWallpaper.copyright : res.prevWallpaper.copyrightEn,
             fullUrl: `${BING_DOMAIN}${res.prevWallpaper.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${res.prevWallpaper.imageFormat}`
           };
         }
         if (res.nextWallpaper) {
-          const meta = this.wallpaperService.parseLocation(res.nextWallpaper, this.lang);
           this.nextWallpaper = {
             ...res.nextWallpaper,
-            copyright: meta.copyright,
-            location: meta.location,
+            copyright: this.lang === WallpaperLang.CN ? res.nextWallpaper.copyright : res.nextWallpaper.copyrightEn,
             fullUrl: `${BING_DOMAIN}${res.nextWallpaper.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${res.nextWallpaper.imageFormat}`
           };
         }

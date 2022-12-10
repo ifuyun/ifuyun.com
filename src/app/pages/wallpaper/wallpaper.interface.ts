@@ -23,7 +23,6 @@ export interface Wallpaper {
   date: Date;
   title: string;
   titleEn: string;
-  location: string;
   description?: string;
   caption?: string;
   url: string;
@@ -43,6 +42,8 @@ export interface Wallpaper {
   storyTitleEn: string;
   story: string;
   storyEn: string;
+  location: string;
+  locationEn: string;
   views: number;
   likes: number;
   downloads: number;
