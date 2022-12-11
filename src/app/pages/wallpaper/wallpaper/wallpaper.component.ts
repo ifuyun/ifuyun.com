@@ -4,6 +4,7 @@ import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
 import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { environment as env } from '../../../../environments/environment';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
@@ -24,12 +25,7 @@ import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
 import { VoteEntity } from '../../post/vote.interface';
 import { VoteService } from '../../post/vote.service';
-import {
-  BING_DOMAIN,
-  DEFAULT_WALLPAPER_RESOLUTION,
-  WALLPAPER_PAGE_DESCRIPTION,
-  WALLPAPER_PAGE_KEYWORDS
-} from '../wallpaper.constant';
+import { BING_DOMAIN, WALLPAPER_PAGE_DESCRIPTION, WALLPAPER_PAGE_KEYWORDS } from '../wallpaper.constant';
 import { Wallpaper, WallpaperLang } from '../wallpaper.interface';
 import { WallpaperService } from '../wallpaper.service';
 
@@ -57,9 +53,9 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
 
   private breadcrumbs: BreadcrumbEntity[] = [];
   private commentUser: Guest | null = null;
+  private urlPrefix = '';
 
   private optionsListener!: Subscription;
-  private paramListener!: Subscription;
   private wallpaperListener!: Subscription;
   private userListener!: Subscription;
   private prevAndNextListener!: Subscription;
@@ -87,21 +83,19 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     this.updateActivePage();
     this.updatePageOptions();
     this.optionsListener = this.optionService.options$
-      .pipe(skipWhile((options) => isEmpty(options)))
-      .subscribe((options) => {
-        this.options = options;
-      });
-    this.paramListener = this.route.paramMap
       .pipe(
-        combineLatestWith(this.route.queryParamMap),
-        tap(([params, queryParams]) => {
+        skipWhile((options) => isEmpty(options)),
+        combineLatestWith(this.route.paramMap, this.route.queryParamMap),
+        tap(([, params, queryParams]) => {
           this.wallpaperId = params.get('wid')?.trim() || '';
           this.lang = <WallpaperLang>queryParams.get('lang')?.trim() || WallpaperLang.CN;
           this.unknownLocation = this.lang === WallpaperLang.CN ? '未知' : 'Unknown';
           this.commentService.updateObjectId(this.wallpaperId);
         })
       )
-      .subscribe(() => {
+      .subscribe(([options]) => {
+        this.options = options;
+        this.urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
         this.fetchWallpaper();
         this.fetchPrevAndNext();
       });
@@ -121,27 +115,20 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
 
   ngOnDestroy(): void {
     this.optionsListener.unsubscribe();
-    this.paramListener.unsubscribe();
     this.wallpaperListener.unsubscribe();
   }
 
   showWallpaper() {
     this.imageService.preview([
       {
-        src: this.wallpaper?.fullUrl
+        src: this.wallpaper?.url
       }
     ]);
   }
 
   download(uhd = false) {
-    const url = uhd ? this.wallpaper.fullUhdUrl : this.wallpaper.fullUrl;
     if (!this.isLoggedIn && uhd) {
       return this.message.error('下载 4k 超高清壁纸请先登录');
-    }
-    if (!this.isLoggedIn) {
-      this.wallpaperService.increaseDownload(this.wallpaperId).subscribe();
-      window.open(url);
-      return;
     }
     window.location.href = `${this.options['site_url']}${this.wallpaperService.getDownloadUrl(this.wallpaperId, uhd)}`;
   }
@@ -219,9 +206,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
       if (wallpaper && wallpaper.wallpaperId) {
         this.wallpaper = {
           ...wallpaper,
-          fullUrl: `${BING_DOMAIN}${wallpaper.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${wallpaper.imageFormat}`,
-          fullUhdUrl: `${BING_DOMAIN}${wallpaper.urlBase}_UHD.${wallpaper.imageFormat}`,
-          fullCopyrightUrl: `${BING_DOMAIN}${wallpaper.copyrightLink}`,
+          url: this.urlPrefix + wallpaper.url,
           hasTranslation:
             (this.lang === WallpaperLang.CN && !!wallpaper.storyEn) ||
             (this.lang === WallpaperLang.EN && !!wallpaper.story)
@@ -255,14 +240,14 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
           this.prevWallpaper = {
             ...res.prevWallpaper,
             copyright: this.lang === WallpaperLang.CN ? res.prevWallpaper.copyright : res.prevWallpaper.copyrightEn,
-            fullUrl: `${BING_DOMAIN}${res.prevWallpaper.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${res.prevWallpaper.imageFormat}`
+            thumbUrl: this.urlPrefix + res.prevWallpaper.thumbUrl
           };
         }
         if (res.nextWallpaper) {
           this.nextWallpaper = {
             ...res.nextWallpaper,
             copyright: this.lang === WallpaperLang.CN ? res.nextWallpaper.copyright : res.nextWallpaper.copyrightEn,
-            fullUrl: `${BING_DOMAIN}${res.nextWallpaper.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${res.nextWallpaper.imageFormat}`
+            thumbUrl: this.urlPrefix + res.nextWallpaper.thumbUrl
           };
         }
       });

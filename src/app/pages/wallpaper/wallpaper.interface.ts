@@ -26,9 +26,8 @@ export interface Wallpaper {
   description?: string;
   caption?: string;
   url: string;
+  thumbUrl: string;
   urlBase: string;
-  fullUrl: string;
-  fullUhdUrl: string;
   imageFormat: string;
   platform: WallpaperPlatform;
   quiz: string;
@@ -37,7 +36,6 @@ export interface Wallpaper {
   copyrightLink: string;
   copyrightLinkEn: string;
   copyrightAuthor: string;
-  fullCopyrightUrl: string;
   storyTitle: string;
   storyTitleEn: string;
   story: string;

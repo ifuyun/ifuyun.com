@@ -19,7 +19,7 @@
                [routerLink]="[wallpaper.wallpaperId]"
                [queryParams]="getLangParams()"
                [title]="lang === 'cn' ? wallpaper.copyright : wallpaper.copyrightEn">
-              <img [src]="wallpaper.fullUrl" [alt]="lang === 'cn' ? wallpaper.copyright : wallpaper.copyrightEn"/>
+              <img [src]="wallpaper.thumbUrl" [alt]="lang === 'cn' ? wallpaper.copyright : wallpaper.copyrightEn"/>
               <div class="overlay"></div>
             </a>
           </div>

@@ -71,11 +71,16 @@ export class WallpaperBoxComponent implements OnDestroy, OnChanges {
   private fetchData() {
     this.loading = true;
     this.wallpaperListener = this.wallpaperService.getRandomWallpapers(8).subscribe((res) => {
-      this.wallpapers = res.map((item) => ({
-        ...item,
-        fullUrl: `${BING_DOMAIN}${item.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${item.imageFormat}`,
-        fullCopyrightUrl: `${BING_DOMAIN}${item.copyrightLink}`
-      }));
+      this.wallpapers = res.map((item) => {
+        const loc = item.location ? '，' + item.location : ', ' + item.locationEn;
+        const description = (item.copyright || item.copyrightEn) + loc + ' (' + item.copyrightAuthor + ')';
+        return {
+          ...item,
+          url: `${BING_DOMAIN}${item.url}`,
+          copyrightLink: `${BING_DOMAIN}${item.copyrightLink}`,
+          description
+        };
+      });
       this.resetImage();
       this.loading = false;
     });

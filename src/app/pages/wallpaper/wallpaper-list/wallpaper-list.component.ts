@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
 import { skipWhile, Subscription } from 'rxjs';
+import { environment as env } from '../../../../environments/environment';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
@@ -169,6 +170,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     if (this.keyword) {
       param.keyword = this.keyword;
     }
+    const urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
     this.wallpapersListener = this.wallpaperService.getWallpapers(param).subscribe((res) => {
       this.wallpapers = (res.list || []).map((item) => {
         const wallpaperLocation = this.lang === WallpaperLang.CN ? item.location || '未知' : item.locationEn || 'Unknown';
@@ -176,8 +178,8 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
           ...item,
           copyright: this.lang === WallpaperLang.CN ? item.copyright : item.copyrightEn,
           location: wallpaperLocation,
-          fullUrl: `${BING_DOMAIN}${item.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${item.imageFormat}`,
-          fullCopyrightUrl: `${BING_DOMAIN}${item.copyrightLink}`
+          url: urlPrefix + item.url,
+          thumbUrl: urlPrefix + item.thumbUrl
         };
       });
       this.initWallpaperStatus(this.wallpapers);

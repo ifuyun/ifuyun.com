@@ -248,7 +248,7 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
       this.wallpaper =
         res.map((item) => ({
           ...item,
-          fullUrl: `${BING_DOMAIN}${item.urlBase}_${DEFAULT_WALLPAPER_RESOLUTION}.${item.imageFormat}`
+          url: `${BING_DOMAIN}${item.url}`
         }))[0] || null;
       if (this.wallpaper) {
         this.initStyles();
@@ -262,7 +262,7 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
 
   private initStyles() {
     this.document.body.classList.add('bg-image');
-    this.document.body.style.backgroundImage = `url('${this.wallpaper?.fullUrl}')`;
+    this.document.body.style.backgroundImage = `url('${this.wallpaper?.url}')`;
   }
 
   private clearStyles() {
