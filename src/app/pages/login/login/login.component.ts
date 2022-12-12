@@ -21,7 +21,7 @@ import md5 from '../../../helpers/md5';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { AuthService } from '../../../services/auth.service';
 import { OptionService } from '../../../services/option.service';
-import { BING_DOMAIN, DEFAULT_WALLPAPER_RESOLUTION } from '../../wallpaper/wallpaper.constant';
+import { BING_DOMAIN } from '../../wallpaper/wallpaper.constant';
 import { Wallpaper } from '../../wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../wallpaper/wallpaper.service';
 import { THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK } from '../login.constant';
@@ -95,13 +95,13 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.updatePageOptions();
+    this.updateActivePage();
     this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => {
         this.options = options;
         this.pageLoaded = true;
-        this.initMeta();
-        this.updateActivePage();
+        this.updatePageInfo();
 
         this.adminUrl = `${this.options['site_url']}${ADMIN_URL}`;
         const rememberMe = this.cookieService.get('remember');
@@ -270,7 +270,7 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
     this.document.body.style.backgroundImage = '';
   }
 
-  private initMeta() {
+  private updatePageInfo() {
     const titles = ['登录', this.options['site_name']];
     const keywords: string[] = (this.options['site_keywords'] || '').split(',');
     const metaData: HTMLMetaData = {

@@ -42,7 +42,6 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
   showCarousel = false;
 
   private optionsListener!: Subscription;
-  private paramListener!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -61,12 +60,10 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
   ngOnInit(): void {
     this.updatePageOptions();
     this.optionsListener = this.optionService.options$
-      .pipe(skipWhile((options) => isEmpty(options)))
-      .subscribe((options) => (this.options = options));
-    this.paramListener = this.route.paramMap
       .pipe(
-        combineLatestWith(this.route.queryParamMap),
-        tap(([params, queryParams]) => {
+        skipWhile((options) => isEmpty(options)),
+        combineLatestWith(this.route.paramMap, this.route.queryParamMap),
+        tap(([, params, queryParams]) => {
           this.page = Number(params.get('page')) || 1;
           this.category = params.get('category')?.trim() || '';
           this.tag = params.get('tag')?.trim() || '';
@@ -76,14 +73,14 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
           this.showCarousel = !this.category && !this.tag && !this.year && !this.keyword;
         })
       )
-      .subscribe(() => {
+      .subscribe(([options]) => {
+        this.options = options;
         this.fetchPosts();
       });
   }
 
   ngOnDestroy() {
     this.optionsListener.unsubscribe();
-    this.paramListener.unsubscribe();
   }
 
   protected updateActivePage(): void {

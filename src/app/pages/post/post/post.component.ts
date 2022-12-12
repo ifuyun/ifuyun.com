@@ -14,7 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 import highlight from 'highlight.js';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
-import { skipWhile, Subscription } from 'rxjs';
+import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
@@ -80,7 +80,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   private optionsListener!: Subscription;
   private urlListener!: Subscription;
-  private paramListener!: Subscription;
   private userListener!: Subscription;
   private postListener!: Subscription;
   private prevAndNextListener!: Subscription;
@@ -111,13 +110,18 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   ngOnInit(): void {
     this.updatePageOptions();
-    this.initOptions();
-    this.paramListener = this.route.params.subscribe((params) => {
-      this.postId = params['postId']?.trim();
-      this.postSlug = params['postSlug']?.trim();
-      this.postSlug ? this.fetchPage() : this.fetchPost();
-      this.commentService.updateObjectId(this.postId);
-    });
+    this.optionsListener = this.optionService.options$
+      .pipe(
+        skipWhile((options) => isEmpty(options)),
+        combineLatestWith(this.route.params)
+      )
+      .subscribe(([options, params]) => {
+        this.options = options;
+        this.postId = params['postId']?.trim();
+        this.postSlug = params['postSlug']?.trim();
+        this.postSlug ? this.fetchPage() : this.fetchPost();
+        this.commentService.updateObjectId(this.postId);
+      });
     this.urlListener = this.urlService.urlInfo$.subscribe((url) => {
       this.referer = url.previous;
     });
@@ -149,7 +153,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   ngOnDestroy() {
     this.optionsListener.unsubscribe();
     this.urlListener.unsubscribe();
-    this.paramListener.unsubscribe();
     this.userListener?.unsubscribe();
     this.postListener.unsubscribe();
     this.prevAndNextListener?.unsubscribe();
@@ -242,14 +245,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       showMobileHeader: true,
       showMobileFooter: true
     });
-  }
-
-  private initOptions() {
-    this.optionsListener = this.optionService.options$
-      .pipe(skipWhile((options) => isEmpty(options)))
-      .subscribe((options) => {
-        this.options = options;
-      });
   }
 
   private initMeta() {

@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
-import { isEmpty } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { MessageService } from '../../../components/message/message.service';
@@ -10,6 +10,9 @@ import { ADMIN_URL, LOGIN_URL } from '../../../config/common.constant';
 import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
+import { HTMLMetaData } from '../../../core/meta.interface';
+import { MetaService } from '../../../core/meta.service';
+import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
@@ -23,11 +26,13 @@ import { LoginService } from '../login.service';
   templateUrl: './third-login.component.html',
   styleUrls: ['./third-login.component.less']
 })
-export class ThirdLoginComponent implements OnInit, OnDestroy {
+export class ThirdLoginComponent extends PageComponent implements OnInit, OnDestroy {
   isMobile = false;
   loginStatus: 'loading' | 'success' | 'cancel' | 'failure' = 'loading';
   loginURL = '';
   countdown = 3; // 3s
+
+  protected pageIndex = 'login';
 
   private options: OptionEntity = {};
   private authCode = '';
@@ -47,6 +52,7 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private userAgentService: UserAgentService,
     private optionService: OptionService,
+    private metaService: MetaService,
     private userService: UserService,
     private authService: AuthService,
     private commonService: CommonService,
@@ -54,10 +60,13 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
     private platform: PlatformService,
     private message: MessageService
   ) {
+    super();
     this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {
+    this.updatePageOptions();
+    this.updateActivePage();
     this.paramListener = this.route.queryParamMap
       .pipe(
         combineLatestWith(this.optionService.options$),
@@ -90,6 +99,7 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(() => {
+        this.updatePageInfo();
         this.thirdLogin();
       });
   }
@@ -126,6 +136,31 @@ export class ThirdLoginComponent implements OnInit, OnDestroy {
         this.startCountdown();
       }
     });
+  }
+
+  protected updateActivePage(): void {
+    this.commonService.updateActivePage(this.pageIndex);
+  }
+
+  protected updatePageOptions(): void {
+    this.commonService.updatePageOptions({
+      showHeader: true,
+      showFooter: true,
+      showMobileHeader: true,
+      showMobileFooter: true
+    });
+  }
+
+  private updatePageInfo() {
+    const titles = ['登录', this.options['site_name']];
+    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    const metaData: HTMLMetaData = {
+      title: titles.join(' - '),
+      description: this.options['site_description'],
+      author: this.options['site_author'],
+      keywords: uniq(keywords).join(',')
+    };
+    this.metaService.updateHTMLMeta(metaData);
   }
 
   private startCountdown() {

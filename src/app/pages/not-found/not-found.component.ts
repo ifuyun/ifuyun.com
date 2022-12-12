@@ -37,8 +37,8 @@ export class NotFoundComponent extends PageComponent implements OnInit, OnDestro
     if (this.platform.isServer) {
       this.response.setStatus(HttpStatusCode.NotFound);
     }
-    this.updateActivePage();
     this.updatePageOptions();
+    this.updateActivePage();
     this.optionsListener = this.optionService.options$
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => {
