@@ -18,13 +18,16 @@
             <a class="photo-link"
                [routerLink]="[wallpaper.wallpaperId]"
                [queryParams]="getLangParams()"
-               [title]="lang === 'cn' ? wallpaper.copyright : wallpaper.copyrightEn">
-              <img [src]="wallpaper.thumbUrl" [alt]="lang === 'cn' ? wallpaper.copyright : wallpaper.copyrightEn"/>
-              <div class="overlay"></div>
+               [title]="wallpaper.copyright">
+              <img [src]="wallpaper.thumbUrl" [alt]="wallpaper.copyright"/><div class="overlay"></div>
             </a>
           </div>
           <div class="content">
-            <h2 [title]="wallpaper.copyright">{{wallpaper.copyright}}</h2>
+            <h2 [title]="wallpaper.copyright">
+              <a [routerLink]="[wallpaper.wallpaperId]"
+                 [queryParams]="getLangParams()"
+                 [title]="wallpaper.copyright">{{wallpaper.copyright}}</a>
+            </h2>
             <div class="content-location">
               <i class="icon icon-geo-alt"></i><span>{{wallpaper.location}}</span>
             </div>

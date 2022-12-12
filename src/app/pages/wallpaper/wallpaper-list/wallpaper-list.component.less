@@ -146,6 +146,14 @@
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
+
+          a {
+            color: var(--base-color);
+
+            &:hover {
+              color: var(--primary-color);
+            }
+          }
         }
 
         > div {
@@ -185,6 +193,10 @@
 
           &.clickable {
             cursor: pointer;
+
+            &:hover {
+              color: var(--action-color);
+            }
           }
 
           &.disabled {
