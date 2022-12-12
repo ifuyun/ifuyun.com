@@ -1,37 +1,34 @@
 @import "../../../styles/variables";
 
 .breadcrumb {
+  display: flex;
   line-height: 40px;
   border-radius: @border-radius;
   background-color: var(--content-background-color);
   box-shadow: var(--content-box-shadow);
 
   &-desktop {
-    display: flex;
     margin: @box-shadow-width @box-shadow-width @primary-margin;
     padding: 0 @content-margin;
-
-    > * {
-      display: inline-flex;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    :not(:last-child) {
-      flex-shrink: 0;
-    }
-
-    a, span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
   }
 
   &-mobile {
     margin-bottom: @m-primary-margin;
     padding: 0 @m-primary-margin;
+  }
+
+  > * {
+    display: inline-flex;
     overflow: hidden;
     white-space: nowrap;
+  }
+
+  :not(:last-child) {
+    flex-shrink: 0;
+  }
+
+  a, span {
+    overflow: hidden;
     text-overflow: ellipsis;
   }
 

@@ -21,12 +21,7 @@ import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
 import { VoteEntity } from '../../post/vote.interface';
 import { VoteService } from '../../post/vote.service';
-import {
-  BING_DOMAIN,
-  DEFAULT_WALLPAPER_RESOLUTION,
-  WALLPAPER_PAGE_DESCRIPTION,
-  WALLPAPER_PAGE_KEYWORDS
-} from '../wallpaper.constant';
+import { BING_DOMAIN, WALLPAPER_PAGE_DESCRIPTION, WALLPAPER_PAGE_KEYWORDS } from '../wallpaper.constant';
 import { Wallpaper, WallpaperLang, WallpaperQueryParam } from '../wallpaper.interface';
 import { WallpaperService } from '../wallpaper.service';
 
@@ -170,8 +165,8 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     if (this.keyword) {
       param.keyword = this.keyword;
     }
-    const urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
     this.wallpapersListener = this.wallpaperService.getWallpapers(param).subscribe((res) => {
+      const urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
       this.wallpapers = (res.list || []).map((item) => {
         const wallpaperLocation = this.lang === WallpaperLang.CN ? item.location || '未知' : item.locationEn || 'Unknown';
         return {
