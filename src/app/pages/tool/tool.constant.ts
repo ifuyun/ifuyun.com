@@ -22,13 +22,13 @@ export const TOOL_PAGE_DESCRIPTION =
 export const TOOL_PAGE_KEYWORDS = Object.freeze([
   '支付宝红包',
   '优惠券',
-  '优惠券工具',
   '电商优惠券',
-  '网购优惠券',
+  '京东优惠券',
+  '天猫优惠券',
+  '淘宝优惠券',
   '省钱工具',
   'MD5加密',
   '加密工具',
-  '网址导航',
   '效率工具',
   '学习工具'
 ]);
@@ -48,7 +48,6 @@ export const SHOPPING_PAGE_KEYWORDS = Object.freeze([
   '京东好物',
   '京东联盟',
   '京东推客',
-  '推客',
   '淘宝客'
 ]);
 

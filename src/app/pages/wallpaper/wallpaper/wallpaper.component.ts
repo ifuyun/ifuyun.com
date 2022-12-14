@@ -25,7 +25,7 @@ import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
 import { VoteEntity } from '../../post/vote.interface';
 import { VoteService } from '../../post/vote.service';
-import { BING_DOMAIN, WALLPAPER_PAGE_DESCRIPTION, WALLPAPER_PAGE_KEYWORDS } from '../wallpaper.constant';
+import { BING_DOMAIN } from '../wallpaper.constant';
 import { Wallpaper, WallpaperLang } from '../wallpaper.interface';
 import { WallpaperService } from '../wallpaper.service';
 
@@ -263,7 +263,6 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   private updatePageInfo() {
     const siteName: string = this.options['site_name'] || '';
     const titles: string[] = ['高清壁纸', siteName];
-    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
     let description = '';
     const fullStop = this.lang === WallpaperLang.EN ? '.' : '。';
     const comma = this.lang === WallpaperLang.EN ? ', ' : '，';
@@ -280,8 +279,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
-      description: `${description}${siteName}${WALLPAPER_PAGE_DESCRIPTION}`,
-      keywords: uniq(WALLPAPER_PAGE_KEYWORDS.concat(keywords)).join(','),
+      description: `${description}${siteName}${this.options['wallpaper_description']}`,
+      keywords: this.options['wallpaper_keywords'],
       author: this.options['site_author']
     });
   }

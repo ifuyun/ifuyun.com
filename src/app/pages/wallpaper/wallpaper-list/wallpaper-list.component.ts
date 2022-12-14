@@ -21,7 +21,7 @@ import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
 import { VoteEntity } from '../../post/vote.interface';
 import { VoteService } from '../../post/vote.service';
-import { BING_DOMAIN, WALLPAPER_PAGE_DESCRIPTION, WALLPAPER_PAGE_KEYWORDS } from '../wallpaper.constant';
+import { BING_DOMAIN } from '../wallpaper.constant';
 import { Wallpaper, WallpaperLang, WallpaperQueryParam } from '../wallpaper.interface';
 import { WallpaperService } from '../wallpaper.service';
 
@@ -198,8 +198,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     const siteName = this.options['site_name'] || '';
     let description = '';
     const titles = ['高清壁纸', siteName];
-    const keywords = (this.options['site_keywords'] || '').split(',');
-    keywords.unshift(...WALLPAPER_PAGE_KEYWORDS);
+    const keywords = (this.options['wallpaper_keywords'] || '').split(',');
 
     if (this.keyword) {
       titles.unshift(this.keyword, '搜索');
@@ -217,7 +216,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     } else {
       description += '。';
     }
-    description += `${siteName}${WALLPAPER_PAGE_DESCRIPTION}`;
+    description += `${siteName}${this.options['wallpaper_description']}`;
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),

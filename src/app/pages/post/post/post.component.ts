@@ -248,7 +248,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   private initMeta() {
-    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    const keywords: string[] = (this.options['post_keywords'] || '').split(',');
     this.metaService.updateHTMLMeta({
       title: `${this.post.postTitle} - ${this.options['site_name']}`,
       description: this.post.postExcerpt,
