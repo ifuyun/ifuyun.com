@@ -19,6 +19,7 @@ import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
+import { filterHtmlTag, truncateString } from '../../../helpers/helper';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { Guest } from '../../../interfaces/user.interface';
 import { OptionService } from '../../../services/option.service';
@@ -276,10 +277,17 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         description += ' ';
       }
     }
+    let story: string;
+    if (this.lang === WallpaperLang.CN) {
+      story = this.wallpaper.story || this.wallpaper.storyEn;
+    } else {
+      story = this.wallpaper.storyEn || this.wallpaper.story;
+    }
+    const wallpaperDesc = truncateString(filterHtmlTag(story), 160);
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
-      description: `${description}${siteName}${this.options['wallpaper_description']}`,
+      description: `${description}${wallpaperDesc}`,
       keywords: this.options['wallpaper_keywords'],
       author: this.options['site_author']
     });
