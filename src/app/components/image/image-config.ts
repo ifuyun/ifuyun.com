@@ -5,4 +5,4 @@ export const FADE_CLASS_NAME_MAP = {
   leaveActive: 'ant-fade-leave-active'
 };
 
-export const IMAGE_PREVIEW_MASK_CLASS_NAME = 'image-preview-mask';
+export const IMAGE_PREVIEW_MASK_CLASS_NAME = 'i-image-preview-mask';

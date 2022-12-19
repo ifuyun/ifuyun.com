@@ -40,22 +40,22 @@ const initialPosition = {
   exportAs: 'nzImagePreview',
   animations: [fadeMotion],
   template: `
-    <div class="image-preview">
+    <div class="i-image-preview">
       <div tabindex="0" aria-hidden="true" style="width: 0; height: 0; overflow: hidden; outline: none;"></div>
-      <div class="image-preview-content">
-        <div class="image-preview-body">
-          <ul class="image-preview-operations">
+      <div class="i-image-preview-content">
+        <div class="i-image-preview-body">
+          <ul class="i-image-preview-operations">
             <li
-              class="image-preview-operations-operation"
-              [class.image-preview-operations-operation-disabled]="zoomOutDisabled && option.type === 'zoomOut'"
+              class="i-image-preview-operations-operation"
+              [class.i-image-preview-operations-operation-disabled]="zoomOutDisabled && option.type === 'zoomOut'"
               (click)="option.onClick()"
               *ngFor="let option of operations"
             >
-              <span class="image-preview-operations-icon icon icon-{{ option.icon }}"></span>
+              <span class="i-image-preview-operations-icon icon icon-{{ option.icon }}"></span>
             </li>
           </ul>
           <div
-            class="image-preview-img-wrapper"
+            class="i-image-preview-img-wrapper"
             #imagePreviewWrapper
             cdkDrag
             [style.transform]="previewImageWrapperTransform"
@@ -65,7 +65,7 @@ const initialPosition = {
             <ng-container *ngFor="let image of images; index as imageIndex">
               <img
                 cdkDragHandle
-                class="image-preview-img"
+                class="i-image-preview-img"
                 #imgRef
                 *ngIf="index === imageIndex"
                 [attr.src]="image.src"
@@ -82,15 +82,15 @@ const initialPosition = {
           </div>
           <ng-container *ngIf="images.length > 1">
             <div
-              class="image-preview-switch-left"
-              [class.image-preview-switch-left-disabled]="index <= 0"
+              class="i-image-preview-switch-left"
+              [class.i-image-preview-switch-left-disabled]="index <= 0"
               (click)="onSwitchLeft($event)"
             >
               <span class="icon icon-left"></span>
             </div>
             <div
-              class="image-preview-switch-right"
-              [class.image-preview-switch-right-disabled]="index >= images.length - 1"
+              class="i-image-preview-switch-right"
+              [class.i-image-preview-switch-right-disabled]="index >= images.length - 1"
               (click)="onSwitchRight($event)"
             >
               <span class="icon icon-right"></span>
@@ -107,8 +107,8 @@ const initialPosition = {
   encapsulation: ViewEncapsulation.None,
   // eslint-disable-next-line @angular-eslint/no-host-metadata-property
   host: {
-    class: 'image-preview-wrap',
-    '[class.image-preview-moving]': 'isDragging',
+    class: 'i-image-preview-wrap',
+    '[class.i-image-preview-moving]': 'isDragging',
     '[style.zIndex]': 'config.nzZIndex',
     '[@.disabled]': 'config.nzNoAnimation',
     '[@fadeMotion]': 'animationState',
