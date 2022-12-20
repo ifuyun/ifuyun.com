@@ -16,7 +16,7 @@ import { PipesModule } from './pipes/pipes.module';
 @NgModule({
   declarations: [AppComponent, NotFoundComponent],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'blogApp' }),
+    BrowserModule.withServerTransition({ appId: 'ifuyun' }),
     TransferHttpCacheModule,
     AppRoutingModule,
     HttpClientModule,

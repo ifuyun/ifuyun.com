@@ -1,6 +1,6 @@
 {
   "name": "ifuyun.com",
-  "version": "3.9.2",
+  "version": "3.10.0",
   "description": "Website of ifuyun.com",
   "author": {
     "name": "Fuyun",
@@ -25,8 +25,8 @@
     "dev:ssr": "ng run ifuyun.com:serve-ssr",
     "serve:ssr": "node dist/server/main.js",
     "build:ssr": "ng build && ng run ifuyun.com:server",
-    "build:ssr:prod": "npm run build:ssr && npm run compress",
-    "compress": "gulp compress",
+    "build:gulp": "gulp build",
+    "build:prod": "npm run build:ssr && npm run build:gulp",
     "prerender": "ng run ifuyun.com:prerender"
   },
   "dependencies": {
@@ -99,6 +99,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "gulp": "^4.0.2",
     "gulp-gzip": "^1.4.2",
+    "gulp-replace": "^1.1.4",
     "jasmine-core": "^4.5.0",
     "karma": "^6.4.1",
     "karma-chrome-launcher": "^3.1.1",
