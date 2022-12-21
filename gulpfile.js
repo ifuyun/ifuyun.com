@@ -8,7 +8,7 @@ gulp.task('replace', function () {
   const host = (/host:\s*'([^']+)'/i.exec(env)[1] || '').replace(/\/$/i, '');
   return gulp.src('./dist/browser/index.html')
     .pipe(replace(/(<link [^>]*href=")\/?([^"]+)("[^>]*>)/gi, (matched, p1, p2, p3) => {
-      if (/^https?:\/\//i.test(p2)) {
+      if (/^https?:\/\//i.test(p2) || /.css$/i.test(p2)) {
         return p1 + p2 + p3;
       }
       return `${p1}${host}/${p2}${p3}`;

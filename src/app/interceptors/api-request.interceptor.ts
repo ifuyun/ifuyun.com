@@ -19,12 +19,12 @@ export class ApiRequestInterceptor implements HttpInterceptor {
   intercept(httpRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const isApiRequest = httpRequest.url.startsWith('/api');
     const token = this.platform.isBrowser ? localStorage.getItem('token') : '';
-    if (token) {
-      httpRequest = httpRequest.clone({
-        setHeaders: { Authorization: 'Bearer ' + token }
-      });
-    }
     if (isApiRequest) {
+      if (token) {
+        httpRequest = httpRequest.clone({
+          setHeaders: { Authorization: 'Bearer ' + token }
+        });
+      }
       httpRequest = httpRequest.clone({
         url: env.api.host + httpRequest.url
       });
