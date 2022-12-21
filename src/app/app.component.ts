@@ -65,8 +65,10 @@ export class AppComponent implements OnInit {
     this.initTheme();
     this.initThemeListener();
     this.optionService.getOptions().subscribe();
-    this.userService.getLoginUser().subscribe();
     this.taxonomyService.getTaxonomies().subscribe((taxonomies) => (this.taxonomies = taxonomies));
+    if (this.platform.isBrowser) {
+      this.userService.getLoginUser().subscribe();
+    }
   }
 
   toggleSiderOpen() {
