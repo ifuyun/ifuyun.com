@@ -131,7 +131,9 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     if (!this.isLoggedIn && uhd) {
       return this.message.error('下载 4k 超高清壁纸请先登录');
     }
-    window.location.href = `${this.options['site_url']}${this.wallpaperService.getDownloadUrl(this.wallpaperId, uhd)}`;
+    const downloadUrl = this.wallpaperService.getDownloadUrl(this.wallpaperId, uhd);
+    const token = localStorage.getItem('token');
+    window.location.href = `${this.options['site_url']}${downloadUrl}${token ? '&token=' + token : ''}`;
   }
 
   voteWallpaper(like = true) {
