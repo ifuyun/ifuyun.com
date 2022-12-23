@@ -2,31 +2,32 @@
 <div class="banner" *ngIf="!isMobile && showCarousel">
   <i-carousel></i-carousel>
 </div>
-<div [ngClass]="{'article-list-desktop': !isMobile}">
+<div class="post-list" [class.post-list-desktop]="!isMobile">
   <article *ngFor="let post of postList?.list"
-           class="article" [class.article-desktop]="!isMobile" [class.article-mobile]="isMobile">
+           class="post-item" [class.post-item-desktop]="!isMobile" [class.post-item-mobile]="isMobile">
     <header>
       <h3>
         <span class="meta-tag meta-tag-sticky" *ngIf="post.post.postSticky">置顶</span>
         <span class="meta-tag meta-tag-pay" *ngIf="post.post.postPayFlag">付费</span>
         <span class="meta-tag meta-tag-vip" *ngIf="post.meta['should_login'] === '1'">会员</span>
-        <a [routerLink]="[post.post.postGuid]" title="{{post.post.postTitle}}" rel="bookmark">{{post.post.postTitle}}</a>
+        <a [routerLink]="[post.post.postGuid]"
+           title="{{post.post.postTitle}}" rel="bookmark">{{post.post.postTitle}}</a>
       </h3>
-      <div class="article-stat">
+      <div class="post-item-stat">
         <ng-container *ngIf="post.post.commentFlag !== 'close'">
           <a [routerLink]="[post.post.postGuid]" fragment="comments" title="《{{post.post.postTitle}}》评论">
-            <ng-container *ngIf="post.post.commentCount > 0">
-              <i class='icon icon-chat-dots'></i><span>{{post.post.commentCount | numberView:'K'}}</span>
+            <ng-container *ngIf="post.post.postComments > 0">
+              <i class='icon icon-chat-dots'></i><span>{{post.post.postComments | numberView:'K'}}</span>
             </ng-container>
-            <ng-container *ngIf="post.post.commentCount < 1">
+            <ng-container *ngIf="post.post.postComments < 1">
               <i class='icon icon-chat'></i><span>0</span>
             </ng-container>
           </a>
         </ng-container>
-        <span><i class="icon icon-eye"></i><span>{{post.post.viewCount | numberView}}</span></span>
+        <span><i class="icon icon-eye"></i><span>{{post.post.postViews | numberView}}</span></span>
       </div>
     </header>
-    <div class="article-meta article-meta-top">
+    <div class="post-item-meta post-item-meta-top">
       <span title="写于: {{post.post.postDate | date:'yyyy-MM-dd'}}">
         <i class='icon icon-calendar'></i><span>{{post.post.postDate | date:'yyyy-MM-dd'}}</span>
       </span>
@@ -43,23 +44,23 @@
         <i class='icon icon-pencil'></i><span>原创</span>
       </span>
     </div>
-    <p class="article-excerpt">
+    <p class="post-item-excerpt">
       <span [innerHTML]="post.post.postExcerpt"></span>
       <a class="read-more" [routerLink]="[post.post.postGuid]" title="{{post.post.postTitle}}">[阅读全文]</a>
     </p>
-    <div class="article-meta article-meta-bottom" *ngIf="post.categories.length > 0 || post.tags.length > 0">
-      <div class="article-meta-taxonomy" *ngIf="isMobile && post.categories.length > 0">
-        <div class="article-meta-icon"><i class='icon icon-folder'></i></div>
-        <ul class="article-meta-info">
+    <div class="post-item-meta post-item-meta-bottom" *ngIf="post.categories.length > 0 || post.tags.length > 0">
+      <div class="post-item-meta-taxonomy" *ngIf="isMobile && post.categories.length > 0">
+        <div class="post-item-meta-icon"><i class='icon icon-folder'></i></div>
+        <ul class="post-item-meta-info">
           <li *ngFor="let category of post.categories">
             <a [routerLink]="['/category/' + category.taxonomySlug]"
                title="{{category.taxonomyName}}" rel="category">{{category.taxonomyName}}</a>
           </li>
         </ul>
       </div>
-      <div class="article-meta-taxonomy" *ngIf="post.tags.length > 0">
-        <div class="article-meta-icon"><i class='icon icon-tag'></i></div>
-        <ul class="article-meta-info">
+      <div class="post-item-meta-taxonomy" *ngIf="post.tags.length > 0">
+        <div class="post-item-meta-icon"><i class='icon icon-tag'></i></div>
+        <ul class="post-item-meta-info">
           <li *ngFor="let tag of post.tags">
             <a [routerLink]="['/tag/' + tag.taxonomySlug]"
                title="{{tag.taxonomyName}}" rel="category">{{tag.taxonomyName}}</a>

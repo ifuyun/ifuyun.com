@@ -1,0 +1,195 @@
+@import "variables";
+
+.banner {
+  position: relative;
+  margin: @box-shadow-width @box-shadow-width @primary-margin;
+  border-radius: @border-radius;
+  background-color: var(--content-background-color);
+  box-shadow: var(--content-box-shadow);
+}
+
+.post-list {
+  &-desktop {
+    margin: 0 @box-shadow-width;
+  }
+
+  .post-item {
+    @article-header-height: 32px;
+
+    border-radius: @border-radius;
+    background-color: var(--content-background-color);
+    box-shadow: var(--content-box-shadow);
+    line-height: @post-line-height;
+
+    &:hover {
+      background-color: var(--post-item-hover-color);
+    }
+
+    &:not(:last-child) {
+      margin-bottom: @primary-margin;
+    }
+
+    &:not(:first-child) {
+      margin-top: @primary-margin;
+    }
+
+    &-desktop {
+      padding: 16px @post-list-padding;
+    }
+
+    &-mobile {
+      padding: @m-content-margin @m-primary-margin;
+    }
+
+    .icon {
+      margin-right: 4px;
+    }
+
+    > header {
+      position: relative;
+
+      h3 {
+        display: flex;
+        height: @article-header-height;
+        margin-right: 108px;
+        align-items: center;
+        font-size: 16px;
+        line-height: @article-header-height;
+
+        a {
+          display: inline-block;
+          max-width: 100%;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    .meta-tag {
+      flex-shrink: 0;
+      margin-right: 8px;
+      padding: 4px 8px;
+      border-radius: 2px;
+      line-height: 1;
+      font-size: @minor-font-size;
+      font-weight: normal;
+    }
+
+    .meta-tag-sticky {
+      background-color: var(--sticky-background-color);
+      color: var(--sticky-color);
+      font-size: @minor-font-size;
+    }
+
+    .meta-tag-pay, .meta-tag-vip {
+      background-color: var(--action-color-light);
+      color: var(--action-color);
+      border: 1px solid var(--action-color);
+    }
+
+    &-stat, &-meta {
+      color: var(--minor-color);
+      font-size: @meta-font-size;
+
+      a {
+        color: var(--minor-color);
+
+        &:hover {
+          color: var(--primary-color);
+        }
+      }
+    }
+
+    &-stat {
+      position: absolute;
+      top: 0;
+      right: 0;
+      line-height: @article-header-height;
+
+      > :not(:last-child) {
+        margin-right: 12px;
+      }
+    }
+
+    &-meta {
+      padding: 8px 0;
+
+      &-top {
+        > span:not(:last-child):after {
+          content: '|';
+          display: inline-block;
+          position: relative;
+          top: -2px;
+          margin: 0 10px;
+          vertical-align: middle;
+        }
+
+        a:not(:last-child) {
+          margin-right: 8px;
+        }
+      }
+
+      &-bottom {
+        margin-top: 8px;
+        padding-bottom: 0;
+        border-top: 1px dashed var(--primary-border-color);
+
+        .icon {
+          line-height: @post-line-height + @tag-row-span * 2;
+        }
+
+        .post-item-meta-taxonomy {
+          &:not(:last-child) {
+            margin-bottom: 4px;
+          }
+
+          .post-item-meta-icon {
+            float: left;
+          }
+
+          .post-item-meta-info {
+            padding-left: 20px;
+          }
+
+          ul li, .post-item-meta-info-text {
+            display: inline-block;
+            padding: @tag-row-span 0;
+          }
+
+          ul li:not(:last-child) {
+            margin-right: 8px;
+          }
+
+          a {
+            padding: 4px 8px;
+            border-radius: 2px;
+            color: var(--minor-color);
+            background-color: var(--tag-background-color);
+
+            &:hover {
+              color: var(--tag-active-color);
+              background-color: var(--primary-color);
+            }
+          }
+        }
+      }
+    }
+
+    &-excerpt {
+      word-wrap: break-word;
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .read-more {
+        margin-left: 4px;
+      }
+    }
+  }
+}

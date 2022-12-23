@@ -21,7 +21,7 @@ import { PostService } from '../post.service';
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
-  styleUrls: ['./post-list.component.less']
+  styleUrls: []
 })
 export class PostListComponent extends PageComponent implements OnInit, OnDestroy {
   isMobile = false;
