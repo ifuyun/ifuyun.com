@@ -5,7 +5,7 @@ import * as moment from 'moment';
 import { EnumChangefreq, SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 import { PostType, TaxonomyType } from '../../../src/app/config/common.enum';
-import { TOOL_LINKS } from '../../../src/app/pages/tool/tool.constant';
+import { TOOL_LINKS, TOOL_URL_PREFIX } from '../../../src/app/pages/tool/tool.constant';
 import { SitemapItem } from './sitemap.interface';
 import { SitemapService } from './sitemap.service';
 
@@ -25,26 +25,26 @@ export class SitemapController {
         priority: 1
       },
       {
-        url: siteUrl + '/archive',
+        url: siteUrl + '/wallpaper',
         changefreq: EnumChangefreq.ALWAYS,
         priority: 1
       },
       {
-        url: siteUrl + '/wallpaper',
-        changefreq: EnumChangefreq.DAILY,
-        priority: 1
+        url: siteUrl + '/archive',
+        changefreq: EnumChangefreq.ALWAYS,
+        priority: 0.9
       },
       {
-        url: siteUrl + '/tool',
+        url: siteUrl + TOOL_URL_PREFIX,
         changefreq: EnumChangefreq.WEEKLY,
-        priority: 1
+        priority: 0.9
       }
     ];
     const pages: SitemapItem[] = data.posts
       .filter((item) => item.postType === PostType.PAGE)
       .map((item) => ({
         url: siteUrl + item.postGuid,
-        changefreq: EnumChangefreq.WEEKLY,
+        changefreq: EnumChangefreq.DAILY,
         priority: 1,
         lastmod: moment(item.postModified).format()
       }));
@@ -52,7 +52,7 @@ export class SitemapController {
       .filter((item) => item.postType === PostType.POST)
       .map((item) => ({
         url: siteUrl + item.postGuid,
-        changefreq: EnumChangefreq.DAILY,
+        changefreq: EnumChangefreq.ALWAYS,
         priority: 0.9,
         lastmod: moment(item.postModified).format()
       }));
@@ -60,19 +60,21 @@ export class SitemapController {
       .filter((item) => !!item.bingIdCn)
       .map((item) => ({
         url: `${siteUrl}/wallpaper/${item.wallpaperId}`,
-        changefreq: EnumChangefreq.DAILY,
-        priority: 0.8
+        changefreq: EnumChangefreq.ALWAYS,
+        priority: 0.9,
+        lastmod: moment(item.wallpaperModified).format()
       }));
     const wallpapersEn: SitemapItem[] = data.wallpapers
       .filter((item) => !!item.bingIdEn)
       .map((item) => ({
         url: `${siteUrl}/wallpaper/${item.wallpaperId}?lang=en`,
-        changefreq: EnumChangefreq.DAILY,
-        priority: 0.8
+        changefreq: EnumChangefreq.ALWAYS,
+        priority: 0.9,
+        lastmod: moment(item.wallpaperModified).format()
       }));
     const archives: SitemapItem[] = data.archives.map((item) => ({
       url: `${siteUrl}/archive/${item.dateText}`,
-      changefreq: EnumChangefreq.MONTHLY,
+      changefreq: EnumChangefreq.DAILY,
       priority: 0.8
     }));
     const tools: SitemapItem[] = TOOL_LINKS.map((item) => ({

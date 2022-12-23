@@ -12,7 +12,7 @@ export const TOOL_LINKS = Object.freeze([
     url: TOOL_URL_PREFIX + '/md5',
     title: 'MD5加密',
     changefreq: 'monthly',
-    priority: 0.6
+    priority: 0.7
   }
 ]);
 export const REGEXP_JD_PRODUCT_DETAIL_URL = /^https?:\/\/([a-zA-Z0-9\-_]+\.)*jd\.com\/(product\/)?\d+\.html$/i;
