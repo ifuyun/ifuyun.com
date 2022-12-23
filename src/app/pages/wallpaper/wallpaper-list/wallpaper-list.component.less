@@ -86,7 +86,7 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     position: relative;
-    margin: (@content-margin - (@content-margin / 2)) -(@content-margin / 2) -(@content-margin / 2);
+    margin: (@content-margin / 2) -(@content-margin / 2) -(@content-margin / 2);
 
     .wallpaper-item {
       box-sizing: border-box;
@@ -205,5 +205,9 @@
         }
       }
     }
+  }
+
+  .empty-box {
+    margin-top: @content-margin;
   }
 }

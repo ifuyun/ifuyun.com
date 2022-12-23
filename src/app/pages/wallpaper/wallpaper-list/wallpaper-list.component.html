@@ -54,6 +54,9 @@
         </div>
       </div>
     </div>
+    <div class="empty-box" *ngIf="total < 1">
+      <app-empty></app-empty>
+    </div>
   </div>
 </div>
 <app-page-bar *ngIf="total > 0"

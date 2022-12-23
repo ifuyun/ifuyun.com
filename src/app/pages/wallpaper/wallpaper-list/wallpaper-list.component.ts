@@ -130,10 +130,16 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   }
 
   getQueryParams(lang: string): Params {
-    if (this.keyword) {
+    if (this.keyword && lang === WallpaperLang.EN) {
       return { lang, keyword: this.keyword };
     }
-    return { lang };
+    if (this.keyword) {
+      return { keyword: this.keyword };
+    }
+    if (lang === WallpaperLang.EN) {
+      return { lang };
+    }
+    return {};
   }
 
   getLangParams(): Params {
