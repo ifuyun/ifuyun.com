@@ -2,18 +2,17 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highlightjs';
-import { BackTopModule } from '../../components/back-top/back-top.module';
 import { ComponentModule } from '../../components/component.module';
 import { MessageModule } from '../../components/message/message.module';
 import { PipesModule } from '../../pipes/pipes.module';
-import { LayoutComponent } from '../layout/layout.component';
-import { ArchiveComponent } from './archive/archive.component';
+import { PostArchiveComponent } from './post-archive/post-archive.component';
 import { PostListComponent } from './post-list/post-list.component';
 import { PostRoutingModule } from './post-routing.module';
 import { PostComponent } from './post/post.component';
+import { PostListBoxComponent } from './post-list-box/post-list-box.component';
 
 @NgModule({
-  declarations: [LayoutComponent, PostListComponent, PostComponent, ArchiveComponent],
+  declarations: [PostListComponent, PostComponent, PostArchiveComponent, PostListBoxComponent],
   imports: [
     CommonModule,
     PostRoutingModule,
@@ -22,8 +21,7 @@ import { PostComponent } from './post/post.component';
     FormsModule,
     ReactiveFormsModule,
     HighlightModule,
-    MessageModule,
-    BackTopModule
+    MessageModule
   ],
   providers: [
     {
@@ -51,6 +49,6 @@ import { PostComponent } from './post/post.component';
       }
     }
   ],
-  exports: [PostListComponent, PostComponent, ArchiveComponent]
+  exports: [PostListComponent, PostComponent, PostArchiveComponent, PostListBoxComponent]
 })
 export class PostModule {}

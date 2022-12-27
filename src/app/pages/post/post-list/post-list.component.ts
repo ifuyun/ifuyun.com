@@ -25,7 +25,7 @@ import { PostService } from '../post.service';
 })
 export class PostListComponent extends PageComponent implements OnInit, OnDestroy {
   isMobile = false;
-  pageIndex = 'index';
+  pageIndex = 'post';
   options: OptionEntity = {};
   page = 1;
   keyword = '';
@@ -39,9 +39,9 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
   pageUrl = '';
   pageUrlParam: Params = {};
   showCrumb = false;
-  showCarousel = false;
 
   private optionsListener!: Subscription;
+  private postsListener!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -70,7 +70,6 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
           this.year = params.get('year')?.trim() || '';
           this.month = params.get('month')?.trim() || '';
           this.keyword = queryParams.get('keyword')?.trim() || '';
-          this.showCarousel = !this.category && !this.tag && !this.year && !this.keyword;
         })
       )
       .subscribe(([options]) => {
@@ -81,6 +80,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
 
   ngOnDestroy() {
     this.optionsListener.unsubscribe();
+    this.postsListener.unsubscribe();
   }
 
   protected updateActivePage(): void {
@@ -100,7 +100,12 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
     const param: PostQueryParam = {
       page: this.page
     };
-    let breadcrumbs: BreadcrumbEntity[] = [];
+    let breadcrumbs: BreadcrumbEntity[] = [{
+      label: `文章`,
+      tooltip: `文章列表`,
+      url: '/post',
+      isHeader: false
+    }];
     if (this.keyword) {
       this.pageIndex = 'search';
       param.keyword = this.keyword;
@@ -111,8 +116,7 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
     if (this.tag) {
       this.pageIndex = 'tag';
       param.tag = this.tag;
-      breadcrumbs = [
-        {
+      breadcrumbs.push({
           label: '标签',
           tooltip: '标签',
           url: '',
@@ -123,49 +127,46 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
           tooltip: this.tag,
           url: '/tag/' + this.tag,
           isHeader: true
-        }
-      ];
+        });
     }
     if (this.year) {
       this.pageIndex = 'archive';
       param.year = this.year;
-      breadcrumbs = [
-        {
-          label: '文章归档',
+      breadcrumbs.push({
+          label: '归档',
           tooltip: '文章归档',
-          url: '/archive',
+          url: '/post/archive',
           isHeader: false
         },
         {
           label: `${this.year}年`,
           tooltip: `${this.year}年`,
-          url: '/archive/' + this.year,
+          url: '/post/archive/' + this.year,
           isHeader: !this.month
-        }
-      ];
+        });
       if (this.month) {
         param.month = this.month;
         breadcrumbs.push({
           label: `${parseInt(this.month, 10)}月`,
           tooltip: `${this.year}年${this.month}月`,
-          url: `/archive/${this.year}/${this.month}`,
+          url: `/post/archive/${this.year}/${this.month}`,
           isHeader: true
         });
       }
     }
-    this.postService.getPosts(param).subscribe((res) => {
+    this.postsListener = this.postService.getPosts(param).subscribe((res) => {
       this.postList = res.postList || {};
       this.page = this.postList.page || 1;
       this.total = this.postList.total || 0;
 
       const siteName: string = this.options['site_name'] || '';
       let description = '';
-      const titles: string[] = [siteName];
+      const titles: string[] = ['文章', siteName];
       const taxonomies: string[] = [];
       const keywords: string[] = (this.options['site_keywords'] || '').split(',');
 
       if (res.breadcrumbs && res.breadcrumbs.length > 0) {
-        breadcrumbs = res.breadcrumbs;
+        breadcrumbs = breadcrumbs.concat(res.breadcrumbs);
         this.pageIndex = res.breadcrumbs[0].slug || '';
       }
       if (this.category && res.breadcrumbs && res.breadcrumbs.length > 0) {
@@ -223,9 +224,6 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
         description += '。';
       }
       description += `${this.options['site_description']}`;
-      if (titles.length === 1) {
-        titles.unshift(this.options['site_slogan']);
-      }
       const metaData: HTMLMetaData = {
         title: titles.join(' - '),
         description,
@@ -234,10 +232,8 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
       };
       this.metaService.updateHTMLMeta(metaData);
 
-      if (breadcrumbs && breadcrumbs.length > 0) {
-        this.showCrumb = true;
-        this.breadcrumbService.updateCrumb(breadcrumbs);
-      }
+      this.showCrumb = true;
+      this.breadcrumbService.updateCrumb(breadcrumbs);
       this.updateActivePage();
 
       this.paginatorData = this.paginator.getPaginator(this.page, this.total);

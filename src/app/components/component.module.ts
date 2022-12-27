@@ -15,6 +15,7 @@ import { HeaderComponent } from './header/header.component';
 import { ImageModule } from './image/image.module';
 import { JdUnionGoodsGroupComponent } from './jd-union-goods-group/jd-union-goods-group.component';
 import { JdUnionGoodsComponent } from './jd-union-goods/jd-union-goods.component';
+import { LayoutComponent } from './layout/layout.component';
 import { MessageModule } from './message/message.module';
 import { ModalComponent } from './modal/modal.component';
 import { PageBarComponent } from './page-bar/page-bar.component';
@@ -34,6 +35,7 @@ import { WallpaperBoxComponent } from './wallpaper-box/wallpaper-box.component';
     HeaderComponent,
     JdUnionGoodsComponent,
     JdUnionGoodsGroupComponent,
+    LayoutComponent,
     ModalComponent,
     PageBarComponent,
     SiderComponent,
@@ -62,6 +64,7 @@ import { WallpaperBoxComponent } from './wallpaper-box/wallpaper-box.component';
     HeaderComponent,
     JdUnionGoodsComponent,
     JdUnionGoodsGroupComponent,
+    LayoutComponent,
     ModalComponent,
     PageBarComponent,
     SiderComponent,

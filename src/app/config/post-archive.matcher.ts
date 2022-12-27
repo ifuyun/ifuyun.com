@@ -1,7 +1,7 @@
 import { UrlSegment } from '@angular/router';
 
 export function archiveUrlMatcher(url: UrlSegment[]) {
-  if (url.length < 2 || url.length > 4 || url[0].path !== 'archive') {
+  if (url[0].path !== 'archive' || url.length < 2 || url.length > 4) {
     return null;
   }
   let page = '';

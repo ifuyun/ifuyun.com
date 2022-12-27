@@ -30,7 +30,7 @@ export class SitemapController {
         priority: 1
       },
       {
-        url: siteUrl + '/archive',
+        url: siteUrl + '/post/archive',
         changefreq: EnumChangefreq.ALWAYS,
         priority: 0.9
       },
@@ -73,7 +73,7 @@ export class SitemapController {
         lastmod: moment(item.wallpaperModified).format()
       }));
     const archives: SitemapItem[] = data.archives.map((item) => ({
-      url: `${siteUrl}/archive/${item.dateText}`,
+      url: `${siteUrl}/post/archive/${item.dateValue}`,
       changefreq: EnumChangefreq.DAILY,
       priority: 0.8
     }));

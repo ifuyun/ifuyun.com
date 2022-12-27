@@ -31,12 +31,12 @@
     <h3 class="widget-title">
       <div><i class='icon icon-archive'></i><span>文章归档</span></div>
       <div class="more">
-        <a [routerLink]="['/archive']" title="查看全部归档"><span>更多</span><i class="icon icon-double-right"></i></a>
+        <a [routerLink]="['/post/archive']" title="查看全部文章归档"><span>更多</span><i class="icon icon-double-right"></i></a>
       </div>
     </h3>
     <ul>
       <li *ngFor="let item of archiveDates">
-        <a [routerLink]="['/archive/'+item.dateText]" title="{{item.dateTitle}}">{{item.dateTitle}}({{item.count}})</a>
+        <a [routerLink]="['/post/archive/'+item.dateValue]" title="{{item.dateLabel}}">{{item.dateLabel}}({{item.count}})</a>
       </li>
     </ul>
   </div>

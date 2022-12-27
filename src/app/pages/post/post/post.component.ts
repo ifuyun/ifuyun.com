@@ -288,7 +288,14 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.pageIndex = (isPage ? post.post.postName : post.breadcrumbs?.[0].slug) || '';
     this.updateActivePage();
     if (!isPage) {
-      this.breadcrumbs = post.breadcrumbs || [];
+      const breadcrumbs = post.breadcrumbs || [];
+      breadcrumbs.unshift({
+        label: `文章`,
+        tooltip: `文章列表`,
+        url: '/post',
+        isHeader: false
+      });
+      this.breadcrumbs = breadcrumbs;
       this.breadcrumbService.updateCrumb(this.breadcrumbs);
     }
     this.showCrumb = !isPage;

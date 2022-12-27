@@ -45,8 +45,8 @@ export interface Post {
 }
 
 export interface PostArchiveDate {
-  dateText: string;
-  dateTitle: string;
+  dateValue: string;
+  dateLabel: string;
   count?: number;
 }
 
@@ -67,4 +67,5 @@ export interface PostQueryParam extends QueryParam {
   tag?: string;
   year?: string;
   month?: string;
+  sticky?: 0 | 1;
 }

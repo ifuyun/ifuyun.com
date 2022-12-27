@@ -1,11 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { PlatformService } from '../../core/platform.service';
+import { UrlService } from '../../core/url.service';
 import { LinkEntity } from '../../interfaces/link.interface';
 import { PostArchiveDate, PostEntity } from '../../pages/post/post.interface';
-import { LinkService } from '../../services/link.service';
 import { PostService } from '../../pages/post/post.service';
-import { UrlService } from '../../core/url.service';
+import { LinkService } from '../../services/link.service';
 
 @Component({
   selector: 'app-sider',
@@ -13,6 +15,7 @@ import { UrlService } from '../../core/url.service';
   styleUrls: ['./sider.component.less']
 })
 export class SiderComponent implements OnInit, OnDestroy {
+  isMobile = false;
   archiveDates: PostArchiveDate[] = [];
   hotPosts: PostEntity[] = [];
   randomPosts: PostEntity[] = [];
@@ -26,11 +29,14 @@ export class SiderComponent implements OnInit, OnDestroy {
   private linksListener!: Subscription;
 
   constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private platform: PlatformService,
     private postService: PostService,
     private urlService: UrlService,
     private linkService: LinkService,
     private router: Router
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.archiveListener = this.postService
@@ -46,18 +52,44 @@ export class SiderComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngAfterViewInit() {
+    if (this.platform.isBrowser) {
+      window.addEventListener('scroll', this.scrollHandler);
+      window.addEventListener('resize', this.scrollHandler);
+    }
+  }
+
   ngOnDestroy() {
     this.archiveListener.unsubscribe();
     this.hotPostsListener.unsubscribe();
     this.randomPostsListener.unsubscribe();
     this.urlListener.unsubscribe();
     this.linksListener.unsubscribe();
+
+    if (this.platform.isBrowser) {
+      window.removeEventListener('scroll', this.scrollHandler);
+      window.removeEventListener('resize', this.scrollHandler);
+    }
   }
 
   search() {
     this.keyword = this.keyword.trim();
     if (this.keyword) {
       this.router.navigate(['/'], { queryParams: { keyword: this.keyword } });
+    }
+  }
+
+  private scrollHandler() {
+    const documentEle = this.document.documentElement;
+    const siderEle = this.document.getElementById('sider') as HTMLElement;
+    if (siderEle) {
+      if (documentEle.scrollTop > 0 && documentEle.scrollTop > siderEle.scrollHeight - documentEle.clientHeight) {
+        siderEle.style.position = 'sticky';
+        siderEle.style.top = documentEle.clientHeight - siderEle.scrollHeight - 16 + 'px';
+      } else {
+        siderEle.style.position = 'relative';
+        siderEle.style.top = '';
+      }
     }
   }
 }

@@ -7,6 +7,7 @@ export const SITE_INFO = Object.freeze({
   startYear: 2014
 });
 export const POST_SLUG_PREFIX_BLACKLIST = Object.freeze([
+  'post',
   'category',
   'tag',
   'archive',

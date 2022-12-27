@@ -15,10 +15,10 @@ import { PostService } from '../post.service';
 
 @Component({
   selector: 'app-archive',
-  templateUrl: './archive.component.html',
-  styleUrls: ['./archive.component.less']
+  templateUrl: './post-archive.component.html',
+  styleUrls: ['./post-archive.component.less']
 })
-export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy {
+export class PostArchiveComponent extends PageComponent implements OnInit, OnDestroy {
   isMobile = false;
   pageIndex = 'archive';
   archiveDateList!: PostArchiveDateMap;
@@ -101,9 +101,15 @@ export class ArchiveComponent extends PageComponent implements OnInit, OnDestroy
   private updateBreadcrumb(): void {
     this.breadcrumbs = [
       {
-        label: '文章归档',
+        label: `文章`,
+        tooltip: `文章列表`,
+        url: '/post',
+        isHeader: false
+      },
+      {
+        label: '归档',
         tooltip: '文章归档',
-        url: '/archive',
+        url: '/post/archive',
         isHeader: true
       }
     ];

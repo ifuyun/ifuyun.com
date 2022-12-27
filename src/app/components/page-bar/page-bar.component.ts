@@ -26,7 +26,7 @@ export class PageBarComponent {
   }
 
   getQueryParams(page: number): Params {
-    if (this.isPath) {
+    if (this.isPath || page === 1) {
       return this.param;
     }
     return { ...this.param, page };

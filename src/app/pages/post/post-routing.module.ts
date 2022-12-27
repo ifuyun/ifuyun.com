@@ -5,7 +5,7 @@ import { postArticleUrlMatcher } from '../../config/post-article.matcher';
 import { postListUrlMatcher } from '../../config/post-list.matcher';
 import { postPageUrlMatcher } from '../../config/post-page.matcher';
 import { taxonomyUrlMatcher } from '../../config/post-taxonomy.matcher';
-import { ArchiveComponent } from './archive/archive.component';
+import { PostArchiveComponent } from './post-archive/post-archive.component';
 import { PostListComponent } from './post-list/post-list.component';
 import { PostComponent } from './post/post.component';
 
@@ -27,10 +27,10 @@ const routes: Routes = [
     component: PostListComponent
   },
   {
-    /* archive/:year */
-    /* archive/:year/page-:page */
-    /* archive/:year/:month */
-    /* archive/:year/:month/page-:page */
+    /* post/archive/:year */
+    /* post/archive/:year/page-:page */
+    /* post/archive/:year/:month */
+    /* post/archive/:year/:month/page-:page */
     matcher: archiveUrlMatcher,
     component: PostListComponent
   },
@@ -41,7 +41,7 @@ const routes: Routes = [
   },
   {
     path: 'archive',
-    component: ArchiveComponent
+    component: PostArchiveComponent
   },
   {
     /* :postSlug */
