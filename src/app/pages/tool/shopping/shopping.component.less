@@ -2,6 +2,12 @@
 
 .content-box {
   &-desktop {
+    .promotion {
+      > :not(:last-child) {
+        margin-bottom: @content-margin;
+      }
+    }
+
     .promotion-item {
       .label {
         flex-basis: 80px;
@@ -11,6 +17,12 @@
   }
 
   &-mobile {
+    .promotion {
+      > :not(:last-child) {
+        margin-bottom: @primary-margin;
+      }
+    }
+
     .promotion-item {
       flex-direction: column;
 
@@ -23,10 +35,6 @@
 }
 
 .promotion {
-  > :not(:last-child) {
-    margin-bottom: @content-margin;
-  }
-
   .tip-text {
     margin-bottom: @primary-margin;
     font-weight: bold;

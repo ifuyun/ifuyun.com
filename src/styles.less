@@ -156,15 +156,21 @@ a, a:hover, a:focus {
   border-radius: @border-radius;
   background-color: var(--content-background-color);
   box-shadow: var(--content-box-shadow);
-  padding: @content-margin;
 
   &-desktop {
     margin: @box-shadow-width;
+    padding: @content-margin;
+
+    .border-header {
+      margin: @primary-margin 0;
+    }
   }
 
   &-mobile {
-    .content-header {
-      padding: @m-primary-margin @m-primary-margin 0.4rem;
+    padding: @m-primary-margin;
+
+    .border-header {
+      margin: @m-primary-margin 0;
     }
   }
 
@@ -191,20 +197,19 @@ a, a:hover, a:focus {
     margin-bottom: @primary-margin;
   }
 
-  > h2:first-child {
-    margin-top: 0;
-  }
-
-  > h2:last-child {
-    margin-bottom: 0;
-  }
-
   .border-header {
-    margin: @content-margin 0;
     border-left: @content-h2-border-width solid var(--primary-color);
     padding-left: @content-h2-padding-left;
     line-height: @post-line-height;
     font-size: 15px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 

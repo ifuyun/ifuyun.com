@@ -1,4 +1,4 @@
-<div class="post-list" [class.post-list-desktop]="!isMobile">
+<div class="post-list" [class.post-list-desktop]="!isMobile" [class.post-list-mobile]="isMobile">
   <article *ngFor="let post of postList?.list"
            class="post-item" [class.post-item-desktop]="!isMobile" [class.post-item-mobile]="isMobile">
     <header>

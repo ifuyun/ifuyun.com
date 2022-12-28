@@ -18,7 +18,7 @@
     <a routerLink="/wallpaper" title="壁纸列表"><span>更多</span><i class="icon icon-double-right"></i></a>
   </div>
 </div>
-<div class="post-list" [class.post-list-desktop]="!isMobile">
+<div class="post-list" [class.post-list-desktop]="!isMobile" [class.post-list-mobile]="isMobile">
   <article *ngFor="let wallpaper of wallpapers"
            class="post-item" [class.post-item-desktop]="!isMobile" [class.post-item-mobile]="isMobile">
     <header>

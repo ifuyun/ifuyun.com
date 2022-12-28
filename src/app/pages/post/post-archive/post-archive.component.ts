@@ -87,7 +87,7 @@ export class PostArchiveComponent extends PageComponent implements OnInit, OnDes
   }
 
   private updatePageInfo() {
-    const titles = ['文章归档', this.options['site_name']];
+    const titles = ['归档', '文章', this.options['site_name']];
     const keywords: string[] = (this.options['site_keywords'] || '').split(',');
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),

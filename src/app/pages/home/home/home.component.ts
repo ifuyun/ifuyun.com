@@ -134,8 +134,8 @@ export class HomeComponent extends PageComponent implements OnInit, OnDestroy {
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
-      description: this.options['wallpaper_description'],
-      keywords: this.options['wallpaper_keywords'],
+      description: this.options['site_description'],
+      keywords: this.options['site_keywords'],
       author: this.options['site_author']
     });
   }

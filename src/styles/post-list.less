@@ -3,6 +3,33 @@
 .post-list {
   &-desktop {
     margin: 0 @box-shadow-width;
+
+    .post-item-excerpt {
+      flex-direction: row;
+    }
+
+    .post-item-thumb {
+      margin-right: @primary-margin;
+
+      img {
+        width: 210px;
+      }
+    }
+  }
+
+  &-mobile {
+    .post-item-excerpt {
+      flex-direction: column;
+    }
+
+    .post-item-thumb {
+      margin-bottom: 8px;
+      text-align: center;
+
+      img {
+        max-width: 100%;
+      }
+    }
   }
 
   .post-item {
@@ -187,10 +214,7 @@
     }
 
     &-thumb {
-      margin-right: @primary-margin;
-
       img {
-        width: 210px;
         border-radius: (@border-radius / 2);
       }
     }
