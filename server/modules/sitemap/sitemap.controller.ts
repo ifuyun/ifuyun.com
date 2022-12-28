@@ -1,6 +1,7 @@
 import { Controller, Get, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
+import { uniq } from 'lodash';
 import * as moment from 'moment';
 import { EnumChangefreq, SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
@@ -21,6 +22,11 @@ export class SitemapController {
     const links: SitemapItem[] = [
       {
         url: siteUrl,
+        changefreq: EnumChangefreq.ALWAYS,
+        priority: 1
+      },
+      {
+        url: siteUrl + '/post',
         changefreq: EnumChangefreq.ALWAYS,
         priority: 1
       },
@@ -72,11 +78,18 @@ export class SitemapController {
         priority: 0.9,
         lastmod: moment(item.wallpaperModified).format()
       }));
-    const archives: SitemapItem[] = data.archives.map((item) => ({
+    const postArchivesByMonth: SitemapItem[] = data.archives.map((item) => ({
       url: `${siteUrl}/post/archive/${item.dateValue}`,
       changefreq: EnumChangefreq.DAILY,
       priority: 0.8
     }));
+    const postArchivesByYear: SitemapItem[] = uniq(data.archives.map((item) => item.dateValue.split('/')[0])).map(
+      (item) => ({
+        url: `${siteUrl}/post/archive/${item}`,
+        changefreq: EnumChangefreq.DAILY,
+        priority: 0.8
+      })
+    );
     const tools: SitemapItem[] = TOOL_LINKS.map((item) => ({
       url: siteUrl + item.url,
       changefreq: <EnumChangefreq>item.changefreq,
@@ -89,9 +102,18 @@ export class SitemapController {
     }));
 
     streamToPromise(
-      Readable.from(links.concat(pages, posts, wallpapersCn, wallpapersEn, archives, taxonomies, tools)).pipe(
-        sitemapStream
-      )
+      Readable.from(
+        links.concat(
+          pages,
+          posts,
+          wallpapersCn,
+          wallpapersEn,
+          postArchivesByYear,
+          postArchivesByMonth,
+          taxonomies,
+          tools
+        )
+      ).pipe(sitemapStream)
     ).then((data) => res.header('Content-Type', 'text/xml').send(data.toString()));
   }
 }

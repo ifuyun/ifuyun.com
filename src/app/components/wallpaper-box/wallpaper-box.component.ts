@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleCha
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PlatformService } from '../../core/platform.service';
-import { BING_DOMAIN, DEFAULT_WALLPAPER_RESOLUTION } from '../../pages/wallpaper/wallpaper.constant';
+import { BING_DOMAIN } from '../../pages/wallpaper/wallpaper.constant';
 import { Wallpaper } from '../../pages/wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
 

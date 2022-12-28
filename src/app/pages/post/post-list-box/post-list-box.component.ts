@@ -13,9 +13,7 @@ export class PostListBoxComponent {
 
   isMobile = false;
 
-  constructor(
-    private userAgentService: UserAgentService
-  ) {
+  constructor(private userAgentService: UserAgentService) {
     this.isMobile = this.userAgentService.isMobile();
   }
 }

@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PlatformService } from '../../core/platform.service';
@@ -14,7 +14,7 @@ import { LinkService } from '../../services/link.service';
   templateUrl: './sider.component.html',
   styleUrls: ['./sider.component.less']
 })
-export class SiderComponent implements OnInit, OnDestroy {
+export class SiderComponent implements OnInit, OnDestroy, AfterViewInit {
   isMobile = false;
   archiveDates: PostArchiveDate[] = [];
   hotPosts: PostEntity[] = [];
@@ -35,8 +35,7 @@ export class SiderComponent implements OnInit, OnDestroy {
     private urlService: UrlService,
     private linkService: LinkService,
     private router: Router
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.archiveListener = this.postService

@@ -97,36 +97,40 @@ export class HomeComponent extends PageComponent implements OnInit, OnDestroy {
   }
 
   private fetchPosts() {
-    this.postsListener = this.postService.getPosts({
-      page: 1,
-      sticky: 0
-    }).subscribe((res) => {
-      this.postList = res.postList || {};
-    });
+    this.postsListener = this.postService
+      .getPosts({
+        page: 1,
+        sticky: 0
+      })
+      .subscribe((res) => {
+        this.postList = res.postList || {};
+      });
   }
 
   private fetchWallpapers() {
-    this.wallpapersListener = this.wallpaperService.getWallpapers({
-      page: 1,
-      pageSize: 10,
-      lang: [WallpaperLang.CN, WallpaperLang.EN]
-    }).subscribe((res) => {
-      const urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
-      this.wallpapers = (res.list || []).map((item) => {
-        const wallpaperLocation = !!item.bingIdCn ? item.location || '未知' : item.locationEn || 'Unknown';
-        return {
-          ...item,
-          copyright: item.copyright || item.copyrightEn,
-          location: wallpaperLocation,
-          story: truncateString(filterHtmlTag(item.story || item.storyEn), 140),
-          url: urlPrefix + item.url,
-          thumbUrl: urlPrefix + item.thumbUrl
-        };
+    this.wallpapersListener = this.wallpaperService
+      .getWallpapers({
+        page: 1,
+        pageSize: 10,
+        lang: [WallpaperLang.CN, WallpaperLang.EN]
+      })
+      .subscribe((res) => {
+        const urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
+        this.wallpapers = (res.list || []).map((item) => {
+          const wallpaperLocation = !!item.bingIdCn ? item.location || '未知' : item.locationEn || 'Unknown';
+          return {
+            ...item,
+            copyright: item.copyright || item.copyrightEn,
+            location: wallpaperLocation,
+            story: truncateString(filterHtmlTag(item.story || item.storyEn), 140),
+            url: urlPrefix + item.url,
+            thumbUrl: urlPrefix + item.thumbUrl
+          };
+        });
+        if (this.platform.isBrowser) {
+          this.wallpapers = this.wallpaperService.checkWallpaperLikedStatus(this.wallpapers);
+        }
       });
-      if (this.platform.isBrowser) {
-        this.wallpapers = this.wallpaperService.checkWallpaperLikedStatus(this.wallpapers);
-      }
-    });
   }
 
   private updatePageInfo() {

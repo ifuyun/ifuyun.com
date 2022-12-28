@@ -100,12 +100,14 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
     const param: PostQueryParam = {
       page: this.page
     };
-    let breadcrumbs: BreadcrumbEntity[] = [{
-      label: `文章`,
-      tooltip: `文章列表`,
-      url: '/post',
-      isHeader: false
-    }];
+    let breadcrumbs: BreadcrumbEntity[] = [
+      {
+        label: `文章`,
+        tooltip: `文章列表`,
+        url: '/post',
+        isHeader: false
+      }
+    ];
     if (this.keyword) {
       this.pageIndex = 'search';
       param.keyword = this.keyword;
@@ -116,7 +118,8 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
     if (this.tag) {
       this.pageIndex = 'tag';
       param.tag = this.tag;
-      breadcrumbs.push({
+      breadcrumbs.push(
+        {
           label: '标签',
           tooltip: '标签',
           url: '',
@@ -127,12 +130,14 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
           tooltip: this.tag,
           url: '/tag/' + this.tag,
           isHeader: true
-        });
+        }
+      );
     }
     if (this.year) {
       this.pageIndex = 'archive';
       param.year = this.year;
-      breadcrumbs.push({
+      breadcrumbs.push(
+        {
           label: '归档',
           tooltip: '文章归档',
           url: '/post/archive',
@@ -143,7 +148,8 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
           tooltip: `${this.year}年`,
           url: '/post/archive/' + this.year,
           isHeader: !this.month
-        });
+        }
+      );
       if (this.month) {
         param.month = this.month;
         breadcrumbs.push({
