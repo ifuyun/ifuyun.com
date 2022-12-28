@@ -57,14 +57,14 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     private route: ActivatedRoute,
     private optionService: OptionService,
     private commonService: CommonService,
-    private breadcrumbService: BreadcrumbService,
     private metaService: MetaService,
+    private platform: PlatformService,
+    private userAgentService: UserAgentService,
+    private breadcrumbService: BreadcrumbService,
     private wallpaperService: WallpaperService,
     private paginator: PaginatorService,
-    private platform: PlatformService,
     private voteService: VoteService,
-    private userService: UserService,
-    private userAgentService: UserAgentService
+    private userService: UserService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -182,22 +182,15 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
           thumbUrl: urlPrefix + item.thumbUrl
         };
       });
-      this.initWallpaperStatus(this.wallpapers);
+      if (this.platform.isBrowser) {
+        this.wallpapers = this.wallpaperService.checkWallpaperLikedStatus(this.wallpapers);
+      }
       this.page = res.page || 1;
       this.total = res.total || 0;
       this.paginatorData = this.paginator.getPaginator(this.page, this.total, this.pageSize);
       this.updatePageInfo();
       this.updateBreadcrumb();
     });
-  }
-
-  private initWallpaperStatus(wallpapers: Wallpaper[]) {
-    if (this.platform.isBrowser) {
-      const likedWallpapers = (localStorage.getItem(STORAGE_KEY_LIKED_WALLPAPER) || '').split(',');
-      wallpapers.forEach((item) => {
-        likedWallpapers.includes(item.wallpaperId) && (item.liked = true);
-      });
-    }
   }
 
   private updatePageInfo() {

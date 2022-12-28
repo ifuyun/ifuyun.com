@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiUrl } from '../../config/api-url';
+import { STORAGE_KEY_LIKED_WALLPAPER } from '../../config/common.constant';
 import { ApiService } from '../../core/api.service';
 import { ResultList } from '../../core/common.interface';
 import { HttpResponseEntity } from '../../core/http-response.interface';
@@ -49,5 +50,13 @@ export class WallpaperService {
         lang
       })
       .pipe(map((res) => res?.data || {}));
+  }
+
+  checkWallpaperLikedStatus<T extends Wallpaper[]>(wallpapers: T): T {
+    const likedWallpapers = (localStorage.getItem(STORAGE_KEY_LIKED_WALLPAPER) || '').split(',');
+    return wallpapers.map((item) => ({
+      ...item,
+      liked: likedWallpapers.includes(item.wallpaperId)
+    })) as T;
   }
 }
