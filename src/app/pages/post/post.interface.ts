@@ -1,6 +1,6 @@
 import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
 import { PostType } from '../../config/common.enum';
-import { QueryParam } from '../../core/common.interface';
+import { ArchiveData, QueryParam } from '../../core/common.interface';
 import { TaxonomyEntity } from '../../interfaces/taxonomy.interface';
 import { UserEntity } from '../../interfaces/user.interface';
 import { CommentFlag } from '../../components/comment/comment.enum';
@@ -44,15 +44,9 @@ export interface Post {
   voted: boolean;
 }
 
-export interface PostArchiveDate {
-  dateValue: string;
-  dateLabel: string;
-  count?: number;
-}
-
 export interface PostArchiveDateMap {
   [year: string]: {
-    list: PostArchiveDate[];
+    list: ArchiveData[];
     countByYear: number;
   };
 }

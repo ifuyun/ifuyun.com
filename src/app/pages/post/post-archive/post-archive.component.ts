@@ -20,7 +20,7 @@ import { PostService } from '../post.service';
 })
 export class PostArchiveComponent extends PageComponent implements OnInit, OnDestroy {
   isMobile = false;
-  pageIndex = 'archive';
+  pageIndex = 'postArchive';
   archiveDateList!: PostArchiveDateMap;
   archiveYearList: string[] = [];
 

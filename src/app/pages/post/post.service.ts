@@ -5,15 +5,8 @@ import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interfa
 import { ApiUrl } from '../../config/api-url';
 import { PostType } from '../../config/common.enum';
 import { ApiService } from '../../core/api.service';
-import { ResultList } from '../../core/common.interface';
-import {
-  Post,
-  PostArchiveDate,
-  PostArchiveDateList,
-  PostArchiveDateMap,
-  PostEntity,
-  PostQueryParam
-} from './post.interface';
+import { ArchiveData, ResultList } from '../../core/common.interface';
+import { Post, PostArchiveDateList, PostArchiveDateMap, PostEntity, PostQueryParam } from './post.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -55,7 +48,7 @@ export class PostService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  getPostArchives({ showCount = false, limit = 10 }): Observable<PostArchiveDate[]> {
+  getPostArchives({ showCount = false, limit = 10 }): Observable<ArchiveData[]> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POST_ARCHIVES), {
         postType: PostType.POST,
@@ -65,7 +58,7 @@ export class PostService {
       .pipe(map((res) => res?.data?.archives || []));
   }
 
-  transformArchiveDates(archiveDates: PostArchiveDate[]): PostArchiveDateList {
+  transformArchiveDates(archiveDates: ArchiveData[]): PostArchiveDateList {
     const dateList: PostArchiveDateMap = {};
     (archiveDates || []).forEach((item) => {
       const year = item.dateValue.split('/')[0];

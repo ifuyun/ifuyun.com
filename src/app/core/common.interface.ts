@@ -23,6 +23,12 @@ export interface ResultList<T> {
   total?: number;
 }
 
+export interface ArchiveData {
+  dateValue: string;
+  dateLabel: string;
+  count?: number;
+}
+
 export interface IPLocation {
   IP?: string;
   country?: string;

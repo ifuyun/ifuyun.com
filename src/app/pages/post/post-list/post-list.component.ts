@@ -36,7 +36,6 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
   paginatorData: PaginatorEntity | null = null;
   pageUrl = '';
   pageUrlParam: Params = {};
-  showCrumb = false;
 
   private year = '';
   private month = '';
@@ -101,14 +100,6 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
     const param: PostQueryParam = {
       page: this.page
     };
-    let breadcrumbs: BreadcrumbEntity[] = [
-      {
-        label: `文章`,
-        tooltip: `文章列表`,
-        url: '/post',
-        isHeader: false
-      }
-    ];
     if (this.keyword) {
       this.pageIndex = 'search';
       param.keyword = this.keyword;
@@ -117,8 +108,105 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
       param.category = this.category;
     }
     if (this.tag) {
-      this.pageIndex = 'tag';
       param.tag = this.tag;
+    }
+    if (this.year) {
+      param.year = this.year;
+      if (this.month) {
+        param.month = this.month;
+      }
+    }
+    this.postsListener = this.postService.getPosts(param).subscribe((res) => {
+      this.postList = res.postList || {};
+      this.page = this.postList.page || 1;
+      this.total = this.postList.total || 0;
+
+      res.breadcrumbs = res.breadcrumbs || [];
+      this.updatePageInfo(res.breadcrumbs);
+      this.updateBreadcrumb(res.breadcrumbs);
+
+      this.paginatorData = this.paginator.getPaginator(this.page, this.total);
+      const urlSegments = this.route.snapshot.url.map((url) => url.path);
+      if (urlSegments.length < 1 || urlSegments[0] === 'archive') {
+        urlSegments.unshift('post');
+      }
+      if (this.route.snapshot.paramMap.get('page')) {
+        urlSegments.splice(-1, 1, 'page-');
+      } else {
+        urlSegments.push('page-');
+      }
+      this.pageUrl = `/${urlSegments.join('/')}`;
+      this.pageUrlParam = { ...this.route.snapshot.queryParams };
+    });
+  }
+
+  private updatePageInfo(postBreadcrumbs: BreadcrumbEntity[]) {
+    if (postBreadcrumbs && postBreadcrumbs.length > 0) {
+      this.pageIndex = postBreadcrumbs[0].slug || this.pageIndex;
+    }
+    this.updateActivePage();
+
+    const siteName: string = this.options['site_name'] || '';
+    let description = '';
+    const titles: string[] = ['文章', siteName];
+    const taxonomies: string[] = [];
+    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+
+    if (this.category && postBreadcrumbs.length > 0) {
+      const label = postBreadcrumbs[postBreadcrumbs.length - 1].label;
+      titles.unshift(label);
+      taxonomies.push(label);
+      keywords.unshift(label);
+    }
+    if (this.tag) {
+      titles.unshift(this.tag);
+      taxonomies.push(this.tag);
+      keywords.unshift(this.tag);
+    }
+    description += taxonomies.length > 0 ? `「${taxonomies.join('-')}」` : '';
+    if (this.year) {
+      const label = `${this.year}年${this.month ? this.month + '月' : ''}`;
+      titles.unshift(label);
+      description += label;
+    }
+    if (this.keyword) {
+      titles.unshift(this.keyword, '搜索');
+      description += `「${this.keyword}」文章搜索结果`;
+      keywords.unshift(this.keyword);
+    } else {
+      if (description) {
+        description += '文章';
+      }
+    }
+    if (this.page > 1) {
+      titles.unshift(`第${this.page}页`);
+      if (description) {
+        description += `(第${this.page}页)`;
+      }
+    }
+    if (description) {
+      description += '。';
+    }
+    description += `${this.options['site_description']}`;
+
+    this.metaService.updateHTMLMeta({
+      title: titles.join(' - '),
+      description,
+      keywords: uniq(keywords).join(','),
+      author: this.options['site_author']
+    });
+  }
+
+  private updateBreadcrumb(postBreadcrumbs: BreadcrumbEntity[]) {
+    let breadcrumbs: BreadcrumbEntity[] = [
+      {
+        label: `文章`,
+        tooltip: `文章列表`,
+        url: '/post',
+        isHeader: false
+      }
+    ];
+    if (this.tag) {
       breadcrumbs.push(
         {
           label: '标签',
@@ -135,8 +223,6 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
       );
     }
     if (this.year) {
-      this.pageIndex = 'archive';
-      param.year = this.year;
       breadcrumbs.push(
         {
           label: '归档',
@@ -152,7 +238,6 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
         }
       );
       if (this.month) {
-        param.month = this.month;
         breadcrumbs.push({
           label: `${parseInt(this.month, 10)}月`,
           tooltip: `${this.year}年${this.month}月`,
@@ -161,100 +246,35 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
         });
       }
     }
-    this.postsListener = this.postService.getPosts(param).subscribe((res) => {
-      this.postList = res.postList || {};
-      this.page = this.postList.page || 1;
-      this.total = this.postList.total || 0;
-
-      const siteName: string = this.options['site_name'] || '';
-      let description = '';
-      const titles: string[] = ['文章', siteName];
-      const taxonomies: string[] = [];
-      const keywords: string[] = (this.options['site_keywords'] || '').split(',');
-
-      if (res.breadcrumbs && res.breadcrumbs.length > 0) {
-        breadcrumbs = breadcrumbs.concat(res.breadcrumbs);
-        this.pageIndex = res.breadcrumbs[0].slug || '';
-      }
-      if (this.category && res.breadcrumbs && res.breadcrumbs.length > 0) {
-        titles.unshift(res.breadcrumbs[res.breadcrumbs.length - 1].label);
-        taxonomies.push(res.breadcrumbs[res.breadcrumbs.length - 1].label);
-        keywords.unshift(res.breadcrumbs[res.breadcrumbs.length - 1].label);
-      }
-      if (this.tag) {
-        titles.unshift(this.tag);
-        taxonomies.push(this.tag);
-        keywords.unshift(this.tag);
-      }
-      description += taxonomies.length > 0 ? `「${taxonomies.join('-')}」` : '';
-      if (this.year) {
-        const label = `${this.year}年${this.month ? this.month + '月' : ''}`;
-        titles.unshift(label);
-        description += label;
-      }
-      if (this.keyword) {
-        titles.unshift(this.keyword, '搜索');
-        description += `「${this.keyword}」搜索结果`;
-        keywords.unshift(this.keyword);
-        breadcrumbs.push(
-          {
-            label: `搜索`,
-            tooltip: `搜索`,
-            url: '',
-            isHeader: false
-          },
-          {
-            label: this.keyword,
-            tooltip: this.keyword,
-            url: '',
-            isHeader: false
-          }
-        );
-      } else {
-        description += '文章列表';
-      }
-      if (this.page > 1) {
-        titles.unshift(`第${this.page}页`);
-        description += `(第${this.page}页)`;
-        if (breadcrumbs.length > 0) {
-          breadcrumbs.push({
-            label: `第${this.page}页`,
-            tooltip: `第${this.page}页`,
-            url: '',
-            isHeader: false
-          });
+    if (postBreadcrumbs.length > 0) {
+      breadcrumbs = breadcrumbs.concat(postBreadcrumbs);
+    }
+    if (this.keyword) {
+      breadcrumbs.push(
+        {
+          label: `搜索`,
+          tooltip: `搜索`,
+          url: '',
+          isHeader: false
+        },
+        {
+          label: this.keyword,
+          tooltip: this.keyword,
+          url: '',
+          isHeader: false
         }
+      );
+    }
+    if (this.page > 1) {
+      if (breadcrumbs.length > 0) {
+        breadcrumbs.push({
+          label: `第${this.page}页`,
+          tooltip: `第${this.page}页`,
+          url: '',
+          isHeader: false
+        });
       }
-      if (description === '文章列表') {
-        description = '';
-      } else {
-        description += '。';
-      }
-      description += `${this.options['site_description']}`;
-      const metaData: HTMLMetaData = {
-        title: titles.join(' - '),
-        description,
-        keywords: uniq(keywords).join(','),
-        author: this.options['site_author']
-      };
-      this.metaService.updateHTMLMeta(metaData);
-
-      this.showCrumb = true;
-      this.breadcrumbService.updateCrumb(breadcrumbs);
-      this.updateActivePage();
-
-      this.paginatorData = this.paginator.getPaginator(this.page, this.total);
-      const urlSegments = this.route.snapshot.url.map((url) => url.path);
-      if (urlSegments.length < 1 || urlSegments[0] === 'archive') {
-        urlSegments.unshift('post');
-      }
-      if (this.route.snapshot.paramMap.get('page')) {
-        urlSegments.splice(-1, 1, 'page-');
-      } else {
-        urlSegments.push('page-');
-      }
-      this.pageUrl = `/${urlSegments.join('/')}`;
-      this.pageUrlParam = { ...this.route.snapshot.queryParams };
-    });
+    }
+    this.breadcrumbService.updateCrumb(breadcrumbs);
   }
 }

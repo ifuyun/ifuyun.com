@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 import { ApiUrl } from '../../config/api-url';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../config/common.constant';
 import { ApiService } from '../../core/api.service';
-import { ResultList } from '../../core/common.interface';
+import { ArchiveData, ResultList } from '../../core/common.interface';
 import { HttpResponseEntity } from '../../core/http-response.interface';
 import { Wallpaper, WallpaperLang, WallpaperQueryParam } from './wallpaper.interface';
 
@@ -58,5 +58,14 @@ export class WallpaperService {
       ...item,
       liked: likedWallpapers.includes(item.wallpaperId)
     })) as T;
+  }
+
+  getWallpaperArchives({ showCount = false, limit = 10 }): Observable<ArchiveData[]> {
+    return this.apiService
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_WALLPAPER_ARCHIVES), {
+        showCount: showCount ? 1 : 0,
+        limit
+      })
+      .pipe(map((res) => res?.data?.archives || []));
   }
 }

@@ -32,8 +32,11 @@
           <a routerLink="/tool" title="实用工具"><i class="icon icon-tools"></i><span>百宝箱</span></a>
         </li>
         <div class="separator"></div>
-        <li [ngClass]="{'active': activePage === 'archive'}">
-          <a routerLink="/post/archive" title="文章归档"><i class="icon icon-archive"></i><span>文章归档</span></a>
+        <li [ngClass]="{'active': activePage === 'postArchive'}">
+          <a routerLink="/post/archive" title="文章归档"><i class="icon icon-pencil-square"></i><span>文章归档</span></a>
+        </li>
+        <li [ngClass]="{'active': activePage === 'wallpaperArchive'}">
+          <a routerLink="/wallpaper/archive" title="壁纸归档"><i class="icon icon-images"></i><span>壁纸归档</span></a>
         </li>
         <li [ngClass]="{'active': activePage === 'aboutme'}">
           <a routerLink="/aboutme"><i class="icon icon-person-heart"></i><span>关于</span></a>

@@ -3,7 +3,6 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
-import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
@@ -85,7 +84,10 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         this.year = params.get('year')?.trim() || '';
         this.month = params.get('month')?.trim() || '';
         this.keyword = queryParams.get('keyword')?.trim() || '';
-        this.lang = <WallpaperLang>queryParams.get('lang')?.trim() || WallpaperLang.CN;
+        this.lang = <WallpaperLang>queryParams.get('lang')?.trim();
+        if (!this.year) {
+          this.lang = this.lang || WallpaperLang.CN;
+        }
         this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
         this.fetchWallpapers();
       });
@@ -180,13 +182,20 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       }
     }
     this.wallpapersListener = this.wallpaperService.getWallpapers(param).subscribe((res) => {
+      this.page = res.page || 1;
+      this.total = res.total || 0;
+      this.updatePageInfo();
+      this.updateBreadcrumb();
+
       const urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
       this.wallpapers = (res.list || []).map((item) => {
         const wallpaperLocation =
-          this.lang === WallpaperLang.CN ? item.location || '未知' : item.locationEn || 'Unknown';
+          this.lang === WallpaperLang.EN ? item.locationEn || 'Unknown' : item.location || '未知';
+        const copyright =
+          this.lang === WallpaperLang.EN ? item.copyrightEn || item.copyright : item.copyright || item.copyrightEn;
         return {
           ...item,
-          copyright: this.lang === WallpaperLang.CN ? item.copyright : item.copyrightEn,
+          copyright,
           location: wallpaperLocation,
           url: urlPrefix + item.url,
           thumbUrl: urlPrefix + item.thumbUrl
@@ -195,17 +204,12 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       if (this.platform.isBrowser) {
         this.wallpapers = this.wallpaperService.checkWallpaperLikedStatus(this.wallpapers);
       }
-      this.page = res.page || 1;
-      this.total = res.total || 0;
       this.paginatorData = this.paginator.getPaginator(this.page, this.total, this.pageSize);
       const urlSegments = this.route.snapshot.url.map((url) => url.path);
       if (urlSegments.length < 1 || urlSegments[0] === 'archive') {
         urlSegments.unshift('wallpaper');
       }
       this.pageUrl = `/${urlSegments.join('/')}`;
-
-      this.updatePageInfo();
-      this.updateBreadcrumb();
     });
   }
 
@@ -225,15 +229,17 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       description += `「${this.keyword}」高清壁纸搜索结果`;
       keywords.unshift(this.keyword);
     } else {
-      description += '高清壁纸';
+      if (description) {
+        description += '高清壁纸';
+      }
     }
     if (this.page > 1) {
       titles.unshift(`第${this.page}页`);
-      description += `(第${this.page}页)`;
+      if (description) {
+        description += `(第${this.page}页)`;
+      }
     }
-    if (description === '高清壁纸') {
-      description = '';
-    } else {
+    if (description) {
       description += '。';
     }
     description += `${siteName}${this.options['wallpaper_description']}`;
