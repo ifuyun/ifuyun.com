@@ -31,14 +31,15 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
   keyword = '';
   category = '';
   tag = '';
-  year = '';
-  month = '';
   postList: ResultList<Post> = {};
   total = 0;
   paginatorData: PaginatorEntity | null = null;
   pageUrl = '';
   pageUrlParam: Params = {};
   showCrumb = false;
+
+  private year = '';
+  private month = '';
 
   private optionsListener!: Subscription;
   private postsListener!: Subscription;
@@ -244,8 +245,8 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
 
       this.paginatorData = this.paginator.getPaginator(this.page, this.total);
       const urlSegments = this.route.snapshot.url.map((url) => url.path);
-      if (urlSegments.length < 1) {
-        urlSegments.push('post');
+      if (urlSegments.length < 1 || urlSegments[0] === 'archive') {
+        urlSegments.unshift('post');
       }
       if (this.route.snapshot.paramMap.get('page')) {
         urlSegments.splice(-1, 1, 'page-');

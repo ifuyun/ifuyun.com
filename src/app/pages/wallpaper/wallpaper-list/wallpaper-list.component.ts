@@ -39,15 +39,16 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   wallpapers: Wallpaper[] = [];
   total = 0;
   paginatorData: PaginatorEntity | null = null;
-  pageUrl = '/wallpaper';
+  pageUrl = '';
   pageUrlParam: Params = {};
   voteLoadingMap: Record<string, boolean> = {};
+  year = '';
+  month = '';
 
   protected pageIndex = 'wallpaper';
 
   private readonly pageSize = 12;
 
-  private breadcrumbs: BreadcrumbEntity[] = [];
   private commentUser: Guest | null = null;
 
   private optionsListener!: Subscription;
@@ -76,11 +77,13 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     this.optionsListener = this.optionService.options$
       .pipe(
         skipWhile((options) => isEmpty(options)),
-        combineLatestWith(this.route.queryParamMap)
+        combineLatestWith(this.route.paramMap, this.route.queryParamMap)
       )
-      .subscribe(([options, queryParams]) => {
+      .subscribe(([options, params, queryParams]) => {
         this.options = options;
         this.page = Number(queryParams.get('page')) || 1;
+        this.year = params.get('year')?.trim() || '';
+        this.month = params.get('month')?.trim() || '';
         this.keyword = queryParams.get('keyword')?.trim() || '';
         this.lang = <WallpaperLang>queryParams.get('lang')?.trim() || WallpaperLang.CN;
         this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
@@ -170,6 +173,12 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     if (this.keyword) {
       param.keyword = this.keyword;
     }
+    if (this.year) {
+      param.year = this.year;
+      if (this.month) {
+        param.month = this.month;
+      }
+    }
     this.wallpapersListener = this.wallpaperService.getWallpapers(param).subscribe((res) => {
       const urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
       this.wallpapers = (res.list || []).map((item) => {
@@ -189,6 +198,12 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       this.page = res.page || 1;
       this.total = res.total || 0;
       this.paginatorData = this.paginator.getPaginator(this.page, this.total, this.pageSize);
+      const urlSegments = this.route.snapshot.url.map((url) => url.path);
+      if (urlSegments.length < 1 || urlSegments[0] === 'archive') {
+        urlSegments.unshift('wallpaper');
+      }
+      this.pageUrl = `/${urlSegments.join('/')}`;
+
       this.updatePageInfo();
       this.updateBreadcrumb();
     });
@@ -200,6 +215,11 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     const titles = ['高清壁纸', siteName];
     const keywords = (this.options['wallpaper_keywords'] || '').split(',');
 
+    if (this.year) {
+      const label = `${this.year}年${this.month ? this.month + '月' : ''}`;
+      titles.unshift(label);
+      description += label;
+    }
     if (this.keyword) {
       titles.unshift(this.keyword, '搜索');
       description += `「${this.keyword}」高清壁纸搜索结果`;
@@ -227,7 +247,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   }
 
   private updateBreadcrumb(): void {
-    this.breadcrumbs = [
+    const breadcrumbs = [
       {
         label: '壁纸',
         tooltip: '高清壁纸',
@@ -235,14 +255,38 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         isHeader: true
       }
     ];
+    if (this.year) {
+      breadcrumbs.push(
+        {
+          label: '归档',
+          tooltip: '壁纸归档',
+          url: '/post/archive',
+          isHeader: false
+        },
+        {
+          label: `${this.year}年`,
+          tooltip: `${this.year}年`,
+          url: '/wallpaper/archive/' + this.year,
+          isHeader: !this.month
+        }
+      );
+      if (this.month) {
+        breadcrumbs.push({
+          label: `${parseInt(this.month, 10)}月`,
+          tooltip: `${this.year}年${this.month}月`,
+          url: `/wallpaper/archive/${this.year}/${this.month}`,
+          isHeader: true
+        });
+      }
+    }
     if (this.page > 1) {
-      this.breadcrumbs.push({
+      breadcrumbs.push({
         label: `第${this.page}页`,
         tooltip: `第${this.page}页`,
         url: '',
         isHeader: false
       });
     }
-    this.breadcrumbService.updateCrumb(this.breadcrumbs);
+    this.breadcrumbService.updateCrumb(breadcrumbs);
   }
 }

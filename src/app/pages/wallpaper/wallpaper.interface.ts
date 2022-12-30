@@ -13,6 +13,8 @@ export enum WallpaperLang {
 
 export interface WallpaperQueryParam extends QueryParam {
   lang?: WallpaperLang | WallpaperLang[];
+  year?: string;
+  month?: string;
 }
 
 export interface Wallpaper {

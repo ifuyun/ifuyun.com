@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { archiveUrlMatcher } from '../../config/post-archive.matcher';
-import { postArticleUrlMatcher } from '../../config/post-article.matcher';
-import { postListUrlMatcher } from '../../config/post-list.matcher';
-import { postPageUrlMatcher } from '../../config/post-page.matcher';
-import { taxonomyUrlMatcher } from '../../config/post-taxonomy.matcher';
+import { archiveUrlMatcher } from '../../config/matcher/archive.matcher';
+import { postArticleUrlMatcher } from '../../config/matcher/post-article.matcher';
+import { postListUrlMatcher } from '../../config/matcher/post-list.matcher';
+import { postPageUrlMatcher } from '../../config/matcher/post-page.matcher';
+import { taxonomyUrlMatcher } from '../../config/matcher/post-taxonomy.matcher';
 import { PostArchiveComponent } from './post-archive/post-archive.component';
 import { PostListComponent } from './post-list/post-list.component';
 import { PostComponent } from './post/post.component';

@@ -1,7 +1,7 @@
 <app-breadcrumb></app-breadcrumb>
 <div class="content-box" [ngClass]="{'content-box-desktop': !isMobile, 'content-box-mobile': isMobile}">
   <div class="wallpaper" [class.wallpaper-desktop]="!isMobile" [class.wallpaper-mobile]="isMobile">
-    <div class="switcher">
+    <div class="switcher" *ngIf="!year">
       <div>
         <div class="lang" [class.active]="lang === 'cn'">
           <a routerLink="./" [queryParams]="getQueryParams('cn')">中文</a>
