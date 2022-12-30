@@ -7,7 +7,6 @@ import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.inte
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ResultList } from '../../../core/common.interface';
 import { CommonService } from '../../../core/common.service';
-import { HTMLMetaData } from '../../../core/meta.interface';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PaginatorEntity } from '../../../core/paginator.interface';

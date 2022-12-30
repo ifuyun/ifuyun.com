@@ -41,6 +41,11 @@ export class SitemapController {
         priority: 0.9
       },
       {
+        url: siteUrl + '/wallpaper/archive',
+        changefreq: EnumChangefreq.ALWAYS,
+        priority: 0.9
+      },
+      {
         url: siteUrl + TOOL_URL_PREFIX,
         changefreq: EnumChangefreq.WEEKLY,
         priority: 0.9
@@ -78,18 +83,30 @@ export class SitemapController {
         priority: 0.9,
         lastmod: moment(item.wallpaperModified).format()
       }));
-    const postArchivesByMonth: SitemapItem[] = data.archives.map((item) => ({
+    const postArchivesByMonth: SitemapItem[] = data.postArchives.map((item) => ({
       url: `${siteUrl}/post/archive/${item.dateValue}`,
       changefreq: EnumChangefreq.DAILY,
       priority: 0.8
     }));
-    const postArchivesByYear: SitemapItem[] = uniq(data.archives.map((item) => item.dateValue.split('/')[0])).map(
+    const postArchivesByYear: SitemapItem[] = uniq(data.postArchives.map((item) => item.dateValue.split('/')[0])).map(
       (item) => ({
         url: `${siteUrl}/post/archive/${item}`,
         changefreq: EnumChangefreq.DAILY,
         priority: 0.8
       })
     );
+    const wallpaperArchivesByMonth: SitemapItem[] = data.wallpaperArchives.map((item) => ({
+      url: `${siteUrl}/wallpaper/archive/${item.dateValue}`,
+      changefreq: EnumChangefreq.DAILY,
+      priority: 0.8
+    }));
+    const wallpaperArchivesByYear: SitemapItem[] = uniq(
+      data.wallpaperArchives.map((item) => item.dateValue.split('/')[0])
+    ).map((item) => ({
+      url: `${siteUrl}/wallpaper/archive/${item}`,
+      changefreq: EnumChangefreq.DAILY,
+      priority: 0.8
+    }));
     const tools: SitemapItem[] = TOOL_LINKS.map((item) => ({
       url: siteUrl + item.url,
       changefreq: <EnumChangefreq>item.changefreq,
@@ -110,6 +127,8 @@ export class SitemapController {
           wallpapersEn,
           postArchivesByYear,
           postArchivesByMonth,
+          wallpaperArchivesByYear,
+          wallpaperArchivesByMonth,
           taxonomies,
           tools
         )

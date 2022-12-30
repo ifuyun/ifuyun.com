@@ -6,7 +6,8 @@ import { Wallpaper } from '../../../src/app/pages/wallpaper/wallpaper.interface'
 
 export interface SitemapData {
   posts: PostEntity[];
-  archives: ArchiveData[];
+  postArchives: ArchiveData[];
+  wallpaperArchives: ArchiveData[];
   taxonomies: TaxonomyEntity[];
   wallpapers: Wallpaper[];
 }
