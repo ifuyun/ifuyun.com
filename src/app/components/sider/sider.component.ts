@@ -1,9 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { skipWhile, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ArchiveData } from '../../core/common.interface';
-import { CommonService } from '../../core/common.service';
 import { PlatformService } from '../../core/platform.service';
 import { UrlService } from '../../core/url.service';
 import { LinkEntity } from '../../interfaces/link.interface';
@@ -27,7 +26,6 @@ export class SiderComponent implements OnInit, OnDestroy, AfterViewInit {
   friendLinks: LinkEntity[] = [];
   keyword = '';
 
-  private commonListener!: Subscription;
   private postArchivesListener!: Subscription;
   private hotPostsListener!: Subscription;
   private randomPostsListener!: Subscription;
@@ -39,7 +37,6 @@ export class SiderComponent implements OnInit, OnDestroy, AfterViewInit {
     @Inject(DOCUMENT) private document: Document,
     private platform: PlatformService,
     private router: Router,
-    private commonService: CommonService,
     private urlService: UrlService,
     private postService: PostService,
     private linkService: LinkService,
@@ -47,25 +44,14 @@ export class SiderComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.commonListener = this.commonService.pageIndex$
-      .pipe(skipWhile((pageIndex) => !pageIndex))
-      .subscribe((pageIndex) => {
-        this.activePage = pageIndex;
-        this.postArchives = [];
-        this.wallpaperArchives = [];
-        if (!['wallpaper', 'wallpaperArchive'].includes(this.activePage)) {
-          this.postArchivesListener = this.postService
-            .getPostArchives({
-              showCount: true
-            })
-            .subscribe((res) => (this.postArchives = res));
-        }
-        if (['index', 'wallpaper', 'wallpaperArchive'].includes(this.activePage)) {
-          this.wallpaperArchivesListener = this.wallpaperService
-            .getWallpaperArchives({ showCount: true })
-            .subscribe((res) => (this.wallpaperArchives = res));
-        }
-      });
+    this.postArchivesListener = this.postService
+      .getPostArchives({
+        showCount: true
+      })
+      .subscribe((res) => (this.postArchives = res));
+    this.wallpaperArchivesListener = this.wallpaperService
+      .getWallpaperArchives({ showCount: true })
+      .subscribe((res) => (this.wallpaperArchives = res));
     this.hotPostsListener = this.postService.getHotPosts().subscribe((res) => (this.hotPosts = res));
     this.randomPostsListener = this.postService.getRandomPosts().subscribe((res) => (this.randomPosts = res));
     this.urlListener = this.urlService.urlInfo$.subscribe((url) => {
@@ -82,13 +68,12 @@ export class SiderComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this.commonListener.unsubscribe();
     this.postArchivesListener?.unsubscribe();
+    this.wallpaperArchivesListener?.unsubscribe();
     this.hotPostsListener.unsubscribe();
     this.randomPostsListener.unsubscribe();
     this.urlListener.unsubscribe();
     this.linksListener.unsubscribe();
-    this.wallpaperArchivesListener?.unsubscribe();
 
     if (this.platform.isBrowser) {
       window.removeEventListener('scroll', this.scrollHandler);
