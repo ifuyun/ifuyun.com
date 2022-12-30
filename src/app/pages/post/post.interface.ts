@@ -1,9 +1,9 @@
 import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
+import { CommentFlag } from '../../components/comment/comment.enum';
 import { PostType } from '../../config/common.enum';
-import { ArchiveData, QueryParam } from '../../core/common.interface';
+import { QueryParam } from '../../core/common.interface';
 import { TaxonomyEntity } from '../../interfaces/taxonomy.interface';
 import { UserEntity } from '../../interfaces/user.interface';
-import { CommentFlag } from '../../components/comment/comment.enum';
 
 export interface PostEntity {
   postId: string;
@@ -42,18 +42,6 @@ export interface Post {
   breadcrumbs?: BreadcrumbEntity[];
   isFavorite: boolean;
   voted: boolean;
-}
-
-export interface PostArchiveDateMap {
-  [year: string]: {
-    list: ArchiveData[];
-    countByYear: number;
-  };
-}
-
-export interface PostArchiveDateList {
-  dateList: PostArchiveDateMap;
-  yearList: string[];
 }
 
 export interface PostQueryParam extends QueryParam {

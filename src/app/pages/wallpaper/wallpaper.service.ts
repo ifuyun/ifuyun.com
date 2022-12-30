@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 import { ApiUrl } from '../../config/api-url';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../config/common.constant';
 import { ApiService } from '../../core/api.service';
-import { ArchiveData, ResultList } from '../../core/common.interface';
+import { ArchiveData, ArchiveDataMap, ArchiveList, ResultList } from '../../core/common.interface';
 import { HttpResponseEntity } from '../../core/http-response.interface';
 import { Wallpaper, WallpaperLang, WallpaperQueryParam } from './wallpaper.interface';
 
@@ -67,5 +67,23 @@ export class WallpaperService {
         limit
       })
       .pipe(map((res) => res?.data?.archives || []));
+  }
+
+  transformArchives(archiveData: ArchiveData[]): ArchiveList {
+    const dateList: ArchiveDataMap = {};
+    (archiveData || []).forEach((item) => {
+      const year = item.dateValue.split('/')[0];
+      dateList[year] = dateList[year] || {};
+      dateList[year].list = dateList[year].list || [];
+      dateList[year].list.push(item);
+      dateList[year].countByYear = dateList[year].countByYear || 0;
+      dateList[year].countByYear += item.count || 0;
+    });
+    const yearList = Object.keys(dateList).sort((a, b) => (a < b ? 1 : -1));
+
+    return {
+      dateList,
+      yearList
+    };
   }
 }

@@ -1,0 +1,28 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="content-box" [ngClass]="{'content-box-desktop': !isMobile, 'content-box-mobile': isMobile}">
+  <header class="content-header">
+    <h1 class="content-title">
+      <a [routerLink]="['/wallpaper/archive']" title="壁纸归档" rel="bookmark">壁纸归档</a>
+    </h1>
+  </header>
+  <div class="archive-content">
+    <ng-container *ngFor="let year of archiveYearList">
+      <h2 class="border-header">
+        <a [routerLink]="['/wallpaper/archive/' + year]" title="{{year}}年">{{year}}年({{archiveDateList[year].countByYear}})</a>
+      </h2>
+      <ul class="archive-content-list">
+        <li *ngFor="let item of archiveDateList[year].list">
+          <a [routerLink]="['/wallpaper/archive/' + item.dateValue]" title="{{item.dateLabel}}">
+            {{item.dateLabel}}({{item.count}})</a>
+        </li>
+        <ng-container *ngIf="!isMobile">
+          <li *ngIf="archiveDateList[year].list.length % 3 === 1">&nbsp;</li>
+          <li *ngIf="archiveDateList[year].list.length % 3 > 0">&nbsp;</li>
+        </ng-container>
+        <ng-container *ngIf="isMobile">
+          <li *ngIf="archiveDateList[year].list.length % 2 === 1">&nbsp;</li>
+        </ng-container>
+      </ul>
+    </ng-container>
+  </div>
+</div>

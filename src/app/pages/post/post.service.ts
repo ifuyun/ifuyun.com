@@ -5,8 +5,8 @@ import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interfa
 import { ApiUrl } from '../../config/api-url';
 import { PostType } from '../../config/common.enum';
 import { ApiService } from '../../core/api.service';
-import { ArchiveData, ResultList } from '../../core/common.interface';
-import { Post, PostArchiveDateList, PostArchiveDateMap, PostEntity, PostQueryParam } from './post.interface';
+import { ArchiveData, ArchiveDataMap, ArchiveList, ResultList } from '../../core/common.interface';
+import { Post, PostEntity, PostQueryParam } from './post.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -58,9 +58,9 @@ export class PostService {
       .pipe(map((res) => res?.data?.archives || []));
   }
 
-  transformArchiveDates(archiveDates: ArchiveData[]): PostArchiveDateList {
-    const dateList: PostArchiveDateMap = {};
-    (archiveDates || []).forEach((item) => {
+  transformArchives(archiveData: ArchiveData[]): ArchiveList {
+    const dateList: ArchiveDataMap = {};
+    (archiveData || []).forEach((item) => {
       const year = item.dateValue.split('/')[0];
       dateList[year] = dateList[year] || {};
       dateList[year].list = dateList[year].list || [];

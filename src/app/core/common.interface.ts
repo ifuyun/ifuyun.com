@@ -29,6 +29,18 @@ export interface ArchiveData {
   count?: number;
 }
 
+export interface ArchiveDataMap {
+  [year: string]: {
+    list: ArchiveData[];
+    countByYear: number;
+  };
+}
+
+export interface ArchiveList {
+  dateList: ArchiveDataMap;
+  yearList: string[];
+}
+
 export interface IPLocation {
   IP?: string;
   country?: string;

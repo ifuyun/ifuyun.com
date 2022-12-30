@@ -11,16 +11,16 @@ import { PageComponent } from '../../../core/page.component';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { OptionService } from '../../../services/option.service';
-import { PostService } from '../post.service';
+import { WallpaperService } from '../wallpaper.service';
 
 @Component({
-  selector: 'app-post-archive',
-  templateUrl: './post-archive.component.html',
+  selector: 'app-wallpaper-archive',
+  templateUrl: './wallpaper-archive.component.html',
   styleUrls: []
 })
-export class PostArchiveComponent extends PageComponent implements OnInit, OnDestroy {
+export class WallpaperArchiveComponent extends PageComponent implements OnInit, OnDestroy {
   isMobile = false;
-  pageIndex = 'postArchive';
+  pageIndex = 'wallpaperArchive';
   archiveDateList!: ArchiveDataMap;
   archiveYearList: string[] = [];
 
@@ -34,9 +34,9 @@ export class PostArchiveComponent extends PageComponent implements OnInit, OnDes
     private optionService: OptionService,
     private metaService: MetaService,
     private commonService: CommonService,
+    private userAgentService: UserAgentService,
     private breadcrumbService: BreadcrumbService,
-    private postService: PostService,
-    private userAgentService: UserAgentService
+    private wallpaperService: WallpaperService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -74,24 +74,24 @@ export class PostArchiveComponent extends PageComponent implements OnInit, OnDes
   }
 
   private fetchArchiveData() {
-    this.archivesListener = this.postService
-      .getPostArchives({
+    this.archivesListener = this.wallpaperService
+      .getWallpaperArchives({
         showCount: true,
         limit: 0
       })
       .subscribe((res) => {
-        const { dateList, yearList } = this.postService.transformArchives(res);
+        const { dateList, yearList } = this.wallpaperService.transformArchives(res);
         this.archiveDateList = dateList;
         this.archiveYearList = yearList;
       });
   }
 
   private updatePageInfo() {
-    const titles = ['归档', '文章', this.options['site_name']];
+    const titles = ['归档', '壁纸', this.options['site_name']];
     const keywords: string[] = (this.options['site_keywords'] || '').split(',');
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
-      description: `${this.options['site_name']}文章归档。${this.options['site_description']}`,
+      description: `${this.options['site_name']}壁纸归档。${this.options['site_description']}`,
       author: this.options['site_author'],
       keywords: uniq(keywords).join(',')
     };
@@ -101,15 +101,15 @@ export class PostArchiveComponent extends PageComponent implements OnInit, OnDes
   private updateBreadcrumb(): void {
     this.breadcrumbs = [
       {
-        label: `文章`,
-        tooltip: `文章列表`,
-        url: '/post',
+        label: `壁纸`,
+        tooltip: `高清壁纸`,
+        url: '/wallpaper',
         isHeader: false
       },
       {
         label: '归档',
-        tooltip: '文章归档',
-        url: '/post/archive',
+        tooltip: '壁纸归档',
+        url: '/wallpaper/archive',
         isHeader: true
       }
     ];

@@ -53,14 +53,14 @@ export class SiderComponent implements OnInit, OnDestroy, AfterViewInit {
         this.activePage = pageIndex;
         this.postArchives = [];
         this.wallpaperArchives = [];
-        if (this.activePage !== 'wallpaper') {
+        if (!['wallpaper', 'wallpaperArchive'].includes(this.activePage)) {
           this.postArchivesListener = this.postService
             .getPostArchives({
               showCount: true
             })
             .subscribe((res) => (this.postArchives = res));
         }
-        if (['wallpaper', 'index'].includes(this.activePage)) {
+        if (['index', 'wallpaper', 'wallpaperArchive'].includes(this.activePage)) {
           this.wallpaperArchivesListener = this.wallpaperService
             .getWallpaperArchives({ showCount: true })
             .subscribe((res) => (this.wallpaperArchives = res));
