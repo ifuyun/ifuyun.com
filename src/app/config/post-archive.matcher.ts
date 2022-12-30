@@ -6,13 +6,13 @@ export function archiveUrlMatcher(url: UrlSegment[]) {
   }
   let page = '';
   let month = '';
-  if (!/^(19|2\d)\d{2}$/i.test(url[1].path)) {
+  if (!/^(?:19|(2[0-2]))\d{2}$/i.test(url[1].path)) {
     return null;
   }
   if (url[2]) {
     if (/^page-\d+$/i.test(url[2].path)) {
       page = url[2].path.split('-')[1];
-    } else if (/^[1-9]|(0[1-9])|(1[0-2])$/i.test(url[2].path)) {
+    } else if (/^(?:[1-9]|(0[1-9])|(1[0-2]))$/i.test(url[2].path)) {
       if (url[3] && !/^page-\d+$/i.test(url[3].path)) {
         return null;
       }

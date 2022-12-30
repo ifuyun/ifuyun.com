@@ -16,6 +16,10 @@ const routes: Routes = [
     component: PostListComponent
   },
   {
+    path: 'archive',
+    component: PostArchiveComponent
+  },
+  {
     /* post/page-:page */
     matcher: postListUrlMatcher,
     component: PostListComponent
@@ -38,10 +42,6 @@ const routes: Routes = [
     /* post/:postId */
     matcher: postArticleUrlMatcher,
     component: PostComponent
-  },
-  {
-    path: 'archive',
-    component: PostArchiveComponent
   },
   {
     /* :postSlug */
