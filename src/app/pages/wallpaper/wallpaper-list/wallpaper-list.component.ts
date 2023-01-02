@@ -266,7 +266,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         {
           label: '归档',
           tooltip: '壁纸归档',
-          url: '/post/archive',
+          url: '/wallpaper/archive',
           isHeader: false
         },
         {
