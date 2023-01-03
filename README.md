@@ -24,8 +24,8 @@ $ npm i
 $ npm run dev:ssr
 $ npm run serve:ssr
 $ npm run build:ssr
-$ npm run compress
-$ npm run build:ssr:prod
+$ npm run build:gulp
+$ npm run build:prod
 
 # SPA mode
 $ npm run start
