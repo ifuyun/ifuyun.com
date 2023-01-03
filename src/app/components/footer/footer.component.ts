@@ -21,9 +21,9 @@ export class FooterComponent implements OnInit, OnDestroy {
   private optionsListener!: Subscription;
 
   constructor(
-    private optionService: OptionService,
+    private userAgentService: UserAgentService,
     private commonService: CommonService,
-    private userAgentService: UserAgentService
+    private optionService: OptionService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }

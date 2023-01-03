@@ -1,15 +1,16 @@
-import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
-import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { combineLatestWith, skipWhile } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
 import { MessageService } from '../../../components/message/message.service';
 import { ADMIN_URL, LOGIN_URL } from '../../../config/common.constant';
 import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
+import { DestroyService } from '../../../core/destroy.service';
 import { HTMLMetaData } from '../../../core/meta.interface';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
@@ -24,9 +25,10 @@ import { LoginService } from '../login.service';
 @Component({
   selector: 'app-third-login',
   templateUrl: './third-login.component.html',
-  styleUrls: ['./third-login.component.less']
+  styleUrls: ['./third-login.component.less'],
+  providers: [DestroyService]
 })
-export class ThirdLoginComponent extends PageComponent implements OnInit, OnDestroy {
+export class ThirdLoginComponent extends PageComponent implements OnInit {
   isMobile = false;
   loginStatus: 'loading' | 'success' | 'cancel' | 'failure' = 'loading';
   loginURL = '';
@@ -43,21 +45,19 @@ export class ThirdLoginComponent extends PageComponent implements OnInit, OnDest
   private errCode = '';
   private adminUrl = '';
 
-  private paramListener!: Subscription;
-  private loginListener!: Subscription;
-
   constructor(
     @Optional() @Inject(RESPONSE) private response: Response,
     @Optional() @Inject(REQUEST) private request: Request,
     private route: ActivatedRoute,
+    private platform: PlatformService,
     private userAgentService: UserAgentService,
-    private optionService: OptionService,
+    private destroy$: DestroyService,
     private metaService: MetaService,
+    private commonService: CommonService,
+    private optionService: OptionService,
     private userService: UserService,
     private authService: AuthService,
-    private commonService: CommonService,
     private loginService: LoginService,
-    private platform: PlatformService,
     private message: MessageService
   ) {
     super();
@@ -67,8 +67,9 @@ export class ThirdLoginComponent extends PageComponent implements OnInit, OnDest
   ngOnInit(): void {
     this.updatePageOptions();
     this.updateActivePage();
-    this.paramListener = this.route.queryParamMap
+    this.route.queryParamMap
       .pipe(
+        takeUntil(this.destroy$),
         combineLatestWith(this.optionService.options$),
         skipWhile(([, options]) => isEmpty(options)),
         tap(([params, options]) => {
@@ -104,10 +105,6 @@ export class ThirdLoginComponent extends PageComponent implements OnInit, OnDest
       });
   }
 
-  ngOnDestroy(): void {
-    this.paramListener.unsubscribe();
-  }
-
   thirdLogin() {
     if (this.platform.isServer) {
       return;
@@ -124,18 +121,20 @@ export class ThirdLoginComponent extends PageComponent implements OnInit, OnDest
       this.loginService.gotoLogin(this.loginURL);
       return;
     }
-    this.loginListener = this.userService.getThirdUser(this.authCode, this.from).subscribe((res) => {
-      if (res.code === ResponseCode.SUCCESS) {
-        this.loginStatus = 'success';
-        this.authService.setAuth(res.data, { username: '', password: '', rememberMe: false });
-        const redirectUrl = this.referer ? this.options['site_url'] + this.referer : this.adminUrl;
-        location.replace(redirectUrl);
-      } else {
-        this.loginStatus = 'failure';
-        this.message.error(Message.LOGIN_ERROR);
-        this.startCountdown();
-      }
-    });
+    this.userService.getThirdUser(this.authCode, this.from)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res.code === ResponseCode.SUCCESS) {
+          this.loginStatus = 'success';
+          this.authService.setAuth(res.data, { username: '', password: '', rememberMe: false });
+          const redirectUrl = this.referer ? this.options['site_url'] + this.referer : this.adminUrl;
+          location.replace(redirectUrl);
+        } else {
+          this.loginStatus = 'failure';
+          this.message.error(Message.LOGIN_ERROR);
+          this.startCountdown();
+        }
+      });
   }
 
   protected updateActivePage(): void {

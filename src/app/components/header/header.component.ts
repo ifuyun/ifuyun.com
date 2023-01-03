@@ -49,9 +49,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private optionService: OptionService,
-    private commonService: CommonService,
     private userAgentService: UserAgentService,
+    private commonService: CommonService,
+    private optionService: OptionService,
     private userService: UserService,
     private authService: AuthService,
     private imageService: ImageService,

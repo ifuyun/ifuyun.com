@@ -9,7 +9,7 @@ export class BreadcrumbService {
   private crumbSource: BehaviorSubject<BreadcrumbEntity[]> = new BehaviorSubject<BreadcrumbEntity[]>([]);
   public crumb$: Observable<BreadcrumbEntity[]> = this.crumbSource.asObservable();
 
-  updateCrumb(breadcrumbs: BreadcrumbEntity[]) {
+  updateBreadcrumb(breadcrumbs: BreadcrumbEntity[]) {
     this.crumbSource.next(breadcrumbs);
   }
 }

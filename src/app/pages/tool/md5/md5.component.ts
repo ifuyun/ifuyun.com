@@ -1,12 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
-import { BehaviorSubject, Observable, skipWhile, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { BehaviorSubject, Observable, skipWhile } from 'rxjs';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { MessageService } from '../../../components/message/message.service';
 import { CommonService } from '../../../core/common.service';
+import { DestroyService } from '../../../core/destroy.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { UserAgentService } from '../../../core/user-agent.service';
@@ -18,9 +19,10 @@ import { MD5_PAGE_DESCRIPTION, MD5_PAGE_KEYWORDS } from '../tool.constant';
 @Component({
   selector: 'app-md5',
   templateUrl: './md5.component.html',
-  styleUrls: ['./md5.component.less']
+  styleUrls: ['./md5.component.less'],
+  providers: [DestroyService]
 })
-export class Md5Component extends PageComponent implements OnInit, OnDestroy {
+export class Md5Component extends PageComponent implements OnInit {
   readonly maxContentLength = 8000;
 
   isMobile = false;
@@ -32,16 +34,15 @@ export class Md5Component extends PageComponent implements OnInit, OnDestroy {
   protected pageIndex = 'tool';
 
   private breadcrumbs: BreadcrumbEntity[] = [];
-  private optionsListener!: Subscription;
-  private inputListener!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
-    private optionService: OptionService,
+    private userAgentService: UserAgentService,
+    private destroy$: DestroyService,
+    private metaService: MetaService,
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
-    private metaService: MetaService,
-    private userAgentService: UserAgentService,
+    private optionService: OptionService,
     private message: MessageService
   ) {
     super();
@@ -52,18 +53,16 @@ export class Md5Component extends PageComponent implements OnInit, OnDestroy {
     this.updateActivePage();
     this.updatePageOptions();
     this.updateBreadcrumb();
-    this.optionsListener = this.optionService.options$
-      .pipe(skipWhile((options) => isEmpty(options)))
+    this.optionService.options$
+      .pipe(
+        takeUntil(this.destroy$),
+        skipWhile((options) => isEmpty(options))
+      )
       .subscribe((options) => {
         this.options = options;
         this.updatePageInfo();
       });
     this.initInput();
-  }
-
-  ngOnDestroy(): void {
-    this.optionsListener.unsubscribe();
-    this.inputListener?.unsubscribe();
   }
 
   onContentChange(content: string) {
@@ -105,7 +104,7 @@ export class Md5Component extends PageComponent implements OnInit, OnDestroy {
   }
   private initInput() {
     const contentInput$: Observable<string> = this.contentChange$.asObservable().pipe(debounceTime(500));
-    this.inputListener = contentInput$.subscribe(() => {
+    contentInput$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.encryptResult = '';
     });
   }
@@ -140,6 +139,6 @@ export class Md5Component extends PageComponent implements OnInit, OnDestroy {
         isHeader: true
       }
     ];
-    this.breadcrumbService.updateCrumb(this.breadcrumbs);
+    this.breadcrumbService.updateBreadcrumb(this.breadcrumbs);
   }
 }

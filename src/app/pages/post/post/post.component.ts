@@ -14,18 +14,20 @@ import { ActivatedRoute } from '@angular/router';
 import highlight from 'highlight.js';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
-import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
+import { combineLatestWith, skipWhile } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
 import { ImageService } from '../../../components/image/image.service';
 import { MessageService } from '../../../components/message/message.service';
-import { VoteType, VoteValue } from '../../../config/common.enum';
 import { STORAGE_KEY_VOTED_POSTS } from '../../../config/common.constant';
+import { VoteType, VoteValue } from '../../../config/common.enum';
 import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
+import { DestroyService } from '../../../core/destroy.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
@@ -46,7 +48,8 @@ import { VoteService } from '../vote.service';
   encapsulation: ViewEncapsulation.None,
   selector: 'app-post',
   templateUrl: './post.component.html',
-  styleUrls: []
+  styleUrls: [],
+  providers: [DestroyService]
 })
 export class PostComponent extends PageComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('postEle', { static: false }) postEle!: ElementRef;
@@ -78,30 +81,24 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private referer = '';
   private commentUser: Guest | null = null;
 
-  private optionsListener!: Subscription;
-  private urlListener!: Subscription;
-  private userListener!: Subscription;
-  private postListener!: Subscription;
-  private prevAndNextListener!: Subscription;
-  private favoriteListener!: Subscription;
-
   constructor(
     @Inject(DOCUMENT) private document: Document,
+    private platform: PlatformService,
+    private userAgentService: UserAgentService,
+    private destroy$: DestroyService,
+    private metaService: MetaService,
+    private commonService: CommonService,
+    private breadcrumbService: BreadcrumbService,
+    private urlService: UrlService,
     private optionService: OptionService,
     private userService: UserService,
-    private breadcrumbService: BreadcrumbService,
-    private commonService: CommonService,
     private postService: PostService,
     private commentService: CommentService,
     private voteService: VoteService,
     private favoriteService: FavoriteService,
-    private metaService: MetaService,
-    private urlService: UrlService,
-    private userAgentService: UserAgentService,
     private imageService: ImageService,
     private route: ActivatedRoute,
     private message: MessageService,
-    private platform: PlatformService,
     private renderer: Renderer2
   ) {
     super();
@@ -110,8 +107,9 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   ngOnInit(): void {
     this.updatePageOptions();
-    this.optionsListener = this.optionService.options$
+    this.optionService.options$
       .pipe(
+        takeUntil(this.destroy$),
         skipWhile((options) => isEmpty(options)),
         combineLatestWith(this.route.params)
       )
@@ -122,13 +120,17 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         this.postSlug ? this.fetchPage() : this.fetchPost();
         this.commentService.updateObjectId(this.postId);
       });
-    this.urlListener = this.urlService.urlInfo$.subscribe((url) => {
-      this.referer = url.previous;
-    });
-    this.userListener = this.userService.loginUser$.subscribe((user) => {
-      this.user = user;
-      this.isLoggedIn = !!this.user.userId;
-    });
+    this.urlService.urlInfo$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((url) => {
+        this.referer = url.previous;
+      });
+    this.userService.loginUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user) => {
+        this.user = user;
+        this.isLoggedIn = !!this.user.userId;
+      });
   }
 
   ngAfterViewInit() {
@@ -151,11 +153,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   ngOnDestroy() {
-    this.optionsListener.unsubscribe();
-    this.urlListener.unsubscribe();
-    this.userListener?.unsubscribe();
-    this.postListener.unsubscribe();
-    this.prevAndNextListener?.unsubscribe();
     this.unlistenImgClick();
   }
 
@@ -172,19 +169,21 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       voteData.user = this.commentUser;
     }
     this.voteLoading = true;
-    this.voteService.saveVote(voteData).subscribe((res) => {
-      this.voteLoading = false;
-      if (res.code === ResponseCode.SUCCESS) {
-        this.post.postLikes = res.data.likes;
-        this.postVoted = true;
+    this.voteService.saveVote(voteData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.voteLoading = false;
+        if (res.code === ResponseCode.SUCCESS) {
+          this.post.postLikes = res.data.likes;
+          this.postVoted = true;
 
-        if (!this.isLoggedIn) {
-          const likedPosts = (localStorage.getItem(STORAGE_KEY_VOTED_POSTS) || '').split(',');
-          likedPosts.push(this.postId);
-          localStorage.setItem(STORAGE_KEY_VOTED_POSTS, uniq(likedPosts.filter((item) => !!item)).join(','));
+          if (!this.isLoggedIn) {
+            const likedPosts = (localStorage.getItem(STORAGE_KEY_VOTED_POSTS) || '').split(',');
+            likedPosts.push(this.postId);
+            localStorage.setItem(STORAGE_KEY_VOTED_POSTS, uniq(likedPosts.filter((item) => !!item)).join(','));
+          }
         }
-      }
-    });
+      });
   }
 
   showReward(src: string) {
@@ -225,13 +224,15 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       return;
     }
     this.favoriteLoading = true;
-    this.favoriteListener = this.favoriteService.addFavorite(this.postId).subscribe((res) => {
-      this.favoriteLoading = false;
-      if (res) {
-        this.message.success(Message.ADD_FAVORITE_SUCCESS);
-        this.isFavorite = true;
-      }
-    });
+    this.favoriteService.addFavorite(this.postId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.favoriteLoading = false;
+        if (res) {
+          this.message.success(Message.ADD_FAVORITE_SUCCESS);
+          this.isFavorite = true;
+        }
+      });
   }
 
   protected updateActivePage(): void {
@@ -258,23 +259,29 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   private fetchPost() {
-    this.postListener = this.postService.getPostById(this.postId, this.referer).subscribe((post) => {
-      if (post && post.post && post.post.postId) {
-        this.initData(post, false);
-      }
-    });
-    this.prevAndNextListener = this.postService.getPostsOfPrevAndNext(this.postId).subscribe((res) => {
-      this.prevPost = res.prevPost;
-      this.nextPost = res.nextPost;
-    });
+    this.postService.getPostById(this.postId, this.referer)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((post) => {
+        if (post && post.post && post.post.postId) {
+          this.initData(post, false);
+        }
+      });
+    this.postService.getPostsOfPrevAndNext(this.postId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.prevPost = res.prevPost;
+        this.nextPost = res.nextPost;
+      });
   }
 
   private fetchPage() {
-    this.postListener = this.postService.getPostBySlug(this.postSlug).subscribe((post) => {
-      if (post && post.post && post.post.postId) {
-        this.initData(post, true);
-      }
-    });
+    this.postService.getPostBySlug(this.postSlug)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((post) => {
+        if (post && post.post && post.post.postId) {
+          this.initData(post, true);
+        }
+      });
   }
 
   private initData(post: Post, isPage: boolean) {
@@ -296,7 +303,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         url: '/post',
         isHeader: false
       });
-      this.breadcrumbService.updateCrumb(this.breadcrumbs);
+      this.breadcrumbService.updateBreadcrumb(this.breadcrumbs);
     }
     this.showCrumb = !isPage;
     this.isPage = isPage;

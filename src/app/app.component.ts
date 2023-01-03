@@ -30,14 +30,14 @@ export class AppComponent implements OnInit {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private router: Router,
+    private platform: PlatformService,
+    private userAgentService: UserAgentService,
+    private commonService: CommonService,
     private urlService: UrlService,
     private optionService: OptionService,
-    private commonService: CommonService,
     private userService: UserService,
     private taxonomyService: TaxonomyService,
     private logService: LogService,
-    private platform: PlatformService,
-    private userAgentService: UserAgentService,
     private scroller: ViewportScroller
   ) {
     this.isMobile = this.userAgentService.isMobile();

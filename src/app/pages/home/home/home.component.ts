@@ -1,12 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty } from 'lodash';
-import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { combineLatestWith, skipWhile } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ResultList } from '../../../core/common.interface';
 import { CommonService } from '../../../core/common.service';
+import { DestroyService } from '../../../core/destroy.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PaginatorService } from '../../../core/paginator.service';
@@ -24,9 +25,10 @@ import { WallpaperService } from '../../wallpaper/wallpaper.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.less']
+  styleUrls: ['./home.component.less'],
+  providers: [DestroyService]
 })
-export class HomeComponent extends PageComponent implements OnInit, OnDestroy {
+export class HomeComponent extends PageComponent implements OnInit {
   isMobile = false;
   pageIndex = 'index';
   options: OptionEntity = {};
@@ -34,18 +36,15 @@ export class HomeComponent extends PageComponent implements OnInit, OnDestroy {
   postList: ResultList<Post> = {};
   wallpapers: Wallpaper[] = [];
 
-  private optionsListener!: Subscription;
-  private postsListener!: Subscription;
-  private wallpapersListener!: Subscription;
-
   constructor(
     private route: ActivatedRoute,
-    private optionService: OptionService,
-    private commonService: CommonService,
-    private metaService: MetaService,
     private platform: PlatformService,
     private userAgentService: UserAgentService,
+    private destroy$: DestroyService,
+    private metaService: MetaService,
+    private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
+    private optionService: OptionService,
     private postService: PostService,
     private paginator: PaginatorService,
     private wallpaperService: WallpaperService
@@ -57,8 +56,9 @@ export class HomeComponent extends PageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.updatePageOptions();
     this.updateActivePage();
-    this.optionsListener = this.optionService.options$
+    this.optionService.options$
       .pipe(
+        takeUntil(this.destroy$),
         skipWhile((options) => isEmpty(options)),
         combineLatestWith(this.route.queryParamMap),
         tap(([, queryParams]) => {
@@ -71,12 +71,6 @@ export class HomeComponent extends PageComponent implements OnInit, OnDestroy {
         this.fetchPosts();
         this.fetchWallpapers();
       });
-  }
-
-  ngOnDestroy() {
-    this.optionsListener.unsubscribe();
-    this.postsListener.unsubscribe();
-    this.wallpapersListener.unsubscribe();
   }
 
   getWallpaperLangParams(wallpaper: Wallpaper): Params {
@@ -97,23 +91,25 @@ export class HomeComponent extends PageComponent implements OnInit, OnDestroy {
   }
 
   private fetchPosts() {
-    this.postsListener = this.postService
+    this.postService
       .getPosts({
         page: 1,
         sticky: 0
       })
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.postList = res.postList || {};
       });
   }
 
   private fetchWallpapers() {
-    this.wallpapersListener = this.wallpaperService
+    this.wallpaperService
       .getWallpapers({
         page: 1,
         pageSize: 10,
         lang: [WallpaperLang.CN, WallpaperLang.EN]
       })
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         const urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
         this.wallpapers = (res.list || []).map((item) => {

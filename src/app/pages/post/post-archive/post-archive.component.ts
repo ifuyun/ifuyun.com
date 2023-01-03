@@ -1,10 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
-import { skipWhile, Subscription } from 'rxjs';
+import { skipWhile } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ArchiveDataMap } from '../../../core/common.interface';
 import { CommonService } from '../../../core/common.service';
+import { DestroyService } from '../../../core/destroy.service';
 import { HTMLMetaData } from '../../../core/meta.interface';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
@@ -16,9 +18,10 @@ import { PostService } from '../post.service';
 @Component({
   selector: 'app-post-archive',
   templateUrl: './post-archive.component.html',
-  styleUrls: []
+  styleUrls: [],
+  providers: [DestroyService]
 })
-export class PostArchiveComponent extends PageComponent implements OnInit, OnDestroy {
+export class PostArchiveComponent extends PageComponent implements OnInit {
   isMobile = false;
   pageIndex = 'postArchive';
   archiveDateList!: ArchiveDataMap;
@@ -27,16 +30,14 @@ export class PostArchiveComponent extends PageComponent implements OnInit, OnDes
   private options: OptionEntity = {};
   private breadcrumbs: BreadcrumbEntity[] = [];
 
-  private optionsListener!: Subscription;
-  private archivesListener!: Subscription;
-
   constructor(
-    private optionService: OptionService,
+    private userAgentService: UserAgentService,
+    private destroy$: DestroyService,
     private metaService: MetaService,
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
-    private postService: PostService,
-    private userAgentService: UserAgentService
+    private optionService: OptionService,
+    private postService: PostService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -46,18 +47,16 @@ export class PostArchiveComponent extends PageComponent implements OnInit, OnDes
     this.updateActivePage();
     this.updatePageOptions();
     this.updateBreadcrumb();
-    this.optionsListener = this.optionService.options$
-      .pipe(skipWhile((options) => isEmpty(options)))
+    this.optionService.options$
+      .pipe(
+        takeUntil(this.destroy$),
+        skipWhile((options) => isEmpty(options))
+      )
       .subscribe((options) => {
         this.options = options;
         this.updatePageInfo();
       });
     this.fetchArchiveData();
-  }
-
-  ngOnDestroy() {
-    this.optionsListener.unsubscribe();
-    this.archivesListener.unsubscribe();
   }
 
   protected updateActivePage(): void {
@@ -74,11 +73,12 @@ export class PostArchiveComponent extends PageComponent implements OnInit, OnDes
   }
 
   private fetchArchiveData() {
-    this.archivesListener = this.postService
+    this.postService
       .getPostArchives({
         showCount: true,
         limit: 0
       })
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         const { dateList, yearList } = this.postService.transformArchives(res);
         this.archiveDateList = dateList;
@@ -113,6 +113,6 @@ export class PostArchiveComponent extends PageComponent implements OnInit, OnDes
         isHeader: true
       }
     ];
-    this.breadcrumbService.updateCrumb(this.breadcrumbs);
+    this.breadcrumbService.updateBreadcrumb(this.breadcrumbs);
   }
 }

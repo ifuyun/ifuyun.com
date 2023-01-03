@@ -7,10 +7,12 @@ import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
-import { skipWhile, Subscription } from 'rxjs';
+import { skipWhile } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { MessageService } from '../../../components/message/message.service';
 import { ADMIN_URL } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
+import { DestroyService } from '../../../core/destroy.service';
 import { HTMLMetaData } from '../../../core/meta.interface';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
@@ -46,7 +48,8 @@ const duration = 500; // ms
         )
       ])
     ])
-  ]
+  ],
+  providers: [DestroyService]
 })
 export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
   isMobile = false;
@@ -69,24 +72,21 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
   private options: OptionEntity = {};
   private referer = '';
 
-  private optionsListener!: Subscription;
-  private paramListener!: Subscription;
-  private wallpaperListener!: Subscription;
-
   constructor(
     @Optional() @Inject(RESPONSE) private response: Response,
     @Optional() @Inject(REQUEST) private request: Request,
     @Inject(DOCUMENT) private document: Document,
-    private fb: FormBuilder,
     private route: ActivatedRoute,
-    private optionService: OptionService,
-    private metaService: MetaService,
-    private cookieService: CookieService,
-    private commonService: CommonService,
-    private authService: AuthService,
-    private message: MessageService,
+    private fb: FormBuilder,
     private platform: PlatformService,
     private userAgentService: UserAgentService,
+    private destroy$: DestroyService,
+    private metaService: MetaService,
+    private commonService: CommonService,
+    private optionService: OptionService,
+    private cookieService: CookieService,
+    private authService: AuthService,
+    private message: MessageService,
     private wallpaperService: WallpaperService
   ) {
     super();
@@ -96,8 +96,11 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.updatePageOptions();
     this.updateActivePage();
-    this.optionsListener = this.optionService.options$
-      .pipe(skipWhile((options) => isEmpty(options)))
+    this.optionService.options$
+      .pipe(
+        takeUntil(this.destroy$),
+        skipWhile((options) => isEmpty(options))
+      )
       .subscribe((options) => {
         this.options = options;
         this.pageLoaded = true;
@@ -114,14 +117,16 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
           }
         }
       });
-    this.paramListener = this.route.queryParamMap.subscribe((queryParams) => {
-      const ref = queryParams.get('ref')?.trim() || '';
-      try {
-        this.referer = decodeURIComponent(ref);
-      } catch (e) {
-        this.referer = ref;
-      }
-    });
+    this.route.queryParamMap
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((queryParams) => {
+        const ref = queryParams.get('ref')?.trim() || '';
+        try {
+          this.referer = decodeURIComponent(ref);
+        } catch (e) {
+          this.referer = ref;
+        }
+      });
     const username = this.cookieService.get('user');
     if (username) {
       this.autoFocus.username = false;
@@ -132,9 +137,6 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.clearStyles();
-    this.optionsListener.unsubscribe();
-    this.paramListener.unsubscribe();
-    this.wallpaperListener.unsubscribe();
   }
 
   login() {
@@ -244,16 +246,18 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
   }
 
   private fetchWallpaper() {
-    this.wallpaperListener = this.wallpaperService.getRandomWallpapers(1).subscribe((res) => {
-      this.wallpaper =
-        res.map((item) => ({
-          ...item,
-          url: `${BING_DOMAIN}${item.url}`
-        }))[0] || null;
-      if (this.wallpaper) {
-        this.initStyles();
-      }
-    });
+    this.wallpaperService.getRandomWallpapers(1)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.wallpaper =
+          res.map((item) => ({
+            ...item,
+            url: `${BING_DOMAIN}${item.url}`
+          }))[0] || null;
+        if (this.wallpaper) {
+          this.initStyles();
+        }
+      });
   }
 
   private getCallbackURL(channel: string) {

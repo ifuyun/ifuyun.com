@@ -38,9 +38,9 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
   private logoutListener!: Subscription;
 
   constructor(
-    private optionService: OptionService,
-    private commonService: CommonService,
     private userAgentService: UserAgentService,
+    private commonService: CommonService,
+    private optionService: OptionService,
     private userService: UserService,
     private authService: AuthService,
     private imageService: ImageService

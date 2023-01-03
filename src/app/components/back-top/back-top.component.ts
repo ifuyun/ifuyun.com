@@ -23,7 +23,7 @@ import {
 import { fromEvent, Subject, Subscription } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { fadeMotion } from '../antd-core/animation';
-import { DestroyService } from '../antd-core/destroy';
+import { DestroyService } from '../../core/destroy.service';
 import { InputNumber } from '../antd-core/util';
 import { ScrollService } from './scroll';
 
@@ -47,7 +47,8 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: t
   animations: [fadeMotion],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false
+  preserveWhitespaces: false,
+  providers: [DestroyService]
 })
 export class BackTopComponent implements OnInit, OnDestroy, OnChanges {
   private scrollListenerDestroy$ = new Subject();

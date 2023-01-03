@@ -1,12 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
-import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { combineLatestWith, skipWhile } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ResultList } from '../../../core/common.interface';
 import { CommonService } from '../../../core/common.service';
+import { DestroyService } from '../../../core/destroy.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PaginatorEntity } from '../../../core/paginator.interface';
@@ -20,9 +21,10 @@ import { PostService } from '../post.service';
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
-  styleUrls: []
+  styleUrls: [],
+  providers: [DestroyService]
 })
-export class PostListComponent extends PageComponent implements OnInit, OnDestroy {
+export class PostListComponent extends PageComponent implements OnInit {
   isMobile = false;
   pageIndex = 'post';
   options: OptionEntity = {};
@@ -39,18 +41,16 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
   private year = '';
   private month = '';
 
-  private optionsListener!: Subscription;
-  private postsListener!: Subscription;
-
   constructor(
     private route: ActivatedRoute,
-    private optionService: OptionService,
-    private commonService: CommonService,
+    private userAgentService: UserAgentService,
+    private destroy$: DestroyService,
     private metaService: MetaService,
+    private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
+    private optionService: OptionService,
     private postService: PostService,
-    private paginator: PaginatorService,
-    private userAgentService: UserAgentService
+    private paginator: PaginatorService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -58,8 +58,9 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
 
   ngOnInit(): void {
     this.updatePageOptions();
-    this.optionsListener = this.optionService.options$
+    this.optionService.options$
       .pipe(
+        takeUntil(this.destroy$),
         skipWhile((options) => isEmpty(options)),
         combineLatestWith(this.route.paramMap, this.route.queryParamMap),
         tap(([, params, queryParams]) => {
@@ -75,11 +76,6 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
         this.options = options;
         this.fetchPosts();
       });
-  }
-
-  ngOnDestroy() {
-    this.optionsListener.unsubscribe();
-    this.postsListener.unsubscribe();
   }
 
   protected updateActivePage(): void {
@@ -115,28 +111,30 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
         param.month = this.month;
       }
     }
-    this.postsListener = this.postService.getPosts(param).subscribe((res) => {
-      this.postList = res.postList || {};
-      this.page = this.postList.page || 1;
-      this.total = this.postList.total || 0;
+    this.postService.getPosts(param)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.postList = res.postList || {};
+        this.page = this.postList.page || 1;
+        this.total = this.postList.total || 0;
 
-      res.breadcrumbs = res.breadcrumbs || [];
-      this.updatePageInfo(res.breadcrumbs);
-      this.updateBreadcrumb(res.breadcrumbs);
+        res.breadcrumbs = res.breadcrumbs || [];
+        this.updatePageInfo(res.breadcrumbs);
+        this.updateBreadcrumb(res.breadcrumbs);
 
-      this.paginatorData = this.paginator.getPaginator(this.page, this.total);
-      const urlSegments = this.route.snapshot.url.map((url) => url.path);
-      if (urlSegments.length < 1 || urlSegments[0] === 'archive') {
-        urlSegments.unshift('post');
-      }
-      if (this.route.snapshot.paramMap.get('page')) {
-        urlSegments.splice(-1, 1, 'page-');
-      } else {
-        urlSegments.push('page-');
-      }
-      this.pageUrl = `/${urlSegments.join('/')}`;
-      this.pageUrlParam = { ...this.route.snapshot.queryParams };
-    });
+        this.paginatorData = this.paginator.getPaginator(this.page, this.total);
+        const urlSegments = this.route.snapshot.url.map((url) => url.path);
+        if (urlSegments.length < 1 || urlSegments[0] === 'archive') {
+          urlSegments.unshift('post');
+        }
+        if (this.route.snapshot.paramMap.get('page')) {
+          urlSegments.splice(-1, 1, 'page-');
+        } else {
+          urlSegments.push('page-');
+        }
+        this.pageUrl = `/${urlSegments.join('/')}`;
+        this.pageUrlParam = { ...this.route.snapshot.queryParams };
+      });
   }
 
   private updatePageInfo(postBreadcrumbs: BreadcrumbEntity[]) {
@@ -274,6 +272,6 @@ export class PostListComponent extends PageComponent implements OnInit, OnDestro
         });
       }
     }
-    this.breadcrumbService.updateCrumb(breadcrumbs);
+    this.breadcrumbService.updateBreadcrumb(breadcrumbs);
   }
 }

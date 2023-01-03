@@ -1,13 +1,15 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
-import { combineLatestWith, skipWhile, Subscription } from 'rxjs';
+import { combineLatestWith, skipWhile } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
+import { DestroyService } from '../../../core/destroy.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PaginatorEntity } from '../../../core/paginator.interface';
@@ -27,9 +29,10 @@ import { WallpaperService } from '../wallpaper.service';
 @Component({
   selector: 'app-wallpaper-list',
   templateUrl: './wallpaper-list.component.html',
-  styleUrls: ['./wallpaper-list.component.less']
+  styleUrls: ['./wallpaper-list.component.less'],
+  providers: [DestroyService]
 })
-export class WallpaperListComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy {
+export class WallpaperListComponent extends PageComponent implements OnInit, AfterViewInit {
   isMobile = false;
   options: OptionEntity = {};
   page = 1;
@@ -50,17 +53,15 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
 
   private commentUser: Guest | null = null;
 
-  private optionsListener!: Subscription;
-  private wallpapersListener!: Subscription;
-
   constructor(
     private route: ActivatedRoute,
-    private optionService: OptionService,
-    private commonService: CommonService,
-    private metaService: MetaService,
     private platform: PlatformService,
     private userAgentService: UserAgentService,
+    private destroy$: DestroyService,
+    private metaService: MetaService,
+    private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
+    private optionService: OptionService,
     private wallpaperService: WallpaperService,
     private paginator: PaginatorService,
     private voteService: VoteService,
@@ -73,8 +74,9 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   ngOnInit(): void {
     this.updateActivePage();
     this.updatePageOptions();
-    this.optionsListener = this.optionService.options$
+    this.optionService.options$
       .pipe(
+        takeUntil(this.destroy$),
         skipWhile((options) => isEmpty(options)),
         combineLatestWith(this.route.paramMap, this.route.queryParamMap)
       )
@@ -102,11 +104,6 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     }
   }
 
-  ngOnDestroy(): void {
-    this.optionsListener.unsubscribe();
-    this.wallpapersListener.unsubscribe();
-  }
-
   voteWallpaper(wallpaper: Wallpaper, like = true) {
     const likedWallpapers = (localStorage.getItem(STORAGE_KEY_LIKED_WALLPAPER) || '').split(',');
     if (likedWallpapers.includes(wallpaper.wallpaperId) || this.voteLoadingMap[wallpaper.wallpaperId]) {
@@ -121,17 +118,19 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     if (this.commentUser && this.commentUser.name) {
       voteData.user = this.commentUser;
     }
-    this.voteService.saveVote(voteData).subscribe((res) => {
-      this.voteLoadingMap[wallpaper.wallpaperId] = false;
-      if (res.code === ResponseCode.SUCCESS) {
-        wallpaper.likes = res.data.likes;
-        if (like) {
-          wallpaper.liked = true;
-          likedWallpapers.push(wallpaper.wallpaperId);
-          localStorage.setItem(STORAGE_KEY_LIKED_WALLPAPER, uniq(likedWallpapers.filter((item) => !!item)).join(','));
+    this.voteService.saveVote(voteData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.voteLoadingMap[wallpaper.wallpaperId] = false;
+        if (res.code === ResponseCode.SUCCESS) {
+          wallpaper.likes = res.data.likes;
+          if (like) {
+            wallpaper.liked = true;
+            likedWallpapers.push(wallpaper.wallpaperId);
+            localStorage.setItem(STORAGE_KEY_LIKED_WALLPAPER, uniq(likedWallpapers.filter((item) => !!item)).join(','));
+          }
         }
-      }
-    });
+      });
   }
 
   getQueryParams(lang: string): Params {
@@ -181,36 +180,38 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         param.month = this.month;
       }
     }
-    this.wallpapersListener = this.wallpaperService.getWallpapers(param).subscribe((res) => {
-      this.page = res.page || 1;
-      this.total = res.total || 0;
-      this.updatePageInfo();
-      this.updateBreadcrumb();
+    this.wallpaperService.getWallpapers(param)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.page = res.page || 1;
+        this.total = res.total || 0;
+        this.updatePageInfo();
+        this.updateBreadcrumb();
 
-      const urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
-      this.wallpapers = (res.list || []).map((item) => {
-        const wallpaperLocation =
-          this.lang === WallpaperLang.EN ? item.locationEn || 'Unknown' : item.location || '未知';
-        const copyright =
-          this.lang === WallpaperLang.EN ? item.copyrightEn || item.copyright : item.copyright || item.copyrightEn;
-        return {
-          ...item,
-          copyright,
-          location: wallpaperLocation,
-          url: urlPrefix + item.url,
-          thumbUrl: urlPrefix + item.thumbUrl
-        };
+        const urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
+        this.wallpapers = (res.list || []).map((item) => {
+          const wallpaperLocation =
+            this.lang === WallpaperLang.EN ? item.locationEn || 'Unknown' : item.location || '未知';
+          const copyright =
+            this.lang === WallpaperLang.EN ? item.copyrightEn || item.copyright : item.copyright || item.copyrightEn;
+          return {
+            ...item,
+            copyright,
+            location: wallpaperLocation,
+            url: urlPrefix + item.url,
+            thumbUrl: urlPrefix + item.thumbUrl
+          };
+        });
+        if (this.platform.isBrowser) {
+          this.wallpapers = this.wallpaperService.checkWallpaperLikedStatus(this.wallpapers);
+        }
+        this.paginatorData = this.paginator.getPaginator(this.page, this.total, this.pageSize);
+        const urlSegments = this.route.snapshot.url.map((url) => url.path);
+        if (urlSegments.length < 1 || urlSegments[0] === 'archive') {
+          urlSegments.unshift('wallpaper');
+        }
+        this.pageUrl = `/${urlSegments.join('/')}`;
       });
-      if (this.platform.isBrowser) {
-        this.wallpapers = this.wallpaperService.checkWallpaperLikedStatus(this.wallpapers);
-      }
-      this.paginatorData = this.paginator.getPaginator(this.page, this.total, this.pageSize);
-      const urlSegments = this.route.snapshot.url.map((url) => url.path);
-      if (urlSegments.length < 1 || urlSegments[0] === 'archive') {
-        urlSegments.unshift('wallpaper');
-      }
-      this.pageUrl = `/${urlSegments.join('/')}`;
-    });
   }
 
   private updatePageInfo() {
@@ -293,6 +294,6 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         isHeader: false
       });
     }
-    this.breadcrumbService.updateCrumb(breadcrumbs);
+    this.breadcrumbService.updateBreadcrumb(breadcrumbs);
   }
 }

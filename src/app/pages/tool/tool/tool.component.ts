@@ -1,13 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
-import { skipWhile, Subscription } from 'rxjs';
+import { skipWhile } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ImageService } from '../../../components/image/image.service';
 import { MessageService } from '../../../components/message/message.service';
 import { CommonService } from '../../../core/common.service';
+import { DestroyService } from '../../../core/destroy.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { UserAgentService } from '../../../core/user-agent.service';
@@ -20,9 +22,10 @@ import { TOOL_PAGE_DESCRIPTION, TOOL_PAGE_KEYWORDS } from '../tool.constant';
 @Component({
   selector: 'app-tool',
   templateUrl: './tool.component.html',
-  styleUrls: ['./tool.component.less']
+  styleUrls: ['./tool.component.less'],
+  providers: [DestroyService]
 })
-export class ToolComponent extends PageComponent implements OnInit, OnDestroy {
+export class ToolComponent extends PageComponent implements OnInit {
   isMobile = false;
   options: OptionEntity = {};
   favoriteLinks: FavoriteLink[] = [];
@@ -31,16 +34,14 @@ export class ToolComponent extends PageComponent implements OnInit, OnDestroy {
 
   private breadcrumbs: BreadcrumbEntity[] = [];
 
-  private optionsListener!: Subscription;
-  private linksListener!: Subscription;
-
   constructor(
     private route: ActivatedRoute,
-    private optionService: OptionService,
+    private userAgentService: UserAgentService,
+    private destroy$: DestroyService,
+    private metaService: MetaService,
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
-    private metaService: MetaService,
-    private userAgentService: UserAgentService,
+    private optionService: OptionService,
     private imageService: ImageService,
     private message: MessageService,
     private linkService: LinkService
@@ -53,18 +54,16 @@ export class ToolComponent extends PageComponent implements OnInit, OnDestroy {
     this.updateActivePage();
     this.updatePageOptions();
     this.updateBreadcrumb();
-    this.optionsListener = this.optionService.options$
-      .pipe(skipWhile((options) => isEmpty(options)))
+    this.optionService.options$
+      .pipe(
+        takeUntil(this.destroy$),
+        skipWhile((options) => isEmpty(options))
+      )
       .subscribe((options) => {
         this.options = options;
         this.updatePageInfo();
       });
     this.fetchFavoriteLinks();
-  }
-
-  ngOnDestroy(): void {
-    this.optionsListener.unsubscribe();
-    this.linksListener.unsubscribe();
   }
 
   showAlipayRedPacketQrcode() {
@@ -97,9 +96,11 @@ export class ToolComponent extends PageComponent implements OnInit, OnDestroy {
   }
 
   private fetchFavoriteLinks() {
-    this.linksListener = this.linkService.getFavoriteLinks().subscribe((res) => {
-      this.favoriteLinks = res.filter((item) => item.taxonomySlug !== 'favorite-links');
-    });
+    this.linkService.getFavoriteLinks()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.favoriteLinks = res.filter((item) => item.taxonomySlug !== 'favorite-links');
+      });
   }
 
   private updatePageInfo() {
@@ -126,6 +127,6 @@ export class ToolComponent extends PageComponent implements OnInit, OnDestroy {
         isHeader: true
       }
     ];
-    this.breadcrumbService.updateCrumb(this.breadcrumbs);
+    this.breadcrumbService.updateBreadcrumb(this.breadcrumbs);
   }
 }

@@ -1,30 +1,31 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
-import { skipWhile, Subscription } from 'rxjs';
+import { skipWhile } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { CommonService } from '../../core/common.service';
+import { DestroyService } from '../../core/destroy.service';
+import { MetaService } from '../../core/meta.service';
 import { PageComponent } from '../../core/page.component';
 import { PlatformService } from '../../core/platform.service';
 import { ResponseService } from '../../core/response.service';
 import { OptionEntity } from '../../interfaces/option.interface';
-import { MetaService } from '../../core/meta.service';
 import { OptionService } from '../../services/option.service';
 
 @Component({
   selector: 'app-not-found',
   templateUrl: './not-found.component.html',
-  styleUrls: ['./not-found.component.less']
+  styleUrls: ['./not-found.component.less'],
+  providers: [DestroyService]
 })
-export class NotFoundComponent extends PageComponent implements OnInit, OnDestroy {
+export class NotFoundComponent extends PageComponent implements OnInit {
   options: OptionEntity = {};
-  curYear = new Date().getFullYear();
 
   protected pageIndex = '404';
 
-  private optionsListener!: Subscription;
-
   constructor(
     private platform: PlatformService,
+    private destroy$: DestroyService,
     private metaService: MetaService,
     private commonService: CommonService,
     private optionService: OptionService,
@@ -39,21 +40,20 @@ export class NotFoundComponent extends PageComponent implements OnInit, OnDestro
     }
     this.updatePageOptions();
     this.updateActivePage();
-    this.optionsListener = this.optionService.options$
-      .pipe(skipWhile((options) => isEmpty(options)))
+    this.optionService.options$
+      .pipe(
+        takeUntil(this.destroy$),
+        skipWhile((options) => isEmpty(options))
+      )
       .subscribe((options) => {
         this.options = options;
         this.metaService.updateHTMLMeta({
-          title: `404 - ${options?.['site_name']}`,
+          title: `404 - ${options['site_name']}`,
           description: options['site_description'],
-          author: options?.['site_author'],
-          keywords: options?.['site_keywords']
+          author: options['site_author'],
+          keywords: options['site_keywords']
         });
       });
-  }
-
-  ngOnDestroy(): void {
-    this.optionsListener.unsubscribe();
   }
 
   protected updateActivePage(): void {

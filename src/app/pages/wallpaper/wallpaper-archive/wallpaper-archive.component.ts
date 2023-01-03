@@ -1,10 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
-import { skipWhile, Subscription } from 'rxjs';
+import { skipWhile } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ArchiveDataMap } from '../../../core/common.interface';
 import { CommonService } from '../../../core/common.service';
+import { DestroyService } from '../../../core/destroy.service';
 import { HTMLMetaData } from '../../../core/meta.interface';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
@@ -16,9 +18,10 @@ import { WallpaperService } from '../wallpaper.service';
 @Component({
   selector: 'app-wallpaper-archive',
   templateUrl: './wallpaper-archive.component.html',
-  styleUrls: []
+  styleUrls: [],
+  providers: [DestroyService]
 })
-export class WallpaperArchiveComponent extends PageComponent implements OnInit, OnDestroy {
+export class WallpaperArchiveComponent extends PageComponent implements OnInit {
   isMobile = false;
   pageIndex = 'wallpaperArchive';
   archiveDateList!: ArchiveDataMap;
@@ -27,15 +30,13 @@ export class WallpaperArchiveComponent extends PageComponent implements OnInit, 
   private options: OptionEntity = {};
   private breadcrumbs: BreadcrumbEntity[] = [];
 
-  private optionsListener!: Subscription;
-  private archivesListener!: Subscription;
-
   constructor(
-    private optionService: OptionService,
+    private userAgentService: UserAgentService,
+    private destroy$: DestroyService,
     private metaService: MetaService,
     private commonService: CommonService,
-    private userAgentService: UserAgentService,
     private breadcrumbService: BreadcrumbService,
+    private optionService: OptionService,
     private wallpaperService: WallpaperService
   ) {
     super();
@@ -46,18 +47,16 @@ export class WallpaperArchiveComponent extends PageComponent implements OnInit, 
     this.updateActivePage();
     this.updatePageOptions();
     this.updateBreadcrumb();
-    this.optionsListener = this.optionService.options$
-      .pipe(skipWhile((options) => isEmpty(options)))
+    this.optionService.options$
+      .pipe(
+        takeUntil(this.destroy$),
+        skipWhile((options) => isEmpty(options))
+      )
       .subscribe((options) => {
         this.options = options;
         this.updatePageInfo();
       });
     this.fetchArchiveData();
-  }
-
-  ngOnDestroy() {
-    this.optionsListener.unsubscribe();
-    this.archivesListener.unsubscribe();
   }
 
   protected updateActivePage(): void {
@@ -74,11 +73,12 @@ export class WallpaperArchiveComponent extends PageComponent implements OnInit, 
   }
 
   private fetchArchiveData() {
-    this.archivesListener = this.wallpaperService
+    this.wallpaperService
       .getWallpaperArchives({
         showCount: true,
         limit: 0
       })
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         const { dateList, yearList } = this.wallpaperService.transformArchives(res);
         this.archiveDateList = dateList;
@@ -113,6 +113,6 @@ export class WallpaperArchiveComponent extends PageComponent implements OnInit, 
         isHeader: true
       }
     ];
-    this.breadcrumbService.updateCrumb(this.breadcrumbs);
+    this.breadcrumbService.updateBreadcrumb(this.breadcrumbs);
   }
 }

@@ -19,7 +19,7 @@ export class ToolboxComponent implements OnInit, OnDestroy {
   private darkModeListener!: Subscription;
   private optionsListener!: Subscription;
 
-  constructor(private optionService: OptionService, private commonService: CommonService) {}
+  constructor(private commonService: CommonService, private optionService: OptionService) {}
 
   ngOnInit(): void {
     this.darkModeListener = this.commonService.darkMode$.subscribe((darkMode) => {

@@ -1,12 +1,14 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
-import { skipWhile, Subscription } from 'rxjs';
+import { skipWhile } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { MessageService } from '../../../components/message/message.service';
 import { CommonService } from '../../../core/common.service';
+import { DestroyService } from '../../../core/destroy.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
@@ -20,9 +22,10 @@ import { ShoppingService } from './shopping.service';
 @Component({
   selector: 'app-shopping',
   templateUrl: './shopping.component.html',
-  styleUrls: ['./shopping.component.less']
+  styleUrls: ['./shopping.component.less'],
+  providers: [DestroyService]
 })
-export class ShoppingComponent extends PageComponent implements OnInit, OnDestroy {
+export class ShoppingComponent extends PageComponent implements OnInit {
   @ViewChild('promotionQrcode') promotionQrcode!: ElementRef;
 
   isMobile = false;
@@ -33,20 +36,18 @@ export class ShoppingComponent extends PageComponent implements OnInit, OnDestro
   protected pageIndex = 'tool';
 
   private breadcrumbs: BreadcrumbEntity[] = [];
-  private optionsListener!: Subscription;
-  private paramListener!: Subscription;
-  private promotionListener!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
-    private optionService: OptionService,
+    private platformService: PlatformService,
+    private userAgentService: UserAgentService,
+    private destroy$: DestroyService,
+    private metaService: MetaService,
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
-    private metaService: MetaService,
-    private userAgentService: UserAgentService,
+    private optionService: OptionService,
     private message: MessageService,
-    private shoppingService: ShoppingService,
-    private platformService: PlatformService
+    private shoppingService: ShoppingService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -56,24 +57,23 @@ export class ShoppingComponent extends PageComponent implements OnInit, OnDestro
     this.updateActivePage();
     this.updatePageOptions();
     this.updateBreadcrumb();
-    this.optionsListener = this.optionService.options$
-      .pipe(skipWhile((options) => isEmpty(options)))
+    this.optionService.options$
+      .pipe(
+        takeUntil(this.destroy$),
+        skipWhile((options) => isEmpty(options))
+      )
       .subscribe((options) => {
         this.options = options;
         this.updatePageInfo();
       });
-    this.paramListener = this.route.queryParamMap.subscribe((queryParams) => {
-      this.keyword = queryParams.get('keyword')?.trim() || '';
-      if (this.keyword && this.checkKeyword()) {
-        this.fetchPromotion();
-      }
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.optionsListener.unsubscribe();
-    this.paramListener.unsubscribe();
-    this.promotionListener?.unsubscribe();
+    this.route.queryParamMap
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((queryParams) => {
+        this.keyword = queryParams.get('keyword')?.trim() || '';
+        if (this.keyword && this.checkKeyword()) {
+          this.fetchPromotion();
+        }
+      });
   }
 
   search(e: SubmitEvent) {
@@ -98,15 +98,17 @@ export class ShoppingComponent extends PageComponent implements OnInit, OnDestro
   }
 
   private fetchPromotion() {
-    this.promotionListener = this.shoppingService.getPromotionCommon(this.keyword).subscribe((res) => {
-      const code = Number(res.code);
-      if (code !== 0 && code !== 200) {
-        this.message.error(res.message);
-      } else {
-        this.promotion = res;
-        this.showPromotionQrcode();
-      }
-    });
+    this.shoppingService.getPromotionCommon(this.keyword)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        const code = Number(res.code);
+        if (code !== 0 && code !== 200) {
+          this.message.error(res.message);
+        } else {
+          this.promotion = res;
+          this.showPromotionQrcode();
+        }
+      });
   }
 
   private showPromotionQrcode() {
@@ -168,6 +170,6 @@ export class ShoppingComponent extends PageComponent implements OnInit, OnDestro
         isHeader: true
       }
     ];
-    this.breadcrumbService.updateCrumb(this.breadcrumbs);
+    this.breadcrumbService.updateBreadcrumb(this.breadcrumbs);
   }
 }

@@ -15,7 +15,7 @@ import { fromEvent } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { fadeMotion } from '../antd-core/animation';
-import { DestroyService } from '../antd-core/destroy';
+import { DestroyService } from '../../core/destroy.service';
 import { isNotNil } from '../antd-core/util';
 
 import { FADE_CLASS_NAME_MAP } from './image-config';
