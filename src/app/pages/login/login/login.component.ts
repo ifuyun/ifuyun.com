@@ -7,7 +7,7 @@ import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
-import { skipWhile } from 'rxjs';
+import { combineLatestWith, skipWhile } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MessageService } from '../../../components/message/message.service';
 import { ADMIN_URL } from '../../../config/common.constant';
@@ -99,32 +99,30 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
     this.optionService.options$
       .pipe(
         takeUntil(this.destroy$),
-        skipWhile((options) => isEmpty(options))
+        skipWhile((options) => isEmpty(options)),
+        combineLatestWith(this.route.queryParamMap)
       )
-      .subscribe((options) => {
+      .subscribe(([options, queryParams]) => {
         this.options = options;
         this.pageLoaded = true;
         this.updatePageInfo();
 
-        this.adminUrl = `${this.options['site_url']}${ADMIN_URL}`;
-        const rememberMe = this.cookieService.get('remember');
-        /* 登录状态直接跳转后台首页 */
-        if (rememberMe === '1' && this.authService.isLoggedIn()) {
-          if (this.platform.isBrowser) {
-            location.href = this.adminUrl;
-          } else {
-            this.response.redirect(this.adminUrl);
-          }
-        }
-      });
-    this.route.queryParamMap
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((queryParams) => {
         const ref = queryParams.get('ref')?.trim() || '';
         try {
           this.referer = decodeURIComponent(ref);
         } catch (e) {
           this.referer = ref;
+        }
+
+        this.adminUrl = `${this.options['site_url']}${ADMIN_URL}`;
+        const rememberMe = this.cookieService.get('remember');
+        // 登录状态直接跳转来源页或后台首页
+        if (rememberMe === '1' && this.authService.isLoggedIn()) {
+          if (this.platform.isBrowser) {
+            location.href = this.referer || this.adminUrl;
+          } else {
+            this.response.redirect(this.referer || this.adminUrl);
+          }
         }
       });
     const username = this.cookieService.get('user');
