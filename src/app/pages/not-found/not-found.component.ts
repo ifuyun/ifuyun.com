@@ -1,8 +1,7 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
-import { skipWhile } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { skipWhile, takeUntil } from 'rxjs';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
 import { MetaService } from '../../core/meta.service';

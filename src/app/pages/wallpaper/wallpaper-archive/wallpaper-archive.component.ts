@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
-import { skipWhile } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ArchiveDataMap } from '../../../core/common.interface';

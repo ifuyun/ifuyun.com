@@ -12,8 +12,7 @@ import {
   Optional,
   SimpleChanges
 } from '@angular/core';
-import { fromEvent, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { fromEvent, Subject, takeUntil } from 'rxjs';
 import { InputBoolean } from '../antd-core/util';
 
 import { ImageGroupComponent } from './image-group.component';

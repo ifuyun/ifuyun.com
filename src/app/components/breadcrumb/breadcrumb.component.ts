@@ -1,26 +1,26 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
-import { skipWhile, Subscription } from 'rxjs';
+import { skipWhile, takeUntil } from 'rxjs';
+import { DestroyService } from '../../core/destroy.service';
 import { UserAgentService } from '../../core/user-agent.service';
-import { BreadcrumbEntity } from './breadcrumb.interface';
 import { OptionEntity } from '../../interfaces/option.interface';
-import { BreadcrumbService } from './breadcrumb.service';
 import { OptionService } from '../../services/option.service';
+import { BreadcrumbEntity } from './breadcrumb.interface';
+import { BreadcrumbService } from './breadcrumb.service';
 
 @Component({
   selector: 'app-breadcrumb',
   templateUrl: './breadcrumb.component.html',
-  styleUrls: ['./breadcrumb.component.less']
+  styleUrls: ['./breadcrumb.component.less'],
+  providers: [DestroyService]
 })
-export class BreadcrumbComponent implements OnInit, OnDestroy {
+export class BreadcrumbComponent implements OnInit {
   isMobile = false;
   breadcrumbs: BreadcrumbEntity[] = [];
   options: OptionEntity = {};
 
-  private breadcrumbListener!: Subscription;
-  private optionsListener!: Subscription;
-
   constructor(
+    private destroy$: DestroyService,
     private breadcrumbService: BreadcrumbService,
     private optionService: OptionService,
     private userAgentService: UserAgentService
@@ -29,10 +29,13 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.optionsListener = this.optionService.options$
-      .pipe(skipWhile((options) => isEmpty(options)))
+    this.optionService.options$
+      .pipe(
+        takeUntil(this.destroy$),
+        skipWhile((options) => isEmpty(options))
+      )
       .subscribe((options) => (this.options = options));
-    this.breadcrumbListener = this.breadcrumbService.crumb$.subscribe((breadcrumbs) => {
+    this.breadcrumbService.crumb$.pipe(takeUntil(this.destroy$)).subscribe((breadcrumbs) => {
       this.breadcrumbs = [...breadcrumbs];
       this.breadcrumbs.unshift({
         label: '首页',
@@ -41,10 +44,5 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
         isHeader: false
       });
     });
-  }
-
-  ngOnDestroy() {
-    this.breadcrumbListener.unsubscribe();
-    this.optionsListener.unsubscribe();
   }
 }

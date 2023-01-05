@@ -20,8 +20,7 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { fromEvent, Subject, Subscription } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
+import { debounceTime, fromEvent, Subject, Subscription, takeUntil } from 'rxjs';
 import { fadeMotion } from '../antd-core/animation';
 import { DestroyService } from '../../core/destroy.service';
 import { InputNumber } from '../antd-core/util';

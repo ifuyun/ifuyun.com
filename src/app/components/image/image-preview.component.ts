@@ -11,8 +11,7 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { fromEvent } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { fromEvent, takeUntil } from 'rxjs';
 
 import { fadeMotion } from '../antd-core/animation';
 import { DestroyService } from '../../core/destroy.service';

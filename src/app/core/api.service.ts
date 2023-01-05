@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 // todo: remove from allowedCommonJsDependencies, since @nestjs/ng-universal/tokens is not exist
 import { RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Response } from 'express';
-import { EMPTY, Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, EMPTY, map, Observable, of } from 'rxjs';
 import { MessageService } from '../components/message/message.service';
 import { ApiUrl } from '../config/api-url';
 import { Message } from '../config/message.enum';

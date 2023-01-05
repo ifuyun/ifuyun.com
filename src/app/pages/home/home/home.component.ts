@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty } from 'lodash';
-import { combineLatestWith, skipWhile } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ResultList } from '../../../core/common.interface';

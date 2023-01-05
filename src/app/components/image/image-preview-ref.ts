@@ -1,7 +1,6 @@
 import { ESCAPE, hasModifierKey, LEFT_ARROW, RIGHT_ARROW } from '@angular/cdk/keycodes';
 import { OverlayRef } from '@angular/cdk/overlay';
-import { Subject } from 'rxjs';
-import { filter, take, takeUntil } from 'rxjs/operators';
+import { filter, Subject, take, takeUntil } from 'rxjs';
 
 import { ImagePreviewOptions } from './image-preview-options';
 import { ImagePreviewComponent } from './image-preview.component';

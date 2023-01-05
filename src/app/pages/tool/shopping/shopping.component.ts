@@ -2,8 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
-import { skipWhile } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { MessageService } from '../../../components/message/message.service';
@@ -66,14 +65,12 @@ export class ShoppingComponent extends PageComponent implements OnInit {
         this.options = options;
         this.updatePageInfo();
       });
-    this.route.queryParamMap
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((queryParams) => {
-        this.keyword = queryParams.get('keyword')?.trim() || '';
-        if (this.keyword && this.checkKeyword()) {
-          this.fetchPromotion();
-        }
-      });
+    this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe((queryParams) => {
+      this.keyword = queryParams.get('keyword')?.trim() || '';
+      if (this.keyword && this.checkKeyword()) {
+        this.fetchPromotion();
+      }
+    });
   }
 
   search(e: SubmitEvent) {
@@ -98,7 +95,8 @@ export class ShoppingComponent extends PageComponent implements OnInit {
   }
 
   private fetchPromotion() {
-    this.shoppingService.getPromotionCommon(this.keyword)
+    this.shoppingService
+      .getPromotionCommon(this.keyword)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         const code = Number(res.code);

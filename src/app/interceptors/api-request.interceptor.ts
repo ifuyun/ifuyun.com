@@ -3,8 +3,7 @@ import { Inject, Injectable, Optional } from '@angular/core';
 import { makeStateKey, StateKey, TransferState } from '@angular/platform-browser';
 import { REQUEST } from '@nestjs/ng-universal/dist/tokens';
 import { Request } from 'express';
-import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, of, tap } from 'rxjs';
 import { environment as env } from '../../environments/environment';
 import { PlatformService } from '../core/platform.service';
 

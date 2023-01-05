@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { ApiUrl } from '../config/api-url';
 import { STORAGE_KEY_USER } from '../config/common.constant';
 import { ApiService } from '../core/api.service';

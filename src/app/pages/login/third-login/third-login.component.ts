@@ -3,8 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
-import { combineLatestWith, skipWhile } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { MessageService } from '../../../components/message/message.service';
 import { ADMIN_URL, LOGIN_URL } from '../../../config/common.constant';
 import { Message } from '../../../config/message.enum';
@@ -121,7 +120,8 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
       this.loginService.gotoLogin(this.loginURL);
       return;
     }
-    this.userService.getThirdUser(this.authCode, this.from)
+    this.userService
+      .getThirdUser(this.authCode, this.from)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res.code === ResponseCode.SUCCESS) {

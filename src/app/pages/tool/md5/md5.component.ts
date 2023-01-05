@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
-import { BehaviorSubject, Observable, skipWhile } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, debounceTime, Observable, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { MessageService } from '../../../components/message/message.service';

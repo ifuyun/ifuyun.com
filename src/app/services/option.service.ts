@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { ApiService } from '../core/api.service';
 import { ApiUrl } from '../config/api-url';
 import { CarouselVo, OptionEntity } from '../interfaces/option.interface';

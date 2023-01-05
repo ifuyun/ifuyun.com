@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
-import { skipWhile, Subscription } from 'rxjs';
+import { skipWhile, takeUntil } from 'rxjs';
 import { CommonService } from '../../core/common.service';
+import { DestroyService } from '../../core/destroy.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { OptionService } from '../../services/option.service';
@@ -9,18 +10,18 @@ import { OptionService } from '../../services/option.service';
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.less']
+  styleUrls: ['./footer.component.less'],
+  providers: [DestroyService]
 })
-export class FooterComponent implements OnInit, OnDestroy {
+export class FooterComponent implements OnInit {
   isMobile = false;
   options: OptionEntity = {};
   curYear = new Date().getFullYear();
   showFooter = true;
   showMobileFooter = true;
 
-  private optionsListener!: Subscription;
-
   constructor(
+    private destroy$: DestroyService,
     private userAgentService: UserAgentService,
     private commonService: CommonService,
     private optionService: OptionService
@@ -29,16 +30,15 @@ export class FooterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.optionsListener = this.optionService.options$
-      .pipe(skipWhile((options) => isEmpty(options)))
+    this.optionService.options$
+      .pipe(
+        takeUntil(this.destroy$),
+        skipWhile((options) => isEmpty(options))
+      )
       .subscribe((options) => (this.options = options));
-    this.commonService.pageOptions$.subscribe((options) => {
+    this.commonService.pageOptions$.pipe(takeUntil(this.destroy$)).subscribe((options) => {
       this.showFooter = options.showFooter;
       this.showMobileFooter = options.showMobileFooter;
     });
-  }
-
-  ngOnDestroy(): void {
-    this.optionsListener.unsubscribe();
   }
 }

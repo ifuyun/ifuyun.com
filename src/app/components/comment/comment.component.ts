@@ -1,9 +1,9 @@
 import { DOCUMENT, ViewportScroller } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { cloneDeep, isEmpty, uniq } from 'lodash';
-import { skipWhile, Subscription } from 'rxjs';
+import { skipWhile, takeUntil } from 'rxjs';
 import { ApiUrl } from '../../config/api-url';
 import { VoteType, VoteValue } from '../../config/common.enum';
 import {
@@ -13,6 +13,7 @@ import {
 } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
+import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { format } from '../../helpers/helper';
@@ -30,9 +31,10 @@ import { CommentService } from './comment.service';
 @Component({
   selector: 'i-comment',
   templateUrl: './comment.component.html',
-  styleUrls: ['./comment.component.less']
+  styleUrls: ['./comment.component.less'],
+  providers: [DestroyService]
 })
-export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
+export class CommentComponent implements OnInit, AfterViewInit {
   @Input() objectType: CommentObjectType = CommentObjectType.POST;
 
   @ViewChild('captchaImg') captchaImg!: ElementRef;
@@ -60,15 +62,12 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
   private commentUser: Guest | null = null;
   private readonly headerHeight!: number;
 
-  private optionsListener!: Subscription;
-  private paramListener!: Subscription;
-  private userListener!: Subscription;
-
   commentForm = this.fb.group(this.commentFormConfig);
   replyForm = this.fb.group(this.commentFormConfig);
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
+    private destroy$: DestroyService,
     private userAgentService: UserAgentService,
     private platform: PlatformService,
     private route: ActivatedRoute,
@@ -87,7 +86,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.initOptions();
-    this.paramListener = this.commentService.objectId$.subscribe((objectId) => {
+    this.commentService.objectId$.pipe(takeUntil(this.destroy$)).subscribe((objectId) => {
       this.objectId = objectId;
       this.resetCommentForm(this.commentForm);
       this.resetReplyStatus();
@@ -95,7 +94,7 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
         this.fetchComments();
       }
     });
-    this.userListener = this.userService.loginUser$.subscribe((user) => {
+    this.userService.loginUser$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.user = user;
       this.isLoggedIn = !!this.user.userId;
       if (this.isLoggedIn) {
@@ -117,11 +116,6 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
         !this.isLoggedIn && setTimeout(() => this.initCommentForm(), 0);
       }
     }
-  }
-
-  ngOnDestroy() {
-    this.paramListener.unsubscribe();
-    this.userListener.unsubscribe();
   }
 
   saveComment(form: FormGroup) {
@@ -167,21 +161,24 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
         userId: this.user.userId
       };
       this.saveLoading = true;
-      this.commentService.saveComment(commentDto).subscribe((res) => {
-        this.saveLoading = false;
-        if (res.code === ResponseCode.SUCCESS) {
-          const msg = res.data.status === 'success' ? '评论成功' : '评论成功，审核通过后将显示在页面上';
-          this.message.success(msg);
-          const cachedReplyMode = this.replyMode;
-          this.replyMode = false;
-          this.resetCommentForm(form);
-          this.resetReplyVisible();
-          this.refreshCaptcha();
-          this.fetchComments(() => {
-            !cachedReplyMode && this.scroller.scrollToAnchor('comments');
-          });
-        }
-      });
+      this.commentService
+        .saveComment(commentDto)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          this.saveLoading = false;
+          if (res.code === ResponseCode.SUCCESS) {
+            const msg = res.data.status === 'success' ? '评论成功' : '评论成功，审核通过后将显示在页面上';
+            this.message.success(msg);
+            const cachedReplyMode = this.replyMode;
+            this.replyMode = false;
+            this.resetCommentForm(form);
+            this.resetReplyVisible();
+            this.refreshCaptcha();
+            this.fetchComments(() => {
+              !cachedReplyMode && this.scroller.scrollToAnchor('comments');
+            });
+          }
+        });
     }
   }
 
@@ -201,25 +198,28 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.commentUser && this.commentUser.name) {
       voteData.user = this.commentUser;
     }
-    this.voteService.saveVote(voteData).subscribe((res) => {
-      this.commentVoteLoading[comment.commentId] = false;
-      if (res.code === ResponseCode.SUCCESS) {
-        comment.commentLikes = res.data.likes;
-        comment.commentDislikes = res.data.dislikes;
-        if (like) {
-          comment.liked = true;
-          likedComments.push(comment.commentId);
-          localStorage.setItem(STORAGE_KEY_LIKED_COMMENTS, uniq(likedComments.filter((item) => !!item)).join(','));
-        } else {
-          comment.disliked = true;
-          dislikedComments.push(comment.commentId);
-          localStorage.setItem(
-            STORAGE_KEY_DISLIKED_COMMENTS,
-            uniq(dislikedComments.filter((item) => !!item)).join(',')
-          );
+    this.voteService
+      .saveVote(voteData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.commentVoteLoading[comment.commentId] = false;
+        if (res.code === ResponseCode.SUCCESS) {
+          comment.commentLikes = res.data.likes;
+          comment.commentDislikes = res.data.dislikes;
+          if (like) {
+            comment.liked = true;
+            likedComments.push(comment.commentId);
+            localStorage.setItem(STORAGE_KEY_LIKED_COMMENTS, uniq(likedComments.filter((item) => !!item)).join(','));
+          } else {
+            comment.disliked = true;
+            dislikedComments.push(comment.commentId);
+            localStorage.setItem(
+              STORAGE_KEY_DISLIKED_COMMENTS,
+              uniq(dislikedComments.filter((item) => !!item)).join(',')
+            );
+          }
         }
-      }
-    });
+      });
   }
 
   replyComment(comment: CommentModel, form: FormGroup) {
@@ -258,8 +258,11 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private initOptions() {
-    this.optionsListener = this.optionService.options$
-      .pipe(skipWhile((options) => isEmpty(options)))
+    this.optionService.options$
+      .pipe(
+        takeUntil(this.destroy$),
+        skipWhile((options) => isEmpty(options))
+      )
       .subscribe((options) => {
         this.options = options;
         if (this.options['site_url'] && this.platform.isBrowser) {
@@ -307,17 +310,20 @@ export class CommentComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private fetchComments(cb?: () => void) {
-    this.commentService.getCommentsByObjectId(this.objectId, this.objectType).subscribe((res) => {
-      this.comments = res.list || [];
-      this.comments.forEach((item) => {
-        this.initComment(item);
-        this.initCommentStatus(item.children);
-        item.children = this.generateCommentTree(item.children);
-        item.children.forEach((child) => (child.parent = cloneDeep(item)));
+    this.commentService
+      .getCommentsByObjectId(this.objectId, this.objectType)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.comments = res.list || [];
+        this.comments.forEach((item) => {
+          this.initComment(item);
+          this.initCommentStatus(item.children);
+          item.children = this.generateCommentTree(item.children);
+          item.children.forEach((child) => (child.parent = cloneDeep(item)));
+        });
+        this.initCommentStatus(this.comments);
+        cb && cb();
       });
-      this.initCommentStatus(this.comments);
-      cb && cb();
-    });
   }
 
   private generateCommentTree(comments: Comment[]) {

@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
-import { skipWhile } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ImageService } from '../../../components/image/image.service';
@@ -96,7 +95,8 @@ export class ToolComponent extends PageComponent implements OnInit {
   }
 
   private fetchFavoriteLinks() {
-    this.linkService.getFavoriteLinks()
+    this.linkService
+      .getFavoriteLinks()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.favoriteLinks = res.filter((item) => item.taxonomySlug !== 'favorite-links');

@@ -7,8 +7,7 @@ import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
-import { combineLatestWith, skipWhile } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { MessageService } from '../../../components/message/message.service';
 import { ADMIN_URL } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
@@ -244,7 +243,8 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
   }
 
   private fetchWallpaper() {
-    this.wallpaperService.getRandomWallpapers(1)
+    this.wallpaperService
+      .getRandomWallpapers(1)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.wallpaper =

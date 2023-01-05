@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { CookieService } from 'ngx-cookie-service';
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApiUrl } from '../config/api-url';
 import { ResponseCode } from '../config/response-code.enum';

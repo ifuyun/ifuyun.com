@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
-import { combineLatestWith, skipWhile } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ResultList } from '../../../core/common.interface';
@@ -111,7 +110,8 @@ export class PostListComponent extends PageComponent implements OnInit {
         param.month = this.month;
       }
     }
-    this.postService.getPosts(param)
+    this.postService
+      .getPosts(param)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.postList = res.postList || {};

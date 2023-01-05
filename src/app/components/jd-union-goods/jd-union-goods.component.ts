@@ -1,5 +1,6 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, Input, OnInit } from '@angular/core';
+import { takeUntil } from 'rxjs';
+import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { JdUnionGoodsJingfen, JdUnionGoodsMaterial } from '../../pages/tool/jd-union.interface';
@@ -8,9 +9,10 @@ import { ShoppingService } from '../../pages/tool/shopping/shopping.service';
 @Component({
   selector: 'i-jd-union-goods',
   templateUrl: './jd-union-goods.component.html',
-  styleUrls: ['./jd-union-goods.component.less']
+  styleUrls: ['./jd-union-goods.component.less'],
+  providers: [DestroyService]
 })
-export class JdUnionGoodsComponent implements OnInit, OnDestroy {
+export class JdUnionGoodsComponent implements OnInit {
   @Input() eliteId = 1;
   @Input() page = 1;
   @Input() pageSize = 3;
@@ -36,9 +38,8 @@ export class JdUnionGoodsComponent implements OnInit, OnDestroy {
   isMobile = false;
   goodsList: (JdUnionGoodsMaterial | JdUnionGoodsJingfen)[] = [];
 
-  private goodsListener!: Subscription;
-
   constructor(
+    private destroy$: DestroyService,
     private platform: PlatformService,
     private userAgentService: UserAgentService,
     private shoppingService: ShoppingService
@@ -62,10 +63,6 @@ export class JdUnionGoodsComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.goodsListener?.unsubscribe();
-  }
-
   private fetchGoods() {
     if (this.isJingfen) {
       this.fetchGoodsJingfen();
@@ -75,13 +72,14 @@ export class JdUnionGoodsComponent implements OnInit, OnDestroy {
   }
 
   private fetchGoodsMaterial() {
-    this.goodsListener = this.shoppingService
+    this.shoppingService
       .getGoodsMaterial({
         eliteId: this.eliteId,
         page: this.page,
         pageSize: this.pageSize,
         transfer: this.isMobile ? 0 : 1
       })
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         const code = Number(res.code);
         if (code === 0 || code === 200) {
@@ -97,12 +95,13 @@ export class JdUnionGoodsComponent implements OnInit, OnDestroy {
   }
 
   private fetchGoodsJingfen() {
-    this.goodsListener = this.shoppingService
+    this.shoppingService
       .getGoodsJingfen({
         eliteId: this.eliteId,
         page: this.page,
         pageSize: this.pageSize
       })
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         const code = Number(res.code);
         if (code === 0 || code === 200) {

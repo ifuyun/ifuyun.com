@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, Observable } from 'rxjs';
 import { ApiUrl } from '../../config/api-url';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../config/common.constant';
 import { ApiService } from '../../core/api.service';

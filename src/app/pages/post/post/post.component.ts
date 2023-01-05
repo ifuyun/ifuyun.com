@@ -14,8 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 import highlight from 'highlight.js';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
-import { combineLatestWith, skipWhile } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
@@ -120,17 +119,13 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         this.postSlug ? this.fetchPage() : this.fetchPost();
         this.commentService.updateObjectId(this.postId);
       });
-    this.urlService.urlInfo$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((url) => {
-        this.referer = url.previous;
-      });
-    this.userService.loginUser$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((user) => {
-        this.user = user;
-        this.isLoggedIn = !!this.user.userId;
-      });
+    this.urlService.urlInfo$.pipe(takeUntil(this.destroy$)).subscribe((url) => {
+      this.referer = url.previous;
+    });
+    this.userService.loginUser$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+      this.user = user;
+      this.isLoggedIn = !!this.user.userId;
+    });
   }
 
   ngAfterViewInit() {
@@ -169,7 +164,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       voteData.user = this.commentUser;
     }
     this.voteLoading = true;
-    this.voteService.saveVote(voteData)
+    this.voteService
+      .saveVote(voteData)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.voteLoading = false;
@@ -224,7 +220,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       return;
     }
     this.favoriteLoading = true;
-    this.favoriteService.addFavorite(this.postId)
+    this.favoriteService
+      .addFavorite(this.postId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.favoriteLoading = false;
@@ -259,14 +256,16 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   private fetchPost() {
-    this.postService.getPostById(this.postId, this.referer)
+    this.postService
+      .getPostById(this.postId, this.referer)
       .pipe(takeUntil(this.destroy$))
       .subscribe((post) => {
         if (post && post.post && post.post.postId) {
           this.initData(post, false);
         }
       });
-    this.postService.getPostsOfPrevAndNext(this.postId)
+    this.postService
+      .getPostsOfPrevAndNext(this.postId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.prevPost = res.prevPost;
@@ -275,7 +274,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   private fetchPage() {
-    this.postService.getPostBySlug(this.postSlug)
+    this.postService
+      .getPostBySlug(this.postSlug)
       .pipe(takeUntil(this.destroy$))
       .subscribe((post) => {
         if (post && post.post && post.post.postId) {

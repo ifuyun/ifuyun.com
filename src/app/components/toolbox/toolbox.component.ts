@@ -1,39 +1,38 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
-import { skipWhile, Subscription } from 'rxjs';
+import { skipWhile, takeUntil } from 'rxjs';
 import { Theme } from '../../config/common.enum';
 import { CommonService } from '../../core/common.service';
+import { DestroyService } from '../../core/destroy.service';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { OptionService } from '../../services/option.service';
 
 @Component({
   selector: 'i-toolbox',
   templateUrl: './toolbox.component.html',
-  styleUrls: ['./toolbox.component.less']
+  styleUrls: ['./toolbox.component.less'],
+  providers: [DestroyService]
 })
-export class ToolboxComponent implements OnInit, OnDestroy {
+export class ToolboxComponent implements OnInit {
   options: OptionEntity = {};
   wallpaperVisible = false;
   darkMode = false;
 
-  private darkModeListener!: Subscription;
-  private optionsListener!: Subscription;
-
-  constructor(private commonService: CommonService, private optionService: OptionService) {}
+  constructor(
+    private destroy$: DestroyService,
+    private commonService: CommonService,
+    private optionService: OptionService
+  ) {}
 
   ngOnInit(): void {
-    this.darkModeListener = this.commonService.darkMode$.subscribe((darkMode) => {
+    this.commonService.darkMode$.pipe(takeUntil(this.destroy$)).subscribe((darkMode) => {
       this.darkMode = darkMode;
     });
-    this.optionsListener = this.optionService.options$
+    this.optionService.options$
+      .pipe(takeUntil(this.destroy$))
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => (this.options = options));
     this.darkMode = this.commonService.getTheme() === Theme.Dark;
-  }
-
-  ngOnDestroy(): void {
-    this.darkModeListener.unsubscribe();
-    this.optionsListener.unsubscribe();
   }
 
   openWallpaper() {

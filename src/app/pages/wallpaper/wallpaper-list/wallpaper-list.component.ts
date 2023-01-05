@@ -1,8 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
-import { combineLatestWith, skipWhile } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
@@ -118,7 +117,8 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     if (this.commentUser && this.commentUser.name) {
       voteData.user = this.commentUser;
     }
-    this.voteService.saveVote(voteData)
+    this.voteService
+      .saveVote(voteData)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.voteLoadingMap[wallpaper.wallpaperId] = false;
@@ -180,7 +180,8 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         param.month = this.month;
       }
     }
-    this.wallpaperService.getWallpapers(param)
+    this.wallpaperService
+      .getWallpapers(param)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.page = res.page || 1;

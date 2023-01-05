@@ -2,8 +2,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
-import { combineLatestWith, skipWhile } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
@@ -99,11 +98,9 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         this.fetchWallpaper();
         this.fetchPrevAndNext();
       });
-    this.userService.loginUser$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((user) => {
-        this.isLoggedIn = !!user.userId;
-      });
+    this.userService.loginUser$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+      this.isLoggedIn = !!user.userId;
+    });
   }
 
   ngAfterViewInit() {
@@ -146,7 +143,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     if (this.commentUser && this.commentUser.name) {
       voteData.user = this.commentUser;
     }
-    this.voteService.saveVote(voteData)
+    this.voteService
+      .saveVote(voteData)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.voteLoading = false;
@@ -203,7 +201,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   }
 
   private fetchWallpaper() {
-    this.wallpaperService.getWallpaperById(this.wallpaperId)
+    this.wallpaperService
+      .getWallpaperById(this.wallpaperId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((wallpaper) => {
         if (wallpaper && wallpaper.wallpaperId) {

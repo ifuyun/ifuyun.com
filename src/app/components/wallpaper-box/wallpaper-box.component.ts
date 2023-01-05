@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs';
+import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { BING_DOMAIN } from '../../pages/wallpaper/wallpaper.constant';
 import { Wallpaper } from '../../pages/wallpaper/wallpaper.interface';
@@ -9,9 +10,10 @@ import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
 @Component({
   selector: 'i-wallpaper-box',
   templateUrl: './wallpaper-box.component.html',
-  styleUrls: ['./wallpaper-box.component.less']
+  styleUrls: ['./wallpaper-box.component.less'],
+  providers: [DestroyService]
 })
-export class WallpaperBoxComponent implements OnDestroy, OnChanges {
+export class WallpaperBoxComponent implements OnChanges {
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
 
@@ -21,9 +23,12 @@ export class WallpaperBoxComponent implements OnDestroy, OnChanges {
   activeIndex = 0;
   isBrowser: boolean;
 
-  private wallpaperListener!: Subscription;
-
-  constructor(private wallpaperService: WallpaperService, private platform: PlatformService, private router: Router) {
+  constructor(
+    private destroy$: DestroyService,
+    private wallpaperService: WallpaperService,
+    private platform: PlatformService,
+    private router: Router
+  ) {
     this.isBrowser = platform.isBrowser;
   }
 
@@ -35,10 +40,6 @@ export class WallpaperBoxComponent implements OnDestroy, OnChanges {
     if (this.visible && this.wallpapers.length < 1) {
       this.fetchData();
     }
-  }
-
-  ngOnDestroy() {
-    this.wallpaperListener?.unsubscribe();
   }
 
   changeVisible(visible: boolean) {
@@ -70,20 +71,23 @@ export class WallpaperBoxComponent implements OnDestroy, OnChanges {
 
   private fetchData() {
     this.loading = true;
-    this.wallpaperListener = this.wallpaperService.getRandomWallpapers(8).subscribe((res) => {
-      this.wallpapers = res.map((item) => {
-        const loc = item.location ? '，' + item.location : ', ' + item.locationEn;
-        const description = (item.copyright || item.copyrightEn) + loc + ' (' + item.copyrightAuthor + ')';
-        return {
-          ...item,
-          url: `${BING_DOMAIN}${item.url}`,
-          copyrightLink: `${BING_DOMAIN}${item.copyrightLink}`,
-          description
-        };
+    this.wallpaperService
+      .getRandomWallpapers(8)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.wallpapers = res.map((item) => {
+          const loc = item.location ? '，' + item.location : ', ' + item.locationEn;
+          const description = (item.copyright || item.copyrightEn) + loc + ' (' + item.copyrightAuthor + ')';
+          return {
+            ...item,
+            url: `${BING_DOMAIN}${item.url}`,
+            copyrightLink: `${BING_DOMAIN}${item.copyrightLink}`,
+            description
+          };
+        });
+        this.resetImage();
+        this.loading = false;
       });
-      this.resetImage();
-      this.loading = false;
-    });
   }
 
   private resetImage() {

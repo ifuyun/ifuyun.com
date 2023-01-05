@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
-import { skipWhile, Subscription } from 'rxjs';
+import { skipWhile, takeUntil } from 'rxjs';
+import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { CarouselVo, OptionEntity } from '../../interfaces/option.interface';
 import { OptionService } from '../../services/option.service';
@@ -8,7 +9,8 @@ import { OptionService } from '../../services/option.service';
 @Component({
   selector: 'i-carousel',
   templateUrl: './carousel.component.html',
-  styleUrls: ['./carousel.component.less']
+  styleUrls: ['./carousel.component.less'],
+  providers: [DestroyService]
 })
 export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   options: OptionEntity = {};
@@ -18,14 +20,18 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   timer!: any;
   staticResourceHost = '';
 
-  private optionsListener!: Subscription;
-  private carouselsListener!: Subscription;
-
-  constructor(private optionService: OptionService, private platform: PlatformService) {}
+  constructor(
+    private destroy$: DestroyService,
+    private optionService: OptionService,
+    private platform: PlatformService
+  ) {}
 
   ngOnInit(): void {
-    this.optionsListener = this.optionService.options$
-      .pipe(skipWhile((options) => isEmpty(options)))
+    this.optionService.options$
+      .pipe(
+        takeUntil(this.destroy$),
+        skipWhile((options) => isEmpty(options))
+      )
       .subscribe((options) => {
         this.options = options;
         this.staticResourceHost = options['static_resource_host'];
@@ -34,8 +40,6 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this.optionsListener.unsubscribe();
-    this.carouselsListener?.unsubscribe();
     this.stop();
   }
 
@@ -62,11 +66,14 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private fetchData() {
-    this.carouselsListener = this.optionService.getCarousels().subscribe((res) => {
-      this.carousels = res;
-      this.carousels.forEach((item) => {
-        item.fullUrl = /^https?:\/\//i.test(item.url) ? item.url : this.staticResourceHost + item.url;
+    this.optionService
+      .getCarousels()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.carousels = res;
+        this.carousels.forEach((item) => {
+          item.fullUrl = /^https?:\/\//i.test(item.url) ? item.url : this.staticResourceHost + item.url;
+        });
       });
-    });
   }
 }

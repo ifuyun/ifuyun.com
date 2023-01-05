@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { isEmpty } from 'lodash';
-import { skipWhile, Subscription } from 'rxjs';
+import { skipWhile, takeUntil } from 'rxjs';
 import { WECHAT_QRCODE_PATH } from '../../config/common.constant';
 import { Theme } from '../../config/common.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
+import { DestroyService } from '../../core/destroy.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { TaxonomyNode } from '../../interfaces/taxonomy.interface';
@@ -17,9 +18,10 @@ import { ImageService } from '../image/image.service';
 @Component({
   selector: 'app-sider-mobile',
   templateUrl: './sider-mobile.component.html',
-  styleUrls: ['./sider-mobile.component.less']
+  styleUrls: ['./sider-mobile.component.less'],
+  providers: [DestroyService]
 })
-export class SiderMobileComponent implements OnInit, OnDestroy {
+export class SiderMobileComponent implements OnInit {
   @Input() taxonomies: TaxonomyNode[] = [];
   @Input() siderOpen = false;
   @Output() siderOpenChange = new EventEmitter<boolean>();
@@ -31,13 +33,8 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
   user!: UserModel;
   isLoggedIn = false;
 
-  private darkModeListener!: Subscription;
-  private optionsListener!: Subscription;
-  private commonListener!: Subscription;
-  private userListener!: Subscription;
-  private logoutListener!: Subscription;
-
   constructor(
+    private destroy$: DestroyService,
     private userAgentService: UserAgentService,
     private commonService: CommonService,
     private optionService: OptionService,
@@ -49,25 +46,20 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.darkModeListener = this.commonService.darkMode$.subscribe((darkMode) => {
+    this.commonService.darkMode$.pipe(takeUntil(this.destroy$)).subscribe((darkMode) => {
       this.darkMode = darkMode;
     });
-    this.optionsListener = this.optionService.options$
+    this.optionService.options$
+      .pipe(takeUntil(this.destroy$))
       .pipe(skipWhile((options) => isEmpty(options)))
       .subscribe((options) => (this.options = options));
-    this.commonListener = this.commonService.pageIndex$.subscribe((pageIndex) => (this.activePage = pageIndex));
-    this.userListener = this.userService.loginUser$.subscribe((user) => {
+    this.commonService.pageIndex$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((pageIndex) => (this.activePage = pageIndex));
+    this.userService.loginUser$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.user = user;
       this.isLoggedIn = !!this.user.userId;
     });
-  }
-
-  ngOnDestroy(): void {
-    this.darkModeListener.unsubscribe();
-    this.optionsListener.unsubscribe();
-    this.commonListener.unsubscribe();
-    this.userListener.unsubscribe();
-    this.logoutListener?.unsubscribe();
   }
 
   changeTheme() {
@@ -76,11 +68,14 @@ export class SiderMobileComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.logoutListener = this.authService.logout().subscribe((res) => {
-      if (res.code === ResponseCode.SUCCESS) {
-        location.reload();
-      }
-    });
+    this.authService
+      .logout()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res.code === ResponseCode.SUCCESS) {
+          location.reload();
+        }
+      });
   }
 
   showWechatQrcode() {
