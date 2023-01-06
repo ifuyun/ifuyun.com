@@ -27,6 +27,9 @@ export class CommonService {
   });
   public pageOptions$: Observable<PageOptions> = this.pageOptions.asObservable();
 
+  private jdUnionFlag: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public jdUnionFlag$: Observable<boolean> = this.jdUnionFlag.asObservable();
+
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private platform: PlatformService,
@@ -91,5 +94,9 @@ export class CommonService {
   updateTheme(theme: Theme) {
     this.setTheme(theme);
     this.cacheTheme(theme);
+  }
+
+  updateJdUnionFlag(flag: boolean) {
+    this.jdUnionFlag.next(flag);
   }
 }

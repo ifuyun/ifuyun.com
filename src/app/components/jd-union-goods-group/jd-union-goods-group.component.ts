@@ -11,8 +11,10 @@ export class JdUnionGoodsGroupComponent {
 
   isMobile = false;
   eliteId = this.materialEliteIds[Math.floor(Math.random() * this.materialEliteIds.length)];
+  pageSize = 0;
 
   constructor(private userAgentService: UserAgentService) {
     this.isMobile = this.userAgentService.isMobile();
+    this.pageSize = this.isMobile ? 1 : 3;
   }
 }

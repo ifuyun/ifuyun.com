@@ -28,12 +28,12 @@ export class ShoppingComponent extends PageComponent implements OnInit {
   @ViewChild('promotionQrcode') promotionQrcode!: ElementRef;
 
   isMobile = false;
-  options: OptionEntity = {};
   keyword = '';
   promotion!: JdUnionResponsePromotion;
 
   protected pageIndex = 'tool';
 
+  private options: OptionEntity = {};
   private breadcrumbs: BreadcrumbEntity[] = [];
 
   constructor(

@@ -68,6 +68,7 @@ export class AppComponent implements OnInit {
     this.taxonomyService.getTaxonomies().subscribe((taxonomies) => (this.taxonomies = taxonomies));
     if (this.platform.isBrowser) {
       this.userService.getLoginUser().subscribe();
+      this.commonService.updateJdUnionFlag(true);
     }
   }
 

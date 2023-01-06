@@ -3,6 +3,7 @@ import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/co
 import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 import { ArchiveData } from '../../core/common.interface';
+import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UrlService } from '../../core/url.service';
@@ -27,6 +28,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   randomPosts: PostEntity[] = [];
   friendLinks: LinkEntity[] = [];
   keyword = '';
+  jdUnionVisible = false;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -34,6 +36,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     private platform: PlatformService,
     private router: Router,
     private urlService: UrlService,
+    private commonService: CommonService,
     private postService: PostService,
     private linkService: LinkService,
     private wallpaperService: WallpaperService
@@ -64,6 +67,9 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
         .getFriendLinks(isHome)
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => (this.friendLinks = res));
+    });
+    this.commonService.jdUnionFlag$.pipe(takeUntil(this.destroy$)).subscribe((flag) => {
+      this.jdUnionVisible = flag;
     });
   }
 

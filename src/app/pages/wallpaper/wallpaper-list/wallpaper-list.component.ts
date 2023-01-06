@@ -48,8 +48,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
 
   protected pageIndex = 'wallpaper';
 
-  private readonly pageSize = 12;
-
+  private pageSize = 10;
   private commentUser: Guest | null = null;
 
   constructor(
@@ -81,6 +80,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       )
       .subscribe(([options, params, queryParams]) => {
         this.options = options;
+        this.pageSize = Number(this.options['wallpaper_list_page_size']) || 10;
         this.page = Number(queryParams.get('page')) || 1;
         this.year = params.get('year')?.trim() || '';
         this.month = params.get('month')?.trim() || '';

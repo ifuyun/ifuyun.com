@@ -1,10 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { takeUntil } from 'rxjs';
+import { isEmpty } from 'lodash';
+import { skipWhile, takeUntil } from 'rxjs';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
+import { OptionEntity } from '../../interfaces/option.interface';
 import { JdUnionGoodsJingfen, JdUnionGoodsMaterial } from '../../pages/tool/jd-union.interface';
 import { ShoppingService } from '../../pages/tool/shopping/shopping.service';
+import { OptionService } from '../../services/option.service';
+import { JdUnionOptions } from './jd-union-goods.interface';
 
 @Component({
   selector: 'i-jd-union-goods',
@@ -13,7 +17,7 @@ import { ShoppingService } from '../../pages/tool/shopping/shopping.service';
   providers: [DestroyService]
 })
 export class JdUnionGoodsComponent implements OnInit {
-  @Input() eliteId = 1;
+  @Input() eliteId = 2;
   @Input() page = 1;
   @Input() pageSize = 3;
   @Input() rowSize = 3;
@@ -23,6 +27,9 @@ export class JdUnionGoodsComponent implements OnInit {
   @Input() showBorder = true;
   @Input() showComments = true;
   @Input() withBox = true;
+  @Input() visible = true;
+  @Input() dynamic = false;
+  @Input() optionKey = '';
 
   readonly materialEliteIds = Object.freeze([1, 2, 3, 4]);
   readonly jingfenEliteIds = Object.freeze([
@@ -38,16 +45,60 @@ export class JdUnionGoodsComponent implements OnInit {
   isMobile = false;
   goodsList: (JdUnionGoodsMaterial | JdUnionGoodsJingfen)[] = [];
 
+  private options: OptionEntity = {};
+
   constructor(
     private destroy$: DestroyService,
     private platform: PlatformService,
     private userAgentService: UserAgentService,
+    private optionService: OptionService,
     private shoppingService: ShoppingService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {
+    this.optionService.options$
+      .pipe(
+        takeUntil(this.destroy$),
+        skipWhile((options) => isEmpty(options))
+      )
+      .subscribe((options) => {
+        this.options = options;
+
+        if (this.dynamic && this.optionKey) {
+          const defaults: JdUnionOptions = {
+            random: true,
+            jingfen: true,
+            eliteId: 2,
+            pageSize: 3,
+            mPageSize: 1,
+            visible: true
+          };
+          let jdUnionOptions: JdUnionOptions;
+          try {
+            jdUnionOptions = JSON.parse(this.options[this.optionKey]);
+            jdUnionOptions = {
+              ...defaults,
+              ...jdUnionOptions
+            };
+          } catch (e) {
+            jdUnionOptions = defaults;
+          }
+          this.isRandom = jdUnionOptions.random;
+          this.isJingfen = jdUnionOptions.jingfen;
+          this.pageSize = this.isMobile ? (jdUnionOptions.mPageSize || 1) : (jdUnionOptions.pageSize || 3);
+          this.visible = jdUnionOptions.visible;
+          this.eliteId = jdUnionOptions.eliteId;
+        }
+        this.initEliteId();
+        if (this.platform.isBrowser && this.visible) {
+          this.fetchGoods();
+        }
+      });
+  }
+
+  private initEliteId() {
     if (this.isRandom) {
       if (this.isJingfen) {
         this.eliteId = this.jingfenEliteIds[Math.floor(Math.random() * this.jingfenEliteIds.length)];
@@ -57,9 +108,6 @@ export class JdUnionGoodsComponent implements OnInit {
       } else {
         this.eliteId = this.materialEliteIds[Math.floor(Math.random() * this.materialEliteIds.length)];
       }
-    }
-    if (this.platform.isBrowser) {
-      this.fetchGoods();
     }
   }
 
