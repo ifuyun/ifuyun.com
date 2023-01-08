@@ -22,8 +22,6 @@ export const LOGO_PATH = '/assets/images/logo.png';
 export const LOGO_DARK_PATH = '/assets/images/logo-dark.png';
 export const WECHAT_QRCODE_PATH = '/assets/images/wechat.jpg';
 export const AVATAR_API_URL = 'https://cravatar.cn/avatar/$0.png?d=$1';
-export const ADMIN_URL = '/admin';
-export const LOGIN_URL = '/user/login';
 export const BLOCK_SCROLL_CLASS = 'cdk-global-scrollblock';
 
 export const STORAGE_KEY_USER = 'user';

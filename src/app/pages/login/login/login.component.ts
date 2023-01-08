@@ -9,7 +9,6 @@ import { isEmpty, uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { MessageService } from '../../../components/message/message.service';
-import { ADMIN_URL } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { HTMLMetaData } from '../../../core/meta.interface';
@@ -113,7 +112,7 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
           this.referer = ref;
         }
 
-        this.adminUrl = `${this.options['site_url']}${ADMIN_URL}`;
+        this.adminUrl = this.options['admin_site_url'];
         const rememberMe = this.cookieService.get('remember');
         // 登录状态直接跳转来源页或后台首页
         if (rememberMe === '1' && this.authService.isLoggedIn()) {

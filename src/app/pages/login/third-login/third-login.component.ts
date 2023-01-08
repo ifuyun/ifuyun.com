@@ -5,7 +5,6 @@ import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { MessageService } from '../../../components/message/message.service';
-import { ADMIN_URL, LOGIN_URL } from '../../../config/common.constant';
 import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
@@ -73,7 +72,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
         skipWhile(([, options]) => isEmpty(options)),
         tap(([params, options]) => {
           this.options = options;
-          this.adminUrl = `${this.options['site_url']}${ADMIN_URL}`;
+          this.adminUrl = this.options['admin_site_url'];
 
           const ref = params.get('ref')?.trim() || '';
           try {
@@ -82,7 +81,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
             this.referer = ref;
           }
           const loginParam = ref ? `?ref=${ref}` : '';
-          this.loginURL = this.commonService.getURL(options, LOGIN_URL) + loginParam;
+          this.loginURL = options['login_url'] + loginParam;
 
           this.from = params.get('from')?.trim() || '';
           if (this.from === 'alipay' || this.from === 'm_alipay') {
