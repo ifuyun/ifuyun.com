@@ -9,6 +9,7 @@ import { isEmpty, uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { MessageService } from '../../../components/message/message.service';
+import { ADMIN_URL_PARAM } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { HTMLMetaData } from '../../../core/meta.interface';
@@ -117,9 +118,8 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
         // 登录状态直接跳转来源页或后台首页
         if (rememberMe === '1' && this.authService.isLoggedIn()) {
           if (this.platform.isBrowser) {
-            location.href = this.referer || this.adminUrl;
-          } else {
-            this.response.redirect(this.referer || this.adminUrl);
+            const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration());
+            location.href = this.referer || (this.adminUrl + urlParam);
           }
         }
       });
@@ -147,7 +147,8 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
         })
         .subscribe((res) => {
           if (res.accessToken) {
-            window.location.href = this.referer ? this.options['site_url'] + this.referer : this.adminUrl;
+            const urlParam = format(ADMIN_URL_PARAM, res.accessToken, res.expiresAt);
+            window.location.href = this.referer ? this.options['site_url'] + this.referer : (this.adminUrl + urlParam);
           } else {
             this.shakeForm();
           }

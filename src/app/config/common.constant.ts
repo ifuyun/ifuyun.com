@@ -18,6 +18,7 @@ export const POST_SLUG_PREFIX_BLACKLIST = Object.freeze([
   'admin',
   'api'
 ]);
+export const ADMIN_URL_PARAM = '?token=$0&expiresAt=$1';
 export const LOGO_PATH = '/assets/images/logo.png';
 export const LOGO_DARK_PATH = '/assets/images/logo-dark.png';
 export const WECHAT_QRCODE_PATH = '/assets/images/wechat.jpg';

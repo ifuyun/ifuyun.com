@@ -3,11 +3,13 @@ import { Router } from '@angular/router';
 import { isEmpty } from 'lodash';
 import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
-import { LOGO_DARK_PATH, LOGO_PATH } from '../../config/common.constant';
+import { ADMIN_URL_PARAM, LOGO_DARK_PATH, LOGO_PATH } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
+import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
+import { format } from '../../helpers/helper';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { TaxonomyNode } from '../../interfaces/taxonomy.interface';
 import { UserModel } from '../../interfaces/user.interface';
@@ -42,11 +44,13 @@ export class HeaderComponent implements OnInit {
   showMobileHeader = true;
   toolLinks = TOOL_LINKS;
   logoPath = LOGO_PATH;
+  adminUrl = '';
 
   constructor(
     private router: Router,
     private destroy$: DestroyService,
     private userAgentService: UserAgentService,
+    private platform: PlatformService,
     private commonService: CommonService,
     private optionService: OptionService,
     private userService: UserService,
@@ -67,7 +71,13 @@ export class HeaderComponent implements OnInit {
         takeUntil(this.destroy$),
         skipWhile((options) => isEmpty(options))
       )
-      .subscribe((options) => (this.options = options));
+      .subscribe((options) => {
+        this.options = options;
+        this.adminUrl = this.options['admin_site_url'];
+        if (this.platform.isBrowser) {
+          this.adminUrl += format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration());
+        }
+      });
     this.commonService.pageIndex$
       .pipe(takeUntil(this.destroy$))
       .subscribe((pageIndex) => (this.activePage = pageIndex));
