@@ -1,12 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
-import { WECHAT_QRCODE_PATH } from '../../config/common.constant';
+import { ADMIN_URL_PARAM, WECHAT_QRCODE_PATH } from '../../config/common.constant';
 import { Theme } from '../../config/common.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
+import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
+import { format } from '../../helpers/helper';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { TaxonomyNode } from '../../interfaces/taxonomy.interface';
 import { UserModel } from '../../interfaces/user.interface';
@@ -32,10 +34,12 @@ export class SiderMobileComponent implements OnInit {
   options: OptionEntity = {};
   user!: UserModel;
   isLoggedIn = false;
+  adminUrl = '';
 
   constructor(
     private destroy$: DestroyService,
     private userAgentService: UserAgentService,
+    private platform: PlatformService,
     private commonService: CommonService,
     private optionService: OptionService,
     private userService: UserService,
@@ -52,7 +56,13 @@ export class SiderMobileComponent implements OnInit {
     this.optionService.options$
       .pipe(takeUntil(this.destroy$))
       .pipe(skipWhile((options) => isEmpty(options)))
-      .subscribe((options) => (this.options = options));
+      .subscribe((options) => {
+        this.options = options;
+        this.adminUrl = this.options['admin_site_url'];
+        if (this.platform.isBrowser) {
+          this.adminUrl += format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration());
+        }
+      });
     this.commonService.pageIndex$
       .pipe(takeUntil(this.destroy$))
       .subscribe((pageIndex) => (this.activePage = pageIndex));
