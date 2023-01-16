@@ -45,7 +45,7 @@
     <ng-container *ngIf="postMeta['show_wechat_card'] === '1'">
       <div class="divider"></div>
       <div class="wechat-card">
-        <img src="/assets/images/wechat-card.png" alt="公众号：黑匣子思维"/>
+        <img [src]="wechatCardPath" alt="公众号：黑匣子思维"/>
       </div>
     </ng-container>
   </div>

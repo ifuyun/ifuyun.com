@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
-import { ADMIN_URL_PARAM, WECHAT_QRCODE_PATH } from '../../config/common.constant';
+import { ADMIN_URL_PARAM, WECHAT_CARD_PATH } from '../../config/common.constant';
 import { Theme } from '../../config/common.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
@@ -93,7 +93,7 @@ export class SiderMobileComponent implements OnInit {
     this.siderOpenChange.emit(this.siderOpen);
     this.imageService.preview([
       {
-        src: WECHAT_QRCODE_PATH
+        src: WECHAT_CARD_PATH
       }
     ]);
   }

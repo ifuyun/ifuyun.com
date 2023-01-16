@@ -19,7 +19,7 @@ import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
 import { ImageService } from '../../../components/image/image.service';
 import { MessageService } from '../../../components/message/message.service';
-import { STORAGE_KEY_VOTED_POSTS } from '../../../config/common.constant';
+import { STORAGE_KEY_VOTED_POSTS, WECHAT_CARD_PATH } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
@@ -52,6 +52,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   @ViewChild('postEle', { static: false }) postEle!: ElementRef;
 
   readonly commentObjectType = CommentObjectType.POST;
+  readonly wechatCardPath = WECHAT_CARD_PATH;
 
   isMobile = false;
   isLoggedIn = false;
