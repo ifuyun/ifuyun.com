@@ -25,7 +25,7 @@ import { ShoppingService } from './shopping.service';
   providers: [DestroyService]
 })
 export class ShoppingComponent extends PageComponent implements OnInit {
-  @ViewChild('promotionQrcode') promotionQrcode!: ElementRef;
+  @ViewChild('promotionQrcode') promotionQrcodeEle!: ElementRef;
 
   isMobile = false;
   keyword = '';
@@ -120,8 +120,8 @@ export class ShoppingComponent extends PageComponent implements OnInit {
             canvas.removeAttribute('style');
             canvas.style.width = '100%';
             canvas.style.maxWidth = '200px';
-            this.promotionQrcode.nativeElement.innerHTML = '';
-            this.promotionQrcode.nativeElement.appendChild(canvas);
+            this.promotionQrcodeEle.nativeElement.innerHTML = '';
+            this.promotionQrcodeEle.nativeElement.appendChild(canvas);
           }, 0);
         })
         .catch((err) => this.message.error(err));

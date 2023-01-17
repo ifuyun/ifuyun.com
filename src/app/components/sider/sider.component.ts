@@ -1,17 +1,22 @@
 import { DOCUMENT } from '@angular/common';
-import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { takeUntil } from 'rxjs';
+import { isEmpty } from 'lodash';
+import * as QRCode from 'qrcode';
+import { skipWhile, takeUntil } from 'rxjs';
 import { ArchiveData } from '../../core/common.interface';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UrlService } from '../../core/url.service';
 import { LinkEntity } from '../../interfaces/link.interface';
+import { OptionEntity } from '../../interfaces/option.interface';
 import { PostEntity } from '../../pages/post/post.interface';
 import { PostService } from '../../pages/post/post.service';
 import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
 import { LinkService } from '../../services/link.service';
+import { OptionService } from '../../services/option.service';
+import { MessageService } from '../message/message.service';
 
 @Component({
   selector: 'app-sider',
@@ -20,6 +25,8 @@ import { LinkService } from '../../services/link.service';
   providers: [DestroyService]
 })
 export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('redPacket') redPacketEle!: ElementRef;
+
   isMobile = false;
   activePage = '';
   postArchives: ArchiveData[] = [];
@@ -30,6 +37,8 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   keyword = '';
   jdUnionVisible = false;
 
+  private options: OptionEntity = {};
+
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private destroy$: DestroyService,
@@ -37,12 +46,23 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private urlService: UrlService,
     private commonService: CommonService,
+    private optionService: OptionService,
     private postService: PostService,
     private linkService: LinkService,
-    private wallpaperService: WallpaperService
+    private wallpaperService: WallpaperService,
+    private message: MessageService
   ) {}
 
   ngOnInit(): void {
+    this.optionService.options$
+      .pipe(
+        takeUntil(this.destroy$),
+        skipWhile((options) => isEmpty(options))
+      )
+      .subscribe((options) => {
+        this.options = options;
+        this.showAlipayRedPacketQrcode();
+      });
     this.postService
       .getPostArchives({
         showCount: true
@@ -92,6 +112,23 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.keyword) {
       this.router.navigate(['/'], { queryParams: { keyword: this.keyword } });
     }
+  }
+
+  private showAlipayRedPacketQrcode() {
+    QRCode.toCanvas(this.options['alipay_red_packet_code'], {
+      width: 280,
+      margin: 0
+    })
+      .then((canvas) => {
+        canvas.removeAttribute('style');
+        const imageEle = this.document.createElement('img');
+        imageEle.src = canvas.toDataURL();
+        imageEle.alt = '支付宝红包';
+        imageEle.style.maxWidth = '100%';
+        this.redPacketEle.nativeElement.innerHTML = '';
+        this.redPacketEle.nativeElement.appendChild(imageEle);
+      })
+      .catch((err) => this.message.error(err));
   }
 
   private scrollHandler() {

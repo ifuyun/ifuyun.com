@@ -37,12 +37,10 @@
     }
   }
 
-  .wechat-qrcode {
-    width: @sider-width - @widget-padding * 2 - 2;
-    height: @sider-width - @widget-padding * 2 - 2;
-    margin: 0 auto;
-    background: url(/assets/images/wechat.jpg) no-repeat;
-    background-size: cover;
+  .red-packet {
+    padding: 0 @widget-padding;
+    transform: matrix3d(1, 0.09, 0, 0.0004, 0.05, 1, 0, 0.0003, 0, 0, 1, 0, 12, 12, 0, 1);
+    transform-origin: 0 0 0;
   }
 
   .icon {

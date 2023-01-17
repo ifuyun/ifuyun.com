@@ -1,9 +1,7 @@
-import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   Component,
   ElementRef,
-  Inject,
   OnDestroy,
   OnInit,
   Renderer2,
@@ -81,7 +79,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private commentUser: Guest | null = null;
 
   constructor(
-    @Inject(DOCUMENT) private document: Document,
     private platform: PlatformService,
     private userAgentService: UserAgentService,
     private destroy$: DestroyService,

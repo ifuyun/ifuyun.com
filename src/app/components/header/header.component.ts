@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { isEmpty } from 'lodash';
-import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM, LOGO_DARK_PATH, LOGO_PATH } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
@@ -17,8 +16,6 @@ import { TOOL_LINKS } from '../../pages/tool/tool.constant';
 import { AuthService } from '../../services/auth.service';
 import { OptionService } from '../../services/option.service';
 import { UserService } from '../../services/user.service';
-import { ImageService } from '../image/image.service';
-import { MessageService } from '../message/message.service';
 
 @Component({
   selector: 'app-header',
@@ -54,9 +51,7 @@ export class HeaderComponent implements OnInit {
     private commonService: CommonService,
     private optionService: OptionService,
     private userService: UserService,
-    private authService: AuthService,
-    private imageService: ImageService,
-    private message: MessageService
+    private authService: AuthService
   ) {
     this.isMobile = this.userAgentService.isMobile();
     this.isFirefox = this.userAgentService.isFirefox();
@@ -89,22 +84,6 @@ export class HeaderComponent implements OnInit {
       this.user = user;
       this.isLoggedIn = !!user.userId;
     });
-  }
-
-  showAlipayRedPacketQrcode() {
-    QRCode.toCanvas(this.options['alipay_red_packet_code'], {
-      width: 320,
-      margin: 0
-    })
-      .then((canvas) => {
-        this.imageService.preview([
-          {
-            src: canvas.toDataURL(),
-            padding: 16
-          }
-        ]);
-      })
-      .catch((err) => this.message.error(err));
   }
 
   toggleSearchStatus() {
