@@ -32,8 +32,10 @@ export class ToolboxComponent implements OnInit {
       this.darkMode = darkMode;
     });
     this.optionService.options$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(skipWhile((options) => isEmpty(options)))
+      .pipe(
+        skipWhile((options) => isEmpty(options)),
+        takeUntil(this.destroy$)
+      )
       .subscribe((options) => (this.options = options));
     this.darkMode = this.commonService.getTheme() === Theme.Dark;
   }

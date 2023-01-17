@@ -57,9 +57,9 @@ export class HomeComponent extends PageComponent implements OnInit {
     this.updateActivePage();
     this.optionService.options$
       .pipe(
-        takeUntil(this.destroy$),
         skipWhile((options) => isEmpty(options)),
         combineLatestWith(this.route.queryParamMap),
+        takeUntil(this.destroy$),
         tap(([, queryParams]) => {
           this.keyword = queryParams.get('keyword')?.trim() || '';
         })

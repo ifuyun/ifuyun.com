@@ -54,8 +54,8 @@ export class Md5Component extends PageComponent implements OnInit {
     this.updateBreadcrumb();
     this.optionService.options$
       .pipe(
-        takeUntil(this.destroy$),
-        skipWhile((options) => isEmpty(options))
+        skipWhile((options) => isEmpty(options)),
+        takeUntil(this.destroy$)
       )
       .subscribe((options) => {
         this.options = options;
@@ -101,9 +101,10 @@ export class Md5Component extends PageComponent implements OnInit {
       showMobileFooter: true
     });
   }
+
   private initInput() {
-    const contentInput$: Observable<string> = this.contentChange$.asObservable().pipe(debounceTime(500));
-    contentInput$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+    const contentInput$: Observable<string> = this.contentChange$.asObservable();
+    contentInput$.pipe(debounceTime(500), takeUntil(this.destroy$)).subscribe(() => {
       this.encryptResult = '';
     });
   }

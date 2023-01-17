@@ -59,9 +59,9 @@ export class PostListComponent extends PageComponent implements OnInit {
     this.updatePageOptions();
     this.optionService.options$
       .pipe(
-        takeUntil(this.destroy$),
         skipWhile((options) => isEmpty(options)),
         combineLatestWith(this.route.paramMap, this.route.queryParamMap),
+        takeUntil(this.destroy$),
         tap(([, params, queryParams]) => {
           this.page = Number(params.get('page')) || 1;
           this.category = params.get('category')?.trim() || '';

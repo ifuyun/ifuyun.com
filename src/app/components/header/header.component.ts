@@ -63,8 +63,8 @@ export class HeaderComponent implements OnInit {
     });
     this.optionService.options$
       .pipe(
-        takeUntil(this.destroy$),
-        skipWhile((options) => isEmpty(options))
+        skipWhile((options) => isEmpty(options)),
+        takeUntil(this.destroy$)
       )
       .subscribe((options) => {
         this.options = options;

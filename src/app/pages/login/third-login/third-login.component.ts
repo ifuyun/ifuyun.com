@@ -67,9 +67,9 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
     this.updateActivePage();
     this.route.queryParamMap
       .pipe(
-        takeUntil(this.destroy$),
         combineLatestWith(this.optionService.options$),
         skipWhile(([, options]) => isEmpty(options)),
+        takeUntil(this.destroy$),
         tap(([params, options]) => {
           this.options = options;
           this.adminUrl = this.options['admin_site_url'];

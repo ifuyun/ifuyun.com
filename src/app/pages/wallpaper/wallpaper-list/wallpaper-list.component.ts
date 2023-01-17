@@ -74,9 +74,9 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     this.updatePageOptions();
     this.optionService.options$
       .pipe(
-        takeUntil(this.destroy$),
         skipWhile((options) => isEmpty(options)),
-        combineLatestWith(this.route.paramMap, this.route.queryParamMap)
+        combineLatestWith(this.route.paramMap, this.route.queryParamMap),
+        takeUntil(this.destroy$)
       )
       .subscribe(([options, params, queryParams]) => {
         this.options = options;

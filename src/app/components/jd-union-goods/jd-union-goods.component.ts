@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
-import { skipWhile, takeUntil } from 'rxjs';
+import { combineLatestWith, of, skipWhile, takeUntil } from 'rxjs';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
+import { UrlService } from '../../core/url.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { JdUnionGoodsJingfen, JdUnionGoodsMaterial } from '../../pages/tool/jd-union.interface';
@@ -30,6 +31,7 @@ export class JdUnionGoodsComponent implements OnInit {
   @Input() visible = true;
   @Input() dynamic = false;
   @Input() optionKey = '';
+  @Input() forceRefresh = true;
 
   readonly materialEliteIds = Object.freeze([1, 2, 3, 4]);
   readonly jingfenEliteIds = Object.freeze([
@@ -52,7 +54,8 @@ export class JdUnionGoodsComponent implements OnInit {
     private platform: PlatformService,
     private userAgentService: UserAgentService,
     private optionService: OptionService,
-    private shoppingService: ShoppingService
+    private shoppingService: ShoppingService,
+    private urlService: UrlService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }
@@ -60,42 +63,47 @@ export class JdUnionGoodsComponent implements OnInit {
   ngOnInit(): void {
     this.optionService.options$
       .pipe(
-        takeUntil(this.destroy$),
-        skipWhile((options) => isEmpty(options))
+        skipWhile((options) => isEmpty(options)),
+        combineLatestWith(this.forceRefresh ? this.urlService.urlInfo$ : of(false)),
+        takeUntil(this.destroy$)
       )
-      .subscribe((options) => {
+      .subscribe(([options]) => {
         this.options = options;
 
         if (this.dynamic && this.optionKey) {
-          const defaults: JdUnionOptions = {
-            random: true,
-            jingfen: true,
-            eliteId: 2,
-            pageSize: 3,
-            mPageSize: 1,
-            visible: true
-          };
-          let jdUnionOptions: JdUnionOptions;
-          try {
-            jdUnionOptions = JSON.parse(this.options[this.optionKey]);
-            jdUnionOptions = {
-              ...defaults,
-              ...jdUnionOptions
-            };
-          } catch (e) {
-            jdUnionOptions = defaults;
-          }
-          this.isRandom = jdUnionOptions.random;
-          this.isJingfen = jdUnionOptions.jingfen;
-          this.pageSize = this.isMobile ? (jdUnionOptions.mPageSize || 1) : (jdUnionOptions.pageSize || 3);
-          this.visible = jdUnionOptions.visible;
-          this.eliteId = jdUnionOptions.eliteId;
+          this.initOptions();
         }
         this.initEliteId();
         if (this.platform.isBrowser && this.visible) {
           this.fetchGoods();
         }
       });
+  }
+
+  private initOptions() {
+    const defaults: JdUnionOptions = {
+      random: true,
+      jingfen: true,
+      eliteId: 2,
+      pageSize: 3,
+      mPageSize: 1,
+      visible: true
+    };
+    let jdUnionOptions: JdUnionOptions;
+    try {
+      jdUnionOptions = JSON.parse(this.options[this.optionKey]);
+      jdUnionOptions = {
+        ...defaults,
+        ...jdUnionOptions
+      };
+    } catch (e) {
+      jdUnionOptions = defaults;
+    }
+    this.isRandom = jdUnionOptions.random;
+    this.isJingfen = jdUnionOptions.jingfen;
+    this.pageSize = this.isMobile ? jdUnionOptions.mPageSize || 1 : jdUnionOptions.pageSize || 3;
+    this.visible = jdUnionOptions.visible;
+    this.eliteId = jdUnionOptions.eliteId;
   }
 
   private initEliteId() {

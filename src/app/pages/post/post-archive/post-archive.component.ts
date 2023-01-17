@@ -48,8 +48,8 @@ export class PostArchiveComponent extends PageComponent implements OnInit {
     this.updateBreadcrumb();
     this.optionService.options$
       .pipe(
-        takeUntil(this.destroy$),
-        skipWhile((options) => isEmpty(options))
+        skipWhile((options) => isEmpty(options)),
+        takeUntil(this.destroy$)
       )
       .subscribe((options) => {
         this.options = options;

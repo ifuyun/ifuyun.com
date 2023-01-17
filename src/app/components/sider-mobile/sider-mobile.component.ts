@@ -54,8 +54,10 @@ export class SiderMobileComponent implements OnInit {
       this.darkMode = darkMode;
     });
     this.optionService.options$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(skipWhile((options) => isEmpty(options)))
+      .pipe(
+        skipWhile((options) => isEmpty(options)),
+        takeUntil(this.destroy$)
+      )
       .subscribe((options) => {
         this.options = options;
         this.adminUrl = this.options['admin_site_url'];

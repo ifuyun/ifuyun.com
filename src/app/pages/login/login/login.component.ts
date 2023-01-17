@@ -97,9 +97,9 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
     this.updateActivePage();
     this.optionService.options$
       .pipe(
-        takeUntil(this.destroy$),
         skipWhile((options) => isEmpty(options)),
-        combineLatestWith(this.route.queryParamMap)
+        combineLatestWith(this.route.queryParamMap),
+        takeUntil(this.destroy$)
       )
       .subscribe(([options, queryParams]) => {
         this.options = options;
@@ -119,7 +119,7 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
         if (rememberMe === '1' && this.authService.isLoggedIn()) {
           if (this.platform.isBrowser) {
             const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration());
-            location.href = this.referer || (this.adminUrl + urlParam);
+            location.href = this.referer || this.adminUrl + urlParam;
           }
         }
       });
@@ -148,7 +148,7 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
         .subscribe((res) => {
           if (res.accessToken) {
             const urlParam = format(ADMIN_URL_PARAM, res.accessToken, res.expiresAt);
-            window.location.href = this.referer ? this.options['site_url'] + this.referer : (this.adminUrl + urlParam);
+            window.location.href = this.referer ? this.options['site_url'] + this.referer : this.adminUrl + urlParam;
           } else {
             this.shakeForm();
           }

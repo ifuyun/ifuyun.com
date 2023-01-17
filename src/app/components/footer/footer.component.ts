@@ -32,8 +32,8 @@ export class FooterComponent implements OnInit {
   ngOnInit(): void {
     this.optionService.options$
       .pipe(
-        takeUntil(this.destroy$),
-        skipWhile((options) => isEmpty(options))
+        skipWhile((options) => isEmpty(options)),
+        takeUntil(this.destroy$)
       )
       .subscribe((options) => (this.options = options));
     this.commonService.pageOptions$.pipe(takeUntil(this.destroy$)).subscribe((options) => {

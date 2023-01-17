@@ -82,9 +82,9 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     this.updatePageOptions();
     this.optionService.options$
       .pipe(
-        takeUntil(this.destroy$),
         skipWhile((options) => isEmpty(options)),
         combineLatestWith(this.route.paramMap, this.route.queryParamMap),
+        takeUntil(this.destroy$),
         tap(([, params, queryParams]) => {
           this.wallpaperId = params.get('wid')?.trim() || '';
           this.lang = <WallpaperLang>queryParams.get('lang')?.trim() || WallpaperLang.CN;
