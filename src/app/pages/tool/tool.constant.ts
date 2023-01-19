@@ -10,7 +10,7 @@ export const TOOL_LINKS = Object.freeze([
   {
     label: 'MD5加密',
     url: TOOL_URL_PREFIX + '/md5',
-    title: 'MD5加密',
+    title: 'MD5 加密',
     changefreq: 'monthly',
     priority: 0.7
   },

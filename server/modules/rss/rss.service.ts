@@ -15,7 +15,7 @@ export class RssService {
 
   async getPosts(page: number, pageSize: number, detail: boolean): Promise<{ postList: ResultList<Post> }> {
     const apiUrl = this.configService.get('app.api.host') + ApiUrl.API_URL_PREFIX + ApiUrl.GET_POSTS;
-    const apiParam = `?page=${page}&pageSize=${pageSize}&detail=${detail ? '1' : '0'}`;
+    const apiParam = `?page=${page}&pageSize=${pageSize}&sticky=0&detail=${detail ? '1' : '0'}`;
     let response: HttpResponseEntity;
     try {
       response = (await lastValueFrom(this.httpService.get(apiUrl + apiParam))).data;
