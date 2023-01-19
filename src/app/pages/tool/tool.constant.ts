@@ -13,12 +13,19 @@ export const TOOL_LINKS = Object.freeze([
     title: 'MD5加密',
     changefreq: 'monthly',
     priority: 0.7
+  },
+  {
+    label: 'MurmurHash',
+    url: TOOL_URL_PREFIX + '/murmurhash',
+    title: 'MurmurHash',
+    changefreq: 'monthly',
+    priority: 0.7
   }
 ]);
 export const REGEXP_JD_PRODUCT_DETAIL_URL = /^https?:\/\/([a-zA-Z0-9\-_]+\.)*jd\.com\/(product\/)?\d+\.html$/i;
 
 export const TOOL_PAGE_DESCRIPTION =
-  '百宝箱收藏了众多互联网好物，包括支付宝红包、网购优惠券等省钱工具，MD5加密工具，网址导航等。';
+  '百宝箱收藏了众多互联网好物，包括支付宝红包、网购优惠券等省钱工具，MD5 加密工具，网址导航等。';
 export const TOOL_PAGE_KEYWORDS = Object.freeze([
   '支付宝红包',
   '优惠券',
@@ -51,7 +58,7 @@ export const SHOPPING_PAGE_KEYWORDS = Object.freeze([
   '淘宝客'
 ]);
 
-export const MD5_PAGE_DESCRIPTION = 'MD5在线加密工具，在线实现MD5加密算法，轻松校验、复制MD5加密结果。';
+export const MD5_PAGE_DESCRIPTION = 'MD5 在线加密工具，在线实现 MD5 加密算法，轻松校验、复制 MD5 加密结果。';
 export const MD5_PAGE_KEYWORDS = Object.freeze([
   'MD5',
   'MD5加密',
@@ -60,4 +67,15 @@ export const MD5_PAGE_KEYWORDS = Object.freeze([
   'MD5在线加密',
   'MD5校验',
   'MD5校验工具'
+]);
+
+export const MURMURHASH_PAGE_DESCRIPTION = 'MurmurHash 在线哈希工具，在线实现 MurmurHash 一致性哈希算法，轻松计算、复制 MurmurHash 结果。';
+export const MURMURHASH_PAGE_KEYWORDS = Object.freeze([
+  'MurmurHash',
+  'Murmur哈希',
+  '一致性哈希',
+  'MurmurHash工具',
+  'Murmur哈希工具',
+  'MurmurHash在线哈希工具',
+  'MurmurHash算法'
 ]);

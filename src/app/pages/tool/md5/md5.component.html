@@ -15,39 +15,31 @@
         <button type="button" class="button button-submit" [class.disabled]="!encryptContent"
                 [disabled]="!encryptContent"
                 (click)="encrypt(true)">MD5加密（大写）</button>
-        <button type="button" class="button button-submit" [class.disabled]="!encryptResult"
-                ngxClipboard
-                [cbContent]="encryptResult"
-                [disabled]="!encryptResult"
-                (cbOnSuccess)="onCopied()">复制加密结果</button>
-        <button type="button" class="button button-submit" [class.disabled]="!encryptContent"
-                [disabled]="!encryptContent"
-                (click)="reset()">清空内容</button>
       </ng-container>
       <ng-container *ngIf="isMobile">
         <button type="button" class="button button-submit" [class.disabled]="!encryptContent"
                 [disabled]="!encryptContent"
                 (click)="encrypt()">MD5加密</button>
-        <button type="button" class="button button-submit" [class.disabled]="!encryptResult"
-                ngxClipboard
-                [cbContent]="encryptResult"
-                [disabled]="!encryptResult"
-                (cbOnSuccess)="onCopied()">复制结果</button>
-        <button type="button" class="button button-submit" [class.disabled]="!encryptContent"
-                [disabled]="!encryptContent"
-                (click)="reset()">清空内容</button>
       </ng-container>
+      <button type="button" class="button button-submit" [class.disabled]="!encryptResult"
+              ngxClipboard
+              [cbContent]="encryptResult"
+              [disabled]="!encryptResult"
+              (cbOnSuccess)="onCopied()">复制结果</button>
+      <button type="button" class="button button-submit" [class.disabled]="!encryptContent"
+              [disabled]="!encryptContent"
+              (click)="reset()">清空内容</button>
     </div>
     <div>
       <textarea class="input input-textarea input-dark" rows="4" name="encryptResult" readonly="readonly"
-                [(ngModel)]="encryptResult" placeholder="MD5加密结果"></textarea>
+                [(ngModel)]="encryptResult" placeholder="MD5 Result"></textarea>
     </div>
-    <h2 class="encrypt-header">MD5加密说明</h2>
+    <h2 class="encrypt-header">MD5 加密说明</h2>
     <div class="encrypt-description">
       <ol>
-        <li>MD5加密常用于判断内容是否被篡改，或比较两份文本是否相同。</li>
-        <li>待加密内容最大输入长度为{{maxContentLength}}字符。</li>
-        <li>本站MD5加密方式为客户端（浏览器）离线加密，不经过任何服务端，不会记录任何信息。</li>
+        <li>MD5 加密常用于判断内容是否被篡改，或比较两份文本是否相同。</li>
+        <li>MD5 待加密内容最大输入长度为 {{maxContentLength}} 字符。</li>
+        <li>本工具 MD5 加密方式为客户端（浏览器）离线加密，不经过任何服务端，不会记录任何信息。</li>
       </ol>
     </div>
   </form>

@@ -140,7 +140,7 @@ export class ShoppingComponent extends PageComponent implements OnInit {
 
   private updatePageInfo() {
     const siteName: string = this.options['site_name'] || '';
-    const titles: string[] = ['电商优惠券', siteName];
+    const titles: string[] = ['电商优惠券', '百宝箱', siteName];
     const description = `${siteName}${SHOPPING_PAGE_DESCRIPTION}`;
     const keywords: string[] = (this.options['site_keywords'] || '').split(',');
     keywords.unshift(...SHOPPING_PAGE_KEYWORDS);

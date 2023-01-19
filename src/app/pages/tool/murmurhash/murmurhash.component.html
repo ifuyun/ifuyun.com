@@ -1,0 +1,47 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="content-box" [ngClass]="{'content-box-desktop': !isMobile, 'content-box-mobile': isMobile}">
+  <form class="encrypt-form">
+    <div>
+      <textarea class="input input-textarea input-dark" rows="12" name="hashKey"
+                [(ngModel)]="hashKey"
+                (ngModelChange)="onContentChange($event)"
+                [maxLength]="maxHashKeyLength"
+                placeholder="MurmurHash Key"></textarea>
+    </div>
+    <div>
+      <input class="input input-dark" name="hashSeed"
+             [(ngModel)]="hashSeed"
+             (ngModelChange)="onContentChange($event)"
+             [maxLength]="maxHashSeedLength"
+             placeholder="MurmurHash Seed(optional)" autocomplete="off"/>
+    </div>
+    <div class="encrypt-form-btns">
+      <button type="button" class="button button-submit" [class.disabled]="!hashKey"
+              [disabled]="!hashKey"
+              (click)="hash()">MurmurHash</button>
+      <button type="button" class="button button-submit" [class.disabled]="!hashResult"
+              ngxClipboard
+              [cbContent]="hashResult"
+              [disabled]="!hashResult"
+              (cbOnSuccess)="onCopied()">复制结果</button>
+      <button type="button" class="button button-submit" [class.disabled]="!hashKey"
+              [disabled]="!hashKey"
+              (click)="reset()">清空内容</button>
+    </div>
+    <div>
+      <textarea class="input input-textarea input-dark" rows="4" name="hashResult" readonly="readonly"
+                [(ngModel)]="hashResult" placeholder="MurmurHash Result"></textarea>
+    </div>
+    <h2 class="encrypt-header">MurmurHash 说明</h2>
+    <div class="encrypt-description">
+      <ol>
+        <li>MurmurHash 是一种非加密型哈希函数，适用于一般的哈希检索操作。</li>
+        <li>本工具采用的是 MurmurHash3 (r136) (as of May 20, 2011)。</li>
+        <li>MurmurHash Key 最大输入长度为 {{maxHashKeyLength}} 字符。</li>
+        <li>MurmurHash Seed 为正整数，可选。</li>
+        <li>本工具 MurmurHash 计算方式为客户端（浏览器）离线计算，不经过任何服务端，不会记录任何信息。</li>
+      </ol>
+    </div>
+  </form>
+</div>
+<i-jd-union-goods-group></i-jd-union-goods-group>

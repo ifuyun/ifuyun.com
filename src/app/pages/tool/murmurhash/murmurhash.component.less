@@ -1,0 +1,44 @@
+@import "../../../../styles/variables";
+
+.content-box {
+  .encrypt-form {
+    display: flex;
+    flex-direction: column;
+
+    > :not(:last-child) {
+      margin-bottom: @primary-margin;
+    }
+
+    textarea, input {
+      box-sizing: border-box;
+      display: block;
+      width: 100%;
+    }
+
+    .encrypt-form-btns {
+      display: flex;
+      justify-content: center;
+
+      .button {
+        &:not(:last-child) {
+          margin-right: 12px;
+        }
+      }
+    }
+
+    .encrypt-header {
+      border-left: @content-h2-border-width solid var(--primary-color);
+      padding-left: @content-h2-padding-left;
+      line-height: @post-line-height;
+      font-size: 14px;
+    }
+
+    .encrypt-description {
+      ol {
+        padding-left: @content-list-padding-left;
+        list-style: decimal;
+        line-height: @post-line-height;
+      }
+    }
+  }
+}

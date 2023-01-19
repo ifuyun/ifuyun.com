@@ -32,6 +32,7 @@
               "moment",
               "qrcode",
               "ua-parser-js",
+              "murmurhash",
               "@nestjs/ng-universal/dist/tokens"
             ],
             "assets": [
