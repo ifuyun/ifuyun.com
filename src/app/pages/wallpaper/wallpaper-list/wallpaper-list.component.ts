@@ -146,7 +146,10 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     return {};
   }
 
-  getLangParams(): Params {
+  getLangParams(wallpaper: Wallpaper): Params {
+    if (this.year) {
+      return !!wallpaper.bingIdCn ? {} : { lang: WallpaperLang.EN };
+    }
     return this.lang === WallpaperLang.CN ? {} : { lang: this.lang };
   }
 

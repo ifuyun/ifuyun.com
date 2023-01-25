@@ -16,16 +16,16 @@
         <div class="wallpaper-box">
           <div class="photo">
             <a class="photo-link"
-               [routerLink]="[wallpaper.wallpaperId]"
-               [queryParams]="getLangParams()"
+               [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
+               [queryParams]="getLangParams(wallpaper)"
                [title]="wallpaper.copyright">
               <img [src]="wallpaper.thumbUrl" [alt]="wallpaper.copyright"/><div class="overlay"></div>
             </a>
           </div>
           <div class="content">
             <h2 [title]="wallpaper.copyright">
-              <a [routerLink]="[wallpaper.wallpaperId]"
-                 [queryParams]="getLangParams()"
+              <a [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
+                 [queryParams]="getLangParams(wallpaper)"
                  [title]="wallpaper.copyright">{{wallpaper.copyright}}</a>
             </h2>
             <div class="content-location">
