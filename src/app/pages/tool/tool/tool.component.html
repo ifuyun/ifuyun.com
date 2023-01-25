@@ -9,11 +9,12 @@
     <h2 class="border-header">省钱计划</h2>
     <ul>
       <li><a href="javascript:" (click)="showAlipayRedPacketQrcode()" title="支付宝扫码领红包">支付宝红包</a></li>
-      <li><a routerLink="/tool/shopping" title="电商优惠券">电商优惠券</a></li>
+      <li><a routerLink="/tool/shopping" title="电商工具">电商工具</a></li>
     </ul>
     <h2 class="border-header">常用工具</h2>
     <ul>
-      <li><a routerLink="/tool/md5" title="MD5加密工具">MD5加密</a></li>
+      <li><a routerLink="/tool/md5" title="MD5 加密工具">MD5 加密</a></li>
+      <li><a routerLink="/tool/murmurhash" title="MurmurHash">MurmurHash</a></li>
     </ul>
     <h2 class="border-header">常用链接</h2>
     <ng-container *ngFor="let data of favoriteLinks">

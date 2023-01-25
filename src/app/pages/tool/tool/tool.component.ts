@@ -16,7 +16,6 @@ import { FavoriteLink } from '../../../interfaces/link.interface';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { LinkService } from '../../../services/link.service';
 import { OptionService } from '../../../services/option.service';
-import { TOOL_PAGE_DESCRIPTION, TOOL_PAGE_KEYWORDS } from '../tool.constant';
 
 @Component({
   selector: 'app-tool',
@@ -106,9 +105,8 @@ export class ToolComponent extends PageComponent implements OnInit {
   private updatePageInfo() {
     const siteName: string = this.options['site_name'] || '';
     const titles: string[] = ['百宝箱', siteName];
-    const description = `${siteName}${TOOL_PAGE_DESCRIPTION}`;
-    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
-    keywords.unshift(...TOOL_PAGE_KEYWORDS);
+    const description = `${siteName}${this.options['tool_description']}`;
+    const keywords: string[] = (this.options['tool_keywords'] || '').split(',');
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
