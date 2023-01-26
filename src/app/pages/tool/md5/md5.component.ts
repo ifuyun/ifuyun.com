@@ -71,7 +71,9 @@ export class Md5Component extends PageComponent implements OnInit {
       return;
     }
     if (this.encryptContent.length > this.maxContentLength) {
-      this.message.error(`待加密内容最大长度为 ${this.maxContentLength} 字符，当前为 ${this.encryptContent.length} 字符`);
+      this.message.error(
+        `待加密内容最大长度为 ${this.maxContentLength} 字符，当前为 ${this.encryptContent.length} 字符`
+      );
       return;
     }
     const result = md5(this.encryptContent);

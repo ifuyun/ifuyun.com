@@ -51,7 +51,8 @@ export const MD5_PAGE_KEYWORDS = Object.freeze([
   'MD5校验工具'
 ]);
 
-export const MURMURHASH_PAGE_DESCRIPTION = 'MurmurHash 在线哈希工具，在线实现 MurmurHash 一致性哈希算法，轻松计算、复制 MurmurHash 结果。';
+export const MURMURHASH_PAGE_DESCRIPTION =
+  'MurmurHash 在线哈希工具，在线实现 MurmurHash 一致性哈希算法，轻松计算、复制 MurmurHash 结果。';
 export const MURMURHASH_PAGE_KEYWORDS = Object.freeze([
   'MurmurHash',
   'Murmur哈希',

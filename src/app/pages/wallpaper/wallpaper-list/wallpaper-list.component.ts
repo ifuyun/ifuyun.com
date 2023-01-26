@@ -194,10 +194,15 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
 
         const urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
         this.wallpapers = (res.list || []).map((item) => {
-          const wallpaperLocation =
-            this.lang === WallpaperLang.EN ? item.locationEn || 'Unknown' : item.location || '未知';
-          const copyright =
-            this.lang === WallpaperLang.EN ? item.copyrightEn || item.copyright : item.copyright || item.copyrightEn;
+          let wallpaperLocation: string;
+          let copyright: string;
+          if (this.lang === WallpaperLang.EN) {
+            wallpaperLocation = item.locationEn || item.location || 'Unknown';
+            copyright = item.copyrightEn || item.copyright;
+          } else {
+            wallpaperLocation = item.location || item.locationEn || '未知';
+            copyright = item.copyright || item.copyrightEn;
+          }
           return {
             ...item,
             copyright,
