@@ -66,11 +66,11 @@ export class CommonService {
       if (window.matchMedia(MEDIA_QUERY_THEME_LIGHT).matches) {
         return Theme.Light;
       }
-      const curHour = new Date().getHours();
-      const isNight = curHour >= 19 || curHour <= 6;
-      return isNight ? Theme.Dark : Theme.Light;
     }
-    return Theme.Light;
+    // todo: init by different time zone
+    const curHour = new Date().getHours();
+    const isNight = curHour >= 19 || curHour <= 6;
+    return isNight ? Theme.Dark : Theme.Light;
   }
 
   setTheme(theme: Theme) {
