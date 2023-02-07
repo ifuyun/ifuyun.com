@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
@@ -59,6 +59,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private platform: PlatformService,
     private userAgentService: UserAgentService,
     private destroy$: DestroyService,
@@ -122,7 +123,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
 
   download(uhd = false) {
     if (!this.isLoggedIn && uhd) {
-      return this.message.error('下载 4k 超高清壁纸请先登录');
+      this.router.navigate(['/user/login'], { queryParams: { ref: `/wallpaper/${this.wallpaperId}` } });
+      return;
     }
     const downloadUrl = this.wallpaperService.getDownloadUrl(this.wallpaperId, uhd);
     const token = localStorage.getItem('token');
