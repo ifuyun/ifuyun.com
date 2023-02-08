@@ -123,7 +123,9 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
 
   download(uhd = false) {
     if (!this.isLoggedIn && uhd) {
-      this.router.navigate(['/user/login'], { queryParams: { ref: `/wallpaper/${this.wallpaperId}` } });
+      this.router.navigate(['/user/login'], {
+        queryParams: { ref: `/wallpaper/${this.wallpaperId}?lang=${this.lang}` }
+      });
       return;
     }
     const downloadUrl = this.wallpaperService.getDownloadUrl(this.wallpaperId, uhd);
