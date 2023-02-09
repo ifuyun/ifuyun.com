@@ -68,15 +68,3 @@ export interface UserAgentData {
   isCrawler: boolean;
   userAgent: string;
 }
-
-export interface AccessLog extends UserAgentData {
-  requestUrl: string;
-  requestTime?: Date;
-  referer: string;
-  requestMethod?: string;
-  site: 'web' | 'admin';
-  userIp?: string;
-  resolution: string;
-  colorDepth: string;
-  isAjax: boolean;
-}
