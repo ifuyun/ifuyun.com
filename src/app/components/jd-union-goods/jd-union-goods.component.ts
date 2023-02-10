@@ -32,6 +32,7 @@ export class JdUnionGoodsComponent implements OnInit {
   @Input() dynamic = false;
   @Input() optionKey = '';
   @Input() forceRefresh = true;
+  @Input() showEmptyBackground = true;
 
   readonly materialEliteIds = Object.freeze([1, 2, 3, 4]);
   readonly jingfenEliteIds = Object.freeze([
