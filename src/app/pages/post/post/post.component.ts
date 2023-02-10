@@ -80,9 +80,9 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private commentUser: Guest | null = null;
 
   constructor(
+    private destroy$: DestroyService,
     private platform: PlatformService,
     private userAgentService: UserAgentService,
-    private destroy$: DestroyService,
     private metaService: MetaService,
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,

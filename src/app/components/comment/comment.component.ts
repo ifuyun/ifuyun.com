@@ -1,7 +1,6 @@
 import { DOCUMENT, ViewportScroller } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { cloneDeep, isEmpty, uniq } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
 import { ApiUrl } from '../../config/api-url';
@@ -68,9 +67,8 @@ export class CommentComponent implements OnInit, AfterViewInit {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private destroy$: DestroyService,
-    private userAgentService: UserAgentService,
     private platform: PlatformService,
-    private route: ActivatedRoute,
+    private userAgentService: UserAgentService,
     private fb: FormBuilder,
     private commonService: CommonService,
     private optionService: OptionService,
@@ -175,7 +173,12 @@ export class CommentComponent implements OnInit, AfterViewInit {
             this.resetReplyVisible();
             this.refreshCaptcha();
             this.fetchComments(() => {
-              !cachedReplyMode && this.scroller.scrollToAnchor('comments');
+              if (!cachedReplyMode) {
+                const offsetTop = this.document.getElementById('comments')?.offsetTop || 0;
+                if (offsetTop > 0) {
+                  this.scroller.scrollToPosition([0, offsetTop - this.headerHeight]);
+                }
+              }
             });
           }
         });

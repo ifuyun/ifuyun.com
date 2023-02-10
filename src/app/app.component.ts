@@ -1,4 +1,4 @@
-import { DOCUMENT, ViewportScroller } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
@@ -37,8 +37,7 @@ export class AppComponent implements OnInit {
     private optionService: OptionService,
     private userService: UserService,
     private taxonomyService: TaxonomyService,
-    private logService: LogService,
-    private scroller: ViewportScroller
+    private logService: LogService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }
@@ -60,7 +59,6 @@ export class AppComponent implements OnInit {
       this.initialized = true;
       this.siderOpen = false;
       this.onSiderOpenChange(false);
-      this.scroller.scrollToPosition([0, 0]);
     });
     this.initTheme();
     this.initThemeListener();
