@@ -18,7 +18,7 @@ import { JdUnionOptions } from './jd-union-goods.interface';
   providers: [DestroyService]
 })
 export class JdUnionGoodsComponent implements OnInit {
-  @Input() eliteId = 2;
+  @Input() eliteIds: number | number[] = 2;
   @Input() page = 1;
   @Input() pageSize = 3;
   @Input() rowSize = 3;
@@ -45,6 +45,7 @@ export class JdUnionGoodsComponent implements OnInit {
   ]);
 
   isMobile = false;
+  eliteId!: number;
   goodsList: (JdUnionGoodsMaterial | JdUnionGoodsJingfen)[] = [];
 
   private options: OptionEntity = {};
@@ -84,7 +85,7 @@ export class JdUnionGoodsComponent implements OnInit {
     const defaults: JdUnionOptions = {
       random: true,
       jingfen: true,
-      eliteId: 2,
+      eliteIds: 2,
       pageSize: 3,
       mPageSize: 1,
       visible: true
@@ -103,11 +104,13 @@ export class JdUnionGoodsComponent implements OnInit {
     this.isJingfen = jdUnionOptions.jingfen;
     this.pageSize = this.isMobile ? jdUnionOptions.mPageSize || 1 : jdUnionOptions.pageSize || 3;
     this.visible = jdUnionOptions.visible;
-    this.eliteId = jdUnionOptions.eliteId;
+    this.eliteIds = jdUnionOptions.eliteIds;
   }
 
   private initEliteId() {
-    if (this.isRandom) {
+    if (Array.isArray(this.eliteIds)) {
+      this.eliteId = this.eliteIds[Math.floor(Math.random() * this.eliteIds.length)];
+    } else if (this.isRandom) {
       if (this.isJingfen) {
         this.eliteId = this.jingfenEliteIds[Math.floor(Math.random() * this.jingfenEliteIds.length)];
         if (this.eliteId === 0) {
@@ -116,6 +119,8 @@ export class JdUnionGoodsComponent implements OnInit {
       } else {
         this.eliteId = this.materialEliteIds[Math.floor(Math.random() * this.materialEliteIds.length)];
       }
+    } else {
+      this.eliteId = this.eliteIds;
     }
   }
 
