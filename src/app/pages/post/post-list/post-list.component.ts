@@ -37,6 +37,7 @@ export class PostListComponent extends PageComponent implements OnInit {
   pageUrl = '';
   pageUrlParam: Params = {};
 
+  private pageSize = 10;
   private year = '';
   private month = '';
 
@@ -73,6 +74,7 @@ export class PostListComponent extends PageComponent implements OnInit {
       )
       .subscribe(([options]) => {
         this.options = options;
+        this.pageSize = Number(this.options['posts_per_page']) || 10;
         this.fetchPosts();
       });
   }
@@ -92,7 +94,8 @@ export class PostListComponent extends PageComponent implements OnInit {
 
   private fetchPosts() {
     const param: PostQueryParam = {
-      page: this.page
+      page: this.page,
+      pageSize: this.pageSize
     };
     if (this.keyword) {
       this.pageIndex = 'search';
@@ -122,7 +125,7 @@ export class PostListComponent extends PageComponent implements OnInit {
         this.updatePageInfo(res.breadcrumbs);
         this.updateBreadcrumb(res.breadcrumbs);
 
-        this.paginatorData = this.paginator.getPaginator(this.page, this.total);
+        this.paginatorData = this.paginator.getPaginator(this.page, this.total, this.pageSize);
         const urlSegments = this.route.snapshot.url.map((url) => url.path);
         if (urlSegments.length < 1 || urlSegments[0] === 'archive') {
           urlSegments.unshift('post');
