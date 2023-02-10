@@ -134,12 +134,15 @@ export class JdUnionGoodsComponent implements OnInit {
 
   private fetchGoodsMaterial() {
     this.shoppingService
-      .getGoodsMaterial({
-        eliteId: this.eliteId,
-        page: this.page,
-        pageSize: this.pageSize,
-        transfer: this.isMobile ? 0 : 1
-      })
+      .getGoodsMaterial(
+        {
+          eliteId: this.eliteId,
+          page: this.page,
+          pageSize: this.pageSize,
+          transfer: this.isMobile ? 0 : 1
+        },
+        true
+      )
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         const code = Number(res.code);
@@ -157,11 +160,14 @@ export class JdUnionGoodsComponent implements OnInit {
 
   private fetchGoodsJingfen() {
     this.shoppingService
-      .getGoodsJingfen({
-        eliteId: this.eliteId,
-        page: this.page,
-        pageSize: this.pageSize
-      })
+      .getGoodsJingfen(
+        {
+          eliteId: this.eliteId,
+          page: this.page,
+          pageSize: this.pageSize
+        },
+        true
+      )
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         const code = Number(res.code);

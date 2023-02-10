@@ -39,7 +39,11 @@ export class ApiService {
     );
   }
 
-  httpGet<T extends HttpResponseEntity>(url: string, param: Record<string, any> = {}): Observable<T> {
+  httpGet<T extends HttpResponseEntity>(
+    url: string,
+    param: Record<string, any> = {},
+    disableMessage = false
+  ): Observable<T> {
     return this.http
       .get<T>(url, {
         params: new HttpParams({
@@ -47,10 +51,14 @@ export class ApiService {
         }),
         observe: 'body'
       })
-      .pipe(catchError(this.handleError<T>()));
+      .pipe(catchError(this.handleError<T>(disableMessage)));
   }
 
-  httpGetData<T extends HttpResponseEntity>(url: string, param: Record<string, any> = {}): Observable<any> {
+  httpGetData<T extends HttpResponseEntity>(
+    url: string,
+    param: Record<string, any> = {},
+    disableMessage = false
+  ): Observable<any> {
     return this.http
       .get<T>(url, {
         params: new HttpParams({
@@ -60,22 +68,28 @@ export class ApiService {
       })
       .pipe(
         map((res) => res?.data),
-        catchError(this.handleError<T>())
+        catchError(this.handleError<T>(disableMessage))
       );
   }
 
-  httpPost<T extends HttpResponseEntity>(url: string, body: Record<string, any> | FormData = {}): Observable<T> {
+  httpPost<T extends HttpResponseEntity>(
+    url: string,
+    body: Record<string, any> | FormData = {},
+    disableMessage = false
+  ): Observable<T> {
     return this.http
       .post<T>(url, body, {
         observe: 'body'
       })
-      .pipe(catchError(this.handleError<T>()));
+      .pipe(catchError(this.handleError<T>(disableMessage)));
   }
 
-  private handleError<T>() {
+  private handleError<T>(disableMessage: boolean) {
     return (error: HttpErrorResponse): Observable<T> => {
       if (error.status !== HttpStatusCode.NotFound) {
-        this.message.error(error.error?.message || error.message || Message.UNKNOWN_ERROR);
+        if (!disableMessage) {
+          this.message.error(error.error?.message || error.message || Message.UNKNOWN_ERROR);
+        }
         // Let the app keep running by returning an empty result.
         return of(error.error as T);
       }

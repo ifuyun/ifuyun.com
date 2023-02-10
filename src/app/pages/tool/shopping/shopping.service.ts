@@ -28,15 +28,15 @@ export class ShoppingService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  getGoodsMaterial(param: JdUnionParamGoodsMaterial): Observable<JdUnionResponseGoodsMaterial> {
+  getGoodsMaterial(param: JdUnionParamGoodsMaterial, disableMessage = false): Observable<JdUnionResponseGoodsMaterial> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_JD_GOODS_MATERIAL), param)
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_JD_GOODS_MATERIAL), param, disableMessage)
       .pipe(map((res) => res?.data || {}));
   }
 
-  getGoodsJingfen(param: JdUnionParamGoodsJingfen): Observable<JdUnionResponseGoodsJingfen> {
+  getGoodsJingfen(param: JdUnionParamGoodsJingfen, disableMessage = false): Observable<JdUnionResponseGoodsJingfen> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_JD_GOODS_JINGFEN), param)
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_JD_GOODS_JINGFEN), param, disableMessage)
       .pipe(map((res) => res?.data || {}));
   }
 }
