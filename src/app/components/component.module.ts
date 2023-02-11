@@ -4,15 +4,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AutofocusDirective } from '../directives/autofocus.directive';
 import { PipesModule } from '../pipes/pipes.module';
-import { BackTopComponent } from './back-top/back-top.component';
-import { BackTopModule } from './back-top/back-top.module';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { CarouselComponent } from './carousel/carousel.component';
 import { CommentComponent } from './comment/comment.component';
 import { EmptyComponent } from './empty/empty.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
-import { ImageModule } from './image/image.module';
 import { JdUnionGoodsGroupComponent } from './jd-union-goods-group/jd-union-goods-group.component';
 import { JdUnionGoodsComponent } from './jd-union-goods/jd-union-goods.component';
 import { LayoutComponent } from './layout/layout.component';
@@ -47,13 +44,10 @@ import { WallpaperBoxComponent } from './wallpaper-box/wallpaper-box.component';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    BackTopModule,
-    ImageModule,
     PipesModule
   ],
   exports: [
     AutofocusDirective,
-    BackTopComponent,
     BreadcrumbComponent,
     CarouselComponent,
     CommentComponent,
