@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { ElementRef, Inject, Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -98,5 +98,9 @@ export class CommonService {
 
   updateJdUnionFlag(flag: boolean) {
     this.jdUnionFlag.next(flag);
+  }
+
+  addPaddingToImagePreview(eleRef: ElementRef) {
+    eleRef.nativeElement.classList.add('preview-with-padding');
   }
 }

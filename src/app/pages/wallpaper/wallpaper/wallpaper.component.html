@@ -18,26 +18,24 @@
     </div>
   </header>
   <div class="divider"></div>
-  <div class="post-content">
-    <div class="wallpaper">
-      <figure>
-        <div class="wallpaper-box" (click)="showWallpaper()">
-          <img *ngIf="wallpaper?.url" [src]="wallpaper?.url" [alt]="wallpaper?.copyright"/>
-          <div class="wallpaper-overlay"></div>
-        </div>
-        <figcaption>{{wallpaper?.copyright}} ({{wallpaper?.copyrightAuthor}})</figcaption>
-      </figure>
-      <div class="wallpaper-actions">
-        <a class="button button-submit" (click)="showWallpaper()" title="全屏查看壁纸">
-          <i class="icon icon-zoom-in"></i><span>查看大图</span>
-        </a>
-        <a class="button button-submit" (click)="download()" title="下载高清壁纸">
-          <i class="icon icon-cloud-download"></i><span>1920x1080</span>
-        </a>
-        <a class="button button-submit" *ngIf="!isMobile" (click)="download(true)" title="下载 4k 超高清壁纸">
-          <i class="icon icon-cloud-download"></i><span>4K 超高清</span>
-        </a>
+  <div class="post-content wallpaper">
+    <figure>
+      <div class="wallpaper-box" (click)="showWallpaper()">
+        <img *ngIf="wallpaper?.url" [src]="wallpaper?.url" [alt]="wallpaper?.copyright"/>
+        <div class="wallpaper-overlay"></div>
       </div>
+      <figcaption>{{wallpaper?.copyright}} ({{wallpaper?.copyrightAuthor}})</figcaption>
+    </figure>
+    <div class="wallpaper-actions">
+      <a class="button button-submit" (click)="showWallpaper()" title="全屏查看壁纸">
+        <i class="icon icon-zoom-in"></i><span>查看大图</span>
+      </a>
+      <a class="button button-submit" (click)="download()" title="下载高清壁纸">
+        <i class="icon icon-cloud-download"></i><span>1920x1080</span>
+      </a>
+      <a class="button button-submit" *ngIf="!isMobile" (click)="download(true)" title="下载 4k 超高清壁纸">
+        <i class="icon icon-cloud-download"></i><span>4K 超高清</span>
+      </a>
     </div>
     <h2>{{wallpaper?.storyTitle}}</h2>
     <article [innerHTML]="wallpaper?.story | safeHtml"></article>

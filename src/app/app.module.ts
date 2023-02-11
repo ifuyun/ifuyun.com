@@ -10,6 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ComponentModule } from './components/component.module';
 import { httpInterceptorProviders } from './interceptors/http-interceptors';
+import { NgZorroAntdModule } from './modules/antd/ng-zorro-antd.module';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PipesModule } from './pipes/pipes.module';
 
@@ -24,7 +25,8 @@ import { PipesModule } from './pipes/pipes.module';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     PipesModule,
-    ComponentModule
+    ComponentModule,
+    NgZorroAntdModule
   ],
   providers: [httpInterceptorProviders, { provide: APP_BASE_HREF, useValue: env.host }],
   bootstrap: [AppComponent]

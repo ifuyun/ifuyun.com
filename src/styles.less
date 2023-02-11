@@ -1,4 +1,4 @@
-@import "./app/components/antd-core/style/index";
+@import "../node_modules/ng-zorro-antd/ng-zorro-antd";
 @import "styles/reset";
 @import "styles/icons";
 @import "styles/variables";
@@ -9,6 +9,16 @@
 @import "styles/post-list";
 @import "styles/archive";
 
+// Override less variables to here
+// View all variables: https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/components/style/themes/default.less
+@heading-color: var(--base-color);
+
+// Override antd styles
+.ant-image-preview-mask {
+  backdrop-filter: blur(5px);
+}
+
+// Custom styles
 a, a:hover, a:focus {
   color: var(--primary-color);
   text-decoration: none;
@@ -247,6 +257,14 @@ a, a:hover, a:focus {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+.preview-with-padding {
+  img {
+    padding: 16px;
+    border-radius: @border-radius;
+    background-color: #fff;
+  }
 }
 
 @keyframes loading-circle {

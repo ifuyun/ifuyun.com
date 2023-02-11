@@ -11,14 +11,14 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import highlight from 'highlight.js';
 import { isEmpty, uniq } from 'lodash';
+import { NzImageService } from 'ng-zorro-antd/image';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import * as QRCode from 'qrcode';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
-import { ImageService } from '../../../components/image/image.service';
-import { MessageService } from '../../../components/message/message.service';
 import { STORAGE_KEY_VOTED_POSTS, WECHAT_CARD_PATH } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { Message } from '../../../config/message.enum';
@@ -81,6 +81,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   constructor(
     private destroy$: DestroyService,
+    private route: ActivatedRoute,
     private platform: PlatformService,
     private userAgentService: UserAgentService,
     private metaService: MetaService,
@@ -93,9 +94,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     private commentService: CommentService,
     private voteService: VoteService,
     private favoriteService: FavoriteService,
-    private imageService: ImageService,
-    private route: ActivatedRoute,
-    private message: MessageService,
+    private imageService: NzImageService,
+    private message: NzMessageService,
     private renderer: Renderer2
   ) {
     super();
@@ -181,12 +181,12 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   showReward(src: string) {
-    this.imageService.preview([
+    const previewRef = this.imageService.preview([
       {
-        src,
-        padding: 16
+        src
       }
     ]);
+    this.commonService.addPaddingToImagePreview(previewRef.previewInstance.imagePreviewWrapper);
   }
 
   showShareQrcode() {
@@ -199,12 +199,12 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       margin: 0
     })
       .then((canvas) => {
-        this.imageService.preview([
+        const previewRef = this.imageService.preview([
           {
-            src: canvas.toDataURL(),
-            padding: 16
+            src: canvas.toDataURL()
           }
         ]);
+        this.commonService.addPaddingToImagePreview(previewRef.previewInstance.imagePreviewWrapper);
       })
       .catch((err) => this.message.error(err));
   }

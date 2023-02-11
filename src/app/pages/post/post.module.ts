@@ -3,13 +3,12 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highlightjs';
 import { ComponentModule } from '../../components/component.module';
-import { MessageModule } from '../../components/message/message.module';
 import { PipesModule } from '../../pipes/pipes.module';
 import { PostArchiveComponent } from './post-archive/post-archive.component';
+import { PostListBoxComponent } from './post-list-box/post-list-box.component';
 import { PostListComponent } from './post-list/post-list.component';
 import { PostRoutingModule } from './post-routing.module';
 import { PostComponent } from './post/post.component';
-import { PostListBoxComponent } from './post-list-box/post-list-box.component';
 
 @NgModule({
   declarations: [PostListComponent, PostComponent, PostArchiveComponent, PostListBoxComponent],
@@ -20,8 +19,7 @@ import { PostListBoxComponent } from './post-list-box/post-list-box.component';
     PipesModule,
     FormsModule,
     ReactiveFormsModule,
-    HighlightModule,
-    MessageModule
+    HighlightModule
   ],
   providers: [
     {

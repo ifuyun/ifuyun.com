@@ -3,8 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
-import { MessageService } from '../../../components/message/message.service';
 import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
@@ -56,7 +56,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
     private userService: UserService,
     private authService: AuthService,
     private loginService: LoginService,
-    private message: MessageService
+    private message: NzMessageService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();

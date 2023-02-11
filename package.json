@@ -60,6 +60,7 @@
     "log4js": "^6.7.1",
     "moment": "^2.29.4",
     "murmurhash": "^2.0.1",
+    "ng-zorro-antd": "^15.0.3",
     "ngx-clipboard": "^15.1.0",
     "ngx-cookie-service": "^15.0.0",
     "ngx-highlightjs": "^8.0.0",

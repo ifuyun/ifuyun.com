@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { isEmpty } from 'lodash';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
 import { ArchiveData } from '../../core/common.interface';
@@ -16,7 +17,6 @@ import { PostService } from '../../pages/post/post.service';
 import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
 import { LinkService } from '../../services/link.service';
 import { OptionService } from '../../services/option.service';
-import { MessageService } from '../message/message.service';
 
 @Component({
   selector: 'app-sider',
@@ -50,7 +50,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     private postService: PostService,
     private linkService: LinkService,
     private wallpaperService: WallpaperService,
-    private message: MessageService
+    private message: NzMessageService
   ) {}
 
   ngOnInit(): void {

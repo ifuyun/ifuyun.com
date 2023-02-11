@@ -1,6 +1,8 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
+import { NzImageService } from 'ng-zorro-antd/image';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import * as QRCode from 'qrcode';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
@@ -8,8 +10,6 @@ import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.inte
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
-import { ImageService } from '../../../components/image/image.service';
-import { MessageService } from '../../../components/message/message.service';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
@@ -71,8 +71,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     private wallpaperService: WallpaperService,
     private commentService: CommentService,
     private voteService: VoteService,
-    private message: MessageService,
-    private imageService: ImageService
+    private message: NzMessageService,
+    private imageService: NzImageService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -164,12 +164,12 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   }
 
   showReward(src: string) {
-    this.imageService.preview([
+    const previewRef = this.imageService.preview([
       {
-        src,
-        padding: 16
+        src
       }
     ]);
+    this.commonService.addPaddingToImagePreview(previewRef.previewInstance.imagePreviewWrapper);
   }
 
   showShareQrcode() {
@@ -182,12 +182,12 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
       margin: 0
     })
       .then((canvas) => {
-        this.imageService.preview([
+        const previewRef = this.imageService.preview([
           {
-            src: canvas.toDataURL(),
-            padding: 16
+            src: canvas.toDataURL()
           }
         ]);
+        this.commonService.addPaddingToImagePreview(previewRef.previewInstance.imagePreviewWrapper);
       })
       .catch((err) => this.message.error(err));
   }

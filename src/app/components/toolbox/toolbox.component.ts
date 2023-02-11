@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
+import { NzImageService } from 'ng-zorro-antd/image';
 import { skipWhile, takeUntil } from 'rxjs';
 import { WECHAT_CARD_PATH } from '../../config/common.constant';
 import { Theme } from '../../config/common.enum';
@@ -7,7 +8,6 @@ import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { OptionService } from '../../services/option.service';
-import { ImageService } from '../image/image.service';
 
 @Component({
   selector: 'i-toolbox',
@@ -24,7 +24,7 @@ export class ToolboxComponent implements OnInit {
     private destroy$: DestroyService,
     private commonService: CommonService,
     private optionService: OptionService,
-    private imageService: ImageService
+    private imageService: NzImageService
   ) {}
 
   ngOnInit(): void {

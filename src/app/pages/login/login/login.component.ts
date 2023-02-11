@@ -6,9 +6,9 @@ import { ActivatedRoute } from '@angular/router';
 import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { CookieService } from 'ngx-cookie-service';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
-import { MessageService } from '../../../components/message/message.service';
 import { ADMIN_URL_PARAM } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -85,7 +85,7 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
     private optionService: OptionService,
     private cookieService: CookieService,
     private authService: AuthService,
-    private message: MessageService,
+    private message: NzMessageService,
     private wallpaperService: WallpaperService
   ) {
     super();
@@ -183,9 +183,10 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
     }
   }
 
-  getUser(type: string) {
+  getUser(type: string): void {
     if (!['alipay', 'weibo', 'github'].includes(type)) {
-      return this.message.warning('Sorry, we are stepping up our efforts to launch this feature, please wait...');
+      this.message.warning('Sorry, we are stepping up our efforts to launch this feature, please wait...');
+      return;
     }
     if (isEmpty(this.options)) {
       return;
@@ -224,7 +225,6 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
           encodeURIComponent(this.getCallbackURL('github')),
           generateId()
         );
-        break;
     }
     location.href = url;
   }

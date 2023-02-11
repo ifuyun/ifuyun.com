@@ -2,6 +2,7 @@ import { DOCUMENT, ViewportScroller } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { cloneDeep, isEmpty, uniq } from 'lodash';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { skipWhile, takeUntil } from 'rxjs';
 import { ApiUrl } from '../../config/api-url';
 import { VoteType, VoteValue } from '../../config/common.enum';
@@ -22,7 +23,6 @@ import { VoteEntity } from '../../pages/post/vote.interface';
 import { VoteService } from '../../pages/post/vote.service';
 import { OptionService } from '../../services/option.service';
 import { UserService } from '../../services/user.service';
-import { MessageService } from '../message/message.service';
 import { CommentObjectType } from './comment.enum';
 import { Comment, CommentEntity, CommentModel } from './comment.interface';
 import { CommentService } from './comment.service';
@@ -75,7 +75,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
     private userService: UserService,
     private commentService: CommentService,
     private voteService: VoteService,
-    private message: MessageService,
+    private message: NzMessageService,
     private scroller: ViewportScroller
   ) {
     this.isMobile = this.userAgentService.isMobile();
