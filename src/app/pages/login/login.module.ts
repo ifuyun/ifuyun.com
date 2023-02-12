@@ -9,14 +9,7 @@ import { ThirdLoginComponent } from './third-login/third-login.component';
 
 @NgModule({
   declarations: [LoginComponent, ThirdLoginComponent],
-  imports: [
-    CommonModule,
-    LoginRoutingModule,
-    ComponentModule,
-    PipesModule,
-    FormsModule,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, LoginRoutingModule, ComponentModule, PipesModule, FormsModule, ReactiveFormsModule],
   exports: [LoginComponent, ThirdLoginComponent]
 })
 export class LoginModule {}

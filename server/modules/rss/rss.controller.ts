@@ -1,16 +1,16 @@
 import { Controller, Get, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
 import * as RSS from 'rss';
-import { SITE_INFO } from '../../../src/app/config/common.constant';
 import { Post } from '../../../src/app/pages/post/post.interface';
 import { PageSizePipe } from '../../pipes/page-size.pipe';
 import { ParseIntPipe } from '../../pipes/parse-int.pipe';
 import { TrimPipe } from '../../pipes/trim.pipe';
+import { OptionService } from '../option/option.service';
 import { RssService } from './rss.service';
 
 @Controller()
 export class RssController {
-  constructor(private readonly rssService: RssService) {}
+  constructor(private readonly rssService: RssService, private readonly optionService: OptionService) {}
 
   @Get('rss.xml')
   async generateRss(
@@ -20,18 +20,25 @@ export class RssController {
     @Res() res: Response
   ) {
     const showDetail = detail === '1';
+    const options = await this.optionService.getOptionsByKeys([
+      'site_name',
+      'site_slogan',
+      'site_url',
+      'site_domain',
+      'site_author'
+    ]);
     const result = await this.rssService.getPosts(page, pageSize, showDetail);
     const posts: Post[] = result.postList.list || [];
     const feed = new RSS({
-      title: SITE_INFO.title,
-      description: SITE_INFO.slogan,
-      generator: SITE_INFO.domain,
-      feed_url: `${SITE_INFO.url}/rss.xml`,
-      site_url: SITE_INFO.url,
-      image_url: `${SITE_INFO.url}/logo.png`,
-      managingEditor: SITE_INFO.author,
-      webMaster: SITE_INFO.author,
-      copyright: `${SITE_INFO.startYear}-${new Date().getFullYear()} ${SITE_INFO.domain}`,
+      title: options['title'],
+      description: options['slogan'],
+      generator: options['domain'],
+      feed_url: `${options['url']}/rss.xml`,
+      site_url: options['url'],
+      image_url: `${options['url']}/logo.png`,
+      managingEditor: options['author'],
+      webMaster: options['author'],
+      copyright: `2014-${new Date().getFullYear()} ${options['domain']}`,
       language: 'zh-cn',
       pubDate: new Date(),
       ttl: 60
@@ -41,7 +48,7 @@ export class RssController {
       feed.item({
         title: post.postTitle,
         description: showDetail ? post.postContent : post.postExcerpt,
-        url: SITE_INFO.url + post.postGuid,
+        url: options['url'] + post.postGuid,
         guid: post.postId,
         categories: item.categories.map((category) => category.taxonomySlug),
         author: item.meta['post_author'] || post.author.userNiceName,

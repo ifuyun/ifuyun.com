@@ -39,13 +39,7 @@ import { WallpaperBoxComponent } from './wallpaper-box/wallpaper-box.component';
     ToolboxComponent,
     WallpaperBoxComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    PipesModule
-  ],
+  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, PipesModule],
   exports: [
     AutofocusDirective,
     BreadcrumbComponent,
