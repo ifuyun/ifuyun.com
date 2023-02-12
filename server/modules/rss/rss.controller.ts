@@ -30,15 +30,15 @@ export class RssController {
     const result = await this.rssService.getPosts(page, pageSize, showDetail);
     const posts: Post[] = result.postList.list || [];
     const feed = new RSS({
-      title: options['title'],
-      description: options['slogan'],
-      generator: options['domain'],
-      feed_url: `${options['url']}/rss.xml`,
-      site_url: options['url'],
-      image_url: `${options['url']}/logo.png`,
-      managingEditor: options['author'],
-      webMaster: options['author'],
-      copyright: `2014-${new Date().getFullYear()} ${options['domain']}`,
+      title: options['site_name'],
+      description: options['site_slogan'],
+      generator: options['site_domain'],
+      feed_url: `${options['site_url']}/rss.xml`,
+      site_url: options['site_url'],
+      image_url: `${options['site_url']}/logo.png`,
+      managingEditor: options['site_author'],
+      webMaster: options['site_author'],
+      copyright: `2014-${new Date().getFullYear()} ${options['site_domain']}`,
       language: 'zh-cn',
       pubDate: new Date(),
       ttl: 60
@@ -48,7 +48,7 @@ export class RssController {
       feed.item({
         title: post.postTitle,
         description: showDetail ? post.postContent : post.postExcerpt,
-        url: options['url'] + post.postGuid,
+        url: options['site_url'] + post.postGuid,
         guid: post.postId,
         categories: item.categories.map((category) => category.taxonomySlug),
         author: item.meta['post_author'] || post.author.userNiceName,
