@@ -61,7 +61,7 @@
           },
           "configurations": {
             "production": {
-              "baseHref": "http://cdn.ifuyun.com/",
+              "baseHref": "https://cdn.ifuyun.com/",
               "budgets": [
                 {
                   "type": "initial",
