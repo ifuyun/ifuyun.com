@@ -112,7 +112,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
             caption: wallpaper.copyright || wallpaper.copyrightEn,
             url,
             fullUrl: url,
-            link: `/wallpaper/${wallpaper.wallpaperId}`,
+            link: this.getWallpaperLink(wallpaper.wallpaperId),
             target: LinkTarget.BLANK,
             order: index + 1
           };
@@ -139,11 +139,15 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
             caption: wallpaper.copyright || wallpaper.copyrightEn,
             url,
             fullUrl: url,
-            link: `/wallpaper/${wallpaper.wallpaperId}`,
+            link: this.getWallpaperLink(wallpaper.wallpaperId),
             target: LinkTarget.BLANK,
             order: index + 1
           };
         });
       });
+  }
+
+  private getWallpaperLink(wallpaperId: string) {
+    return `${this.options['site_url']}/wallpaper/${wallpaperId}`;
   }
 }
