@@ -9,7 +9,7 @@
     --minor-color: #999;
     --primary-border-color: #eee;
     --minor-border-color: #e9e9e9;
-    --header-color: #333;
+    --header-color: var(--base-color);
     --header-background-color: rgba(255, 255, 255, .72);
     --header-background-color-moz: rgba(242, 242, 242, 1);
     --header-border: none;
@@ -81,7 +81,7 @@
   }
 
   &[data-theme='dark'] {
-    --base-color: rgba(255, 255, 255, .6);
+    --base-color: rgba(255, 255, 255, .65);
     --base-font-color: #333;
     --base-background-color: #111;
     --primary-background-color: rgba(255, 255, 255, .05);
@@ -89,9 +89,9 @@
     --minor-color: rgba(255, 255, 255, .3);
     --primary-border-color: #404040;
     --minor-border-color: #404040;
-    --header-color: rgba(255, 255, 255, .6);
+    --header-color: var(--base-color);
     --header-background-color: rgba(32, 32, 32, .72);
-    --header-background-color-moz: #191919;
+    --header-background-color-moz: #202020;
     --header-border: 1px solid #202020;
     --header-subnav-color: #333;
     --header-subnav-background: #f6f6f6;
@@ -128,7 +128,7 @@
 
     --img-figcaption-color: rgba(255, 255, 255, .4);
     --post-item-hover-color: #202020;
-    --post-pre-border-color: var(--base-color);
+    --post-pre-border-color: rgba(255, 255, 255, .4);
     --post-pre-background-color: #202020;
     --post-code-background-color: #303030;
     --post-quote-color: rgba(255, 255, 255, .3);
