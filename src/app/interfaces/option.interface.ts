@@ -17,3 +17,10 @@ export interface Carousel {
 export interface CarouselVo extends Carousel {
   fullUrl: string;
 }
+
+export interface CarouselOptions {
+  type: 'album' | 'wallpaper';
+  orderBy?: 'newest' | 'oldest' | 'random';
+  size?: number;
+  resolution?: string;
+}

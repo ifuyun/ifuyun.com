@@ -19,9 +19,9 @@ export class WallpaperService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  getRandomWallpapers(size: number): Observable<Wallpaper[]> {
+  getRandomWallpapers(size: number, remote = 1): Observable<Wallpaper[]> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_WALLPAPERS_BY_RANDOM), { size })
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_WALLPAPERS_BY_RANDOM), { size, remote })
       .pipe(map((res) => res?.data || []));
   }
 

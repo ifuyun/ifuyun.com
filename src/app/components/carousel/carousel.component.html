@@ -1,16 +1,23 @@
 <div class="carousel-container" (mouseover)="stop()" (mouseout)="start()">
   <div class="carousel"
-       [ngStyle]="{'width': (100 * carousels.length) + '%', 'transform': 'translateX(-' + (100 / carousels.length) * activeIndex + '%)'}">
+       [style.width]="(100 * carousels.length) + '%'"
+       [style.transform]="'translateX(-' + (100 / carousels.length) * activeIndex + '%)'">
     <div class="carousel-slide" *ngFor="let carousel of carousels" [ngStyle]="{'width': (100 / carousels.length) + '%'}">
-      <img *ngIf="!carousel.link" [src]="carousel.fullUrl" [alt]="carousel.title"/>
-      <a *ngIf="carousel.link" [href]="carousel.link" [target]="carousel.target">
-        <img [src]="carousel.fullUrl" [alt]="carousel.title"/>
+      <div class="carousel-img" *ngIf="!carousel.link"
+           [title]="carousel.title" [style.background-image]="'url(' + carousel.fullUrl + ')'"></div>
+      <a class="carousel-link"
+         *ngIf="carousel.link" [href]="carousel.link" [title]="carousel.title" [target]="carousel.target">
+        <div class="carousel-img" [style.background-image]="'url(' + carousel.fullUrl + ')'"></div>
       </a>
     </div>
   </div>
   <div class="indicator">
     <div class="caption">
-      <span [title]="carousels[activeIndex]?.caption">{{carousels[activeIndex]?.caption}}</span>
+      <span *ngIf="!carousels[activeIndex]?.link"
+            [title]="carousels[activeIndex]?.caption">{{carousels[activeIndex]?.caption}}</span>
+      <a *ngIf="carousels[activeIndex]?.link"
+         [href]="carousels[activeIndex]?.link"
+         [title]="carousels[activeIndex]?.caption">{{carousels[activeIndex]?.caption}}</a>
     </div>
     <ul class="dots">
       <li *ngFor="let carousel of carousels; let i = index"

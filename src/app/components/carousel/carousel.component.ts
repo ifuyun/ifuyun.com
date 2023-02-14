@@ -1,9 +1,13 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
+import { LinkTarget } from '../../config/common.enum';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
-import { CarouselVo, OptionEntity } from '../../interfaces/option.interface';
+import { CarouselOptions, CarouselVo, OptionEntity } from '../../interfaces/option.interface';
+import { BING_DOMAIN } from '../../pages/wallpaper/wallpaper.constant';
+import { WallpaperLang } from '../../pages/wallpaper/wallpaper.interface';
+import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
 import { OptionService } from '../../services/option.service';
 
 @Component({
@@ -18,12 +22,15 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   activeIndex = 0;
   isRevert = false;
   timer!: any;
-  staticResourceHost = '';
+
+  private carouselOptions!: CarouselOptions;
+  private staticResourceHost = '';
 
   constructor(
     private destroy$: DestroyService,
+    private platform: PlatformService,
     private optionService: OptionService,
-    private platform: PlatformService
+    private wallpaperService: WallpaperService
   ) {}
 
   ngOnInit(): void {
@@ -35,7 +42,21 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((options) => {
         this.options = options;
         this.staticResourceHost = options['static_resource_host'];
-        this.fetchData();
+        try {
+          this.carouselOptions = JSON.parse(options['carousel_options']);
+        } catch (e) {
+          this.carouselOptions = { type: 'album' };
+        }
+
+        if (this.carouselOptions.type === 'album') {
+          this.fetchCarousels();
+        } else {
+          if (this.carouselOptions.orderBy === 'random') {
+            this.fetchRandomWallpapers();
+          } else {
+            this.fetchWallpapers();
+          }
+        }
       });
   }
 
@@ -65,7 +86,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private fetchData() {
+  private fetchCarousels() {
     this.optionService
       .getCarousels()
       .pipe(takeUntil(this.destroy$))
@@ -73,6 +94,55 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
         this.carousels = res;
         this.carousels.forEach((item) => {
           item.fullUrl = /^https?:\/\//i.test(item.url) ? item.url : this.staticResourceHost + item.url;
+        });
+      });
+  }
+
+  private fetchRandomWallpapers() {
+    this.wallpaperService
+      .getRandomWallpapers(this.carouselOptions.size || 4, 0)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        const resolution = this.carouselOptions.resolution || '1280x720';
+        this.carousels = res.map((wallpaper, index) => {
+          const url = `${BING_DOMAIN}${wallpaper.urlBase}_${resolution}.${wallpaper.imageFormat}`;
+          return {
+            id: wallpaper.wallpaperId,
+            title: wallpaper.title || wallpaper.titleEn,
+            caption: wallpaper.copyright || wallpaper.copyrightEn,
+            url,
+            fullUrl: url,
+            link: `/wallpaper/${wallpaper.wallpaperId}`,
+            target: LinkTarget.BLANK,
+            order: index + 1
+          };
+        });
+      });
+  }
+
+  private fetchWallpapers() {
+    this.wallpaperService
+      .getWallpapers({
+        page: 1,
+        pageSize: this.carouselOptions.size || 4,
+        lang: [WallpaperLang.CN, WallpaperLang.EN],
+        orderBy: this.carouselOptions.orderBy === 'oldest' ? [['date', 'asc']] : [['date', 'desc']]
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        const resolution = this.carouselOptions.resolution || '1280x720';
+        this.carousels = (res.list || []).map((wallpaper, index) => {
+          const url = `${BING_DOMAIN}${wallpaper.urlBase}_${resolution}.${wallpaper.imageFormat}`;
+          return {
+            id: wallpaper.wallpaperId,
+            title: wallpaper.title || wallpaper.titleEn,
+            caption: wallpaper.copyright || wallpaper.copyrightEn,
+            url,
+            fullUrl: url,
+            link: `/wallpaper/${wallpaper.wallpaperId}`,
+            target: LinkTarget.BLANK,
+            order: index + 1
+          };
         });
       });
   }
