@@ -21,6 +21,16 @@
       display: block;
       height: 100%;
     }
+
+    .indicator {
+      padding: @primary-margin @post-list-padding;
+    }
+  }
+
+  &.carousel-mobile {
+    .indicator {
+      padding: @m-primary-margin @m-content-margin;
+    }
   }
 }
 
@@ -48,7 +58,6 @@
   position: absolute;
   width: 100%;
   bottom: 0;
-  padding: 16px @post-list-padding;
   background: rgba(51, 51, 51, .6);
 
   .caption {
