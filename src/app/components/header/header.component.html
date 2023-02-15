@@ -11,7 +11,7 @@
             <a class="nav-link" title="{{options['site_name']}}首页" [routerLink]="['/']">首页</a>
           </li>
           <li *ngFor="let taxonomy of taxonomies" [ngClass]="{'active': activePage === taxonomy.taxonomySlug}">
-            <a class="nav-link" [routerLink]="['/category/'+taxonomy.taxonomySlug]"
+            <a class="nav-link" [routerLink]="['/post/category/'+taxonomy.taxonomySlug]"
                title="{{taxonomy.taxonomyDescription}}">
               <span>{{taxonomy.taxonomyName}}</span><i class="nav-arrow" *ngIf="!taxonomy.isLeaf"></i>
             </a>
@@ -19,7 +19,7 @@
               <div class="sub-nav-list">
                 <ul>
                   <li *ngFor="let subTaxonomy of taxonomy.children">
-                    <a class="sub-nav-link" [routerLink]="['/category/'+subTaxonomy.taxonomySlug]"
+                    <a class="sub-nav-link" [routerLink]="['/post/category/'+subTaxonomy.taxonomySlug]"
                        title="{{subTaxonomy.taxonomyDescription}}">{{subTaxonomy.taxonomyName}}</a>
                   </li>
                 </ul>

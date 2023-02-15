@@ -113,7 +113,7 @@ export class SitemapController {
       priority: item.priority
     }));
     const taxonomies: SitemapItem[] = data.taxonomies.map((item) => ({
-      url: `${siteUrl}/${item.taxonomyType === TaxonomyType.POST ? 'category' : 'tag'}/${item.taxonomySlug}`,
+      url: `${siteUrl}/post/${item.taxonomyType === TaxonomyType.POST ? 'category' : 'tag'}/${item.taxonomySlug}`,
       changefreq: EnumChangefreq.DAILY,
       priority: 0.7
     }));

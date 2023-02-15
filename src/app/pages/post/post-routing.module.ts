@@ -25,8 +25,8 @@ const routes: Routes = [
     component: PostListComponent
   },
   {
-    /* category/:category, category/:category/page-:page */
-    /* tag/:tag, tag/:tag/page-:page */
+    /* post/category/:category, post/category/:category/page-:page */
+    /* post/tag/:tag, post/tag/:tag/page-:page */
     matcher: taxonomyUrlMatcher,
     component: PostListComponent
   },

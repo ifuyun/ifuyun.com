@@ -121,7 +121,10 @@ export class PostListComponent extends PageComponent implements OnInit {
         this.page = this.postList.page || 1;
         this.total = this.postList.total || 0;
 
-        res.breadcrumbs = res.breadcrumbs || [];
+        res.breadcrumbs = (res.breadcrumbs || []).map((item) => {
+          item.url = `/post/category/${item.slug}`;
+          return item;
+        });
         this.updatePageInfo(res.breadcrumbs);
         this.updateBreadcrumb(res.breadcrumbs);
 
@@ -217,7 +220,7 @@ export class PostListComponent extends PageComponent implements OnInit {
         {
           label: this.tag,
           tooltip: this.tag,
-          url: '/tag/' + this.tag,
+          url: '/post/tag/' + this.tag,
           isHeader: true
         }
       );

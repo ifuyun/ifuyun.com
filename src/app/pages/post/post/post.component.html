@@ -55,7 +55,7 @@
         <div class="post-meta-icon"><i class='icon icon-folder'></i></div>
         <ul class="post-meta-info">
           <li *ngFor="let cat of postCategories">
-            <a [routerLink]="['/category/' + cat.taxonomySlug]"
+            <a [routerLink]="['/post/category/' + cat.taxonomySlug]"
                title="{{cat.taxonomyName}}" rel="category">{{cat.taxonomyName}}</a>
           </li>
         </ul>
@@ -64,7 +64,7 @@
         <div class="post-meta-icon"><i class='icon icon-tag'></i></div>
         <ul class="post-meta-info">
           <li *ngFor="let tag of postTags">
-            <a [routerLink]="['/tag/' + tag.taxonomySlug]"
+            <a [routerLink]="['/post/tag/' + tag.taxonomySlug]"
                title="{{tag.taxonomyName}}" rel="category">{{tag.taxonomyName}}</a>
           </li>
         </ul>
