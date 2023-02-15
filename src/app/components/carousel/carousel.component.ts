@@ -4,6 +4,7 @@ import { skipWhile, takeUntil } from 'rxjs';
 import { LinkTarget } from '../../config/common.enum';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
+import { UserAgentService } from '../../core/user-agent.service';
 import { CarouselOptions, CarouselVo, OptionEntity } from '../../interfaces/option.interface';
 import { BING_DOMAIN } from '../../pages/wallpaper/wallpaper.constant';
 import { WallpaperLang } from '../../pages/wallpaper/wallpaper.interface';
@@ -17,6 +18,7 @@ import { OptionService } from '../../services/option.service';
   providers: [DestroyService]
 })
 export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
+  isMobile = false;
   options: OptionEntity = {};
   carousels: CarouselVo[] = [];
   activeIndex = 0;
@@ -29,9 +31,12 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private destroy$: DestroyService,
     private platform: PlatformService,
+    private userAgentService: UserAgentService,
     private optionService: OptionService,
     private wallpaperService: WallpaperService
-  ) {}
+  ) {
+    this.isMobile = this.userAgentService.isMobile();
+  }
 
   ngOnInit(): void {
     this.optionService.options$
@@ -113,7 +118,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
             url,
             fullUrl: url,
             link: this.getWallpaperLink(wallpaper.wallpaperId),
-            target: LinkTarget.BLANK,
+            target: LinkTarget.SELF,
             order: index + 1
           };
         });
@@ -140,7 +145,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
             url,
             fullUrl: url,
             link: this.getWallpaperLink(wallpaper.wallpaperId),
-            target: LinkTarget.BLANK,
+            target: LinkTarget.SELF,
             order: index + 1
           };
         });

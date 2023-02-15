@@ -1,17 +1,29 @@
-<div class="carousel-container" (mouseover)="stop()" (mouseout)="start()">
+<div class="carousel-container"
+     [class.carousel-desktop]="!isMobile"
+     [class.carousel-mobile]="isMobile"
+     (mouseover)="stop()" (mouseout)="start()">
   <div class="carousel"
        [style.width]="(100 * carousels.length) + '%'"
        [style.transform]="'translateX(-' + (100 / carousels.length) * activeIndex + '%)'">
     <div class="carousel-slide"
          *ngFor="let carousel of carousels"
          [ngStyle]="{'width': (100 / carousels.length) + '%'}">
-      <div class="carousel-img" *ngIf="!carousel.link"
-           [title]="carousel.caption"
-           [style.background-image]="'url(' + carousel.fullUrl + ')'"></div>
-      <a class="carousel-link"
-         *ngIf="carousel.link" [href]="carousel.link" [title]="carousel.caption" [target]="carousel.target">
-        <div class="carousel-img" [style.background-image]="'url(' + carousel.fullUrl + ')'"></div>
-      </a>
+      <ng-container *ngIf="!isMobile">
+        <div class="carousel-img" *ngIf="!carousel.link"
+             [title]="carousel.caption"
+             [style.background-image]="'url(' + carousel.fullUrl + ')'"></div>
+        <a class="carousel-link" *ngIf="carousel.link"
+           [href]="carousel.link" [title]="carousel.caption" [target]="carousel.target">
+          <div class="carousel-img" [style.background-image]="'url(' + carousel.fullUrl + ')'"></div>
+        </a>
+      </ng-container>
+      <ng-container *ngIf="isMobile">
+        <img *ngIf="!carousel.link" [src]="carousel.fullUrl" [alt]="carousel.caption"/>
+        <a class="carousel-link" *ngIf="carousel.link"
+           [href]="carousel.link" [title]="carousel.caption" [target]="carousel.target">
+          <img [src]="carousel.fullUrl" [alt]="carousel.caption"/>
+        </a>
+      </ng-container>
     </div>
   </div>
   <div class="indicator">
