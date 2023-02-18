@@ -1,4 +1,7 @@
-<i-jd-union-goods *ngIf="!isMobile || isMobile && eliteId === 2" [eliteIds]="2" [pageSize]="pageSize"></i-jd-union-goods>
-<i-jd-union-goods *ngIf="!isMobile || isMobile && eliteId === 3" [eliteIds]="3" [pageSize]="pageSize"></i-jd-union-goods>
-<i-jd-union-goods *ngIf="!isMobile || isMobile && eliteId === 4" [eliteIds]="4" [pageSize]="pageSize"></i-jd-union-goods>
-<i-jd-union-goods *ngIf="!isMobile" [eliteIds]="1" [pageSize]="3"></i-jd-union-goods>
+<ng-container *ngIf="!isMobile">
+  <i-jd-union-goods [eliteIds]="2" [pageSize]="pageSize"></i-jd-union-goods>
+  <i-jd-union-goods [eliteIds]="3" [pageSize]="pageSize"></i-jd-union-goods>
+  <i-jd-union-goods [eliteIds]="4" [pageSize]="pageSize"></i-jd-union-goods>
+  <i-jd-union-goods [eliteIds]="1" [pageSize]="pageSize"></i-jd-union-goods>
+</ng-container>
+<i-jd-union-goods *ngIf="isMobile" [dynamic]="true" [optionKey]="'jd_union_options_content'"></i-jd-union-goods>
