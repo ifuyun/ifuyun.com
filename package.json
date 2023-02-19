@@ -1,6 +1,6 @@
 {
   "name": "ifuyun.com",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "description": "Website of ifuyun.com",
   "author": {
     "name": "Fuyun",
@@ -27,6 +27,7 @@
     "build:ssr": "ng build && ng run ifuyun.com:server",
     "build:gulp": "gulp build",
     "build:prod": "npm run build:ssr && npm run build:gulp",
+    "deploy": "sh ./scripts/deploy.sh",
     "prerender": "ng run ifuyun.com:prerender"
   },
   "dependencies": {

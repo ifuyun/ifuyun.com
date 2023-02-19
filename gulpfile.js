@@ -22,4 +22,4 @@ gulp.task('compress', function () {
     .pipe(gulp.dest('./dist/browser'));
 });
 
-gulp.task('build', gulp.series('replace', 'compress'));
+gulp.task('build', gulp.series('compress'));
