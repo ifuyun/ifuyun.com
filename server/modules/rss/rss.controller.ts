@@ -51,7 +51,7 @@ export class RssController {
         url: options['site_url'] + post.postGuid,
         guid: post.postId,
         categories: item.categories.map((category) => category.taxonomySlug),
-        author: item.meta['post_author'] || post.author.userNiceName,
+        author: item.meta['post_author'] || post.owner.userNiceName,
         date: post.postDate
       });
     });

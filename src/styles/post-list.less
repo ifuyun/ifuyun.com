@@ -177,6 +177,7 @@
     .post-item-thumb {
       position: relative;
       flex-shrink: 0;
+      border-radius: (@border-radius / 2);
       overflow: hidden;
 
       &:hover {
@@ -199,10 +200,6 @@
         background-color: var(--overlay-background-color);
         opacity: 0;
         transition: @overlay-transition;
-      }
-
-      img {
-        border-radius: (@border-radius / 2);
       }
     }
   }

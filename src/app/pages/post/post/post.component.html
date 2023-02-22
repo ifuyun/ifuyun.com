@@ -22,7 +22,7 @@
     <article class="post-content"
              [ngStyle]="{'user-select': post?.postPayFlag || postMeta['should_login'] && !isLoggedIn ? 'none' : ''}"
              [innerHTML]="post?.postContent | safeHtml"></article>
-    <ng-container *ngIf="post?.postPayFlag && !user.isAdmin && post?.postAuthor !== user.userId || postMeta['should_login'] && !isLoggedIn">
+    <ng-container *ngIf="post?.postPayFlag && !user.isAdmin && post?.postOwner !== user.userId || postMeta['should_login'] && !isLoggedIn">
       <div class="pay-mask"></div>
       <div class="pay-body">
         <div class="pay-separator">
@@ -73,7 +73,7 @@
         <div class="post-meta-icon"><i class='icon icon-book'></i></div>
         <div class="post-meta-info">
           <span class="post-meta-info-text" *ngIf="post?.postOriginal === 1"
-                title="来源: {{post.author?.userNiceName}}原创">来源：{{post.author?.userNiceName}}原创</span>
+                title="来源: {{post.owner?.userNiceName}}原创">来源：{{post.owner?.userNiceName}}原创</span>
           <span class="post-meta-info-text" *ngIf="post?.postOriginal !== 1"
                 title="来源: {{postMeta['post_source']}}">来源：{{postMeta['post_source']}}</span>
         </div>

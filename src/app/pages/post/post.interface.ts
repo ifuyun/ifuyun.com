@@ -9,7 +9,7 @@ export interface PostEntity {
   postId: string;
   postTitle: string;
   postGuid: string;
-  postAuthor: string;
+  postOwner: string;
   postDate: Date;
   postContent: string;
   postExcerpt: string;
@@ -25,7 +25,7 @@ export interface PostEntity {
   postComments: number;
   postViews: number;
   postLikes: number;
-  author: UserEntity;
+  owner: UserEntity;
 }
 
 export interface PostModel extends PostEntity {
