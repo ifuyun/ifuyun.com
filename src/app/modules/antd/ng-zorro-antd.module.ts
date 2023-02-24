@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzI18nModule } from 'ng-zorro-antd/i18n';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 
 @NgModule({
   exports: [
-    // NzI18nModule,
+    NzI18nModule,
     // NzLayoutModule,
     // NzMenuModule,
     NzMessageModule,
