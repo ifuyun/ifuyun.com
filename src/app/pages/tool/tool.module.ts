@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardModule } from 'ngx-clipboard';
 import { ComponentModule } from '../../components/component.module';
-import { NgZorroAntdModule } from '../../modules/antd/ng-zorro-antd.module';
 import { PipesModule } from '../../pipes/pipes.module';
 import { Md5Component } from './md5/md5.component';
 import { MurmurhashComponent } from './murmurhash/murmurhash.component';
@@ -20,8 +19,7 @@ import { ToolComponent } from './tool/tool.component';
     PipesModule,
     FormsModule,
     ReactiveFormsModule,
-    ClipboardModule,
-    NgZorroAntdModule
+    ClipboardModule
   ]
 })
 export class ToolModule {}

@@ -5,14 +5,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TransferHttpCacheModule } from '@nguniversal/common';
-import { NZ_I18N, zh_CN } from 'ng-zorro-antd/i18n';
 import { environment as env } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ComponentModule } from './components/component.module';
 import { httpInterceptorProviders } from './interceptors/http-interceptors';
-import { IconsProviderModule } from './modules/antd/icons-provider.module';
-import { NgZorroAntdModule } from './modules/antd/ng-zorro-antd.module';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PipesModule } from './pipes/pipes.module';
 
@@ -27,14 +24,11 @@ import { PipesModule } from './pipes/pipes.module';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     PipesModule,
-    ComponentModule,
-    NgZorroAntdModule,
-    IconsProviderModule
+    ComponentModule
   ],
   providers: [
     httpInterceptorProviders,
-    { provide: APP_BASE_HREF, useValue: env.host },
-    { provide: NZ_I18N, useValue: zh_CN }
+    { provide: APP_BASE_HREF, useValue: env.host }
   ],
   bootstrap: [AppComponent]
 })

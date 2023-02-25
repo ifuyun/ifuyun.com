@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { isEmpty } from 'lodash';
-import { NzImageService } from 'ng-zorro-antd/image';
 import { skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM, WECHAT_CARD_PATH } from '../../config/common.constant';
 import { Theme } from '../../config/common.enum';
@@ -16,6 +15,7 @@ import { UserModel } from '../../interfaces/user.interface';
 import { AuthService } from '../../services/auth.service';
 import { OptionService } from '../../services/option.service';
 import { UserService } from '../../services/user.service';
+import { ImageService } from '../image/image.service';
 
 @Component({
   selector: 'app-sider-mobile',
@@ -44,7 +44,7 @@ export class SiderMobileComponent implements OnInit {
     private optionService: OptionService,
     private userService: UserService,
     private authService: AuthService,
-    private imageService: NzImageService
+    private imageService: ImageService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }

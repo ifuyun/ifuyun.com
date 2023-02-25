@@ -11,14 +11,14 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import highlight from 'highlight.js';
 import { isEmpty, uniq } from 'lodash';
-import { NzImageService } from 'ng-zorro-antd/image';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import * as QRCode from 'qrcode';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
+import { ImageService } from '../../../components/image/image.service';
+import { MessageService } from '../../../components/message/message.service';
 import { STORAGE_KEY_VOTED_POSTS, WECHAT_CARD_PATH } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { Message } from '../../../config/message.enum';
@@ -94,8 +94,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     private commentService: CommentService,
     private voteService: VoteService,
     private favoriteService: FavoriteService,
-    private imageService: NzImageService,
-    private message: NzMessageService,
+    private imageService: ImageService,
+    private message: MessageService,
     private renderer: Renderer2
   ) {
     super();

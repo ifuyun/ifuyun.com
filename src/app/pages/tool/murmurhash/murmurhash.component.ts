@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
 import * as murmurhash from 'murmurhash';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { BehaviorSubject, debounceTime, Observable, skipWhile, takeUntil } from 'rxjs';
+import { MessageService } from 'src/app/components/message/message.service';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommonService } from '../../../core/common.service';
@@ -42,7 +42,7 @@ export class MurmurhashComponent extends PageComponent implements OnInit {
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
     private optionService: OptionService,
-    private message: NzMessageService
+    private message: MessageService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();

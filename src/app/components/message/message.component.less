@@ -1,0 +1,46 @@
+.message {
+  position: fixed;
+  top: 8px;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+  pointer-events: none;
+
+  .message-notice {
+    padding: 8px;
+    text-align: center;
+  }
+
+  .message-notice-content {
+    display: inline-block;
+    padding: 10px 16px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    pointer-events: all;
+    color: #333;
+  }
+
+  .icon {
+    position: relative;
+    top: 1px;
+    margin-right: 8px;
+    font-size: 16px;
+  }
+
+  .message-success .icon {
+    color: #52c41a;
+  }
+
+  .message-error .icon {
+    color: #f5222d;
+  }
+
+  .message-warning .icon {
+    color: #faad14;
+  }
+
+  .message-info .icon {
+    color: #1890ff;
+  }
+}

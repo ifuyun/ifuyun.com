@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
-import { NzImageService } from 'ng-zorro-antd/image';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { ImageService } from '../../../components/image/image.service';
+import { MessageService } from '../../../components/message/message.service';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { MetaService } from '../../../core/meta.service';
@@ -40,8 +40,8 @@ export class ToolComponent extends PageComponent implements OnInit {
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
     private optionService: OptionService,
-    private imageService: NzImageService,
-    private message: NzMessageService,
+    private imageService: ImageService,
+    private message: MessageService,
     private linkService: LinkService
   ) {
     super();
