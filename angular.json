@@ -53,7 +53,9 @@
             "styles": [
               "src/styles.less"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/lazysizes/lazysizes.min.js"
+            ]
           },
           "configurations": {
             "production": {
