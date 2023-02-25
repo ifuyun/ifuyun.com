@@ -116,7 +116,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private showAlipayRedPacketQrcode() {
     QRCode.toCanvas(this.options['alipay_red_packet_code'], {
-      width: 280,
+      width: 560,
       margin: 0
     })
       .then((canvas) => {
@@ -127,6 +127,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
         imageEle.style.maxWidth = '100%';
         this.redPacketEle.nativeElement.innerHTML = '';
         this.redPacketEle.nativeElement.appendChild(imageEle);
+        this.redPacketEle.nativeElement.style.display = 'block';
       })
       .catch((err) => this.message.error(err));
   }
