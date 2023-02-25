@@ -49,7 +49,7 @@
            [queryParams]="getWallpaperLangParams(wallpaper)"
            [title]="wallpaper.copyright">
           <img class="lazyload"
-               [attr.src]="'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='"
+               [attr.src]="blankImage"
                [attr.data-src]="wallpaper.thumbUrl"
                [alt]="wallpaper.copyright"/><div class="overlay"></div>
         </a>

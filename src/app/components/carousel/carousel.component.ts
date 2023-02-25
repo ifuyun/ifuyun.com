@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
+import { BLANK_IMAGE } from '../../config/common.constant';
 import { LinkTarget } from '../../config/common.enum';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
@@ -18,6 +19,8 @@ import { OptionService } from '../../services/option.service';
   providers: [DestroyService]
 })
 export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
+  readonly blankImage = BLANK_IMAGE;
+
   isMobile = false;
   options: OptionEntity = {};
   carousels: CarouselVo[] = [];

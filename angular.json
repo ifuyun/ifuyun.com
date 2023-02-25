@@ -54,7 +54,8 @@
               "src/styles.less"
             ],
             "scripts": [
-              "node_modules/lazysizes/lazysizes.min.js"
+              "node_modules/lazysizes/lazysizes.min.js",
+              "node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.min.js"
             ]
           },
           "configurations": {
@@ -140,7 +141,10 @@
             "styles": [
               "src/styles.less"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/lazysizes/lazysizes.min.js",
+              "node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.min.js"
+            ]
           }
         },
         "server": {

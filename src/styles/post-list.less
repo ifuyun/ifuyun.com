@@ -184,6 +184,7 @@
         .post-thumb-link {
           transform: scale(1.08);
         }
+
         .overlay {
           opacity: 0.5;
         }
@@ -221,10 +222,14 @@
   }
 
   .post-item-thumb {
+    @thumb-width: 210px;
+
     margin-right: @primary-margin;
 
     img {
-      width: 210px;
+      display: inline-block;
+      width: @thumb-width;
+      height: (@thumb-width * 9 / 16);
     }
   }
 }

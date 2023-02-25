@@ -26,3 +26,5 @@ export const STORAGE_KEY_THEME = 'theme';
 
 export const MEDIA_QUERY_THEME_DARK = '(prefers-color-scheme: dark)';
 export const MEDIA_QUERY_THEME_LIGHT = '(prefers-color-scheme: light)';
+
+export const BLANK_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';

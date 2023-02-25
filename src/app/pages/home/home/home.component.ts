@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { BLANK_IMAGE } from '../../../config/common.constant';
 import { ResultList } from '../../../core/common.interface';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -28,6 +29,8 @@ import { WallpaperService } from '../../wallpaper/wallpaper.service';
   providers: [DestroyService]
 })
 export class HomeComponent extends PageComponent implements OnInit {
+  readonly blankImage = BLANK_IMAGE;
+
   isMobile = false;
   pageIndex = 'index';
   options: OptionEntity = {};
