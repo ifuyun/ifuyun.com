@@ -18,35 +18,35 @@
             <a class="photo-link"
                [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
                [queryParams]="getLangParams(wallpaper)"
-               [title]="wallpaper.copyright">
-              <img [src]="wallpaper.thumbUrl" [alt]="wallpaper.copyright"/><div class="overlay"></div>
+               [title]="wallpaper.wallpaperCopyright">
+              <img [src]="wallpaper.wallpaperThumbUrl" [alt]="wallpaper.wallpaperCopyright"/><div class="overlay"></div>
             </a>
           </div>
           <div class="content">
-            <h2 [title]="wallpaper.copyright">
+            <h2 [title]="wallpaper.wallpaperCopyright">
               <a [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
                  [queryParams]="getLangParams(wallpaper)"
-                 [title]="wallpaper.copyright">{{wallpaper.copyright}}</a>
+                 [title]="wallpaper.wallpaperCopyright">{{wallpaper.wallpaperCopyright}}</a>
             </h2>
             <div class="content-location">
-              <i class="icon icon-geo-alt"></i><span>{{wallpaper.location}}</span>
+              <i class="icon icon-geo-alt"></i><span>{{wallpaper.wallpaperLocation}}</span>
             </div>
             <div class="content-meta">
-              <div class="date" [title]="wallpaper.date">
-                <i class='icon icon-calendar'></i><span>{{wallpaper.date}}</span>
+              <div class="date" [title]="wallpaper.wallpaperDate">
+                <i class='icon icon-calendar'></i><span>{{wallpaper.wallpaperDate}}</span>
               </div>
               <div class="actions">
-                <div class="action-item" title="访问: {{wallpaper.views | numberView}}">
-                  <i class="icon icon-eye"></i><span>{{wallpaper.views | numberView}}</span>
+                <div class="action-item" title="访问: {{wallpaper.wallpaperViews | numberView}}">
+                  <i class="icon icon-eye"></i><span>{{wallpaper.wallpaperViews | numberView}}</span>
                 </div>
                 <div class="action-item clickable"
-                     [class.disabled]="wallpaper.liked || voteLoadingMap[wallpaper.wallpaperId]"
+                     [class.disabled]="wallpaper.wallpaperLiked || voteLoadingMap[wallpaper.wallpaperId]"
                      (click)="voteWallpaper(wallpaper)"
-                     title="喜欢: {{wallpaper.likes | numberView}}">
+                     title="喜欢: {{wallpaper.wallpaperLikes | numberView}}">
                   <i class='icon'
-                     [class.icon-heart]="!wallpaper.liked"
-                     [class.icon-heart-fill]="wallpaper.liked"
-                     [class.icon-loading]="voteLoadingMap[wallpaper.wallpaperId]"></i><span>{{wallpaper.likes | numberView}}</span>
+                     [class.icon-heart]="!wallpaper.wallpaperLiked"
+                     [class.icon-heart-fill]="wallpaper.wallpaperLiked"
+                     [class.icon-loading]="voteLoadingMap[wallpaper.wallpaperId]"></i><span>{{wallpaper.wallpaperLikes | numberView}}</span>
                 </div>
               </div>
             </div>

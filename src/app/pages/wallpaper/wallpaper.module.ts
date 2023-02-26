@@ -10,14 +10,7 @@ import { WallpaperComponent } from './wallpaper/wallpaper.component';
 
 @NgModule({
   declarations: [WallpaperListComponent, WallpaperComponent, WallpaperArchiveComponent],
-  imports: [
-    CommonModule,
-    WallpaperRoutingModule,
-    PipesModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ComponentModule
-  ],
+  imports: [CommonModule, WallpaperRoutingModule, PipesModule, FormsModule, ReactiveFormsModule, ComponentModule],
   exports: [WallpaperListComponent, WallpaperComponent, WallpaperArchiveComponent]
 })
 export class WallpaperModule {}

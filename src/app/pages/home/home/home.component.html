@@ -25,21 +25,23 @@
       <h3>
         <a [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
            [queryParams]="getWallpaperLangParams(wallpaper)"
-           title="{{wallpaper.copyright}}" rel="bookmark">{{wallpaper.copyright}}</a>
+           title="{{wallpaper.wallpaperCopyright}}" rel="bookmark">{{wallpaper.wallpaperCopyright}}</a>
       </h3>
       <div class="post-item-stat">
-        <span><i class="icon icon-eye"></i><span>{{wallpaper.views | numberView}}</span></span>
-        <span><i class='icon'
-                 [class.icon-heart]="!wallpaper.liked"
-                 [class.icon-heart-fill]="wallpaper.liked"></i><span>{{wallpaper.likes | numberView}}</span></span>
+        <span><i class="icon icon-eye"></i><span>{{wallpaper.wallpaperViews | numberView}}</span></span>
+        <span>
+          <i class='icon'
+             [class.icon-heart]="!wallpaper.wallpaperLiked"
+             [class.icon-heart-fill]="wallpaper.wallpaperLiked"></i><span>{{wallpaper.wallpaperLikes | numberView}}</span>
+        </span>
       </div>
     </header>
     <div class="post-item-meta post-item-meta-top">
-      <span [title]="wallpaper.date | date:'yyyy-MM-dd'">
-        <i class='icon icon-calendar'></i><span>{{wallpaper.date | date:'yyyy-MM-dd'}}</span>
+      <span [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
+        <i class='icon icon-calendar'></i><span>{{wallpaper.wallpaperDate | date:'yyyy-MM-dd'}}</span>
       </span>
-      <span [title]="wallpaper.location">
-        <i class="icon icon-geo-alt"></i><span>{{wallpaper.location}}</span>
+      <span [title]="wallpaper.wallpaperLocation">
+        <i class="icon icon-geo-alt"></i><span>{{wallpaper.wallpaperLocation}}</span>
       </span>
     </div>
     <div class="post-item-excerpt">
@@ -47,19 +49,19 @@
         <a class="post-thumb-link"
            [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
            [queryParams]="getWallpaperLangParams(wallpaper)"
-           [title]="wallpaper.copyright">
+           [title]="wallpaper.wallpaperCopyright">
           <img class="lazyload"
                [attr.src]="blankImage"
-               [attr.data-src]="wallpaper.thumbUrl"
-               [alt]="wallpaper.copyright"/><div class="overlay"></div>
+               [attr.data-src]="wallpaper.wallpaperThumbUrl"
+               [alt]="wallpaper.wallpaperCopyright"/><div class="overlay"></div>
         </a>
       </div>
       <div>
-        <span [innerHTML]="wallpaper.story"></span>
+        <span [innerHTML]="wallpaper.wallpaperStory"></span>
         <a class="read-more"
            [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
            [queryParams]="getWallpaperLangParams(wallpaper)"
-           [title]="wallpaper.copyright">[阅读全文]</a>
+           [title]="wallpaper.wallpaperCopyright">[阅读全文]</a>
       </div>
     </div>
   </article>

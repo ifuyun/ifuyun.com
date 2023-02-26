@@ -55,7 +55,7 @@ export class WallpaperService {
     const likedWallpapers = (localStorage.getItem(STORAGE_KEY_LIKED_WALLPAPER) || '').split(',');
     return wallpapers.map((item) => ({
       ...item,
-      liked: likedWallpapers.includes(item.wallpaperId)
+      wallpaperLiked: likedWallpapers.includes(item.wallpaperId)
     })) as T;
   }
 

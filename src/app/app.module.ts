@@ -26,10 +26,7 @@ import { PipesModule } from './pipes/pipes.module';
     PipesModule,
     ComponentModule
   ],
-  providers: [
-    httpInterceptorProviders,
-    { provide: APP_BASE_HREF, useValue: env.host }
-  ],
+  providers: [httpInterceptorProviders, { provide: APP_BASE_HREF, useValue: env.host }],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -113,11 +113,11 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((res) => {
         const resolution = this.carouselOptions.resolution || '1280x720';
         this.carousels = res.map((wallpaper, index) => {
-          const url = `${BING_DOMAIN}${wallpaper.urlBase}_${resolution}.${wallpaper.imageFormat}`;
+          const url = `${BING_DOMAIN}${wallpaper.wallpaperUrlBase}_${resolution}.${wallpaper.wallpaperImageFormat}`;
           return {
             id: wallpaper.wallpaperId,
-            title: wallpaper.title || wallpaper.titleEn,
-            caption: wallpaper.copyright || wallpaper.copyrightEn,
+            title: wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn,
+            caption: wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn,
             url,
             fullUrl: url,
             link: this.getWallpaperLink(wallpaper.wallpaperId),
@@ -134,17 +134,17 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
         page: 1,
         pageSize: this.carouselOptions.size || 4,
         lang: [WallpaperLang.CN, WallpaperLang.EN],
-        orderBy: this.carouselOptions.orderBy === 'oldest' ? [['date', 'asc']] : [['date', 'desc']]
+        orderBy: this.carouselOptions.orderBy === 'oldest' ? [['wallpaperDate', 'asc']] : [['wallpaperDate', 'desc']]
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         const resolution = this.carouselOptions.resolution || '1280x720';
         this.carousels = (res.list || []).map((wallpaper, index) => {
-          const url = `${BING_DOMAIN}${wallpaper.urlBase}_${resolution}.${wallpaper.imageFormat}`;
+          const url = `${BING_DOMAIN}${wallpaper.wallpaperUrlBase}_${resolution}.${wallpaper.wallpaperImageFormat}`;
           return {
             id: wallpaper.wallpaperId,
-            title: wallpaper.title || wallpaper.titleEn,
-            caption: wallpaper.copyright || wallpaper.copyrightEn,
+            title: wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn,
+            caption: wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn,
             url,
             fullUrl: url,
             link: this.getWallpaperLink(wallpaper.wallpaperId),

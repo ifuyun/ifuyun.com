@@ -115,14 +115,16 @@ export class HomeComponent extends PageComponent implements OnInit {
       .subscribe((res) => {
         const urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
         this.wallpapers = (res.list || []).map((item) => {
-          const wallpaperLocation = !!item.bingIdCn ? item.location || '未知' : item.locationEn || 'Unknown';
+          const wallpaperLocation = !!item.bingIdCn
+            ? item.wallpaperLocation || '未知'
+            : item.wallpaperLocationEn || 'Unknown';
           return {
             ...item,
-            copyright: item.copyright || item.copyrightEn,
-            location: wallpaperLocation,
-            story: truncateString(filterHtmlTag(item.story || item.storyEn), 140),
-            url: urlPrefix + item.url,
-            thumbUrl: urlPrefix + item.thumbUrl
+            wallpaperCopyright: item.wallpaperCopyright || item.wallpaperCopyrightEn,
+            wallpaperLocation,
+            wallpaperStory: truncateString(filterHtmlTag(item.wallpaperStory || item.wallpaperStoryEn), 140),
+            wallpaperUrl: urlPrefix + item.wallpaperUrl,
+            wallpaperThumbUrl: urlPrefix + item.wallpaperThumbUrl
           };
         });
         if (this.platform.isBrowser) {

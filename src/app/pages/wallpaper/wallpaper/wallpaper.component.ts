@@ -116,7 +116,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   showWallpaper() {
     this.imageService.preview([
       {
-        src: this.wallpaper?.url
+        src: this.wallpaper?.wallpaperUrl
       }
     ]);
   }
@@ -153,9 +153,9 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
       .subscribe((res) => {
         this.voteLoading = false;
         if (res.code === ResponseCode.SUCCESS) {
-          this.wallpaper.likes = res.data.likes;
+          this.wallpaper.wallpaperLikes = res.data.likes;
           if (like) {
-            this.wallpaper.liked = true;
+            this.wallpaper.wallpaperLiked = true;
             likedWallpapers.push(this.wallpaperId);
             localStorage.setItem(STORAGE_KEY_LIKED_WALLPAPER, uniq(likedWallpapers.filter((item) => !!item)).join(','));
           }
@@ -212,21 +212,21 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         if (wallpaper && wallpaper.wallpaperId) {
           this.wallpaper = {
             ...wallpaper,
-            url: this.urlPrefix + wallpaper.url,
+            wallpaperUrl: this.urlPrefix + wallpaper.wallpaperUrl,
             hasTranslation:
-              (this.lang === WallpaperLang.CN && !!wallpaper.storyEn) ||
-              (this.lang === WallpaperLang.EN && !!wallpaper.story)
+              (this.lang === WallpaperLang.CN && !!wallpaper.wallpaperStoryEn) ||
+              (this.lang === WallpaperLang.EN && !!wallpaper.wallpaperStory)
           };
           if (this.lang === WallpaperLang.CN) {
-            this.wallpaper.copyright = wallpaper.copyright || wallpaper.copyrightEn;
-            this.wallpaper.location = wallpaper.location || wallpaper.locationEn;
-            this.wallpaper.storyTitle = wallpaper.storyTitle || wallpaper.storyTitleEn;
-            this.wallpaper.story = wallpaper.story || wallpaper.storyEn;
+            this.wallpaper.wallpaperCopyright = wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn;
+            this.wallpaper.wallpaperLocation = wallpaper.wallpaperLocation || wallpaper.wallpaperLocationEn;
+            this.wallpaper.wallpaperStoryTitle = wallpaper.wallpaperStoryTitle || wallpaper.wallpaperStoryTitleEn;
+            this.wallpaper.wallpaperStory = wallpaper.wallpaperStory || wallpaper.wallpaperStoryEn;
           } else {
-            this.wallpaper.copyright = wallpaper.copyrightEn || wallpaper.copyright;
-            this.wallpaper.location = wallpaper.locationEn || wallpaper.location;
-            this.wallpaper.storyTitle = wallpaper.storyTitleEn || wallpaper.storyTitle;
-            this.wallpaper.story = wallpaper.storyEn || wallpaper.story;
+            this.wallpaper.wallpaperCopyright = wallpaper.wallpaperCopyrightEn || wallpaper.wallpaperCopyright;
+            this.wallpaper.wallpaperLocation = wallpaper.wallpaperLocationEn || wallpaper.wallpaperLocation;
+            this.wallpaper.wallpaperStoryTitle = wallpaper.wallpaperStoryTitleEn || wallpaper.wallpaperStoryTitle;
+            this.wallpaper.wallpaperStory = wallpaper.wallpaperStoryEn || wallpaper.wallpaperStory;
           }
         }
         this.updatePageInfo();
@@ -246,15 +246,21 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         if (res.prevWallpaper) {
           this.prevWallpaper = {
             ...res.prevWallpaper,
-            copyright: this.lang === WallpaperLang.CN ? res.prevWallpaper.copyright : res.prevWallpaper.copyrightEn,
-            thumbUrl: this.urlPrefix + res.prevWallpaper.thumbUrl
+            wallpaperCopyright:
+              this.lang === WallpaperLang.CN
+                ? res.prevWallpaper.wallpaperCopyright
+                : res.prevWallpaper.wallpaperCopyrightEn,
+            wallpaperThumbUrl: this.urlPrefix + res.prevWallpaper.wallpaperThumbUrl
           };
         }
         if (res.nextWallpaper) {
           this.nextWallpaper = {
             ...res.nextWallpaper,
-            copyright: this.lang === WallpaperLang.CN ? res.nextWallpaper.copyright : res.nextWallpaper.copyrightEn,
-            thumbUrl: this.urlPrefix + res.nextWallpaper.thumbUrl
+            wallpaperCopyright:
+              this.lang === WallpaperLang.CN
+                ? res.nextWallpaper.wallpaperCopyright
+                : res.nextWallpaper.wallpaperCopyrightEn,
+            wallpaperThumbUrl: this.urlPrefix + res.nextWallpaper.wallpaperThumbUrl
           };
         }
       });
@@ -263,7 +269,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   private initWallpaperStatus() {
     if (this.platform.isBrowser) {
       const likedWallpapers = (localStorage.getItem(STORAGE_KEY_LIKED_WALLPAPER) || '').split(',');
-      likedWallpapers.includes(this.wallpaper.wallpaperId) && (this.wallpaper.liked = true);
+      likedWallpapers.includes(this.wallpaper.wallpaperId) && (this.wallpaper.wallpaperLiked = true);
     }
   }
 
@@ -273,11 +279,11 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     let description = '';
     const fullStop = this.lang === WallpaperLang.EN ? '.' : '。';
     const comma = this.lang === WallpaperLang.EN ? ', ' : '，';
-    const wallpaperLocation = this.wallpaper.location ? comma + this.wallpaper.location : '';
+    const wallpaperLocation = this.wallpaper.wallpaperLocation ? comma + this.wallpaper.wallpaperLocation : '';
 
     if (this.wallpaper) {
-      titles.unshift(this.wallpaper.copyright);
-      description += `${this.wallpaper.copyright}${wallpaperLocation}`;
+      titles.unshift(this.wallpaper.wallpaperCopyright);
+      description += `${this.wallpaper.wallpaperCopyright}${wallpaperLocation}`;
       description += description.endsWith(fullStop) ? '' : fullStop;
       if (this.lang === WallpaperLang.EN) {
         description += ' ';
@@ -285,9 +291,9 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     }
     let story: string;
     if (this.lang === WallpaperLang.CN) {
-      story = this.wallpaper.story || this.wallpaper.storyEn;
+      story = this.wallpaper.wallpaperStory || this.wallpaper.wallpaperStoryEn;
     } else {
-      story = this.wallpaper.storyEn || this.wallpaper.story;
+      story = this.wallpaper.wallpaperStoryEn || this.wallpaper.wallpaperStory;
     }
     const wallpaperDesc = truncateString(filterHtmlTag(story), 160);
 
@@ -318,8 +324,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         isHeader: false
       },
       {
-        label: this.wallpaper?.copyright,
-        tooltip: this.wallpaper?.copyright,
+        label: this.wallpaper?.wallpaperCopyright,
+        tooltip: this.wallpaper?.wallpaperCopyright,
         url: '.',
         param: this.lang === WallpaperLang.EN ? { lang: WallpaperLang.EN } : {},
         isHeader: true

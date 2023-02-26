@@ -7,7 +7,7 @@
   <ng-template #wallpaperTpl>
     <div class="wallpaper">
       <ng-container *ngIf="activeWallpaper">
-        <div class="photo" [style.background-image]="'url(' + (activeWallpaper.url || '') + ')'"></div>
+        <div class="photo" [style.background-image]="'url(' + (activeWallpaper.wallpaperUrl || '') + ')'"></div>
         <div class="actions">
           <div class="action-item">
             <a (click)="gotoWallpaper()" title="高清壁纸"><span>更多壁纸</span><i class="icon icon-double-right"></i></a>
@@ -16,12 +16,12 @@
         <div class="content">
           <div>
             <h2 class="image-title">
-              <span>{{activeWallpaper.title || activeWallpaper.titleEn}}</span>
-              <a [href]="activeWallpaper.copyrightLink"
-                 [title]="activeWallpaper.title || activeWallpaper.titleEn"
+              <span>{{activeWallpaper.wallpaperTitle || activeWallpaper.wallpaperTitleEn}}</span>
+              <a [href]="activeWallpaper.wallpaperCopyrightLink || activeWallpaper.wallpaperCopyrightLinkEn"
+                 [title]="activeWallpaper.wallpaperTitle || activeWallpaper.wallpaperTitleEn"
                  target="_blank"><i class='icon icon-link-45deg'></i></a>
             </h2>
-            <div class="image-desc">{{activeWallpaper.description}}</div>
+            <div class="image-desc">{{activeWallpaper.wallpaperDescription}}</div>
           </div>
           <div class="indicator">
             <i class="icon icon-left"

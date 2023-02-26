@@ -76,13 +76,14 @@ export class WallpaperBoxComponent implements OnChanges {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.wallpapers = res.map((item) => {
-          const loc = item.location ? '，' + item.location : ', ' + item.locationEn;
-          const description = (item.copyright || item.copyrightEn) + loc + ' (' + item.copyrightAuthor + ')';
+          const loc = item.wallpaperLocation ? '，' + item.wallpaperLocation : ', ' + item.wallpaperLocationEn;
+          const description =
+            (item.wallpaperCopyright || item.wallpaperCopyrightEn) + loc + ' (' + item.wallpaperCopyrightAuthor + ')';
           return {
             ...item,
-            url: `${BING_DOMAIN}${item.url}`,
-            copyrightLink: `${BING_DOMAIN}${item.copyrightLink}`,
-            description
+            wallpaperUrl: `${BING_DOMAIN}${item.wallpaperUrl}`,
+            wallpaperCopyrightLink: `${BING_DOMAIN}${item.wallpaperCopyrightLink}`,
+            wallpaperDescription: description
           };
         });
         this.resetImage();

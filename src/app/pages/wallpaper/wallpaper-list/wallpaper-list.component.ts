@@ -123,9 +123,9 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       .subscribe((res) => {
         this.voteLoadingMap[wallpaper.wallpaperId] = false;
         if (res.code === ResponseCode.SUCCESS) {
-          wallpaper.likes = res.data.likes;
+          wallpaper.wallpaperLikes = res.data.likes;
           if (like) {
-            wallpaper.liked = true;
+            wallpaper.wallpaperLiked = true;
             likedWallpapers.push(wallpaper.wallpaperId);
             localStorage.setItem(STORAGE_KEY_LIKED_WALLPAPER, uniq(likedWallpapers.filter((item) => !!item)).join(','));
           }
@@ -197,18 +197,18 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
           let wallpaperLocation: string;
           let copyright: string;
           if (this.lang === WallpaperLang.EN) {
-            wallpaperLocation = item.locationEn || item.location || 'Unknown';
-            copyright = item.copyrightEn || item.copyright;
+            wallpaperLocation = item.wallpaperLocationEn || item.wallpaperLocation || 'Unknown';
+            copyright = item.wallpaperCopyrightEn || item.wallpaperCopyright;
           } else {
-            wallpaperLocation = item.location || item.locationEn || '未知';
-            copyright = item.copyright || item.copyrightEn;
+            wallpaperLocation = item.wallpaperLocation || item.wallpaperLocationEn || '未知';
+            copyright = item.wallpaperCopyright || item.wallpaperCopyrightEn;
           }
           return {
             ...item,
-            copyright,
-            location: wallpaperLocation,
-            url: urlPrefix + item.url,
-            thumbUrl: urlPrefix + item.thumbUrl
+            wallpaperCopyright: copyright,
+            wallpaperLocation,
+            wallpaperUrl: urlPrefix + item.wallpaperUrl,
+            wallpaperThumbUrl: urlPrefix + item.wallpaperThumbUrl
           };
         });
         if (this.platform.isBrowser) {
