@@ -79,10 +79,12 @@ export class WallpaperBoxComponent implements OnChanges {
           const loc = item.wallpaperLocation ? '，' + item.wallpaperLocation : ', ' + item.wallpaperLocationEn;
           const description =
             (item.wallpaperCopyright || item.wallpaperCopyrightEn) + loc + ' (' + item.wallpaperCopyrightAuthor + ')';
+          const enLink = item.wallpaperCopyrightLinkEn ? item.wallpaperCopyrightLinkEn + '&ensearch=1' : '';
           return {
             ...item,
+            wallpaperTitle: item.wallpaperTitle || item.wallpaperTitleEn,
             wallpaperUrl: `${BING_DOMAIN}${item.wallpaperUrl}`,
-            wallpaperCopyrightLink: `${BING_DOMAIN}${item.wallpaperCopyrightLink}`,
+            wallpaperCopyrightLink: `${BING_DOMAIN}${item.wallpaperCopyrightLink || enLink}`,
             wallpaperDescription: description
           };
         });
