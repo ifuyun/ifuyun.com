@@ -2,15 +2,20 @@
   <span>当前位置：</span>
   <ng-container *ngFor="let breadcrumb of breadcrumbs; let i = index">
     <ng-container *ngIf="i > 0"><span class="separator">/</span></ng-container>
-    <a *ngIf="breadcrumb.url !== '' && !breadcrumb.isHeader"
-       [routerLink]="[breadcrumb.url]"
-       [queryParams]="breadcrumb.param"
-       title="{{breadcrumb.tooltip}}">{{breadcrumb.label}}</a>
-    <h3 *ngIf="breadcrumb.url !== '' && breadcrumb.isHeader">
-      <a title="{{breadcrumb.tooltip}}"
+    <ng-container *ngIf="breadcrumb.url !== ''">
+      <a *ngIf="!breadcrumb.isHeader"
          [routerLink]="[breadcrumb.url]"
-         [queryParams]="breadcrumb.param">{{breadcrumb.label}}</a>
-    </h3>
-    <span *ngIf="breadcrumb.url === ''" title="{{breadcrumb.tooltip}}">{{breadcrumb.label}}</span>
+         [queryParams]="breadcrumb.param"
+         title="{{breadcrumb.tooltip}}">{{breadcrumb.label}}</a>
+      <h3 *ngIf="breadcrumb.isHeader">
+        <a title="{{breadcrumb.tooltip}}"
+           [routerLink]="[breadcrumb.url]"
+           [queryParams]="breadcrumb.param">{{breadcrumb.label}}</a>
+      </h3>
+    </ng-container>
+    <ng-container *ngIf="breadcrumb.url === ''">
+      <span *ngIf="!breadcrumb.isHeader" title="{{breadcrumb.tooltip}}">{{breadcrumb.label}}</span>
+      <h3 *ngIf="breadcrumb.isHeader" title="{{breadcrumb.tooltip}}">{{breadcrumb.label}}</h3>
+    </ng-container>
   </ng-container>
 </div>

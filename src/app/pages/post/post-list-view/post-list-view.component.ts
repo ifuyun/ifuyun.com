@@ -1,15 +1,14 @@
 import { Component, Input } from '@angular/core';
-import { ResultList } from '../../../core/common.interface';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { Post } from '../post.interface';
 
 @Component({
-  selector: 'app-post-list-box',
-  templateUrl: './post-list-box.component.html',
+  selector: 'i-post-list',
+  templateUrl: './post-list-view.component.html',
   styleUrls: []
 })
-export class PostListBoxComponent {
-  @Input() postList: ResultList<Post> = {};
+export class PostListViewComponent {
+  @Input() postList: Post[] = [];
 
   isMobile = false;
 

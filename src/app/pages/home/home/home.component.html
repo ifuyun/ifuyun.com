@@ -1,69 +1,92 @@
-<div class="banner">
-  <i-carousel></i-carousel>
-</div>
-<div class="column-header">
-  <div class="column-header-label">
-    <span><i class="icon icon-pencil-square"></i><span>最新文章</span></span>
-  </div>
-  <div class="column-header-more">
-    <a routerLink="/post" title="文章列表"><span>更多</span><i class="icon icon-double-right"></i></a>
-  </div>
-</div>
-<app-post-list-box [postList]="postList"></app-post-list-box>
-<div class="column-header">
-  <div class="column-header-label">
-    <span><i class="icon icon-images"></i><span>最新壁纸</span></span>
-  </div>
-  <div class="column-header-more">
-    <a routerLink="/wallpaper" title="壁纸列表"><span>更多</span><i class="icon icon-double-right"></i></a>
-  </div>
-</div>
-<div class="post-list" [class.post-list-desktop]="!isMobile" [class.post-list-mobile]="isMobile">
-  <article *ngFor="let wallpaper of wallpapers"
-           class="post-item" [class.post-item-desktop]="!isMobile" [class.post-item-mobile]="isMobile">
-    <header>
-      <h3>
-        <a [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
-           [queryParams]="getWallpaperLangParams(wallpaper)"
-           title="{{wallpaper.wallpaperCopyright}}" rel="bookmark">{{wallpaper.wallpaperCopyright}}</a>
-      </h3>
-      <div class="post-item-stat">
-        <span><i class="icon icon-eye"></i><span>{{wallpaper.wallpaperViews | numberView}}</span></span>
-        <span>
-          <i class='icon'
-             [class.icon-heart]="!wallpaper.wallpaperLiked"
-             [class.icon-heart-fill]="wallpaper.wallpaperLiked"></i><span>{{wallpaper.wallpaperLikes | numberView}}</span>
-        </span>
-      </div>
-    </header>
-    <div class="post-item-meta post-item-meta-top">
-      <span [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
-        <i class='icon icon-calendar'></i><span>{{wallpaper.wallpaperDate | date:'yyyy-MM-dd'}}</span>
-      </span>
-      <span [title]="wallpaper.wallpaperLocation">
-        <i class="icon icon-geo-alt"></i><span>{{wallpaper.wallpaperLocation}}</span>
+<app-breadcrumb *ngIf="bizType === 'search'"></app-breadcrumb>
+<ng-template #wallpaperTpl let-wallpaper>
+  <header>
+    <h3>
+      <a [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
+         [queryParams]="getWallpaperLangParams(wallpaper)"
+         title="{{wallpaper.wallpaperCopyright}}" rel="bookmark">{{wallpaper.wallpaperCopyright}}</a>
+    </h3>
+    <div class="post-item-stat">
+      <span><i class="icon icon-eye"></i><span>{{wallpaper.wallpaperViews | numberView}}</span></span>
+      <span>
+        <i class='icon'
+           [class.icon-heart]="!wallpaper.wallpaperVoted"
+           [class.icon-heart-fill]="wallpaper.wallpaperVoted"></i><span>{{wallpaper.wallpaperLikes | numberView}}</span>
       </span>
     </div>
-    <div class="post-item-excerpt">
-      <div class="post-item-thumb">
-        <a class="post-thumb-link"
-           [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
-           [queryParams]="getWallpaperLangParams(wallpaper)"
-           [title]="wallpaper.wallpaperCopyright">
-          <img class="lazyload"
-               [attr.src]="blankImage"
-               [attr.data-src]="wallpaper.wallpaperThumbUrl"
-               [alt]="wallpaper.wallpaperCopyright"/><div class="overlay"></div>
-        </a>
-      </div>
-      <div>
-        <span [innerHTML]="wallpaper.wallpaperStory"></span>
-        <a class="read-more"
-           [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
-           [queryParams]="getWallpaperLangParams(wallpaper)"
-           [title]="wallpaper.wallpaperCopyright">[阅读全文]</a>
-      </div>
+  </header>
+  <div class="post-item-meta post-item-meta-top">
+    <span [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
+      <i class='icon icon-calendar'></i><span>{{wallpaper.wallpaperDate | date:'yyyy-MM-dd'}}</span>
+    </span>
+    <span [title]="wallpaper.wallpaperLocation">
+      <i class="icon icon-geo-alt"></i><span>{{wallpaper.wallpaperLocation}}</span>
+    </span>
+  </div>
+  <div class="post-item-excerpt">
+    <div class="post-item-thumb">
+      <a class="post-thumb-link"
+         [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
+         [queryParams]="getWallpaperLangParams(wallpaper)"
+         [title]="wallpaper.wallpaperCopyright">
+        <img class="lazyload"
+             [attr.src]="blankImage"
+             [attr.data-src]="wallpaper.wallpaperThumbUrl"
+             [alt]="wallpaper.wallpaperCopyright"/><div class="overlay"></div>
+      </a>
     </div>
-  </article>
-</div>
-<app-empty *ngIf="!wallpapers || wallpapers.length < 1"></app-empty>
+    <div>
+      <span [innerHTML]="wallpaper.wallpaperStory"></span>
+      <a class="read-more"
+         [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
+         [queryParams]="getWallpaperLangParams(wallpaper)"
+         [title]="wallpaper.wallpaperCopyright">[阅读全文]</a>
+    </div>
+  </div>
+</ng-template>
+<ng-container *ngIf="bizType === 'index'">
+  <div class="banner">
+    <i-carousel></i-carousel>
+  </div>
+  <div class="column-header">
+    <div class="column-header-label">
+      <span><i class="icon icon-pencil-square"></i><span>最新文章</span></span>
+    </div>
+    <div class="column-header-more">
+      <a routerLink="/post" title="文章列表"><span>更多</span><i class="icon icon-double-right"></i></a>
+    </div>
+  </div>
+  <i-post-list [postList]="postList"></i-post-list>
+  <div class="column-header">
+    <div class="column-header-label">
+      <span><i class="icon icon-images"></i><span>最新壁纸</span></span>
+    </div>
+    <div class="column-header-more">
+      <a routerLink="/wallpaper" title="壁纸列表"><span>更多</span><i class="icon icon-double-right"></i></a>
+    </div>
+  </div>
+  <div class="post-list" [class.post-list-desktop]="!isMobile" [class.post-list-mobile]="isMobile">
+    <article *ngFor="let wallpaper of wallpapers"
+             class="post-item" [class.post-item-desktop]="!isMobile" [class.post-item-mobile]="isMobile">
+      <ng-container *ngTemplateOutlet="wallpaperTpl; context: { $implicit: wallpaper }"></ng-container>
+    </article>
+  </div>
+  <app-empty *ngIf="!wallpapers || wallpapers.length < 1"></app-empty>
+</ng-container>
+<ng-container *ngIf="bizType === 'search'">
+  <div class="post-list" [class.post-list-desktop]="!isMobile" [class.post-list-mobile]="isMobile">
+    <article *ngFor="let item of searchList"
+             class="post-item" [class.post-item-desktop]="!isMobile" [class.post-item-mobile]="isMobile">
+      <ng-container *ngIf="item.type === 'post'">
+        <i-post-item [post]="$any(item.data)"></i-post-item>
+      </ng-container>
+      <ng-container *ngIf="item.type === 'wallpaper'">
+        <ng-container *ngTemplateOutlet="wallpaperTpl; context: { $implicit: item.data }"></ng-container>
+      </ng-container>
+    </article>
+  </div>
+  <i-jd-union-goods [dynamic]="true" [optionKey]="'jd_union_options_content'"></i-jd-union-goods>
+  <app-page-bar *ngIf="total > 0"
+                [isPath]="false" [paginator]="paginatorData" [url]="pageUrl" [param]="pageUrlParam"></app-page-bar>
+  <app-empty *ngIf="total < 1"></app-empty>
+</ng-container>

@@ -51,11 +51,17 @@ export class WallpaperService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  checkWallpaperLikedStatus<T extends Wallpaper[]>(wallpapers: T): T {
-    const likedWallpapers = (localStorage.getItem(STORAGE_KEY_LIKED_WALLPAPER) || '').split(',');
+  checkWallpaperVoteStatus<T extends (Wallpaper | Wallpaper[])>(wallpapers: T): T {
+    const voted = (localStorage.getItem(STORAGE_KEY_LIKED_WALLPAPER) || '').split(',');
+    if (!Array.isArray(wallpapers)) {
+      return {
+        ...wallpapers,
+        wallpaperVoted: voted.includes(wallpapers.wallpaperId)
+      };
+    }
     return wallpapers.map((item) => ({
       ...item,
-      wallpaperLiked: likedWallpapers.includes(item.wallpaperId)
+      wallpaperVoted: voted.includes(item.wallpaperId)
     })) as T;
   }
 

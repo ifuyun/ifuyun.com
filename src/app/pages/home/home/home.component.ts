@@ -1,21 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { isEmpty } from 'lodash';
+import { isEmpty, omit } from 'lodash';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
+import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { BLANK_IMAGE } from '../../../config/common.constant';
-import { ResultList } from '../../../core/common.interface';
+import { SearchType } from '../../../config/common.enum';
+import { SearchResponse } from '../../../core/common.interface';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
+import { PaginatorEntity } from '../../../core/paginator.interface';
 import { PaginatorService } from '../../../core/paginator.service';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { filterHtmlTag, truncateString } from '../../../helpers/helper';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { OptionService } from '../../../services/option.service';
+import { SearchService } from '../../../services/search.service';
 import { Post } from '../../post/post.interface';
 import { PostService } from '../../post/post.service';
 import { BING_DOMAIN } from '../../wallpaper/wallpaper.constant';
@@ -35,8 +39,18 @@ export class HomeComponent extends PageComponent implements OnInit {
   pageIndex = 'index';
   options: OptionEntity = {};
   keyword = '';
-  postList: ResultList<Post> = {};
+  postList: Post[] = [];
   wallpapers: Wallpaper[] = [];
+  page = 1;
+  total = 0;
+  bizType: 'init' | 'index' | 'search' = 'init';
+  searchList: SearchResponse[] = [];
+  paginatorData: PaginatorEntity | null = null;
+  pageUrl = '/';
+  pageUrlParam: Params = {};
+
+  private pageSize = 10;
+  private wallpaperURLPrefix = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -49,7 +63,8 @@ export class HomeComponent extends PageComponent implements OnInit {
     private optionService: OptionService,
     private postService: PostService,
     private paginator: PaginatorService,
-    private wallpaperService: WallpaperService
+    private wallpaperService: WallpaperService,
+    private searchService: SearchService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -57,21 +72,32 @@ export class HomeComponent extends PageComponent implements OnInit {
 
   ngOnInit(): void {
     this.updatePageOptions();
-    this.updateActivePage();
     this.optionService.options$
       .pipe(
         skipWhile((options) => isEmpty(options)),
         combineLatestWith(this.route.queryParamMap),
         takeUntil(this.destroy$),
         tap(([, queryParams]) => {
+          this.page = Number(queryParams.get('page')) || 1;
           this.keyword = queryParams.get('keyword')?.trim() || '';
         })
       )
       .subscribe(([options]) => {
         this.options = options;
+        this.wallpaperURLPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
+        this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
         this.updatePageInfo();
-        this.fetchPosts();
-        this.fetchWallpapers();
+        if (this.keyword) {
+          this.pageIndex = 'search';
+          this.bizType = 'search';
+          this.updateBreadcrumb();
+          this.search();
+        } else {
+          this.bizType = 'index';
+          this.fetchPosts();
+          this.fetchWallpapers();
+        }
+        this.updateActivePage();
       });
   }
 
@@ -100,7 +126,10 @@ export class HomeComponent extends PageComponent implements OnInit {
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.postList = res.postList || {};
+        this.postList = res.postList?.list || [];
+        if (this.platform.isBrowser) {
+          this.postList = this.postService.checkPostVoteStatus(this.postList);
+        }
       });
   }
 
@@ -113,24 +142,83 @@ export class HomeComponent extends PageComponent implements OnInit {
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        const urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
-        this.wallpapers = (res.list || []).map((item) => {
-          const wallpaperLocation = !!item.bingIdCn
-            ? item.wallpaperLocation || '未知'
-            : item.wallpaperLocationEn || 'Unknown';
-          return {
-            ...item,
-            wallpaperCopyright: item.wallpaperCopyright || item.wallpaperCopyrightEn,
-            wallpaperLocation,
-            wallpaperStory: truncateString(filterHtmlTag(item.wallpaperStory || item.wallpaperStoryEn), 140),
-            wallpaperUrl: urlPrefix + item.wallpaperUrl,
-            wallpaperThumbUrl: urlPrefix + item.wallpaperThumbUrl
-          };
-        });
+        this.wallpapers = this.transformWallpapers(res.list || []);
         if (this.platform.isBrowser) {
-          this.wallpapers = this.wallpaperService.checkWallpaperLikedStatus(this.wallpapers);
+          this.wallpapers = this.wallpaperService.checkWallpaperVoteStatus(this.wallpapers);
         }
       });
+  }
+
+  private search() {
+    this.searchService
+      .searchAll({
+        keyword: this.keyword,
+        page: this.page
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.searchList = res.list || [];
+        this.page = res.page || 1;
+        this.total = res.total || 0;
+
+        this.searchList.forEach((item) => {
+          if (item.type === SearchType.POST) {
+            item.data = this.postService.checkPostVoteStatus(<Post>item.data);
+          } else if (item.type === SearchType.WALLPAPER) {
+            item.data = this.wallpaperService.checkWallpaperVoteStatus(this.transformWallpapers(<Wallpaper>item.data));
+          }
+        });
+        this.paginatorData = this.paginator.getPaginator(this.page, this.total, this.pageSize);
+      });
+  }
+
+  private transformWallpapers<T extends (Wallpaper | Wallpaper[])>(wallpapers: T): T {
+    const transformFn = (wallpaper: Wallpaper) => {
+      const wallpaperLocation = !!wallpaper.bingIdCn
+        ? wallpaper.wallpaperLocation || '未知'
+        : wallpaper.wallpaperLocationEn || 'Unknown';
+      return {
+        ...wallpaper,
+        wallpaperCopyright: wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn,
+        wallpaperLocation,
+        wallpaperStory: truncateString(filterHtmlTag(wallpaper.wallpaperStory || wallpaper.wallpaperStoryEn), 140),
+        wallpaperUrl: this.wallpaperURLPrefix + wallpaper.wallpaperUrl,
+        wallpaperThumbUrl: this.wallpaperURLPrefix + wallpaper.wallpaperThumbUrl
+      };
+    };
+    if (!Array.isArray(wallpapers)) {
+      return transformFn(wallpapers) as T;
+    }
+    return wallpapers.map(transformFn) as T;
+  }
+
+  private updateBreadcrumb() {
+    const breadcrumbs: BreadcrumbEntity[] = [
+      {
+        label: '搜索',
+        tooltip: '搜索',
+        url: '',
+        isHeader: false
+      },
+      {
+        label: this.keyword,
+        tooltip: this.keyword,
+        url: '/',
+        param: {
+          keyword: this.keyword
+        },
+        isHeader: true
+      }
+    ];
+    if (this.page > 1) {
+      breadcrumbs.push({
+        label: `第${this.page}页`,
+        tooltip: `第${this.page}页`,
+        url: '',
+        isHeader: false
+      });
+    }
+    this.breadcrumbService.updateBreadcrumb(breadcrumbs);
   }
 
   private updatePageInfo() {

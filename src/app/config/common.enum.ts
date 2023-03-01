@@ -44,3 +44,8 @@ export enum LinkTarget {
   SELF = '_self',
   TOP = '_top'
 }
+
+export enum SearchType {
+  POST = 'post',
+  WALLPAPER = 'wallpaper'
+}

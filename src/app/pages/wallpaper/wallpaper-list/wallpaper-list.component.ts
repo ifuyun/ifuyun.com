@@ -35,10 +35,10 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   isMobile = false;
   options: OptionEntity = {};
   page = 1;
+  total = 0;
   lang = WallpaperLang.CN;
   keyword = '';
   wallpapers: Wallpaper[] = [];
-  total = 0;
   paginatorData: PaginatorEntity | null = null;
   pageUrl = '';
   pageUrlParam: Params = {};
@@ -125,7 +125,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         if (res.code === ResponseCode.SUCCESS) {
           wallpaper.wallpaperLikes = res.data.likes;
           if (like) {
-            wallpaper.wallpaperLiked = true;
+            wallpaper.wallpaperVoted = true;
             likedWallpapers.push(wallpaper.wallpaperId);
             localStorage.setItem(STORAGE_KEY_LIKED_WALLPAPER, uniq(likedWallpapers.filter((item) => !!item)).join(','));
           }
@@ -212,7 +212,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
           };
         });
         if (this.platform.isBrowser) {
-          this.wallpapers = this.wallpaperService.checkWallpaperLikedStatus(this.wallpapers);
+          this.wallpapers = this.wallpaperService.checkWallpaperVoteStatus(this.wallpapers);
         }
         this.paginatorData = this.paginator.getPaginator(this.page, this.total, this.pageSize);
         const urlSegments = this.route.snapshot.url.map((url) => url.path);
@@ -268,7 +268,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         label: '壁纸',
         tooltip: '高清壁纸',
         url: '/wallpaper',
-        isHeader: true
+        isHeader: !this.year
       }
     ];
     if (this.year) {

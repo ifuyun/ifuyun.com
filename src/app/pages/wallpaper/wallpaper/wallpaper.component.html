@@ -56,7 +56,7 @@
     <div class="post-actions">
       <div>
         <button class="button-like"
-                [ngClass]="{liked: wallpaper?.wallpaperLiked, loading: voteLoading}" (click)="voteWallpaper()">
+                [ngClass]="{liked: wallpaper?.wallpaperVoted, loading: voteLoading}" (click)="voteWallpaper()">
           <i class='icon icon-like-fill'></i>
           <span class="text">真棒！{{wallpaper && wallpaper.wallpaperLikes > 0 ? wallpaper.wallpaperLikes : ''}}</span>
           <span class="parkinson-mask" *ngIf="!voteLoading"><i class='icon icon-like-fill'></i></span>

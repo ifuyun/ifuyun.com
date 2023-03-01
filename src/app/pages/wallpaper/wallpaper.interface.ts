@@ -47,7 +47,7 @@ export interface Wallpaper {
   wallpaperViews: number;
   wallpaperLikes: number;
   wallpaperDownloads: number;
-  wallpaperLiked?: boolean;
+  wallpaperVoted?: boolean;
   wallpaperModified: Date;
   hasTranslation: boolean;
 }

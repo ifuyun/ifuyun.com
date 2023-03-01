@@ -155,7 +155,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         if (res.code === ResponseCode.SUCCESS) {
           this.wallpaper.wallpaperLikes = res.data.likes;
           if (like) {
-            this.wallpaper.wallpaperLiked = true;
+            this.wallpaper.wallpaperVoted = true;
             likedWallpapers.push(this.wallpaperId);
             localStorage.setItem(STORAGE_KEY_LIKED_WALLPAPER, uniq(likedWallpapers.filter((item) => !!item)).join(','));
           }
@@ -269,7 +269,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   private initWallpaperStatus() {
     if (this.platform.isBrowser) {
       const likedWallpapers = (localStorage.getItem(STORAGE_KEY_LIKED_WALLPAPER) || '').split(',');
-      likedWallpapers.includes(this.wallpaper.wallpaperId) && (this.wallpaper.wallpaperLiked = true);
+      likedWallpapers.includes(this.wallpaper.wallpaperId) && (this.wallpaper.wallpaperVoted = true);
     }
   }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
 import { ApiUrl } from '../../config/api-url';
+import { STORAGE_KEY_VOTED_POSTS } from '../../config/common.constant';
 import { PostType } from '../../config/common.enum';
 import { ApiService } from '../../core/api.service';
 import { ArchiveData, ArchiveDataMap, ArchiveList, ResultList } from '../../core/common.interface';
@@ -85,5 +86,19 @@ export class PostService {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS_BY_RANDOM))
       .pipe(map((res) => res?.data || []));
+  }
+
+  checkPostVoteStatus<T extends (Post | Post[])>(posts: T): T {
+    const voted = (localStorage.getItem(STORAGE_KEY_VOTED_POSTS) || '').split(',');
+    if (!Array.isArray(posts)) {
+      return {
+        ...posts,
+        voted: voted.includes(posts.post.postId)
+      };
+    }
+    return posts.map((item) => ({
+      ...item,
+      voted: voted.includes(item.post.postId)
+    })) as T;
   }
 }

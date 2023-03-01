@@ -1,3 +1,7 @@
+import { SearchType } from '../config/common.enum';
+import { Post } from '../pages/post/post.interface';
+import { Wallpaper } from '../pages/wallpaper/wallpaper.interface';
+
 export interface PageOptions {
   showHeader: boolean;
   showFooter: boolean;
@@ -18,9 +22,9 @@ export interface QueryParam {
 }
 
 export interface ResultList<T> {
-  list?: T[];
-  page?: number;
-  total?: number;
+  list: T[];
+  page: number;
+  total: number;
 }
 
 export interface ArchiveData {
@@ -67,4 +71,16 @@ export interface UserAgentData {
   isMobile: boolean;
   isCrawler: boolean;
   userAgent: string;
+}
+
+export interface SearchParam {
+  keyword: string;
+  page?: number;
+  size?: number;
+}
+
+export interface SearchResponse {
+  type: SearchType;
+  data: Post | Wallpaper;
+  score: number;
 }

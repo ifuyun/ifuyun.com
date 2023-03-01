@@ -31,7 +31,7 @@ export class PostListComponent extends PageComponent implements OnInit {
   keyword = '';
   category = '';
   tag = '';
-  postList: ResultList<Post> = {};
+  postList: Post[] = [];
   total = 0;
   paginatorData: PaginatorEntity | null = null;
   pageUrl = '';
@@ -117,9 +117,9 @@ export class PostListComponent extends PageComponent implements OnInit {
       .getPosts(param)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.postList = res.postList || {};
-        this.page = this.postList.page || 1;
-        this.total = this.postList.total || 0;
+        this.postList = res.postList?.list || [];
+        this.page = res.postList.page || 1;
+        this.total = res.postList.total || 0;
 
         res.breadcrumbs = (res.breadcrumbs || []).map((item) => {
           item.url = `/post/category/${item.slug}`;

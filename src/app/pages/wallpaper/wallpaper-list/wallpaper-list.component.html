@@ -40,12 +40,12 @@
                   <i class="icon icon-eye"></i><span>{{wallpaper.wallpaperViews | numberView}}</span>
                 </div>
                 <div class="action-item clickable"
-                     [class.disabled]="wallpaper.wallpaperLiked || voteLoadingMap[wallpaper.wallpaperId]"
+                     [class.disabled]="wallpaper.wallpaperVoted || voteLoadingMap[wallpaper.wallpaperId]"
                      (click)="voteWallpaper(wallpaper)"
                      title="喜欢: {{wallpaper.wallpaperLikes | numberView}}">
                   <i class='icon'
-                     [class.icon-heart]="!wallpaper.wallpaperLiked"
-                     [class.icon-heart-fill]="wallpaper.wallpaperLiked"
+                     [class.icon-heart]="!wallpaper.wallpaperVoted"
+                     [class.icon-heart-fill]="wallpaper.wallpaperVoted"
                      [class.icon-loading]="voteLoadingMap[wallpaper.wallpaperId]"></i><span>{{wallpaper.wallpaperLikes | numberView}}</span>
                 </div>
               </div>
