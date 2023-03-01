@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { isEmpty, omit } from 'lodash';
+import { isEmpty, omit, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
@@ -86,7 +86,6 @@ export class HomeComponent extends PageComponent implements OnInit {
         this.options = options;
         this.wallpaperURLPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
         this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
-        this.updatePageInfo();
         if (this.keyword) {
           this.pageIndex = 'search';
           this.bizType = 'search';
@@ -98,6 +97,7 @@ export class HomeComponent extends PageComponent implements OnInit {
           this.fetchWallpapers();
         }
         this.updateActivePage();
+        this.updatePageInfo();
       });
   }
 
@@ -222,12 +222,30 @@ export class HomeComponent extends PageComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = [this.options['site_slogan'], this.options['site_name']];
+    const titles = [this.options['site_name']];
+    let description = '';
+    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    if (this.bizType === 'search') {
+      titles.unshift(this.keyword, '搜索');
+      description += `「${this.keyword}」搜索结果`;
+      keywords.unshift(...this.keyword.split(/\s+/i));
+
+      if (this.page > 1) {
+        titles.unshift(`第${this.page}页`);
+        if (description) {
+          description += `(第${this.page}页)`;
+        }
+      }
+      description += '。';
+    } else {
+      titles.unshift(this.options['site_slogan']);
+    }
+    description += `${this.options['site_description']}`;
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
-      description: this.options['site_description'],
-      keywords: this.options['site_keywords'],
+      description,
+      keywords: uniq(keywords).join(','),
       author: this.options['site_author']
     });
   }
