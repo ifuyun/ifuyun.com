@@ -39,7 +39,9 @@ export class ApiRequestInterceptor implements HttpInterceptor {
       return next.handle(httpRequest);
     }
 
-    const key: StateKey<string> = makeStateKey<string>(`${httpRequest.url}?${httpRequest.params.toString()}`);
+    const url = httpRequest.url.replace(/^https?:\/\/[^\/]+/i, '');
+    const urlParam = httpRequest.params.toString();
+    const key: StateKey<string> = makeStateKey<string>(`${url}${urlParam ? '?' + urlParam : ''}`);
 
     if (this.platform.isServer) {
       return next.handle(httpRequest).pipe(
