@@ -41,12 +41,12 @@ export class ApiRequestInterceptor implements HttpInterceptor {
 
     const url = httpRequest.url.replace(/^https?:\/\/[^\/]+/i, '');
     const urlParam = httpRequest.params.toString();
-    const key: StateKey<string> = makeStateKey<string>(`${url}${urlParam ? '?' + urlParam : ''}`);
+    const key: StateKey<any> = makeStateKey<any>(`${url}${urlParam ? '?' + urlParam : ''}`);
 
     if (this.platform.isServer) {
       return next.handle(httpRequest).pipe(
         tap((event) => {
-          this.state.set(key, (<HttpResponse<any>>event).body);
+          this.state.set<any>(key, (<HttpResponse<any>>event).body);
         })
       );
     }
@@ -57,8 +57,7 @@ export class ApiRequestInterceptor implements HttpInterceptor {
       this.state.remove(key);
 
       return of(response);
-    } else {
-      return next.handle(httpRequest);
     }
+    return next.handle(httpRequest);
   }
 }

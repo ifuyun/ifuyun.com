@@ -161,13 +161,15 @@ export class HomeComponent extends PageComponent implements OnInit {
         this.page = res.page || 1;
         this.total = res.total || 0;
 
-        this.searchList.forEach((item) => {
-          if (item.type === SearchType.POST) {
-            item.data = this.postService.checkPostVoteStatus(<Post>item.data);
-          } else if (item.type === SearchType.WALLPAPER) {
-            item.data = this.wallpaperService.checkWallpaperVoteStatus(this.transformWallpapers(<Wallpaper>item.data));
-          }
-        });
+        if (this.platform.isBrowser) {
+          this.searchList.forEach((item) => {
+            if (item.type === SearchType.POST) {
+              item.data = this.postService.checkPostVoteStatus(<Post>item.data);
+            } else if (item.type === SearchType.WALLPAPER) {
+              item.data = this.wallpaperService.checkWallpaperVoteStatus(this.transformWallpapers(<Wallpaper>item.data));
+            }
+          });
+        }
         this.paginatorData = this.paginator.getPaginator(this.page, this.total, this.pageSize);
       });
   }
