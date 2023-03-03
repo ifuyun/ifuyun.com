@@ -1,12 +1,7 @@
-import { DOCUMENT, NgClass, NgIf } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
-import { BackTopComponent } from './components/back-top/back-top.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { HeaderComponent } from './components/header/header.component';
-import { SiderMobileComponent } from './components/sider-mobile/sider-mobile.component';
-import { ToolboxComponent } from './components/toolbox/toolbox.component';
 import { BLOCK_SCROLL_CLASS, MEDIA_QUERY_THEME_DARK } from './config/common.constant';
 import { Theme } from './config/common.enum';
 import { CommonService } from './core/common.service';
@@ -22,18 +17,7 @@ import { UserService } from './services/user.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.less'],
-  // standalone: true,
-  // imports: [
-  //   NgIf,
-  //   NgClass,
-  //   RouterModule,
-  //   HeaderComponent,
-  //   FooterComponent,
-  //   SiderMobileComponent,
-  //   ToolboxComponent,
-  //   BackTopComponent
-  // ]
+  styleUrls: ['./app.component.less']
 })
 export class AppComponent implements OnInit {
   isMobile = false;
