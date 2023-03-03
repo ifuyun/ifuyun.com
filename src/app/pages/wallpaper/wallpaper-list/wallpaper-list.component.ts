@@ -1,9 +1,14 @@
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
+import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { EmptyComponent } from '../../../components/empty/empty.component';
+import { JdUnionGoodsComponent } from '../../../components/jd-union-goods/jd-union-goods.component';
+import { PageBarComponent } from '../../../components/page-bar/page-bar.component';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
@@ -17,6 +22,7 @@ import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { Guest } from '../../../interfaces/user.interface';
+import { NumberViewPipe } from '../../../pipes/number-view.pipe';
 import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
 import { VoteEntity } from '../../post/vote.interface';
@@ -29,7 +35,19 @@ import { WallpaperService } from '../wallpaper.service';
   selector: 'app-wallpaper-list',
   templateUrl: './wallpaper-list.component.html',
   styleUrls: ['./wallpaper-list.component.less'],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [
+    NgClass,
+    NgFor,
+    NgIf,
+    RouterLink,
+    BreadcrumbComponent,
+    PageBarComponent,
+    EmptyComponent,
+    JdUnionGoodsComponent,
+    NumberViewPipe
+  ]
 })
 export class WallpaperListComponent extends PageComponent implements OnInit, AfterViewInit {
   isMobile = false;

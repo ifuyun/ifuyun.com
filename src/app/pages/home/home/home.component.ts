@@ -1,10 +1,16 @@
+import { DatePipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
+import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { CarouselComponent } from '../../../components/carousel/carousel.component';
+import { EmptyComponent } from '../../../components/empty/empty.component';
+import { JdUnionGoodsComponent } from '../../../components/jd-union-goods/jd-union-goods.component';
+import { PageBarComponent } from '../../../components/page-bar/page-bar.component';
 import { BLANK_IMAGE } from '../../../config/common.constant';
 import { SearchType } from '../../../config/common.enum';
 import { SearchResponse } from '../../../core/common.interface';
@@ -18,8 +24,11 @@ import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { filterHtmlTag, truncateString } from '../../../helpers/helper';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { NumberViewPipe } from '../../../pipes/number-view.pipe';
 import { OptionService } from '../../../services/option.service';
 import { SearchService } from '../../../services/search.service';
+import { PostItemComponent } from '../../post/post-item/post-item.component';
+import { PostListViewComponent } from '../../post/post-list-view/post-list-view.component';
 import { Post } from '../../post/post.interface';
 import { PostService } from '../../post/post.service';
 import { BING_DOMAIN } from '../../wallpaper/wallpaper.constant';
@@ -30,7 +39,23 @@ import { WallpaperService } from '../../wallpaper/wallpaper.service';
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.less'],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [
+    NgIf,
+    NgFor,
+    NgTemplateOutlet,
+    RouterLink,
+    BreadcrumbComponent,
+    CarouselComponent,
+    EmptyComponent,
+    PostListViewComponent,
+    PostItemComponent,
+    PageBarComponent,
+    JdUnionGoodsComponent,
+    DatePipe,
+    NumberViewPipe
+  ]
 })
 export class HomeComponent extends PageComponent implements OnInit {
   readonly blankImage = BLANK_IMAGE;
@@ -174,7 +199,7 @@ export class HomeComponent extends PageComponent implements OnInit {
       });
   }
 
-  private transformWallpapers<T extends (Wallpaper | Wallpaper[])>(wallpapers: T): T {
+  private transformWallpapers<T extends Wallpaper | Wallpaper[]>(wallpapers: T): T {
     const transformFn = (wallpaper: Wallpaper) => {
       const wallpaperLocation = !!wallpaper.bingIdCn
         ? wallpaper.wallpaperLocation || '未知'

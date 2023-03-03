@@ -10,12 +10,15 @@ import { PlatformService } from '../../core/platform.service';
 import { ResponseService } from '../../core/response.service';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { OptionService } from '../../services/option.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-not-found',
   templateUrl: './not-found.component.html',
   styleUrls: ['./not-found.component.less'],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [RouterLink]
 })
 export class NotFoundComponent extends PageComponent implements OnInit {
   options: OptionEntity = {};

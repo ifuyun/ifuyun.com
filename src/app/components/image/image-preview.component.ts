@@ -1,5 +1,7 @@
 import { AnimationEvent } from '@angular/animations';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { OverlayRef } from '@angular/cdk/overlay';
+import { NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -12,9 +14,9 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { fromEvent, takeUntil } from 'rxjs';
+import { DestroyService } from '../../core/destroy.service';
 
 import { fadeMotion } from '../antd-core/animation';
-import { DestroyService } from '../../core/destroy.service';
 import { isNotNil } from '../antd-core/util';
 
 import { FADE_CLASS_NAME_MAP } from './image-config';
@@ -116,7 +118,9 @@ const initialPosition = {
     tabindex: '-1',
     role: 'document'
   },
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [NgFor, NgIf, CdkDrag, CdkDragHandle]
 })
 export class ImagePreviewComponent implements OnInit {
   images: Image[] = [];

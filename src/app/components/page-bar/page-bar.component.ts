@@ -1,12 +1,15 @@
+import { NgFor, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { Params } from '@angular/router';
+import { Params, RouterLink } from '@angular/router';
 import { PaginatorEntity } from '../../core/paginator.interface';
 import { UserAgentService } from '../../core/user-agent.service';
 
 @Component({
   selector: 'app-page-bar',
   templateUrl: './page-bar.component.html',
-  styleUrls: ['./page-bar.component.less']
+  styleUrls: ['./page-bar.component.less'],
+  standalone: true,
+  imports: [NgFor, NgIf, RouterLink]
 })
 export class PageBarComponent {
   @Input() paginator: PaginatorEntity | null = null;

@@ -21,7 +21,8 @@ import { MessageData } from './message.interface';
   preserveWhitespaces: false,
   animations: [moveUpMotion],
   templateUrl: './message.component.html',
-  styleUrls: ['./message.component.less']
+  styleUrls: ['./message.component.less'],
+  standalone: true
 })
 export class MessageComponent extends MessageBaseComponent implements OnInit, OnDestroy {
   @Input() override message!: Required<MessageData>;

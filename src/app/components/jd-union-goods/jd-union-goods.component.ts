@@ -1,3 +1,4 @@
+import { DecimalPipe, NgClass, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { combineLatestWith, of, skipWhile, takeUntil } from 'rxjs';
@@ -8,14 +9,18 @@ import { UserAgentService } from '../../core/user-agent.service';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { JdUnionGoodsJingfen, JdUnionGoodsMaterial } from '../../pages/tool/jd-union.interface';
 import { ShoppingService } from '../../pages/tool/shopping/shopping.service';
+import { NumberViewPipe } from '../../pipes/number-view.pipe';
 import { OptionService } from '../../services/option.service';
+import { EmptyComponent } from '../empty/empty.component';
 import { JdUnionOptions } from './jd-union-goods.interface';
 
 @Component({
   selector: 'i-jd-union-goods',
   templateUrl: './jd-union-goods.component.html',
   styleUrls: ['./jd-union-goods.component.less'],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [NgClass, NgFor, NgIf, NgTemplateOutlet, EmptyComponent, DecimalPipe, NumberViewPipe]
 })
 export class JdUnionGoodsComponent implements OnInit {
   @Input() eliteIds: number | number[] = 2;

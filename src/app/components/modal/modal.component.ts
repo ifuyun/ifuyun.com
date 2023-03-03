@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -19,7 +19,9 @@ import { PlatformService } from '../../core/platform.service';
 @Component({
   selector: 'i-modal',
   templateUrl: './modal.component.html',
-  styleUrls: ['./modal.component.less']
+  styleUrls: ['./modal.component.less'],
+  standalone: true,
+  imports: [NgIf, NgTemplateOutlet]
 })
 export class ModalComponent implements OnDestroy, AfterViewInit, OnChanges {
   @Input() content!: TemplateRef<void>;

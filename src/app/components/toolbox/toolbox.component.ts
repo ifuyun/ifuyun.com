@@ -7,13 +7,17 @@ import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { OptionService } from '../../services/option.service';
+import { ImageModule } from '../image/image.module';
 import { ImageService } from '../image/image.service';
+import { WallpaperBoxComponent } from '../wallpaper-box/wallpaper-box.component';
 
 @Component({
   selector: 'i-toolbox',
   templateUrl: './toolbox.component.html',
   styleUrls: ['./toolbox.component.less'],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [WallpaperBoxComponent, ImageModule]
 })
 export class ToolboxComponent implements OnInit {
   options: OptionEntity = {};

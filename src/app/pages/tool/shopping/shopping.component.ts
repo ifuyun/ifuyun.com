@@ -1,10 +1,15 @@
+import { NgClass, NgIf } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
+import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { EmptyComponent } from '../../../components/empty/empty.component';
+import { JdUnionGoodsGroupComponent } from '../../../components/jd-union-goods-group/jd-union-goods-group.component';
 import { MessageService } from '../../../components/message/message.service';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -22,7 +27,9 @@ import { ShoppingService } from './shopping.service';
   selector: 'app-shopping',
   templateUrl: './shopping.component.html',
   styleUrls: ['./shopping.component.less'],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [NgClass, NgIf, FormsModule, BreadcrumbComponent, EmptyComponent, JdUnionGoodsGroupComponent]
 })
 export class ShoppingComponent extends PageComponent implements OnInit {
   @ViewChild('promotionQrcode') promotionQrcodeEle!: ElementRef;

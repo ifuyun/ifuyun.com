@@ -1,23 +1,19 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  Renderer2,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { DatePipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import highlight from 'highlight.js';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
+import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { CommentComponent } from '../../../components/comment/comment.component';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
+import { ImageModule } from '../../../components/image/image.module';
 import { ImageService } from '../../../components/image/image.service';
+import { JdUnionGoodsComponent } from '../../../components/jd-union-goods/jd-union-goods.component';
 import { MessageService } from '../../../components/message/message.service';
 import { STORAGE_KEY_VOTED_POSTS, WECHAT_CARD_PATH } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
@@ -33,6 +29,10 @@ import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { TaxonomyEntity } from '../../../interfaces/taxonomy.interface';
 import { Guest, UserModel } from '../../../interfaces/user.interface';
+import { CopyrightTypeDescPipe } from '../../../pipes/copyright-type-desc.pipe';
+import { CopyrightTypePipe } from '../../../pipes/copyright-type.pipe';
+import { NumberViewPipe } from '../../../pipes/number-view.pipe';
+import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
 import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
 import { FavoriteService } from '../favorite.service';
@@ -46,7 +46,24 @@ import { VoteService } from '../vote.service';
   selector: 'app-post',
   templateUrl: './post.component.html',
   styleUrls: [],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [
+    NgClass,
+    NgIf,
+    NgFor,
+    NgStyle,
+    RouterLink,
+    BreadcrumbComponent,
+    CommentComponent,
+    JdUnionGoodsComponent,
+    ImageModule,
+    DatePipe,
+    SafeHtmlPipe,
+    CopyrightTypePipe,
+    CopyrightTypeDescPipe,
+    NumberViewPipe
+  ]
 })
 export class PostComponent extends PageComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('postEle', { static: false }) postEle!: ElementRef;

@@ -1,6 +1,8 @@
 import { Direction } from '@angular/cdk/bidi';
+import { NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
 import { MessageContainerBaseComponent, toCssPixel } from './base';
+import { MessageComponent } from './message.component';
 import { MessageConfig } from './message.interface';
 
 const MESSAGE_DEFAULT_CONFIG: Required<MessageConfig> = {
@@ -26,7 +28,9 @@ const MESSAGE_DEFAULT_CONFIG: Required<MessageConfig> = {
         (destroyed)="remove($event.id, $event.userAction)"
       ></i-message>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [NgFor, MessageComponent]
 })
 export class MessageContainerComponent extends MessageContainerBaseComponent {
   dir: Direction = 'ltr';

@@ -88,7 +88,7 @@ export class PostService {
       .pipe(map((res) => res?.data || []));
   }
 
-  checkPostVoteStatus<T extends (Post | Post[])>(posts: T): T {
+  checkPostVoteStatus<T extends Post | Post[]>(posts: T): T {
     const voted = (localStorage.getItem(STORAGE_KEY_VOTED_POSTS) || '').split(',');
     if (!Array.isArray(posts)) {
       return {

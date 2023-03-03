@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'commentHash'
+  name: 'commentHash',
+  standalone: true
 })
 export class CommentHashPipe implements PipeTransform {
   transform(value: string): string {

@@ -1,11 +1,14 @@
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
+import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ImageService } from '../../../components/image/image.service';
+import { JdUnionGoodsGroupComponent } from '../../../components/jd-union-goods-group/jd-union-goods-group.component';
 import { MessageService } from '../../../components/message/message.service';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -21,7 +24,9 @@ import { OptionService } from '../../../services/option.service';
   selector: 'app-tool',
   templateUrl: './tool.component.html',
   styleUrls: ['./tool.component.less'],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [NgClass, NgFor, NgIf, RouterLink, BreadcrumbComponent, JdUnionGoodsGroupComponent]
 })
 export class ToolComponent extends PageComponent implements OnInit {
   isMobile = false;

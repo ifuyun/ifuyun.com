@@ -1,15 +1,12 @@
-import { DOCUMENT, ViewportScroller } from '@angular/common';
+import { DatePipe, DOCUMENT, NgClass, NgFor, NgIf, NgStyle, NgTemplateOutlet, ViewportScroller } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { cloneDeep, isEmpty, uniq } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
 import { ApiUrl } from '../../config/api-url';
+import { AVATAR_API_URL, STORAGE_KEY_DISLIKED_COMMENTS, STORAGE_KEY_LIKED_COMMENTS } from '../../config/common.constant';
 import { VoteType, VoteValue } from '../../config/common.enum';
-import {
-  AVATAR_API_URL,
-  STORAGE_KEY_DISLIKED_COMMENTS,
-  STORAGE_KEY_LIKED_COMMENTS
-} from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
@@ -20,6 +17,7 @@ import { OptionEntity } from '../../interfaces/option.interface';
 import { Guest, UserModel } from '../../interfaces/user.interface';
 import { VoteEntity } from '../../pages/post/vote.interface';
 import { VoteService } from '../../pages/post/vote.service';
+import { CommentHashPipe } from '../../pipes/comment-hash.pipe';
 import { OptionService } from '../../services/option.service';
 import { UserService } from '../../services/user.service';
 import { MessageService } from '../message/message.service';
@@ -31,7 +29,20 @@ import { CommentService } from './comment.service';
   selector: 'i-comment',
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.less'],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [
+    NgClass,
+    NgFor,
+    NgIf,
+    NgStyle,
+    RouterLink,
+    NgTemplateOutlet,
+    FormsModule,
+    ReactiveFormsModule,
+    DatePipe,
+    CommentHashPipe
+  ]
 })
 export class CommentComponent implements OnInit, AfterViewInit {
   @Input() objectType: CommentObjectType = CommentObjectType.POST;

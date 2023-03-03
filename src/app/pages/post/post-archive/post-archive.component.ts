@@ -1,6 +1,9 @@
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
+import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ArchiveDataMap } from '../../../core/common.interface';
@@ -18,7 +21,9 @@ import { PostService } from '../post.service';
   selector: 'app-post-archive',
   templateUrl: './post-archive.component.html',
   styleUrls: [],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [NgClass, NgFor, NgIf, RouterLink, BreadcrumbComponent]
 })
 export class PostArchiveComponent extends PageComponent implements OnInit {
   isMobile = false;

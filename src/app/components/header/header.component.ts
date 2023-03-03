@@ -1,5 +1,7 @@
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM, LOGO_DARK_PATH, LOGO_PATH } from '../../config/common.constant';
@@ -8,6 +10,7 @@ import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
+import { AutofocusDirective } from '../../directives/autofocus.directive';
 import { format } from '../../helpers/helper';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { TaxonomyNode } from '../../interfaces/taxonomy.interface';
@@ -21,7 +24,9 @@ import { UserService } from '../../services/user.service';
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.less'],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [NgClass, NgFor, NgIf, RouterLink, FormsModule, AutofocusDirective]
 })
 export class HeaderComponent implements OnInit {
   @Input() taxonomies: TaxonomyNode[] = [];

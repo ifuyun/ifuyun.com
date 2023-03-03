@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { COPYRIGHT_TYPE, DEFAULT_COPYRIGHT_TYPE } from '../pages/post/post.constant';
 
 @Pipe({
-  name: 'copyrightType'
+  name: 'copyrightType',
+  standalone: true
 })
 export class CopyrightTypePipe implements PipeTransform {
   transform(value: string): string {

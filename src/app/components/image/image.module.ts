@@ -11,9 +11,17 @@ import { ImageDirective } from './image.directive';
 import { ImageService } from './image.service';
 
 @NgModule({
-  imports: [BidiModule, OverlayModule, PortalModule, DragDropModule, CommonModule],
+  imports: [
+    BidiModule,
+    OverlayModule,
+    PortalModule,
+    DragDropModule,
+    CommonModule,
+    ImageDirective,
+    ImagePreviewComponent,
+    ImageGroupComponent
+  ],
   exports: [ImageDirective, ImagePreviewComponent, ImageGroupComponent],
-  providers: [ImageService],
-  declarations: [ImageDirective, ImagePreviewComponent, ImageGroupComponent]
+  providers: [ImageService]
 })
 export class ImageModule {}

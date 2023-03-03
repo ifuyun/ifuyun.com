@@ -2,25 +2,25 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highlightjs';
-import { ComponentModule } from '../../components/component.module';
-import { PipesModule } from '../../pipes/pipes.module';
 import { PostArchiveComponent } from './post-archive/post-archive.component';
+import { PostItemComponent } from './post-item/post-item.component';
 import { PostListViewComponent } from './post-list-view/post-list-view.component';
 import { PostListComponent } from './post-list/post-list.component';
 import { PostRoutingModule } from './post-routing.module';
 import { PostComponent } from './post/post.component';
-import { PostItemComponent } from './post-item/post-item.component';
 
 @NgModule({
-  declarations: [PostListComponent, PostComponent, PostArchiveComponent, PostListViewComponent, PostItemComponent],
   imports: [
     CommonModule,
     PostRoutingModule,
-    ComponentModule,
-    PipesModule,
     FormsModule,
     ReactiveFormsModule,
-    HighlightModule
+    HighlightModule,
+    PostListComponent,
+    PostComponent,
+    PostArchiveComponent,
+    PostListViewComponent,
+    PostItemComponent
   ],
   providers: [
     {

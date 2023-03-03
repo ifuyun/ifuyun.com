@@ -11,6 +11,24 @@ function bootstrap() {
   platformBrowserDynamic()
     .bootstrapModule(AppModule)
     .catch((err) => console.error(err));
+  /*
+    The following code is used for CSR:
+    bootstrapApplication(AppComponent, {
+      providers: [
+        importProvidersFrom(
+          BrowserModule.withServerTransition({ appId: 'ifuyun' }),
+          TransferHttpCacheModule,
+          AppRoutingModule,
+          FormsModule,
+          ReactiveFormsModule
+        ),
+        httpInterceptorProviders,
+        { provide: APP_BASE_HREF, useValue: env.host },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideAnimations()
+      ]
+    }).catch((err) => console.error(err));
+  */
 }
 
 if (document.readyState === 'complete') {

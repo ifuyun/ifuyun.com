@@ -1,4 +1,6 @@
+import { NgClass, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
 import { CommonService } from '../../core/common.service';
@@ -11,7 +13,9 @@ import { OptionService } from '../../services/option.service';
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.less'],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [NgClass, NgIf, RouterLink]
 })
 export class FooterComponent implements OnInit {
   isMobile = false;

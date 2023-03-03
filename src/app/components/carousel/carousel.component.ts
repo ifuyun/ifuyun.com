@@ -1,3 +1,4 @@
+import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
@@ -16,7 +17,9 @@ import { OptionService } from '../../services/option.service';
   selector: 'i-carousel',
   templateUrl: './carousel.component.html',
   styleUrls: ['./carousel.component.less'],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [NgClass, NgFor, NgIf, NgStyle]
 })
 export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly blankImage = BLANK_IMAGE;

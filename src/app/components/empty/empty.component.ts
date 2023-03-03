@@ -4,7 +4,8 @@ import { UserAgentService } from '../../core/user-agent.service';
 @Component({
   selector: 'app-empty',
   templateUrl: './empty.component.html',
-  styleUrls: ['./empty.component.less']
+  styleUrls: ['./empty.component.less'],
+  standalone: true
 })
 export class EmptyComponent {
   @Input() showBorder = true;

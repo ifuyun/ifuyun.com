@@ -51,7 +51,7 @@ export class WallpaperService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  checkWallpaperVoteStatus<T extends (Wallpaper | Wallpaper[])>(wallpapers: T): T {
+  checkWallpaperVoteStatus<T extends Wallpaper | Wallpaper[]>(wallpapers: T): T {
     const voted = (localStorage.getItem(STORAGE_KEY_LIKED_WALLPAPER) || '').split(',');
     if (!Array.isArray(wallpapers)) {
       return {

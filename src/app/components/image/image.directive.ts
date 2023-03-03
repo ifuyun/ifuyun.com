@@ -26,7 +26,8 @@ export type ImageStatusType = 'error' | 'loading' | 'normal';
   // eslint-disable-next-line @angular-eslint/no-host-metadata-property
   host: {
     '(click)': 'onPreview()'
-  }
+  },
+  standalone: true
 })
 export class ImageDirective implements OnInit, OnChanges, OnDestroy {
   @Input() nzSrc = '';

@@ -1,14 +1,19 @@
+import { NgClass, NgIf } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
+import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { CommentComponent } from '../../../components/comment/comment.component';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
+import { ImageModule } from '../../../components/image/image.module';
 import { ImageService } from '../../../components/image/image.service';
+import { JdUnionGoodsComponent } from '../../../components/jd-union-goods/jd-union-goods.component';
 import { MessageService } from '../../../components/message/message.service';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
@@ -22,6 +27,8 @@ import { UserAgentService } from '../../../core/user-agent.service';
 import { filterHtmlTag, truncateString } from '../../../helpers/helper';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { Guest } from '../../../interfaces/user.interface';
+import { NumberViewPipe } from '../../../pipes/number-view.pipe';
+import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
 import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
 import { VoteEntity } from '../../post/vote.interface';
@@ -34,10 +41,21 @@ import { WallpaperService } from '../wallpaper.service';
   selector: 'app-wallpaper',
   templateUrl: './wallpaper.component.html',
   styleUrls: ['./wallpaper.component.less'],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [
+    NgClass,
+    NgIf,
+    RouterLink,
+    BreadcrumbComponent,
+    CommentComponent,
+    ImageModule,
+    JdUnionGoodsComponent,
+    NumberViewPipe,
+    SafeHtmlPipe
+  ]
 })
 export class WallpaperComponent extends PageComponent implements OnInit, AfterViewInit {
-  readonly bingDomain = BING_DOMAIN;
   readonly commentObjectType = CommentObjectType.WALLPAPER;
 
   isMobile = false;

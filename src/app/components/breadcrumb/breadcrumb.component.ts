@@ -1,4 +1,6 @@
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
 import { DestroyService } from '../../core/destroy.service';
@@ -12,7 +14,9 @@ import { BreadcrumbService } from './breadcrumb.service';
   selector: 'app-breadcrumb',
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.less'],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [NgClass, NgFor, NgIf, RouterLink]
 })
 export class BreadcrumbComponent implements OnInit {
   isMobile = false;

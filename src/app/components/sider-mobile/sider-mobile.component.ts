@@ -1,4 +1,6 @@
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM, WECHAT_CARD_PATH } from '../../config/common.constant';
@@ -21,7 +23,9 @@ import { ImageService } from '../image/image.service';
   selector: 'app-sider-mobile',
   templateUrl: './sider-mobile.component.html',
   styleUrls: ['./sider-mobile.component.less'],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [NgClass, NgFor, NgIf, RouterLink]
 })
 export class SiderMobileComponent implements OnInit {
   @Input() taxonomies: TaxonomyNode[] = [];

@@ -1,10 +1,13 @@
+import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
+import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
-import { ResultList } from '../../../core/common.interface';
+import { JdUnionGoodsComponent } from '../../../components/jd-union-goods/jd-union-goods.component';
+import { PageBarComponent } from '../../../components/page-bar/page-bar.component';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { MetaService } from '../../../core/meta.service';
@@ -14,6 +17,7 @@ import { PaginatorService } from '../../../core/paginator.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { OptionService } from '../../../services/option.service';
+import { PostListViewComponent } from '../post-list-view/post-list-view.component';
 import { Post, PostQueryParam } from '../post.interface';
 import { PostService } from '../post.service';
 
@@ -21,7 +25,9 @@ import { PostService } from '../post.service';
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
   styleUrls: [],
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [NgIf, BreadcrumbComponent, PostListViewComponent, PageBarComponent, JdUnionGoodsComponent]
 })
 export class PostListComponent extends PageComponent implements OnInit {
   isMobile = false;

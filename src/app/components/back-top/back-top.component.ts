@@ -1,6 +1,6 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -21,8 +21,8 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { debounceTime, fromEvent, Subject, Subscription, takeUntil } from 'rxjs';
-import { fadeMotion } from '../antd-core/animation';
 import { DestroyService } from '../../core/destroy.service';
+import { fadeMotion } from '../antd-core/animation';
 import { InputNumber } from '../antd-core/util';
 import { ScrollService } from './scroll';
 
@@ -47,7 +47,9 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: t
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
-  providers: [DestroyService]
+  providers: [DestroyService],
+  standalone: true,
+  imports: [NgIf, NgTemplateOutlet]
 })
 export class BackTopComponent implements OnInit, OnDestroy, OnChanges {
   private scrollListenerDestroy$ = new Subject();
