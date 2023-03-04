@@ -23,4 +23,10 @@ export class LinkService {
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_LINKS_OF_FAVORITE))
       .pipe(map((res) => res?.data || []));
   }
+
+  getFooterLinks(): Observable<LinkEntity[]> {
+    return this.apiService
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_LINKS_OF_FOOTER))
+      .pipe(map((res) => res?.data || []));
+  }
 }

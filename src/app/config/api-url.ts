@@ -8,6 +8,7 @@ export enum ApiUrl {
   GET_POST_ARCHIVES = '/posts/archives',
   GET_OPTIONS = '/options',
   GET_TAXONOMY_TREE = '/taxonomies/taxonomy-tree',
+  GET_LINKS_OF_FOOTER = '/links/footer',
   GET_LINKS_OF_FRIEND = '/links/friend',
   GET_LINKS_OF_FAVORITE = '/links/favorites',
   GET_COMMENTS = '/comments',
