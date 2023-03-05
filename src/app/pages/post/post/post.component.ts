@@ -1,5 +1,14 @@
 import { DatePipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import highlight from 'highlight.js';
 import { isEmpty, uniq } from 'lodash';

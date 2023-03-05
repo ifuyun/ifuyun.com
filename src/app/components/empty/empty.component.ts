@@ -10,6 +10,7 @@ import { UserAgentService } from '../../core/user-agent.service';
 export class EmptyComponent {
   @Input() showBorder = true;
   @Input() showBackground = true;
+  @Input() showShadow = false;
 
   isMobile = false;
 

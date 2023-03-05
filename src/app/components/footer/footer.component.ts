@@ -17,7 +17,7 @@ import { OptionService } from '../../services/option.service';
   styleUrls: ['./footer.component.less'],
   providers: [DestroyService],
   standalone: true,
-  imports: [NgClass, NgIf, NgFor, RouterLink]
+  imports: [NgClass, NgFor, NgIf, RouterLink]
 })
 export class FooterComponent implements OnInit {
   isMobile = false;

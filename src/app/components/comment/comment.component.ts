@@ -5,7 +5,11 @@ import { RouterLink } from '@angular/router';
 import { cloneDeep, isEmpty, uniq } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
 import { ApiUrl } from '../../config/api-url';
-import { AVATAR_API_URL, STORAGE_KEY_DISLIKED_COMMENTS, STORAGE_KEY_LIKED_COMMENTS } from '../../config/common.constant';
+import {
+  AVATAR_API_URL,
+  STORAGE_KEY_DISLIKED_COMMENTS,
+  STORAGE_KEY_LIKED_COMMENTS
+} from '../../config/common.constant';
 import { VoteType, VoteValue } from '../../config/common.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';

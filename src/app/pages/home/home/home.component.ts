@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
@@ -11,7 +11,6 @@ import { CarouselComponent } from '../../../components/carousel/carousel.compone
 import { EmptyComponent } from '../../../components/empty/empty.component';
 import { JdUnionGoodsComponent } from '../../../components/jd-union-goods/jd-union-goods.component';
 import { PageBarComponent } from '../../../components/page-bar/page-bar.component';
-import { BLANK_IMAGE } from '../../../config/common.constant';
 import { SearchType } from '../../../config/common.enum';
 import { SearchResponse } from '../../../core/common.interface';
 import { CommonService } from '../../../core/common.service';
@@ -31,6 +30,8 @@ import { PostItemComponent } from '../../post/post-item/post-item.component';
 import { PostListViewComponent } from '../../post/post-list-view/post-list-view.component';
 import { Post } from '../../post/post.interface';
 import { PostService } from '../../post/post.service';
+import { WallpaperItemComponent } from '../../wallpaper/wallpaper-item/wallpaper-item.component';
+import { WallpaperListViewComponent } from '../../wallpaper/wallpaper-list-view/wallpaper-list-view.component';
 import { BING_DOMAIN } from '../../wallpaper/wallpaper.constant';
 import { Wallpaper, WallpaperLang } from '../../wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../wallpaper/wallpaper.service';
@@ -42,15 +43,15 @@ import { WallpaperService } from '../../wallpaper/wallpaper.service';
   providers: [DestroyService],
   standalone: true,
   imports: [
-    NgIf,
-    NgFor,
-    NgTemplateOutlet,
+    CommonModule,
     RouterLink,
     BreadcrumbComponent,
     CarouselComponent,
     EmptyComponent,
     PostListViewComponent,
     PostItemComponent,
+    WallpaperListViewComponent,
+    WallpaperItemComponent,
     PageBarComponent,
     JdUnionGoodsComponent,
     DatePipe,
@@ -58,8 +59,6 @@ import { WallpaperService } from '../../wallpaper/wallpaper.service';
   ]
 })
 export class HomeComponent extends PageComponent implements OnInit {
-  readonly blankImage = BLANK_IMAGE;
-
   isMobile = false;
   pageIndex = 'index';
   options: OptionEntity = {};
@@ -126,10 +125,6 @@ export class HomeComponent extends PageComponent implements OnInit {
       });
   }
 
-  getWallpaperLangParams(wallpaper: Wallpaper): Params {
-    return !!wallpaper.bingIdCn ? {} : { lang: WallpaperLang.EN };
-  }
-
   protected updateActivePage(): void {
     this.commonService.updateActivePage(this.pageIndex);
   }
@@ -191,7 +186,9 @@ export class HomeComponent extends PageComponent implements OnInit {
             if (item.type === SearchType.POST) {
               item.data = this.postService.checkPostVoteStatus(<Post>item.data);
             } else if (item.type === SearchType.WALLPAPER) {
-              item.data = this.wallpaperService.checkWallpaperVoteStatus(this.transformWallpapers(<Wallpaper>item.data));
+              item.data = this.wallpaperService.checkWallpaperVoteStatus(
+                this.transformWallpapers(<Wallpaper>item.data)
+              );
             }
           });
         }

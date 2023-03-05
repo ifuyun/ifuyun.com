@@ -6,14 +6,14 @@ import { PostItemComponent } from '../post-item/post-item.component';
 import { Post } from '../post.interface';
 
 @Component({
-  selector: 'i-post-list',
+  selector: 'i-post-list-view',
   templateUrl: './post-list-view.component.html',
   styleUrls: [],
   standalone: true,
   imports: [NgFor, NgIf, PostItemComponent, EmptyComponent]
 })
 export class PostListViewComponent {
-  @Input() postList: Post[] = [];
+  @Input() posts: Post[] = [];
 
   isMobile = false;
 

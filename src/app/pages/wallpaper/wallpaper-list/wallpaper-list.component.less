@@ -3,7 +3,18 @@
 .wallpaper {
   @row-size: 2;
 
+  border-radius: @border-radius;
+
   &.wallpaper-desktop {
+    margin: @box-shadow-width;
+    padding: @content-margin;
+    background-color: var(--content-background-color);
+    box-shadow: var(--content-box-shadow);
+
+    .wallpaper-list {
+      margin: -(@content-margin / 2);
+    }
+
     .wallpaper-item {
       width: (100% / @row-size);
       padding: (@content-margin / 2);
@@ -13,69 +24,13 @@
   &.wallpaper-mobile {
     .wallpaper-item {
       width: 100%;
-      padding: (@content-margin / 2) 0;
-    }
-  }
 
-  .switcher {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: @content-margin;
-
-    > div {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .lang {
-      border: 1px solid var(--minor-border-color);
-      font-size: 15px;
-
-      &:first-child {
-        border-right: none;
-        border-top-left-radius: @border-radius;
-        border-bottom-left-radius: @border-radius;
+      &:not(:last-child) {
+        padding-bottom: (@m-primary-margin / 2);
       }
 
-      &:last-child {
-        border-left: none;
-        border-top-right-radius: @border-radius;
-        border-bottom-right-radius: @border-radius;
-      }
-
-      &:hover {
-        color: var(--primary-color);
-        border-color: var(--primary-color);
-      }
-
-      a {
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 80px;
-        height: 32px;
-        padding: 4px 8px;
-        color: var(--base-color);
-
-        &:hover {
-          color: var(--primary-color);
-        }
-      }
-
-      &.active {
-        border-color: var(--primary-color);
-        background: var(--primary-color);
-
-        &:hover {
-          background: var(--active-color);
-        }
-
-        a {
-          color: #fff;
-        }
+      &:not(:first-child) {
+        padding-top: (@m-primary-margin / 2);
       }
     }
   }
@@ -87,7 +42,6 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     position: relative;
-    margin: -(@content-margin / 2);
 
     .wallpaper-item {
       box-sizing: border-box;
@@ -203,8 +157,56 @@
       }
     }
   }
+}
 
-  .empty-box {
-    margin-top: @content-margin;
+.filter {
+  .filter-item {
+    display: flex;
+
+    &:not(:last-child) {
+      margin-bottom: @primary-margin;
+    }
+  }
+
+  .filter-label {
+    display: flex;
+    align-items: center;
+    flex-basis: 100px;
+
+    &:after {
+      content: ':';
+    }
+  }
+
+  .filter-options {
+    display: flex;
+    align-items: center;
+
+    li {
+      padding: 4px 8px;
+      border-radius: @border-radius;
+
+      &:not(:last-child) {
+        margin-right: 12px;
+      }
+
+      &.active {
+        background: var(--primary-color);
+
+        &:hover {
+          background: var(--active-color);
+        }
+
+        a {
+          color: #fff;
+        }
+      }
+
+      &:not(.active) a {
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
   }
 }

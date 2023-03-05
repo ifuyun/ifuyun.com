@@ -1,16 +1,23 @@
 <app-breadcrumb></app-breadcrumb>
-<div class="content-box" [ngClass]="{'content-box-desktop': !isMobile, 'content-box-mobile': isMobile}">
+<div class="filter content-box" [class.content-box-desktop]="!isMobile" [class.content-box-mobile]="isMobile">
+  <div class="filter-item">
+    <div class="filter-label">语言</div>
+    <ul class="filter-options">
+      <li [class.active]="!lang"><a routerLink="./" [queryParams]="{mode: mode}">全部</a></li>
+      <li [class.active]="lang === 'cn'"><a routerLink="./" [queryParams]="{lang: 'cn', mode: mode}">中文</a></li>
+      <li [class.active]="lang === 'en'"><a routerLink="./" [queryParams]="{lang: 'en', mode: mode}">English</a></li>
+    </ul>
+  </div>
+  <div class="filter-item">
+    <div class="filter-label">显示方式</div>
+    <ul class="filter-options">
+      <li [class.active]="mode === 'card'"><a routerLink="./" [queryParams]="{lang: lang, mode: 'card'}">卡片</a></li>
+      <li [class.active]="mode === 'list'"><a routerLink="./" [queryParams]="{lang: lang, mode: 'list'}">列表</a></li>
+    </ul>
+  </div>
+</div>
+<ng-container *ngIf="mode === 'card'">
   <div class="wallpaper" [class.wallpaper-desktop]="!isMobile" [class.wallpaper-mobile]="isMobile">
-    <div class="switcher" *ngIf="!year">
-      <div>
-        <div class="lang" [class.active]="lang === 'cn'">
-          <a routerLink="./" [queryParams]="getQueryParams('cn')">中文</a>
-        </div>
-        <div class="lang" [class.active]="lang === 'en'">
-          <a routerLink="./" [queryParams]="getQueryParams('en')">English</a>
-        </div>
-      </div>
-    </div>
     <div class="wallpaper-list">
       <div class="wallpaper-item" *ngFor="let wallpaper of wallpapers">
         <div class="wallpaper-box">
@@ -54,11 +61,10 @@
         </div>
       </div>
     </div>
-    <div class="empty-box" *ngIf="total < 1">
-      <app-empty></app-empty>
-    </div>
   </div>
-</div>
+  <app-empty *ngIf="wallpapers.length < 1" [showBorder]="false" [showShadow]="true"></app-empty>
+</ng-container>
+<i-wallpaper-list-view *ngIf="mode === 'list'" [wallpapers]="wallpapers"></i-wallpaper-list-view>
 <i-jd-union-goods [dynamic]="true" [optionKey]="'jd_union_options_content'"></i-jd-union-goods>
 <app-page-bar *ngIf="total > 0"
               [isPath]="false" [paginator]="paginatorData" [url]="pageUrl" [param]="pageUrlParam"></app-page-bar>

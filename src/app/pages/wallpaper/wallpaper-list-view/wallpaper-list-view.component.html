@@ -1,0 +1,7 @@
+<div class="post-list" [class.post-list-desktop]="!isMobile" [class.post-list-mobile]="isMobile">
+  <article *ngFor="let wallpaper of wallpapers"
+           class="post-item" [class.post-item-desktop]="!isMobile" [class.post-item-mobile]="isMobile">
+    <i-wallpaper-item [wallpaper]="wallpaper"></i-wallpaper-item>
+  </article>
+</div>
+<app-empty *ngIf="!wallpapers || wallpapers.length < 1" [showBorder]="false" [showShadow]="true"></app-empty>

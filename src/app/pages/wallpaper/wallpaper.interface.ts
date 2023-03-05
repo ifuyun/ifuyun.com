@@ -11,6 +11,11 @@ export enum WallpaperLang {
   CN = 'cn'
 }
 
+export enum WallpaperListMode {
+  LIST = 'list',
+  CARD = 'card'
+}
+
 export interface WallpaperQueryParam extends QueryParam {
   lang?: WallpaperLang | WallpaperLang[];
   year?: string;

@@ -20,6 +20,7 @@ import { PaginatorEntity } from '../../../core/paginator.interface';
 import { PaginatorService } from '../../../core/paginator.service';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
+import { filterHtmlTag, truncateString } from '../../../helpers/helper';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { Guest } from '../../../interfaces/user.interface';
 import { NumberViewPipe } from '../../../pipes/number-view.pipe';
@@ -27,8 +28,9 @@ import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
 import { VoteEntity } from '../../post/vote.interface';
 import { VoteService } from '../../post/vote.service';
+import { WallpaperListViewComponent } from '../wallpaper-list-view/wallpaper-list-view.component';
 import { BING_DOMAIN } from '../wallpaper.constant';
-import { Wallpaper, WallpaperLang, WallpaperQueryParam } from '../wallpaper.interface';
+import { Wallpaper, WallpaperLang, WallpaperListMode, WallpaperQueryParam } from '../wallpaper.interface';
 import { WallpaperService } from '../wallpaper.service';
 
 @Component({
@@ -43,6 +45,7 @@ import { WallpaperService } from '../wallpaper.service';
     NgIf,
     RouterLink,
     BreadcrumbComponent,
+    WallpaperListViewComponent,
     PageBarComponent,
     EmptyComponent,
     JdUnionGoodsComponent,
@@ -54,7 +57,8 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   options: OptionEntity = {};
   page = 1;
   total = 0;
-  lang = WallpaperLang.CN;
+  lang!: WallpaperLang;
+  mode!: WallpaperListMode;
   keyword = '';
   wallpapers: Wallpaper[] = [];
   paginatorData: PaginatorEntity | null = null;
@@ -104,9 +108,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         this.month = params.get('month')?.trim() || '';
         this.keyword = queryParams.get('keyword')?.trim() || '';
         this.lang = <WallpaperLang>queryParams.get('lang')?.trim();
-        if (!this.year) {
-          this.lang = this.lang || WallpaperLang.CN;
-        }
+        this.mode = <WallpaperListMode>queryParams.get('mode')?.trim() || WallpaperListMode.CARD;
         this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
         this.fetchWallpapers();
       });
@@ -151,24 +153,11 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       });
   }
 
-  getQueryParams(lang: string): Params {
-    if (this.keyword && lang === WallpaperLang.EN) {
-      return { lang, keyword: this.keyword };
-    }
-    if (this.keyword) {
-      return { keyword: this.keyword };
-    }
-    if (lang === WallpaperLang.EN) {
-      return { lang };
-    }
-    return {};
-  }
-
   getLangParams(wallpaper: Wallpaper): Params {
-    if (this.year) {
+    if (!this.lang) {
       return !!wallpaper.bingIdCn ? {} : { lang: WallpaperLang.EN };
     }
-    return this.lang === WallpaperLang.CN ? {} : { lang: this.lang };
+    return { lang: this.lang };
   }
 
   protected updateActivePage(): void {
@@ -214,17 +203,21 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         this.wallpapers = (res.list || []).map((item) => {
           let wallpaperLocation: string;
           let copyright: string;
+          let story: string;
           if (this.lang === WallpaperLang.EN) {
             wallpaperLocation = item.wallpaperLocationEn || item.wallpaperLocation || 'Unknown';
             copyright = item.wallpaperCopyrightEn || item.wallpaperCopyright;
+            story = item.wallpaperStoryEn || item.wallpaperStory;
           } else {
             wallpaperLocation = item.wallpaperLocation || item.wallpaperLocationEn || '未知';
             copyright = item.wallpaperCopyright || item.wallpaperCopyrightEn;
+            story = item.wallpaperStory || item.wallpaperStoryEn;
           }
           return {
             ...item,
             wallpaperCopyright: copyright,
             wallpaperLocation,
+            wallpaperStory: truncateString(filterHtmlTag(story), 140),
             wallpaperUrl: urlPrefix + item.wallpaperUrl,
             wallpaperThumbUrl: urlPrefix + item.wallpaperThumbUrl
           };
