@@ -205,7 +205,7 @@ export class HomeComponent extends PageComponent implements OnInit {
         ...wallpaper,
         wallpaperCopyright: wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn,
         wallpaperLocation,
-        wallpaperStory: truncateString(filterHtmlTag(wallpaper.wallpaperStory || wallpaper.wallpaperStoryEn), 140),
+        wallpaperStory: wallpaper.wallpaperStory || wallpaper.wallpaperStoryEn,
         wallpaperUrl: this.wallpaperURLPrefix + wallpaper.wallpaperUrl,
         wallpaperThumbUrl: this.wallpaperURLPrefix + wallpaper.wallpaperThumbUrl
       };

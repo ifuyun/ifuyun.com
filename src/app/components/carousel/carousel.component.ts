@@ -111,12 +111,11 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private fetchRandomWallpapers() {
     this.wallpaperService
-      .getRandomWallpapers(this.carouselOptions.size || 4, 0)
+      .getRandomWallpapers(this.carouselOptions.size || 4, 1, this.carouselOptions.resolution || '1280x720')
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        const resolution = this.carouselOptions.resolution || '1280x720';
         this.carousels = res.map((wallpaper, index) => {
-          const url = `${BING_DOMAIN}${wallpaper.wallpaperUrlBase}_${resolution}.${wallpaper.wallpaperImageFormat}`;
+          const url = `${BING_DOMAIN}${wallpaper.wallpaperUrl}`;
           return {
             id: wallpaper.wallpaperId,
             title: wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn,
@@ -137,13 +136,13 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
         page: 1,
         pageSize: this.carouselOptions.size || 4,
         lang: [WallpaperLang.CN, WallpaperLang.EN],
+        resolution: this.carouselOptions.resolution || '1280x720',
         orderBy: this.carouselOptions.orderBy === 'oldest' ? [['wallpaperDate', 'asc']] : [['wallpaperDate', 'desc']]
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        const resolution = this.carouselOptions.resolution || '1280x720';
         this.carousels = (res.list || []).map((wallpaper, index) => {
-          const url = `${BING_DOMAIN}${wallpaper.wallpaperUrlBase}_${resolution}.${wallpaper.wallpaperImageFormat}`;
+          const url = `${BING_DOMAIN}${wallpaper.wallpaperUrl}`;
           return {
             id: wallpaper.wallpaperId,
             title: wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn,

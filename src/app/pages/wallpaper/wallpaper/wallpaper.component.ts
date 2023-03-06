@@ -313,7 +313,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     } else {
       story = this.wallpaper.wallpaperStoryEn || this.wallpaper.wallpaperStory;
     }
-    const wallpaperDesc = truncateString(filterHtmlTag(story), 160);
+    const wallpaperDesc = truncateString(filterHtmlTag(story), 140);
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),

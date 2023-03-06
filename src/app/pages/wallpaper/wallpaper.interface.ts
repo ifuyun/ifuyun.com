@@ -20,6 +20,7 @@ export interface WallpaperQueryParam extends QueryParam {
   lang?: WallpaperLang | WallpaperLang[];
   year?: string;
   month?: string;
+  resolution?: string;
 }
 
 export interface Wallpaper {

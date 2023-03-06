@@ -217,7 +217,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
             ...item,
             wallpaperCopyright: copyright,
             wallpaperLocation,
-            wallpaperStory: truncateString(filterHtmlTag(story), 140),
+            wallpaperStory: story,
             wallpaperUrl: urlPrefix + item.wallpaperUrl,
             wallpaperThumbUrl: urlPrefix + item.wallpaperThumbUrl
           };
