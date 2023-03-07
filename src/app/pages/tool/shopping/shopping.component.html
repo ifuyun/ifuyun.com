@@ -5,38 +5,45 @@
     <div class="promotion-search">
       <div class="tip-text">请输入京东商品详情页地址或商品ID</div>
       <form class="search-form" method="get" action="./" (submit)="search($event)">
-        <input type="text" class="input input-search input-dark"
+        <input type="text" class="input input-large input-dark"
                name="keyword" [(ngModel)]="keyword"
                autocomplete="off"
                placeholder="京东商品详情页地址或商品ID"/>
-        <input type="submit" class="button button-search" value="查询"/>
       </form>
+    </div>
+    <div class="promotion-btns">
+      <button type="button" class="button button-submit" [class.disabled]="!keyword" (click)="search()">查询</button>
+      <button type="button" class="button button-submit" [class.disabled]="!keyword"
+              [disabled]="!keyword"
+              (click)="reset()">清空</button>
     </div>
     <div class="promotion-result">
       <div class="tip-text">查询结果</div>
-      <div class="promotion-list" *ngIf="promotion?.data?.shortURL || promotion?.data?.clickURL">
+      <div class="promotion-list" *ngIf="promotion?.shortURL || promotion?.clickURL">
         <div class="promotion-item">
           <div class="label">长链：</div>
           <div>
-            <a *ngIf="promotion?.data?.clickURL"
-               [href]="promotion?.data?.clickURL" target="_blank">{{promotion?.data?.clickURL}}</a>
-            <span *ngIf="!promotion?.data?.clickURL">暂无</span>
+            <a *ngIf="promotion?.clickURL"
+               [href]="promotion?.clickURL" target="_blank">{{promotion?.clickURL}}</a>
+            <span *ngIf="!promotion?.clickURL">暂无</span>
           </div>
         </div>
         <div class="promotion-item">
           <div class="label">短链：</div>
           <div>
-            <a *ngIf="promotion?.data?.shortURL"
-               [href]="promotion?.data?.shortURL" target="_blank">{{promotion?.data?.shortURL}}</a>
-            <span *ngIf="!promotion?.data?.shortURL">暂无</span>
+            <a *ngIf="promotion?.shortURL"
+               [href]="promotion?.shortURL" target="_blank">{{promotion?.shortURL}}</a>
+            <span *ngIf="!promotion?.shortURL">暂无</span>
           </div>
         </div>
         <div class="promotion-item">
           <div class="label">二维码：</div>
-          <div #promotionQrcode></div>
+          <div class="promotion-qrcode">
+            <div [class.promotion-qrcode-img]="darkMode" #promotionQrcode></div>
+          </div>
         </div>
       </div>
-      <app-empty *ngIf="!promotion?.data?.shortURL && !promotion?.data?.clickURL"></app-empty>
+      <app-empty *ngIf="!promotion?.shortURL && !promotion?.clickURL"></app-empty>
     </div>
   </div>
 </div>

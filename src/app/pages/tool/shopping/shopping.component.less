@@ -45,7 +45,7 @@
   }
 
   .promotion-search {
-    .input-search {
+    .input {
       box-sizing: border-box;
       width: 100%;
       border-color: var(--input-border-color);
@@ -57,6 +57,17 @@
     }
   }
 
+  .promotion-btns {
+    display: flex;
+    justify-content: center;
+
+    .button {
+      &:not(:last-child) {
+        margin-right: 12px;
+      }
+    }
+  }
+
   .promotion-result {
     .promotion-list {
       padding: @primary-margin;
@@ -64,17 +75,27 @@
       border-radius: @border-radius;
       background-color: var(--content-box-background-color);
       word-break: break-all;
+    }
 
-      .promotion-item {
+    .promotion-item {
+      display: flex;
+
+      &:not(:last-child) {
+        margin-bottom: @primary-margin;
+      }
+
+      .label {
+        font-weight: 500;
+      }
+    }
+
+    .promotion-qrcode {
+      display: flex;
+
+      .promotion-qrcode-img {
         display: flex;
-
-        &:not(:last-child) {
-          margin-bottom: @primary-margin;
-        }
-
-        .label {
-          font-weight: 500;
-        }
+        padding: 8px;
+        background-color: #fff;
       }
     }
   }

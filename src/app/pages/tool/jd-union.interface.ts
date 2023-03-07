@@ -11,11 +11,13 @@ export interface JdUnionSuccessResponse {
   requestId?: string;
 }
 
-export interface JdUnionResponsePromotion extends JdUnionSuccessResponse {
-  data: {
-    clickURL: string;
-    shortURL: string;
-  };
+export interface JdUnionPromotionResponseBody {
+  clickURL: string;
+  shortURL?: string;
+}
+
+export interface JdUnionPromotionResponse extends JdUnionSuccessResponse {
+  data: JdUnionPromotionResponseBody;
 }
 
 export interface JdUnionParamGoods {

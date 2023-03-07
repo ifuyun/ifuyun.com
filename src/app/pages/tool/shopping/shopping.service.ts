@@ -7,7 +7,7 @@ import {
   JdUnionParamGoodsMaterial,
   JdUnionResponseGoodsJingfen,
   JdUnionResponseGoodsMaterial,
-  JdUnionResponsePromotion
+  JdUnionPromotionResponse
 } from '../jd-union.interface';
 
 @Injectable({
@@ -16,13 +16,13 @@ import {
 export class ShoppingService {
   constructor(private apiService: ApiService) {}
 
-  getSellingPromotion(keyword: string): Observable<JdUnionResponsePromotion> {
+  getSellingPromotion(keyword: string): Observable<JdUnionPromotionResponse> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_JD_SELLING_PROMOTION), { keyword })
       .pipe(map((res) => res?.data || {}));
   }
 
-  getPromotionCommon(keyword: string): Observable<JdUnionResponsePromotion> {
+  getPromotionCommon(keyword: string): Observable<JdUnionPromotionResponse> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_JD_PROMOTION_COMMON), { keyword })
       .pipe(map((res) => res?.data || {}));

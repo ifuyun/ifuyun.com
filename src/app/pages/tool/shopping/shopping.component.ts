@@ -11,6 +11,7 @@ import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.ser
 import { EmptyComponent } from '../../../components/empty/empty.component';
 import { JdUnionGoodsGroupComponent } from '../../../components/jd-union-goods-group/jd-union-goods-group.component';
 import { MessageService } from '../../../components/message/message.service';
+import { LOGO_DARK_PATH, LOGO_PATH } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { MetaService } from '../../../core/meta.service';
@@ -19,7 +20,7 @@ import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { OptionService } from '../../../services/option.service';
-import { JdUnionResponsePromotion } from '../jd-union.interface';
+import { JdUnionPromotionResponseBody } from '../jd-union.interface';
 import { REGEXP_JD_PRODUCT_DETAIL_URL, SHOPPING_PAGE_DESCRIPTION, SHOPPING_PAGE_KEYWORDS } from '../tool.constant';
 import { ShoppingService } from './shopping.service';
 
@@ -35,8 +36,9 @@ export class ShoppingComponent extends PageComponent implements OnInit {
   @ViewChild('promotionQrcode') promotionQrcodeEle!: ElementRef;
 
   isMobile = false;
+  darkMode = false;
   keyword = '';
-  promotion!: JdUnionResponsePromotion;
+  promotion: JdUnionPromotionResponseBody = { clickURL: '' };
 
   protected pageIndex = 'tool';
 
@@ -78,14 +80,22 @@ export class ShoppingComponent extends PageComponent implements OnInit {
         this.fetchPromotion();
       }
     });
+    this.commonService.darkMode$.pipe(takeUntil(this.destroy$)).subscribe((darkMode) => {
+      this.darkMode = darkMode;
+    });
   }
 
-  search(e: SubmitEvent) {
-    e.preventDefault();
+  search(e?: SubmitEvent) {
+    e?.preventDefault();
     this.keyword = this.keyword.trim();
     if (this.keyword && this.checkKeyword()) {
       this.fetchPromotion();
     }
+  }
+
+  reset() {
+    this.keyword = '';
+    this.promotion = { clickURL: '' };
   }
 
   protected updateActivePage(): void {
@@ -110,15 +120,15 @@ export class ShoppingComponent extends PageComponent implements OnInit {
         if (code !== 0 && code !== 200) {
           this.message.error(res.message);
         } else {
-          this.promotion = res;
+          this.promotion = res.data || {};
           this.showPromotionQrcode();
         }
       });
   }
 
   private showPromotionQrcode() {
-    if (this.platformService.isBrowser && (this.promotion.data.shortURL || this.promotion.data.clickURL)) {
-      QRCode.toCanvas(this.promotion.data.shortURL || this.promotion.data.clickURL, {
+    if (this.platformService.isBrowser && (this.promotion.shortURL || this.promotion.clickURL)) {
+      QRCode.toCanvas(this.promotion.shortURL || this.promotion.clickURL, {
         width: 200,
         margin: 0
       })
