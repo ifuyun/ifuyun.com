@@ -13,6 +13,7 @@ export const POST_SLUG_PREFIX_BLACKLIST = Object.freeze([
 export const ADMIN_URL_PARAM = '?token=$0&expiresAt=$1';
 export const LOGO_PATH = '/assets/images/logo.png';
 export const LOGO_DARK_PATH = '/assets/images/logo-dark.png';
+export const FAVICON_PATH = '/assets/images/favicon.png';
 export const WECHAT_CARD_PATH = '/assets/images/wechat-card.png';
 export const AVATAR_API_URL = 'https://cravatar.cn/avatar/$0.png?d=$1';
 export const BLOCK_SCROLL_CLASS = 'cdk-global-scrollblock';

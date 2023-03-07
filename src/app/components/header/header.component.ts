@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit {
   showHeader = true;
   showMobileHeader = true;
   toolLinks = TOOL_LINKS;
-  logoPath = LOGO_PATH;
+  logoPath = '';
   adminUrl = '';
 
   constructor(

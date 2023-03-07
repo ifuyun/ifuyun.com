@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
-import { ADMIN_URL_PARAM, WECHAT_CARD_PATH } from '../../config/common.constant';
+import { ADMIN_URL_PARAM, FAVICON_PATH, WECHAT_CARD_PATH } from '../../config/common.constant';
 import { Theme } from '../../config/common.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
@@ -31,6 +31,8 @@ export class SiderMobileComponent implements OnInit {
   @Input() taxonomies: TaxonomyNode[] = [];
   @Input() siderOpen = false;
   @Output() siderOpenChange = new EventEmitter<boolean>();
+
+  readonly logoUrl = FAVICON_PATH;
 
   darkMode = false;
   isMobile = false;

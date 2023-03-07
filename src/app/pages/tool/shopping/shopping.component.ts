@@ -11,7 +11,6 @@ import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.ser
 import { EmptyComponent } from '../../../components/empty/empty.component';
 import { JdUnionGoodsGroupComponent } from '../../../components/jd-union-goods-group/jd-union-goods-group.component';
 import { MessageService } from '../../../components/message/message.service';
-import { LOGO_DARK_PATH, LOGO_PATH } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { MetaService } from '../../../core/meta.service';

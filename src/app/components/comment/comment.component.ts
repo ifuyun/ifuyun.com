@@ -7,6 +7,7 @@ import { skipWhile, takeUntil } from 'rxjs';
 import { ApiUrl } from '../../config/api-url';
 import {
   AVATAR_API_URL,
+  FAVICON_PATH,
   STORAGE_KEY_DISLIKED_COMMENTS,
   STORAGE_KEY_LIKED_COMMENTS
 } from '../../config/common.constant';
@@ -293,7 +294,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
     const initialFn = (data: Comment) => {
       let defaultAvatar = this.options['avatar_default'];
       if (!defaultAvatar || defaultAvatar === 'logo') {
-        defaultAvatar = this.options['site_url'] + '/logo.png';
+        defaultAvatar = FAVICON_PATH;
       }
       data.authorAvatar =
         data.user?.userAvatar ||
