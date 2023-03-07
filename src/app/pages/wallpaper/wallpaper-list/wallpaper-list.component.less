@@ -42,118 +42,119 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     position: relative;
+  }
 
-    .wallpaper-item {
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      position: relative;
+  .wallpaper-item {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 
-      &:hover {
-        .photo-link {
-          transform: scale(1.08);
-        }
+    .photo {
+      overflow: hidden;
+
+      &:hover .overlay {
+        opacity: 0.5;
       }
 
-      .wallpaper-box {
-        border: 1px solid var(--minor-border-color);
-        border-radius: @border-radius;
-        background: var(--wallpaper-item-background-color);
+      img {
+        width: 100%;
       }
 
-      .photo {
+      .photo-link {
+        position: relative;
+        display: block;
+        transition: transform .5s;
+      }
+
+      .overlay {
+        position: absolute;
+        inset: 0;
+        background-color: var(--overlay-background-color);
+        opacity: 0;
+        transition: @overlay-transition;
+      }
+    }
+
+    .photo, .photo-link {
+      border-top-left-radius: @border-radius;
+      border-top-right-radius: @border-radius;
+    }
+
+    .content {
+      padding: (@content-margin / 2);
+      line-height: @post-line-height;
+
+      h2 {
+        font-size: @primary-font-size;
+        font-weight: 400;
         overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
 
-        &:hover .overlay {
-          opacity: 0.5;
-        }
-
-        img {
-          width: 100%;
-        }
-
-        .photo-link {
-          display: block;
-          transition: transform .5s;
-        }
-
-        .overlay {
-          position: absolute;
-          inset: 0;
-          background-color: var(--overlay-background-color);
-          opacity: 0;
-          transition: @overlay-transition;
+        a:hover {
+          text-decoration: underline;
         }
       }
 
-      .photo, .photo-link {
-        border-top-left-radius: @border-radius;
-        border-top-right-radius: @border-radius;
+      > div {
+        margin-top: 8px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
 
-      .content {
-        padding: (@content-margin / 2);
-        line-height: @post-line-height;
+      .content-location, .content-meta {
+        color: var(--minor-color);
+        font-size: @minor-font-size;
+      }
 
-        h2 {
-          font-size: @primary-font-size;
-          font-weight: 400;
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
+      .content-meta {
+        display: flex;
+        justify-content: space-between;
+      }
 
-          a:hover {
-            text-decoration: underline;
+      .icon {
+        margin-right: 4px;
+      }
+
+      .icon-heart-fill {
+        color: var(--action-color);
+      }
+
+      .actions {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .action-item {
+        &:not(:last-child) {
+          margin-right: 8px;
+        }
+
+        &.clickable {
+          cursor: pointer;
+
+          &:hover {
+            color: var(--action-color);
           }
         }
 
-        > div {
-          margin-top: 8px;
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
+        &.disabled {
+          cursor: not-allowed;
         }
+      }
+    }
+  }
 
-        .content-location, .content-meta {
-          color: var(--minor-color);
-          font-size: @minor-font-size;
-        }
+  .wallpaper-box {
+    border: 1px solid var(--minor-border-color);
+    border-radius: @border-radius;
+    background: var(--wallpaper-item-background-color);
 
-        .content-meta {
-          display: flex;
-          justify-content: space-between;
-        }
-
-        .icon {
-          margin-right: 4px;
-        }
-
-        .icon-heart-fill {
-          color: var(--action-color);
-        }
-
-        .actions {
-          display: flex;
-          justify-content: flex-end;
-        }
-
-        .action-item {
-          &:not(:last-child) {
-            margin-right: 8px;
-          }
-
-          &.clickable {
-            cursor: pointer;
-
-            &:hover {
-              color: var(--action-color);
-            }
-          }
-
-          &.disabled {
-            cursor: not-allowed;
-          }
-        }
+    &:hover {
+      .photo-link {
+        transform: scale(1.08);
       }
     }
   }
