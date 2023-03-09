@@ -54,7 +54,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
         this.options = options;
         this.staticResourceHost = options['static_resource_host'];
         try {
-          this.carouselOptions = JSON.parse(options['carousel_options']);
+          this.carouselOptions = JSON.parse(options['carousel_config']);
         } catch (e) {
           this.carouselOptions = { type: 'album' };
         }

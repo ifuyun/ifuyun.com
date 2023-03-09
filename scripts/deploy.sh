@@ -13,6 +13,7 @@ echo "[deploy] stopping server..."
 # -s –silent: hide all messages
 # https://pm2.io/docs/runtime/reference/pm2-cli/
 pm2 stop $PM2_APP_NAME -s
+echo "[deploy] server: ${PM2_APP_NAME} is stopped."
 
 sh ${SHELL_PATH}/build.sh
 

@@ -136,6 +136,8 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
           this.hideAdsEle();
         }
       }
+    } else {
+      this.hideAdsEle();
     }
   }
 
