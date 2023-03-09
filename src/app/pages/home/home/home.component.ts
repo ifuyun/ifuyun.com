@@ -9,7 +9,7 @@ import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.inte
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CarouselComponent } from '../../../components/carousel/carousel.component';
 import { EmptyComponent } from '../../../components/empty/empty.component';
-import { JdUnionGoodsComponent } from '../../../components/jd-union-goods/jd-union-goods.component';
+import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { PageBarComponent } from '../../../components/page-bar/page-bar.component';
 import { SearchType } from '../../../config/common.enum';
 import { SearchResponse } from '../../../core/common.interface';
@@ -21,7 +21,6 @@ import { PaginatorEntity } from '../../../core/paginator.interface';
 import { PaginatorService } from '../../../core/paginator.service';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
-import { filterHtmlTag, truncateString } from '../../../helpers/helper';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { NumberViewPipe } from '../../../pipes/number-view.pipe';
 import { OptionService } from '../../../services/option.service';
@@ -53,7 +52,7 @@ import { WallpaperService } from '../../wallpaper/wallpaper.service';
     WallpaperListViewComponent,
     WallpaperItemComponent,
     PageBarComponent,
-    JdUnionGoodsComponent,
+    MakeMoneyComponent,
     DatePipe,
     NumberViewPipe
   ]

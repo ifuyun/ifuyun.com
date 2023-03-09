@@ -4,18 +4,19 @@
   margin-bottom: @primary-margin;
 }
 
-.widget, .ads-widget {
+.widget, .widget-other {
   margin-top: @primary-margin;
-  border: 1px solid transparent;
   border-radius: @border-radius;
-  background-color: var(--content-background-color);
-  box-shadow: var(--content-box-shadow);
 }
 
 .widget {
   @widget-padding: 12px;
   @widget-icon-width: 24px;
+
   padding: @widget-padding 0;
+  border: 1px solid transparent;
+  background-color: var(--content-background-color);
+  box-shadow: var(--content-box-shadow);
 
   .widget-title {
     display: flex;

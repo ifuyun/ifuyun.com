@@ -1,0 +1,4 @@
+<div class="ads-box" [class.ads-box-desktop]="!isMobile" [class.ads-box-mobile]="isMobile">
+  <i-adsense optionKey="adsense_options_content"></i-adsense>
+</div>
+<i-jd-union-goods *ngIf="jdUnionVisible" [dynamic]="true" optionKey="jd_union_options_content"></i-jd-union-goods>

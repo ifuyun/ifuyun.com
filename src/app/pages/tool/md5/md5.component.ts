@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { isEmpty, uniq } from 'lodash';
@@ -7,7 +7,7 @@ import { BehaviorSubject, debounceTime, Observable, skipWhile, takeUntil } from 
 import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
-import { JdUnionGoodsGroupComponent } from '../../../components/jd-union-goods-group/jd-union-goods-group.component';
+import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -25,7 +25,7 @@ import { MD5_PAGE_DESCRIPTION, MD5_PAGE_KEYWORDS } from '../tool.constant';
   styleUrls: ['./md5.component.less'],
   providers: [DestroyService],
   standalone: true,
-  imports: [NgClass, NgIf, FormsModule, ClipboardModule, BreadcrumbComponent, JdUnionGoodsGroupComponent]
+  imports: [CommonModule, FormsModule, ClipboardModule, BreadcrumbComponent, MakeMoneyComponent]
 })
 export class Md5Component extends PageComponent implements OnInit {
   readonly maxContentLength = 8000;

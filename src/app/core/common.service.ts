@@ -19,6 +19,9 @@ export class CommonService {
   private darkMode: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public darkMode$: Observable<boolean> = this.darkMode.asObservable();
 
+  private disableAds: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public disableAds$: Observable<boolean> = this.disableAds.asObservable();
+
   private pageOptions: BehaviorSubject<PageOptions> = new BehaviorSubject<PageOptions>({
     showHeader: true,
     showFooter: true,
@@ -102,5 +105,9 @@ export class CommonService {
 
   addPaddingToImagePreview(eleRef: ElementRef) {
     eleRef.nativeElement.classList.add('preview-with-padding');
+  }
+
+  updateAdsFlag(isDisabled: boolean) {
+    this.disableAds.next(isDisabled);
   }
 }

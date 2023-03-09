@@ -9,7 +9,7 @@ import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.c
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { EmptyComponent } from '../../../components/empty/empty.component';
-import { JdUnionGoodsGroupComponent } from '../../../components/jd-union-goods-group/jd-union-goods-group.component';
+import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -25,11 +25,11 @@ import { ShoppingService } from './shopping.service';
 
 @Component({
   selector: 'app-shopping',
-  templateUrl: './shopping.component.html',
-  styleUrls: ['./shopping.component.less'],
-  providers: [DestroyService],
   standalone: true,
-  imports: [NgClass, NgIf, FormsModule, BreadcrumbComponent, EmptyComponent, JdUnionGoodsGroupComponent]
+  imports: [NgClass, NgIf, FormsModule, BreadcrumbComponent, EmptyComponent, MakeMoneyComponent],
+  providers: [DestroyService],
+  templateUrl: './shopping.component.html',
+  styleUrls: ['./shopping.component.less']
 })
 export class ShoppingComponent extends PageComponent implements OnInit {
   @ViewChild('promotionQrcode') promotionQrcodeEle!: ElementRef;

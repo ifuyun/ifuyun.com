@@ -6,7 +6,7 @@ import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
-import { JdUnionGoodsComponent } from '../../../components/jd-union-goods/jd-union-goods.component';
+import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { PageBarComponent } from '../../../components/page-bar/page-bar.component';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -23,11 +23,11 @@ import { PostService } from '../post.service';
 
 @Component({
   selector: 'app-post-list',
-  templateUrl: './post-list.component.html',
-  styleUrls: [],
-  providers: [DestroyService],
   standalone: true,
-  imports: [NgIf, BreadcrumbComponent, PostListViewComponent, PageBarComponent, JdUnionGoodsComponent]
+  imports: [NgIf, BreadcrumbComponent, PostListViewComponent, PageBarComponent, MakeMoneyComponent],
+  providers: [DestroyService],
+  templateUrl: './post-list.component.html',
+  styleUrls: []
 })
 export class PostListComponent extends PageComponent implements OnInit {
   isMobile = false;

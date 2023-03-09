@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
@@ -13,7 +13,7 @@ import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
 import { ImageModule } from '../../../components/image/image.module';
 import { ImageService } from '../../../components/image/image.service';
-import { JdUnionGoodsComponent } from '../../../components/jd-union-goods/jd-union-goods.component';
+import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
@@ -39,21 +39,20 @@ import { WallpaperService } from '../wallpaper.service';
 
 @Component({
   selector: 'app-wallpaper',
-  templateUrl: './wallpaper.component.html',
-  styleUrls: ['./wallpaper.component.less'],
-  providers: [DestroyService],
   standalone: true,
   imports: [
-    NgClass,
-    NgIf,
+    CommonModule,
     RouterLink,
     BreadcrumbComponent,
     CommentComponent,
     ImageModule,
-    JdUnionGoodsComponent,
+    MakeMoneyComponent,
     NumberViewPipe,
     SafeHtmlPipe
-  ]
+  ],
+  providers: [DestroyService],
+  templateUrl: './wallpaper.component.html',
+  styleUrls: ['./wallpaper.component.less']
 })
 export class WallpaperComponent extends PageComponent implements OnInit, AfterViewInit {
   readonly commentObjectType = CommentObjectType.WALLPAPER;

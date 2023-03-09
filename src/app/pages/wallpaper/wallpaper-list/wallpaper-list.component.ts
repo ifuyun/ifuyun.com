@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
@@ -7,7 +7,7 @@ import { environment as env } from '../../../../environments/environment';
 import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { EmptyComponent } from '../../../components/empty/empty.component';
-import { JdUnionGoodsComponent } from '../../../components/jd-union-goods/jd-union-goods.component';
+import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { PageBarComponent } from '../../../components/page-bar/page-bar.component';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
@@ -20,7 +20,6 @@ import { PaginatorEntity } from '../../../core/paginator.interface';
 import { PaginatorService } from '../../../core/paginator.service';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
-import { filterHtmlTag, truncateString } from '../../../helpers/helper';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { Guest } from '../../../interfaces/user.interface';
 import { NumberViewPipe } from '../../../pipes/number-view.pipe';
@@ -35,22 +34,20 @@ import { WallpaperService } from '../wallpaper.service';
 
 @Component({
   selector: 'app-wallpaper-list',
-  templateUrl: './wallpaper-list.component.html',
-  styleUrls: ['./wallpaper-list.component.less'],
-  providers: [DestroyService],
   standalone: true,
   imports: [
-    NgClass,
-    NgFor,
-    NgIf,
+    CommonModule,
     RouterLink,
     BreadcrumbComponent,
     WallpaperListViewComponent,
     PageBarComponent,
     EmptyComponent,
-    JdUnionGoodsComponent,
+    MakeMoneyComponent,
     NumberViewPipe
-  ]
+  ],
+  providers: [DestroyService],
+  templateUrl: './wallpaper-list.component.html',
+  styleUrls: ['./wallpaper-list.component.less']
 })
 export class WallpaperListComponent extends PageComponent implements OnInit, AfterViewInit {
   isMobile = false;

@@ -9,7 +9,7 @@ import { MessageService } from 'src/app/components/message/message.service';
 import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
-import { JdUnionGoodsGroupComponent } from '../../../components/jd-union-goods-group/jd-union-goods-group.component';
+import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { MetaService } from '../../../core/meta.service';
@@ -21,11 +21,11 @@ import { MURMURHASH_PAGE_DESCRIPTION, MURMURHASH_PAGE_KEYWORDS } from '../tool.c
 
 @Component({
   selector: 'app-murmurhash',
-  templateUrl: './murmurhash.component.html',
-  styleUrls: ['./murmurhash.component.less'],
-  providers: [DestroyService],
   standalone: true,
-  imports: [NgClass, FormsModule, ClipboardModule, BreadcrumbComponent, JdUnionGoodsGroupComponent]
+  imports: [NgClass, FormsModule, ClipboardModule, BreadcrumbComponent, MakeMoneyComponent],
+  providers: [DestroyService],
+  templateUrl: './murmurhash.component.html',
+  styleUrls: ['./murmurhash.component.less']
 })
 export class MurmurhashComponent extends PageComponent implements OnInit {
   readonly maxHashKeyLength = 2000;

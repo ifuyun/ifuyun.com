@@ -1,4 +1,4 @@
-import { DatePipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -22,7 +22,7 @@ import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
 import { ImageModule } from '../../../components/image/image.module';
 import { ImageService } from '../../../components/image/image.service';
-import { JdUnionGoodsComponent } from '../../../components/jd-union-goods/jd-union-goods.component';
+import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
 import { STORAGE_KEY_VOTED_POSTS, WECHAT_CARD_PATH } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
@@ -51,28 +51,25 @@ import { VoteEntity } from '../vote.interface';
 import { VoteService } from '../vote.service';
 
 @Component({
-  encapsulation: ViewEncapsulation.None,
   selector: 'app-post',
-  templateUrl: './post.component.html',
-  styleUrls: [],
-  providers: [DestroyService],
   standalone: true,
+  providers: [DestroyService],
   imports: [
-    NgClass,
-    NgIf,
-    NgFor,
-    NgStyle,
+    CommonModule,
     RouterLink,
     BreadcrumbComponent,
     CommentComponent,
-    JdUnionGoodsComponent,
     ImageModule,
+    MakeMoneyComponent,
     DatePipe,
     SafeHtmlPipe,
     CopyrightTypePipe,
     CopyrightTypeDescPipe,
     NumberViewPipe
-  ]
+  ],
+  templateUrl: './post.component.html',
+  styleUrls: [],
+  encapsulation: ViewEncapsulation.None
 })
 export class PostComponent extends PageComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('postEle', { static: false }) postEle!: ElementRef;

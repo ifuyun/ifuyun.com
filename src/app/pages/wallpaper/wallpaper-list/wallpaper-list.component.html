@@ -65,6 +65,6 @@
   <app-empty *ngIf="wallpapers.length < 1" [showBorder]="false" [showShadow]="true"></app-empty>
 </ng-container>
 <i-wallpaper-list-view *ngIf="mode === 'list'" [wallpapers]="wallpapers"></i-wallpaper-list-view>
-<i-jd-union-goods [dynamic]="true" [optionKey]="'jd_union_options_content'"></i-jd-union-goods>
+<i-make-money></i-make-money>
 <app-page-bar *ngIf="total > 0"
               [isPath]="false" [paginator]="paginatorData" [url]="pageUrl" [param]="pageUrlParam"></app-page-bar>
