@@ -30,11 +30,15 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
   @Input() clientId!: string;
   @Input() slotId!: string | number;
   @Input() format!: string;
-  @Input() responsive!: boolean;
+  @Input() responsive!: boolean | undefined;
   @Input() className!: string;
   @Input() display!: string;
   @Input() width!: number | string;
   @Input() height!: number | string;
+  @Input() minWidth!: number | string;
+  @Input() minHeight!: number | string;
+  @Input() maxWidth!: number | string;
+  @Input() maxHeight!: number | string;
   @Input() region = 'ad-' + Math.floor(Math.random() * 10000) + 1;
   @Input() testMode!: boolean;
 
@@ -82,7 +86,6 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
       clientId: '',
       slotId: '',
       format: '',
-      responsive: false,
       className: 'adsbygoogle',
       display: 'inline-block',
       testMode: this.isDev
@@ -103,17 +106,19 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
     this.responsive = this.responsive ?? adsenseConfig.responsive;
     this.className = this.className ?? adsenseConfig.className;
     this.display = this.display ?? adsenseConfig.display;
-    this.width = this.width ?? adsenseConfig.width;
-    if (this.width) {
-      this.width = typeof this.width === 'number' ? this.width + 'px' : this.width;
-    }
-    this.height = this.height ?? adsenseConfig.height;
-    if (this.height) {
-      this.height = typeof this.height === 'number' ? this.height + 'px' : this.height;
-    }
+    this.width = this.parseSize(this.width ?? adsenseConfig.width);
+    this.height = this.parseSize(this.height ?? adsenseConfig.height);
+    this.minWidth = this.parseSize(this.minWidth ?? adsenseConfig.minWidth);
+    this.minHeight = this.parseSize(this.minHeight ?? adsenseConfig.minHeight);
+    this.maxWidth = this.parseSize(this.maxWidth ?? adsenseConfig.maxWidth);
+    this.maxHeight = this.parseSize(this.maxHeight ?? adsenseConfig.maxHeight);
     this.testMode = this.testMode ?? adsenseConfig.testMode;
     this.visible = !!(this.clientId && this.slotId);
   }
+
+  private parseSize = (size: number | string): string => {
+    return typeof size === 'number' ? size + 'px' : size;
+  };
 
   private loadAds() {
     if (!this.isDev && this.platform.isBrowser && this.visible) {
@@ -143,21 +148,23 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
 
   private createAdsEle() {
     const adsEle = this.document.createElement('ins');
+
     adsEle.className = this.className;
     adsEle.style.display = this.display;
-    adsEle.style.width = this.width + '';
-    adsEle.style.height = this.height + '';
+    this.width && (adsEle.style.width = this.width + '');
+    this.height && (adsEle.style.height = this.height + '');
+    this.minWidth && (adsEle.style.minWidth = this.minWidth + '');
+    this.minHeight && (adsEle.style.minHeight = this.minHeight + '');
+    this.maxWidth && (adsEle.style.maxWidth = this.maxWidth + '');
+    this.maxHeight && (adsEle.style.maxHeight = this.maxHeight + '');
+
     adsEle.setAttribute('data-ad-client', this.clientId);
     adsEle.setAttribute('data-ad-slot', this.slotId + '');
     adsEle.setAttribute('data-ad-region', this.region);
-    if (this.format) {
-      adsEle.setAttribute('data-ad-format', this.format);
-    }
-    if (this.responsive) {
-      adsEle.setAttribute('data-full-width-responsive', 'true');
-    }
-    if (this.testMode) {
-      adsEle.setAttribute('data-ad-adtest', 'on');
+    this.format && adsEle.setAttribute('data-ad-format', this.format);
+    this.testMode && adsEle.setAttribute('data-ad-adtest', 'on');
+    if (typeof this.responsive === 'boolean') {
+      adsEle.setAttribute('data-full-width-responsive', this.responsive + '');
     }
 
     this.adsenseEle.nativeElement.appendChild(adsEle);
