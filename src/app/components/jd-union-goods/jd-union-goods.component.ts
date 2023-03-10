@@ -2,6 +2,7 @@ import { DecimalPipe, NgClass, NgFor, NgIf, NgTemplateOutlet } from '@angular/co
 import { Component, Input, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { combineLatestWith, of, skipWhile, takeUntil } from 'rxjs';
+import { environment as env } from '../../../environments/environment';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UrlService } from '../../core/url.service';
@@ -51,6 +52,7 @@ export class JdUnionGoodsComponent implements OnInit {
   ]);
 
   isMobile = false;
+  enableAds = false;
   eliteId!: number;
   goodsList: (JdUnionGoodsMaterial | JdUnionGoodsJingfen)[] = [];
 
@@ -76,6 +78,9 @@ export class JdUnionGoodsComponent implements OnInit {
       )
       .subscribe(([options]) => {
         this.options = options;
+        const enableAds = this.options['enable_ads'] || '';
+        this.enableAds =
+          (env.production && ['1', '0'].includes(enableAds)) || (!env.production && ['2', '0'].includes(enableAds));
 
         if (this.dynamic && this.optionKey) {
           this.initOptions();

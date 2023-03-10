@@ -1,51 +1,53 @@
-<ng-template #goodsListTpl>
-  <div class="goods-list" [ngClass]="{'goods-list-desktop': !isMobile, 'goods-list-mobile': isMobile}">
-    <div class="goods-item" [style.width]="isMobile ? '100%' : (100 / rowSize) + '%'" *ngFor="let goods of goodsList">
-      <div class="goods-box" [class.goods-box-border]="showBorder">
-        <div class="goods-info">
-          <div class="goods-image">
-            <a [href]="goods.promotionInfo?.clickURL"
-               [title]="goods.skuName"
-               target="_blank"><img [src]="goods.imageInfo.imageList[0].url" [alt]="goods.skuName"/></a>
+<ng-container *ngIf="enableAds">
+  <ng-template #goodsListTpl>
+    <div class="goods-list" [ngClass]="{'goods-list-desktop': !isMobile, 'goods-list-mobile': isMobile}">
+      <div class="goods-item" [style.width]="isMobile ? '100%' : (100 / rowSize) + '%'" *ngFor="let goods of goodsList">
+        <div class="goods-box" [class.goods-box-border]="showBorder">
+          <div class="goods-info">
+            <div class="goods-image">
+              <a [href]="goods.promotionInfo?.clickURL"
+                 [title]="goods.skuName"
+                 target="_blank"><img [src]="goods.imageInfo.imageList[0].url" [alt]="goods.skuName"/></a>
+            </div>
+            <div class="goods-name">
+              <a [href]="goods.promotionInfo?.clickURL"
+                 [title]="goods.skuName"
+                 target="_blank">{{goods.skuName}}</a>
+            </div>
+            <div class="goods-price">
+              <span>￥{{goods.priceInfo.lowestPrice | number: '1.2-2'}}</span>
+              <a class="goods-coupon" *ngIf="!!goods.bestCoupon"
+                 [href]="goods.bestCoupon.link"
+                 title="领取优惠券" target="_blank">券</a>
+            </div>
           </div>
-          <div class="goods-name">
-            <a [href]="goods.promotionInfo?.clickURL"
-               [title]="goods.skuName"
-               target="_blank">{{goods.skuName}}</a>
+          <div class="goods-meta" *ngIf="showComments">
+            <div title="商品评论数"><i class='icon icon-chat-dots'></i><span>{{goods.comments | numberView}}</span></div>
+            <div title="商品好评率"><i class='icon icon-like'></i><span>{{goods.goodCommentsShare}}%</span></div>
           </div>
-          <div class="goods-price">
-            <span>￥{{goods.priceInfo.lowestPrice | number: '1.2-2'}}</span>
-            <a class="goods-coupon" *ngIf="!!goods.bestCoupon"
-               [href]="goods.bestCoupon.link"
-               title="领取优惠券" target="_blank">券</a>
-          </div>
-        </div>
-        <div class="goods-meta" *ngIf="showComments">
-          <div title="商品评论数"><i class='icon icon-chat-dots'></i><span>{{goods.comments | numberView}}</span></div>
-          <div title="商品好评率"><i class='icon icon-like'></i><span>{{goods.goodCommentsShare}}%</span></div>
         </div>
       </div>
     </div>
+  </ng-template>
+  <div class="content-box" *ngIf="withBox && goodsList.length > 0"
+       [ngClass]="{'content-box-desktop': !isMobile, 'content-box-mobile': isMobile}">
+    <h2 class="border-header" *ngIf="showHeader">
+      <ng-container *ngIf="!isJingfen">
+        <span *ngIf="eliteId === 1">猜你喜欢</span>
+        <span *ngIf="eliteId === 2">热销商品</span>
+        <span *ngIf="eliteId === 3">大额券</span>
+        <span *ngIf="eliteId === 4">9.9包邮</span>
+      </ng-container>
+      <ng-container *ngIf="isJingfen">
+        <span>热销商品</span>
+      </ng-container>
+    </h2>
+    <ng-container *ngTemplateOutlet="goodsListTpl"></ng-container>
   </div>
-</ng-template>
-<div class="content-box" *ngIf="withBox && goodsList.length > 0"
-     [ngClass]="{'content-box-desktop': !isMobile, 'content-box-mobile': isMobile}">
-  <h2 class="border-header" *ngIf="showHeader">
-    <ng-container *ngIf="!isJingfen">
-      <span *ngIf="eliteId === 1">猜你喜欢</span>
-      <span *ngIf="eliteId === 2">热销商品</span>
-      <span *ngIf="eliteId === 3">大额券</span>
-      <span *ngIf="eliteId === 4">9.9包邮</span>
-    </ng-container>
-    <ng-container *ngIf="isJingfen">
-      <span>热销商品</span>
-    </ng-container>
-  </h2>
-  <ng-container *ngTemplateOutlet="goodsListTpl"></ng-container>
-</div>
-<ng-container *ngIf="!withBox && goodsList.length > 0">
-  <ng-container *ngTemplateOutlet="goodsListTpl"></ng-container>
+  <ng-container *ngIf="!withBox && goodsList.length > 0">
+    <ng-container *ngTemplateOutlet="goodsListTpl"></ng-container>
+  </ng-container>
+  <app-empty *ngIf="!withBox && goodsList.length < 1"
+             [showBorder]="showBorder"
+             [showBackground]="showEmptyBackground"></app-empty>
 </ng-container>
-<app-empty *ngIf="!withBox && goodsList.length < 1"
-           [showBorder]="showBorder"
-           [showBackground]="showEmptyBackground"></app-empty>

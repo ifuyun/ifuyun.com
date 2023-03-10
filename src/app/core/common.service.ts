@@ -19,9 +19,6 @@ export class CommonService {
   private darkMode: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public darkMode$: Observable<boolean> = this.darkMode.asObservable();
 
-  private disableAds: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  public disableAds$: Observable<boolean> = this.disableAds.asObservable();
-
   private pageOptions: BehaviorSubject<PageOptions> = new BehaviorSubject<PageOptions>({
     showHeader: true,
     showFooter: true,
@@ -29,6 +26,9 @@ export class CommonService {
     showMobileFooter: true
   });
   public pageOptions$: Observable<PageOptions> = this.pageOptions.asObservable();
+
+  private adsFlag: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public adsFlag$: Observable<boolean> = this.adsFlag.asObservable();
 
   private jdUnionFlag: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public jdUnionFlag$: Observable<boolean> = this.jdUnionFlag.asObservable();
@@ -108,6 +108,6 @@ export class CommonService {
   }
 
   updateAdsFlag(isDisabled: boolean) {
-    this.disableAds.next(isDisabled);
+    this.adsFlag.next(isDisabled);
   }
 }

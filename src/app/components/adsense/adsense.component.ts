@@ -48,7 +48,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
   private readonly adsenseClass = 'adsbygoogle';
   private readonly customClassPrefix = 'make-money';
 
-  private isDev = !env.production;
+  private enableAds = false;
   private options: OptionEntity = {};
   private pageLevelAds = false;
 
@@ -71,6 +71,10 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
       )
       .subscribe((options) => {
         this.options = options;
+        const enableAds = this.options['enable_ads'] || '';
+        this.enableAds =
+          (env.production && ['1', '0'].includes(enableAds)) || (!env.production && ['2', '0'].includes(enableAds));
+
         this.initOptions();
         this.loadAds();
       });
@@ -91,7 +95,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
       format: '',
       className: '',
       display: 'inline-block',
-      testMode: this.isDev
+      testMode: false
     };
     let adsenseConfig: Partial<AdsenseConfig> = {};
     if (this.dynamic && this.optionKey) {
@@ -126,7 +130,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
   };
 
   private loadAds() {
-    if (!this.isDev && this.platform.isBrowser && this.visible) {
+    if (this.enableAds && this.platform.isBrowser && this.visible) {
       const ads: Record<string, string | boolean> = {};
       if (this.pageLevelAds) {
         ads['google_ad_client'] = this.clientId;
@@ -138,7 +142,6 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
           ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(ads);
           if (Array.isArray((window as any).adsbygoogle)) {
             this.hideAdsEle();
-            this.commonService.updateAdsFlag(true);
           } else {
             this.commonService.updateAdsFlag(false);
           }
@@ -177,5 +180,6 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
 
   private hideAdsEle() {
     this.adsenseEle.nativeElement.style.display = 'none';
+    this.commonService.updateAdsFlag(true);
   }
 }

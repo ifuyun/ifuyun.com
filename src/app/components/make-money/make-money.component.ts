@@ -28,7 +28,7 @@ export class MakeMoneyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.commonService.disableAds$.pipe(takeUntil(this.destroy$)).subscribe((flag) => {
+    this.commonService.adsFlag$.pipe(takeUntil(this.destroy$)).subscribe((flag) => {
       this.jdUnionVisible = flag;
     });
   }

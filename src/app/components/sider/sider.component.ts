@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
+import { environment as env } from '../../../environments/environment';
 import { ArchiveData } from '../../core/common.interface';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
@@ -40,6 +41,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   randomPosts: PostEntity[] = [];
   friendLinks: LinkEntity[] = [];
   keyword = '';
+  enableAds = false;
   jdUnionVisible = false;
 
   private options: OptionEntity = {};
@@ -66,6 +68,9 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       )
       .subscribe((options) => {
         this.options = options;
+        const enableAds = this.options['enable_ads'] || '';
+        this.enableAds =
+          (env.production && ['1', '0'].includes(enableAds)) || (!env.production && ['2', '0'].includes(enableAds));
         this.showAlipayRedPacketQrcode();
       });
     this.postService
@@ -93,7 +98,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => (this.friendLinks = res));
     });
-    this.commonService.disableAds$.pipe(takeUntil(this.destroy$)).subscribe((flag) => {
+    this.commonService.adsFlag$.pipe(takeUntil(this.destroy$)).subscribe((flag) => {
       this.jdUnionVisible = flag;
     });
   }
