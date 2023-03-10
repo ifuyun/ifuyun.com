@@ -1,6 +1,6 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, ViewChild } from '@angular/core';
-import { isEmpty } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
 import { environment as env } from '../../../environments/environment';
 import { CommonService } from '../../core/common.service';
@@ -45,6 +45,9 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
   isMobile = false;
   visible = false;
 
+  private readonly adsenseClass = 'adsbygoogle';
+  private readonly customClassPrefix = 'make-money';
+
   private isDev = !env.production;
   private options: OptionEntity = {};
   private pageLevelAds = false;
@@ -86,7 +89,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
       clientId: '',
       slotId: '',
       format: '',
-      className: 'adsbygoogle',
+      className: '',
       display: 'inline-block',
       testMode: this.isDev
     };
@@ -104,7 +107,9 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
     this.slotId = this.slotId ?? adsenseConfig.slotId;
     this.format = this.format ?? adsenseConfig.format;
     this.responsive = this.responsive ?? adsenseConfig.responsive;
-    this.className = this.className ?? adsenseConfig.className;
+    this.className = (this.className ?? adsenseConfig.className) + this.adsenseClass;
+    this.className += this.isMobile ? `${this.customClassPrefix}-mobile` : `${this.customClassPrefix}-desktop`;
+    this.className = uniq(this.className.split(' ')).join(' ');
     this.display = this.display ?? adsenseConfig.display;
     this.width = this.parseSize(this.width ?? adsenseConfig.width);
     this.height = this.parseSize(this.height ?? adsenseConfig.height);

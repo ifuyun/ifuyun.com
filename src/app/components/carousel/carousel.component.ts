@@ -122,7 +122,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
             caption: wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn,
             url,
             fullUrl: url,
-            link: this.getWallpaperLink(wallpaper.wallpaperId),
+            link: this.getWallpaperLink(wallpaper.wallpaperId, !wallpaper.wallpaperTitle),
             target: LinkTarget.SELF,
             order: index + 1
           };
@@ -149,7 +149,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
             caption: wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn,
             url,
             fullUrl: url,
-            link: this.getWallpaperLink(wallpaper.wallpaperId),
+            link: this.getWallpaperLink(wallpaper.wallpaperId, !wallpaper.wallpaperTitle),
             target: LinkTarget.SELF,
             order: index + 1
           };
@@ -157,7 +157,9 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  private getWallpaperLink(wallpaperId: string) {
-    return `${this.options['site_url']}/wallpaper/${wallpaperId}`;
+  private getWallpaperLink(wallpaperId: string, isEn: boolean) {
+    const url = `${this.options['site_url']}/wallpaper/${wallpaperId}`;
+    const langParam = isEn ? '?lang=en' : '';
+    return url + langParam;
   }
 }
