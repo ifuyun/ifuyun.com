@@ -114,7 +114,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
     this.format = this.format ?? adsenseConfig.format;
     this.responsive = this.responsive ?? adsenseConfig.responsive;
     this.className = (this.className ?? adsenseConfig.className) + this.adsenseClass;
-    this.className += this.isMobile ? `${this.customClassPrefix}-mobile` : `${this.customClassPrefix}-desktop`;
+    this.className += this.isMobile ? ` ${this.customClassPrefix}-mobile` : ` ${this.customClassPrefix}-desktop`;
     this.className = uniq(this.className.split(' ')).join(' ');
     this.display = this.display ?? adsenseConfig.display;
     this.width = this.parseSize(this.width ?? adsenseConfig.width);
