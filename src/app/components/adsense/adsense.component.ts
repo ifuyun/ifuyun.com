@@ -4,6 +4,7 @@ import { isEmpty, uniq } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
 import { environment as env } from '../../../environments/environment';
 import { CommonService } from '../../core/common.service';
+import { ConsoleService } from '../../core/console.service';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
@@ -58,7 +59,8 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
     private platform: PlatformService,
     private userAgentService: UserAgentService,
     private optionService: OptionService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private console: ConsoleService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }
@@ -141,15 +143,18 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
           this.createAdsEle();
           ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(ads);
           if (Array.isArray((window as any).adsbygoogle)) {
+            this.console.warn('Ads is blocked.');
             this.hideAdsEle();
           } else {
             this.commonService.updateAdsFlag(false);
           }
         } catch (e) {
+          this.console.error('Ads: ', e.message || 'is not working.');
           this.hideAdsEle();
         }
       }
     } else {
+      this.console.warn('Ads is disabled.');
       this.hideAdsEle();
     }
   }
