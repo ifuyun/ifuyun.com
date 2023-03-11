@@ -290,8 +290,12 @@ a, a:hover, a:focus {
   }
 }
 
-ins.adsbygoogle[data-ad-status='unfilled'] {
-  display: none !important;
+ins.adsbygoogle {
+  box-sizing: border-box;
+
+  &[data-ad-status='unfilled'] {
+    display: none !important;
+  }
 }
 
 @keyframes loading-circle {

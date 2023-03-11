@@ -33,6 +33,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
   @Input() format!: string;
   @Input() responsive!: boolean | undefined;
   @Input() className!: string;
+  @Input() style!: string;
   @Input() display!: string;
   @Input() width!: number | string;
   @Input() height!: number | string;
@@ -96,6 +97,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
       slotId: '',
       format: '',
       className: '',
+      style: '',
       display: 'inline-block',
       testMode: false
     };
@@ -116,6 +118,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
     this.className = (this.className ?? adsenseConfig.className) + this.adsenseClass;
     this.className += this.isMobile ? ` ${this.customClassPrefix}-mobile` : ` ${this.customClassPrefix}-desktop`;
     this.className = uniq(this.className.split(' ')).join(' ');
+    this.style = this.style ?? adsenseConfig.style;
     this.display = this.display ?? adsenseConfig.display;
     this.width = this.parseSize(this.width ?? adsenseConfig.width);
     this.height = this.parseSize(this.height ?? adsenseConfig.height);
@@ -163,6 +166,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
     const adsEle = this.document.createElement('ins');
 
     adsEle.className = this.className;
+    adsEle.setAttribute('style', this.style);
     adsEle.style.display = this.display;
     this.width && (adsEle.style.width = this.width + '');
     this.height && (adsEle.style.height = this.height + '');

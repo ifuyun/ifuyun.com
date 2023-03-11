@@ -4,6 +4,7 @@ export interface AdsenseConfig {
   format?: string;
   responsive?: boolean;
   className?: string | string[];
+  style?: string;
   display?: string;
   width?: number | string;
   height?: number | string;
