@@ -169,7 +169,7 @@ a, a:hover, a:focus {
   }
 }
 
-.content-box {
+.content-box, .container {
   border-radius: @border-radius;
   background-color: var(--content-background-color);
   box-shadow: var(--content-box-shadow);
@@ -210,10 +210,6 @@ a, a:hover, a:focus {
     }
   }
 
-  &:not(:last-child) {
-    margin-bottom: @primary-margin;
-  }
-
   .border-header {
     border-left: @content-h2-border-width solid var(--primary-color);
     padding-left: @content-h2-padding-left;
@@ -227,6 +223,12 @@ a, a:hover, a:focus {
     &:last-child {
       margin-bottom: 0;
     }
+  }
+}
+
+.content-box {
+  &:not(:last-child) {
+    margin-bottom: @primary-margin;
   }
 }
 
