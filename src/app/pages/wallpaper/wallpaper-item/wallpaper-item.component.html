@@ -7,19 +7,19 @@
   <div class="post-item-stat">
     <span><i class="icon icon-eye"></i><span>{{wallpaper.wallpaperViews | numberView}}</span></span>
     <span>
-        <i class='icon'
-           [class.icon-heart]="!wallpaper.wallpaperVoted"
-           [class.icon-heart-fill]="wallpaper.wallpaperVoted"></i><span>{{wallpaper.wallpaperLikes | numberView}}</span>
-      </span>
+      <i class='icon'
+         [class.icon-like]="!wallpaper.wallpaperVoted"
+         [class.icon-like-fill]="wallpaper.wallpaperVoted"></i><span>{{wallpaper.wallpaperLikes | numberView}}</span>
+    </span>
   </div>
 </header>
 <div class="post-item-meta post-item-meta-top">
-    <span [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
-      <i class='icon icon-calendar'></i><span>{{wallpaper.wallpaperDate | date:'yyyy-MM-dd'}}</span>
-    </span>
-  <span [title]="wallpaper.wallpaperLocation">
-      <i class="icon icon-geo-alt"></i><span>{{wallpaper.wallpaperLocation}}</span>
-    </span>
+  <span [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
+    <i class='icon icon-calendar'></i><span>{{wallpaper.wallpaperDate | date:'yyyy-MM-dd'}}</span>
+  </span>
+  <span class="auto-fit" [title]="wallpaper.wallpaperLocation">
+    <i class="icon icon-geo-alt"></i><span>{{wallpaper.wallpaperLocation}}</span>
+  </span>
 </div>
 <div class="post-item-excerpt">
   <div class="post-item-thumb">

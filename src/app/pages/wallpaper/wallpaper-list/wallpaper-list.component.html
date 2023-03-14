@@ -51,8 +51,8 @@
                      (click)="voteWallpaper(wallpaper)"
                      title="喜欢: {{wallpaper.wallpaperLikes | numberView}}">
                   <i class='icon'
-                     [class.icon-heart]="!wallpaper.wallpaperVoted"
-                     [class.icon-heart-fill]="wallpaper.wallpaperVoted"
+                     [class.icon-like]="!wallpaper.wallpaperVoted"
+                     [class.icon-like-fill]="wallpaper.wallpaperVoted"
                      [class.icon-loading]="voteLoadingMap[wallpaper.wallpaperId]"></i><span>{{wallpaper.wallpaperLikes | numberView}}</span>
                 </div>
               </div>

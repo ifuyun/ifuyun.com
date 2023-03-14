@@ -101,13 +101,23 @@
     }
 
     .post-item-meta-top {
-      > span:not(:last-child):after {
-        content: '|';
-        display: inline-block;
-        position: relative;
-        top: -2px;
-        margin: 0 10px;
-        vertical-align: middle;
+      display: flex;
+
+      > span {
+        &.auto-fit {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+
+        &:not(.auto-fit) {
+          flex-shrink: 0;
+        }
+
+        &:not(:last-child):after {
+          margin: 0 10px;
+          content: '|';
+        }
       }
 
       a:not(:last-child) {

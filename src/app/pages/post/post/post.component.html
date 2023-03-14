@@ -112,7 +112,10 @@
         <button (click)="showReward('/assets/images/reward.jpg')">
           <i class='icon icon-heart-fill'></i>
         </button>
-        <button *ngIf="!isPage" (click)="addFavorite()" [ngClass]="{liked: isFavorite}">
+        <button *ngIf="!isPage"
+                (click)="addFavorite()"
+                [ngClass]="{liked: isFavorite}"
+                [title]="isFavorite ? '已收藏' : '添加收藏'">
           <i class='icon icon-star-fill' *ngIf="!favoriteLoading"></i>
           <i class='icon icon-loading' *ngIf="favoriteLoading"></i>
         </button>
