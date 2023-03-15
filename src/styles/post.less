@@ -75,16 +75,14 @@
     font-size: @meta-font-size;
 
     &-top {
+      display: flex;
+      justify-content: center;
       margin-bottom: 8px;
       padding: 0 @content-margin;
 
       > span:not(:last-child):after {
         content: '|';
-        display: inline-block;
-        position: relative;
-        top: -2px;
         margin: 0 10px;
-        vertical-align: middle;
       }
 
       a:not(:last-child) {

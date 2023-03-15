@@ -1,19 +1,19 @@
 <app-breadcrumb></app-breadcrumb>
-<div class="filter content-box" [class.content-box-desktop]="!isMobile" [class.content-box-mobile]="isMobile">
-  <div class="filter-item">
-    <div class="filter-label">语言</div>
-    <ul class="filter-options">
-      <li [class.active]="!lang"><a routerLink="./" [queryParams]="{mode: mode}">全部</a></li>
-      <li [class.active]="lang === 'cn'"><a routerLink="./" [queryParams]="{lang: 'cn', mode: mode}">中文</a></li>
-      <li [class.active]="lang === 'en'"><a routerLink="./" [queryParams]="{lang: 'en', mode: mode}">English</a></li>
-    </ul>
+<div class="filter" [class.filter-desktop]="!isMobile" [class.filter-mobile]="isMobile">
+  <div class="lang-options">
+    <label [class.active]="!lang"><a routerLink="./" [queryParams]="{mode: mode}">全部</a></label>
+    <label [class.active]="lang === 'cn'"><a routerLink="./" [queryParams]="{lang: 'cn', mode: mode}">中文</a></label>
+    <label [class.active]="lang === 'en'"><a routerLink="./" [queryParams]="{lang: 'en', mode: mode}">English</a></label>
   </div>
-  <div class="filter-item">
-    <div class="filter-label">显示方式</div>
-    <ul class="filter-options">
-      <li [class.active]="mode === 'card'"><a routerLink="./" [queryParams]="{lang: lang, mode: 'card'}">卡片</a></li>
-      <li [class.active]="mode === 'list'"><a routerLink="./" [queryParams]="{lang: lang, mode: 'list'}">列表</a></li>
-    </ul>
+  <div class="mode-options">
+    <a *ngIf="mode === 'card'"
+       routerLink="./"
+       [queryParams]="{lang: lang, mode: 'list'}"
+       title="列表模式"><i class='icon icon-bars'></i></a>
+    <a *ngIf="mode === 'list'"
+       routerLink="./"
+       [queryParams]="{lang: lang, mode: 'card'}"
+       title="卡片模式"><i class='icon icon-appstore'></i></a>
   </div>
 </div>
 <ng-container *ngIf="mode === 'card'">
