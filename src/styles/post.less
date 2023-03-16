@@ -6,7 +6,7 @@
 
   &-desktop {
     .post-header {
-      padding: @content-header-margin @content-margin 4px;
+      padding: @content-header-margin @content-margin @primary-margin;
     }
 
     .post-content, .post-footer, .pay-body {
@@ -29,7 +29,7 @@
 
   &-mobile {
     .post-header {
-      padding: @m-content-header-margin @m-primary-margin 4px;
+      padding: @m-content-header-margin @m-primary-margin @m-primary-margin;
     }
 
     .post-content, .post-footer, .pay-body, .wechat-card {
@@ -77,7 +77,6 @@
     &-top {
       display: flex;
       justify-content: center;
-      margin-bottom: 8px;
       padding: 0 @content-margin;
 
       > span:not(:last-child):after {
@@ -371,7 +370,7 @@
         .text {
           margin-left: 8px;
           font-size: @primary-font-size;
-          font-weight: 700;
+          font-weight: 600;
         }
       }
 
@@ -411,7 +410,7 @@
         top: 0;
         left: 0;
         padding: 0 @button-padding + 1;
-        border-radius: 4px;
+        border-radius: @border-radius;
         background-color: var(--action-color);
         color: #fff;
         opacity: 0;
@@ -570,7 +569,7 @@
     background-color: var(--primary-color);
     color: #fff;
     font-size: @minor-font-size;
-    font-weight: 700;
+    font-weight: 600;
   }
 
   .pay-mask {

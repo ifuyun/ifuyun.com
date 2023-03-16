@@ -9,8 +9,8 @@
       <span title="日期: {{wallpaper?.wallpaperDate}}">
         <i class='icon icon-calendar'></i><span>{{wallpaper?.wallpaperDate}}</span>
       </span>
-      <span *ngIf="!isMobile" title="地点: {{wallpaper?.wallpaperLocation || unknownLocation}}">
-        <i class='icon icon-geo-alt'></i><span>{{wallpaper?.wallpaperLocation || unknownLocation}}</span>
+      <span *ngIf="!isMobile" title="地点: {{wallpaper?.wallpaperLocation}}">
+        <i class='icon icon-geo-alt'></i><span>{{wallpaper?.wallpaperLocation}}</span>
       </span>
       <span title="访问：{{wallpaper?.wallpaperViews | numberView}}">
         <i class='icon icon-eye'></i><span>{{wallpaper?.wallpaperViews | numberView}}</span>
@@ -24,7 +24,7 @@
         <img *ngIf="wallpaper?.wallpaperUrl" [src]="wallpaper?.wallpaperUrl" [alt]="wallpaper?.wallpaperCopyright"/>
         <div class="wallpaper-overlay"></div>
       </div>
-      <figcaption>{{wallpaper?.wallpaperCopyright}} ({{wallpaper?.wallpaperCopyrightAuthor}})</figcaption>
+      <figcaption>{{wallpaper?.wallpaperTitle}}</figcaption>
     </figure>
     <div class="wallpaper-actions">
       <a class="button button-submit" (click)="showWallpaper()" title="全屏查看壁纸">
@@ -49,8 +49,15 @@
         <div class="post-meta-icon"><i class='icon icon-geo-alt'></i></div>
         <div class="post-meta-info">
           <span class="post-meta-info-text"
-                title="地点: {{wallpaper?.wallpaperLocation || unknownLocation}}">{{wallpaper?.wallpaperLocation || unknownLocation}}</span>
+                title="地点: {{wallpaper?.wallpaperLocation}}">{{wallpaper?.wallpaperLocation}}</span>
         </div>
+      </div>
+    </div>
+    <div class="post-meta">
+      <div class="post-meta-icon"><i class='icon icon-copyright'></i></div>
+      <div class="post-meta-info">
+          <span class="post-meta-info-text"
+                title="版权: {{wallpaper?.wallpaperCopyrightAuthor}}">{{wallpaper?.wallpaperCopyrightAuthor}}</span>
       </div>
     </div>
     <div class="post-actions">
@@ -62,7 +69,7 @@
           <span class="parkinson-mask" *ngIf="!voteLoading"><i class='icon icon-like-fill'></i></span>
           <span class="loading-mask" *ngIf="voteLoading"><i class='icon icon-loading'></i></span>
         </button>
-        <button (click)="showReward('/assets/images/reward.jpg')">
+        <button (click)="showReward()" title="打赏">
           <i class='icon icon-heart-fill'></i>
         </button>
         <button *ngIf="!isMobile" (click)="showShareQrcode()">

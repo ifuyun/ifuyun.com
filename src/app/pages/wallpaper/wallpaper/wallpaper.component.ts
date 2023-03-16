@@ -15,7 +15,7 @@ import { ImageModule } from '../../../components/image/image.module';
 import { ImageService } from '../../../components/image/image.service';
 import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
-import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
+import { STORAGE_KEY_LIKED_WALLPAPER, WECHAT_REWARD_PATH } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
@@ -66,13 +66,13 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   isLoggedIn = false;
   prevWallpaper: Wallpaper | null = null;
   nextWallpaper: Wallpaper | null = null;
-  unknownLocation = '';
 
   protected pageIndex = 'wallpaper';
 
   private breadcrumbs: BreadcrumbEntity[] = [];
   private commentUser: Guest | null = null;
   private urlPrefix = '';
+  private unknownLocation = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -171,19 +171,17 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         this.voteLoading = false;
         if (res.code === ResponseCode.SUCCESS) {
           this.wallpaper.wallpaperLikes = res.data.likes;
-          if (like) {
-            this.wallpaper.wallpaperVoted = true;
-            likedWallpapers.push(this.wallpaperId);
-            localStorage.setItem(STORAGE_KEY_LIKED_WALLPAPER, uniq(likedWallpapers.filter((item) => !!item)).join(','));
-          }
+          this.wallpaper.wallpaperVoted = true;
+          likedWallpapers.push(this.wallpaperId);
+          localStorage.setItem(STORAGE_KEY_LIKED_WALLPAPER, uniq(likedWallpapers.filter((item) => !!item)).join(','));
         }
       });
   }
 
-  showReward(src: string) {
+  showReward() {
     const previewRef = this.imageService.preview([
       {
-        src
+        src: WECHAT_REWARD_PATH
       }
     ]);
     this.commonService.addPaddingToImagePreview(previewRef.previewInstance.imagePreviewWrapper);
@@ -230,21 +228,27 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
           this.wallpaper = {
             ...wallpaper,
             wallpaperUrl: this.urlPrefix + wallpaper.wallpaperUrl,
-            hasTranslation:
-              (this.lang === WallpaperLang.CN && !!wallpaper.wallpaperStoryEn) ||
-              (this.lang === WallpaperLang.EN && !!wallpaper.wallpaperStory)
+            wallpaperCopyrightAuthor: wallpaper.wallpaperCopyrightAuthor.replace(/^©\s*/i, '')
           };
+          let wallpaperLocation = '';
+          let hasTranslation: boolean;
           if (this.lang === WallpaperLang.CN) {
+            wallpaperLocation = wallpaper.wallpaperLocation || wallpaper.wallpaperLocationEn;
+            hasTranslation = !!wallpaper.wallpaperStoryEn;
+            this.wallpaper.wallpaperTitle = wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn;
             this.wallpaper.wallpaperCopyright = wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn;
-            this.wallpaper.wallpaperLocation = wallpaper.wallpaperLocation || wallpaper.wallpaperLocationEn;
             this.wallpaper.wallpaperStoryTitle = wallpaper.wallpaperStoryTitle || wallpaper.wallpaperStoryTitleEn;
             this.wallpaper.wallpaperStory = wallpaper.wallpaperStory || wallpaper.wallpaperStoryEn;
           } else {
+            wallpaperLocation = wallpaper.wallpaperLocationEn || wallpaper.wallpaperLocation;
+            hasTranslation = !!wallpaper.wallpaperStory;
+            this.wallpaper.wallpaperTitle = wallpaper.wallpaperTitleEn || wallpaper.wallpaperTitle;
             this.wallpaper.wallpaperCopyright = wallpaper.wallpaperCopyrightEn || wallpaper.wallpaperCopyright;
-            this.wallpaper.wallpaperLocation = wallpaper.wallpaperLocationEn || wallpaper.wallpaperLocation;
             this.wallpaper.wallpaperStoryTitle = wallpaper.wallpaperStoryTitleEn || wallpaper.wallpaperStoryTitle;
             this.wallpaper.wallpaperStory = wallpaper.wallpaperStoryEn || wallpaper.wallpaperStory;
           }
+          this.wallpaper.wallpaperLocation = wallpaperLocation || this.unknownLocation;
+          this.wallpaper.hasTranslation = hasTranslation;
         }
         this.updatePageInfo();
         this.updateBreadcrumb();

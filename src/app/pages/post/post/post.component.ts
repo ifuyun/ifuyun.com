@@ -24,7 +24,7 @@ import { ImageModule } from '../../../components/image/image.module';
 import { ImageService } from '../../../components/image/image.service';
 import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
-import { STORAGE_KEY_VOTED_POSTS, WECHAT_CARD_PATH } from '../../../config/common.constant';
+import { STORAGE_KEY_VOTED_POSTS, WECHAT_CARD_PATH, WECHAT_REWARD_PATH } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
@@ -203,10 +203,10 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       });
   }
 
-  showReward(src: string) {
+  showReward() {
     const previewRef = this.imageService.preview([
       {
-        src
+        src: WECHAT_REWARD_PATH
       }
     ]);
     this.commonService.addPaddingToImagePreview(previewRef.previewInstance.imagePreviewWrapper);
