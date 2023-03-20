@@ -1,9 +1,9 @@
 <app-breadcrumb *ngIf="bizType === 'search'"></app-breadcrumb>
 <ng-container *ngIf="bizType === 'index'">
-  <div class="banner">
+  <div class="banner" [class.banner-desktop]="!isMobile" [class.banner-mobile]="isMobile">
     <i-carousel></i-carousel>
   </div>
-  <div class="column-header">
+  <div class="column-header" [class.column-header-desktop]="!isMobile" [class.column-header-mobile]="isMobile">
     <div class="column-header-label">
       <span><i class="icon icon-pencil-square"></i><span>最新文章</span></span>
     </div>
@@ -12,7 +12,7 @@
     </div>
   </div>
   <i-post-list-view [posts]="postList"></i-post-list-view>
-  <div class="column-header">
+  <div class="column-header" [class.column-header-desktop]="!isMobile" [class.column-header-mobile]="isMobile">
     <div class="column-header-label">
       <span><i class="icon icon-images"></i><span>最新壁纸</span></span>
     </div>

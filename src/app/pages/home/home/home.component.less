@@ -2,10 +2,17 @@
 
 .banner {
   position: relative;
-  margin: @box-shadow-width @box-shadow-width @primary-margin;
   border-radius: @border-radius;
   background-color: var(--content-background-color);
   box-shadow: var(--content-box-shadow);
+
+  &-desktop {
+    margin: @box-shadow-width @box-shadow-width @primary-margin;
+  }
+
+  &-mobile {
+    margin-bottom: @m-primary-margin;
+  }
 }
 
 .column-header {
@@ -14,6 +21,14 @@
   justify-content: space-between;
   margin: @primary-margin @box-shadow-width;
   border-bottom: 1px solid var(--minor-border-color);
+
+  &-desktop {
+    margin: @primary-margin @box-shadow-width;
+  }
+
+  &-mobile {
+    margin: @primary-margin 0;
+  }
 
   &:first-child {
     margin-top: 0;
