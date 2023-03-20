@@ -18,7 +18,7 @@
       </li>
     </ul>
   </div>
-  <div class="widget-other">
+  <div class="widget-other" *ngIf="enableAds && !jdUnionVisible">
     <i-adsense optionKey="adsense_config_sider"></i-adsense>
   </div>
   <div class="widget" *ngIf="enableAds && jdUnionVisible">

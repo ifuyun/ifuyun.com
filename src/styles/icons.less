@@ -2,9 +2,9 @@
 
 @font-face {
   font-family: '@{font-family}';
-  src: url('@{font-path}/icons.ttf?@{version}') format('truetype'),
-    url('@{font-path}/icons.woff?@{version}') format('woff'),
-    url('@{font-path}/icons.svg?@{version}#@{font-family}') format('svg');
+  src: url('@{font-path}/icons.ttf?@{font-version}') format('truetype'),
+    url('@{font-path}/icons.woff?@{font-version}') format('woff'),
+    url('@{font-path}/icons.svg?@{font-version}#@{font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -109,3 +109,21 @@
 .icon-weibo:before { content: @icon-weibo; }
 .icon-zoom-in:before { content: @icon-zoom-in; }
 .icon-zoom-out:before { content: @icon-zoom-out; }
+
+.icon-loading {
+  display: inline-block;
+  margin-top: -2px;
+  line-height: 1em;
+  vertical-align: middle;
+  animation: loading-circle 1s infinite linear;
+
+  + span {
+    margin-left: 8px;
+  }
+}
+
+@keyframes loading-circle {
+  100% {
+    transform: rotate(360deg);
+  }
+}

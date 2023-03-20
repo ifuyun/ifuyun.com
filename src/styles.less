@@ -157,18 +157,6 @@ a, a:hover, a:focus {
   touch-action: none;
 }
 
-.icon-loading {
-  display: inline-block;
-  margin-top: -2px;
-  line-height: 1em;
-  vertical-align: middle;
-  animation: loading-circle 1s infinite linear;
-
-  + span {
-    margin-left: 8px;
-  }
-}
-
 .content-box, .container {
   border-radius: @border-radius;
   background-color: var(--content-background-color);
@@ -297,11 +285,5 @@ ins.adsbygoogle {
 
   &[data-ad-status='unfilled'] {
     display: none !important;
-  }
-}
-
-@keyframes loading-circle {
-  100% {
-    transform: rotate(360deg);
   }
 }
