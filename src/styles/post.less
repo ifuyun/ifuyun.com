@@ -101,7 +101,6 @@
   .post-content {
     line-height: 1.71428571em;
     word-wrap: break-word;
-    text-align: justify;
 
     &, article {
       > :first-child {
@@ -152,16 +151,13 @@
     }
 
     h2 {
+      padding-left: 10px;
+      border-left: 4px solid var(--primary-color);
       font-size: 15px;
     }
 
     h3, h4, h5, h6 {
       font-size: @primary-font-size;
-    }
-
-    h2 {
-      padding-left: 10px;
-      border-left: 4px solid var(--primary-color);
     }
 
     blockquote {
@@ -179,18 +175,11 @@
       }
     }
 
-    code {
-      background: var(--post-code-background-color);
-    }
-
-    pre {
-      background: var(--post-pre-background-color);
-    }
-
     pre {
       display: flex;
       border-radius: @border-radius;
       border: 1px solid var(--post-pre-border-color);
+      background: var(--post-pre-background-color);
       overflow: hidden;
 
       ul.i-code-lines, code.i-code-text {
@@ -220,6 +209,7 @@
       padding: 2px 6px;
       border-radius: 2px;
       color: var(--base-color);
+      background: var(--post-code-background-color);
     }
 
     ol, ul {
@@ -620,9 +610,12 @@
     text-align: center;
 
     img {
-      width: 420px;
       max-width: 100%;
       cursor: zoom-in;
+    }
+
+    img.card {
+      width: 420px;
     }
   }
 }

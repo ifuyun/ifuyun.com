@@ -15,7 +15,11 @@ import { ImageModule } from '../../../components/image/image.module';
 import { ImageService } from '../../../components/image/image.service';
 import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
-import { STORAGE_KEY_LIKED_WALLPAPER, WECHAT_REWARD_PATH } from '../../../config/common.constant';
+import {
+  STORAGE_KEY_LIKED_WALLPAPER,
+  WECHAT_MINI_APP_CARD_PATH,
+  WECHAT_REWARD_PATH
+} from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
@@ -56,6 +60,7 @@ import { WallpaperService } from '../wallpaper.service';
 })
 export class WallpaperComponent extends PageComponent implements OnInit, AfterViewInit {
   readonly commentObjectType = CommentObjectType.WALLPAPER;
+  readonly miniAppCardPath = WECHAT_MINI_APP_CARD_PATH;
 
   isMobile = false;
   options: OptionEntity = {};
@@ -134,6 +139,14 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     this.imageService.preview([
       {
         src: this.wallpaper?.wallpaperUrl
+      }
+    ]);
+  }
+
+  showMiniAppCard() {
+    this.imageService.preview([
+      {
+        src: this.miniAppCardPath
       }
     ]);
   }

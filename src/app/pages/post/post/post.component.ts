@@ -158,12 +158,13 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     }
     this.unlistenImgClick = this.renderer.listen(this.postEle.nativeElement, 'click', (e: MouseEvent) => {
       if (e.target instanceof HTMLImageElement) {
-        // todo: if image is in <a> link
         this.imageService.preview([
           {
             src: e.target.src
           }
         ]);
+        e.preventDefault();
+        e.stopPropagation()
       }
     });
   }

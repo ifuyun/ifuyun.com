@@ -43,6 +43,12 @@
       <a routerLink="." [queryParams]="getTranslateLangParams()" title="查看翻译" rel="bookmark">查看翻译</a>
     </p>
   </div>
+  <ng-container *ngIf="options['show_wechat_mini'] === '1'">
+    <div class="divider"></div>
+    <div class="wechat-card">
+      <img class="card" [src]="miniAppCardPath" (click)="showMiniAppCard()" alt="小程序：壁纸之旅"/>
+    </div>
+  </ng-container>
   <footer class="post-footer">
     <div *ngIf="isMobile">
       <div class="post-meta">

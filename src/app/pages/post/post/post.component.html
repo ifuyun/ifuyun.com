@@ -45,7 +45,7 @@
     <ng-container *ngIf="postMeta['show_wechat_card'] === '1'">
       <div class="divider"></div>
       <div class="wechat-card">
-        <img [src]="wechatCardPath" alt="公众号：黑匣子思维"/>
+        <img class="card" [src]="wechatCardPath" alt="公众号：黑匣子思维"/>
       </div>
     </ng-container>
   </div>
@@ -119,7 +119,7 @@
           <i class='icon icon-star-fill' *ngIf="!favoriteLoading"></i>
           <i class='icon icon-loading' *ngIf="favoriteLoading"></i>
         </button>
-        <button *ngIf="!isMobile" (click)="showShareQrcode()">
+        <button *ngIf="!isMobile" (click)="showShareQrcode()" title="分享">
           <i class='icon icon-share-fill'></i>
         </button>
       </div>
