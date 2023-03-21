@@ -9,9 +9,6 @@
       <span title="日期: {{wallpaper?.wallpaperDate}}">
         <i class='icon icon-calendar'></i><span>{{wallpaper?.wallpaperDate}}</span>
       </span>
-      <span *ngIf="!isMobile" title="地点: {{wallpaper?.wallpaperLocation}}">
-        <i class='icon icon-geo-alt'></i><span>{{wallpaper?.wallpaperLocation}}</span>
-      </span>
       <span title="访问：{{wallpaper?.wallpaperViews | numberView}}">
         <i class='icon icon-eye'></i><span>{{wallpaper?.wallpaperViews | numberView}}</span>
       </span>
@@ -50,7 +47,7 @@
     </div>
   </ng-container>
   <footer class="post-footer">
-    <div *ngIf="isMobile">
+    <div>
       <div class="post-meta">
         <div class="post-meta-icon"><i class='icon icon-geo-alt'></i></div>
         <div class="post-meta-info">

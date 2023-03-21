@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
-import { BLOCK_SCROLL_CLASS, MEDIA_QUERY_THEME_DARK } from './config/common.constant';
+import { CLASS_BLOCK_SCROLL, MEDIA_QUERY_THEME_DARK } from './config/common.constant';
 import { Theme } from './config/common.enum';
 import { CommonService } from './core/common.service';
 import { PlatformService } from './core/platform.service';
@@ -77,9 +77,9 @@ export class AppComponent implements OnInit {
   onSiderOpenChange(open: boolean) {
     const htmlNode = this.document.getElementsByTagName('html')[0];
     if (open) {
-      htmlNode.classList.add(BLOCK_SCROLL_CLASS);
+      htmlNode.classList.add(CLASS_BLOCK_SCROLL);
     } else {
-      htmlNode.classList.remove(BLOCK_SCROLL_CLASS);
+      htmlNode.classList.remove(CLASS_BLOCK_SCROLL);
     }
   }
 

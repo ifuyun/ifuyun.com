@@ -10,15 +10,16 @@ export const POST_SLUG_PREFIX_BLACKLIST = Object.freeze([
   'admin',
   'api'
 ]);
+
+export const PATH_LOGO = '/assets/images/logo.png';
+export const PATH_LOGO_DARK = '/assets/images/logo-dark.png';
+export const PATH_FAVICON = '/assets/images/favicon.png';
+export const PATH_WECHAT_CARD = '/assets/images/wechat-card.png';
+export const PATH_WECHAT_MINI_APP_CARD = '/assets/images/wechat-mini.png';
+export const PATH_WECHAT_REWARD = '/assets/images/reward.jpg';
 export const ADMIN_URL_PARAM = '?token=$0&expiresAt=$1';
-export const LOGO_PATH = '/assets/images/logo.png';
-export const LOGO_DARK_PATH = '/assets/images/logo-dark.png';
-export const FAVICON_PATH = '/assets/images/favicon.png';
-export const WECHAT_CARD_PATH = '/assets/images/wechat-card.png';
-export const WECHAT_MINI_APP_CARD_PATH = '/assets/images/wechat-mini.png';
-export const WECHAT_REWARD_PATH = '/assets/images/reward.jpg';
-export const AVATAR_API_URL = 'https://cravatar.cn/avatar/$0.png?d=$1';
-export const BLOCK_SCROLL_CLASS = 'cdk-global-scrollblock';
+export const URL_AVATAR_API = 'https://cravatar.cn/avatar/$0.png?d=$1';
+export const CLASS_BLOCK_SCROLL = 'cdk-global-scrollblock';
 
 export const STORAGE_KEY_USER = 'user';
 export const STORAGE_KEY_VOTED_POSTS = 'voted_posts';

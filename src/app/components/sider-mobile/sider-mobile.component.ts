@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
-import { ADMIN_URL_PARAM, FAVICON_PATH, WECHAT_CARD_PATH } from '../../config/common.constant';
+import { ADMIN_URL_PARAM, PATH_FAVICON, PATH_WECHAT_CARD } from '../../config/common.constant';
 import { Theme } from '../../config/common.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
@@ -32,7 +32,7 @@ export class SiderMobileComponent implements OnInit {
   @Input() siderOpen = false;
   @Output() siderOpenChange = new EventEmitter<boolean>();
 
-  readonly logoUrl = FAVICON_PATH;
+  readonly logoUrl = PATH_FAVICON;
 
   darkMode = false;
   isMobile = false;
@@ -101,7 +101,7 @@ export class SiderMobileComponent implements OnInit {
     this.siderOpenChange.emit(this.siderOpen);
     this.imageService.preview([
       {
-        src: WECHAT_CARD_PATH
+        src: PATH_WECHAT_CARD
       }
     ]);
   }

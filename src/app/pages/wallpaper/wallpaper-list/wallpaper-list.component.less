@@ -6,22 +6,21 @@
   border-radius: @border-radius;
 
   &.wallpaper-desktop {
-    margin: @box-shadow-width;
-    padding: @content-margin;
-    background-color: var(--content-background-color);
-    box-shadow: var(--content-box-shadow);
+    margin: @primary-margin @box-shadow-width 0;
 
     .wallpaper-list {
-      margin: -(@content-margin / 2);
+      margin: -(@primary-margin / 2);
     }
 
     .wallpaper-item {
       width: (100% / @row-size);
-      padding: (@content-margin / 2);
+      padding: (@primary-margin / 2);
     }
   }
 
   &.wallpaper-mobile {
+    margin: @m-primary-margin 0 0;
+
     .wallpaper-item {
       width: 100%;
 
@@ -148,9 +147,9 @@
   }
 
   .wallpaper-box {
-    border: 1px solid var(--minor-border-color);
     border-radius: @border-radius;
     background: var(--wallpaper-item-background-color);
+    box-shadow: var(--content-box-shadow);
 
     &:hover {
       .photo-link {
@@ -210,7 +209,7 @@
         border-bottom-right-radius: @border-radius;
       }
 
-      &:not(:first-child){
+      &:not(:first-child) {
         border-left-width: 0;
 
         &:before {
@@ -258,5 +257,15 @@
     border-radius: @border-radius;
     font-size: 20px;
     background-color: var(--content-background-color);
+  }
+}
+
+.empty-wrap {
+  &-desktop {
+    margin: @primary-margin @box-shadow-width 0;
+  }
+
+  &-mobile {
+    margin: @m-primary-margin 0 0;
   }
 }

@@ -13,7 +13,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { BLOCK_SCROLL_CLASS } from '../../config/common.constant';
+import { CLASS_BLOCK_SCROLL } from '../../config/common.constant';
 import { PlatformService } from '../../core/platform.service';
 
 @Component({
@@ -84,9 +84,9 @@ export class ModalComponent implements OnDestroy, AfterViewInit, OnChanges {
   private toggleModal(visible: boolean) {
     const htmlNode = this.document.getElementsByTagName('html')[0];
     if (visible) {
-      htmlNode.classList.add(BLOCK_SCROLL_CLASS);
+      htmlNode.classList.add(CLASS_BLOCK_SCROLL);
     } else {
-      htmlNode.classList.remove(BLOCK_SCROLL_CLASS);
+      htmlNode.classList.remove(CLASS_BLOCK_SCROLL);
       this.visibleChange.emit(false);
     }
   }

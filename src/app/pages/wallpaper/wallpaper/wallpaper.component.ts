@@ -17,8 +17,8 @@ import { MakeMoneyComponent } from '../../../components/make-money/make-money.co
 import { MessageService } from '../../../components/message/message.service';
 import {
   STORAGE_KEY_LIKED_WALLPAPER,
-  WECHAT_MINI_APP_CARD_PATH,
-  WECHAT_REWARD_PATH
+  PATH_WECHAT_MINI_APP_CARD,
+  PATH_WECHAT_REWARD
 } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
@@ -60,7 +60,7 @@ import { WallpaperService } from '../wallpaper.service';
 })
 export class WallpaperComponent extends PageComponent implements OnInit, AfterViewInit {
   readonly commentObjectType = CommentObjectType.WALLPAPER;
-  readonly miniAppCardPath = WECHAT_MINI_APP_CARD_PATH;
+  readonly miniAppCardPath = PATH_WECHAT_MINI_APP_CARD;
 
   isMobile = false;
   options: OptionEntity = {};
@@ -194,7 +194,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   showReward() {
     const previewRef = this.imageService.preview([
       {
-        src: WECHAT_REWARD_PATH
+        src: PATH_WECHAT_REWARD
       }
     ]);
     this.commonService.addPaddingToImagePreview(previewRef.previewInstance.imagePreviewWrapper);

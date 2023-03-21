@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
-import { WECHAT_CARD_PATH } from '../../config/common.constant';
+import { PATH_WECHAT_CARD, PATH_WECHAT_MINI_APP_CARD } from '../../config/common.constant';
 import { Theme } from '../../config/common.enum';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
@@ -56,7 +56,15 @@ export class ToolboxComponent implements OnInit {
   showWechatCard() {
     this.imageService.preview([
       {
-        src: WECHAT_CARD_PATH
+        src: PATH_WECHAT_CARD
+      }
+    ]);
+  }
+
+  showMiniAppCard() {
+    this.imageService.preview([
+      {
+        src: PATH_WECHAT_MINI_APP_CARD
       }
     ]);
   }

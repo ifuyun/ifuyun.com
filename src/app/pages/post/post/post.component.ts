@@ -24,7 +24,7 @@ import { ImageModule } from '../../../components/image/image.module';
 import { ImageService } from '../../../components/image/image.service';
 import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
-import { STORAGE_KEY_VOTED_POSTS, WECHAT_CARD_PATH, WECHAT_REWARD_PATH } from '../../../config/common.constant';
+import { STORAGE_KEY_VOTED_POSTS, PATH_WECHAT_CARD, PATH_WECHAT_REWARD } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
@@ -75,7 +75,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   @ViewChild('postEle', { static: false }) postEle!: ElementRef;
 
   readonly commentObjectType = CommentObjectType.POST;
-  readonly wechatCardPath = WECHAT_CARD_PATH;
+  readonly wechatCardPath = PATH_WECHAT_CARD;
 
   isMobile = false;
   isLoggedIn = false;
@@ -207,7 +207,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   showReward() {
     const previewRef = this.imageService.preview([
       {
-        src: WECHAT_REWARD_PATH
+        src: PATH_WECHAT_REWARD
       }
     ]);
     this.commonService.addPaddingToImagePreview(previewRef.previewInstance.imagePreviewWrapper);

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
-import { ADMIN_URL_PARAM, LOGO_DARK_PATH, LOGO_PATH } from '../../config/common.constant';
+import { ADMIN_URL_PARAM, PATH_LOGO_DARK, PATH_LOGO } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
@@ -64,7 +64,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.commonService.darkMode$.pipe(takeUntil(this.destroy$)).subscribe((darkMode) => {
-      this.logoPath = darkMode ? LOGO_DARK_PATH : LOGO_PATH;
+      this.logoPath = darkMode ? PATH_LOGO_DARK : PATH_LOGO;
     });
     this.optionService.options$
       .pipe(
