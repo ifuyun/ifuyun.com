@@ -19,11 +19,8 @@
         <li [ngClass]="{'active': activePage === 'index'}">
           <a routerLink="/"><i class="icon icon-home"></i><span>首页</span></a>
         </li>
-        <li *ngFor="let taxonomy of taxonomies" [ngClass]="{'active': activePage === taxonomy.taxonomySlug}">
-          <a [routerLink]="['/post/category/'+taxonomy.taxonomySlug]" title="{{taxonomy.taxonomyDescription}}">
-            <i class="icon icon-{{taxonomy.taxonomyIcon || 'folder'}}"></i>
-            <span>{{taxonomy.taxonomyName}}</span>
-          </a>
+        <li [ngClass]="{'active': activePage === 'post'}">
+          <a routerLink="/post" title="文章"><i class="icon icon-pencil-square"></i><span>文章</span></a>
         </li>
         <li [ngClass]="{'active': activePage === 'wallpaper'}">
           <a routerLink="/wallpaper" title="高清壁纸"><i class="icon icon-images"></i><span>壁纸</span></a>

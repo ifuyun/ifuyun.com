@@ -314,7 +314,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.postCategories = post.categories;
     this.isFavorite = post.isFavorite;
     this.postVoted = post.voted;
-    this.pageIndex = (isPage ? post.post.postName : post.breadcrumbs?.[0].slug) || '';
+    this.pageIndex = isPage ? post.post.postName || '' : 'post';
     this.updateActivePage();
     if (!isPage) {
       const breadcrumbs = post.breadcrumbs || [];

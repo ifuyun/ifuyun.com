@@ -10,23 +10,32 @@
           <li [ngClass]="{'active': activePage === 'index'}">
             <a class="nav-link" title="{{options['site_name']}}首页" [routerLink]="['/']">首页</a>
           </li>
-          <li *ngFor="let taxonomy of taxonomies" [ngClass]="{'active': activePage === taxonomy.taxonomySlug}">
-            <a class="nav-link" [routerLink]="['/post/category/'+taxonomy.taxonomySlug]"
-               title="{{taxonomy.taxonomyDescription}}">
-              <span>{{taxonomy.taxonomyName}}</span><i class="nav-arrow" *ngIf="!taxonomy.isLeaf"></i>
-            </a>
-            <div class="sub-nav-group" *ngIf="!taxonomy.isLeaf">
+          <li [ngClass]="{'active': activePage === 'post' || activePage === 'postArchive'}">
+            <a class="nav-link" routerLink="/post" title="文章"><span>文章</span><i class="nav-arrow"></i></a>
+            <div class="sub-nav-group">
               <div class="sub-nav-list">
                 <ul>
-                  <li *ngFor="let subTaxonomy of taxonomy.children">
-                    <a class="sub-nav-link" [routerLink]="['/post/category/'+subTaxonomy.taxonomySlug]"
-                       title="{{subTaxonomy.taxonomyDescription}}">{{subTaxonomy.taxonomyName}}</a>
+                  <li *ngFor="let taxonomy of taxonomies">
+                    <a class="sub-nav-link" [routerLink]="['/post/category/'+taxonomy.taxonomySlug]"
+                       title="{{taxonomy.taxonomyDescription}}">
+                      <span>{{taxonomy.taxonomyName}}</span><i class="sub-nav-arrow" *ngIf="!taxonomy.isLeaf"></i>
+                    </a>
+                    <div class="child-nav-group" *ngIf="!taxonomy.isLeaf">
+                      <div class="child-nav-list">
+                        <ul>
+                          <li *ngFor="let subTaxonomy of taxonomy.children">
+                            <a class="child-nav-link" [routerLink]="['/post/category/'+subTaxonomy.taxonomySlug]"
+                               title="{{subTaxonomy.taxonomyDescription}}">{{subTaxonomy.taxonomyName}}</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                   </li>
                 </ul>
               </div>
             </div>
           </li>
-          <li [ngClass]="{'active': activePage === 'wallpaper'}">
+          <li [ngClass]="{'active': activePage === 'wallpaper' || activePage === 'wallpaperArchive'}">
             <a class="nav-link" [routerLink]="['/wallpaper']" title="高清壁纸">壁纸</a>
           </li>
           <li [ngClass]="{'active': activePage === 'tool'}">

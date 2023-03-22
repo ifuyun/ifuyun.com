@@ -104,7 +104,6 @@ export class PostListComponent extends PageComponent implements OnInit {
       pageSize: this.pageSize
     };
     if (this.keyword) {
-      this.pageIndex = 'search';
       param.keyword = this.keyword;
     }
     if (this.category) {
@@ -150,9 +149,6 @@ export class PostListComponent extends PageComponent implements OnInit {
   }
 
   private updatePageInfo(postBreadcrumbs: BreadcrumbEntity[]) {
-    if (postBreadcrumbs && postBreadcrumbs.length > 0) {
-      this.pageIndex = postBreadcrumbs[0].slug || this.pageIndex;
-    }
     this.updateActivePage();
 
     const siteName: string = this.options['site_name'] || '';
