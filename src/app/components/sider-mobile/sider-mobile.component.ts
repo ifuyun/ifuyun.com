@@ -3,7 +3,12 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
-import { ADMIN_URL_PARAM, PATH_FAVICON, PATH_WECHAT_CARD } from '../../config/common.constant';
+import {
+  ADMIN_URL_PARAM,
+  PATH_FAVICON,
+  PATH_WECHAT_CARD,
+  PATH_WECHAT_MINI_APP_CARD
+} from '../../config/common.constant';
 import { Theme } from '../../config/common.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
@@ -102,6 +107,16 @@ export class SiderMobileComponent implements OnInit {
     this.imageService.preview([
       {
         src: PATH_WECHAT_CARD
+      }
+    ]);
+  }
+
+  showMiniAppCode() {
+    this.siderOpen = false;
+    this.siderOpenChange.emit(this.siderOpen);
+    this.imageService.preview([
+      {
+        src: PATH_WECHAT_MINI_APP_CARD
       }
     ]);
   }

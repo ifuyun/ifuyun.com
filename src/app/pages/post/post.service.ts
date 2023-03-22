@@ -61,7 +61,9 @@ export class PostService {
   transformArchives(archiveData: ArchiveData[]): ArchiveList {
     const dateList: ArchiveDataMap = {};
     (archiveData || []).forEach((item) => {
-      const year = item.dateValue.split('/')[0];
+      const dates = item.dateValue.split('/');
+      const year = dates[0];
+      item.dateLabel = `${Number(dates[1])}月`;
       dateList[year] = dateList[year] || {};
       dateList[year].list = dateList[year].list || [];
       dateList[year].list.push(item);

@@ -81,6 +81,10 @@ export class PostListComponent extends PageComponent implements OnInit {
       .subscribe(([options]) => {
         this.options = options;
         this.pageSize = Number(this.options['posts_per_page']) || 10;
+        if (this.year) {
+          this.pageIndex = 'postArchive';
+        }
+        this.updateActivePage();
         this.fetchPosts();
       });
   }
@@ -149,8 +153,6 @@ export class PostListComponent extends PageComponent implements OnInit {
   }
 
   private updatePageInfo(postBreadcrumbs: BreadcrumbEntity[]) {
-    this.updateActivePage();
-
     const siteName: string = this.options['site_name'] || '';
     let description = '';
     const titles: string[] = ['文章', siteName];

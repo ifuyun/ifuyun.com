@@ -89,7 +89,6 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   }
 
   ngOnInit(): void {
-    this.updateActivePage();
     this.updatePageOptions();
     this.optionService.options$
       .pipe(
@@ -107,6 +106,10 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         this.lang = <WallpaperLang>queryParams.get('lang')?.trim();
         this.mode = <WallpaperListMode>queryParams.get('mode')?.trim() || WallpaperListMode.CARD;
         this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
+        if (this.year) {
+          this.pageIndex = 'wallpaperArchive';
+        }
+        this.updateActivePage();
         this.fetchWallpapers();
       });
   }

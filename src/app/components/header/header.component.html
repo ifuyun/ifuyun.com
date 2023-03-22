@@ -11,8 +11,10 @@
             <a class="nav-link" title="{{options['site_name']}}首页" [routerLink]="['/']">首页</a>
           </li>
           <li [ngClass]="{'active': activePage === 'post' || activePage === 'postArchive'}">
-            <a class="nav-link" routerLink="/post" title="文章"><span>文章</span><i class="nav-arrow"></i></a>
-            <div class="sub-nav-group">
+            <a class="nav-link" routerLink="/post" title="文章">
+              <span>文章</span><i class="nav-arrow" *ngIf="taxonomies.length > 0"></i>
+            </a>
+            <div class="sub-nav-group" *ngIf="taxonomies.length > 0">
               <div class="sub-nav-list">
                 <ul>
                   <li *ngFor="let taxonomy of taxonomies">
