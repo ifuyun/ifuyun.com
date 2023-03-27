@@ -4,4 +4,4 @@
     <i-wallpaper-item [wallpaper]="wallpaper"></i-wallpaper-item>
   </article>
 </div>
-<app-empty *ngIf="!wallpapers || wallpapers.length < 1" [showBorder]="false" [showShadow]="true"></app-empty>
+<i-empty *ngIf="!wallpapers || wallpapers.length < 1" [showBorder]="false" [showShadow]="true"></i-empty>

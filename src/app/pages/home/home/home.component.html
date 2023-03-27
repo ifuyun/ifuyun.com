@@ -23,15 +23,18 @@
   <i-wallpaper-list-view [wallpapers]="wallpapers"></i-wallpaper-list-view>
 </ng-container>
 <ng-container *ngIf="bizType === 'search'">
-  <div class="post-list" [class.post-list-desktop]="!isMobile" [class.post-list-mobile]="isMobile">
-    <article *ngFor="let item of searchList"
-             class="post-item" [class.post-item-desktop]="!isMobile" [class.post-item-mobile]="isMobile">
-      <i-post-item *ngIf="item.type === 'post'" [post]="$any(item.data)"></i-post-item>
-      <i-wallpaper-item *ngIf="item.type === 'wallpaper'" [wallpaper]="$any(item.data)"></i-wallpaper-item>
-    </article>
+  <ng-container *ngIf="total > 0">
+    <div class="post-list" [class.post-list-desktop]="!isMobile" [class.post-list-mobile]="isMobile">
+      <article *ngFor="let item of searchList"
+               class="post-item" [class.post-item-desktop]="!isMobile" [class.post-item-mobile]="isMobile">
+        <i-post-item *ngIf="item.type === 'post'" [post]="$any(item.data)"></i-post-item>
+        <i-wallpaper-item *ngIf="item.type === 'wallpaper'" [wallpaper]="$any(item.data)"></i-wallpaper-item>
+      </article>
+    </div>
+    <i-make-money></i-make-money>
+    <app-page-bar [isPath]="false" [paginator]="paginatorData" [url]="pageUrl" [param]="pageUrlParam"></app-page-bar>
+  </ng-container>
+  <div *ngIf="total < 1" class="container" [ngClass]="{'container-desktop': !isMobile, 'container-mobile': isMobile}">
+    <i-empty [showBorder]="false" [showShadow]="false"></i-empty>
   </div>
-  <i-make-money></i-make-money>
-  <app-page-bar *ngIf="total > 0"
-                [isPath]="false" [paginator]="paginatorData" [url]="pageUrl" [param]="pageUrlParam"></app-page-bar>
-  <app-empty *ngIf="total < 1"></app-empty>
 </ng-container>

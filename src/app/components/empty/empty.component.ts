@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { UserAgentService } from '../../core/user-agent.service';
 
 @Component({
-  selector: 'app-empty',
+  selector: 'i-empty',
   templateUrl: './empty.component.html',
   styleUrls: ['./empty.component.less'],
   standalone: true

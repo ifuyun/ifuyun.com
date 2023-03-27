@@ -65,7 +65,7 @@
   </div>
   <div *ngIf="wallpapers.length < 1"
        class="empty-wrap" [class.empty-wrap-desktop]="!isMobile" [class.empty-wrap-mobile]="isMobile">
-    <app-empty [showBorder]="false" [showShadow]="true"></app-empty>
+    <i-empty [showBorder]="false" [showShadow]="true"></i-empty>
   </div>
 </ng-container>
 <i-wallpaper-list-view *ngIf="mode === 'list'" [wallpapers]="wallpapers"></i-wallpaper-list-view>
