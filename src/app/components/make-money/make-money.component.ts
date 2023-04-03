@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
+import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { AdsenseComponent } from '../adsense/adsense.component';
 import { JdUnionGoodsComponent } from '../jd-union-goods/jd-union-goods.component';
@@ -16,20 +17,27 @@ import { JdUnionGoodsComponent } from '../jd-union-goods/jd-union-goods.componen
   styleUrls: ['./make-money.component.less']
 })
 export class MakeMoneyComponent implements OnInit {
+  isBrowser = false;
   isMobile = false;
   jdUnionVisible = false;
 
   constructor(
     private destroy$: DestroyService,
+    private platform: PlatformService,
     private userAgentService: UserAgentService,
     private commonService: CommonService
   ) {
+    this.isBrowser = this.platform.isBrowser;
     this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {
-    this.commonService.adsFlag$.pipe(takeUntil(this.destroy$)).subscribe((flag) => {
-      this.jdUnionVisible = flag;
-    });
+    if (this.isBrowser) {
+      this.commonService.adsFlag$.pipe(takeUntil(this.destroy$)).subscribe((flag) => {
+        setTimeout(() => {
+          this.jdUnionVisible = flag;
+        }, 0);
+      });
+    }
   }
 }

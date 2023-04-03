@@ -34,5 +34,5 @@ export enum ApiUrl {
   GET_JD_PROMOTION_COMMON = '/tool/jd/promotion-common',
   GET_JD_GOODS_MATERIAL = '/tool/jd/goods-material',
   GET_JD_GOODS_JINGFEN = '/tool/jd/goods-jingfen',
-  SEARCH_ALL = '/search/all'
+  SEARCH_SITE = '/search'
 }

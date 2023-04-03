@@ -12,7 +12,7 @@ export class SearchService {
 
   searchAll(param: SearchParam): Observable<ResultList<SearchResponse>> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.SEARCH_ALL), param)
+      .httpGet(this.apiService.getApiUrl(ApiUrl.SEARCH_SITE), param)
       .pipe(map((res) => res?.data || {}));
   }
 }
