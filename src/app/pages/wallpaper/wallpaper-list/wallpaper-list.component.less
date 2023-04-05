@@ -25,11 +25,11 @@
       width: 100%;
 
       &:not(:last-child) {
-        padding-bottom: (@m-primary-margin / 2);
+        padding-bottom: (@m-content-padding / 2);
       }
 
       &:not(:first-child) {
-        padding-top: (@m-primary-margin / 2);
+        padding-top: (@m-content-padding / 2);
       }
     }
   }
@@ -81,7 +81,7 @@
     }
 
     .content {
-      padding: (@content-margin / 2);
+      padding: (@primary-padding / 2) @content-padding;
       line-height: @post-line-height;
 
       h2 {
