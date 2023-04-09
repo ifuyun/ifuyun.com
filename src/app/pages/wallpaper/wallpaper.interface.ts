@@ -56,4 +56,5 @@ export interface Wallpaper {
   wallpaperVoted?: boolean;
   wallpaperModified: Date;
   hasTranslation: boolean;
+  isFavorite: boolean;
 }

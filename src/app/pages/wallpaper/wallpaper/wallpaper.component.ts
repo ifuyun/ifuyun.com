@@ -16,11 +16,12 @@ import { ImageService } from '../../../components/image/image.service';
 import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
 import {
-  STORAGE_KEY_LIKED_WALLPAPER,
   PATH_WECHAT_MINI_APP_CARD,
-  PATH_WECHAT_REWARD
+  PATH_WECHAT_REWARD,
+  STORAGE_KEY_LIKED_WALLPAPER
 } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
+import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -29,14 +30,16 @@ import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { filterHtmlTag, truncateString } from '../../../helpers/helper';
+import { FavoriteType } from '../../../interfaces/favorite.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { Guest } from '../../../interfaces/user.interface';
+import { VoteEntity } from '../../../interfaces/vote.interface';
 import { NumberViewPipe } from '../../../pipes/number-view.pipe';
 import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
+import { FavoriteService } from '../../../services/favorite.service';
 import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
-import { VoteEntity } from '../../post/vote.interface';
-import { VoteService } from '../../post/vote.service';
+import { VoteService } from '../../../services/vote.service';
 import { BING_DOMAIN } from '../wallpaper.constant';
 import { Wallpaper, WallpaperLang } from '../wallpaper.interface';
 import { WallpaperService } from '../wallpaper.service';
@@ -71,6 +74,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   isLoggedIn = false;
   prevWallpaper: Wallpaper | null = null;
   nextWallpaper: Wallpaper | null = null;
+  isFavorite = false;
+  favoriteLoading = false;
 
   protected pageIndex = 'wallpaper';
 
@@ -93,6 +98,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     private wallpaperService: WallpaperService,
     private commentService: CommentService,
     private voteService: VoteService,
+    private favoriteService: FavoriteService,
     private message: MessageService,
     private imageService: ImageService
   ) {
@@ -220,6 +226,27 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
       .catch((err) => this.message.error(err));
   }
 
+  addFavorite() {
+    if (this.favoriteLoading || this.isFavorite) {
+      return;
+    }
+    if (!this.isLoggedIn) {
+      this.message.error(Message.ADD_FAVORITE_MUST_LOGIN);
+      return;
+    }
+    this.favoriteLoading = true;
+    this.favoriteService
+      .addFavorite(this.wallpaperId, FavoriteType.WALLPAPER)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.favoriteLoading = false;
+        if (res) {
+          this.message.success(Message.ADD_FAVORITE_SUCCESS);
+          this.isFavorite = true;
+        }
+      });
+  }
+
   getLangParams(): Params {
     return this.lang === WallpaperLang.CN ? {} : { lang: this.lang };
   }
@@ -262,6 +289,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
           }
           this.wallpaper.wallpaperLocation = wallpaperLocation || this.unknownLocation;
           this.wallpaper.hasTranslation = hasTranslation;
+          this.isFavorite = wallpaper.isFavorite;
         }
         this.updatePageInfo();
         this.updateBreadcrumb();

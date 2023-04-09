@@ -24,7 +24,7 @@ import { ImageModule } from '../../../components/image/image.module';
 import { ImageService } from '../../../components/image/image.service';
 import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
-import { STORAGE_KEY_VOTED_POSTS, PATH_WECHAT_CARD, PATH_WECHAT_REWARD } from '../../../config/common.constant';
+import { PATH_WECHAT_CARD, PATH_WECHAT_REWARD, STORAGE_KEY_VOTED_POSTS } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
@@ -35,20 +35,21 @@ import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
 import { UrlService } from '../../../core/url.service';
 import { UserAgentService } from '../../../core/user-agent.service';
+import { FavoriteType } from '../../../interfaces/favorite.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { TaxonomyEntity } from '../../../interfaces/taxonomy.interface';
 import { Guest, UserModel } from '../../../interfaces/user.interface';
+import { VoteEntity } from '../../../interfaces/vote.interface';
 import { CopyrightTypeDescPipe } from '../../../pipes/copyright-type-desc.pipe';
 import { CopyrightTypePipe } from '../../../pipes/copyright-type.pipe';
 import { NumberViewPipe } from '../../../pipes/number-view.pipe';
 import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
+import { FavoriteService } from '../../../services/favorite.service';
 import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
-import { FavoriteService } from '../favorite.service';
+import { VoteService } from '../../../services/vote.service';
 import { Post, PostEntity, PostModel } from '../post.interface';
 import { PostService } from '../post.service';
-import { VoteEntity } from '../vote.interface';
-import { VoteService } from '../vote.service';
 
 @Component({
   selector: 'app-post',
@@ -243,7 +244,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     }
     this.favoriteLoading = true;
     this.favoriteService
-      .addFavorite(this.postId)
+      .addFavorite(this.postId, FavoriteType.POST)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.favoriteLoading = false;
