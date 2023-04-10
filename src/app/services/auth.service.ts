@@ -28,13 +28,8 @@ export class AuthService {
   }
 
   logout(): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.LOGOUT)).pipe(
-      tap((res) => {
-        if (res.code === ResponseCode.SUCCESS) {
-          this.clearAuth();
-        }
-      })
-    );
+    this.clearAuth();
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.LOGOUT));
   }
 
   getToken(): string {

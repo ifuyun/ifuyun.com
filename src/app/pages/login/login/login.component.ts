@@ -117,11 +117,15 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
 
         this.adminUrl = this.options['admin_site_url'];
         const rememberMe = this.cookieService.get('remember');
-        // 登录状态直接跳转来源页或后台首页
-        if (rememberMe === '1' && this.authService.isLoggedIn()) {
-          if (this.platform.isBrowser) {
-            const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration());
-            location.href = this.referer || this.adminUrl + urlParam;
+        if (ref === 'logout') {
+          this.authService.clearAuth();
+        } else {
+          // 登录状态直接跳转来源页或后台首页
+          if (rememberMe === '1' && this.authService.isLoggedIn()) {
+            if (this.platform.isBrowser) {
+              const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration());
+              location.href = this.referer || this.adminUrl + urlParam;
+            }
           }
         }
       });
@@ -150,7 +154,13 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
         .subscribe((res) => {
           if (res.accessToken) {
             const urlParam = format(ADMIN_URL_PARAM, res.accessToken, res.expiresAt);
-            window.location.href = this.referer ? this.options['site_url'] + this.referer : this.adminUrl + urlParam;
+            let redirectUrl: string;
+            if (this.referer && this.referer !== 'logout') {
+              redirectUrl = this.options['site_url'] + this.referer;
+            } else {
+              redirectUrl = this.adminUrl + urlParam;
+            }
+            window.location.href = redirectUrl;
           } else {
             this.shakeForm();
           }
