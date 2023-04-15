@@ -104,7 +104,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         this.month = params.get('month')?.trim() || '';
         this.keyword = queryParams.get('keyword')?.trim() || '';
         this.lang = <WallpaperLang>queryParams.get('lang')?.trim();
-        this.mode = <WallpaperListMode>queryParams.get('mode')?.trim() || WallpaperListMode.CARD;
+        this.mode = <WallpaperListMode>queryParams.get('mode')?.trim();
         this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
         if (this.year) {
           this.pageIndex = 'wallpaperArchive';
