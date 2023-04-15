@@ -4,7 +4,7 @@ import { ApiUrl } from '../config/api-url';
 import { ApiService } from '../core/api.service';
 import { UserAgentService } from '../core/user-agent.service';
 import { HttpResponseEntity } from '../core/http-response.interface';
-import { AccessLog, DownloadLog } from '../interfaces/log.interface';
+import { AccessLog, ActionLog } from '../interfaces/log.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class LogService {
     return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_ACCESS_LOG), log);
   }
 
-  logDownload(log: DownloadLog): Observable<HttpResponseEntity> {
+  logAction(log: ActionLog): Observable<HttpResponseEntity> {
     return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_DOWNLOAD_LOG), log);
   }
 }

@@ -22,7 +22,7 @@ export enum ApiUrl {
   ADD_FAVORITE = '/favorites/favorite',
   GET_CAROUSELS = '/options/carousels',
   SAVE_ACCESS_LOG = '/logs/access',
-  SAVE_DOWNLOAD_LOG = '/logs/download',
+  SAVE_DOWNLOAD_LOG = '/logs/action',
   GET_WALLPAPERS = '/wallpapers',
   GET_WALLPAPERS_BY_RANDOM = '/wallpapers/random',
   GET_WALLPAPERS_OF_PREV_AND_NEXT = '/wallpapers/prev-and-next',

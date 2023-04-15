@@ -1,5 +1,5 @@
 import { UserAgentData } from '../core/common.interface';
-import { DownloadObjectType } from './log.enum';
+import { Action, ActionObjectType } from './log.enum';
 
 export interface AccessLog extends UserAgentData {
   requestUrl: string;
@@ -13,8 +13,18 @@ export interface AccessLog extends UserAgentData {
   isAjax: boolean;
 }
 
-export interface DownloadLog {
-  objectType: DownloadObjectType;
+export interface ActionLog {
+  action: Action;
+  objectType: ActionObjectType;
   objectId: string;
   resolution?: string;
+  from?: string;
+  lang?: string;
+  listType?: string;
+  keyword?: string;
+  theme?: string;
+  adsPosition?: string;
+  promotionURL?: string;
+  goodURL?: string;
+  extraData?: Record<string, any>;
 }
