@@ -19,13 +19,13 @@
     </ul>
   </div>
   <div class="widget-other" *ngIf="enableAds && !jdUnionVisible">
-    <i-adsense optionKey="adsense_config_sider"></i-adsense>
+    <i-adsense optionKey="adsense_config_sider" position="sider"></i-adsense>
   </div>
   <div class="widget" *ngIf="enableAds && jdUnionVisible">
     <h3 class="widget-title"><div><i class='icon icon-bag-heart'></i><span>热销商品</span></div></h3>
     <div class="widget-goods">
       <i-jd-union-goods
-        [dynamic]="true" [optionKey]="'jd_union_config_sider'" [rowSize]="1"
+        [dynamic]="true" [optionKey]="'jd_union_config_sider'" [rowSize]="1" position="sider"
         [showHeader]="false" [withBox]="false"
         [showComments]="false" [showBorder]="false" [showEmptyBackground]="false"></i-jd-union-goods>
     </div>

@@ -6,11 +6,13 @@
           <div class="goods-info">
             <div class="goods-image">
               <a [href]="goods.promotionInfo?.clickURL"
+                 (click)="logClick(goods)"
                  [title]="goods.skuName"
                  target="_blank"><img [src]="goods.imageInfo.imageList[0].url" [alt]="goods.skuName"/></a>
             </div>
             <div class="goods-name">
               <a [href]="goods.promotionInfo?.clickURL"
+                 (click)="logClick(goods)"
                  [title]="goods.skuName"
                  target="_blank">{{goods.skuName}}</a>
             </div>
@@ -18,6 +20,7 @@
               <span>￥{{goods.priceInfo.lowestPrice | number: '1.2-2'}}</span>
               <a class="goods-coupon" *ngIf="!!goods.bestCoupon"
                  [href]="goods.bestCoupon.link"
+                 (click)="logClick(goods, true)"
                  title="领取优惠券" target="_blank">券</a>
             </div>
           </div>

@@ -17,7 +17,9 @@ import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
+import { Action, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
 import { JdUnionPromotionResponseBody } from '../jd-union.interface';
 import { REGEXP_JD_PRODUCT_DETAIL_URL, SHOPPING_PAGE_DESCRIPTION, SHOPPING_PAGE_KEYWORDS } from '../tool.constant';
@@ -54,7 +56,8 @@ export class ShoppingComponent extends PageComponent implements OnInit {
     private breadcrumbService: BreadcrumbService,
     private optionService: OptionService,
     private message: MessageService,
-    private shoppingService: ShoppingService
+    private shoppingService: ShoppingService,
+    private logService: LogService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -88,6 +91,11 @@ export class ShoppingComponent extends PageComponent implements OnInit {
     e?.preventDefault();
     this.keyword = this.keyword.trim();
     if (this.keyword && this.checkKeyword()) {
+      this.logService.logAction({
+        action: Action.PROMOTE_JD_UNION,
+        objectType: ActionObjectType.ADS,
+        goodsURL: this.keyword
+      }).subscribe();
       this.fetchPromotion();
     }
   }

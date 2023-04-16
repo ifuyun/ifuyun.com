@@ -1,18 +1,23 @@
 <app-breadcrumb></app-breadcrumb>
 <div class="filter" [class.filter-desktop]="!isMobile" [class.filter-mobile]="isMobile">
   <div class="lang-options">
-    <label [class.active]="!lang"><a routerLink="./" [queryParams]="{mode: mode}">全部</a></label>
-    <label [class.active]="lang === 'cn'"><a routerLink="./" [queryParams]="{lang: 'cn', mode: mode}">中文</a></label>
-    <label [class.active]="lang === 'en'"><a routerLink="./" [queryParams]="{lang: 'en', mode: mode}">English</a></label>
+    <label [class.active]="!lang">
+      <a routerLink="./" [queryParams]="{mode: mode}" (click)="logLang('all')">全部</a></label>
+    <label [class.active]="lang === 'cn'">
+      <a routerLink="./" [queryParams]="{lang: 'cn', mode: mode}" (click)="logLang('cn')">中文</a></label>
+    <label [class.active]="lang === 'en'">
+      <a routerLink="./" [queryParams]="{lang: 'en', mode: mode}" (click)="logLang('en')">English</a></label>
   </div>
   <div class="mode-options">
     <a *ngIf="mode !== 'list'"
        routerLink="./"
        [queryParams]="{lang: lang, mode: 'list'}"
+       (click)="logListMode('list')"
        title="列表模式"><i class='icon icon-bars'></i></a>
     <a *ngIf="mode === 'list'"
        routerLink="./"
        [queryParams]="{lang: lang, mode: 'card'}"
+       (click)="logListMode('card')"
        title="卡片模式"><i class='icon icon-appstore'></i></a>
   </div>
 </div>

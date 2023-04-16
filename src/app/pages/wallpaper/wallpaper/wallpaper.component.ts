@@ -31,12 +31,14 @@ import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { filterHtmlTag, truncateString } from '../../../helpers/helper';
 import { FavoriteType } from '../../../interfaces/favorite.enum';
+import { Action, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { Guest } from '../../../interfaces/user.interface';
 import { VoteEntity } from '../../../interfaces/vote.interface';
 import { NumberViewPipe } from '../../../pipes/number-view.pipe';
 import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
 import { FavoriteService } from '../../../services/favorite.service';
+import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
 import { VoteService } from '../../../services/vote.service';
@@ -100,7 +102,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     private voteService: VoteService,
     private favoriteService: FavoriteService,
     private message: MessageService,
-    private imageService: ImageService
+    private imageService: ImageService,
+    private logService: LogService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -253,6 +256,15 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
 
   getTranslateLangParams(): Params {
     return this.lang === WallpaperLang.CN ? { lang: WallpaperLang.EN } : {};
+  }
+
+  logTranslate() {
+    this.logService.logAction({
+      action: Action.TRANSLATE_WALLPAPER,
+      objectType: ActionObjectType.WALLPAPER,
+      objectId: this.wallpaperId,
+      lang: this.lang === WallpaperLang.CN ? WallpaperLang.EN : WallpaperLang.CN
+    }).subscribe();
   }
 
   protected updateActivePage(): void {

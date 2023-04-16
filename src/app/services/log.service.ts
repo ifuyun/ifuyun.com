@@ -25,10 +25,10 @@ export class LogService {
   }
 
   logAccess(log: AccessLog): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_ACCESS_LOG), log);
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_ACCESS_LOG), log, true);
   }
 
   logAction(log: ActionLog): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_DOWNLOAD_LOG), log);
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_DOWNLOAD_LOG), log, true);
   }
 }

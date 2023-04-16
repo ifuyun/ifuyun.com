@@ -13,7 +13,9 @@
              [title]="carousel.caption"
              [style.background-image]="'url(' + carousel.fullUrl + ')'"></div>
         <a class="carousel-link" *ngIf="carousel.link"
-           [href]="carousel.link" [title]="carousel.caption" [target]="carousel.target">
+           [href]="carousel.link" [title]="carousel.caption"
+           (click)="logClick(carousel)"
+           [target]="carousel.target">
           <div class="carousel-img" [style.background-image]="'url(' + carousel.fullUrl + ')'"></div>
         </a>
       </ng-container>
@@ -22,7 +24,9 @@
              [title]="carousel.caption"
              [attr.data-bg]="carousel.fullUrl"></div>
         <a class="carousel-link" *ngIf="carousel.link"
-           [href]="carousel.link" [title]="carousel.caption" [target]="carousel.target">
+           [href]="carousel.link" [title]="carousel.caption"
+           (click)="logClick(carousel)"
+           [target]="carousel.target">
           <div class="carousel-img lazyload" [attr.data-bg]="carousel.fullUrl"></div>
         </a>
       </ng-container>
@@ -34,6 +38,7 @@
             [title]="carousels[activeIndex]?.title">{{carousels[activeIndex]?.title}}</span>
       <a *ngIf="carousels[activeIndex]?.link"
          [href]="carousels[activeIndex]?.link"
+         (click)="logClick(carousels[activeIndex])"
          [title]="carousels[activeIndex]?.title">{{carousels[activeIndex]?.title}}</a>
     </div>
     <ul class="dots">

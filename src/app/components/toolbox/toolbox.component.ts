@@ -5,7 +5,9 @@ import { PATH_WECHAT_CARD, PATH_WECHAT_MINI_APP_CARD } from '../../config/common
 import { Theme } from '../../config/common.enum';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
+import { Action, ActionObjectType } from '../../interfaces/log.enum';
 import { OptionEntity } from '../../interfaces/option.interface';
+import { LogService } from '../../services/log.service';
 import { OptionService } from '../../services/option.service';
 import { ImageModule } from '../image/image.module';
 import { ImageService } from '../image/image.service';
@@ -28,7 +30,8 @@ export class ToolboxComponent implements OnInit {
     private destroy$: DestroyService,
     private commonService: CommonService,
     private optionService: OptionService,
-    private imageService: ImageService
+    private imageService: ImageService,
+    private logService: LogService
   ) {}
 
   ngOnInit(): void {
@@ -46,11 +49,20 @@ export class ToolboxComponent implements OnInit {
 
   openWallpaper() {
     this.wallpaperVisible = true;
+    this.logService.logAction({
+      action: Action.SHOW_WALLPAPER_BOX,
+      objectType: ActionObjectType.TOOLBOX
+    }).subscribe();
   }
 
   changeTheme() {
     const theme = this.darkMode ? Theme.Light : Theme.Dark;
     this.commonService.updateTheme(theme);
+    this.logService.logAction({
+      action: Action.CHANGE_THEME,
+      objectType: ActionObjectType.TOOLBOX,
+      theme
+    }).subscribe();
   }
 
   showWechatCard() {
@@ -59,6 +71,10 @@ export class ToolboxComponent implements OnInit {
         src: PATH_WECHAT_CARD
       }
     ]);
+    this.logService.logAction({
+      action: Action.SHOW_WECHAT_CARD,
+      objectType: ActionObjectType.TOOLBOX
+    }).subscribe();
   }
 
   showMiniAppCard() {
@@ -67,5 +83,16 @@ export class ToolboxComponent implements OnInit {
         src: PATH_WECHAT_MINI_APP_CARD
       }
     ]);
+    this.logService.logAction({
+      action: Action.SHOW_MINI_APP_CARD,
+      objectType: ActionObjectType.TOOLBOX
+    }).subscribe();
+  }
+
+  logRSS() {
+    this.logService.logAction({
+      action: Action.OPEN_RSS,
+      objectType: ActionObjectType.TOOLBOX
+    }).subscribe();
   }
 }

@@ -12,11 +12,13 @@ import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UrlService } from '../../core/url.service';
 import { LinkEntity } from '../../interfaces/link.interface';
+import { Action, ActionObjectType } from '../../interfaces/log.enum';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { PostEntity } from '../../pages/post/post.interface';
 import { PostService } from '../../pages/post/post.service';
 import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
 import { LinkService } from '../../services/link.service';
+import { LogService } from '../../services/log.service';
 import { OptionService } from '../../services/option.service';
 import { AdsenseComponent } from '../adsense/adsense.component';
 import { JdUnionGoodsComponent } from '../jd-union-goods/jd-union-goods.component';
@@ -57,7 +59,8 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     private postService: PostService,
     private linkService: LinkService,
     private wallpaperService: WallpaperService,
-    private message: MessageService
+    private message: MessageService,
+    private logService: LogService
   ) {}
 
   ngOnInit(): void {
@@ -120,6 +123,11 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   search() {
     this.keyword = this.keyword.trim();
     if (this.keyword) {
+      this.logService.logAction({
+        action: Action.SEARCH,
+        objectType: ActionObjectType.SEARCH,
+        keyword: this.keyword
+      }).subscribe();
       this.router.navigate(['/'], { queryParams: { keyword: this.keyword } });
     }
   }

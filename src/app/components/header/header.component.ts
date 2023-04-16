@@ -12,11 +12,13 @@ import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
 import { format } from '../../helpers/helper';
+import { Action, ActionObjectType } from '../../interfaces/log.enum';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { TaxonomyNode } from '../../interfaces/taxonomy.interface';
 import { UserModel } from '../../interfaces/user.interface';
 import { TOOL_LINKS } from '../../pages/tool/tool.constant';
 import { AuthService } from '../../services/auth.service';
+import { LogService } from '../../services/log.service';
 import { OptionService } from '../../services/option.service';
 import { UserService } from '../../services/user.service';
 
@@ -56,7 +58,8 @@ export class HeaderComponent implements OnInit {
     private commonService: CommonService,
     private optionService: OptionService,
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
+    private logService: LogService
   ) {
     this.isMobile = this.userAgentService.isMobile();
     this.isFirefox = this.userAgentService.isFirefox();
@@ -100,6 +103,11 @@ export class HeaderComponent implements OnInit {
     this.keyword = this.keyword.trim();
     if (this.keyword) {
       this.showSearch = false;
+      this.logService.logAction({
+        action: Action.SEARCH,
+        objectType: ActionObjectType.SEARCH,
+        keyword: this.keyword
+      }).subscribe();
       this.router.navigate(['/'], { queryParams: { keyword: this.keyword } });
     }
   }

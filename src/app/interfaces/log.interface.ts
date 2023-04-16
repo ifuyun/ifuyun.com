@@ -1,3 +1,4 @@
+import { Theme } from '../config/common.enum';
 import { UserAgentData } from '../core/common.interface';
 import { Action, ActionObjectType } from './log.enum';
 
@@ -16,15 +17,17 @@ export interface AccessLog extends UserAgentData {
 export interface ActionLog {
   action: Action;
   objectType: ActionObjectType;
-  objectId: string;
+  objectId?: string;
   resolution?: string;
   from?: string;
   lang?: string;
-  listType?: string;
+  listMode?: string;
   keyword?: string;
-  theme?: string;
+  theme?: Theme;
+  carouselTitle?: string;
+  carouselURL?: string;
   adsPosition?: string;
-  promotionURL?: string;
-  goodURL?: string;
+  goodsURL?: string;
+  goodsName?: string;
   extraData?: Record<string, any>;
 }

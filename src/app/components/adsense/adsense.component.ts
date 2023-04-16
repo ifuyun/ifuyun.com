@@ -8,7 +8,9 @@ import { ConsoleService } from '../../core/console.service';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
+import { Action, ActionObjectType } from '../../interfaces/log.enum';
 import { OptionEntity } from '../../interfaces/option.interface';
+import { LogService } from '../../services/log.service';
 import { OptionService } from '../../services/option.service';
 import { AdsenseConfig } from './adsense.interface';
 
@@ -18,7 +20,9 @@ import { AdsenseConfig } from './adsense.interface';
   imports: [CommonModule],
   providers: [DestroyService],
   template: `
-    <div #adsense class="ads-wrap" [class.ads-wrap-desktop]="!isMobile" [class.ads-wrap-mobile]="isMobile"></div>
+    <div #adsense class="ads-wrap"
+         [class.ads-wrap-desktop]="!isMobile" [class.ads-wrap-mobile]="isMobile"
+         (click)="logClick()"></div>
   `,
   styleUrls: []
 })
@@ -27,6 +31,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
 
   @Input() dynamic = true;
   @Input() optionKey = '';
+  @Input() position = '';
   // full options
   @Input() clientId!: string;
   @Input() slotId!: string | number;
@@ -61,7 +66,8 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
     private userAgentService: UserAgentService,
     private optionService: OptionService,
     private commonService: CommonService,
-    private console: ConsoleService
+    private console: ConsoleService,
+    private logService: LogService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }
@@ -89,6 +95,14 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
       iframe.src = 'about:blank';
       iframe.remove();
     }
+  }
+
+  logClick() {
+    this.logService.logAction({
+      action: Action.CLICK_ADSENSE,
+      objectType: ActionObjectType.ADS,
+      adsPosition: this.position
+    }).subscribe();
   }
 
   private initOptions() {

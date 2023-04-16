@@ -1,9 +1,10 @@
 <ng-container *ngIf="isBrowser">
   <div *ngIf="!isMobile" class="ads-box ads-box-desktop">
-    <i-adsense optionKey="adsense_config_content"></i-adsense>
+    <i-adsense optionKey="adsense_config_content" position="content"></i-adsense>
   </div>
   <div *ngIf="isMobile" class="ads-box ads-box-mobile">
-    <i-adsense optionKey="adsense_config_mobile"></i-adsense>
+    <i-adsense optionKey="adsense_config_mobile" position="mobile"></i-adsense>
   </div>
-  <i-jd-union-goods *ngIf="jdUnionVisible" [dynamic]="true" optionKey="jd_union_config_content"></i-jd-union-goods>
+  <i-jd-union-goods *ngIf="jdUnionVisible" [dynamic]="true"
+                    optionKey="jd_union_config_content" position="content"></i-jd-union-goods>
 </ng-container>

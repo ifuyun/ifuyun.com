@@ -18,7 +18,7 @@ export enum Action {
   DOWNLOAD_WALLPAPER = 'download_wallpaper',
   TRANSLATE_WALLPAPER = 'translate_wallpaper',
   // wallpaper list
-  CHANGE_WALLPAPER_LIST_TYPE = 'change_wallpaper_list_type',
+  CHANGE_WALLPAPER_LIST_MODE = 'change_wallpaper_list_mode',
   // user
   LOGIN = 'login',
   LOGOUT = 'logout',
@@ -39,6 +39,7 @@ export enum Action {
   CHANGE_LANG = 'change_lang',
   // ads
   CLICK_JD_UNION = 'click_jd_union',
+  CLICK_JD_UNION_COUPON = 'click_jd_union_coupon',
   CLICK_ADSENSE = 'click_adsense',
   PROMOTE_JD_UNION = 'promote_jd_union',
   // carousel

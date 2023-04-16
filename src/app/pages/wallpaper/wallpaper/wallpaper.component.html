@@ -37,7 +37,8 @@
     <h2>{{wallpaper?.wallpaperStoryTitle}}</h2>
     <article [innerHTML]="wallpaper?.wallpaperStory | safeHtml"></article>
     <p *ngIf="wallpaper?.hasTranslation">
-      <a routerLink="." [queryParams]="getTranslateLangParams()" title="查看翻译" rel="bookmark">查看翻译</a>
+      <a routerLink="." [queryParams]="getTranslateLangParams()" (click)="logTranslate()"
+         title="查看翻译" rel="bookmark">查看翻译</a>
     </p>
   </div>
   <ng-container *ngIf="options['show_wechat_mini'] === '1'">

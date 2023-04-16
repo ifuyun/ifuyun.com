@@ -7,10 +7,12 @@ import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UrlService } from '../../core/url.service';
 import { UserAgentService } from '../../core/user-agent.service';
+import { Action, ActionObjectType } from '../../interfaces/log.enum';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { JdUnionGoodsJingfen, JdUnionGoodsMaterial } from '../../pages/tool/jd-union.interface';
 import { ShoppingService } from '../../pages/tool/shopping/shopping.service';
 import { NumberViewPipe } from '../../pipes/number-view.pipe';
+import { LogService } from '../../services/log.service';
 import { OptionService } from '../../services/option.service';
 import { EmptyComponent } from '../empty/empty.component';
 import { JdUnionOptions } from './jd-union-goods.interface';
@@ -39,6 +41,7 @@ export class JdUnionGoodsComponent implements OnInit {
   @Input() optionKey = '';
   @Input() forceRefresh = true;
   @Input() showEmptyBackground = true;
+  @Input() position = '';
 
   readonly materialEliteIds = Object.freeze([1, 2, 3, 4]);
   readonly jingfenEliteIds = Object.freeze([
@@ -64,7 +67,8 @@ export class JdUnionGoodsComponent implements OnInit {
     private userAgentService: UserAgentService,
     private optionService: OptionService,
     private shoppingService: ShoppingService,
-    private urlService: UrlService
+    private urlService: UrlService,
+    private logService: LogService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }
@@ -90,6 +94,16 @@ export class JdUnionGoodsComponent implements OnInit {
           this.fetchGoods();
         }
       });
+  }
+
+  logClick(goods: JdUnionGoodsMaterial | JdUnionGoodsJingfen, isCoupon = false) {
+    this.logService.logAction({
+      action: isCoupon ? Action.CLICK_JD_UNION_COUPON : Action.CLICK_JD_UNION,
+      objectType: ActionObjectType.ADS,
+      adsPosition: this.isMobile ? 'mobile' : this.position,
+      goodsName: goods.skuName,
+      goodsURL: goods.promotionInfo?.clickURL
+    }).subscribe();
   }
 
   private initOptions() {

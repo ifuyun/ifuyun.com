@@ -7,10 +7,12 @@ import { LinkTarget } from '../../config/common.enum';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
+import { Action, ActionObjectType } from '../../interfaces/log.enum';
 import { CarouselOptions, CarouselVo, OptionEntity } from '../../interfaces/option.interface';
 import { BING_DOMAIN } from '../../pages/wallpaper/wallpaper.constant';
 import { WallpaperLang } from '../../pages/wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
+import { LogService } from '../../services/log.service';
 import { OptionService } from '../../services/option.service';
 
 @Component({
@@ -39,7 +41,8 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
     private platform: PlatformService,
     private userAgentService: UserAgentService,
     private optionService: OptionService,
-    private wallpaperService: WallpaperService
+    private wallpaperService: WallpaperService,
+    private logService: LogService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }
@@ -95,6 +98,15 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
         this.activeIndex = this.activeIndex + 1 >= this.carousels.length ? 0 : this.activeIndex + 1;
       }, 3000);
     }
+  }
+
+  logClick(carousel: CarouselVo) {
+    this.logService.logAction({
+      action: Action.CLICK_CAROUSEL,
+      objectType: ActionObjectType.CAROUSEL,
+      carouselTitle: carousel.title,
+      carouselURL: carousel.link
+    }).subscribe();
   }
 
   private fetchCarousels() {

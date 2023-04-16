@@ -20,10 +20,12 @@ import { PaginatorEntity } from '../../../core/paginator.interface';
 import { PaginatorService } from '../../../core/paginator.service';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
+import { Action, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { Guest } from '../../../interfaces/user.interface';
 import { VoteEntity } from '../../../interfaces/vote.interface';
 import { NumberViewPipe } from '../../../pipes/number-view.pipe';
+import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
 import { VoteService } from '../../../services/vote.service';
@@ -82,7 +84,8 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     private wallpaperService: WallpaperService,
     private paginator: PaginatorService,
     private voteService: VoteService,
-    private userService: UserService
+    private userService: UserService,
+    private logService: LogService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -158,6 +161,22 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       return !!wallpaper.bingIdCn ? {} : { lang: WallpaperLang.EN };
     }
     return { lang: this.lang };
+  }
+
+  logLang(lang: string) {
+    this.logService.logAction({
+      action: Action.CHANGE_LANG,
+      objectType: ActionObjectType.WALLPAPER_LIST,
+      lang
+    }).subscribe();
+  }
+
+  logListMode(mode: string) {
+    this.logService.logAction({
+      action: Action.CHANGE_WALLPAPER_LIST_MODE,
+      objectType: ActionObjectType.WALLPAPER_LIST,
+      listMode: mode
+    }).subscribe();
   }
 
   protected updateActivePage(): void {
