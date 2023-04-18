@@ -52,7 +52,6 @@ export class AuthService {
   }
 
   clearAuth() {
-    // todo: destroy token in server side
     localStorage?.removeItem('token');
     localStorage?.removeItem('token_expires');
     this.cookieService.delete('user');

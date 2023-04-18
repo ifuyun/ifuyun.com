@@ -6,7 +6,6 @@ import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { MessageService } from '../../../components/message/message.service';
-import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -133,7 +132,6 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
           location.replace(redirectUrl);
         } else {
           this.loginStatus = 'failure';
-          this.message.error(Message.LOGIN_ERROR);
           this.startCountdown();
         }
       });

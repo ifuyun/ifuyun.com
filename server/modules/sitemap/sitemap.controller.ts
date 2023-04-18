@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import { EnumChangefreq, SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 import { PostType, TaxonomyType } from '../../../src/app/config/common.enum';
-import { TOOL_LINKS, TOOL_URL_PREFIX } from '../../../src/app/pages/tool/tool.constant';
+import { TOOL_LINKS, TOOL_URL_ENTRY } from '../../../src/app/pages/tool/tool.constant';
 import { SitemapItem } from './sitemap.interface';
 import { SitemapService } from './sitemap.service';
 
@@ -46,7 +46,7 @@ export class SitemapController {
         priority: 0.9
       },
       {
-        url: siteUrl + TOOL_URL_PREFIX,
+        url: siteUrl + TOOL_URL_ENTRY,
         changefreq: EnumChangefreq.WEEKLY,
         priority: 0.9
       }

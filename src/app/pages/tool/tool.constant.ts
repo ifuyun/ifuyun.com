@@ -1,22 +1,22 @@
-export const TOOL_URL_PREFIX = '/tool';
+export const TOOL_URL_ENTRY = '/tool';
 export const TOOL_LINKS = Object.freeze([
   {
     label: '电商工具',
-    url: TOOL_URL_PREFIX + '/shopping',
+    url: TOOL_URL_ENTRY + '/shopping',
     title: '电商工具',
     changefreq: 'weekly',
     priority: 0.7
   },
   {
     label: 'MD5 加密',
-    url: TOOL_URL_PREFIX + '/md5',
+    url: TOOL_URL_ENTRY + '/md5',
     title: 'MD5 加密',
     changefreq: 'monthly',
     priority: 0.7
   },
   {
     label: 'MurmurHash',
-    url: TOOL_URL_PREFIX + '/murmurhash',
+    url: TOOL_URL_ENTRY + '/murmurhash',
     title: 'MurmurHash',
     changefreq: 'monthly',
     priority: 0.7
