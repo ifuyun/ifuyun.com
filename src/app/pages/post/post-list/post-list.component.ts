@@ -139,7 +139,9 @@ export class PostListComponent extends PageComponent implements OnInit {
 
         this.paginatorData = this.paginator.getPaginator(this.page, this.total, this.pageSize);
         const urlSegments = this.route.snapshot.url.map((url) => url.path);
-        urlSegments.unshift('post');
+        if (urlSegments[0] !== 'post') {
+          urlSegments.unshift('post');
+        }
         if (this.route.snapshot.paramMap.get('page')) {
           urlSegments.splice(-1, 1, 'page-');
         } else {
