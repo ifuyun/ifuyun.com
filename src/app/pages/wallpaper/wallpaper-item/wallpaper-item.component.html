@@ -7,7 +7,7 @@
   <div class="post-item-stat">
     <span><i class="icon icon-eye"></i><span>{{wallpaper.wallpaperViews | numberView}}</span></span>
     <span>
-      <i class='icon'
+      <i class="icon"
          [class.icon-like]="!wallpaper.wallpaperVoted"
          [class.icon-like-fill]="wallpaper.wallpaperVoted"></i><span>{{wallpaper.wallpaperLikes | numberView}}</span>
     </span>
@@ -15,7 +15,7 @@
 </header>
 <div class="post-item-meta post-item-meta-top">
   <span [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
-    <i class='icon icon-calendar'></i><span>{{wallpaper.wallpaperDate | date:'yyyy-MM-dd'}}</span>
+    <i class="icon icon-calendar"></i><span>{{wallpaper.wallpaperDate | date:'yyyy-MM-dd'}}</span>
   </span>
   <span class="auto-fit" [title]="wallpaper.wallpaperLocation">
     <i class="icon icon-geo-alt"></i><span>{{wallpaper.wallpaperLocation}}</span>

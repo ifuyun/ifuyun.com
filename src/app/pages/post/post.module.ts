@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ClipboardModule } from 'ngx-clipboard';
 import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highlightjs';
 import { PostArchiveComponent } from './post-archive/post-archive.component';
 import { PostItemComponent } from './post-item/post-item.component';
@@ -16,6 +17,7 @@ import { PostComponent } from './post/post.component';
     FormsModule,
     ReactiveFormsModule,
     HighlightModule,
+    ClipboardModule,
     PostListComponent,
     PostComponent,
     PostArchiveComponent,

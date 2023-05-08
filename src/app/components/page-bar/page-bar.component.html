@@ -3,7 +3,7 @@
     <ul>
       <li *ngIf="paginator.curPage > 1" class="paginator-page">
         <a [routerLink]="getRouterLink(paginator.prevPage)"
-           [queryParams]="getQueryParams(paginator.prevPage)" title="上一页"><i class='icon icon-left'></i></a>
+           [queryParams]="getQueryParams(paginator.prevPage)" title="上一页"><i class="icon icon-left"></i></a>
       </li>
       <ng-container *ngIf="paginator.totalPage < 10">
         <ng-container *ngFor="let v of counter(paginator.totalPage); let i = index">
@@ -67,7 +67,7 @@
       </ng-container>
       <li *ngIf="paginator.curPage < paginator.endPage" class="paginator-page">
         <a [routerLink]="getRouterLink(paginator.nextPage)"
-           [queryParams]="getQueryParams(paginator.nextPage)" title="下一页"><i class='icon icon-right'></i></a>
+           [queryParams]="getQueryParams(paginator.nextPage)" title="下一页"><i class="icon icon-right"></i></a>
       </li>
     </ul>
   </div>
@@ -78,14 +78,14 @@
       <a *ngIf="paginator.curPage > 1"
          [routerLink]="getRouterLink(paginator.prevPage)"
          [queryParams]="getQueryParams(paginator.prevPage)" title="上一页">
-        <i class='icon icon-arrow-left'></i><span>上一页</span>
+        <i class="icon icon-arrow-left"></i><span>上一页</span>
       </a>
     </div>
     <div>
       <a *ngIf="paginator.curPage < paginator.endPage"
          [routerLink]="getRouterLink(paginator.nextPage)"
          [queryParams]="getQueryParams(paginator.nextPage)" title="下一页">
-        <span>下一页</span><i class='icon icon-arrow-right'></i>
+        <span>下一页</span><i class="icon icon-arrow-right"></i>
       </a>
     </div>
   </div>

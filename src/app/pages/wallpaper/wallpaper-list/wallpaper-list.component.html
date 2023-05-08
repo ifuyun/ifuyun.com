@@ -13,12 +13,12 @@
        routerLink="./"
        [queryParams]="{lang: lang, mode: 'list'}"
        (click)="logListMode('list')"
-       title="列表模式"><i class='icon icon-bars'></i></a>
+       title="列表模式"><i class="icon icon-bars"></i></a>
     <a *ngIf="mode === 'list'"
        routerLink="./"
        [queryParams]="{lang: lang, mode: 'card'}"
        (click)="logListMode('card')"
-       title="卡片模式"><i class='icon icon-appstore'></i></a>
+       title="卡片模式"><i class="icon icon-appstore"></i></a>
   </div>
 </div>
 <ng-container *ngIf="mode !== 'list'">
@@ -45,7 +45,7 @@
             </div>
             <div class="content-meta">
               <div class="date" [title]="wallpaper.wallpaperDate">
-                <i class='icon icon-calendar'></i><span>{{wallpaper.wallpaperDate}}</span>
+                <i class="icon icon-calendar"></i><span>{{wallpaper.wallpaperDate}}</span>
               </div>
               <div class="actions">
                 <div class="action-item" title="访问: {{wallpaper.wallpaperViews | numberView}}">
@@ -55,7 +55,7 @@
                      [class.disabled]="wallpaper.wallpaperVoted || voteLoadingMap[wallpaper.wallpaperId]"
                      (click)="voteWallpaper(wallpaper)"
                      title="喜欢: {{wallpaper.wallpaperLikes | numberView}}">
-                  <i class='icon'
+                  <i class="icon"
                      [class.icon-like]="!wallpaper.wallpaperVoted"
                      [class.icon-like-fill]="wallpaper.wallpaperVoted"
                      [class.icon-loading]="voteLoadingMap[wallpaper.wallpaperId]"

@@ -12,6 +12,7 @@ import {
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import highlight from 'highlight.js';
 import { isEmpty, uniq } from 'lodash';
+import { ClipboardService } from 'ngx-clipboard';
 import * as QRCode from 'qrcode';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
@@ -95,6 +96,9 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   voteLoading = false;
   favoriteLoading = false;
 
+  private readonly copyHTML = '<i class="icon icon-copy"></i>Copy code';
+  private readonly copiedHTML = '<i class="icon icon-check-lg"></i>Copied!';
+
   private breadcrumbs: BreadcrumbEntity[] = [];
   private postId = '';
   private postSlug = '';
@@ -120,7 +124,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     private favoriteService: FavoriteService,
     private imageService: ImageService,
     private message: MessageService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private clipboardService: ClipboardService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -165,7 +170,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
           }
         ]);
         e.preventDefault();
-        e.stopPropagation()
+        e.stopPropagation();
       }
     });
   }
@@ -373,11 +378,38 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
         return (
           `<pre class="i-code"${langStr ? ' data-lang="' + langStr + '"' : ''}>` +
+          `<div class="i-code-info">` +
+          `<span>${langStr}</span><span class="i-code-copy">${this.copyHTML}` +
+          `</div>` +
+          `<div class="i-code-body">` +
           `<ul class="i-code-lines">${lines}</ul>` +
-          `<code class="i-code-text">${codes}</code></pre>`
+          `<code class="i-code-html">${codes}</code>` +
+          `<div class="i-code-text">${codeStr}</div>` +
+          `</div>` +
+          `</pre>`
         );
       }
     );
+  }
+
+  onPostClick(e: MouseEvent) {
+    const $target = e.target as HTMLElement;
+    if ($target.classList.contains('i-code-copy')) {
+      const $parent = $target.parentNode?.parentNode;
+      if ($parent) {
+        const $code = $parent.querySelector('.i-code-text');
+        const codeText = $code?.innerHTML;
+        if (codeText) {
+          this.clipboardService.copy(codeText);
+          $target.innerHTML = this.copiedHTML;
+          setTimeout(() => {
+            $target.innerHTML = this.copyHTML;
+          }, 2000);
+        }
+      }
+      e.preventDefault();
+      e.stopPropagation();
+    }
   }
 
   private checkPostVoted() {

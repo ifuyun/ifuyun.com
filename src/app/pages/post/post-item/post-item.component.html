@@ -11,10 +11,10 @@
     <ng-container *ngIf="post.post.commentFlag !== 'close'">
       <a [routerLink]="[post.post.postGuid]" fragment="comments" title="《{{post.post.postTitle}}》评论">
         <ng-container *ngIf="post.post.postComments > 0">
-          <i class='icon icon-chat-dots'></i><span>{{post.post.postComments | numberView:'K'}}</span>
+          <i class="icon icon-chat-dots"></i><span>{{post.post.postComments | numberView:'K'}}</span>
         </ng-container>
         <ng-container *ngIf="post.post.postComments < 1">
-          <i class='icon icon-chat'></i><span>0</span>
+          <i class="icon icon-chat"></i><span>0</span>
         </ng-container>
       </a>
     </ng-container>
@@ -22,19 +22,19 @@
 </header>
 <div class="post-item-meta post-item-meta-top">
   <span title="写于: {{post.post.postDate | date:'yyyy-MM-dd'}}">
-    <i class='icon icon-calendar'></i><span>{{post.post.postDate | date:'yyyy-MM-dd'}}</span>
+    <i class="icon icon-calendar"></i><span>{{post.post.postDate | date:'yyyy-MM-dd'}}</span>
   </span>
   <span title="作者: {{post.meta['post_author'] || post.post.owner.userNiceName}}">
-    <i class='icon icon-user'></i><span>{{post.meta['post_author'] || post.post.owner.userNiceName}}</span>
+    <i class="icon icon-user"></i><span>{{post.meta['post_author'] || post.post.owner.userNiceName}}</span>
   </span>
   <span *ngIf="!isMobile && post.categories.length > 0">
-    <i class='icon icon-folder'></i>
+    <i class="icon icon-folder"></i>
     <a *ngFor="let category of post.categories"
        [routerLink]="['/post/category/' + category.taxonomySlug]"
        title="{{category.taxonomyName}}" rel="category">{{category.taxonomyName}}</a>
   </span>
   <span *ngIf="post.post.postOriginal === 1" title="{{post.post.owner.userNiceName}}原创">
-    <i class='icon icon-pencil'></i><span>原创</span>
+    <i class="icon icon-pencil"></i><span>原创</span>
   </span>
 </div>
 <div class="post-item-excerpt">
@@ -45,7 +45,7 @@
 </div>
 <div class="post-item-meta post-item-meta-bottom" *ngIf="post.categories.length > 0 || post.tags.length > 0">
   <div class="post-item-meta-taxonomy" *ngIf="isMobile && post.categories.length > 0">
-    <div class="post-item-meta-icon"><i class='icon icon-folder'></i></div>
+    <div class="post-item-meta-icon"><i class="icon icon-folder"></i></div>
     <ul class="post-item-meta-info">
       <li *ngFor="let category of post.categories">
         <a [routerLink]="['/post/category/' + category.taxonomySlug]"
@@ -54,7 +54,7 @@
     </ul>
   </div>
   <div class="post-item-meta-taxonomy" *ngIf="post.tags.length > 0">
-    <div class="post-item-meta-icon"><i class='icon icon-tag'></i></div>
+    <div class="post-item-meta-icon"><i class="icon icon-tag"></i></div>
     <ul class="post-item-meta-info">
       <li *ngFor="let tag of post.tags">
         <a [routerLink]="['/post/tag/' + tag.taxonomySlug]"

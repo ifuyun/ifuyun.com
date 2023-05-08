@@ -11,7 +11,7 @@
     </div>
     <div class="sider-tool">
       <div (click)="changeTheme()" [title]="darkMode ? '深色模式: 开启' : '深色模式: 关闭'">
-        <i class='icon' [class.icon-sun-fill]="!darkMode" [class.icon-moon-fill]="darkMode"></i>
+        <i class="icon" [class.icon-sun-fill]="!darkMode" [class.icon-moon-fill]="darkMode"></i>
       </div>
     </div>
     <nav class="sider-nav">
@@ -51,15 +51,15 @@
         </li>
         <div class="separator"></div>
         <li *ngIf="!isLoggedIn">
-          <a routerLink="/user/login" title="登录"><i class='icon icon-login'></i><span>登录</span></a>
+          <a routerLink="/user/login" title="登录"><i class="icon icon-login"></i><span>登录</span></a>
         </li>
         <ng-container *ngIf="isLoggedIn">
           <li>
             <a [href]="adminUrl" target="_blank">
-              <i class='icon icon-dashboard'></i><span>个人中心</span>
+              <i class="icon icon-dashboard"></i><span>个人中心</span>
             </a>
           </li>
-          <li><a (click)="logout()"><i class='icon icon-logout'></i><span>退出登录</span></a></li>
+          <li><a (click)="logout()"><i class="icon icon-logout"></i><span>退出登录</span></a></li>
         </ng-container>
       </ul>
     </nav>

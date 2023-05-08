@@ -6,11 +6,11 @@
     </form>
   </div>
   <div class="widget">
-    <h3 class="widget-title"><div><i class='icon icon-heart'></i><span>支付宝扫码领红包</span></div></h3>
+    <h3 class="widget-title"><div><i class="icon icon-heart"></i><span>支付宝扫码领红包</span></div></h3>
     <div class="red-packet" #redPacket></div>
   </div>
   <div class="widget">
-    <h3 class="widget-title"><div><i class='icon icon-fire'></i><span>热门文章</span></div></h3>
+    <h3 class="widget-title"><div><i class="icon icon-fire"></i><span>热门文章</span></div></h3>
     <ul class="hot-list">
       <li *ngFor="let post of hotPosts; let i = index">
         <span class="hot-num">{{i + 1}}</span>
@@ -22,7 +22,7 @@
     <i-adsense optionKey="adsense_config_sider" position="sider"></i-adsense>
   </div>
   <div class="widget" *ngIf="enableAds && jdUnionVisible">
-    <h3 class="widget-title"><div><i class='icon icon-bag-heart'></i><span>热销商品</span></div></h3>
+    <h3 class="widget-title"><div><i class="icon icon-bag-heart"></i><span>热销商品</span></div></h3>
     <div class="widget-goods">
       <i-jd-union-goods
         [dynamic]="true" [optionKey]="'jd_union_config_sider'" [rowSize]="1" position="sider"
@@ -32,7 +32,7 @@
   </div>
   <div class="widget" *ngIf="postArchives.length > 0">
     <h3 class="widget-title">
-      <div><i class='icon icon-pencil-square'></i><span>文章归档</span></div>
+      <div><i class="icon icon-pencil-square"></i><span>文章归档</span></div>
       <div class="more">
         <a [routerLink]="['/post/archive']" title="文章归档"><span>更多</span><i class="icon icon-double-right"></i></a>
       </div>
@@ -45,7 +45,7 @@
   </div>
   <div class="widget" *ngIf="wallpaperArchives.length > 0">
     <h3 class="widget-title">
-      <div><i class='icon icon-images'></i><span>壁纸归档</span></div>
+      <div><i class="icon icon-images"></i><span>壁纸归档</span></div>
       <div class="more">
         <a [routerLink]="['/wallpaper/archive']" title="壁纸归档"><span>更多</span><i class="icon icon-double-right"></i></a>
       </div>
@@ -57,7 +57,7 @@
     </ul>
   </div>
   <div class="widget">
-    <h3 class="widget-title"><div><i class='icon icon-shuffle'></i><span>手气不错</span></div></h3>
+    <h3 class="widget-title"><div><i class="icon icon-shuffle"></i><span>手气不错</span></div></h3>
     <ul>
       <li *ngFor="let post of randomPosts">
         <a title="{{post.postTitle}}" [routerLink]="[post.postGuid]">{{post.postTitle}}</a>
@@ -65,7 +65,7 @@
     </ul>
   </div>
   <div class="widget" *ngIf="friendLinks.length > 0">
-    <h3 class="widget-title"><div><i class='icon icon-link-45deg'></i><span>友情链接</span></div></h3>
+    <h3 class="widget-title"><div><i class="icon icon-link-45deg"></i><span>友情链接</span></div></h3>
     <ul>
       <li *ngFor="let link of friendLinks">
         <a title="{{link.linkDescription}}" href="{{link.linkUrl}}" target="{{link.linkTarget}}">{{link.linkName}}</a>

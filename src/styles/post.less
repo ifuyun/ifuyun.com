@@ -177,12 +177,34 @@
 
     pre {
       display: flex;
+      flex-direction: column;
       border-radius: @border-radius;
       border: 1px solid var(--post-pre-border-color);
       background: var(--post-pre-background-color);
       overflow: hidden;
 
-      ul.i-code-lines, code.i-code-text {
+      .i-code-info {
+        display: flex;
+        justify-content: space-between;
+        padding: 4px 12px;
+        border-bottom: 1px solid var(--post-pre-border-color);
+        font-family: @code-family;
+        font-size: @meta-font-size;
+
+        .i-code-copy {
+          cursor: pointer;
+        }
+
+        .icon {
+          margin-right: 6px;
+        }
+      }
+
+      .i-code-body {
+        display: flex;
+      }
+
+      ul.i-code-lines, .i-code-html {
         padding: 8px 12px;
       }
 
@@ -197,17 +219,22 @@
         }
       }
 
-      code.i-code-text {
+      .i-code-html {
         width: max-content;
         padding: 8px @primary-margin;
         background-color: transparent;
         overflow: auto;
+      }
+
+      .i-code-text {
+        display: none;
       }
     }
 
     code {
       padding: 2px 6px;
       border-radius: 2px;
+      font-family: @code-family;
       color: var(--base-color);
       background: var(--post-code-background-color);
     }
