@@ -14,6 +14,8 @@ export enum ActionObjectType {
 }
 
 export enum Action {
+  // post
+  COPY_CODE = 'copy_code',
   // wallpaper
   DOWNLOAD_WALLPAPER = 'download_wallpaper',
   TRANSLATE_WALLPAPER = 'translate_wallpaper',

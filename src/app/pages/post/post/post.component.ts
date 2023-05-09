@@ -37,6 +37,7 @@ import { PlatformService } from '../../../core/platform.service';
 import { UrlService } from '../../../core/url.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { FavoriteType } from '../../../interfaces/favorite.enum';
+import { Action, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { TaxonomyEntity } from '../../../interfaces/taxonomy.interface';
 import { Guest, UserModel } from '../../../interfaces/user.interface';
@@ -46,6 +47,7 @@ import { CopyrightTypePipe } from '../../../pipes/copyright-type.pipe';
 import { NumberViewPipe } from '../../../pipes/number-view.pipe';
 import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
 import { FavoriteService } from '../../../services/favorite.service';
+import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
 import { VoteService } from '../../../services/vote.service';
@@ -125,7 +127,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     private imageService: ImageService,
     private message: MessageService,
     private renderer: Renderer2,
-    private clipboardService: ClipboardService
+    private clipboardService: ClipboardService,
+    private logService: LogService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -402,6 +405,13 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         if (codeText) {
           this.clipboardService.copy(codeText);
           $target.innerHTML = this.copiedHTML;
+
+          this.logService.logAction({
+            action: Action.COPY_CODE,
+            objectType: ActionObjectType.POST,
+            objectId: this.postId
+          }).subscribe();
+
           setTimeout(() => {
             $target.innerHTML = this.copyHTML;
           }, 2000);
