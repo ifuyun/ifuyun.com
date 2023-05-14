@@ -84,7 +84,7 @@ export class ApiService {
       .pipe(catchError(this.handleError<T>(disableMessage)));
   }
 
-  private handleError<T>(disableMessage: boolean) {
+  private handleError<T>(disableMessage = false) {
     return (error: HttpErrorResponse): Observable<T> => {
       if (error.status !== HttpStatusCode.NotFound) {
         if (!disableMessage) {

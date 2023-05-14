@@ -263,6 +263,33 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       });
   }
 
+  onPostClick(e: MouseEvent) {
+    const $target = e.target as HTMLElement;
+    if ($target.classList.contains('i-code-copy')) {
+      const $parent = $target.parentNode?.parentNode;
+      if ($parent) {
+        const $code = $parent.querySelector('.i-code-text');
+        const codeText = $code?.innerHTML;
+        if (codeText) {
+          this.clipboardService.copy(codeText);
+          $target.innerHTML = this.copiedHTML;
+
+          this.logService.logAction({
+            action: Action.COPY_CODE,
+            objectType: ActionObjectType.POST,
+            objectId: this.postId
+          }).subscribe();
+
+          setTimeout(() => {
+            $target.innerHTML = this.copyHTML;
+          }, 2000);
+        }
+      }
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }
+
   protected updateActivePage(): void {
     this.commonService.updateActivePage(this.pageIndex);
   }
@@ -382,7 +409,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         return (
           `<pre class="i-code"${langStr ? ' data-lang="' + langStr + '"' : ''}>` +
           `<div class="i-code-info">` +
-          `<span>${langStr}</span><span class="i-code-copy">${this.copyHTML}` +
+          `<span>${langStr}</span><span class="i-code-copy">${this.copyHTML}</span>` +
           `</div>` +
           `<div class="i-code-body">` +
           `<ul class="i-code-lines">${lines}</ul>` +
@@ -393,33 +420,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         );
       }
     );
-  }
-
-  onPostClick(e: MouseEvent) {
-    const $target = e.target as HTMLElement;
-    if ($target.classList.contains('i-code-copy')) {
-      const $parent = $target.parentNode?.parentNode;
-      if ($parent) {
-        const $code = $parent.querySelector('.i-code-text');
-        const codeText = $code?.innerHTML;
-        if (codeText) {
-          this.clipboardService.copy(codeText);
-          $target.innerHTML = this.copiedHTML;
-
-          this.logService.logAction({
-            action: Action.COPY_CODE,
-            objectType: ActionObjectType.POST,
-            objectId: this.postId
-          }).subscribe();
-
-          setTimeout(() => {
-            $target.innerHTML = this.copyHTML;
-          }, 2000);
-        }
-      }
-      e.preventDefault();
-      e.stopPropagation();
-    }
   }
 
   private checkPostVoted() {
