@@ -180,8 +180,12 @@
       flex-direction: column;
       border-radius: @border-radius;
       border: 1px solid var(--post-pre-border-color);
-      background: var(--post-pre-background-color);
+      background: var(--post-pre-bg-color);
       overflow: hidden;
+
+      &, code {
+        color: var(--post-pre-code-color);
+      }
 
       .i-code-info {
         display: flex;
@@ -190,6 +194,7 @@
         border-bottom: 1px solid var(--post-pre-border-color);
         font-family: @code-family;
         font-size: @meta-font-size;
+        background-color: var(--post-pre-code-info-bg-color);
 
         .i-code-copy {
           cursor: pointer;
@@ -235,7 +240,7 @@
       border-radius: 2px;
       font-family: @code-family;
       color: var(--base-color);
-      background: var(--post-code-background-color);
+      background: var(--post-code-bg-color);
     }
 
     ol, ul {
@@ -272,7 +277,7 @@
       }
 
       th {
-        background-color: var(--tag-background-color);
+        background-color: var(--tag-bg-color);
       }
     }
 
@@ -316,7 +321,7 @@
         padding: 4px 8px;
         border-radius: 2px;
         color: var(--minor-color);
-        background-color: var(--tag-background-color);
+        background-color: var(--tag-bg-color);
 
         &:hover {
           color: var(--tag-active-color);
@@ -537,7 +542,7 @@
         position: absolute;
         inset: 0;
         margin: (@primary-margin / 2);
-        background-color: var(--overlay-background-color);
+        background-color: var(--overlay-bg-color);
         opacity: 0;
         transition: @overlay-transition;
       }
@@ -592,7 +597,7 @@
     position: relative;
     height: 160px;
     margin-top: -160px;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--content-background-color));
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--content-bg-color));
   }
 
   .pay-body {
@@ -618,7 +623,7 @@
       .text {
         margin-top: -13px;
         padding: 0 8px;
-        background-color: var(--post-pay-separator-background);
+        background-color: var(--post-pay-separator-bg-color);
       }
     }
 

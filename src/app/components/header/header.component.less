@@ -4,7 +4,7 @@
   top: 0;
   position: fixed;
   width: 100%;
-  background-color: var(--header-background-color);
+  background-color: var(--header-bg-color);
   box-shadow: var(--content-box-shadow);
   backdrop-filter: blur(5px);
   z-index: 19;
@@ -98,7 +98,7 @@
 
       a.sub-nav-link, a.child-nav-link {
         color: var(--header-subnav-color);
-        background: var(--header-subnav-background);
+        background: var(--header-subnav-bg-color);
       }
     }
 
@@ -151,14 +151,14 @@
         top: -10px;
         left: 24px;
         transform: translate(0, 50%) rotate(45deg);
-        background-color: var(--header-subnav-background);
+        background-color: var(--header-subnav-bg-color);
         box-shadow: var(--content-box-shadow);
       }
 
       ul {
         position: relative;
         border-radius: @group-border-radius;
-        background-color: var(--header-subnav-background);
+        background-color: var(--header-subnav-bg-color);
 
         li:first-child, li:first-child > a {
           border-top-left-radius: @group-border-radius;
@@ -335,7 +335,7 @@
 
 .header-firefox {
   // fix: firefox doesn't support backdrop-filter
-  background-color: var(--header-background-color-moz);
+  background-color: var(--header-bg-color-moz);
 }
 
 .mask-search {

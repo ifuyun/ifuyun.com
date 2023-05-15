@@ -41,14 +41,14 @@ a, a:hover, a:focus {
   padding: 4px 11px;
   border: 1px solid var(--input-border-color);
   color: var(--base-color);
-  background-color: var(--content-background-color);
+  background-color: var(--content-bg-color);
 
   &:focus {
     border-color: var(--primary-color);
   }
 
   &.input-dark {
-    background-color: var(--input-background-color);
+    background-color: var(--input-bg-color);
   }
 }
 
@@ -63,7 +63,7 @@ a, a:hover, a:focus {
   border: 1px solid var(--input-border-color);
   text-align: center;
   color: var(--btn-color);
-  background: var(--btn-background-color);
+  background: var(--btn-bg-color);
   -webkit-appearance: button;
   cursor: pointer;
 
@@ -101,7 +101,7 @@ a, a:hover, a:focus {
     &, &:hover {
       color: var(--btn-disabled-color);
       border-color: var(--btn-disabled-border-color);
-      background: var(--btn-disabled-background-color);
+      background: var(--btn-disabled-bg-color);
       text-shadow: none;
       box-shadow: none;
       cursor: not-allowed;
@@ -152,14 +152,14 @@ a, a:hover, a:focus {
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: var(--mask-background-color);
+  background: var(--mask-bg-color);
   backdrop-filter: blur(3px);
   touch-action: none;
 }
 
 .content-box, .container {
   border-radius: @border-radius;
-  background-color: var(--content-background-color);
+  background-color: var(--content-bg-color);
   box-shadow: var(--content-box-shadow);
 
   &-desktop {
@@ -222,7 +222,7 @@ a, a:hover, a:focus {
 
 .post, .comment {
   border-radius: @border-radius;
-  background-color: var(--content-background-color);
+  background-color: var(--content-bg-color);
   box-shadow: var(--content-box-shadow);
 
   &-desktop {

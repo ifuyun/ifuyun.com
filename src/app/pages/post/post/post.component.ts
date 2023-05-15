@@ -36,6 +36,7 @@ import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
 import { UrlService } from '../../../core/url.service';
 import { UserAgentService } from '../../../core/user-agent.service';
+import { decodeEntities } from '../../../helpers/entities';
 import { FavoriteType } from '../../../interfaces/favorite.enum';
 import { Action, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
@@ -271,7 +272,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         const $code = $parent.querySelector('.i-code-text');
         const codeText = $code?.innerHTML;
         if (codeText) {
-          this.clipboardService.copy(codeText);
+          this.clipboardService.copy(decodeEntities(codeText));
           $target.innerHTML = this.copiedHTML;
 
           this.logService.logAction({
