@@ -42,7 +42,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
   private scope = '';
   private from = '';
   private referer = '';
-  private errCode = '';
+  private errorCode = '';
   private adminUrl = '';
 
   constructor(
@@ -92,10 +92,10 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
             this.scope = params.get('scope')?.trim() || '';
           } else if (this.from === 'weibo') {
             this.authCode = params.get('code')?.trim() || '';
-            this.errCode = params.get('error_code')?.trim() || '';
+            this.errorCode = params.get('error_code')?.trim() || '';
           } else if (this.from === 'github') {
             this.authCode = params.get('code')?.trim() || '';
-            this.errCode = params.get('error')?.trim() || '';
+            this.errorCode = params.get('error')?.trim() || '';
           }
         })
       )
@@ -109,13 +109,13 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
     if (this.platform.isServer) {
       return;
     }
-    if (this.from === 'weibo' && this.errCode === '21330') {
+    if (this.from === 'weibo' && this.errorCode === '21330') {
       // cancel
       this.loginStatus = 'cancel';
       this.loginService.gotoLogin(this.loginURL);
       return;
     }
-    if (this.from === 'github' && this.errCode === 'access_denied') {
+    if (this.from === 'github' && this.errorCode === 'access_denied') {
       // cancel
       this.loginStatus = 'cancel';
       this.loginService.gotoLogin(this.loginURL);
@@ -131,6 +131,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
           const redirectUrl = this.referer ? this.options['site_url'] + this.referer : this.adminUrl;
           location.replace(redirectUrl);
         } else {
+          this.message.error(res.message || '登录失败');
           this.loginStatus = 'failure';
           this.startCountdown();
         }
