@@ -70,7 +70,7 @@ export class PostListComponent extends PageComponent implements OnInit {
         combineLatestWith(this.route.paramMap, this.route.queryParamMap),
         takeUntil(this.destroy$),
         tap(([, params, queryParams]) => {
-          this.page = Number(params.get('page')) || 1;
+          this.page = Number(queryParams.get('page')) || 1;
           this.category = params.get('category')?.trim() || '';
           this.tag = params.get('tag')?.trim() || '';
           this.year = params.get('year')?.trim() || '';
@@ -142,13 +142,7 @@ export class PostListComponent extends PageComponent implements OnInit {
         if (urlSegments[0] !== 'post') {
           urlSegments.unshift('post');
         }
-        if (this.route.snapshot.paramMap.get('page')) {
-          urlSegments.splice(-1, 1, 'page-');
-        } else {
-          urlSegments.push('page-');
-        }
         this.pageUrl = `/${urlSegments.join('/')}`;
-        this.pageUrlParam = { ...this.route.snapshot.queryParams };
       });
   }
 

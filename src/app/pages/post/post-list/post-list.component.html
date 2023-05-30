@@ -1,4 +1,5 @@
 <app-breadcrumb></app-breadcrumb>
 <i-post-list-view [posts]="postList"></i-post-list-view>
 <i-make-money></i-make-money>
-<app-page-bar *ngIf="total > 0" [paginator]="paginatorData" [url]="pageUrl" [param]="pageUrlParam"></app-page-bar>
+<app-page-bar *ngIf="total > 0"
+              [isPath]="false" [paginator]="paginatorData" [url]="pageUrl" [param]="pageUrlParam"></app-page-bar>

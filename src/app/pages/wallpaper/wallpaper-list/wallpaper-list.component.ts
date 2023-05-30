@@ -246,7 +246,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         }
         this.paginatorData = this.paginator.getPaginator(this.page, this.total, this.pageSize);
         const urlSegments = this.route.snapshot.url.map((url) => url.path);
-        if (urlSegments.length < 1 || urlSegments[0] === 'archive') {
+        if (urlSegments[0] !== 'wallpaper') {
           urlSegments.unshift('wallpaper');
         }
         this.pageUrl = `/${urlSegments.join('/')}`;

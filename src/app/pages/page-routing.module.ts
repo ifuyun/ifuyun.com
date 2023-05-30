@@ -23,7 +23,10 @@ const routes: Routes = [
     component: LayoutComponent,
     loadChildren: () => import('./tool/tool.module').then((m) => m.ToolModule)
   },
-  { path: 'user/login', loadChildren: () => import('./login/login.module').then((m) => m.LoginModule) }
+  {
+    path: 'user/login',
+    loadChildren: () => import('./login/login.module').then((m) => m.LoginModule)
+  },
 ];
 
 @NgModule({

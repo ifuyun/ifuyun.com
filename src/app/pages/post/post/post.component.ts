@@ -25,7 +25,12 @@ import { ImageModule } from '../../../components/image/image.module';
 import { ImageService } from '../../../components/image/image.service';
 import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
-import { PATH_WECHAT_CARD, PATH_WECHAT_REWARD, STORAGE_KEY_VOTED_POSTS } from '../../../config/common.constant';
+import {
+  PATH_WECHAT_CARD,
+  PATH_WECHAT_REWARD,
+  REGEXP_ID,
+  STORAGE_KEY_VOTED_POSTS
+} from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
@@ -145,9 +150,18 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       )
       .subscribe(([options, params]) => {
         this.options = options;
-        this.postId = params['postId']?.trim();
-        this.postSlug = params['postSlug']?.trim();
-        this.postSlug ? this.fetchPage() : this.fetchPost();
+        const postName = params['postName']?.trim();
+        if (!postName) {
+          this.commonService.redirectToNotFound();
+          return;
+        }
+        if (REGEXP_ID.test(postName)) {
+          this.postId = postName;
+          this.fetchPost();
+        } else {
+          this.postSlug = postName;
+          this.fetchPage();
+        }
         this.commentService.updateObjectId(this.postId);
       });
     this.urlService.urlInfo$.pipe(takeUntil(this.destroy$)).subscribe((url) => {

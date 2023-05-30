@@ -1,5 +1,8 @@
 import { DOCUMENT } from '@angular/common';
-import { ElementRef, Inject, Injectable } from '@angular/core';
+import { ElementRef, Inject, Injectable, Optional } from '@angular/core';
+import { Router } from '@angular/router';
+import { RESPONSE } from '@nestjs/ng-universal/dist/tokens';
+import { Response } from 'express';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -35,6 +38,8 @@ export class CommonService {
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
+    @Optional() @Inject(RESPONSE) private response: Response,
+    private router: Router,
     private platform: PlatformService,
     private readonly cookieService: CookieService
   ) {}
@@ -109,5 +114,13 @@ export class CommonService {
 
   updateAdsFlag(isDisabled: boolean) {
     this.adsFlag.next(isDisabled);
+  }
+
+  redirectToNotFound() {
+    if (this.platform.isBrowser) {
+      this.router.navigate(['404']);
+    } else {
+      this.response.redirect('/404');
+    }
   }
 }

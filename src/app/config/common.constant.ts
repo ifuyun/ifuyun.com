@@ -1,12 +1,13 @@
+export const REGEXP_ID = /^[0-9a-zA-Z]{16}$/i;
+export const REGEXP_POST_NAME = /^[a-zA-Z0-9]+(?:[~@$%&*\-_=+;:,]+[a-zA-Z0-9]+)*$/i;
+
 export const POST_SLUG_PREFIX_BLACKLIST = Object.freeze([
   'post',
-  'category',
-  'tag',
-  'archive',
-  'comment',
-  'user',
   'wallpaper',
+  'prompt',
+  'user',
   'tool',
+  'comment',
   'admin',
   'api'
 ]);
