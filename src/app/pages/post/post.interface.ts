@@ -45,6 +45,7 @@ export interface Post {
 }
 
 export interface PostQueryParam extends QueryParam {
+  postType?: PostType;
   category?: string;
   tag?: string;
   year?: string;

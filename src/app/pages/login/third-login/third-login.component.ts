@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
@@ -23,10 +22,7 @@ import { LoginService } from '../login.service';
 @Component({
   selector: 'app-third-login',
   templateUrl: './third-login.component.html',
-  styleUrls: ['./third-login.component.less'],
-  providers: [DestroyService],
-  standalone: true,
-  imports: [NgIf]
+  styleUrls: ['./third-login.component.less']
 })
 export class ThirdLoginComponent extends PageComponent implements OnInit {
   isMobile = false;

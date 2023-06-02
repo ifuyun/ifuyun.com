@@ -47,7 +47,6 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: t
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
-  providers: [DestroyService],
   standalone: true,
   imports: [NgIf, NgTemplateOutlet]
 })

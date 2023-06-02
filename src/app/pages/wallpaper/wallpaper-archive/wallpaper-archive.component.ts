@@ -1,9 +1,6 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
-import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ArchiveDataMap } from '../../../core/common.interface';
@@ -20,10 +17,7 @@ import { WallpaperService } from '../wallpaper.service';
 @Component({
   selector: 'app-wallpaper-archive',
   templateUrl: './wallpaper-archive.component.html',
-  styleUrls: [],
-  providers: [DestroyService],
-  standalone: true,
-  imports: [NgClass, NgFor, NgIf, RouterLink, BreadcrumbComponent]
+  styleUrls: []
 })
 export class WallpaperArchiveComponent extends PageComponent implements OnInit {
   isMobile = false;

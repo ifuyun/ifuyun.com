@@ -13,7 +13,6 @@ import { ModalComponent } from '../modal/modal.component';
   selector: 'i-wallpaper-box',
   templateUrl: './wallpaper-box.component.html',
   styleUrls: ['./wallpaper-box.component.less'],
-  providers: [DestroyService],
   standalone: true,
   imports: [NgClass, NgIf, ModalComponent]
 })

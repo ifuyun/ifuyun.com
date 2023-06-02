@@ -28,7 +28,6 @@ import { MessageService } from '../message/message.service';
   selector: 'app-sider',
   templateUrl: './sider.component.html',
   styleUrls: ['./sider.component.less'],
-  providers: [DestroyService],
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink, AdsenseComponent, JdUnionGoodsComponent]
 })
@@ -123,11 +122,13 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   search() {
     this.keyword = this.keyword.trim();
     if (this.keyword) {
-      this.logService.logAction({
-        action: Action.SEARCH,
-        objectType: ActionObjectType.SEARCH,
-        keyword: this.keyword
-      }).subscribe();
+      this.logService
+        .logAction({
+          action: Action.SEARCH,
+          objectType: ActionObjectType.SEARCH,
+          keyword: this.keyword
+        })
+        .subscribe();
       this.router.navigate(['/'], { queryParams: { keyword: this.keyword } });
     }
   }

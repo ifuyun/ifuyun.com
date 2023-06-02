@@ -40,11 +40,12 @@ export class PostService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  getPostsOfPrevAndNext(postId: string): Observable<{ prevPost: PostEntity; nextPost: PostEntity }> {
+  getPostsOfPrevAndNext(param: {
+    postId?: string;
+    postName?: string;
+  }): Observable<{ prevPost: PostEntity; nextPost: PostEntity }> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS_OF_PREV_AND_NEXT), {
-        postId
-      })
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS_OF_PREV_AND_NEXT), param)
       .pipe(map((res) => res?.data || {}));
   }
 

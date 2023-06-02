@@ -34,7 +34,6 @@ import { CommentService } from './comment.service';
   selector: 'i-comment',
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.less'],
-  providers: [DestroyService],
   standalone: true,
   imports: [
     NgClass,

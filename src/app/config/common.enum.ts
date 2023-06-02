@@ -5,7 +5,8 @@ export enum Theme {
 
 export enum PostType {
   POST = 'post',
-  PAGE = 'page'
+  PAGE = 'page',
+  PROMPT = 'prompt'
 }
 
 export enum TaxonomyType {
@@ -29,6 +30,7 @@ export enum VoteValue {
 export enum VoteType {
   POST = 'post',
   PAGE = 'page',
+  PROMPT = 'prompt',
   COMMENT = 'comment',
   WALLPAPER = 'wallpaper'
 }

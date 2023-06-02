@@ -1,17 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, RouterLink } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { takeUntil } from 'rxjs';
 import { BLANK_IMAGE } from '../../../config/common.constant';
 import { DestroyService } from '../../../core/destroy.service';
-import { NumberViewPipe } from '../../../pipes/number-view.pipe';
 import { Wallpaper, WallpaperLang } from '../wallpaper.interface';
 
 @Component({
   selector: 'i-wallpaper-item',
-  standalone: true,
-  providers: [DestroyService],
-  imports: [CommonModule, RouterLink, NumberViewPipe],
   templateUrl: './wallpaper-item.component.html',
   styleUrls: []
 })

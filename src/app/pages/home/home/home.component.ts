@@ -1,16 +1,10 @@
-import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, RouterLink } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
-import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
-import { CarouselComponent } from '../../../components/carousel/carousel.component';
-import { EmptyComponent } from '../../../components/empty/empty.component';
-import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
-import { PageBarComponent } from '../../../components/page-bar/page-bar.component';
 import { SearchType } from '../../../config/common.enum';
 import { SearchResponse } from '../../../core/common.interface';
 import { CommonService } from '../../../core/common.service';
@@ -22,15 +16,10 @@ import { PaginatorService } from '../../../core/paginator.service';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
-import { NumberViewPipe } from '../../../pipes/number-view.pipe';
 import { OptionService } from '../../../services/option.service';
 import { SearchService } from '../../../services/search.service';
-import { PostItemComponent } from '../../post/post-item/post-item.component';
-import { PostListViewComponent } from '../../post/post-list-view/post-list-view.component';
 import { Post } from '../../post/post.interface';
 import { PostService } from '../../post/post.service';
-import { WallpaperItemComponent } from '../../wallpaper/wallpaper-item/wallpaper-item.component';
-import { WallpaperListViewComponent } from '../../wallpaper/wallpaper-list-view/wallpaper-list-view.component';
 import { BING_DOMAIN } from '../../wallpaper/wallpaper.constant';
 import { Wallpaper, WallpaperLang } from '../../wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../wallpaper/wallpaper.service';
@@ -38,24 +27,7 @@ import { WallpaperService } from '../../wallpaper/wallpaper.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.less'],
-  providers: [DestroyService],
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    BreadcrumbComponent,
-    CarouselComponent,
-    EmptyComponent,
-    PostListViewComponent,
-    PostItemComponent,
-    WallpaperListViewComponent,
-    WallpaperItemComponent,
-    PageBarComponent,
-    MakeMoneyComponent,
-    DatePipe,
-    NumberViewPipe
-  ]
+  styleUrls: ['./home.component.less']
 })
 export class HomeComponent extends PageComponent implements OnInit {
   isMobile = false;

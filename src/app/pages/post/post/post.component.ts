@@ -1,29 +1,25 @@
-import { CommonModule, DatePipe } from '@angular/common';
 import {
   AfterViewInit,
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   Renderer2,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import highlight from 'highlight.js';
 import { isEmpty, uniq } from 'lodash';
 import { ClipboardService } from 'ngx-clipboard';
 import * as QRCode from 'qrcode';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
-import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
-import { CommentComponent } from '../../../components/comment/comment.component';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
-import { ImageModule } from '../../../components/image/image.module';
 import { ImageService } from '../../../components/image/image.service';
-import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
 import {
   PATH_WECHAT_CARD,
@@ -31,7 +27,7 @@ import {
   REGEXP_ID,
   STORAGE_KEY_VOTED_POSTS
 } from '../../../config/common.constant';
-import { VoteType, VoteValue } from '../../../config/common.enum';
+import { PostType, VoteType, VoteValue } from '../../../config/common.enum';
 import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
@@ -48,10 +44,6 @@ import { OptionEntity } from '../../../interfaces/option.interface';
 import { TaxonomyEntity } from '../../../interfaces/taxonomy.interface';
 import { Guest, UserModel } from '../../../interfaces/user.interface';
 import { VoteEntity } from '../../../interfaces/vote.interface';
-import { CopyrightTypeDescPipe } from '../../../pipes/copyright-type-desc.pipe';
-import { CopyrightTypePipe } from '../../../pipes/copyright-type.pipe';
-import { NumberViewPipe } from '../../../pipes/number-view.pipe';
-import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
 import { FavoriteService } from '../../../services/favorite.service';
 import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
@@ -62,26 +54,12 @@ import { PostService } from '../post.service';
 
 @Component({
   selector: 'app-post',
-  standalone: true,
-  providers: [DestroyService],
-  imports: [
-    CommonModule,
-    RouterLink,
-    BreadcrumbComponent,
-    CommentComponent,
-    ImageModule,
-    MakeMoneyComponent,
-    DatePipe,
-    SafeHtmlPipe,
-    CopyrightTypePipe,
-    CopyrightTypeDescPipe,
-    NumberViewPipe
-  ],
   templateUrl: './post.component.html',
   styleUrls: [],
   encapsulation: ViewEncapsulation.None
 })
 export class PostComponent extends PageComponent implements OnInit, OnDestroy, AfterViewInit {
+  @Input() postType: PostType = PostType.POST;
   @ViewChild('postEle', { static: false }) postEle!: ElementRef;
 
   readonly commentObjectType = CommentObjectType.POST;
@@ -99,7 +77,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   postCategories: TaxonomyEntity[] = [];
   isFavorite = false;
   showCrumb = true;
-  isPage = false;
   postVoted = false;
   voteLoading = false;
   favoriteLoading = false;
@@ -201,10 +178,21 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     if (this.postVoted || this.voteLoading) {
       return;
     }
+    let voteType: VoteType;
+    switch (this.postType) {
+      case PostType.PROMPT:
+        voteType = VoteType.PROMPT;
+        break;
+      case PostType.PAGE:
+        voteType = VoteType.PAGE;
+        break;
+      default:
+        voteType = VoteType.POST;
+    }
     const voteData: VoteEntity = {
       objectId: this.postId,
       value: like ? VoteValue.LIKE : VoteValue.DISLIKE,
-      type: this.isPage ? VoteType.PAGE : VoteType.POST
+      type: voteType
     };
     if (this.commentUser && this.commentUser.name) {
       voteData.user = this.commentUser;
@@ -289,11 +277,13 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
           this.clipboardService.copy(decodeEntities(codeText));
           $target.innerHTML = this.copiedHTML;
 
-          this.logService.logAction({
-            action: Action.COPY_CODE,
-            objectType: ActionObjectType.POST,
-            objectId: this.postId
-          }).subscribe();
+          this.logService
+            .logAction({
+              action: Action.COPY_CODE,
+              objectType: ActionObjectType.POST,
+              objectId: this.postId
+            })
+            .subscribe();
 
           setTimeout(() => {
             $target.innerHTML = this.copyHTML;
@@ -334,11 +324,13 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       .pipe(takeUntil(this.destroy$))
       .subscribe((post) => {
         if (post && post.post && post.post.postId) {
-          this.initData(post, false);
+          this.initData(post);
         }
       });
     this.postService
-      .getPostsOfPrevAndNext(this.postId)
+      .getPostsOfPrevAndNext({
+        postId: this.postId
+      })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.prevPost = res.prevPost;
@@ -352,12 +344,21 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       .pipe(takeUntil(this.destroy$))
       .subscribe((post) => {
         if (post && post.post && post.post.postId) {
-          this.initData(post, true);
+          this.initData(post);
         }
+      });
+    this.postService
+      .getPostsOfPrevAndNext({
+        postName: this.postSlug
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.prevPost = res.prevPost;
+        this.nextPost = res.nextPost;
       });
   }
 
-  private initData(post: Post, isPage: boolean) {
+  private initData(post: Post) {
     this.post = post.post;
     this.postId = this.post?.postId;
     this.postMeta = post.meta;
@@ -365,24 +366,29 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.postCategories = post.categories;
     this.isFavorite = post.isFavorite;
     this.postVoted = post.voted;
-    this.pageIndex = isPage ? post.post.postName || '' : 'post';
     this.updateActivePage();
-    if (!isPage) {
-      const breadcrumbs = (post.breadcrumbs || []).map((item) => {
-        item.url = `/post/category/${item.slug}`;
-        return item;
-      });
-      this.breadcrumbs = [...breadcrumbs];
+    if (this.postType !== PostType.PAGE) {
+      const isPost = this.postType === PostType.POST;
+      const urlType = isPost ? 'post' : 'prompt';
+      const pageType = isPost ? '文章' : 'Prompt';
+
+      this.pageIndex = isPost ? 'post' : 'prompt';
+      this.showCrumb = true;
+      this.breadcrumbs = (post.breadcrumbs || []).map((item) => ({
+        ...item,
+        url: `/${urlType}/category/${item.slug}`
+      }));
       this.breadcrumbs.unshift({
-        label: `文章`,
-        tooltip: `文章列表`,
-        url: '/post',
+        label: pageType,
+        tooltip: `${pageType}列表`,
+        url: `/${urlType}`,
         isHeader: false
       });
       this.breadcrumbService.updateBreadcrumb(this.breadcrumbs);
+    } else {
+      this.pageIndex = post.post.postName;
+      this.showCrumb = false;
     }
-    this.showCrumb = !isPage;
-    this.isPage = isPage;
     !this.postVoted && this.checkPostVoted();
     this.initMeta();
     this.parseHtml();

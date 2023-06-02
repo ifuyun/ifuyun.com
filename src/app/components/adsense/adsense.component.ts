@@ -18,11 +18,14 @@ import { AdsenseConfig } from './adsense.interface';
   selector: 'i-adsense',
   standalone: true,
   imports: [CommonModule],
-  providers: [DestroyService],
   template: `
-    <div #adsense class="ads-wrap"
-         [class.ads-wrap-desktop]="!isMobile" [class.ads-wrap-mobile]="isMobile"
-         (click)="logClick()"></div>
+    <div
+      #adsense
+      class="ads-wrap"
+      [class.ads-wrap-desktop]="!isMobile"
+      [class.ads-wrap-mobile]="isMobile"
+      (click)="logClick()"
+    ></div>
   `,
   styleUrls: []
 })
@@ -98,11 +101,13 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
   }
 
   logClick() {
-    this.logService.logAction({
-      action: Action.CLICK_ADSENSE,
-      objectType: ActionObjectType.ADS,
-      adsPosition: this.position
-    }).subscribe();
+    this.logService
+      .logAction({
+        action: Action.CLICK_ADSENSE,
+        objectType: ActionObjectType.ADS,
+        adsPosition: this.position
+      })
+      .subscribe();
   }
 
   private initOptions() {

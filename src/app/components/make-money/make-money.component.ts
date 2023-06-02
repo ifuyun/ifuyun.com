@@ -12,7 +12,6 @@ import { JdUnionGoodsComponent } from '../jd-union-goods/jd-union-goods.componen
   selector: 'i-make-money',
   standalone: true,
   imports: [CommonModule, AdsenseComponent, JdUnionGoodsComponent],
-  providers: [DestroyService],
   templateUrl: './make-money.component.html',
   styleUrls: ['./make-money.component.less']
 })

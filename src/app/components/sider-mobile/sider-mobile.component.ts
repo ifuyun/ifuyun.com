@@ -17,7 +17,6 @@ import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { format } from '../../helpers/helper';
 import { OptionEntity } from '../../interfaces/option.interface';
-import { TaxonomyNode } from '../../interfaces/taxonomy.interface';
 import { UserModel } from '../../interfaces/user.interface';
 import { AuthService } from '../../services/auth.service';
 import { OptionService } from '../../services/option.service';
@@ -28,12 +27,10 @@ import { ImageService } from '../image/image.service';
   selector: 'app-sider-mobile',
   templateUrl: './sider-mobile.component.html',
   styleUrls: ['./sider-mobile.component.less'],
-  providers: [DestroyService],
   standalone: true,
   imports: [NgClass, NgFor, NgIf, RouterLink]
 })
 export class SiderMobileComponent implements OnInit {
-  @Input() taxonomies: TaxonomyNode[] = [];
   @Input() siderOpen = false;
   @Output() siderOpenChange = new EventEmitter<boolean>();
 

@@ -1,10 +1,10 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
-import { ADMIN_URL_PARAM, PATH_LOGO_DARK, PATH_LOGO } from '../../config/common.constant';
+import { ADMIN_URL_PARAM, PATH_LOGO, PATH_LOGO_DARK } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
@@ -26,12 +26,12 @@ import { UserService } from '../../services/user.service';
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.less'],
-  providers: [DestroyService],
   standalone: true,
-  imports: [NgClass, NgFor, NgIf, RouterLink, FormsModule, AutofocusDirective]
+  imports: [CommonModule, RouterLink, FormsModule, AutofocusDirective]
 })
 export class HeaderComponent implements OnInit {
-  @Input() taxonomies: TaxonomyNode[] = [];
+  @Input() postTaxonomies: TaxonomyNode[] = [];
+  @Input() promptTaxonomies: TaxonomyNode[] = [];
   @Input() siderOpen = false;
   @Output() siderOpenChange = new EventEmitter<boolean>();
 
@@ -103,11 +103,13 @@ export class HeaderComponent implements OnInit {
     this.keyword = this.keyword.trim();
     if (this.keyword) {
       this.showSearch = false;
-      this.logService.logAction({
-        action: Action.SEARCH,
-        objectType: ActionObjectType.SEARCH,
-        keyword: this.keyword
-      }).subscribe();
+      this.logService
+        .logAction({
+          action: Action.SEARCH,
+          objectType: ActionObjectType.SEARCH,
+          keyword: this.keyword
+        })
+        .subscribe();
       this.router.navigate(['/'], { queryParams: { keyword: this.keyword } });
     }
   }

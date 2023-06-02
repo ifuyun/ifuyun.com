@@ -21,7 +21,6 @@ import { JdUnionOptions } from './jd-union-goods.interface';
   selector: 'i-jd-union-goods',
   templateUrl: './jd-union-goods.component.html',
   styleUrls: ['./jd-union-goods.component.less'],
-  providers: [DestroyService],
   standalone: true,
   imports: [NgClass, NgFor, NgIf, NgTemplateOutlet, EmptyComponent, DecimalPipe, NumberViewPipe]
 })
@@ -97,13 +96,15 @@ export class JdUnionGoodsComponent implements OnInit {
   }
 
   logClick(goods: JdUnionGoodsMaterial | JdUnionGoodsJingfen, isCoupon = false) {
-    this.logService.logAction({
-      action: isCoupon ? Action.CLICK_JD_UNION_COUPON : Action.CLICK_JD_UNION,
-      objectType: ActionObjectType.ADS,
-      adsPosition: this.isMobile ? 'mobile' : this.position,
-      goodsName: goods.skuName,
-      goodsURL: goods.promotionInfo?.clickURL
-    }).subscribe();
+    this.logService
+      .logAction({
+        action: isCoupon ? Action.CLICK_JD_UNION_COUPON : Action.CLICK_JD_UNION,
+        objectType: ActionObjectType.ADS,
+        adsPosition: this.isMobile ? 'mobile' : this.position,
+        goodsName: goods.skuName,
+        goodsURL: goods.promotionInfo?.clickURL
+      })
+      .subscribe();
   }
 
   private initOptions() {

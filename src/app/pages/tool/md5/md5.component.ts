@@ -1,13 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { isEmpty, uniq } from 'lodash';
-import { ClipboardModule } from 'ngx-clipboard';
 import { BehaviorSubject, debounceTime, Observable, skipWhile, takeUntil } from 'rxjs';
-import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
-import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -23,9 +18,6 @@ import { MD5_PAGE_DESCRIPTION, MD5_PAGE_KEYWORDS } from '../tool.constant';
   selector: 'app-md5',
   templateUrl: './md5.component.html',
   styleUrls: ['./md5.component.less'],
-  providers: [DestroyService],
-  standalone: true,
-  imports: [CommonModule, FormsModule, ClipboardModule, BreadcrumbComponent, MakeMoneyComponent]
 })
 export class Md5Component extends PageComponent implements OnInit {
   readonly maxContentLength = 8000;

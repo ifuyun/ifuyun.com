@@ -1,19 +1,14 @@
-import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
-import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
-import { CommentComponent } from '../../../components/comment/comment.component';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
-import { ImageModule } from '../../../components/image/image.module';
 import { ImageService } from '../../../components/image/image.service';
-import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
 import {
   PATH_WECHAT_MINI_APP_CARD,
@@ -35,8 +30,6 @@ import { Action, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { Guest } from '../../../interfaces/user.interface';
 import { VoteEntity } from '../../../interfaces/vote.interface';
-import { NumberViewPipe } from '../../../pipes/number-view.pipe';
-import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
 import { FavoriteService } from '../../../services/favorite.service';
 import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
@@ -48,18 +41,6 @@ import { WallpaperService } from '../wallpaper.service';
 
 @Component({
   selector: 'app-wallpaper',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    BreadcrumbComponent,
-    CommentComponent,
-    ImageModule,
-    MakeMoneyComponent,
-    NumberViewPipe,
-    SafeHtmlPipe
-  ],
-  providers: [DestroyService],
   templateUrl: './wallpaper.component.html',
   styleUrls: ['./wallpaper.component.less']
 })
@@ -259,12 +240,14 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   }
 
   logTranslate() {
-    this.logService.logAction({
-      action: Action.TRANSLATE_WALLPAPER,
-      objectType: ActionObjectType.WALLPAPER,
-      objectId: this.wallpaperId,
-      lang: this.lang === WallpaperLang.CN ? WallpaperLang.EN : WallpaperLang.CN
-    }).subscribe();
+    this.logService
+      .logAction({
+        action: Action.TRANSLATE_WALLPAPER,
+        objectType: ActionObjectType.WALLPAPER,
+        objectId: this.wallpaperId,
+        lang: this.lang === WallpaperLang.CN ? WallpaperLang.EN : WallpaperLang.CN
+      })
+      .subscribe();
   }
 
   protected updateActivePage(): void {

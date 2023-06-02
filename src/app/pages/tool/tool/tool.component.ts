@@ -1,14 +1,11 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
-import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ImageService } from '../../../components/image/image.service';
-import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -22,9 +19,6 @@ import { OptionService } from '../../../services/option.service';
 
 @Component({
   selector: 'app-tool',
-  standalone: true,
-  imports: [CommonModule, RouterLink, BreadcrumbComponent, MakeMoneyComponent],
-  providers: [DestroyService],
   templateUrl: './tool.component.html',
   styleUrls: ['./tool.component.less']
 })

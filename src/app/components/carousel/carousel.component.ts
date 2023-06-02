@@ -19,7 +19,6 @@ import { OptionService } from '../../services/option.service';
   selector: 'i-carousel',
   templateUrl: './carousel.component.html',
   styleUrls: ['./carousel.component.less'],
-  providers: [DestroyService],
   standalone: true,
   imports: [NgClass, NgFor, NgIf, NgStyle]
 })
@@ -101,12 +100,14 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   logClick(carousel: CarouselVo) {
-    this.logService.logAction({
-      action: Action.CLICK_CAROUSEL,
-      objectType: ActionObjectType.CAROUSEL,
-      carouselTitle: carousel.title,
-      carouselURL: carousel.link
-    }).subscribe();
+    this.logService
+      .logAction({
+        action: Action.CLICK_CAROUSEL,
+        objectType: ActionObjectType.CAROUSEL,
+        carouselTitle: carousel.title,
+        carouselURL: carousel.link
+      })
+      .subscribe();
   }
 
   private fetchCarousels() {

@@ -1,7 +1,7 @@
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
@@ -17,7 +17,6 @@ import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
-import { AutofocusDirective } from '../../../directives/autofocus.directive';
 import { format, generateId } from '../../../helpers/helper';
 import md5 from '../../../helpers/md5';
 import { OptionEntity } from '../../../interfaces/option.interface';
@@ -47,10 +46,7 @@ const duration = 500; // ms
         )
       ])
     ])
-  ],
-  providers: [DestroyService],
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, AutofocusDirective]
+  ]
 })
 export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
   isMobile = false;

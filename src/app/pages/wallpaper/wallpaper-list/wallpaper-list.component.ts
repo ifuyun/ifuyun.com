@@ -1,14 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, RouterLink } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
-import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
-import { EmptyComponent } from '../../../components/empty/empty.component';
-import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
-import { PageBarComponent } from '../../../components/page-bar/page-bar.component';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
@@ -24,30 +19,16 @@ import { Action, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { Guest } from '../../../interfaces/user.interface';
 import { VoteEntity } from '../../../interfaces/vote.interface';
-import { NumberViewPipe } from '../../../pipes/number-view.pipe';
 import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
 import { VoteService } from '../../../services/vote.service';
-import { WallpaperListViewComponent } from '../wallpaper-list-view/wallpaper-list-view.component';
 import { BING_DOMAIN } from '../wallpaper.constant';
 import { Wallpaper, WallpaperLang, WallpaperListMode, WallpaperQueryParam } from '../wallpaper.interface';
 import { WallpaperService } from '../wallpaper.service';
 
 @Component({
   selector: 'app-wallpaper-list',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    BreadcrumbComponent,
-    WallpaperListViewComponent,
-    PageBarComponent,
-    EmptyComponent,
-    MakeMoneyComponent,
-    NumberViewPipe
-  ],
-  providers: [DestroyService],
   templateUrl: './wallpaper-list.component.html',
   styleUrls: ['./wallpaper-list.component.less']
 })
@@ -164,19 +145,23 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   }
 
   logLang(lang: string) {
-    this.logService.logAction({
-      action: Action.CHANGE_LANG,
-      objectType: ActionObjectType.WALLPAPER_LIST,
-      lang
-    }).subscribe();
+    this.logService
+      .logAction({
+        action: Action.CHANGE_LANG,
+        objectType: ActionObjectType.WALLPAPER_LIST,
+        lang
+      })
+      .subscribe();
   }
 
   logListMode(mode: string) {
-    this.logService.logAction({
-      action: Action.CHANGE_WALLPAPER_LIST_MODE,
-      objectType: ActionObjectType.WALLPAPER_LIST,
-      listMode: mode
-    }).subscribe();
+    this.logService
+      .logAction({
+        action: Action.CHANGE_WALLPAPER_LIST_MODE,
+        objectType: ActionObjectType.WALLPAPER_LIST,
+        listMode: mode
+      })
+      .subscribe();
   }
 
   protected updateActivePage(): void {

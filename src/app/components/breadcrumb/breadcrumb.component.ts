@@ -14,7 +14,6 @@ import { BreadcrumbService } from './breadcrumb.service';
   selector: 'app-breadcrumb',
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.less'],
-  providers: [DestroyService],
   standalone: true,
   imports: [NgClass, NgFor, NgIf, RouterLink]
 })

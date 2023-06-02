@@ -1,16 +1,11 @@
-import { NgFor, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { EmptyComponent } from '../../../components/empty/empty.component';
 import { UserAgentService } from '../../../core/user-agent.service';
-import { PostItemComponent } from '../post-item/post-item.component';
 import { Post } from '../post.interface';
 
 @Component({
   selector: 'i-post-list-view',
   templateUrl: './post-list-view.component.html',
-  styleUrls: [],
-  standalone: true,
-  imports: [NgFor, NgIf, PostItemComponent, EmptyComponent]
+  styleUrls: []
 })
 export class PostListViewComponent {
   @Input() posts: Post[] = [];

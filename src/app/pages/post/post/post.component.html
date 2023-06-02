@@ -1,6 +1,6 @@
 <app-breadcrumb *ngIf="showCrumb"></app-breadcrumb>
 <div class="post" [ngClass]="{'post-desktop': !isMobile, 'post-mobile': isMobile}">
-  <div class="original-sign" *ngIf="post?.postOriginal === 1 && !isPage">原创</div>
+  <div class="original-sign" *ngIf="post?.postOriginal === 1 && postType !== 'page'">原创</div>
   <header class="post-header">
     <h1 class="post-title">
       <a [routerLink]="[post?.postGuid]" title="{{post?.postTitle}}" rel="bookmark">{{post?.postTitle}}</a>
@@ -52,7 +52,7 @@
   </div>
   <footer class="post-footer">
     <div>
-      <div class="post-meta" *ngIf="!isPage && postCategories.length > 0">
+      <div class="post-meta" *ngIf="postType !== 'page' && postCategories.length > 0">
         <div class="post-meta-icon"><i class="icon icon-folder"></i></div>
         <ul class="post-meta-info">
           <li *ngFor="let cat of postCategories">
@@ -70,7 +70,7 @@
           </li>
         </ul>
       </div>
-      <div class="post-meta" *ngIf="!isPage">
+      <div class="post-meta" *ngIf="postType !== 'page'">
         <div class="post-meta-icon"><i class="icon icon-book"></i></div>
         <div class="post-meta-info">
           <span class="post-meta-info-text" *ngIf="post?.postOriginal === 1"
@@ -79,7 +79,7 @@
                 title="来源: {{postMeta['post_source']}}">来源：{{postMeta['post_source']}}</span>
         </div>
       </div>
-      <div class="post-meta" *ngIf="post?.postOriginal === 1 && !isPage">
+      <div class="post-meta" *ngIf="post?.postOriginal === 1 && postType !== 'page'">
         <div class="post-meta-icon"><i class="icon icon-copyright"></i></div>
         <div class="post-meta-info">
           <span *ngIf="postMeta['copyright_type'] !== '2'"
@@ -113,7 +113,7 @@
         <button (click)="showReward()" title="打赏">
           <i class="icon icon-heart-fill"></i>
         </button>
-        <button *ngIf="!isPage"
+        <button *ngIf="postType !== 'page'"
                 [ngClass]="{liked: isFavorite}"
                 (click)="addFavorite()"
                 [title]="isFavorite ? '已收藏' : '添加收藏'">
@@ -125,7 +125,7 @@
         </button>
       </div>
     </div>
-    <div class="post-link" *ngIf="!isPage">
+    <div class="post-link" *ngIf="postType !== 'page'">
       <div class="post-link-prev">
         <a *ngIf="prevPost" [routerLink]="[prevPost.postGuid]" title="{{prevPost.postTitle}}">
           <span class="post-link-text">上一篇：{{prevPost.postTitle}}</span>

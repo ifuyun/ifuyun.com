@@ -24,22 +24,6 @@ export const TOOL_LINKS = Object.freeze([
 ]);
 export const REGEXP_JD_PRODUCT_DETAIL_URL = /^https?:\/\/([a-zA-Z0-9\-_]+\.)*jd\.com\/(product\/)?\d+\.html$/i;
 
-export const SHOPPING_PAGE_DESCRIPTION =
-  '电商工具提供京东、淘宝、天猫、拼多多等电商平台的转链等功能，助力实现超级网购省钱计划。';
-export const SHOPPING_PAGE_KEYWORDS = Object.freeze([
-  '京东转链',
-  '淘宝转链',
-  '转链工具',
-  '电商转链',
-  '省钱工具',
-  '网购省钱计划',
-  '京东省钱计划',
-  '京东联盟',
-  '京东推客',
-  '淘宝客',
-  '淘宝联盟'
-]);
-
 export const MD5_PAGE_DESCRIPTION = 'MD5 在线加密工具，在线实现 MD5 加密算法，轻松校验、复制 MD5 加密结果。';
 export const MD5_PAGE_KEYWORDS = Object.freeze([
   'MD5',

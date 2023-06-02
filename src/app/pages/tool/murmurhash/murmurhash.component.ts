@@ -1,15 +1,10 @@
-import { NgClass } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { isEmpty, uniq } from 'lodash';
 import * as murmurhash from 'murmurhash';
-import { ClipboardModule } from 'ngx-clipboard';
 import { BehaviorSubject, debounceTime, Observable, skipWhile, takeUntil } from 'rxjs';
 import { MessageService } from 'src/app/components/message/message.service';
-import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
-import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { MetaService } from '../../../core/meta.service';
@@ -21,9 +16,6 @@ import { MURMURHASH_PAGE_DESCRIPTION, MURMURHASH_PAGE_KEYWORDS } from '../tool.c
 
 @Component({
   selector: 'app-murmurhash',
-  standalone: true,
-  imports: [NgClass, FormsModule, ClipboardModule, BreadcrumbComponent, MakeMoneyComponent],
-  providers: [DestroyService],
   templateUrl: './murmurhash.component.html',
   styleUrls: ['./murmurhash.component.less']
 })

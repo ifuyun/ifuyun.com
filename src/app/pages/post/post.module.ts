@@ -1,14 +1,25 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardModule } from 'ngx-clipboard';
 import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highlightjs';
+import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
+import { CommentComponent } from '../../components/comment/comment.component';
+import { EmptyComponent } from '../../components/empty/empty.component';
+import { ImageModule } from '../../components/image/image.module';
+import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
+import { PageBarComponent } from '../../components/page-bar/page-bar.component';
+import { CopyrightTypeDescPipe } from '../../pipes/copyright-type-desc.pipe';
+import { CopyrightTypePipe } from '../../pipes/copyright-type.pipe';
+import { NumberViewPipe } from '../../pipes/number-view.pipe';
+import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
 import { PostArchiveComponent } from './post-archive/post-archive.component';
 import { PostItemComponent } from './post-item/post-item.component';
 import { PostListViewComponent } from './post-list-view/post-list-view.component';
 import { PostListComponent } from './post-list/post-list.component';
 import { PostRoutingModule } from './post-routing.module';
 import { PostComponent } from './post/post.component';
+import { PostPageComponent } from './post-page/post-page.component';
 
 @NgModule({
   imports: [
@@ -18,11 +29,25 @@ import { PostComponent } from './post/post.component';
     ReactiveFormsModule,
     HighlightModule,
     ClipboardModule,
+    ImageModule,
+    BreadcrumbComponent,
+    CommentComponent,
+    PageBarComponent,
+    MakeMoneyComponent,
+    EmptyComponent,
+    DatePipe,
+    CopyrightTypePipe,
+    CopyrightTypeDescPipe,
+    NumberViewPipe,
+    SafeHtmlPipe
+  ],
+  declarations: [
     PostListComponent,
     PostComponent,
     PostArchiveComponent,
     PostListViewComponent,
-    PostItemComponent
+    PostItemComponent,
+    PostPageComponent
   ],
   providers: [
     {
@@ -50,6 +75,13 @@ import { PostComponent } from './post/post.component';
       }
     }
   ],
-  exports: [PostListComponent, PostComponent, PostArchiveComponent, PostListViewComponent, PostItemComponent]
+  exports: [
+    PostListComponent,
+    PostComponent,
+    PostArchiveComponent,
+    PostListViewComponent,
+    PostItemComponent,
+    PostPageComponent
+  ]
 })
 export class PostModule {}

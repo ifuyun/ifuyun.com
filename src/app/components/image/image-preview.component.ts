@@ -118,7 +118,6 @@ const initialPosition = {
     tabindex: '-1',
     role: 'document'
   },
-  providers: [DestroyService],
   standalone: true,
   imports: [NgFor, NgIf, CdkDrag, CdkDragHandle]
 })

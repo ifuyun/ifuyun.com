@@ -12,12 +12,12 @@
           </li>
           <li [ngClass]="{'active': activePage === 'post' || activePage === 'postArchive'}">
             <a class="nav-link" routerLink="/post" title="文章">
-              <span>文章</span><i class="nav-arrow" *ngIf="taxonomies.length > 0"></i>
+              <span>文章</span><i class="nav-arrow" *ngIf="postTaxonomies.length > 0"></i>
             </a>
-            <div class="sub-nav-group" *ngIf="taxonomies.length > 0">
+            <div class="sub-nav-group" *ngIf="postTaxonomies.length > 0">
               <div class="sub-nav-list">
                 <ul>
-                  <li *ngFor="let taxonomy of taxonomies">
+                  <li *ngFor="let taxonomy of postTaxonomies">
                     <a class="sub-nav-link" [routerLink]="['/post/category/'+taxonomy.taxonomySlug]"
                        title="{{taxonomy.taxonomyDescription}}">
                       <span>{{taxonomy.taxonomyName}}</span><i class="sub-nav-arrow" *ngIf="!taxonomy.isLeaf"></i>
@@ -27,6 +27,33 @@
                         <ul>
                           <li *ngFor="let subTaxonomy of taxonomy.children">
                             <a class="child-nav-link" [routerLink]="['/post/category/'+subTaxonomy.taxonomySlug]"
+                               title="{{subTaxonomy.taxonomyDescription}}">{{subTaxonomy.taxonomyName}}</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </li>
+          <li [ngClass]="{'active': activePage === 'prompt' || activePage === 'promptArchive'}">
+            <a class="nav-link" routerLink="/prompt" title="Prompt">
+              <span>Prompt</span><i class="nav-arrow" *ngIf="promptTaxonomies.length > 0"></i>
+            </a>
+            <div class="sub-nav-group" *ngIf="promptTaxonomies.length > 0">
+              <div class="sub-nav-list">
+                <ul>
+                  <li *ngFor="let taxonomy of promptTaxonomies">
+                    <a class="sub-nav-link" [routerLink]="['/prompt/category/'+taxonomy.taxonomySlug]"
+                       title="{{taxonomy.taxonomyDescription}}">
+                      <span>{{taxonomy.taxonomyName}}</span><i class="sub-nav-arrow" *ngIf="!taxonomy.isLeaf"></i>
+                    </a>
+                    <div class="child-nav-group" *ngIf="!taxonomy.isLeaf">
+                      <div class="child-nav-list">
+                        <ul>
+                          <li *ngFor="let subTaxonomy of taxonomy.children">
+                            <a class="child-nav-link" [routerLink]="['/prompt/category/'+subTaxonomy.taxonomySlug]"
                                title="{{subTaxonomy.taxonomyDescription}}">{{subTaxonomy.taxonomyName}}</a>
                           </li>
                         </ul>

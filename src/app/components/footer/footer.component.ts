@@ -15,7 +15,6 @@ import { OptionService } from '../../services/option.service';
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.less'],
-  providers: [DestroyService],
   standalone: true,
   imports: [NgClass, NgFor, NgIf, RouterLink]
 })

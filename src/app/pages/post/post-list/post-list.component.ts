@@ -1,13 +1,10 @@
-import { NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
-import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
-import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
-import { PageBarComponent } from '../../../components/page-bar/page-bar.component';
+import { PostType } from '../../../config/common.enum';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { MetaService } from '../../../core/meta.service';
@@ -17,19 +14,17 @@ import { PaginatorService } from '../../../core/paginator.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { OptionService } from '../../../services/option.service';
-import { PostListViewComponent } from '../post-list-view/post-list-view.component';
 import { Post, PostQueryParam } from '../post.interface';
 import { PostService } from '../post.service';
 
 @Component({
   selector: 'app-post-list',
-  standalone: true,
-  imports: [NgIf, BreadcrumbComponent, PostListViewComponent, PageBarComponent, MakeMoneyComponent],
-  providers: [DestroyService],
   templateUrl: './post-list.component.html',
   styleUrls: []
 })
 export class PostListComponent extends PageComponent implements OnInit {
+  @Input() postType: PostType = PostType.POST;
+
   isMobile = false;
   pageIndex = 'post';
   options: OptionEntity = {};
@@ -43,6 +38,8 @@ export class PostListComponent extends PageComponent implements OnInit {
   pageUrl = '';
   pageUrlParam: Params = {};
 
+  private isPost = false;
+  private isPrompt = false;
   private pageSize = 10;
   private year = '';
   private month = '';
@@ -63,6 +60,8 @@ export class PostListComponent extends PageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isPrompt = this.postType === PostType.PROMPT;
+    this.isPost = this.postType === PostType.POST;
     this.updatePageOptions();
     this.optionService.options$
       .pipe(
@@ -82,7 +81,9 @@ export class PostListComponent extends PageComponent implements OnInit {
         this.options = options;
         this.pageSize = Number(this.options['posts_per_page']) || 10;
         if (this.year) {
-          this.pageIndex = 'postArchive';
+          this.pageIndex = this.isPrompt ? 'promptArchive' : 'postArchive';
+        } else {
+          this.pageIndex = this.isPrompt ? 'prompt' : 'post';
         }
         this.updateActivePage();
         this.fetchPosts();
@@ -105,7 +106,8 @@ export class PostListComponent extends PageComponent implements OnInit {
   private fetchPosts() {
     const param: PostQueryParam = {
       page: this.page,
-      pageSize: this.pageSize
+      pageSize: this.pageSize,
+      postType: this.postType
     };
     if (this.keyword) {
       param.keyword = this.keyword;
@@ -131,7 +133,7 @@ export class PostListComponent extends PageComponent implements OnInit {
         this.total = res.postList.total || 0;
 
         res.breadcrumbs = (res.breadcrumbs || []).map((item) => {
-          item.url = `/post/category/${item.slug}`;
+          item.url = `/${this.postType}/category/${item.slug}`;
           return item;
         });
         this.updatePageInfo(res.breadcrumbs);
@@ -139,8 +141,10 @@ export class PostListComponent extends PageComponent implements OnInit {
 
         this.paginatorData = this.paginator.getPaginator(this.page, this.total, this.pageSize);
         const urlSegments = this.route.snapshot.url.map((url) => url.path);
-        if (urlSegments[0] !== 'post') {
+        if (this.postType === PostType.POST && urlSegments[0] !== 'post') {
           urlSegments.unshift('post');
+        } else if (this.postType === PostType.PROMPT && urlSegments[0] !== 'prompt') {
+          urlSegments.unshift('prompt');
         }
         this.pageUrl = `/${urlSegments.join('/')}`;
       });
@@ -148,10 +152,13 @@ export class PostListComponent extends PageComponent implements OnInit {
 
   private updatePageInfo(postBreadcrumbs: BreadcrumbEntity[]) {
     const siteName: string = this.options['site_name'] || '';
+    const pageType = this.isPost ? '文章' : 'Prompt';
+
     let description = '';
-    const titles: string[] = ['文章', siteName];
+    const titles: string[] = [pageType, siteName];
     const taxonomies: string[] = [];
-    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    const pageKeywords = this.isPost ? this.options['post_keywords'] : this.options['prompt_keywords'];
+    const keywords: string[] = (pageKeywords || '').split(',');
 
     if (this.category && postBreadcrumbs.length > 0) {
       const label = postBreadcrumbs[postBreadcrumbs.length - 1].label;
@@ -172,11 +179,11 @@ export class PostListComponent extends PageComponent implements OnInit {
     }
     if (this.keyword) {
       titles.unshift(this.keyword, '搜索');
-      description += `「${this.keyword}」文章搜索结果`;
+      description += `「${this.keyword}」${pageType}搜索结果`;
       keywords.unshift(this.keyword);
     } else {
       if (description) {
-        description += '文章';
+        description += pageType;
       }
     }
     if (this.page > 1) {
@@ -188,7 +195,7 @@ export class PostListComponent extends PageComponent implements OnInit {
     if (description) {
       description += '。';
     }
-    description += `${this.options['site_description']}`;
+    description += this.options['site_description'];
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
@@ -199,11 +206,13 @@ export class PostListComponent extends PageComponent implements OnInit {
   }
 
   private updateBreadcrumb(postBreadcrumbs: BreadcrumbEntity[]) {
+    const urlType = this.isPost ? 'post' : 'prompt';
+    const pageType = this.isPost ? '文章' : 'Prompt';
     let breadcrumbs: BreadcrumbEntity[] = [
       {
-        label: `文章`,
-        tooltip: `文章列表`,
-        url: '/post',
+        label: pageType,
+        tooltip: `${pageType}列表`,
+        url: `/${urlType}`,
         isHeader: false
       }
     ];
@@ -218,7 +227,7 @@ export class PostListComponent extends PageComponent implements OnInit {
         {
           label: this.tag,
           tooltip: this.tag,
-          url: '/post/tag/' + this.tag,
+          url: `/${urlType}/tag/${this.tag}`,
           isHeader: true
         }
       );
@@ -227,14 +236,14 @@ export class PostListComponent extends PageComponent implements OnInit {
       breadcrumbs.push(
         {
           label: '归档',
-          tooltip: '文章归档',
-          url: '/post/archive',
+          tooltip: `${pageType}归档`,
+          url: `/${urlType}/archive`,
           isHeader: false
         },
         {
           label: `${this.year}年`,
           tooltip: `${this.year}年`,
-          url: '/post/archive/' + this.year,
+          url: `/${urlType}/archive/${this.year}`,
           isHeader: !this.month
         }
       );
@@ -242,7 +251,7 @@ export class PostListComponent extends PageComponent implements OnInit {
         breadcrumbs.push({
           label: `${parseInt(this.month, 10)}月`,
           tooltip: `${this.year}年${this.month}月`,
-          url: `/post/archive/${this.year}/${this.month}`,
+          url: `/${urlType}/archive/${this.year}/${this.month}`,
           isHeader: true
         });
       }

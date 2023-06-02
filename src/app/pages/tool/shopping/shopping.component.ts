@@ -1,15 +1,10 @@
-import { NgClass, NgIf } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
-import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
-import { EmptyComponent } from '../../../components/empty/empty.component';
-import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MessageService } from '../../../components/message/message.service';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -22,14 +17,11 @@ import { OptionEntity } from '../../../interfaces/option.interface';
 import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
 import { JdUnionPromotionResponseBody } from '../jd-union.interface';
-import { REGEXP_JD_PRODUCT_DETAIL_URL, SHOPPING_PAGE_DESCRIPTION, SHOPPING_PAGE_KEYWORDS } from '../tool.constant';
+import { REGEXP_JD_PRODUCT_DETAIL_URL } from '../tool.constant';
 import { ShoppingService } from './shopping.service';
 
 @Component({
   selector: 'app-shopping',
-  standalone: true,
-  imports: [NgClass, NgIf, FormsModule, BreadcrumbComponent, EmptyComponent, MakeMoneyComponent],
-  providers: [DestroyService],
   templateUrl: './shopping.component.html',
   styleUrls: ['./shopping.component.less']
 })
@@ -91,11 +83,13 @@ export class ShoppingComponent extends PageComponent implements OnInit {
     e?.preventDefault();
     this.keyword = this.keyword.trim();
     if (this.keyword && this.checkKeyword()) {
-      this.logService.logAction({
-        action: Action.PROMOTE_JD_UNION,
-        objectType: ActionObjectType.ADS,
-        goodsURL: this.keyword
-      }).subscribe();
+      this.logService
+        .logAction({
+          action: Action.PROMOTE_JD_UNION,
+          objectType: ActionObjectType.ADS,
+          goodsURL: this.keyword
+        })
+        .subscribe();
       this.fetchPromotion();
     }
   }
@@ -165,8 +159,8 @@ export class ShoppingComponent extends PageComponent implements OnInit {
   private updatePageInfo() {
     const siteName: string = this.options['site_name'] || '';
     const titles: string[] = ['电商工具', '百宝箱', siteName];
-    const description = `${siteName}${SHOPPING_PAGE_DESCRIPTION}`;
-    const keywords: string[] = [...SHOPPING_PAGE_KEYWORDS];
+    const description = `${siteName}${this.options['shopping_description']}`;
+    const keywords: string[] = this.options['shopping_keywords'].split(',');
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),

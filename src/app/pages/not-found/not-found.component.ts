@@ -16,7 +16,6 @@ import { RouterLink } from '@angular/router';
   selector: 'app-not-found',
   templateUrl: './not-found.component.html',
   styleUrls: ['./not-found.component.less'],
-  providers: [DestroyService],
   standalone: true,
   imports: [RouterLink]
 })
