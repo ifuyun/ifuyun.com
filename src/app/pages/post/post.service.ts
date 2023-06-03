@@ -43,6 +43,7 @@ export class PostService {
   getPostsOfPrevAndNext(param: {
     postId?: string;
     postName?: string;
+    postType?: PostType;
   }): Observable<{ prevPost: PostEntity; nextPost: PostEntity }> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS_OF_PREV_AND_NEXT), param)

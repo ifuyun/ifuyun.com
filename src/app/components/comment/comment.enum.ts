@@ -6,5 +6,6 @@ export enum CommentFlag {
 
 export enum CommentObjectType {
   POST = 'post',
-  WALLPAPER = 'wallpaper'
+  WALLPAPER = 'wallpaper',
+  PROMPT = 'prompt'
 }

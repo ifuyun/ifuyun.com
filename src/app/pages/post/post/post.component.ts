@@ -62,9 +62,10 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   @Input() postType: PostType = PostType.POST;
   @ViewChild('postEle', { static: false }) postEle!: ElementRef;
 
-  readonly commentObjectType = CommentObjectType.POST;
   readonly wechatCardPath = PATH_WECHAT_CARD;
 
+  commentObjectType = CommentObjectType.POST;
+  isPrompt = false;
   isMobile = false;
   isLoggedIn = false;
   user!: UserModel;
@@ -118,6 +119,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   ngOnInit(): void {
+    this.isPrompt = this.postType === PostType.PROMPT;
+    this.commentObjectType = this.isPrompt ? CommentObjectType.PROMPT : CommentObjectType.POST;
     this.updatePageOptions();
     this.optionService.options$
       .pipe(
@@ -255,7 +258,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     }
     this.favoriteLoading = true;
     this.favoriteService
-      .addFavorite(this.postId, FavoriteType.POST)
+      .addFavorite(this.postId, this.postType === PostType.POST ? FavoriteType.POST : FavoriteType.PROMPT)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.favoriteLoading = false;
@@ -329,7 +332,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       });
     this.postService
       .getPostsOfPrevAndNext({
-        postId: this.postId
+        postId: this.postId,
+        postType: this.postType
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -349,7 +353,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       });
     this.postService
       .getPostsOfPrevAndNext({
-        postName: this.postSlug
+        postName: this.postSlug,
+        postType: this.postType
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -366,7 +371,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.postCategories = post.categories;
     this.isFavorite = post.isFavorite;
     this.postVoted = post.voted;
-    this.updateActivePage();
     if (this.postType !== PostType.PAGE) {
       const isPost = this.postType === PostType.POST;
       const urlType = isPost ? 'post' : 'prompt';
@@ -390,6 +394,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       this.showCrumb = false;
     }
     !this.postVoted && this.checkPostVoted();
+    this.updateActivePage();
     this.initMeta();
     this.parseHtml();
   }

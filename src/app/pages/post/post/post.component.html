@@ -125,7 +125,7 @@
         </button>
       </div>
     </div>
-    <div class="post-link" *ngIf="postType !== 'page'">
+    <div class="post-link" *ngIf="postType !== 'page' && (prevPost || nextPost)">
       <div class="post-link-prev">
         <a *ngIf="prevPost" [routerLink]="[prevPost.postGuid]" title="{{prevPost.postTitle}}">
           <span class="post-link-text">上一篇：{{prevPost.postTitle}}</span>

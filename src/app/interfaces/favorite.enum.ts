@@ -1,4 +1,5 @@
 export enum FavoriteType {
   POST = 'post',
-  WALLPAPER = 'wallpaper'
+  WALLPAPER = 'wallpaper',
+  PROMPT = 'prompt'
 }
