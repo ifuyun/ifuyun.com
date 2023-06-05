@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { PostType } from '../../../config/common.enum';
 import { ArchiveDataMap } from '../../../core/common.interface';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -21,8 +22,13 @@ import { PostService } from '../post.service';
   providers: [DestroyService]
 })
 export class PostArchiveComponent extends PageComponent implements OnInit {
+  @Input() postType: PostType = PostType.POST;
+
+  isPrompt = false;
+  isPost = false;
   isMobile = false;
-  pageIndex = 'postArchive';
+  pageIndex = '';
+  urlPrefix = '';
   archiveDateList!: ArchiveDataMap;
   archiveYearList: string[] = [];
 
@@ -43,7 +49,10 @@ export class PostArchiveComponent extends PageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.updateActivePage();
+    this.isPrompt = this.postType === PostType.PROMPT;
+    this.isPost = this.postType === PostType.POST;
+    this.urlPrefix = this.isPrompt ? 'prompt' : 'post';
+
     this.updatePageOptions();
     this.updateBreadcrumb();
     this.optionService.options$
@@ -54,6 +63,9 @@ export class PostArchiveComponent extends PageComponent implements OnInit {
       .subscribe((options) => {
         this.options = options;
         this.updatePageInfo();
+
+        this.pageIndex = this.isPrompt ? 'promptArchive' : 'postArchive';
+        this.updateActivePage();
       });
     this.fetchArchiveData();
   }
@@ -74,6 +86,7 @@ export class PostArchiveComponent extends PageComponent implements OnInit {
   private fetchArchiveData() {
     this.postService
       .getPostArchives({
+        postType: this.isPrompt ? PostType.PROMPT : PostType.POST,
         showCount: true,
         limit: 0
       })
@@ -86,11 +99,13 @@ export class PostArchiveComponent extends PageComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = ['归档', '文章', this.options['site_name']];
-    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    const pageType = this.isPost ? '文章' : 'Prompt';
+    const titles = ['归档', pageType, this.options['site_name']];
+    const pageKeywords = this.isPost ? this.options['post_keywords'] : this.options['prompt_keywords'];
+    const keywords: string[] = (pageKeywords || '').split(',');
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
-      description: `${this.options['site_name']}文章归档。${this.options['site_description']}`,
+      description: `${this.options['site_name']}${pageType}归档。${this.options['site_description']}`,
       author: this.options['site_author'],
       keywords: uniq(keywords).join(',')
     };
@@ -98,17 +113,18 @@ export class PostArchiveComponent extends PageComponent implements OnInit {
   }
 
   private updateBreadcrumb(): void {
+    const pageType = this.isPost ? '文章' : 'Prompt';
     this.breadcrumbs = [
       {
-        label: `文章`,
-        tooltip: `文章列表`,
-        url: '/post',
+        label: pageType,
+        tooltip: `${pageType}列表`,
+        url: `/${this.urlPrefix}`,
         isHeader: false
       },
       {
         label: '归档',
-        tooltip: '文章归档',
-        url: '/post/archive',
+        tooltip: `${pageType}归档`,
+        url: `/${this.urlPrefix}/archive`,
         isHeader: true
       }
     ];

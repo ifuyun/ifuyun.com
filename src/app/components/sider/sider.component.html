@@ -39,7 +39,23 @@
     </h3>
     <ul>
       <li *ngFor="let item of postArchives">
-        <a [routerLink]="['/post/archive/'+item.dateValue]" title="{{item.dateLabel}}">{{item.dateLabel}}({{item.count}})</a>
+        <a [routerLink]="['/post/archive/'+item.dateValue]"
+           title="{{item.dateLabel}}">{{item.dateLabel}}({{item.count}})</a>
+      </li>
+    </ul>
+  </div>
+  <div class="widget" *ngIf="(isHomePage || isPromptPage) && promptArchives.length > 0">
+    <h3 class="widget-title">
+      <div><i class="icon icon-rocket-takeoff"></i><span>Prompt归档</span></div>
+      <div class="more">
+        <a [routerLink]="['/prompt/archive']"
+           title="Prompt归档"><span>更多</span><i class="icon icon-double-right"></i></a>
+      </div>
+    </h3>
+    <ul>
+      <li *ngFor="let item of promptArchives">
+        <a [routerLink]="['/prompt/archive/'+item.dateValue]"
+           title="{{item.dateLabel}}">{{item.dateLabel}}({{item.count}})</a>
       </li>
     </ul>
   </div>
@@ -47,12 +63,14 @@
     <h3 class="widget-title">
       <div><i class="icon icon-images"></i><span>壁纸归档</span></div>
       <div class="more">
-        <a [routerLink]="['/wallpaper/archive']" title="壁纸归档"><span>更多</span><i class="icon icon-double-right"></i></a>
+        <a [routerLink]="['/wallpaper/archive']"
+           title="壁纸归档"><span>更多</span><i class="icon icon-double-right"></i></a>
       </div>
     </h3>
     <ul>
       <li *ngFor="let item of wallpaperArchives">
-        <a [routerLink]="['/wallpaper/archive/'+item.dateValue]" title="{{item.dateLabel}}">{{item.dateLabel}}({{item.count}})</a>
+        <a [routerLink]="['/wallpaper/archive/'+item.dateValue]"
+           title="{{item.dateLabel}}">{{item.dateLabel}}({{item.count}})</a>
       </li>
     </ul>
   </div>

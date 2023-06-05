@@ -2,17 +2,19 @@
 <div class="content-box" [ngClass]="{'content-box-desktop': !isMobile, 'content-box-mobile': isMobile}">
   <header class="content-header">
     <h1 class="content-title">
-      <a [routerLink]="['/post/archive']" title="文章归档" rel="bookmark">文章归档</a>
+      <a *ngIf="isPost" [routerLink]="['/' + urlPrefix + '/archive']" title="文章归档" rel="bookmark">文章归档</a>
+      <a *ngIf="isPrompt" [routerLink]="['/' + urlPrefix + '/archive']" title="Prompt归档" rel="bookmark">Prompt归档</a>
     </h1>
   </header>
   <div class="archive-content">
     <ng-container *ngFor="let year of archiveYearList">
       <h2 class="border-header">
-        <a [routerLink]="['/post/archive/' + year]" title="{{year}}年">{{year}}年({{archiveDateList[year].countByYear}})</a>
+        <a [routerLink]="['/' + urlPrefix + '/archive/' + year]"
+           title="{{year}}年">{{year}}年({{archiveDateList[year].countByYear}})</a>
       </h2>
       <ul class="archive-content-list">
         <li *ngFor="let item of archiveDateList[year].list">
-          <a [routerLink]="['/post/archive/' + item.dateValue]" title="{{item.dateLabel}}">
+          <a [routerLink]="['/' + urlPrefix + '/archive/' + item.dateValue]" title="{{item.dateLabel}}">
             {{item.dateLabel}}({{item.count}})</a>
         </li>
         <ng-container *ngIf="!isMobile">

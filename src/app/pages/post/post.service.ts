@@ -50,10 +50,10 @@ export class PostService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  getPostArchives({ showCount = false, limit = 10 }): Observable<ArchiveData[]> {
+  getPostArchives({ showCount = false, limit = 10, postType = PostType.POST }): Observable<ArchiveData[]> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POST_ARCHIVES), {
-        postType: PostType.POST,
+        postType,
         showCount: showCount ? 1 : 0,
         limit
       })

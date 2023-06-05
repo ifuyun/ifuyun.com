@@ -66,6 +66,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   readonly wechatCardPath = PATH_WECHAT_CARD;
 
   commentObjectType = CommentObjectType.POST;
+  isPost = false;
   isPrompt = false;
   isMobile = false;
   isLoggedIn = false;
@@ -120,6 +121,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   ngOnInit(): void {
+    this.isPost = this.postType === PostType.POST;
     this.isPrompt = this.postType === PostType.PROMPT;
     this.commentObjectType = this.isPrompt ? CommentObjectType.PROMPT : CommentObjectType.POST;
     this.updatePageOptions();
@@ -259,7 +261,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     }
     this.favoriteLoading = true;
     this.favoriteService
-      .addFavorite(this.postId, this.postType === PostType.POST ? FavoriteType.POST : FavoriteType.PROMPT)
+      .addFavorite(this.postId, this.isPost ? FavoriteType.POST : FavoriteType.PROMPT)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.favoriteLoading = false;
@@ -372,12 +374,12 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.postCategories = post.categories;
     this.isFavorite = post.isFavorite;
     this.postVoted = post.voted;
-    if (this.postType !== PostType.PAGE) {
-      const isPost = this.postType === PostType.POST;
-      const urlType = isPost ? 'post' : 'prompt';
-      const pageType = isPost ? '文章' : 'Prompt';
 
-      this.pageIndex = isPost ? 'post' : 'prompt';
+    if (this.postType !== PostType.PAGE) {
+      const urlType = this.isPost ? 'post' : 'prompt';
+      const pageType = this.isPost ? '文章' : 'Prompt';
+
+      this.pageIndex = this.isPost ? 'post' : 'prompt';
       this.showCrumb = true;
       this.breadcrumbs = (post.breadcrumbs || []).map((item) => ({
         ...item,
@@ -394,6 +396,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       this.pageIndex = post.post.postName;
       this.showCrumb = false;
     }
+
     !this.postVoted && this.checkPostVoted();
     this.updateActivePage();
     this.initMeta();
