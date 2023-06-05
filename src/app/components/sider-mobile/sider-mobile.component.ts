@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
@@ -28,7 +28,8 @@ import { ImageService } from '../image/image.service';
   templateUrl: './sider-mobile.component.html',
   styleUrls: ['./sider-mobile.component.less'],
   standalone: true,
-  imports: [NgClass, NgFor, NgIf, RouterLink]
+  imports: [CommonModule, RouterLink],
+  providers: [DestroyService]
 })
 export class SiderMobileComponent implements OnInit {
   @Input() siderOpen = false;

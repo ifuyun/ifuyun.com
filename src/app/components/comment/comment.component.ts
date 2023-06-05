@@ -1,4 +1,4 @@
-import { DatePipe, DOCUMENT, NgClass, NgFor, NgIf, NgStyle, NgTemplateOutlet, ViewportScroller } from '@angular/common';
+import { CommonModule, DatePipe, DOCUMENT, ViewportScroller } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -35,18 +35,8 @@ import { CommentService } from './comment.service';
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.less'],
   standalone: true,
-  imports: [
-    NgClass,
-    NgFor,
-    NgIf,
-    NgStyle,
-    RouterLink,
-    NgTemplateOutlet,
-    FormsModule,
-    ReactiveFormsModule,
-    DatePipe,
-    CommentHashPipe
-  ]
+  imports: [CommonModule, RouterLink, FormsModule, ReactiveFormsModule, DatePipe, CommentHashPipe],
+  providers: [DestroyService]
 })
 export class CommentComponent implements OnInit, AfterViewInit {
   @Input() objectType: CommentObjectType = CommentObjectType.POST;

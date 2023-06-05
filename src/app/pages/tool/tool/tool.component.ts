@@ -20,7 +20,8 @@ import { OptionService } from '../../../services/option.service';
 @Component({
   selector: 'app-tool',
   templateUrl: './tool.component.html',
-  styleUrls: ['./tool.component.less']
+  styleUrls: ['./tool.component.less'],
+  providers: [DestroyService]
 })
 export class ToolComponent extends PageComponent implements OnInit {
   isMobile = false;

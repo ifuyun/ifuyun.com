@@ -48,7 +48,8 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: t
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   standalone: true,
-  imports: [NgIf, NgTemplateOutlet]
+  imports: [NgIf, NgTemplateOutlet],
+  providers: [DestroyService]
 })
 export class BackTopComponent implements OnInit, OnDestroy, OnChanges {
   private scrollListenerDestroy$ = new Subject();

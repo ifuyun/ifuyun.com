@@ -6,6 +6,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class CommentHashPipe implements PipeTransform {
   transform(value: string): string {
-    return (value || '').substring(2, 10);
+    return (value || '').substring(4, 10);
   }
 }

@@ -30,7 +30,8 @@ import { WallpaperService } from '../wallpaper.service';
 @Component({
   selector: 'app-wallpaper-list',
   templateUrl: './wallpaper-list.component.html',
-  styleUrls: ['./wallpaper-list.component.less']
+  styleUrls: ['./wallpaper-list.component.less'],
+  providers: [DestroyService]
 })
 export class WallpaperListComponent extends PageComponent implements OnInit, AfterViewInit {
   isMobile = false;

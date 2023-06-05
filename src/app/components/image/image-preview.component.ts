@@ -119,7 +119,8 @@ const initialPosition = {
     role: 'document'
   },
   standalone: true,
-  imports: [NgFor, NgIf, CdkDrag, CdkDragHandle]
+  imports: [NgFor, NgIf, CdkDrag, CdkDragHandle],
+  providers: [DestroyService]
 })
 export class ImagePreviewComponent implements OnInit {
   images: Image[] = [];

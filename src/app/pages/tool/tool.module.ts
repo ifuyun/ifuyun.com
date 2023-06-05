@@ -25,17 +25,7 @@ import { ToolComponent } from './tool/tool.component';
     EmptyComponent,
     MakeMoneyComponent
   ],
-  declarations: [
-    ShoppingComponent,
-    Md5Component,
-    ToolComponent,
-    MurmurhashComponent
-  ],
-  exports: [
-    ShoppingComponent,
-    Md5Component,
-    ToolComponent,
-    MurmurhashComponent
-  ]
+  declarations: [ShoppingComponent, Md5Component, ToolComponent, MurmurhashComponent],
+  exports: [ShoppingComponent, Md5Component, ToolComponent, MurmurhashComponent]
 })
 export class ToolModule {}

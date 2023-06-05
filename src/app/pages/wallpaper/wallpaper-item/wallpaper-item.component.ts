@@ -8,7 +8,8 @@ import { Wallpaper, WallpaperLang } from '../wallpaper.interface';
 @Component({
   selector: 'i-wallpaper-item',
   templateUrl: './wallpaper-item.component.html',
-  styleUrls: []
+  styleUrls: [],
+  providers: [DestroyService]
 })
 export class WallpaperItemComponent implements OnInit {
   @Input() wallpaper!: Wallpaper;

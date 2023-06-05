@@ -18,6 +18,7 @@ import { MD5_PAGE_DESCRIPTION, MD5_PAGE_KEYWORDS } from '../tool.constant';
   selector: 'app-md5',
   templateUrl: './md5.component.html',
   styleUrls: ['./md5.component.less'],
+  providers: [DestroyService]
 })
 export class Md5Component extends PageComponent implements OnInit {
   readonly maxContentLength = 8000;

@@ -42,7 +42,8 @@ import { WallpaperService } from '../wallpaper.service';
 @Component({
   selector: 'app-wallpaper',
   templateUrl: './wallpaper.component.html',
-  styleUrls: ['./wallpaper.component.less']
+  styleUrls: ['./wallpaper.component.less'],
+  providers: [DestroyService]
 })
 export class WallpaperComponent extends PageComponent implements OnInit, AfterViewInit {
   readonly commentObjectType = CommentObjectType.WALLPAPER;

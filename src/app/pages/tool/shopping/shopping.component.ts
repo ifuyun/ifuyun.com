@@ -23,7 +23,8 @@ import { ShoppingService } from './shopping.service';
 @Component({
   selector: 'app-shopping',
   templateUrl: './shopping.component.html',
-  styleUrls: ['./shopping.component.less']
+  styleUrls: ['./shopping.component.less'],
+  providers: [DestroyService]
 })
 export class ShoppingComponent extends PageComponent implements OnInit {
   @ViewChild('promotionQrcode') promotionQrcodeEle!: ElementRef;

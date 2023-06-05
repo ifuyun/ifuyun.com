@@ -17,7 +17,8 @@ import { MURMURHASH_PAGE_DESCRIPTION, MURMURHASH_PAGE_KEYWORDS } from '../tool.c
 @Component({
   selector: 'app-murmurhash',
   templateUrl: './murmurhash.component.html',
-  styleUrls: ['./murmurhash.component.less']
+  styleUrls: ['./murmurhash.component.less'],
+  providers: [DestroyService]
 })
 export class MurmurhashComponent extends PageComponent implements OnInit {
   readonly maxHashKeyLength = 2000;

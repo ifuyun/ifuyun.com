@@ -18,7 +18,8 @@ import { WallpaperBoxComponent } from '../wallpaper-box/wallpaper-box.component'
   templateUrl: './toolbox.component.html',
   styleUrls: ['./toolbox.component.less'],
   standalone: true,
-  imports: [WallpaperBoxComponent, ImageModule]
+  imports: [WallpaperBoxComponent, ImageModule],
+  providers: [DestroyService]
 })
 export class ToolboxComponent implements OnInit {
   options: OptionEntity = {};

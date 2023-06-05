@@ -20,7 +20,8 @@ import { OptionService } from '../../services/option.service';
   templateUrl: './carousel.component.html',
   styleUrls: ['./carousel.component.less'],
   standalone: true,
-  imports: [NgClass, NgFor, NgIf, NgStyle]
+  imports: [NgClass, NgFor, NgIf, NgStyle],
+  providers: [DestroyService]
 })
 export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly blankImage = BLANK_IMAGE;

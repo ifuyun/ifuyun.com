@@ -17,7 +17,8 @@ import { WallpaperService } from '../wallpaper.service';
 @Component({
   selector: 'app-wallpaper-archive',
   templateUrl: './wallpaper-archive.component.html',
-  styleUrls: []
+  styleUrls: [],
+  providers: [DestroyService]
 })
 export class WallpaperArchiveComponent extends PageComponent implements OnInit {
   isMobile = false;

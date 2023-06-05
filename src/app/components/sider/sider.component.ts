@@ -29,13 +29,18 @@ import { MessageService } from '../message/message.service';
   templateUrl: './sider.component.html',
   styleUrls: ['./sider.component.less'],
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, AdsenseComponent, JdUnionGoodsComponent]
+  imports: [CommonModule, FormsModule, RouterLink, AdsenseComponent, JdUnionGoodsComponent],
+  providers: [DestroyService]
 })
 export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('redPacket') redPacketEle!: ElementRef;
 
   isMobile = false;
-  activePage = '';
+  pageIndex = '';
+  isHomePage = false;
+  isPostPage = false;
+  isWallpaperPage = false;
+  isPromptPage = false;
   postArchives: ArchiveData[] = [];
   wallpaperArchives: ArchiveData[] = [];
   hotPosts: PostEntity[] = [];
@@ -76,16 +81,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showAlipayRedPacketQrcode();
       });
     this.postService
-      .getPostArchives({
-        showCount: true
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => (this.postArchives = res));
-    this.wallpaperService
-      .getWallpaperArchives({ showCount: true })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => (this.wallpaperArchives = res));
-    this.postService
       .getHotPosts()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => (this.hotPosts = res));
@@ -103,6 +98,21 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.commonService.adsFlag$.pipe(takeUntil(this.destroy$)).subscribe((flag) => {
       this.jdUnionVisible = flag;
     });
+    this.commonService.pageIndex$
+      .pipe(
+        skipWhile((page) => !page),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((page) => {
+        this.pageIndex = page;
+        this.updatePageIndex();
+        if (this.isHomePage || this.isPostPage) {
+          this.fetchPostArchives();
+        }
+        if (this.isHomePage || this.isWallpaperPage) {
+          this.fetchWallpaperArchives();
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -131,6 +141,24 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
         .subscribe();
       this.router.navigate(['/'], { queryParams: { keyword: this.keyword } });
     }
+  }
+
+  private fetchPostArchives() {
+    this.postService
+      .getPostArchives({
+        showCount: true
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => (this.postArchives = res));
+  }
+
+  private fetchWallpaperArchives() {
+    this.wallpaperService
+      .getWallpaperArchives({
+        showCount: true
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => (this.wallpaperArchives = res));
   }
 
   private showAlipayRedPacketQrcode() {
@@ -163,5 +191,12 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
         siderEle.style.top = '';
       }
     }
+  }
+
+  private updatePageIndex() {
+    this.isHomePage = this.pageIndex === 'index';
+    this.isPostPage = ['post', 'postArchive'].includes(this.pageIndex);
+    this.isWallpaperPage = ['wallpaper', 'wallpaperArchive'].includes(this.pageIndex);
+    this.isPromptPage = ['prompt', 'promptArchive'].includes(this.pageIndex);
   }
 }

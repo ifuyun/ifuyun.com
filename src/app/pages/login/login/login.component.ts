@@ -46,7 +46,8 @@ const duration = 500; // ms
         )
       ])
     ])
-  ]
+  ],
+  providers: [DestroyService]
 })
 export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
   isMobile = false;

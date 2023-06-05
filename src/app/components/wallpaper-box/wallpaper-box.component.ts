@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
@@ -14,7 +14,8 @@ import { ModalComponent } from '../modal/modal.component';
   templateUrl: './wallpaper-box.component.html',
   styleUrls: ['./wallpaper-box.component.less'],
   standalone: true,
-  imports: [NgClass, NgIf, ModalComponent]
+  imports: [CommonModule, ModalComponent],
+  providers: [DestroyService]
 })
 export class WallpaperBoxComponent implements OnChanges {
   @Input() visible = false;

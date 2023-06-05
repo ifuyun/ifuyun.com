@@ -20,7 +20,8 @@ import { PostService } from '../post.service';
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
-  styleUrls: []
+  styleUrls: [],
+  providers: [DestroyService]
 })
 export class PostListComponent extends PageComponent implements OnInit {
   @Input() postType: PostType = PostType.POST;

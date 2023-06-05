@@ -17,7 +17,8 @@ import { PostService } from '../post.service';
 @Component({
   selector: 'app-post-archive',
   templateUrl: './post-archive.component.html',
-  styleUrls: []
+  styleUrls: [],
+  providers: [DestroyService]
 })
 export class PostArchiveComponent extends PageComponent implements OnInit {
   isMobile = false;

@@ -15,7 +15,8 @@ import { BreadcrumbService } from './breadcrumb.service';
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.less'],
   standalone: true,
-  imports: [NgClass, NgFor, NgIf, RouterLink]
+  imports: [NgClass, NgFor, NgIf, RouterLink],
+  providers: [DestroyService]
 })
 export class BreadcrumbComponent implements OnInit {
   isMobile = false;

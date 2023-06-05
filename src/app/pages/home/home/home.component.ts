@@ -27,7 +27,8 @@ import { WallpaperService } from '../../wallpaper/wallpaper.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.less']
+  styleUrls: ['./home.component.less'],
+  providers: [DestroyService]
 })
 export class HomeComponent extends PageComponent implements OnInit {
   isMobile = false;

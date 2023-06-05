@@ -16,8 +16,6 @@ import { AdsenseConfig } from './adsense.interface';
 
 @Component({
   selector: 'i-adsense',
-  standalone: true,
-  imports: [CommonModule],
   template: `
     <div
       #adsense
@@ -27,7 +25,10 @@ import { AdsenseConfig } from './adsense.interface';
       (click)="logClick()"
     ></div>
   `,
-  styleUrls: []
+  styleUrls: [],
+  standalone: true,
+  imports: [CommonModule],
+  providers: [DestroyService]
 })
 export class AdsenseComponent implements AfterViewInit, OnDestroy {
   @ViewChild('adsense', { read: ElementRef, static: true }) adsenseEle!: ElementRef;
@@ -154,7 +155,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
   };
 
   private loadAds() {
-    if (this.enableAds && this.platform.isBrowser && this.visible) {
+    if (this.enableAds && this.visible && this.platform.isBrowser) {
       const ads: Record<string, string | boolean> = {};
       if (this.pageLevelAds) {
         ads['google_ad_client'] = this.clientId;

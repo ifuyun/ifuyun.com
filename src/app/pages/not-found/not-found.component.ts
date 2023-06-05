@@ -17,7 +17,8 @@ import { RouterLink } from '@angular/router';
   templateUrl: './not-found.component.html',
   styleUrls: ['./not-found.component.less'],
   standalone: true,
-  imports: [RouterLink]
+  imports: [RouterLink],
+  providers: [DestroyService]
 })
 export class NotFoundComponent extends PageComponent implements OnInit {
   options: OptionEntity = {};

@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
@@ -16,7 +16,8 @@ import { OptionService } from '../../services/option.service';
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.less'],
   standalone: true,
-  imports: [NgClass, NgFor, NgIf, RouterLink]
+  imports: [CommonModule, RouterLink],
+  providers: [DestroyService]
 })
 export class FooterComponent implements OnInit {
   isMobile = false;

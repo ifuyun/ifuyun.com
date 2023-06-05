@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Response } from 'express';
 import { CookieService } from 'ngx-cookie-service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { MEDIA_QUERY_THEME_DARK, MEDIA_QUERY_THEME_LIGHT, STORAGE_KEY_THEME } from '../config/common.constant';
 import { Theme } from '../config/common.enum';
@@ -16,7 +16,7 @@ import { PlatformService } from './platform.service';
   providedIn: 'root'
 })
 export class CommonService {
-  private pageIndex: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private pageIndex: Subject<string> = new Subject<string>();
   public pageIndex$: Observable<string> = this.pageIndex.asObservable();
 
   private darkMode: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);

@@ -30,7 +30,7 @@
         [showComments]="false" [showBorder]="false" [showEmptyBackground]="false"></i-jd-union-goods>
     </div>
   </div>
-  <div class="widget" *ngIf="postArchives.length > 0">
+  <div class="widget" *ngIf="(isHomePage || isPostPage) && postArchives.length > 0">
     <h3 class="widget-title">
       <div><i class="icon icon-pencil-square"></i><span>文章归档</span></div>
       <div class="more">
@@ -43,7 +43,7 @@
       </li>
     </ul>
   </div>
-  <div class="widget" *ngIf="wallpaperArchives.length > 0">
+  <div class="widget" *ngIf="(isHomePage || isWallpaperPage) && wallpaperArchives.length > 0">
     <h3 class="widget-title">
       <div><i class="icon icon-images"></i><span>壁纸归档</span></div>
       <div class="more">

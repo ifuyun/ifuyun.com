@@ -22,7 +22,8 @@ import { LoginService } from '../login.service';
 @Component({
   selector: 'app-third-login',
   templateUrl: './third-login.component.html',
-  styleUrls: ['./third-login.component.less']
+  styleUrls: ['./third-login.component.less'],
+  providers: [DestroyService]
 })
 export class ThirdLoginComponent extends PageComponent implements OnInit {
   isMobile = false;

@@ -27,7 +27,8 @@ import { UserService } from '../../services/user.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.less'],
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, AutofocusDirective]
+  imports: [CommonModule, RouterLink, FormsModule, AutofocusDirective],
+  providers: [DestroyService]
 })
 export class HeaderComponent implements OnInit {
   @Input() postTaxonomies: TaxonomyNode[] = [];

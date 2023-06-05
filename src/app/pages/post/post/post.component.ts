@@ -56,7 +56,8 @@ import { PostService } from '../post.service';
   selector: 'app-post',
   templateUrl: './post.component.html',
   styleUrls: [],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  providers: [DestroyService]
 })
 export class PostComponent extends PageComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() postType: PostType = PostType.POST;
