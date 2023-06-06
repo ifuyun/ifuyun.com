@@ -354,16 +354,18 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
           this.initData(post);
         }
       });
-    this.postService
-      .getPostsOfPrevAndNext({
-        postName: this.postSlug,
-        postType: this.postType
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.prevPost = res.prevPost;
-        this.nextPost = res.nextPost;
-      });
+    if (this.postType !== PostType.PAGE) {
+      this.postService
+        .getPostsOfPrevAndNext({
+          postName: this.postSlug,
+          postType: this.postType
+        })
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          this.prevPost = res.prevPost;
+          this.nextPost = res.nextPost;
+        });
+    }
   }
 
   private initData(post: Post) {

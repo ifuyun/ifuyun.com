@@ -31,12 +31,22 @@ export class SitemapController {
         priority: 1
       },
       {
+        url: siteUrl + '/prompt',
+        changefreq: EnumChangefreq.ALWAYS,
+        priority: 1
+      },
+      {
         url: siteUrl + '/wallpaper',
         changefreq: EnumChangefreq.ALWAYS,
         priority: 1
       },
       {
         url: siteUrl + '/post/archive',
+        changefreq: EnumChangefreq.ALWAYS,
+        priority: 0.9
+      },
+      {
+        url: siteUrl + '/prompt/archive',
         changefreq: EnumChangefreq.ALWAYS,
         priority: 0.9
       },
@@ -61,6 +71,14 @@ export class SitemapController {
       }));
     const posts: SitemapItem[] = data.posts
       .filter((item) => item.postType === PostType.POST)
+      .map((item) => ({
+        url: siteUrl + item.postGuid,
+        changefreq: EnumChangefreq.ALWAYS,
+        priority: 0.9,
+        lastmod: moment(item.postModified).format()
+      }));
+    const prompts: SitemapItem[] = data.posts
+      .filter((item) => item.postType === PostType.PROMPT)
       .map((item) => ({
         url: siteUrl + item.postGuid,
         changefreq: EnumChangefreq.ALWAYS,
@@ -95,6 +113,18 @@ export class SitemapController {
         priority: 0.8
       })
     );
+    const promptArchivesByMonth: SitemapItem[] = data.promptArchives.map((item) => ({
+      url: `${siteUrl}/prompt/archive/${item.dateValue}`,
+      changefreq: EnumChangefreq.DAILY,
+      priority: 0.8
+    }));
+    const promptArchivesByYear: SitemapItem[] = uniq(data.promptArchives.map((item) => item.dateValue.split('/')[0])).map(
+      (item) => ({
+        url: `${siteUrl}/prompt/archive/${item}`,
+        changefreq: EnumChangefreq.DAILY,
+        priority: 0.8
+      })
+    );
     const wallpaperArchivesByMonth: SitemapItem[] = data.wallpaperArchives.map((item) => ({
       url: `${siteUrl}/wallpaper/archive/${item.dateValue}`,
       changefreq: EnumChangefreq.DAILY,
@@ -112,21 +142,45 @@ export class SitemapController {
       changefreq: <EnumChangefreq>item.changefreq,
       priority: item.priority
     }));
-    const taxonomies: SitemapItem[] = data.taxonomies.map((item) => ({
-      url: `${siteUrl}/post/${item.taxonomyType === TaxonomyType.POST ? 'category' : 'tag'}/${item.taxonomySlug}`,
-      changefreq: EnumChangefreq.DAILY,
-      priority: 0.7
-    }));
+    const taxonomies: SitemapItem[] = data.taxonomies.map((item) => {
+      let urlPrefix = '';
+      let taxonomyType = '';
+      switch (item.taxonomyType) {
+        case TaxonomyType.POST:
+          urlPrefix = 'post';
+          taxonomyType = 'category';
+          break;
+        case TaxonomyType.TAG:
+          urlPrefix = 'post';
+          taxonomyType = 'tag';
+          break;
+        case TaxonomyType.PROMPT:
+          urlPrefix = 'prompt';
+          taxonomyType = 'category';
+          break;
+        case TaxonomyType.PROMPT_TAG:
+          urlPrefix = 'prompt';
+          taxonomyType = 'tag';
+      }
+      return {
+        url: `${siteUrl}/${urlPrefix}/${taxonomyType}/${item.taxonomySlug}`,
+        changefreq: EnumChangefreq.DAILY,
+        priority: 0.7
+      };
+    });
 
     streamToPromise(
       Readable.from(
         links.concat(
           pages,
           posts,
+          prompts,
           wallpapersCn,
           wallpapersEn,
           postArchivesByYear,
           postArchivesByMonth,
+          promptArchivesByYear,
+          promptArchivesByMonth,
           wallpaperArchivesByYear,
           wallpaperArchivesByMonth,
           taxonomies,

@@ -13,7 +13,9 @@ export enum TaxonomyType {
   POST = 'post',
   LINK = 'link',
   TAG = 'tag',
-  MENU = 'menu'
+  MENU = 'menu',
+  PROMPT = 'prompt',
+  PROMPT_TAG = 'prompt-tag'
 }
 
 export enum TaxonomyStatus {
