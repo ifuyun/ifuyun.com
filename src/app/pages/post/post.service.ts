@@ -20,9 +20,10 @@ export class PostService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  getPostById(postId: string, referer?: string): Observable<Post> {
+  getPostById(postId: string, postType: PostType, referer?: string): Observable<Post> {
     const param: Record<string, any> = {
-      postId
+      postId,
+      postType
     };
     if (referer?.trim()) {
       param['ref'] = referer;
@@ -32,10 +33,11 @@ export class PostService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  getPostBySlug(slug: string): Observable<Post> {
+  getPostBySlug(slug: string, postType: PostType): Observable<Post> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POST), {
-        slug
+        slug,
+        postType
       })
       .pipe(map((res) => res?.data || {}));
   }

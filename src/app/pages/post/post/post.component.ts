@@ -326,7 +326,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   private fetchPost() {
     this.postService
-      .getPostById(this.postId, this.referer)
+      .getPostById(this.postId, this.postType, this.referer)
       .pipe(takeUntil(this.destroy$))
       .subscribe((post) => {
         if (post && post.post && post.post.postId) {
@@ -347,7 +347,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   private fetchPage() {
     this.postService
-      .getPostBySlug(this.postSlug)
+      .getPostBySlug(this.postSlug, this.postType)
       .pipe(takeUntil(this.destroy$))
       .subscribe((post) => {
         if (post && post.post && post.post.postId) {
