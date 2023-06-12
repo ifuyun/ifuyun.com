@@ -51,5 +51,6 @@ export enum LinkTarget {
 
 export enum SearchType {
   POST = 'post',
+  PROMPT = 'prompt',
   WALLPAPER = 'wallpaper'
 }
