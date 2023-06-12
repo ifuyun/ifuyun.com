@@ -49,6 +49,7 @@ import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
 import { UserService } from '../../../services/user.service';
 import { VoteService } from '../../../services/vote.service';
+import { PromptEntity } from '../../prompt/prompt.interface';
 import { Post, PostEntity, PostModel } from '../post.interface';
 import { PostService } from '../post.service';
 
@@ -78,11 +79,14 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   postMeta: Record<string, any> = {};
   postTags: TaxonomyEntity[] = [];
   postCategories: TaxonomyEntity[] = [];
+  prompts: PromptEntity[] = [];
   isFavorite = false;
   showCrumb = true;
   postVoted = false;
   voteLoading = false;
   favoriteLoading = false;
+  showPayMask = false;
+  promptCopyMap: Record<string, boolean> = {};
 
   private readonly copyHTML = '<i class="icon icon-copy"></i>Copy code';
   private readonly copiedHTML = '<i class="icon icon-check-lg"></i>Copied!';
@@ -128,11 +132,15 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.optionService.options$
       .pipe(
         skipWhile((options) => isEmpty(options)),
-        combineLatestWith(this.route.params),
+        combineLatestWith(this.route.params, this.urlService.urlInfo$, this.userService.loginUser$),
         takeUntil(this.destroy$)
       )
-      .subscribe(([options, params]) => {
+      .subscribe(([options, params, url, user]) => {
         this.options = options;
+        this.referer = url.previous;
+        this.user = user;
+        this.isLoggedIn = !!this.user.userId;
+
         const postName = params['postName']?.trim();
         if (!postName) {
           this.commonService.redirectToNotFound();
@@ -147,13 +155,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         }
         this.commentService.updateObjectId(this.postId);
       });
-    this.urlService.urlInfo$.pipe(takeUntil(this.destroy$)).subscribe((url) => {
-      this.referer = url.previous;
-    });
-    this.userService.loginUser$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      this.user = user;
-      this.isLoggedIn = !!this.user.userId;
-    });
   }
 
   ngAfterViewInit() {
@@ -301,6 +302,19 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     }
   }
 
+  copyPrompt(prompt: PromptEntity) {
+    if (!this.isLoggedIn) {
+      this.message.error('请先登录');
+      return;
+    }
+    this.clipboardService.copy(prompt.promptContent);
+
+    this.promptCopyMap[prompt.promptId] = true;
+    setTimeout(() => {
+      this.promptCopyMap[prompt.promptId] = false;
+    }, 2000);
+  }
+
   protected updateActivePage(): void {
     this.commonService.updateActivePage(this.pageIndex);
   }
@@ -374,8 +388,10 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.postMeta = post.meta;
     this.postTags = post.tags;
     this.postCategories = post.categories;
+    this.prompts = post.prompts;
     this.isFavorite = post.isFavorite;
     this.postVoted = post.voted;
+    this.showPayMask = post.post.postPayFlag && !this.user.isAdmin && post.post.postOwner !== this.user.userId || !!post.meta['should_login'] && !this.isLoggedIn;
 
     if (this.postType !== PostType.PAGE) {
       const urlType = this.isPost ? 'post' : 'prompt';

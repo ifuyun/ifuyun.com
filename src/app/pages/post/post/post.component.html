@@ -23,7 +23,7 @@
              [ngStyle]="{'user-select': post?.postPayFlag || postMeta['should_login'] && !isLoggedIn ? 'none' : ''}"
              [innerHTML]="post?.postContent | safeHtml"
              (click)="onPostClick($event)"></article>
-    <ng-container *ngIf="post?.postPayFlag && !user.isAdmin && post?.postOwner !== user.userId || postMeta['should_login'] && !isLoggedIn">
+    <ng-container *ngIf="showPayMask">
       <div class="pay-mask"></div>
       <div class="pay-body">
         <div class="pay-separator">
@@ -42,6 +42,26 @@
           </ng-container>
         </div>
       </div>
+    </ng-container>
+    <ng-container *ngIf="isPrompt && !showPayMask">
+      <article class="post-content prompt-content">
+        <h1>Prompt</h1>
+        <ng-container *ngFor="let prompt of prompts">
+          <h2>{{prompt.promptTitle}}</h2>
+          <pre class="i-code">
+            <div class="i-code-info">
+              <span>{{prompt.promptLang | promptLang}}</span>
+              <span class="i-code-copy" (click)="copyPrompt(prompt)">
+                <span *ngIf="!promptCopyMap[prompt.promptId]"><i class="icon icon-copy"></i>Copy prompt</span>
+                <span *ngIf="promptCopyMap[prompt.promptId]"><i class="icon icon-check-lg"></i>Copied!</span>
+              </span>
+            </div>
+            <div class="i-code-body">
+              <code class="i-code-html" [innerHTML]="prompt.promptContent | safeHtml"></code>
+            </div>
+          </pre>
+        </ng-container>
+      </article>
     </ng-container>
     <ng-container *ngIf="postMeta['show_wechat_card'] === '1'">
       <div class="divider"></div>

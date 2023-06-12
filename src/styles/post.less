@@ -197,6 +197,7 @@
         background-color: var(--post-pre-code-info-bg-color);
 
         .i-code-copy {
+          display: flex;
           cursor: pointer;
         }
 
@@ -286,6 +287,17 @@
       border-bottom: none;
       border-left: none;
       border-right: none;
+    }
+  }
+
+  .prompt-content {
+    h1 {
+      text-align: center;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      user-select: none;
     }
   }
 
