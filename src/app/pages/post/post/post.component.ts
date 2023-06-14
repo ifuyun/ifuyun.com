@@ -309,6 +309,14 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     }
     this.clipboardService.copy(prompt.promptContent);
 
+    this.logService
+      .logAction({
+        action: Action.COPY_PROMPT,
+        objectType: ActionObjectType.PROMPT,
+        objectId: this.postId
+      })
+      .subscribe();
+
     this.promptCopyMap[prompt.promptId] = true;
     setTimeout(() => {
       this.promptCopyMap[prompt.promptId] = false;

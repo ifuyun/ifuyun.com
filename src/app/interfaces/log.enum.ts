@@ -1,6 +1,8 @@
 export enum ActionObjectType {
   POST = 'post',
   POST_LIST = 'post_list',
+  PROMPT = 'prompt',
+  PROMPT_LIST = 'prompt_list',
   WALLPAPER = 'wallpaper',
   WALLPAPER_LIST = 'wallpaper_list',
   COMMENT = 'comment',
@@ -16,6 +18,8 @@ export enum ActionObjectType {
 export enum Action {
   // post
   COPY_CODE = 'copy_code',
+  // prompt
+  COPY_PROMPT = 'copy_prompt',
   // wallpaper
   DOWNLOAD_WALLPAPER = 'download_wallpaper',
   TRANSLATE_WALLPAPER = 'translate_wallpaper',
