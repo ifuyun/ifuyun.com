@@ -60,6 +60,10 @@
               <code class="i-code-html" [innerHTML]="prompt.promptContent | safeHtml"></code>
             </div>
           </pre>
+          <div class="prompt-source">
+            <span>来源：{{!prompt.promptOriginal ? prompt.promptMetaMap?.['prompt_source'] : '原创'}}</span>
+            <span>作者：{{prompt.promptMetaMap?.['prompt_author'] || prompt.user.userNiceName}}</span>
+          </div>
         </ng-container>
       </article>
     </ng-container>

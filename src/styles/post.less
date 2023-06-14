@@ -299,6 +299,17 @@
       white-space: pre-wrap;
       user-select: none;
     }
+
+    .prompt-source {
+      display: flex;
+      justify-content: center;
+      color: var(--img-figcaption-color);
+      font-size: 13px;
+
+      :not(:last-child):after {
+        content: '，';
+      }
+    }
   }
 
   .post-footer {
