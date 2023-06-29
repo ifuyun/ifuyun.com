@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
 import { CommentComponent } from '../../components/comment/comment.component';
 import { EmptyComponent } from '../../components/empty/empty.component';
-import { ImageModule } from '../../components/image/image.module';
 import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
 import { PageBarComponent } from '../../components/page-bar/page-bar.component';
 import { NumberViewPipe } from '../../pipes/number-view.pipe';
@@ -22,7 +21,6 @@ import { WallpaperComponent } from './wallpaper/wallpaper.component';
     WallpaperRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    ImageModule,
     BreadcrumbComponent,
     CommentComponent,
     MakeMoneyComponent,

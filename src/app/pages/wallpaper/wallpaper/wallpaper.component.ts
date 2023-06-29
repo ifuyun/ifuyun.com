@@ -1,6 +1,8 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
+import { NzImageService } from 'ng-zorro-antd/image';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import * as QRCode from 'qrcode';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
@@ -8,8 +10,6 @@ import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.inte
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
-import { ImageService } from '../../../components/image/image.service';
-import { MessageService } from '../../../components/message/message.service';
 import {
   PATH_WECHAT_MINI_APP_CARD,
   PATH_WECHAT_REWARD,
@@ -83,8 +83,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     private commentService: CommentService,
     private voteService: VoteService,
     private favoriteService: FavoriteService,
-    private message: MessageService,
-    private imageService: ImageService,
+    private message: NzMessageService,
+    private imageService: NzImageService,
     private logService: LogService
   ) {
     super();

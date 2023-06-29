@@ -6,7 +6,6 @@ import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highli
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
 import { CommentComponent } from '../../components/comment/comment.component';
 import { EmptyComponent } from '../../components/empty/empty.component';
-import { ImageModule } from '../../components/image/image.module';
 import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
 import { PageBarComponent } from '../../components/page-bar/page-bar.component';
 import { CopyrightTypeDescPipe } from '../../pipes/copyright-type-desc.pipe';
@@ -30,7 +29,6 @@ import { PostPageComponent } from './post-page/post-page.component';
     ReactiveFormsModule,
     HighlightModule,
     ClipboardModule,
-    ImageModule,
     BreadcrumbComponent,
     CommentComponent,
     PageBarComponent,

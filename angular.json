@@ -3,16 +3,8 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ifuyun.com": {
+    "ifuyun": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "less"
-        },
-        "@schematics/angular:application": {
-          "strict": true
-        }
-      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -23,7 +15,7 @@
             "outputPath": "dist/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "inlineStyleLanguage": "less",
@@ -40,13 +32,20 @@
                 "glob": "**/*",
                 "input": "src/favicon/",
                 "output": "/"
-              }, {
+              },
+              {
                 "glob": "**/*",
                 "input": "src/webmaster/",
                 "output": "/"
-              }, {
+              },
+              {
                 "glob": "**/*",
                 "input": "src/assets/",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
                 "output": "/assets/"
               }
             ],
@@ -101,10 +100,10 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "ifuyun.com:build:production"
+              "browserTarget": "ifuyun:build:production"
             },
             "development": {
-              "browserTarget": "ifuyun.com:build:development"
+              "browserTarget": "ifuyun:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -112,29 +111,34 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ifuyun.com:build"
+            "browserTarget": "ifuyun:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "less",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "src/favicon/",
                 "output": "/"
-              }, {
+              },
+              {
                 "glob": "**/*",
                 "input": "src/webmaster/",
                 "output": "/"
-              }, {
+              },
+              {
                 "glob": "**/*",
                 "input": "src/assets/",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
                 "output": "/assets/"
               }
             ],
@@ -155,6 +159,8 @@
             "tsConfig": "tsconfig.server.json",
             "inlineStyleLanguage": "less",
             "externalDependencies": [
+              "@nestjs/common",
+              "@nestjs/core",
               "@nestjs/microservices",
               "@nestjs/microservices/microservices-module",
               "@nestjs/websockets",
@@ -165,13 +171,7 @@
           },
           "configurations": {
             "production": {
-              "outputHashing": "media",
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ]
+              "outputHashing": "media"
             },
             "development": {
               "optimization": false,
@@ -189,12 +189,12 @@
           },
           "configurations": {
             "development": {
-              "browserTarget": "ifuyun.com:build:development",
-              "serverTarget": "ifuyun.com:server:development"
+              "browserTarget": "ifuyun:build:development",
+              "serverTarget": "ifuyun:server:development"
             },
             "production": {
-              "browserTarget": "ifuyun.com:build:production",
-              "serverTarget": "ifuyun.com:server:production"
+              "browserTarget": "ifuyun:build:production",
+              "serverTarget": "ifuyun:server:production"
             }
           },
           "defaultConfiguration": "development"
@@ -208,12 +208,12 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "ifuyun.com:build:production",
-              "serverTarget": "ifuyun.com:server:production"
+              "browserTarget": "ifuyun:build:production",
+              "serverTarget": "ifuyun:server:production"
             },
             "development": {
-              "browserTarget": "ifuyun.com:build:development",
-              "serverTarget": "ifuyun.com:server:development"
+              "browserTarget": "ifuyun:build:development",
+              "serverTarget": "ifuyun:server:development"
             }
           },
           "defaultConfiguration": "production"
@@ -221,7 +221,6 @@
       }
     }
   },
-  "defaultProject": "ifuyun.com",
   "cli": {
     "analytics": false
   }

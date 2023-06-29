@@ -2,7 +2,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "alwaysStrict": true,
     "baseUrl": "./",
     "declaration": false,
     "downlevelIteration": true,

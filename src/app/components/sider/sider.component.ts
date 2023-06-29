@@ -3,6 +3,7 @@ import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewCh
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
 import { environment as env } from '../../../environments/environment';
@@ -23,7 +24,6 @@ import { LogService } from '../../services/log.service';
 import { OptionService } from '../../services/option.service';
 import { AdsenseComponent } from '../adsense/adsense.component';
 import { JdUnionGoodsComponent } from '../jd-union-goods/jd-union-goods.component';
-import { MessageService } from '../message/message.service';
 
 @Component({
   selector: 'app-sider',
@@ -65,7 +65,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     private postService: PostService,
     private linkService: LinkService,
     private wallpaperService: WallpaperService,
-    private message: MessageService,
+    private message: NzMessageService,
     private logService: LogService
   ) {}
 

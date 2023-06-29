@@ -171,7 +171,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
           } else {
             this.commonService.updateAdsFlag(false);
           }
-        } catch (e) {
+        } catch (e: any) {
           this.console.error('Ads: ', e.message || 'is not working.');
           this.hideAdsEle();
         }

@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 // todo: remove from allowedCommonJsDependencies, since @nestjs/ng-universal/tokens is not exist
 import { RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Response } from 'express';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { catchError, EMPTY, map, Observable, of } from 'rxjs';
-import { MessageService } from '../components/message/message.service';
 import { ApiUrl } from '../config/api-url';
 import { Message } from '../config/message.enum';
 import { HttpResponseEntity } from './http-response.interface';
@@ -22,7 +22,7 @@ export class ApiService {
     private http: HttpClient,
     private router: Router,
     private platform: PlatformService,
-    private message: MessageService
+    private message: NzMessageService
   ) {}
 
   getApiUrl(path: string): string {

@@ -2,19 +2,12 @@
 {
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
-    "outDir": "./out-tsc/server",
-    "target": "ES2022",
-    "types": [
-      "node"
-    ],
+    "outDir": "./out-tsc/app-server",
+    "types": ["node"],
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
   "files": [
-    "src/main.server.ts",
     "server.ts"
-  ],
-  "angularCompilerOptions": {
-    "entryModule": "./src/app/app.server.module#AppServerModule"
-  }
+  ]
 }

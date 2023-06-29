@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
+import { NzImageService } from 'ng-zorro-antd/image';
 import { skipWhile, takeUntil } from 'rxjs';
 import { PATH_WECHAT_CARD, PATH_WECHAT_MINI_APP_CARD } from '../../config/common.constant';
 import { Theme } from '../../config/common.enum';
@@ -9,8 +10,6 @@ import { Action, ActionObjectType } from '../../interfaces/log.enum';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { LogService } from '../../services/log.service';
 import { OptionService } from '../../services/option.service';
-import { ImageModule } from '../image/image.module';
-import { ImageService } from '../image/image.service';
 import { WallpaperBoxComponent } from '../wallpaper-box/wallpaper-box.component';
 
 @Component({
@@ -18,7 +17,7 @@ import { WallpaperBoxComponent } from '../wallpaper-box/wallpaper-box.component'
   templateUrl: './toolbox.component.html',
   styleUrls: ['./toolbox.component.less'],
   standalone: true,
-  imports: [WallpaperBoxComponent, ImageModule],
+  imports: [WallpaperBoxComponent],
   providers: [DestroyService]
 })
 export class ToolboxComponent implements OnInit {
@@ -30,7 +29,7 @@ export class ToolboxComponent implements OnInit {
     private destroy$: DestroyService,
     private commonService: CommonService,
     private optionService: OptionService,
-    private imageService: ImageService,
+    private imageService: NzImageService,
     private logService: LogService
   ) {}
 

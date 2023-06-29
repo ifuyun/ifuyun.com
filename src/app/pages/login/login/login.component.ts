@@ -6,9 +6,9 @@ import { ActivatedRoute } from '@angular/router';
 import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { CookieService } from 'ngx-cookie-service';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
-import { MessageService } from '../../../components/message/message.service';
 import { ADMIN_URL_PARAM } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -84,7 +84,7 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
     private optionService: OptionService,
     private cookieService: CookieService,
     private authService: AuthService,
-    private message: MessageService,
+    private message: NzMessageService,
     private wallpaperService: WallpaperService
   ) {
     super();

@@ -12,6 +12,8 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import highlight from 'highlight.js';
 import { isEmpty, uniq } from 'lodash';
+import { NzImageService } from 'ng-zorro-antd/image';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { ClipboardService } from 'ngx-clipboard';
 import * as QRCode from 'qrcode';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
@@ -19,8 +21,6 @@ import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.inte
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
-import { ImageService } from '../../../components/image/image.service';
-import { MessageService } from '../../../components/message/message.service';
 import {
   PATH_WECHAT_CARD,
   PATH_WECHAT_REWARD,
@@ -114,8 +114,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     private commentService: CommentService,
     private voteService: VoteService,
     private favoriteService: FavoriteService,
-    private imageService: ImageService,
-    private message: MessageService,
+    private imageService: NzImageService,
+    private message: NzMessageService,
     private renderer: Renderer2,
     private clipboardService: ClipboardService,
     private logService: LogService
