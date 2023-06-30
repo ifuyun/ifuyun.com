@@ -23,6 +23,7 @@
     "outDir": "./dist/out-tsc",
     "removeComments": true,
     "sourceMap": true,
+    "strict": true,
     "strictFunctionTypes": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": true,

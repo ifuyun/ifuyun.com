@@ -12,7 +12,7 @@ import { TaxonomyNode } from './interfaces/taxonomy.interface';
 import { LogService } from './services/log.service';
 import { OptionService } from './services/option.service';
 import { TaxonomyService } from './services/taxonomy.service';
-import { UserService } from './services/user.service';
+import { UserService } from './pages/user/user.service';
 
 @Component({
   selector: 'app-root',

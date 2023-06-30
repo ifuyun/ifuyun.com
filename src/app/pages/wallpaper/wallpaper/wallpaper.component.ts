@@ -33,7 +33,7 @@ import { VoteEntity } from '../../../interfaces/vote.interface';
 import { FavoriteService } from '../../../services/favorite.service';
 import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
-import { UserService } from '../../../services/user.service';
+import { UserService } from '../../user/user.service';
 import { VoteService } from '../../../services/vote.service';
 import { BING_DOMAIN } from '../wallpaper.constant';
 import { Wallpaper, WallpaperLang } from '../wallpaper.interface';

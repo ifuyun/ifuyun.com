@@ -24,7 +24,7 @@ import { Guest, UserModel } from '../../interfaces/user.interface';
 import { VoteEntity } from '../../interfaces/vote.interface';
 import { CommentHashPipe } from '../../pipes/comment-hash.pipe';
 import { OptionService } from '../../services/option.service';
-import { UserService } from '../../services/user.service';
+import { UserService } from '../../pages/user/user.service';
 import { VoteService } from '../../services/vote.service';
 import { CommentObjectType } from './comment.enum';
 import { Comment, CommentEntity, CommentModel } from './comment.interface';

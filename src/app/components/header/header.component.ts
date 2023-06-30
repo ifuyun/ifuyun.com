@@ -20,7 +20,7 @@ import { TOOL_LINKS } from '../../pages/tool/tool.constant';
 import { AuthService } from '../../services/auth.service';
 import { LogService } from '../../services/log.service';
 import { OptionService } from '../../services/option.service';
-import { UserService } from '../../services/user.service';
+import { UserService } from '../../pages/user/user.service';
 
 @Component({
   selector: 'app-header',

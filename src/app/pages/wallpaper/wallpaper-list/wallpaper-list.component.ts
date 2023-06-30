@@ -21,7 +21,7 @@ import { Guest } from '../../../interfaces/user.interface';
 import { VoteEntity } from '../../../interfaces/vote.interface';
 import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
-import { UserService } from '../../../services/user.service';
+import { UserService } from '../../user/user.service';
 import { VoteService } from '../../../services/vote.service';
 import { BING_DOMAIN } from '../wallpaper.constant';
 import { Wallpaper, WallpaperLang, WallpaperListMode, WallpaperQueryParam } from '../wallpaper.interface';

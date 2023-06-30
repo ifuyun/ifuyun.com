@@ -25,7 +25,7 @@ import { OptionService } from '../../../services/option.service';
 import { BING_DOMAIN } from '../../wallpaper/wallpaper.constant';
 import { Wallpaper } from '../../wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../wallpaper/wallpaper.service';
-import { THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK } from '../login.constant';
+import { THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK } from '../user.constant';
 
 const margin = 24;
 const offsets = [margin, 0, -margin, 0];

@@ -67,30 +67,37 @@ export class LoggerService {
   }
 
   trace(logData: string | LogData, ...args: any[]) {
-    this.logger.trace.call(this.logger, ...this.transformLogData(logData, ...args));
+    const formattedLog = this.transformLogData(logData, ...args);
+    this.logger.trace.apply(this.logger, [formattedLog.shift(), ...formattedLog]);
   }
 
   debug(logData: string | LogData, ...args: any[]) {
-    this.logger.debug.call(this.logger, ...this.transformLogData(logData, ...args));
+    const formattedLog = this.transformLogData(logData, ...args);
+    this.logger.debug.apply(this.logger, [formattedLog.shift(), ...formattedLog]);
   }
 
   info(logData: string | LogData, ...args: any[]) {
-    this.logger.info.call(this.logger, ...this.transformLogData(logData, ...args));
+    const formattedLog = this.transformLogData(logData, ...args);
+    this.logger.info.apply(this.logger, [formattedLog.shift(), ...formattedLog]);
   }
 
   warn(logData: string | LogData, ...args: any[]) {
-    this.logger.warn.call(this.logger, ...this.transformLogData(logData, ...args));
+    const formattedLog = this.transformLogData(logData, ...args);
+    this.logger.warn.apply(this.logger, [formattedLog.shift(), ...formattedLog]);
   }
 
   error(logData: string | LogData, ...args: any[]) {
-    this.logger.error.call(this.logger, ...this.transformLogData(logData, ...args));
+    const formattedLog = this.transformLogData(logData, ...args);
+    this.logger.error.apply(this.logger, [formattedLog.shift(), ...formattedLog]);
   }
 
   fatal(logData: string | LogData, ...args: any[]) {
-    this.logger.fatal.call(this.logger, ...this.transformLogData(logData, ...args));
+    const formattedLog = this.transformLogData(logData, ...args);
+    this.logger.fatal.apply(this.logger, [formattedLog.shift(), ...formattedLog]);
   }
 
   mark(logData: string | LogData, ...args: any[]) {
-    this.logger.mark.call(this.logger, ...this.transformLogData(logData, ...args));
+    const formattedLog = this.transformLogData(logData, ...args);
+    this.logger.mark.apply(this.logger, [formattedLog.shift(), ...formattedLog]);
   }
 }

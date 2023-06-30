@@ -16,8 +16,7 @@ import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { AuthService } from '../../../services/auth.service';
 import { OptionService } from '../../../services/option.service';
-import { UserService } from '../../../services/user.service';
-import { LoginService } from '../login.service';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-third-login',
@@ -54,7 +53,6 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
     private optionService: OptionService,
     private userService: UserService,
     private authService: AuthService,
-    private loginService: LoginService,
     private message: NzMessageService
   ) {
     super();
@@ -109,13 +107,13 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
     if (this.from === 'weibo' && this.errorCode === '21330') {
       // cancel
       this.loginStatus = 'cancel';
-      this.loginService.gotoLogin(this.loginURL);
+      this.userService.gotoLogin(this.loginURL);
       return;
     }
     if (this.from === 'github' && this.errorCode === 'access_denied') {
       // cancel
       this.loginStatus = 'cancel';
-      this.loginService.gotoLogin(this.loginURL);
+      this.userService.gotoLogin(this.loginURL);
       return;
     }
     this.userService
@@ -165,7 +163,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
       this.countdown -= 1;
       if (this.countdown <= 0) {
         clearInterval(timer);
-        this.loginService.gotoLogin(this.loginURL);
+        this.userService.gotoLogin(this.loginURL);
       }
     }, 1000);
   }

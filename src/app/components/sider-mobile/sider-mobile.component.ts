@@ -21,7 +21,7 @@ import { OptionEntity } from '../../interfaces/option.interface';
 import { UserModel } from '../../interfaces/user.interface';
 import { AuthService } from '../../services/auth.service';
 import { OptionService } from '../../services/option.service';
-import { UserService } from '../../services/user.service';
+import { UserService } from '../../pages/user/user.service';
 
 @Component({
   selector: 'app-sider-mobile',
