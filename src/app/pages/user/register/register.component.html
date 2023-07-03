@@ -1,0 +1,70 @@
+<div class="user-box" [class.login-desktop]="!isMobile" [class.login-mobile]="isMobile">
+  <div class="user-box-body">
+    <form nz-form nzLayout="vertical" class="user-form" [formGroup]="regForm">
+      <nz-form-item>
+        <nz-form-label>邮箱</nz-form-label>
+        <nz-form-control [nzErrorTip]="nameErrorTpl">
+          <input nz-input
+                 type="text"
+                 formControlName="email"
+                 [maxlength]="maxEmailLength"
+                 [autofocus]="true"
+                 placeholder="请输入邮箱"/>
+          <ng-template #nameErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">请输入邮箱</ng-container>
+            <ng-container *ngIf="control.hasError('email')">请输入有效的邮箱</ng-container>
+            <ng-container *ngIf="control.hasError('maxlength')">邮箱最大长度为{{maxEmailLength}}字符</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>密码</nz-form-label>
+        <nz-form-control [nzErrorTip]="pwdErrorTpl">
+          <nz-input-group [nzSuffix]="pwdSuffix">
+            <input nz-input
+                   [type]="passwordVisible.password ? 'text' : 'password'"
+                   formControlName="password"
+                   [maxlength]="maxPasswordLength"
+                   placeholder="请输入密码"/>
+          </nz-input-group>
+          <ng-template #pwdSuffix>
+            <span nz-icon [nzType]="passwordVisible.password ? 'eye-invisible' : 'eye'"
+                  (click)="passwordVisible.password = !passwordVisible.password"></span>
+          </ng-template>
+          <ng-template #pwdErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">请输入密码</ng-container>
+            <ng-container *ngIf="control.hasError('maxlength')">密码最大长度为{{maxPasswordLength}}字符</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>确认密码</nz-form-label>
+        <nz-form-control [nzErrorTip]="confirmPwdErrorTpl">
+          <nz-input-group [nzSuffix]="confirmPwdSuffix">
+            <input nz-input
+                   [type]="passwordVisible.confirmPassword ? 'text' : 'password'"
+                   formControlName="confirmPassword"
+                   [maxlength]="maxPasswordLength"
+                   placeholder="请再次输入密码"/>
+          </nz-input-group>
+          <ng-template #confirmPwdSuffix>
+            <span nz-icon [nzType]="passwordVisible.confirmPassword ? 'eye-invisible' : 'eye'"
+                  (click)="passwordVisible.confirmPassword = !passwordVisible.confirmPassword"></span>
+          </ng-template>
+          <ng-template #confirmPwdErrorTpl>
+            <ng-container *ngIf="regForm.errors?.['confirmPassword'].required">请输入密码</ng-container>
+            <ng-container *ngIf="regForm.errors?.['confirmPassword'].maxlength">密码最大长度为{{maxPasswordLength}}字符</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <div class="user-form-row">
+          <div class="user-form-col"></div>
+          <div class="user-form-col">
+            <button nz-button nzType="primary" (click)="register()" [nzLoading]="regLoading">注册</button>
+          </div>
+        </div>
+      </nz-form-item>
+    </form>
+  </div>
+</div>

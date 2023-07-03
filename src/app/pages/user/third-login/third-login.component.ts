@@ -14,8 +14,8 @@ import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
-import { AuthService } from '../../../services/auth.service';
 import { OptionService } from '../../../services/option.service';
+import { AuthService } from '../auth.service';
 import { UserService } from '../user.service';
 
 @Component({
@@ -122,7 +122,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
       .subscribe((res) => {
         if (res.code === ResponseCode.SUCCESS) {
           this.loginStatus = 'success';
-          this.authService.setAuth(res.data, { username: '', password: '', rememberMe: false });
+          this.authService.setAuth(res.data);
           const redirectUrl = this.referer ? this.options['site_url'] + this.referer : this.adminUrl;
           location.replace(redirectUrl);
         } else {

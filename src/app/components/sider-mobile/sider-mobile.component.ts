@@ -19,9 +19,9 @@ import { UserAgentService } from '../../core/user-agent.service';
 import { format } from '../../helpers/helper';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { UserModel } from '../../interfaces/user.interface';
-import { AuthService } from '../../services/auth.service';
-import { OptionService } from '../../services/option.service';
+import { AuthService } from '../../pages/user/auth.service';
 import { UserService } from '../../pages/user/user.service';
+import { OptionService } from '../../services/option.service';
 
 @Component({
   selector: 'app-sider-mobile',

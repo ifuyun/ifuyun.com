@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { CookieService } from 'ngx-cookie-service';
 import { map, Observable, tap } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { ApiUrl } from '../config/api-url';
-import { ResponseCode } from '../config/response-code.enum';
-import { ApiService } from '../core/api.service';
-import { PlatformService } from '../core/platform.service';
-import { LoginEntity, LoginResponse } from '../interfaces/auth.interface';
-import { HttpResponseEntity } from '../core/http-response.interface';
+import { environment } from '../../../environments/environment';
+import { ApiUrl } from '../../config/api-url';
+import { ResponseCode } from '../../config/response-code.enum';
+import { ApiService } from '../../core/api.service';
+import { PlatformService } from '../../core/platform.service';
+import { LoginEntity, LoginResponse } from './auth.interface';
+import { HttpResponseEntity } from '../../core/http-response.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -73,17 +73,12 @@ export class AuthService {
     return !this.isLoggedIn();
   }
 
-  setAuth(authResult: LoginResponse, loginData: LoginEntity) {
+  setAuth(authResult: LoginResponse, loginData?: LoginEntity) {
     if (authResult.accessToken) {
       localStorage?.setItem('token', authResult.accessToken);
       localStorage?.setItem('token_expires', authResult.expiresAt.toString());
-      if (loginData.rememberMe) {
-        this.cookieService.set('user', loginData.username || '', {
-          path: '/',
-          domain: environment.cookie.domain,
-          expires: environment.cookie.expires
-        });
-        this.cookieService.set('remember', '1', {
+      if (loginData?.username) {
+        this.cookieService.set('user', loginData.username, {
           path: '/',
           domain: environment.cookie.domain,
           expires: environment.cookie.expires

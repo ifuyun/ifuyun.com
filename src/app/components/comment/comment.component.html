@@ -128,13 +128,13 @@
       <form [formGroup]="form" (ngSubmit)="saveComment(form)">
         <div class="form-row" *ngIf="!isLoggedIn">
           <span class="flex">
-            <input type="text" class="input input-dark" formControlName="author" maxlength="10" placeholder="昵称（必填）"/>
+            <input type="text" class="input input-bg" formControlName="author" maxlength="10" placeholder="昵称（必填）"/>
           </span>
           <span class="flex">
-            <input type="text" class="input input-dark" formControlName="email" maxlength="100" placeholder="邮箱（必填）"/>
+            <input type="text" class="input input-bg" formControlName="email" maxlength="100" placeholder="邮箱（必填）"/>
           </span>
           <div class="captcha-wrapper">
-            <input type="text" class="input input-dark input-captcha"
+            <input type="text" class="input input-bg input-captcha"
                    formControlName="captcha" maxlength="4" placeholder="验证码（必填）"/>
             <img #captchaImg [src]="captchaUrl" (click)="refreshCaptcha($event)"
                  class="captcha" title="点击刷新验证码" alt="验证码"/>
@@ -142,7 +142,7 @@
         </div>
         <div class="form-row">
           <span class="flex">
-            <textarea class="input input-textarea input-dark" formControlName="content"
+            <textarea class="input input-textarea input-bg" formControlName="content"
                       rows="4" maxlength="400" placeholder="评论内容（必填）"></textarea>
           </span>
         </div>

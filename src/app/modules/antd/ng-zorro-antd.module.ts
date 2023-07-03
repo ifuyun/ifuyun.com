@@ -3,6 +3,7 @@ import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzI18nModule } from 'ng-zorro-antd/i18n';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageModule } from 'ng-zorro-antd/image';
@@ -44,7 +45,7 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
     // NzDrawerModule,
     // NzDropDownModule,
     NzEmptyModule,
-    // NzFormModule,
+    NzFormModule,
     // NzGridModule,
     NzIconModule,
     NzImageModule,
@@ -70,7 +71,7 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
     NzSpinModule,
     // NzStatisticModule,
     // NzStepsModule,
-    NzSwitchModule,
+    NzSwitchModule
     // NzTabsModule,
     // NzTagModule,
     // NzTimePickerModule,

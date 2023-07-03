@@ -45,5 +45,4 @@ import { NgZorroAntdModule } from './modules/antd/ng-zorro-antd.module';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule {}

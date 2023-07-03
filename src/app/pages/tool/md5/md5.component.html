@@ -2,7 +2,7 @@
 <div class="container" [ngClass]="{'container-desktop': !isMobile, 'container-mobile': isMobile}">
   <form class="encrypt-form">
     <div>
-      <textarea class="input input-textarea input-dark" rows="12" name="encryptContent"
+      <textarea class="input input-textarea input-bg" rows="12" name="encryptContent"
                 [(ngModel)]="encryptContent"
                 (ngModelChange)="onContentChange($event)"
                 [maxLength]="maxContentLength" placeholder="待加密内容"></textarea>
@@ -31,7 +31,7 @@
               (click)="reset()">清空内容</button>
     </div>
     <div>
-      <textarea class="input input-textarea input-dark" rows="4" name="encryptResult" readonly="readonly"
+      <textarea class="input input-textarea input-bg" rows="4" name="encryptResult" readonly="readonly"
                 [(ngModel)]="encryptResult" placeholder="MD5 Result"></textarea>
     </div>
     <h2 class="encrypt-header">MD5 加密说明</h2>

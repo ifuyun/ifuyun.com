@@ -1,27 +1,51 @@
-<div class="login" [class.login-desktop]="!isMobile" [class.login-mobile]="isMobile">
-  <div class="login-body" [@shakeForm]="formStatus">
-    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()">
-      <div class="login-form-row">
-        <label class="login-form-label" for="username">用户名</label>
-        <input type="text" formControlName="username" class="input input-dark" id="username" tabindex="10"
-               maxlength="20" autocomplete="off" [autofocus]="autoFocus.username"/>
-      </div>
-      <div class="login-form-row">
-        <label class="login-form-label" for="password">密码</label>
-        <input type="password" formControlName="password" class="input input-dark" id="password" tabindex="20"
-               maxlength="20" [autofocus]="autoFocus.password"/>
-      </div>
-      <div class="login-form-row">
-        <div class="login-form-col">
-          <label>
-            <input type="checkbox" formControlName="rememberMe" class="input-checkbox" tabindex="90"/>
-            <span>记住我的登录信息</span>
-          </label>
+<div class="user-box" [class.login-desktop]="!isMobile" [class.login-mobile]="isMobile">
+  <div class="user-box-body" [@shakeForm]="formStatus">
+    <form nz-form nzLayout="vertical" class="user-form" [formGroup]="loginForm">
+      <nz-form-item>
+        <nz-form-label>用户名或邮箱</nz-form-label>
+        <nz-form-control [nzErrorTip]="nameErrorTpl">
+          <input nz-input
+                 type="text"
+                 formControlName="username"
+                 [maxlength]="maxUsernameLength"
+                 [autofocus]="true"
+                 placeholder="请输入用户名或邮箱"/>
+          <ng-template #nameErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">请输入用户名或邮箱</ng-container>
+            <ng-container *ngIf="control.hasError('maxlength')">用户名或邮箱最大长度为{{maxUsernameLength}}字符</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>密码</nz-form-label>
+        <nz-form-control [nzErrorTip]="confirmErrorTpl">
+          <nz-input-group [nzSuffix]="confirmPwdSuffix">
+            <input nz-input
+                   [type]="passwordVisible ? 'text' : 'password'"
+                   formControlName="password"
+                   [maxlength]="maxPasswordLength"
+                   placeholder="请输入密码"/>
+          </nz-input-group>
+          <ng-template #confirmPwdSuffix>
+            <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                  (click)="passwordVisible = !passwordVisible"></span>
+          </ng-template>
+          <ng-template #confirmErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">请输入密码</ng-container>
+            <ng-container *ngIf="control.hasError('maxlength')">密码最大长度为{{maxPasswordLength}}字符</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <div class="user-form-row">
+          <div class="user-form-col">
+            <a class="reg-link" [routerLink]="['../register']" title="立即注册"><span nz-icon nzType="user-add"></span>立即注册</a>
+          </div>
+          <div class="user-form-col">
+            <button nz-button nzType="primary" (click)="login()" [nzLoading]="loginLoading">登录</button>
+          </div>
         </div>
-        <div class="login-form-col">
-          <input type="submit" class="button button-submit" tabindex="100" value="登录"/>
-        </div>
-      </div>
+      </nz-form-item>
       <div class="separator">
         <div class="line"></div>
         <div class="text-wrap">

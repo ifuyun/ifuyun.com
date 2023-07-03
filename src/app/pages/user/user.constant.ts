@@ -1,3 +1,6 @@
+export const USER_NAME_LENGTH = 64;
+export const USER_EMAIL_LENGTH = 64;
+export const USER_PASSWORD_LENGTH = 32;
 export const THIRD_LOGIN_CALLBACK = '/user/login/callback?from=$0&ref=$1';
 export const THIRD_LOGIN_API: Record<string, string> = Object.freeze({
   wechat: '',

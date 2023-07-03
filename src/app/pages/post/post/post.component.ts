@@ -399,7 +399,9 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.prompts = post.prompts;
     this.isFavorite = post.isFavorite;
     this.postVoted = post.voted;
-    this.showPayMask = post.post.postPayFlag && !this.user.isAdmin && post.post.postOwner !== this.user.userId || !!post.meta['should_login'] && !this.isLoggedIn;
+    this.showPayMask =
+      (post.post.postPayFlag && !this.user.isAdmin && post.post.postOwner !== this.user.userId) ||
+      (!!post.meta['should_login'] && !this.isLoggedIn);
 
     if (this.postType !== PostType.PAGE) {
       const urlType = this.isPost ? 'post' : 'prompt';

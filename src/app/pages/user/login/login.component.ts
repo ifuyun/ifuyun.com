@@ -14,18 +14,17 @@ import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { HTMLMetaData } from '../../../core/meta.interface';
 import { MetaService } from '../../../core/meta.service';
-import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { format, generateId } from '../../../helpers/helper';
 import md5 from '../../../helpers/md5';
 import { OptionEntity } from '../../../interfaces/option.interface';
-import { AuthService } from '../../../services/auth.service';
 import { OptionService } from '../../../services/option.service';
-import { BING_DOMAIN } from '../../wallpaper/wallpaper.constant';
 import { Wallpaper } from '../../wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../wallpaper/wallpaper.service';
-import { THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK } from '../user.constant';
+import { AuthService } from '../auth.service';
+import { UserComponent } from '../user.component';
+import { THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK, USER_NAME_LENGTH, USER_PASSWORD_LENGTH } from '../user.constant';
 
 const margin = 24;
 const offsets = [margin, 0, -margin, 0];
@@ -49,18 +48,21 @@ const duration = 500; // ms
   ],
   providers: [DestroyService]
 })
-export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
+export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
+  readonly maxUsernameLength = USER_NAME_LENGTH;
+  readonly maxPasswordLength = USER_PASSWORD_LENGTH;
+
   isMobile = false;
   loginForm = this.fb.group({
-    username: [this.cookieService.get('user') || '', [Validators.required, Validators.maxLength(20)]],
-    password: [null, [Validators.required, Validators.maxLength(20)]],
-    rememberMe: [this.cookieService.get('remember') === '1']
+    username: [
+      this.cookieService.get('user') || '',
+      [Validators.required, Validators.maxLength(this.maxUsernameLength)]
+    ],
+    password: [null, [Validators.required, Validators.maxLength(this.maxPasswordLength)]]
   });
-  autoFocus = {
-    username: true,
-    password: false
-  };
+  passwordVisible = false;
   formStatus: 'normal' | 'shaking' = 'normal';
+  loginLoading = false;
   wallpaper: Wallpaper | null = null;
   pageLoaded = false;
 
@@ -71,9 +73,10 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
   private referer = '';
 
   constructor(
+    @Inject(DOCUMENT) protected override document: Document,
+    protected override wallpaperService: WallpaperService,
     @Optional() @Inject(RESPONSE) private response: Response,
     @Optional() @Inject(REQUEST) private request: Request,
-    @Inject(DOCUMENT) private document: Document,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private platform: PlatformService,
@@ -84,10 +87,9 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
     private optionService: OptionService,
     private cookieService: CookieService,
     private authService: AuthService,
-    private message: NzMessageService,
-    private wallpaperService: WallpaperService
+    private message: NzMessageService
   ) {
-    super();
+    super(document, wallpaperService);
     this.isMobile = this.userAgentService.isMobile();
   }
 
@@ -113,12 +115,11 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
         }
 
         this.adminUrl = this.options['admin_site_url'];
-        const rememberMe = this.cookieService.get('remember');
         if (ref === 'logout') {
           this.authService.clearAuth();
         } else {
           // 登录状态直接跳转来源页或后台首页
-          if (rememberMe === '1' && this.authService.isLoggedIn()) {
+          if (this.authService.isLoggedIn()) {
             if (this.platform.isBrowser) {
               const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration());
               location.href = this.referer || this.adminUrl + urlParam;
@@ -126,12 +127,7 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
           }
         }
       });
-    const username = this.cookieService.get('user');
-    if (username) {
-      this.autoFocus.username = false;
-      this.autoFocus.password = true;
-    }
-    this.fetchWallpaper();
+    this.initWallpaper();
   }
 
   ngOnDestroy() {
@@ -141,14 +137,16 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
   login() {
     const { value, valid } = this.validateForm(this.loginForm);
     if (valid) {
-      const { username, password, rememberMe } = value;
+      const { username, password } = value;
+      this.loginLoading = true;
       this.authService
         .login({
           username: username || '',
-          password: md5(password || ''),
-          rememberMe: rememberMe || false
+          password: md5(password || '')
         })
+        .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
+          this.loginLoading = false;
           if (res.accessToken) {
             const urlParam = format(ADMIN_URL_PARAM, res.accessToken, res.expiresAt);
             let redirectUrl: string;
@@ -164,31 +162,6 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
         });
     } else {
       this.shakeForm();
-
-      const formLabels: Record<string, string> = {
-        username: '用户名',
-        password: '密码'
-      };
-      const msgs: string[] = [];
-      Object.keys(this.loginForm.controls).forEach((key) => {
-        const ctrl = this.loginForm.get(key);
-        const errors = ctrl?.errors;
-        if (errors) {
-          Object.keys(errors).forEach((type) => {
-            switch (type) {
-              case 'required':
-                msgs.push(`请输入${formLabels[key]}`);
-                break;
-              case 'maxlength':
-                msgs.push(
-                  `${formLabels[key]}长度应不大于${errors[type].requiredLength}字符，当前为${errors[type].actualLength}`
-                );
-                break;
-            }
-          });
-        }
-      });
-      msgs.length > 0 && this.message.error(msgs[0]);
     }
   }
 
@@ -251,34 +224,17 @@ export class LoginComponent extends PageComponent implements OnInit, OnDestroy {
     });
   }
 
-  private fetchWallpaper() {
-    this.wallpaperService
-      .getRandomWallpapers(1)
+  private initWallpaper() {
+    this.fetchWallpaper()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.wallpaper =
-          res.map((item) => ({
-            ...item,
-            wallpaperUrl: `${BING_DOMAIN}${item.wallpaperUrl}`
-          }))[0] || null;
-        if (this.wallpaper) {
-          this.initStyles();
-        }
+        this.wallpaper = this.transformWallpaper(res)[0] || null;
+        this.wallpaper && this.initStyles();
       });
   }
 
   private getCallbackURL(channel: string) {
     return this.commonService.getURL(this.options, format(THIRD_LOGIN_CALLBACK, channel, this.referer));
-  }
-
-  private initStyles() {
-    this.document.body.classList.add('bg-image');
-    this.document.body.style.backgroundImage = `url('${this.wallpaper?.wallpaperUrl}')`;
-  }
-
-  private clearStyles() {
-    this.document.body.classList.remove('bg-image');
-    this.document.body.style.backgroundImage = '';
   }
 
   private updatePageInfo() {

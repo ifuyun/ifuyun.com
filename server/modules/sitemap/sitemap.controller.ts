@@ -118,13 +118,13 @@ export class SitemapController {
       changefreq: EnumChangefreq.DAILY,
       priority: 0.8
     }));
-    const promptArchivesByYear: SitemapItem[] = uniq(data.promptArchives.map((item) => item.dateValue.split('/')[0])).map(
-      (item) => ({
-        url: `${siteUrl}/prompt/archive/${item}`,
-        changefreq: EnumChangefreq.DAILY,
-        priority: 0.8
-      })
-    );
+    const promptArchivesByYear: SitemapItem[] = uniq(
+      data.promptArchives.map((item) => item.dateValue.split('/')[0])
+    ).map((item) => ({
+      url: `${siteUrl}/prompt/archive/${item}`,
+      changefreq: EnumChangefreq.DAILY,
+      priority: 0.8
+    }));
     const wallpaperArchivesByMonth: SitemapItem[] = data.wallpaperArchives.map((item) => ({
       url: `${siteUrl}/wallpaper/archive/${item.dateValue}`,
       changefreq: EnumChangefreq.DAILY,

@@ -17,10 +17,10 @@ import { OptionEntity } from '../../interfaces/option.interface';
 import { TaxonomyNode } from '../../interfaces/taxonomy.interface';
 import { UserModel } from '../../interfaces/user.interface';
 import { TOOL_LINKS } from '../../pages/tool/tool.constant';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../pages/user/auth.service';
+import { UserService } from '../../pages/user/user.service';
 import { LogService } from '../../services/log.service';
 import { OptionService } from '../../services/option.service';
-import { UserService } from '../../pages/user/user.service';
 
 @Component({
   selector: 'app-header',
