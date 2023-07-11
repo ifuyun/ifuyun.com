@@ -1,9 +1,10 @@
 export interface UserEntity {
-  userId: string;
+  userId?: string;
   userNiceName: string;
   userEmail?: string;
+  userPassword?: string;
   userRegistered?: Date;
-  userStatus?: number;
+  userStatus?: string;
 }
 
 export interface UserModel extends UserEntity {

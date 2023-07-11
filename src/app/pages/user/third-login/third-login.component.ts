@@ -117,7 +117,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
       return;
     }
     this.userService
-      .getThirdUser(this.authCode, this.from)
+      .thirdLogin(this.authCode, this.from)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res.code === ResponseCode.SUCCESS) {

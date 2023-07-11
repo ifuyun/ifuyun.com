@@ -2,14 +2,15 @@ import { animate, keyframes, state, style, transition, trigger } from '@angular/
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CookieService } from 'ngx-cookie-service';
-import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
+import { combineLatestWith, Observer, skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM } from '../../../config/common.constant';
+import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { HTMLMetaData } from '../../../core/meta.interface';
@@ -19,9 +20,11 @@ import { UserAgentService } from '../../../core/user-agent.service';
 import { format, generateId } from '../../../helpers/helper';
 import md5 from '../../../helpers/md5';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { UserModel } from '../../../interfaces/user.interface';
 import { OptionService } from '../../../services/option.service';
 import { Wallpaper } from '../../wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../wallpaper/wallpaper.service';
+import { LoginResponse } from '../auth.interface';
 import { AuthService } from '../auth.service';
 import { UserComponent } from '../user.component';
 import { THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK, USER_NAME_LENGTH, USER_PASSWORD_LENGTH } from '../user.constant';
@@ -53,6 +56,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
   readonly maxPasswordLength = USER_PASSWORD_LENGTH;
 
   isMobile = false;
+  wallpaper: Wallpaper | null = null;
   loginForm = this.fb.group({
     username: [
       this.cookieService.get('user') || '',
@@ -63,13 +67,12 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
   passwordVisible = false;
   formStatus: 'normal' | 'shaking' = 'normal';
   loginLoading = false;
-  wallpaper: Wallpaper | null = null;
   pageLoaded = false;
 
   protected pageIndex = 'login';
 
-  private adminUrl = '';
   private options: OptionEntity = {};
+  private adminUrl = '';
   private referer = '';
 
   constructor(
@@ -77,6 +80,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
     protected override wallpaperService: WallpaperService,
     @Optional() @Inject(RESPONSE) private response: Response,
     @Optional() @Inject(REQUEST) private request: Request,
+    private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private platform: PlatformService,
@@ -102,27 +106,29 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
         combineLatestWith(this.route.queryParamMap),
         takeUntil(this.destroy$)
       )
-      .subscribe(([options, queryParams]) => {
-        this.options = options;
-        this.pageLoaded = true;
-        this.updatePageInfo();
+      .subscribe(<Observer<[OptionEntity, ParamMap]>>{
+        next: ([options, queryParams]) => {
+          this.options = options;
+          this.pageLoaded = true;
+          this.updatePageInfo();
 
-        const ref = queryParams.get('ref')?.trim() || '';
-        try {
-          this.referer = decodeURIComponent(ref);
-        } catch (e) {
-          this.referer = ref;
-        }
+          const ref = queryParams.get('ref')?.trim() || '';
+          try {
+            this.referer = decodeURIComponent(ref);
+          } catch (e) {
+            this.referer = ref;
+          }
 
-        this.adminUrl = this.options['admin_site_url'];
-        if (ref === 'logout') {
-          this.authService.clearAuth();
-        } else {
-          // 登录状态直接跳转来源页或后台首页
-          if (this.authService.isLoggedIn()) {
-            if (this.platform.isBrowser) {
-              const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration());
-              location.href = this.referer || this.adminUrl + urlParam;
+          this.adminUrl = this.options['admin_site_url'];
+          if (ref === 'logout') {
+            this.authService.clearAuth();
+          } else {
+            // 登录状态直接跳转来源页或后台首页
+            if (this.authService.isLoggedIn()) {
+              if (this.platform.isBrowser) {
+                const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration());
+                location.href = this.referer || this.adminUrl + urlParam;
+              }
             }
           }
         }
@@ -147,8 +153,9 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
           this.loginLoading = false;
-          if (res.accessToken) {
-            const urlParam = format(ADMIN_URL_PARAM, res.accessToken, res.expiresAt);
+          const loginRes: LoginResponse = res.data || {};
+          if (res.code === ResponseCode.SUCCESS && loginRes.accessToken) {
+            const urlParam = format(ADMIN_URL_PARAM, loginRes.accessToken, loginRes.expiresAt);
             let redirectUrl: string;
             if (this.referer && this.referer !== 'logout') {
               redirectUrl = this.options['site_url'] + this.referer;
@@ -156,6 +163,16 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
               redirectUrl = this.adminUrl + urlParam;
             }
             window.location.href = redirectUrl;
+          } else if(res.code === ResponseCode.USER_UNVERIFIED) {
+            const user: UserModel = res.data?.user || {};
+            if (user.userId) {
+              this.router.navigate(['../confirm'], {
+                relativeTo: this.route, queryParams: {
+                  userId: user.userId,
+                  email: user.userEmail
+                }
+              });
+            }
           } else {
             this.shakeForm();
           }

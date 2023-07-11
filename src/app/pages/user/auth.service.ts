@@ -7,6 +7,7 @@ import { ApiUrl } from '../../config/api-url';
 import { ResponseCode } from '../../config/response-code.enum';
 import { ApiService } from '../../core/api.service';
 import { PlatformService } from '../../core/platform.service';
+import { UserEntity, UserModel } from '../../interfaces/user.interface';
 import { LoginEntity, LoginResponse } from './auth.interface';
 import { HttpResponseEntity } from '../../core/http-response.interface';
 
@@ -20,10 +21,10 @@ export class AuthService {
     private readonly cookieService: CookieService
   ) {}
 
-  login(loginData: LoginEntity): Observable<LoginResponse> {
+  login(loginData: LoginEntity): Observable<HttpResponseEntity> {
     return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.LOGIN), loginData).pipe(
-      map((res) => res?.data || {}),
-      tap((res) => this.setAuth(res, loginData))
+      map((res) => res || {}),
+      tap((res) => this.setAuth(res.data, loginData))
     );
   }
 
@@ -34,6 +35,27 @@ export class AuthService {
           this.clearAuth();
         }
       })
+    );
+  }
+
+  register(user: UserEntity): Observable<UserModel> {
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.REGISTER), user).pipe(
+      map((res) => <any>(res?.data || {}))
+    );
+  }
+
+  verify(payload: { userId: string; code: string }): Observable<LoginResponse> {
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.VERIFY_USER), payload).pipe(
+      map((res) => <any>(res?.data || '')),
+      tap((res) => {
+        this.setAuth(res);
+      })
+    );
+  }
+
+  resend(userId: string): Observable<UserModel> {
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.RESEND_CODE), { userId }).pipe(
+      map((res) => <any>(res?.data || {}))
     );
   }
 

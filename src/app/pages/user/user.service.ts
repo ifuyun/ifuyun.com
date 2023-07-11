@@ -4,7 +4,7 @@ import { ApiUrl } from '../../config/api-url';
 import { STORAGE_KEY_USER } from '../../config/common.constant';
 import { ApiService } from '../../core/api.service';
 import { HttpResponseEntity } from '../../core/http-response.interface';
-import { Guest, UserModel } from '../../interfaces/user.interface';
+import { Guest, UserEntity, UserModel } from '../../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +30,7 @@ export class UserService {
     }
   }
 
-  getThirdUser(authCode: string, from: string): Observable<HttpResponseEntity> {
+  thirdLogin(authCode: string, from: string): Observable<HttpResponseEntity> {
     return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.THIRD_LOGIN), { authCode, from });
   }
 
