@@ -4,21 +4,12 @@
 export const environment = {
   production: false,
   host: '/',
-  isCluster: false,
-  logLevel: 'TRACE',
   cookie: {
     domain: 'localhost',
     expires: 7,
     secret: '[cookie_secret]]'
   },
   api: {
-    host: 'http://localhost:2008'
-  },
-  server: {
-    host: 'localhost',
-    port: 2008
-  },
-  adsense: {
-    clientId: 'ca-pub-xxxxxxxxxxxxxxxx'
+    host: 'http://localhost:2016'
   }
 };

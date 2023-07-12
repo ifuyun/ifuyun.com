@@ -1,10 +1,9 @@
 import { registerAs } from '@nestjs/config';
-import { environment } from '../../src/environments/environment';
 
 const ENV_CONFIG = () => ({
-  isDev: !environment.production,
-  isProd: environment.production,
-  isCluster: environment.isCluster
+  isDev: process.env['ENV'] !== 'production',
+  isProd: process.env['ENV'] === 'production',
+  isCluster: process.env['IS_CLUSTER'] === 'true'
 });
 
 export default registerAs('env', ENV_CONFIG);

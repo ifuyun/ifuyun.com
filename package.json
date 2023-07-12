@@ -38,7 +38,7 @@
     "test": "ng test",
     "dev:ssr": "ng run ifuyun:serve-ssr",
     "serve:ssr": "node dist/server/main.js",
-    "build:ssr": "ng build && ng run ifuyun:server",
+    "build:ssr": "ng build -c production && ng run ifuyun:server:production",
     "build:gulp": "gulp build",
     "build:prod": "npm run build:ssr && npm run build:gulp",
     "deploy": "bash ./scripts/deploy.sh",
