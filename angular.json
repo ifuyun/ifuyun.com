@@ -159,8 +159,6 @@
             "tsConfig": "tsconfig.server.json",
             "inlineStyleLanguage": "less",
             "externalDependencies": [
-              "@nestjs/common",
-              "@nestjs/core",
               "@nestjs/microservices",
               "@nestjs/microservices/microservices-module",
               "@nestjs/websockets",

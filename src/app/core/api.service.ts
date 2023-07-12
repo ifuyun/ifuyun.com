@@ -1,15 +1,11 @@
 import { HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode } from '@angular/common/http';
-import { Inject, Injectable, Optional } from '@angular/core';
-import { Router } from '@angular/router';
-// todo: remove from allowedCommonJsDependencies, since @nestjs/ng-universal/tokens is not exist
-import { RESPONSE } from '@nestjs/ng-universal/dist/tokens';
-import { Response } from 'express';
+import { Injectable } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { catchError, EMPTY, map, Observable, of } from 'rxjs';
 import { ApiUrl } from '../config/api-url';
 import { Message } from '../config/message.enum';
+import { CommonService } from './common.service';
 import { HttpResponseEntity } from './http-response.interface';
-import { PlatformService } from './platform.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +14,8 @@ export class ApiService {
   private apiUrlPrefix: string = ApiUrl.API_URL_PREFIX;
 
   constructor(
-    @Optional() @Inject(RESPONSE) private response: Response,
     private http: HttpClient,
-    private router: Router,
-    private platform: PlatformService,
+    private commonService: CommonService,
     private message: NzMessageService
   ) {}
 
@@ -93,11 +87,7 @@ export class ApiService {
         // Let the app keep running by returning an empty result.
         return of(error.error as T);
       }
-      if (this.platform.isBrowser) {
-        this.router.navigate(['404']);
-      } else {
-        this.response.redirect('/404');
-      }
+      this.commonService.redirectToNotFound();
       return EMPTY;
     };
   }

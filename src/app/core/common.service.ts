@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { ElementRef, Inject, Injectable, Optional } from '@angular/core';
 import { Router } from '@angular/router';
+// todo: remove from allowedCommonJsDependencies, since @nestjs/ng-universal/tokens is not exist
 import { RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Response } from 'express';
 import { CookieService } from 'ngx-cookie-service';
@@ -118,7 +119,7 @@ export class CommonService {
 
   redirectToNotFound() {
     if (this.platform.isBrowser) {
-      this.router.navigate(['404']);
+      this.router.navigate(['/404']);
     } else {
       this.response.redirect('/404');
     }

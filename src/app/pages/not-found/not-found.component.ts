@@ -1,5 +1,8 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { RESPONSE } from '@nestjs/ng-universal/dist/tokens';
+import { Response } from 'express';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
 import { CommonService } from '../../core/common.service';
@@ -7,10 +10,8 @@ import { DestroyService } from '../../core/destroy.service';
 import { MetaService } from '../../core/meta.service';
 import { PageComponent } from '../../core/page.component';
 import { PlatformService } from '../../core/platform.service';
-import { ResponseService } from '../../core/response.service';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { OptionService } from '../../services/option.service';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-not-found',
@@ -31,15 +32,15 @@ export class NotFoundComponent extends PageComponent implements OnInit {
     private metaService: MetaService,
     private commonService: CommonService,
     private optionService: OptionService,
-    private response: ResponseService
+    @Optional() @Inject(RESPONSE) private response: Response
   ) {
     super();
+    if (this.platform.isServer) {
+      this.response.status(HttpStatusCode.NotFound);
+    }
   }
 
   ngOnInit(): void {
-    if (this.platform.isServer) {
-      this.response.setStatus(HttpStatusCode.NotFound);
-    }
     this.updatePageOptions();
     this.updateActivePage();
     this.optionService.options$

@@ -1,6 +1,6 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
-import { Inject, Injectable, Optional } from '@angular/core';
-import { makeStateKey, StateKey, TransferState } from '@angular/platform-browser';
+import { Inject, Injectable, makeStateKey, Optional, StateKey } from '@angular/core';
+import { TransferState } from '@angular/platform-browser';
 import { REQUEST } from '@nestjs/ng-universal/dist/tokens';
 import { Request } from 'express';
 import { Observable, of, tap } from 'rxjs';
