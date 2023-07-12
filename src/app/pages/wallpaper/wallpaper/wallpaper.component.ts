@@ -5,7 +5,6 @@ import { NzImageService } from 'ng-zorro-antd/image';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import * as QRCode from 'qrcode';
 import { combineLatestWith, Observer, skipWhile, takeUntil, tap } from 'rxjs';
-import { environment as env } from '../../../../environments/environment';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
@@ -33,9 +32,8 @@ import { VoteEntity } from '../../../interfaces/vote.interface';
 import { FavoriteService } from '../../../services/favorite.service';
 import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
-import { UserService } from '../../user/user.service';
 import { VoteService } from '../../../services/vote.service';
-import { BING_DOMAIN } from '../wallpaper.constant';
+import { UserService } from '../../user/user.service';
 import { Wallpaper, WallpaperLang } from '../wallpaper.interface';
 import { WallpaperService } from '../wallpaper.service';
 
@@ -109,7 +107,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
       .subscribe(<Observer<[OptionEntity, ParamMap, ParamMap]>>{
         next: ([options]) => {
           this.options = options;
-          this.urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
+          this.urlPrefix = this.options['wallpaper_server'];
           this.fetchWallpaper();
           this.fetchPrevAndNext();
         }

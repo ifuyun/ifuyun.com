@@ -1,6 +1,6 @@
 {
   "name": "ifuyun.com",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "Website of ifuyun.com",
   "keywords": [
     "Angular",
@@ -33,7 +33,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "watch": "ng build --watch -c development",
     "lint": "eslint \"{src,server,test}/**/*.{ts,html}\" --fix",
     "test": "ng test",
     "dev:ssr": "ng run ifuyun:serve-ssr:development",

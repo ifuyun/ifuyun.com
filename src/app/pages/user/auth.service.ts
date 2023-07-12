@@ -96,7 +96,7 @@ export class AuthService {
   }
 
   setAuth(authResult: LoginResponse, loginData?: LoginEntity) {
-    if (authResult.accessToken) {
+    if (authResult?.accessToken) {
       localStorage?.setItem('token', authResult.accessToken);
       localStorage?.setItem('token_expires', authResult.expiresAt.toString());
       if (loginData?.username) {

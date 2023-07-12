@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
-import { environment as env } from '../../../../environments/environment';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
@@ -21,9 +20,8 @@ import { Guest } from '../../../interfaces/user.interface';
 import { VoteEntity } from '../../../interfaces/vote.interface';
 import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
-import { UserService } from '../../user/user.service';
 import { VoteService } from '../../../services/vote.service';
-import { BING_DOMAIN } from '../wallpaper.constant';
+import { UserService } from '../../user/user.service';
 import { Wallpaper, WallpaperLang, WallpaperListMode, WallpaperQueryParam } from '../wallpaper.interface';
 import { WallpaperService } from '../wallpaper.service';
 
@@ -204,7 +202,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         this.updatePageInfo();
         this.updateBreadcrumb();
 
-        const urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
+        const urlPrefix = this.options['wallpaper_server'];
         this.wallpapers = (res.list || []).map((item) => {
           let wallpaperLocation: string;
           let copyright: string;

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, ParamMap, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
-import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
-import { environment as env } from '../../../../environments/environment';
+import { combineLatestWith, Observer, skipWhile, takeUntil, tap } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { SearchType } from '../../../config/common.enum';
@@ -20,7 +19,6 @@ import { OptionService } from '../../../services/option.service';
 import { SearchService } from '../../../services/search.service';
 import { Post } from '../../post/post.interface';
 import { PostService } from '../../post/post.service';
-import { BING_DOMAIN } from '../../wallpaper/wallpaper.constant';
 import { Wallpaper, WallpaperLang } from '../../wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../wallpaper/wallpaper.service';
 
@@ -78,22 +76,24 @@ export class HomeComponent extends PageComponent implements OnInit {
           this.keyword = queryParams.get('keyword')?.trim() || '';
         })
       )
-      .subscribe(([options]) => {
-        this.options = options;
-        this.wallpaperURLPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
-        this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
-        if (this.keyword) {
-          this.pageIndex = 'search';
-          this.bizType = 'search';
-          this.updateBreadcrumb();
-          this.search();
-        } else {
-          this.bizType = 'index';
-          this.fetchPosts();
-          this.fetchWallpapers();
+      .subscribe(<Observer<[OptionEntity, ParamMap]>>{
+        next: ([options]) => {
+          this.options = options;
+          this.wallpaperURLPrefix = this.options['wallpaper_server'];
+          this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
+          if (this.keyword) {
+            this.pageIndex = 'search';
+            this.bizType = 'search';
+            this.updateBreadcrumb();
+            this.search();
+          } else {
+            this.bizType = 'index';
+            this.fetchPosts();
+            this.fetchWallpapers();
+          }
+          this.updateActivePage();
+          this.updatePageInfo();
         }
-        this.updateActivePage();
-        this.updatePageInfo();
       });
   }
 
