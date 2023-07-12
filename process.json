@@ -6,28 +6,13 @@
       "out_file": "/dev/null",
       "watch": false,
       "env": {
-        "ENV": "production",
-        "HOST": "localhost",
-        "PORT": 2022,
-        "API_HOST": "https://www.ifuyun.com",
-        "LOG_LEVEL": "INFO",
-        "IS_CLUSTER": true
+        "ENV": "production"
       },
       "env_production": {
-        "ENV": "production",
-        "HOST": "localhost",
-        "PORT": 2022,
-        "API_HOST": "https://www.ifuyun.com",
-        "LOG_LEVEL": "INFO",
-        "IS_CLUSTER": true
+        "ENV": "production"
       },
       "env_development": {
-        "ENV": "development",
-        "HOST": "localhost",
-        "PORT": 2008,
-        "API_HOST": "http://localhost:2016",
-        "LOG_LEVEL": "TRACE",
-        "IS_CLUSTER": false
+        "ENV": "development"
       }
     }
   ]

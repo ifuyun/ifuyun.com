@@ -50,3 +50,4 @@ package-lock.json
 /src/environments
 /src/favicon/*
 /src/webmaster/*
+/server/env

@@ -22,6 +22,7 @@ import { SitemapModule } from './modules/sitemap/sitemap.module';
     }),
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: join(process.cwd(), `server/env/${process.env['ENV']}.env`),
       load: [ENV_CONFIG, APP_CONFIG]
     }),
     RssModule,

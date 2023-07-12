@@ -6,8 +6,7 @@ export const environment = {
   host: '/',
   cookie: {
     domain: 'localhost',
-    expires: 7,
-    secret: '[cookie_secret]]'
+    expires: 7
   },
   api: {
     host: 'http://localhost:2016'
