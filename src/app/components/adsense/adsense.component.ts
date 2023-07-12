@@ -155,30 +155,32 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
   };
 
   private loadAds() {
-    if (this.enableAds && this.visible && this.platform.isBrowser) {
-      const ads: Record<string, string | boolean> = {};
-      if (this.pageLevelAds) {
-        ads['google_ad_client'] = this.clientId;
-        ads['enable_page_level_ads'] = true;
-      }
-      if (window) {
-        try {
-          this.createAdsEle();
-          ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(ads);
-          if (Array.isArray((window as any).adsbygoogle)) {
-            this.console.warn('Ads is blocked.');
-            this.hideAdsEle();
-          } else {
-            this.commonService.updateAdsFlag(false);
-          }
-        } catch (e: any) {
-          this.console.error('Ads: ', e.message || 'is not working.');
-          this.hideAdsEle();
+    if (this.platform.isBrowser) {
+      if (this.enableAds && this.visible) {
+        const ads: Record<string, string | boolean> = {};
+        if (this.pageLevelAds) {
+          ads['google_ad_client'] = this.clientId;
+          ads['enable_page_level_ads'] = true;
         }
+        if (window) {
+          try {
+            this.createAdsEle();
+            ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(ads);
+            if (Array.isArray((window as any).adsbygoogle)) {
+              this.console.warn('Ads is blocked.');
+              this.hideAdsEle();
+            } else {
+              this.commonService.updateAdsFlag(false);
+            }
+          } catch (e: any) {
+            this.console.error('Ads: ', e.message || 'is not working.');
+            this.hideAdsEle();
+          }
+        }
+      } else {
+        this.console.warn('Ads is disabled.');
+        this.hideAdsEle();
       }
-    } else {
-      this.console.warn('Ads is disabled.');
-      this.hideAdsEle();
     }
   }
 

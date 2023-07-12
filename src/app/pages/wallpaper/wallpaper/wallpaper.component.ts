@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { NzImageService } from 'ng-zorro-antd/image';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import * as QRCode from 'qrcode';
-import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
+import { combineLatestWith, Observer, skipWhile, takeUntil, tap } from 'rxjs';
 import { environment as env } from '../../../../environments/environment';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
@@ -106,11 +106,13 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
           this.commentService.updateObjectId(this.wallpaperId);
         })
       )
-      .subscribe(([options]) => {
-        this.options = options;
-        this.urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
-        this.fetchWallpaper();
-        this.fetchPrevAndNext();
+      .subscribe(<Observer<[OptionEntity, ParamMap, ParamMap]>>{
+        next: ([options]) => {
+          this.options = options;
+          this.urlPrefix = env.production ? this.options['wallpaper_server'] : BING_DOMAIN;
+          this.fetchWallpaper();
+          this.fetchPrevAndNext();
+        }
       });
     this.userService.loginUser$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.isLoggedIn = !!user.userId;
@@ -127,11 +129,13 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   }
 
   showWallpaper() {
-    this.imageService.preview([
-      {
-        src: this.wallpaper?.wallpaperUrl
-      }
-    ]);
+    if (this.wallpaper?.wallpaperUrl) {
+      this.imageService.preview([
+        {
+          src: this.wallpaper.wallpaperUrl
+        }
+      ]);
+    }
   }
 
   showMiniAppCard() {
@@ -337,7 +341,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     let description = '';
     const fullStop = this.lang === WallpaperLang.EN ? '.' : '。';
     const comma = this.lang === WallpaperLang.EN ? ', ' : '，';
-    const wallpaperLocation = this.wallpaper.wallpaperLocation ? comma + this.wallpaper.wallpaperLocation : '';
+    const wallpaperLocation = this.wallpaper?.wallpaperLocation ? comma + this.wallpaper.wallpaperLocation : '';
+    let story = '';
 
     if (this.wallpaper) {
       titles.unshift(this.wallpaper.wallpaperCopyright);
@@ -345,13 +350,10 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
       description += description.endsWith(fullStop) ? '' : fullStop;
       if (this.lang === WallpaperLang.EN) {
         description += ' ';
+        story = this.wallpaper.wallpaperStoryEn || this.wallpaper.wallpaperStory;
+      } else {
+        story = this.wallpaper.wallpaperStory || this.wallpaper.wallpaperStoryEn;
       }
-    }
-    let story: string;
-    if (this.lang === WallpaperLang.CN) {
-      story = this.wallpaper.wallpaperStory || this.wallpaper.wallpaperStoryEn;
-    } else {
-      story = this.wallpaper.wallpaperStoryEn || this.wallpaper.wallpaperStory;
     }
     const wallpaperDesc = truncateString(filterHtmlTag(story), 140);
 
@@ -373,7 +375,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   }
 
   private updateBreadcrumb(): void {
-    this.breadcrumbs = [
+    this.breadcrumbs = <BreadcrumbEntity[]>[
       {
         label: '壁纸',
         tooltip: '高清壁纸',
