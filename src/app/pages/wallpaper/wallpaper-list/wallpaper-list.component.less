@@ -3,7 +3,7 @@
 .wallpaper {
   @row-size: 2;
 
-  border-radius: @border-radius;
+  border-radius: @primary-border-radius;
 
   &.wallpaper-desktop {
     margin: @primary-margin @box-shadow-width 0;
@@ -76,8 +76,8 @@
     }
 
     .photo, .photo-link {
-      border-top-left-radius: @border-radius;
-      border-top-right-radius: @border-radius;
+      border-top-left-radius: @primary-border-radius;
+      border-top-right-radius: @primary-border-radius;
     }
 
     .content {
@@ -152,7 +152,7 @@
   }
 
   .wallpaper-box {
-    border-radius: @border-radius;
+    border-radius: @primary-border-radius;
     background: var(--wallpaper-item-bg-color);
     box-shadow: var(--content-box-shadow);
 
@@ -205,13 +205,13 @@
       background-color: var(--content-bg-color);
 
       &:first-child {
-        border-top-left-radius: @border-radius;
-        border-bottom-left-radius: @border-radius;
+        border-top-left-radius: @primary-border-radius;
+        border-bottom-left-radius: @primary-border-radius;
       }
 
       &:last-child {
-        border-top-right-radius: @border-radius;
-        border-bottom-right-radius: @border-radius;
+        border-top-right-radius: @primary-border-radius;
+        border-bottom-right-radius: @primary-border-radius;
       }
 
       &:not(:first-child) {
@@ -259,7 +259,7 @@
     align-items: center;
     width: @filter-height;
     border: 1px solid var(--input-border-color);
-    border-radius: @border-radius;
+    border-radius: @primary-border-radius;
     font-size: 20px;
     background-color: var(--content-bg-color);
   }

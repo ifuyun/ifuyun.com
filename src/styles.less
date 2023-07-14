@@ -12,8 +12,11 @@
 
 // Override less variables to here
 // View all variables: https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/components/style/themes/default.less
+@text-color: var(--text-color);
 @heading-color: var(--base-color);
 @component-background: var(--input-bg-color);
+@popover-background: var(--popover-background);
+@control-border-radius: 2px;
 
 // Override antd styles
 .ant-image-preview-mask {
@@ -34,7 +37,7 @@ a, a:hover, a:focus {
 
 .input, .button {
   line-height: @input-line-height;
-  border-radius: @border-radius;
+  border-radius: @control-border-radius;
   font-size: @primary-font-size;
 }
 
@@ -159,7 +162,7 @@ a, a:hover, a:focus {
 }
 
 .content-box, .container {
-  border-radius: @border-radius;
+  border-radius: @primary-border-radius;
   background-color: var(--content-bg-color);
   box-shadow: var(--content-box-shadow);
 
@@ -222,7 +225,7 @@ a, a:hover, a:focus {
 }
 
 .post, .comment {
-  border-radius: @border-radius;
+  border-radius: @primary-border-radius;
   background-color: var(--content-bg-color);
   box-shadow: var(--content-box-shadow);
 
@@ -259,7 +262,7 @@ a, a:hover, a:focus {
 .preview-with-padding {
   img {
     padding: 16px;
-    border-radius: @border-radius;
+    border-radius: @primary-border-radius;
     background-color: #fff;
   }
 }
@@ -268,7 +271,7 @@ a, a:hover, a:focus {
   box-sizing: border-box;
   position: relative;
   display: flex;
-  border-radius: @border-radius;
+  border-radius: @primary-border-radius;
 }
 
 .make-money {
