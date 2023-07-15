@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'confirm', component: ConfirmComponent },
-  { path: 'callback', component: ThirdLoginComponent }
+  { path: 'login/callback', component: ThirdLoginComponent }
 ];
 
 @NgModule({
