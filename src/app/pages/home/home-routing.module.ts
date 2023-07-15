@@ -6,6 +6,7 @@ import { PostPageComponent } from '../post/post-page/post-page.component';
 import { PostComponent } from '../post/post/post.component';
 import { PromptArchiveComponent } from '../prompt/prompt-archive/prompt-archive.component';
 import { PromptComponent } from '../prompt/prompt/prompt.component';
+import { WallpaperArchiveComponent } from '../wallpaper/wallpaper-archive/wallpaper-archive.component';
 import { WallpaperComponent } from '../wallpaper/wallpaper/wallpaper.component';
 import { HomeComponent } from './home/home.component';
 
@@ -14,6 +15,7 @@ const routes: Routes = [
   // 需要在post/:postName之前
   { path: 'post/archive', component: PostArchiveComponent },
   { path: 'prompt/archive', component: PromptArchiveComponent },
+  { path: 'wallpaper/archive', component: WallpaperArchiveComponent },
   // 如果在post-routing中定义，会导致/post/post/xxx也能访问
   { path: 'post/:postName', component: PostComponent },
   { path: 'wallpaper/:wid', component: WallpaperComponent },
