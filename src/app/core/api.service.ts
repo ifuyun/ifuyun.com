@@ -6,6 +6,7 @@ import { ApiUrl } from '../config/api-url';
 import { Message } from '../config/message.enum';
 import { CommonService } from './common.service';
 import { HttpResponseEntity } from './http-response.interface';
+import { PlatformService } from './platform.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
+    private platform: PlatformService,
     private commonService: CommonService,
     private message: NzMessageService
   ) {}
@@ -81,7 +83,7 @@ export class ApiService {
   private handleError<T>(disableMessage = false) {
     return (error: HttpErrorResponse): Observable<T> => {
       if (error.status !== HttpStatusCode.NotFound) {
-        if (!disableMessage) {
+        if (!disableMessage && this.platform.isBrowser) {
           this.message.error(error.error?.message || error.message || Message.UNKNOWN_ERROR);
         }
         // Let the app keep running by returning an empty result.

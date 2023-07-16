@@ -80,7 +80,9 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
         const enableAds = this.options['enable_ads'] || '';
         this.enableAds =
           (env.production && ['1', '0'].includes(enableAds)) || (!env.production && ['2', '0'].includes(enableAds));
-        this.showAlipayRedPacketQrcode();
+        if (this.platform.isBrowser) {
+          this.showAlipayRedPacketQrcode();
+        }
       });
     this.postService
       .getHotPosts()

@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
-import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzI18nModule } from 'ng-zorro-antd/i18n';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -10,11 +8,6 @@ import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMessageModule } from 'ng-zorro-antd/message';
-import { NzModalModule } from 'ng-zorro-antd/modal';
-import { NzRadioModule } from 'ng-zorro-antd/radio';
-import { NzSelectModule } from 'ng-zorro-antd/select';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { NzSwitchModule } from 'ng-zorro-antd/switch';
 
 @NgModule({
   exports: [
@@ -36,7 +29,7 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
     // NzCardModule,
     // NzCarouselModule,
     // NzCascaderModule,
-    NzCheckboxModule,
+    // NzCheckboxModule,
     // NzCollapseModule,
     // NzCommentModule,
     // NzDatePickerModule,
@@ -44,7 +37,7 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
     // NzDividerModule,
     // NzDrawerModule,
     // NzDropDownModule,
-    NzEmptyModule,
+    // NzEmptyModule,
     NzFormModule,
     // NzGridModule,
     NzIconModule,
@@ -53,7 +46,7 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
     // NzInputNumberModule,
     // NzListModule,
     // NzMentionModule,
-    NzModalModule,
+    // NzModalModule,
     // NzNoAnimationModule,
     // NzNotificationModule,
     // NzPageHeaderModule,
@@ -61,17 +54,17 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
     // NzPopconfirmModule,
     // NzPopoverModule,
     // NzProgressModule,
-    NzRadioModule,
+    // NzRadioModule,
     // NzRateModule,
     // NzResultModule,
-    NzSelectModule,
+    // NzSelectModule,
     // NzSkeletonModule,
     // NzSliderModule,
     // NzSpaceModule,
-    NzSpinModule,
+    // NzSpinModule,
     // NzStatisticModule,
     // NzStepsModule,
-    NzSwitchModule
+    // NzSwitchModule
     // NzTabsModule,
     // NzTagModule,
     // NzTimePickerModule,
