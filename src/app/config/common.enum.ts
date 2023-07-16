@@ -19,7 +19,7 @@ export enum TaxonomyType {
 }
 
 export enum TaxonomyStatus {
-  PUBLISH = 'publish',
+  PUBLIC = 'public',
   PRIVATE = 'private',
   TRASH = 'trash'
 }

@@ -74,8 +74,10 @@ export class AuthService {
   }
 
   clearAuth() {
-    localStorage?.removeItem('token');
-    localStorage?.removeItem('token_expires');
+    if (this.platform.isBrowser) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('token_expires');
+    }
     this.cookieService.delete('user');
   }
 

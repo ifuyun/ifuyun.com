@@ -4,7 +4,7 @@ export enum PromptLang {
 }
 
 export enum PromptScope {
-  PUBLISH = 'publish',
+  PUBLIC = 'public',
   PRIVATE = 'private'
 }
 
