@@ -28,11 +28,9 @@ import { UserComponent } from '../user.component';
 export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy {
   isMobile = false;
   wallpaper: Wallpaper | null = null;
-  confirmForm = this.fb.group(
-    {
-      code: ['', [Validators.required, Validators.pattern(/^\s*\d{4}\s*$/i)]]
-    }
-  );
+  confirmForm = this.fb.group({
+    code: ['', [Validators.required, Validators.pattern(/^\s*\d{4}\s*$/i)]]
+  });
   confirmLoading = false;
   userEmail = '';
   countdown = 0; // 60s
@@ -128,11 +126,14 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
   resendCode() {
     this.countdown = 60;
     this.startCountdown();
-    this.authService.resend(this.userId).pipe(takeUntil(this.destroy$)).subscribe((res) => {
-      if (res.userId) {
-        this.message.success('验证码已重新发送');
-      }
-    });
+    this.authService
+      .resend(this.userId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res.userId) {
+          this.message.success('验证码已重新发送');
+        }
+      });
   }
 
   protected updateActivePage(): void {

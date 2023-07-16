@@ -98,7 +98,7 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
         takeUntil(this.destroy$)
       )
       .subscribe(<Observer<[OptionEntity, ParamMap]>>{
-        next: ([options, queryParams]) => {
+        next: ([options]) => {
           this.options = options;
           this.updatePageInfo();
         }
@@ -125,7 +125,8 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
           this.regLoading = false;
           if (res.userId) {
             this.router.navigate(['../confirm'], {
-              relativeTo: this.route, queryParams: {
+              relativeTo: this.route,
+              queryParams: {
                 userId: res.userId,
                 email: res.userEmail
               }

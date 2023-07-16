@@ -39,9 +39,9 @@ export class AuthService {
   }
 
   register(user: UserEntity): Observable<UserModel> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.REGISTER), user).pipe(
-      map((res) => <any>(res?.data || {}))
-    );
+    return this.apiService
+      .httpPost(this.apiService.getApiUrl(ApiUrl.REGISTER), user)
+      .pipe(map((res) => <any>(res?.data || {})));
   }
 
   verify(payload: { userId: string; code: string }): Observable<LoginResponse> {
@@ -54,9 +54,9 @@ export class AuthService {
   }
 
   resend(userId: string): Observable<UserModel> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.RESEND_CODE), { userId }).pipe(
-      map((res) => <any>(res?.data || {}))
-    );
+    return this.apiService
+      .httpPost(this.apiService.getApiUrl(ApiUrl.RESEND_CODE), { userId })
+      .pipe(map((res) => <any>(res?.data || {})));
   }
 
   getToken(): string {

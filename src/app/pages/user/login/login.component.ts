@@ -163,11 +163,12 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
               redirectUrl = this.adminUrl + urlParam;
             }
             window.location.href = redirectUrl;
-          } else if(res.code === ResponseCode.USER_UNVERIFIED) {
+          } else if (res.code === ResponseCode.USER_UNVERIFIED) {
             const user: UserModel = res.data?.user || {};
             if (user.userId) {
               this.router.navigate(['../confirm'], {
-                relativeTo: this.route, queryParams: {
+                relativeTo: this.route,
+                queryParams: {
                   userId: user.userId,
                   email: user.userEmail
                 }
