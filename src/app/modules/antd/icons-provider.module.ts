@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
-import { MenuFoldOutline, MenuUnfoldOutline } from '@ant-design/icons-angular/icons';
+import { EyeOutline, EyeInvisibleOutline, UserAddOutline } from '@ant-design/icons-angular/icons';
 import { NZ_ICONS, NzIconModule } from 'ng-zorro-antd/icon';
 
-const icons = [MenuFoldOutline, MenuUnfoldOutline];
+const icons = [EyeOutline, EyeInvisibleOutline, UserAddOutline];
 
 @NgModule({
   imports: [NzIconModule],
