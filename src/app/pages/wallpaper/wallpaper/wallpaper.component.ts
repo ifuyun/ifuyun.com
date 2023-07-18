@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { NzImageService } from 'ng-zorro-antd/image';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import * as QRCode from 'qrcode';
 import { combineLatestWith, Observer, skipWhile, takeUntil, tap } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
@@ -19,6 +18,7 @@ import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
+import { MessageService } from '../../../core/message.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
@@ -81,7 +81,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     private commentService: CommentService,
     private voteService: VoteService,
     private favoriteService: FavoriteService,
-    private message: NzMessageService,
+    private message: MessageService,
     private imageService: NzImageService,
     private logService: LogService
   ) {

@@ -1,13 +1,13 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
+import { MessageService } from '../../../core/message.service';
 import { HTMLMetaData } from '../../../core/meta.interface';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
@@ -53,7 +53,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
     private optionService: OptionService,
     private userService: UserService,
     private authService: AuthService,
-    private message: NzMessageService
+    private message: MessageService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -65,7 +65,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
     this.route.queryParamMap
       .pipe(
         combineLatestWith(this.optionService.options$),
-        skipWhile(([, options]) => isEmpty(options)),
+        skipWhile<[ParamMap, OptionEntity]>(([, options]) => isEmpty(options)),
         takeUntil(this.destroy$),
         tap(([params, options]) => {
           this.options = options;

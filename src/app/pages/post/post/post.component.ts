@@ -13,7 +13,6 @@ import { ActivatedRoute } from '@angular/router';
 import highlight from 'highlight.js';
 import { isEmpty, uniq } from 'lodash';
 import { NzImageService } from 'ng-zorro-antd/image';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { ClipboardService } from 'ngx-clipboard';
 import * as QRCode from 'qrcode';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
@@ -32,6 +31,7 @@ import { Message } from '../../../config/message.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
+import { MessageService } from '../../../core/message.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
@@ -115,7 +115,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     private voteService: VoteService,
     private favoriteService: FavoriteService,
     private imageService: NzImageService,
-    private message: NzMessageService,
+    private message: MessageService,
     private renderer: Renderer2,
     private clipboardService: ClipboardService,
     private logService: LogService

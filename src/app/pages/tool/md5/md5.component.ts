@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { BehaviorSubject, debounceTime, Observable, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
+import { MessageService } from '../../../core/message.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { UserAgentService } from '../../../core/user-agent.service';
@@ -40,7 +40,7 @@ export class Md5Component extends PageComponent implements OnInit {
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
     private optionService: OptionService,
-    private message: NzMessageService
+    private message: MessageService
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();

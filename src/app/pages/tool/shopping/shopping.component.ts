@@ -1,13 +1,13 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
+import { MessageService } from '../../../core/message.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
@@ -48,7 +48,7 @@ export class ShoppingComponent extends PageComponent implements OnInit {
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
     private optionService: OptionService,
-    private message: NzMessageService,
+    private message: MessageService,
     private shoppingService: ShoppingService,
     private logService: LogService
   ) {
@@ -122,7 +122,7 @@ export class ShoppingComponent extends PageComponent implements OnInit {
         if (code !== 0 && code !== 200) {
           this.message.error(res.message);
         } else {
-          this.promotion = res.data || {};
+          this.promotion = res.data || { clickURL: '' };
           this.showPromotionQrcode();
         }
       });

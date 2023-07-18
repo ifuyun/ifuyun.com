@@ -42,7 +42,7 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
     // NzGridModule,
     NzIconModule,
     NzImageModule,
-    NzInputModule,
+    NzInputModule
     // NzInputNumberModule,
     // NzListModule,
     // NzMentionModule,

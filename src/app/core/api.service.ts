@@ -1,11 +1,11 @@
 import { HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { catchError, EMPTY, map, Observable, of } from 'rxjs';
 import { ApiUrl } from '../config/api-url';
 import { Message } from '../config/message.enum';
 import { CommonService } from './common.service';
 import { HttpResponseEntity } from './http-response.interface';
+import { MessageService } from './message.service';
 import { PlatformService } from './platform.service';
 
 @Injectable({
@@ -18,7 +18,7 @@ export class ApiService {
     private http: HttpClient,
     private platform: PlatformService,
     private commonService: CommonService,
-    private message: NzMessageService
+    private message: MessageService
   ) {}
 
   getApiUrl(path: string): string {
@@ -83,7 +83,7 @@ export class ApiService {
   private handleError<T>(disableMessage = false) {
     return (error: HttpErrorResponse): Observable<T> => {
       if (error.status !== HttpStatusCode.NotFound) {
-        if (!disableMessage && this.platform.isBrowser) {
+        if (!disableMessage) {
           this.message.error(error.error?.message || error.message || Message.UNKNOWN_ERROR);
         }
         // Let the app keep running by returning an empty result.

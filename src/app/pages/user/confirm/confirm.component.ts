@@ -3,11 +3,11 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { combineLatestWith, Observer, skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
+import { MessageService } from '../../../core/message.service';
 import { HTMLMetaData } from '../../../core/meta.interface';
 import { MetaService } from '../../../core/meta.service';
 import { UserAgentService } from '../../../core/user-agent.service';
@@ -52,7 +52,7 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
     private userAgentService: UserAgentService,
     private metaService: MetaService,
     private commonService: CommonService,
-    private message: NzMessageService,
+    private message: MessageService,
     private optionService: OptionService,
     private authService: AuthService
   ) {

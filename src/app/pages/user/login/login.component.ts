@@ -6,13 +6,13 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { CookieService } from 'ngx-cookie-service';
 import { combineLatestWith, Observer, skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM } from '../../../config/common.constant';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
+import { MessageService } from '../../../core/message.service';
 import { HTMLMetaData } from '../../../core/meta.interface';
 import { MetaService } from '../../../core/meta.service';
 import { PlatformService } from '../../../core/platform.service';
@@ -91,7 +91,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
     private optionService: OptionService,
     private cookieService: CookieService,
     private authService: AuthService,
-    private message: NzMessageService
+    private message: MessageService
   ) {
     super(document, wallpaperService);
     this.isMobile = this.userAgentService.isMobile();

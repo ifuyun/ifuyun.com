@@ -1,6 +1,7 @@
-import { APP_BASE_HREF, CommonModule } from '@angular/common';
+import { APP_BASE_HREF, CommonModule, registerLocaleData } from '@angular/common';
 import { HttpClientModule, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { APP_ID, NgModule } from '@angular/core';
+import zh from '@angular/common/locales/zh';
+import { APP_ID, LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
@@ -16,6 +17,8 @@ import { ToolboxComponent } from './components/toolbox/toolbox.component';
 import { httpInterceptorProviders } from './interceptors/http-interceptors';
 import { IconsProviderModule } from './modules/antd/icons-provider.module';
 import { NgZorroAntdModule } from './modules/antd/ng-zorro-antd.module';
+
+registerLocaleData(zh);
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,6 +41,7 @@ import { NgZorroAntdModule } from './modules/antd/ng-zorro-antd.module';
   providers: [
     { provide: APP_ID, useValue: 'ifuyun' },
     { provide: APP_BASE_HREF, useValue: env.host },
+    { provide: LOCALE_ID, useValue: 'zh' },
     { provide: NZ_I18N, useValue: zh_CN },
     httpInterceptorProviders,
     provideHttpClient(withInterceptorsFromDi()),

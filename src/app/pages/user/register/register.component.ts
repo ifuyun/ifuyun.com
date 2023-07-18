@@ -3,10 +3,10 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { combineLatestWith, Observer, skipWhile, takeUntil } from 'rxjs';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
+import { MessageService } from '../../../core/message.service';
 import { HTMLMetaData } from '../../../core/meta.interface';
 import { MetaService } from '../../../core/meta.service';
 import { UserAgentService } from '../../../core/user-agent.service';
@@ -82,7 +82,7 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
     private commonService: CommonService,
     private optionService: OptionService,
     private authService: AuthService,
-    private message: NzMessageService
+    private message: MessageService
   ) {
     super(document, wallpaperService);
     this.isMobile = this.userAgentService.isMobile();
