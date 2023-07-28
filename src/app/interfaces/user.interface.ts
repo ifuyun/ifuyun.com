@@ -3,7 +3,7 @@ export interface UserEntity {
   userNiceName: string;
   userEmail?: string;
   userPassword?: string;
-  userRegistered?: Date;
+  userCreated?: Date;
   userStatus?: string;
 }
 
