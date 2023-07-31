@@ -22,6 +22,14 @@ export class UserService {
     );
   }
 
+  getRegisterUser(userId: string): Observable<UserModel> {
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.GET_REGISTER_USER), {
+      userId
+    }).pipe(
+      map((res) => res?.data || {})
+    );
+  }
+
   getCommentUser(): Guest | null {
     try {
       return JSON.parse(localStorage.getItem(STORAGE_KEY_USER) || '');

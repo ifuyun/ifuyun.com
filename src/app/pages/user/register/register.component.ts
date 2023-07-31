@@ -127,8 +127,7 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
             this.router.navigate(['../confirm'], {
               relativeTo: this.route,
               queryParams: {
-                userId: res.userId,
-                email: res.userEmail
+                userId: res.userId
               }
             });
           }

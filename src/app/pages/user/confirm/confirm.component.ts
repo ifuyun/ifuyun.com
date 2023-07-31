@@ -13,11 +13,14 @@ import { MetaService } from '../../../core/meta.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { format } from '../../../helpers/helper';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { UserModel } from '../../../interfaces/user.interface';
 import { OptionService } from '../../../services/option.service';
 import { Wallpaper } from '../../wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../wallpaper/wallpaper.service';
 import { AuthService } from '../auth.service';
 import { UserComponent } from '../user.component';
+import { UserStatus } from '../user.enum';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-confirm',
@@ -32,8 +35,9 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
     code: ['', [Validators.required, Validators.pattern(/^\s*\d{4}\s*$/i)]]
   });
   confirmLoading = false;
-  userEmail = '';
+  user?: UserModel;
   countdown = 0; // 60s
+  isLoggedIn = false;
 
   protected pageIndex = 'register';
 
@@ -54,6 +58,7 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
     private commonService: CommonService,
     private message: MessageService,
     private optionService: OptionService,
+    private userService: UserService,
     private authService: AuthService
   ) {
     super(document, wallpaperService);
@@ -64,12 +69,14 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
     this.optionService.options$
       .pipe(
         skipWhile((options) => isEmpty(options)),
-        combineLatestWith(this.route.queryParamMap),
+        combineLatestWith(this.route.queryParamMap, this.userService.loginUser$),
         takeUntil(this.destroy$)
       )
-      .subscribe(<Observer<[OptionEntity, ParamMap]>>{
-        next: ([options, queryParams]) => {
+      .subscribe(<Observer<[OptionEntity, ParamMap, UserModel]>>{
+        next: ([options, queryParams, loginUser]) => {
           this.options = options;
+          this.adminUrl = this.options['admin_site_url'];
+          this.isLoggedIn = !!loginUser.userId;
           this.updatePageInfo();
 
           const ref = queryParams.get('ref')?.trim() || '';
@@ -79,8 +86,8 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
             this.referer = ref;
           }
           this.userId = queryParams.get('userId') || '';
-          this.userEmail = queryParams.get('email') || '';
-          this.adminUrl = this.options['admin_site_url'];
+
+          this.fetchUser();
         }
       });
     this.initWallpaper();
@@ -143,6 +150,23 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
       showMobileHeader: true,
       showMobileFooter: true
     });
+  }
+
+  private fetchUser() {
+    this.userService
+      .getRegisterUser(this.userId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.user = res;
+        if (res.userStatus === UserStatus.NORMAL) {
+          this.message.info('账号已验证，无需重复验证');
+          if (this.isLoggedIn) {
+            this.router.navigate(['/']);
+          } else {
+            this.router.navigate(['/user/login']);
+          }
+        }
+      });
   }
 
   private startCountdown() {
