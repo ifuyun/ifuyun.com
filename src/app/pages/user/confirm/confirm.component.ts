@@ -61,10 +61,6 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
   }
 
   ngOnInit() {
-    this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe((queryParams) => {
-      this.userId = queryParams.get('userId') || '';
-      this.userEmail = queryParams.get('email') || '';
-    });
     this.optionService.options$
       .pipe(
         skipWhile((options) => isEmpty(options)),

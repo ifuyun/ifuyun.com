@@ -9,7 +9,6 @@ export interface PromptEntity {
   promptLang: PromptLang;
   promptScope: PromptScope;
   promptStatus: PromptStatus;
-  promptOrder: number;
   promptMetaMap?: Record<string, string>;
   user: UserModel;
 }

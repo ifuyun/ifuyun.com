@@ -43,7 +43,7 @@
         </div>
       </div>
     </ng-container>
-    <ng-container *ngIf="isPrompt && !showPayMask">
+    <ng-container *ngIf="isPrompt && !showPayMask && prompts.length > 0">
       <article class="post-content prompt-content">
         <h1>Prompt</h1>
         <ng-container *ngFor="let prompt of prompts">
