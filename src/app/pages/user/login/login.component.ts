@@ -169,8 +169,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
               this.router.navigate(['../confirm'], {
                 relativeTo: this.route,
                 queryParams: {
-                  userId: user.userId,
-                  email: user.userEmail
+                  userId: user.userId
                 }
               });
             }
