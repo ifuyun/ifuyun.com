@@ -268,6 +268,6 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
 
   private shakeForm() {
     this.formStatus = 'shaking';
-    setTimeout(() => (this.formStatus = 'normal'), duration);
+    window.setTimeout(() => (this.formStatus = 'normal'), duration);
   }
 }

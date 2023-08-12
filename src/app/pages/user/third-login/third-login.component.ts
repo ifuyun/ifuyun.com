@@ -159,7 +159,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
   }
 
   private startCountdown() {
-    const timer = setInterval(() => {
+    const timer = window.setInterval(() => {
       this.countdown -= 1;
       if (this.countdown <= 0) {
         clearInterval(timer);

@@ -130,8 +130,8 @@ export class PostListComponent extends PageComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.postList = res.postList?.list || [];
-        this.page = res.postList.page || 1;
-        this.total = res.postList.total || 0;
+        this.page = res.postList?.page || 1;
+        this.total = res.postList?.total || 0;
 
         res.breadcrumbs = (res.breadcrumbs || []).map((item) => {
           item.url = `/${this.postType}/category/${item.slug}`;

@@ -170,7 +170,7 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
   }
 
   private startCountdown() {
-    const timer = setInterval(() => {
+    const timer = window.setInterval(() => {
       this.countdown -= 1;
       if (this.countdown <= 0) {
         clearInterval(timer);

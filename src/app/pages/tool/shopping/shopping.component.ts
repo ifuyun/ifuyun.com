@@ -135,7 +135,7 @@ export class ShoppingComponent extends PageComponent implements OnInit {
         margin: 0
       })
         .then((canvas) => {
-          setTimeout(() => {
+          window.setTimeout(() => {
             canvas.removeAttribute('style');
             canvas.style.width = '100%';
             canvas.style.maxWidth = '200px';

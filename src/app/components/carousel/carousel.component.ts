@@ -31,7 +31,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   carousels: CarouselVo[] = [];
   activeIndex = 0;
   isRevert = false;
-  timer!: any;
+  timer!: number;
 
   private carouselOptions!: CarouselOptions;
   private staticResourceHost = '';
@@ -93,7 +93,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
 
   start() {
     if (this.platform.isBrowser) {
-      this.timer = setInterval(() => {
+      this.timer = window.setInterval(() => {
         this.isRevert = false;
         this.activeIndex = this.activeIndex + 1 >= this.carousels.length ? 0 : this.activeIndex + 1;
       }, 3000);

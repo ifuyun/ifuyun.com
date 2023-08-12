@@ -53,7 +53,7 @@ export class MakeMoneyComponent implements OnInit {
       });
     if (this.isBrowser) {
       this.commonService.adsFlag$.pipe(takeUntil(this.destroy$)).subscribe((flag) => {
-        setTimeout(() => {
+        window.setTimeout(() => {
           this.jdUnionVisible = flag;
         }, 0);
       });

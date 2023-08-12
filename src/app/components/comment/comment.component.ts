@@ -116,7 +116,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
       const commentUser = this.userService.getCommentUser();
       if (commentUser) {
         this.commentUser = { ...commentUser };
-        !this.isLoggedIn && setTimeout(() => this.initCommentForm(), 0);
+        !this.isLoggedIn && window.setTimeout(() => this.initCommentForm(), 0);
       }
     }
   }
@@ -252,7 +252,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
       if (e) {
         (e.target as HTMLImageElement).src = `${captchaUrl}?r=${Math.random()}`;
       } else {
-        setTimeout(() => (this.captchaImg.nativeElement.src = `${captchaUrl}?r=${Math.random()}`));
+        window.setTimeout(() => (this.captchaImg.nativeElement.src = `${captchaUrl}?r=${Math.random()}`));
       }
     }
   }

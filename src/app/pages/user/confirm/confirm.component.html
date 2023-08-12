@@ -26,7 +26,7 @@
         <div class="user-form-row">
           <div class="user-form-col">
             <button nz-button (click)="resendCode()"
-                    [disabled]="countdown > 0">重新发送{{countdown > 0 ? '（' + countdown + 's）' : ''}}</button>
+                    [disabled]="countdown > 0">重新发送{{countdown > 0 ? ' (' + countdown + 's)' : ''}}</button>
           </div>
           <div class="user-form-col">
             <button nz-button nzType="primary" (click)="verify()" [nzLoading]="confirmLoading">确定</button>

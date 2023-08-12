@@ -292,7 +292,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
             })
             .subscribe();
 
-          setTimeout(() => {
+          window.setTimeout(() => {
             $target.innerHTML = this.copyHTML;
           }, 2000);
         }
@@ -318,7 +318,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       .subscribe();
 
     this.promptCopyMap[prompt.promptId] = true;
-    setTimeout(() => {
+    window.setTimeout(() => {
       this.promptCopyMap[prompt.promptId] = false;
     }, 2000);
   }
