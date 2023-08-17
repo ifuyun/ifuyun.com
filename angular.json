@@ -25,6 +25,7 @@
               "qrcode",
               "ua-parser-js",
               "murmurhash",
+              "file-saver",
               "@nestjs/ng-universal/dist/tokens"
             ],
             "assets": [
