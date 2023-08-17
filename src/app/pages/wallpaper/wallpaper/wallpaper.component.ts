@@ -1,5 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
+import { saveAs } from 'file-saver';
 import { isEmpty, uniq } from 'lodash';
 import { NzImageService } from 'ng-zorro-antd/image';
 import * as QRCode from 'qrcode';
@@ -58,6 +60,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   nextWallpaper: Wallpaper | null = null;
   isFavorite = false;
   favoriteLoading = false;
+  downloading = false;
 
   protected pageIndex = 'wallpaper';
 
@@ -151,9 +154,32 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
       });
       return;
     }
-    const downloadUrl = this.wallpaperService.getDownloadUrl(this.wallpaperId, uhd);
-    const token = localStorage.getItem('token');
-    window.location.href = `${this.options['site_url']}${downloadUrl}${token ? '&token=' + token : ''}`;
+    this.downloading = true;
+    this.wallpaperService
+      .downloadWallpaper(this.wallpaperId, uhd)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          this.downloading = false;
+
+          const fileType = '.' + this.wallpaper.wallpaperImageFormat;
+          const fileName = `${this.wallpaper.wallpaperCopyright}${uhd ? '_UHD' : ''}${fileType}`;
+          saveAs(<Blob>res.body, fileName);
+        },
+        error: async (err: HttpErrorResponse) => {
+          this.downloading = false;
+
+          if (err.error instanceof Blob && err.error.type === 'application/json') {
+            const resStr = await err.error.text();
+            try {
+              const res = JSON.parse(resStr);
+              this.message.error(res.message || '下载失败');
+            } catch (e) {
+              this.message.error('下载失败');
+            }
+          }
+        }
+      });
   }
 
   voteWallpaper(like = true) {

@@ -6,13 +6,12 @@ import { NzI18nModule } from 'ng-zorro-antd/i18n';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 
 @NgModule({
   exports: [
     NzI18nModule,
-    NzLayoutModule,
+    // NzLayoutModule,
     // NzMenuModule,
     NzMessageModule,
     // NzBreadCrumbModule,

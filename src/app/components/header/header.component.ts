@@ -16,6 +16,7 @@ import { Action, ActionObjectType } from '../../interfaces/log.enum';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { TaxonomyNode } from '../../interfaces/taxonomy.interface';
 import { UserModel } from '../../interfaces/user.interface';
+import { NgZorroAntdModule } from '../../modules/antd/ng-zorro-antd.module';
 import { TOOL_LINKS } from '../../pages/tool/tool.constant';
 import { AuthService } from '../../pages/user/auth.service';
 import { UserService } from '../../pages/user/user.service';
@@ -27,7 +28,7 @@ import { OptionService } from '../../services/option.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.less'],
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, AutofocusDirective],
+  imports: [CommonModule, RouterLink, FormsModule, AutofocusDirective, NgZorroAntdModule],
   providers: [DestroyService]
 })
 export class HeaderComponent implements OnInit {

@@ -2,6 +2,23 @@
 
 .search {
   margin-bottom: @primary-margin;
+
+  input {
+    font-size: 14px;
+    line-height: 1.79577;
+
+    &:not(:hover, :focus) {
+      border-color: var(--content-bg-color);
+    }
+
+    &::placeholder {
+      color: var(--input-placeholder-color);
+    }
+  }
+
+  input, button {
+    box-shadow: var(--content-box-shadow);
+  }
 }
 
 .widget {

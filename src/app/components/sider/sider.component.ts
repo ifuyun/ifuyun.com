@@ -16,6 +16,7 @@ import { UrlService } from '../../core/url.service';
 import { LinkEntity } from '../../interfaces/link.interface';
 import { Action, ActionObjectType } from '../../interfaces/log.enum';
 import { OptionEntity } from '../../interfaces/option.interface';
+import { NgZorroAntdModule } from '../../modules/antd/ng-zorro-antd.module';
 import { PostEntity } from '../../pages/post/post.interface';
 import { PostService } from '../../pages/post/post.service';
 import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
@@ -30,7 +31,7 @@ import { JdUnionGoodsComponent } from '../jd-union-goods/jd-union-goods.componen
   templateUrl: './sider.component.html',
   styleUrls: ['./sider.component.less'],
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, AdsenseComponent, JdUnionGoodsComponent],
+  imports: [CommonModule, FormsModule, RouterLink, NgZorroAntdModule, AdsenseComponent, JdUnionGoodsComponent],
   providers: [DestroyService]
 })
 export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -136,7 +137,10 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  search() {
+  search(event?: KeyboardEvent) {
+    if (event && event.key !== 'Enter') {
+      return;
+    }
     this.keyword = this.keyword.trim();
     if (this.keyword) {
       this.logService

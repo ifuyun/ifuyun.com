@@ -1,3 +1,4 @@
+import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ApiUrl } from '../../config/api-url';
@@ -31,8 +32,12 @@ export class WallpaperService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  getDownloadUrl(wallpaperId: string, isUhd: boolean): string {
-    return `${this.apiService.getApiUrl(ApiUrl.DOWNLOAD_WALLPAPER)}?wallpaperId=${wallpaperId}&uhd=${isUhd ? 1 : 0}`;
+  downloadWallpaper(wallpaperId: string, isUhd: boolean): Observable<HttpResponse<Blob>> {
+    return this.apiService
+      .downloadFile(this.apiService.getApiUrl(ApiUrl.DOWNLOAD_WALLPAPER), {
+        wallpaperId,
+        uhd: isUhd ? 1 : 0
+      });
   }
 
   increaseDownload(wallpaperId: string): Observable<HttpResponseEntity> {

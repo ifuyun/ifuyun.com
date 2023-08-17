@@ -6,6 +6,7 @@ import { CommentComponent } from '../../components/comment/comment.component';
 import { EmptyComponent } from '../../components/empty/empty.component';
 import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
 import { PageBarComponent } from '../../components/page-bar/page-bar.component';
+import { NgZorroAntdModule } from '../../modules/antd/ng-zorro-antd.module';
 import { NumberViewPipe } from '../../pipes/number-view.pipe';
 import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
 import { WallpaperArchiveComponent } from './wallpaper-archive/wallpaper-archive.component';
@@ -21,6 +22,7 @@ import { WallpaperComponent } from './wallpaper/wallpaper.component';
     WallpaperRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    NgZorroAntdModule,
     BreadcrumbComponent,
     CommentComponent,
     MakeMoneyComponent,

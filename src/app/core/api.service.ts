@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpParams, HttpStatusCode } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams, HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, EMPTY, map, Observable, of } from 'rxjs';
 import { ApiUrl } from '../config/api-url';
@@ -66,6 +66,20 @@ export class ApiService {
         map((res) => res?.data),
         catchError(this.handleError<T>(disableMessage))
       );
+  }
+
+  downloadFile<T extends HttpResponse<Blob>>(
+    url: string,
+    param: Record<string, any> = {}
+  ): Observable<HttpResponse<Blob>> {
+    return this.http
+      .get(url, {
+        params: new HttpParams({
+          fromObject: param
+        }),
+        observe: 'response',
+        responseType: 'blob'
+      });
   }
 
   httpPost<T extends HttpResponseEntity>(

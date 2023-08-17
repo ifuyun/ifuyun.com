@@ -128,10 +128,20 @@
         <i class="icon icon-search" (click)="toggleSearchStatus()"></i>
       </ng-container>
       <ng-container *ngIf="showSearch">
-        <form method="get" action="/" (submit)="search()">
-          <input type="text" class="header-input" [(ngModel)]="keyword" [autofocus]="focusSearch"
-                 name="keyword" autocomplete="off" placeholder="探索新世界……"/>
-          <input type="submit" class="header-button" value="搜索"/>
+        <form class="search-form" method="get" action="/" (submit)="search()">
+          <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchBtn">
+            <input type="text" nz-input
+                   [(ngModel)]="keyword"
+                   [autofocus]="focusSearch"
+                   name="keyword"
+                   autocomplete="off"
+                   placeholder="探索新世界……"/>
+          </nz-input-group>
+          <ng-template #searchBtn>
+            <button nz-button nzSearch nzType="primary" nzSize="large" (click)="search()">
+              <span nz-icon nzType="search"></span>
+            </button>
+          </ng-template>
         </form>
         <div class="mask mask-search" (click)="toggleSearchStatus()"></div>
       </ng-container>
