@@ -40,7 +40,7 @@
                  [queryParams]="getLangParams(wallpaper)"
                  [title]="wallpaper.wallpaperCopyright">{{wallpaper.wallpaperCopyright}}</a>
             </h2>
-            <div class="content-location" *ngIf="!isMobile">
+            <div class="content-location" *ngIf="!isMobile" [title]="wallpaper.wallpaperLocation">
               <i class="icon icon-geo-alt"></i><span>{{wallpaper.wallpaperLocation}}</span>
             </div>
             <div class="content-meta">

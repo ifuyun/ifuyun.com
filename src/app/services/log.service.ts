@@ -29,6 +29,6 @@ export class LogService {
   }
 
   logAction(log: ActionLog): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_DOWNLOAD_LOG), log, true);
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_ACTION_LOG), log, true);
   }
 }

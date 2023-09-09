@@ -19,11 +19,6 @@ const routes: Routes = [
     loadChildren: () => import('./wallpaper/wallpaper.module').then((m) => m.WallpaperModule)
   },
   {
-    path: 'prompt',
-    component: LayoutComponent,
-    loadChildren: () => import('./prompt/prompt.module').then((m) => m.PromptModule)
-  },
-  {
     path: 'tool',
     component: LayoutComponent,
     loadChildren: () => import('./tool/tool.module').then((m) => m.ToolModule)

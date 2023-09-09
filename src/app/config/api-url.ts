@@ -35,7 +35,7 @@ export enum ApiUrl {
   GET_CAROUSELS = '/options/carousels',
   // log
   SAVE_ACCESS_LOG = '/logs/access',
-  SAVE_DOWNLOAD_LOG = '/logs/action',
+  SAVE_ACTION_LOG = '/logs/action',
   // wallpaper
   GET_WALLPAPERS = '/wallpapers',
   GET_WALLPAPERS_BY_RANDOM = '/wallpapers/random',
