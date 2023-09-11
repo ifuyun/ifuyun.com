@@ -79,7 +79,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   postMeta: Record<string, any> = {};
   postTags: TaxonomyEntity[] = [];
   postCategories: TaxonomyEntity[] = [];
-  prompts: PromptEntity[] = [];
   isFavorite = false;
   showCrumb = true;
   postVoted = false;
@@ -396,7 +395,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.postMeta = post.meta;
     this.postTags = post.tags;
     this.postCategories = post.categories;
-    this.prompts = post.prompts;
     this.isFavorite = post.isFavorite;
     this.postVoted = post.voted;
     this.showPayMask =

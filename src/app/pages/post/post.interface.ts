@@ -40,7 +40,6 @@ export interface Post {
   meta: Record<string, string>;
   tags: TaxonomyEntity[];
   categories: TaxonomyEntity[];
-  prompts: PromptEntity[];
   breadcrumbs?: BreadcrumbEntity[];
   isFavorite: boolean;
   voted: boolean;

@@ -43,30 +43,6 @@
         </div>
       </div>
     </ng-container>
-    <ng-container *ngIf="isPrompt && !showPayMask && prompts.length > 0">
-      <article class="post-content prompt-content">
-        <h1>Prompt</h1>
-        <ng-container *ngFor="let prompt of prompts">
-          <h2>{{prompt.promptTitle}}</h2>
-          <pre class="i-code">
-            <div class="i-code-info">
-              <span>{{prompt.promptLang | promptLang}}</span>
-              <span class="i-code-copy" (click)="copyPrompt(prompt)">
-                <span *ngIf="!promptCopyMap[prompt.promptId]"><i class="icon icon-copy"></i>Copy prompt</span>
-                <span *ngIf="promptCopyMap[prompt.promptId]"><i class="icon icon-check-lg"></i>Copied!</span>
-              </span>
-            </div>
-            <div class="i-code-body">
-              <code class="i-code-html" [innerHTML]="prompt.promptContent | safeHtml"></code>
-            </div>
-          </pre>
-          <div class="prompt-source">
-            <span>来源：{{!prompt.promptOriginal ? prompt.promptMetaMap?.['prompt_source'] : '原创'}}</span>
-            <span>作者：{{prompt.promptMetaMap?.['prompt_author'] || prompt.user.userNiceName}}</span>
-          </div>
-        </ng-container>
-      </article>
-    </ng-container>
     <ng-container *ngIf="postMeta['show_wechat_card'] === '1'">
       <div class="divider"></div>
       <div class="wechat-card">
