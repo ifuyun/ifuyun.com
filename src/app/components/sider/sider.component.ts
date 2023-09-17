@@ -6,7 +6,6 @@ import { isEmpty } from 'lodash';
 import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
 import { environment as env } from '../../../environments/environment';
-import { PostType } from '../../config/common.enum';
 import { ArchiveData } from '../../core/common.interface';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
@@ -42,9 +41,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   isHomePage = false;
   isPostPage = false;
   isWallpaperPage = false;
-  isPromptPage = false;
   postArchives: ArchiveData[] = [];
-  promptArchives: ArchiveData[] = [];
   wallpaperArchives: ArchiveData[] = [];
   hotPosts: PostEntity[] = [];
   randomPosts: PostEntity[] = [];
@@ -114,9 +111,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.isHomePage || this.isPostPage) {
           this.fetchPostArchives();
         }
-        if (this.isHomePage || this.isPromptPage) {
-          this.fetchPromptArchives();
-        }
         if (this.isHomePage || this.isWallpaperPage) {
           this.fetchWallpaperArchives();
         }
@@ -161,16 +155,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => (this.postArchives = res));
-  }
-
-  private fetchPromptArchives() {
-    this.postService
-      .getPostArchives({
-        postType: PostType.PROMPT,
-        showCount: true
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => (this.promptArchives = res));
   }
 
   private fetchWallpaperArchives() {
@@ -218,6 +202,5 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isHomePage = this.pageIndex === 'index';
     this.isPostPage = ['post', 'postArchive'].includes(this.pageIndex);
     this.isWallpaperPage = ['wallpaper', 'wallpaperArchive'].includes(this.pageIndex);
-    this.isPromptPage = ['prompt', 'promptArchive'].includes(this.pageIndex);
   }
 }

@@ -24,7 +24,6 @@ import { PostService } from '../post.service';
 export class PostArchiveComponent extends PageComponent implements OnInit {
   @Input() postType: PostType = PostType.POST;
 
-  isPrompt = false;
   isPost = false;
   isMobile = false;
   pageIndex = '';
@@ -49,9 +48,8 @@ export class PostArchiveComponent extends PageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isPrompt = this.postType === PostType.PROMPT;
     this.isPost = this.postType === PostType.POST;
-    this.urlPrefix = this.isPrompt ? 'prompt' : 'post';
+    this.urlPrefix = 'post';
 
     this.updatePageOptions();
     this.updateBreadcrumb();
@@ -64,7 +62,7 @@ export class PostArchiveComponent extends PageComponent implements OnInit {
         this.options = options;
         this.updatePageInfo();
 
-        this.pageIndex = this.isPrompt ? 'promptArchive' : 'postArchive';
+        this.pageIndex = 'postArchive';
         this.updateActivePage();
       });
     this.fetchArchiveData();
@@ -86,7 +84,7 @@ export class PostArchiveComponent extends PageComponent implements OnInit {
   private fetchArchiveData() {
     this.postService
       .getPostArchives({
-        postType: this.isPrompt ? PostType.PROMPT : PostType.POST,
+        postType: PostType.POST,
         showCount: true,
         limit: 0
       })
@@ -99,7 +97,7 @@ export class PostArchiveComponent extends PageComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const pageType = this.isPost ? '文章' : 'Prompt';
+    const pageType = '文章';
     const titles = ['归档', pageType, this.options['site_name']];
     const pageKeywords = this.isPost ? this.options['post_keywords'] : this.options['prompt_keywords'];
     const keywords: string[] = (pageKeywords || '').split(',');
@@ -113,7 +111,7 @@ export class PostArchiveComponent extends PageComponent implements OnInit {
   }
 
   private updateBreadcrumb(): void {
-    const pageType = this.isPost ? '文章' : 'Prompt';
+    const pageType = '文章';
     this.breadcrumbs = [
       {
         label: pageType,
