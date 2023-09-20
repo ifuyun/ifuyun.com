@@ -34,16 +34,16 @@
   }
 
   .footer-link, .footer-record-desktop {
-    li:not(:last-child):after {
+    li:not(:last-child)::after {
       margin: 0 12px;
     }
   }
 
-  .footer-link li:not(:last-child):after {
+  .footer-link li:not(:last-child)::after {
     content: '/';
   }
 
-  .footer-record-desktop li:not(:last-child):after {
+  .footer-record-desktop li:not(:last-child)::after {
     content: '|';
   }
 

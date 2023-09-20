@@ -79,7 +79,7 @@
       justify-content: center;
       padding: 0 @content-margin;
 
-      > span:not(:last-child):after {
+      > span:not(:last-child)::after {
         content: '|';
         margin: 0 10px;
       }
@@ -306,7 +306,7 @@
       color: var(--img-figcaption-color);
       font-size: 13px;
 
-      :not(:last-child):after {
+      :not(:last-child)::after {
         content: '，';
       }
     }

@@ -22,7 +22,6 @@ import { UserService } from './pages/user/user.service';
 export class AppComponent implements OnInit {
   isMobile = false;
   postTaxonomies: TaxonomyNode[] = [];
-  promptTaxonomies: TaxonomyNode[] = [];
   siderOpen = false;
 
   private currentUrl = '';
@@ -65,7 +64,6 @@ export class AppComponent implements OnInit {
     this.initThemeListener();
     this.optionService.getOptions().subscribe();
     this.taxonomyService.getTaxonomies().subscribe((taxonomies) => (this.postTaxonomies = taxonomies));
-    this.taxonomyService.getTaxonomies('prompt').subscribe((taxonomies) => (this.promptTaxonomies = taxonomies));
     if (this.platform.isBrowser) {
       this.userService.getLoginUser().subscribe();
     }

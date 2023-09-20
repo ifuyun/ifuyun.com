@@ -33,7 +33,6 @@ import { OptionService } from '../../services/option.service';
 })
 export class HeaderComponent implements OnInit {
   @Input() postTaxonomies: TaxonomyNode[] = [];
-  @Input() promptTaxonomies: TaxonomyNode[] = [];
   @Input() siderOpen = false;
   @Output() siderOpenChange = new EventEmitter<boolean>();
 
