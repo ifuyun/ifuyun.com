@@ -11,15 +11,14 @@ import { PageBarComponent } from '../../components/page-bar/page-bar.component';
 import { CopyrightTypeDescPipe } from '../../pipes/copyright-type-desc.pipe';
 import { CopyrightTypePipe } from '../../pipes/copyright-type.pipe';
 import { NumberViewPipe } from '../../pipes/number-view.pipe';
-import { PromptLangPipe } from '../../pipes/prompt-lang.pipe';
 import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
 import { PostArchiveComponent } from './post-archive/post-archive.component';
 import { PostItemComponent } from './post-item/post-item.component';
 import { PostListViewComponent } from './post-list-view/post-list-view.component';
 import { PostListComponent } from './post-list/post-list.component';
+import { PostPageComponent } from './post-page/post-page.component';
 import { PostRoutingModule } from './post-routing.module';
 import { PostComponent } from './post/post.component';
-import { PostPageComponent } from './post-page/post-page.component';
 
 @NgModule({
   imports: [
@@ -38,8 +37,7 @@ import { PostPageComponent } from './post-page/post-page.component';
     CopyrightTypePipe,
     CopyrightTypeDescPipe,
     NumberViewPipe,
-    SafeHtmlPipe,
-    PromptLangPipe
+    SafeHtmlPipe
   ],
   declarations: [
     PostListComponent,

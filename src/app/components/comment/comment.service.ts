@@ -31,15 +31,6 @@ export class CommentService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  getCommentsByPromptId(postId: string): Observable<ResultList<Comment>> {
-    return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_COMMENTS), {
-        objectId: postId,
-        objectType: CommentObjectType.PROMPT
-      })
-      .pipe(map((res) => res?.data || {}));
-  }
-
   getCommentsByWallpaperId(wallpaperId: string): Observable<ResultList<Comment>> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_COMMENTS), {
@@ -52,9 +43,6 @@ export class CommentService {
   getCommentsByObjectId(objectId: string, objectType: CommentObjectType): Observable<ResultList<Comment>> {
     if (objectType === CommentObjectType.POST) {
       return this.getCommentsByPostId(objectId);
-    }
-    if (objectType === CommentObjectType.PROMPT) {
-      return this.getCommentsByPromptId(objectId);
     }
     return this.getCommentsByWallpaperId(objectId);
   }

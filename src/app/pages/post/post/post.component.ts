@@ -47,9 +47,8 @@ import { VoteEntity } from '../../../interfaces/vote.interface';
 import { FavoriteService } from '../../../services/favorite.service';
 import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
-import { UserService } from '../../user/user.service';
 import { VoteService } from '../../../services/vote.service';
-import { PromptEntity } from '../../prompt/prompt.interface';
+import { UserService } from '../../user/user.service';
 import { Post, PostEntity, PostModel } from '../post.interface';
 import { PostService } from '../post.service';
 
@@ -68,7 +67,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   commentObjectType = CommentObjectType.POST;
   isPost = false;
-  isPrompt = false;
   isMobile = false;
   isLoggedIn = false;
   user!: UserModel;
@@ -125,8 +123,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   ngOnInit(): void {
     this.isPost = this.postType === PostType.POST;
-    this.isPrompt = this.postType === PostType.PROMPT;
-    this.commentObjectType = this.isPrompt ? CommentObjectType.PROMPT : CommentObjectType.POST;
+    this.commentObjectType = CommentObjectType.POST;
     this.updatePageOptions();
     this.optionService.options$
       .pipe(
@@ -186,9 +183,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     }
     let voteType: VoteType;
     switch (this.postType) {
-      case PostType.PROMPT:
-        voteType = VoteType.PROMPT;
-        break;
       case PostType.PAGE:
         voteType = VoteType.PAGE;
         break;
@@ -261,7 +255,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     }
     this.favoriteLoading = true;
     this.favoriteService
-      .addFavorite(this.postId, this.isPost ? FavoriteType.POST : FavoriteType.PROMPT)
+      .addFavorite(this.postId, FavoriteType.POST)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.favoriteLoading = false;
@@ -299,27 +293,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       e.preventDefault();
       e.stopPropagation();
     }
-  }
-
-  copyPrompt(prompt: PromptEntity) {
-    if (!this.isLoggedIn) {
-      this.message.error('请先登录');
-      return;
-    }
-    this.clipboardService.copy(prompt.promptContent);
-
-    this.logService
-      .logAction({
-        action: Action.COPY_PROMPT,
-        objectType: ActionObjectType.PROMPT,
-        objectId: this.postId
-      })
-      .subscribe();
-
-    this.promptCopyMap[prompt.promptId] = true;
-    window.setTimeout(() => {
-      this.promptCopyMap[prompt.promptId] = false;
-    }, 2000);
   }
 
   protected updateActivePage(): void {
@@ -402,10 +375,10 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       (!!post.meta['should_login'] && !this.isLoggedIn);
 
     if (this.postType !== PostType.PAGE) {
-      const urlType = this.isPost ? 'post' : 'prompt';
-      const pageType = this.isPost ? '文章' : 'Prompt';
+      const urlType = 'post';
+      const pageType = '文章';
 
-      this.pageIndex = this.isPost ? 'post' : 'prompt';
+      this.pageIndex = 'post';
       this.showCrumb = true;
       this.breadcrumbs = (post.breadcrumbs || []).map((item) => ({
         ...item,

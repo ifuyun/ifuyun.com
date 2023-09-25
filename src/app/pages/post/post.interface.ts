@@ -4,7 +4,6 @@ import { PostType } from '../../config/common.enum';
 import { QueryParam } from '../../core/common.interface';
 import { TaxonomyEntity } from '../../interfaces/taxonomy.interface';
 import { UserEntity } from '../../interfaces/user.interface';
-import { PromptEntity } from '../prompt/prompt.interface';
 
 export interface PostEntity {
   postId: string;

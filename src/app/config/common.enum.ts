@@ -5,17 +5,14 @@ export enum Theme {
 
 export enum PostType {
   POST = 'post',
-  PAGE = 'page',
-  PROMPT = 'prompt'
+  PAGE = 'page'
 }
 
 export enum TaxonomyType {
   POST = 'post',
   LINK = 'link',
   TAG = 'tag',
-  MENU = 'menu',
-  PROMPT = 'prompt',
-  PROMPT_TAG = 'prompt-tag'
+  MENU = 'menu'
 }
 
 export enum TaxonomyStatus {
@@ -32,7 +29,6 @@ export enum VoteValue {
 export enum VoteType {
   POST = 'post',
   PAGE = 'page',
-  PROMPT = 'prompt',
   COMMENT = 'comment',
   WALLPAPER = 'wallpaper'
 }
@@ -51,6 +47,5 @@ export enum LinkTarget {
 
 export enum SearchType {
   POST = 'post',
-  PROMPT = 'prompt',
   WALLPAPER = 'wallpaper'
 }

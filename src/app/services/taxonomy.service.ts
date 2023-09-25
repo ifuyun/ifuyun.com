@@ -10,10 +10,10 @@ import { TaxonomyNode } from '../interfaces/taxonomy.interface';
 export class TaxonomyService {
   constructor(private apiService: ApiService) {}
 
-  getTaxonomies(type: 'post' | 'prompt' = 'post'): Observable<TaxonomyNode[]> {
+  getTaxonomies(): Observable<TaxonomyNode[]> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.GET_TAXONOMY_TREE), {
-        type
+        type: 'post'
       })
       .pipe(map((res) => res?.data || []));
   }

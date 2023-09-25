@@ -28,7 +28,7 @@
     <div class="post-list" [class.post-list-desktop]="!isMobile" [class.post-list-mobile]="isMobile">
       <article *ngFor="let item of searchList"
                class="post-item" [class.post-item-desktop]="!isMobile" [class.post-item-mobile]="isMobile">
-        <i-post-item *ngIf="item.type === 'post' || item.type === 'prompt'" [post]="$any(item.data)"></i-post-item>
+        <i-post-item *ngIf="item.type === 'post'" [post]="$any(item.data)"></i-post-item>
         <i-wallpaper-item *ngIf="item.type === 'wallpaper'" [wallpaper]="$any(item.data)"></i-wallpaper-item>
       </article>
     </div>

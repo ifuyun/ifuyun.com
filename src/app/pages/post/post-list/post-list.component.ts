@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
-import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
+import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { PostType } from '../../../config/common.enum';
@@ -40,7 +40,6 @@ export class PostListComponent extends PageComponent implements OnInit {
   pageUrlParam: Params = {};
 
   private isPost = false;
-  private isPrompt = false;
   private pageSize = 10;
   private year = '';
   private month = '';
@@ -61,31 +60,30 @@ export class PostListComponent extends PageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isPrompt = this.postType === PostType.PROMPT;
     this.isPost = this.postType === PostType.POST;
     this.updatePageOptions();
     this.optionService.options$
       .pipe(
         skipWhile((options) => isEmpty(options)),
         combineLatestWith(this.route.paramMap, this.route.queryParamMap),
-        takeUntil(this.destroy$),
-        tap(([, params, queryParams]) => {
-          this.page = Number(queryParams.get('page')) || 1;
-          this.category = params.get('category')?.trim() || '';
-          this.tag = params.get('tag')?.trim() || '';
-          this.year = params.get('year')?.trim() || '';
-          this.month = params.get('month')?.trim() || '';
-          this.keyword = queryParams.get('keyword')?.trim() || '';
-        })
+        takeUntil(this.destroy$)
       )
-      .subscribe(([options]) => {
+      .subscribe(([options, params, queryParams]) => {
         this.options = options;
+
         this.pageSize = Number(this.options['posts_per_page']) || 10;
+        this.page = Number(queryParams.get('page')) || 1;
+        this.category = params.get('category')?.trim() || '';
+        this.tag = params.get('tag')?.trim() || '';
+        this.year = params.get('year')?.trim() || '';
+        this.month = params.get('month')?.trim() || '';
+        this.keyword = queryParams.get('keyword')?.trim() || '';
         if (this.year) {
-          this.pageIndex = this.isPrompt ? 'promptArchive' : 'postArchive';
+          this.pageIndex = 'postArchive';
         } else {
-          this.pageIndex = this.isPrompt ? 'prompt' : 'post';
+          this.pageIndex = 'post';
         }
+
         this.updateActivePage();
         this.fetchPosts();
       });
@@ -144,8 +142,6 @@ export class PostListComponent extends PageComponent implements OnInit {
         const urlSegments = this.route.snapshot.url.map((url) => url.path);
         if (this.postType === PostType.POST && urlSegments[0] !== 'post') {
           urlSegments.unshift('post');
-        } else if (this.postType === PostType.PROMPT && urlSegments[0] !== 'prompt') {
-          urlSegments.unshift('prompt');
         }
         this.pageUrl = `/${urlSegments.join('/')}`;
       });
@@ -207,8 +203,8 @@ export class PostListComponent extends PageComponent implements OnInit {
   }
 
   private updateBreadcrumb(postBreadcrumbs: BreadcrumbEntity[]) {
-    const urlType = this.isPost ? 'post' : 'prompt';
-    const pageType = this.isPost ? '文章' : 'Prompt';
+    const urlType = 'post';
+    const pageType = '文章';
     let breadcrumbs: BreadcrumbEntity[] = [
       {
         label: pageType,
