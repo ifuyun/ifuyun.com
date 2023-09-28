@@ -119,7 +119,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
             this.referer = ref;
           }
 
-          this.adminUrl = this.options['admin_site_url'];
+          this.adminUrl = this.options['admin_url'];
           if (ref === 'logout') {
             this.authService.clearAuth();
           } else {

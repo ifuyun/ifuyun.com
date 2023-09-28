@@ -75,7 +75,7 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
       .subscribe(<Observer<[OptionEntity, ParamMap, UserModel]>>{
         next: ([options, queryParams, loginUser]) => {
           this.options = options;
-          this.adminUrl = this.options['admin_site_url'];
+          this.adminUrl = this.options['admin_url'];
           this.isLoggedIn = !!loginUser.userId;
           this.updatePageInfo();
 

@@ -1,7 +1,7 @@
 export enum ApiUrl {
   API_URL_PREFIX = '/api',
   // common
-  GET_OPTIONS = '/options',
+  GET_OPTIONS = '/options/frontend',
   CAPTCHA = '/captcha',
   // post
   GET_POSTS = '/posts',

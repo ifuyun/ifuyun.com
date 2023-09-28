@@ -77,7 +77,7 @@ export class HeaderComponent implements OnInit {
       )
       .subscribe((options) => {
         this.options = options;
-        this.adminUrl = this.options['admin_site_url'];
+        this.adminUrl = this.options['admin_url'];
         if (this.platform.isBrowser) {
           this.adminUrl += format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration());
         }

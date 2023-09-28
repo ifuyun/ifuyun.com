@@ -11,12 +11,11 @@ import { InternalServerErrorException } from '../../exceptions/internal-server-e
 export class OptionService {
   constructor(private readonly httpService: HttpService, private readonly configService: ConfigService) {}
 
-  async getOptionsByKeys(keys: string[]): Promise<Record<string, string>> {
+  async getOptions(): Promise<Record<string, string>> {
     const apiUrl = this.configService.get('app.api.host') + ApiUrl.API_URL_PREFIX + ApiUrl.GET_OPTIONS;
-    const apiParam = `?${keys.map((key) => 'keys=' + key).join('&')}`;
     let response: HttpResponseEntity;
     try {
-      response = (await lastValueFrom(this.httpService.get(apiUrl + apiParam))).data;
+      response = (await lastValueFrom(this.httpService.get(apiUrl))).data;
     } catch (e) {
       response = {
         code: ResponseCode.INTERNAL_SERVER_ERROR

@@ -1,4 +1,4 @@
-<ng-container *ngIf="enableAds && isBrowser">
+<ng-container *ngIf="adsFlag && isBrowser">
   <div *ngIf="!isMobile" class="ads-box ads-box-desktop">
     <i-adsense optionKey="adsense_config_content" position="content"></i-adsense>
   </div>

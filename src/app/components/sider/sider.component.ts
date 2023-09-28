@@ -47,7 +47,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   randomPosts: PostEntity[] = [];
   friendLinks: LinkEntity[] = [];
   keyword = '';
-  enableAds = false;
+  adsFlag = false;
   jdUnionVisible = false;
 
   private options: OptionEntity = {};
@@ -75,9 +75,9 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       )
       .subscribe((options) => {
         this.options = options;
-        const enableAds = this.options['enable_ads'] || '';
-        this.enableAds =
-          (env.production && ['1', '0'].includes(enableAds)) || (!env.production && ['2', '0'].includes(enableAds));
+        const adsFlag = this.options['ads_flag'] || '';
+        this.adsFlag =
+          (env.production && ['1', '0'].includes(adsFlag)) || (!env.production && ['2', '0'].includes(adsFlag));
         if (this.platform.isBrowser) {
           this.showAlipayRedPacketQrcode();
         }

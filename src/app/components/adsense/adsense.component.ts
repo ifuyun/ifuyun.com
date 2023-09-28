@@ -59,7 +59,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
   private readonly adsenseClass = 'adsbygoogle';
   private readonly customClassPrefix = 'make-money';
 
-  private enableAds = false;
+  private adsFlag = false;
   private options: OptionEntity = {};
   private pageLevelAds = false;
 
@@ -84,9 +84,9 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
       )
       .subscribe((options) => {
         this.options = options;
-        const enableAds = this.options['enable_ads'] || '';
-        this.enableAds =
-          (env.production && ['1', '0'].includes(enableAds)) || (!env.production && ['2', '0'].includes(enableAds));
+        const adsFlag = this.options['ads_flag'] || '';
+        this.adsFlag =
+          (env.production && ['1', '0'].includes(adsFlag)) || (!env.production && ['2', '0'].includes(adsFlag));
 
         this.initOptions();
         this.loadAds();
@@ -156,7 +156,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
 
   private loadAds() {
     if (this.platform.isBrowser) {
-      if (this.enableAds && this.visible) {
+      if (this.adsFlag && this.visible) {
         const ads: Record<string, string | boolean> = {};
         if (this.pageLevelAds) {
           ads['google_ad_client'] = this.clientId;

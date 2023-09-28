@@ -21,13 +21,7 @@ export class RssController {
     @Res() res: Response
   ) {
     const showDetail = detail === '1';
-    const options = await this.optionService.getOptionsByKeys([
-      'site_name',
-      'site_slogan',
-      'site_url',
-      'site_domain',
-      'site_author'
-    ]);
+    const options = await this.optionService.getOptions();
     const result = await this.rssService.getPosts(page, pageSize, showDetail);
     const posts: Post[] = result.postList.list || [];
     const feed = new RSS({

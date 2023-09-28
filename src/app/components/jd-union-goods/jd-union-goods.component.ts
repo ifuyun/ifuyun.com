@@ -55,7 +55,7 @@ export class JdUnionGoodsComponent implements OnInit {
   ]);
 
   isMobile = false;
-  enableAds = false;
+  adsFlag = false;
   eliteId!: number;
   goodsList: (JdUnionGoodsMaterial | JdUnionGoodsJingfen)[] = [];
 
@@ -82,9 +82,9 @@ export class JdUnionGoodsComponent implements OnInit {
       )
       .subscribe(([options]) => {
         this.options = options;
-        const enableAds = this.options['enable_ads'] || '';
-        this.enableAds =
-          (env.production && ['1', '0'].includes(enableAds)) || (!env.production && ['2', '0'].includes(enableAds));
+        const adsFlag = this.options['ads_flag'] || '';
+        this.adsFlag =
+          (env.production && ['1', '0'].includes(adsFlag)) || (!env.production && ['2', '0'].includes(adsFlag));
 
         if (this.dynamic && this.optionKey) {
           this.initOptions();

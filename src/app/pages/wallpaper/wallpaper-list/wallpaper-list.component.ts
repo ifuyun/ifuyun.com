@@ -81,7 +81,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       )
       .subscribe(([options, params, queryParams]) => {
         this.options = options;
-        this.pageSize = Number(this.options['wallpapers_per_page']) || 10;
+        this.pageSize = Number(this.options['wallpaper_page_size']) || 10;
         this.page = Number(queryParams.get('page')) || 1;
         this.year = params.get('year')?.trim() || '';
         this.month = params.get('month')?.trim() || '';

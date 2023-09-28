@@ -71,7 +71,7 @@ export class PostListComponent extends PageComponent implements OnInit {
       .subscribe(([options, params, queryParams]) => {
         this.options = options;
 
-        this.pageSize = Number(this.options['posts_per_page']) || 10;
+        this.pageSize = Number(this.options['post_page_size']) || 10;
         this.page = Number(queryParams.get('page')) || 1;
         this.category = params.get('category')?.trim() || '';
         this.tag = params.get('tag')?.trim() || '';

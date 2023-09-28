@@ -23,7 +23,7 @@ import { JdUnionGoodsComponent } from '../jd-union-goods/jd-union-goods.componen
 export class MakeMoneyComponent implements OnInit {
   isBrowser = false;
   isMobile = false;
-  enableAds = false;
+  adsFlag = false;
   jdUnionVisible = false;
 
   private options: OptionEntity = {};
@@ -47,9 +47,9 @@ export class MakeMoneyComponent implements OnInit {
       )
       .subscribe((options) => {
         this.options = options;
-        const enableAds = this.options['enable_ads'] || '';
-        this.enableAds =
-          (env.production && ['1', '0'].includes(enableAds)) || (!env.production && ['2', '0'].includes(enableAds));
+        const adsFlag = this.options['ads_flag'] || '';
+        this.adsFlag =
+          (env.production && ['1', '0'].includes(adsFlag)) || (!env.production && ['2', '0'].includes(adsFlag));
       });
     if (this.isBrowser) {
       this.commonService.adsFlag$.pipe(takeUntil(this.destroy$)).subscribe((flag) => {

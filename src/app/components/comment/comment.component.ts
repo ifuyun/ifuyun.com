@@ -281,13 +281,13 @@ export class CommentComponent implements OnInit, AfterViewInit {
 
   private initComment(comment: Comment) {
     const initialFn = (data: Comment) => {
-      let defaultAvatar = this.options['avatar_default'];
-      if (!defaultAvatar || defaultAvatar === 'logo') {
-        defaultAvatar = PATH_FAVICON;
+      let defaultAvatarType = this.options['avatar_default_type'];
+      if (!defaultAvatarType || defaultAvatarType === 'logo') {
+        defaultAvatarType = PATH_FAVICON;
       }
       data.authorAvatar =
         data.user?.userAvatar ||
-        format(URL_AVATAR_API, data.user?.userEmailHash || data.authorEmailHash, defaultAvatar);
+        format(URL_AVATAR_API, data.user?.userEmailHash || data.authorEmailHash, defaultAvatarType);
       data.commentMetaMap = this.commonService.transformMeta(data.commentMeta || []);
       try {
         data.userLocation = JSON.parse(data.commentMetaMap['user_location']);
@@ -335,7 +335,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
   }
 
   private generateCommentTree(comments: Comment[]) {
-    const depth = this.isMobile ? 2 : Number(this.options['thread_comments_depth']) || 3;
+    const depth = this.isMobile ? 2 : Number(this.options['comment_thread_depth']) || 3;
     const copies = [...comments];
     let tree = copies.filter((father) => {
       father.children = copies.filter((child) => {

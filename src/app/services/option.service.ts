@@ -15,9 +15,7 @@ export class OptionService {
 
   getOptions(): Observable<OptionEntity> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_OPTIONS), {
-        autoload: 1
-      })
+      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_OPTIONS))
       .pipe(
         map((res) => res?.data || {}),
         tap((options) => {

@@ -1,4 +1,4 @@
-<ng-container *ngIf="enableAds">
+<ng-container *ngIf="adsFlag">
   <ng-template #goodsListTpl>
     <div class="goods-list" [ngClass]="{'goods-list-desktop': !isMobile, 'goods-list-mobile': isMobile}">
       <div class="goods-item" [style.width]="isMobile ? '100%' : (100 / rowSize) + '%'" *ngFor="let goods of goodsList">

@@ -69,7 +69,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
         takeUntil(this.destroy$),
         tap(([params, options]) => {
           this.options = options;
-          this.adminUrl = this.options['admin_site_url'];
+          this.adminUrl = this.options['admin_url'];
 
           const ref = params.get('ref')?.trim() || '';
           try {
