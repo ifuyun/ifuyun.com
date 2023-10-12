@@ -3,7 +3,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
-import { STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
+import { APP_ID, STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
@@ -148,7 +148,8 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       .logAction({
         action: Action.CHANGE_LANG,
         objectType: ActionObjectType.WALLPAPER_LIST,
-        lang
+        lang,
+        appId: APP_ID
       })
       .subscribe();
   }
@@ -158,7 +159,8 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       .logAction({
         action: Action.CHANGE_WALLPAPER_LIST_MODE,
         objectType: ActionObjectType.WALLPAPER_LIST,
-        listMode: mode
+        listMode: mode,
+        appId: APP_ID
       })
       .subscribe();
   }

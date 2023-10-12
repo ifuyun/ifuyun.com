@@ -5,6 +5,7 @@ import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { APP_ID } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { MessageService } from '../../../core/message.service';
@@ -88,7 +89,8 @@ export class ShoppingComponent extends PageComponent implements OnInit {
         .logAction({
           action: Action.PROMOTE_JD_UNION,
           objectType: ActionObjectType.ADS,
-          goodsURL: this.keyword
+          goodsURL: this.keyword,
+          appId: APP_ID
         })
         .subscribe();
       this.fetchPromotion();

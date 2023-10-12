@@ -3,6 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 export const environment = {
   production: false,
+  appId: 'xxxxxxxxxxxxxxxx',
   host: '/',
   cookie: {
     domain: 'localhost',

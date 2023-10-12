@@ -11,6 +11,7 @@ import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.ser
 import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
 import {
+  APP_ID,
   PATH_WECHAT_MINI_APP_CARD,
   PATH_WECHAT_REWARD,
   STORAGE_KEY_LIKED_WALLPAPER
@@ -274,7 +275,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         action: Action.TRANSLATE_WALLPAPER,
         objectType: ActionObjectType.WALLPAPER,
         objectId: this.wallpaperId,
-        lang: this.lang === WallpaperLang.CN ? WallpaperLang.EN : WallpaperLang.CN
+        lang: this.lang === WallpaperLang.CN ? WallpaperLang.EN : WallpaperLang.CN,
+        appId: APP_ID
       })
       .subscribe();
   }

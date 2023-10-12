@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiUrl } from '../config/api-url';
+import { APP_ID } from '../config/common.constant';
 import { ApiService } from '../core/api.service';
-import { UserAgentService } from '../core/user-agent.service';
 import { HttpResponseEntity } from '../core/http-response.interface';
+import { UserAgentService } from '../core/user-agent.service';
 import { AccessLog, ActionLog } from '../interfaces/log.interface';
 
 @Injectable({
@@ -20,7 +21,8 @@ export class LogService {
       site: 'web',
       resolution: window.screen.width + 'x' + window.screen.height,
       colorDepth: window.screen.colorDepth.toString(),
-      isAjax: initialized
+      isAjax: initialized,
+      appId: APP_ID
     };
   }
 

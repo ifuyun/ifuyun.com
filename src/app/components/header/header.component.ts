@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
-import { ADMIN_URL_PARAM, PATH_LOGO, PATH_LOGO_DARK } from '../../config/common.constant';
+import { ADMIN_URL_PARAM, APP_ID, PATH_LOGO, PATH_LOGO_DARK } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
@@ -108,7 +108,8 @@ export class HeaderComponent implements OnInit {
         .logAction({
           action: Action.SEARCH,
           objectType: ActionObjectType.SEARCH,
-          keyword: this.keyword
+          keyword: this.keyword,
+          appId: APP_ID
         })
         .subscribe();
       this.router.navigate(['/'], { queryParams: { keyword: this.keyword } });

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { NzImageService } from 'ng-zorro-antd/image';
 import { skipWhile, takeUntil } from 'rxjs';
-import { PATH_WECHAT_CARD, PATH_WECHAT_MINI_APP_CARD } from '../../config/common.constant';
+import { APP_ID, PATH_WECHAT_CARD, PATH_WECHAT_MINI_APP_CARD } from '../../config/common.constant';
 import { Theme } from '../../config/common.enum';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
@@ -51,7 +51,8 @@ export class ToolboxComponent implements OnInit {
     this.logService
       .logAction({
         action: Action.SHOW_WALLPAPER_BOX,
-        objectType: ActionObjectType.TOOLBOX
+        objectType: ActionObjectType.TOOLBOX,
+        appId: APP_ID
       })
       .subscribe();
   }
@@ -63,7 +64,8 @@ export class ToolboxComponent implements OnInit {
       .logAction({
         action: Action.CHANGE_THEME,
         objectType: ActionObjectType.TOOLBOX,
-        theme
+        theme,
+        appId: APP_ID
       })
       .subscribe();
   }
@@ -77,7 +79,8 @@ export class ToolboxComponent implements OnInit {
     this.logService
       .logAction({
         action: Action.SHOW_WECHAT_CARD,
-        objectType: ActionObjectType.TOOLBOX
+        objectType: ActionObjectType.TOOLBOX,
+        appId: APP_ID
       })
       .subscribe();
   }
@@ -91,7 +94,8 @@ export class ToolboxComponent implements OnInit {
     this.logService
       .logAction({
         action: Action.SHOW_MINI_APP_CARD,
-        objectType: ActionObjectType.TOOLBOX
+        objectType: ActionObjectType.TOOLBOX,
+        appId: APP_ID
       })
       .subscribe();
   }
@@ -100,7 +104,8 @@ export class ToolboxComponent implements OnInit {
     this.logService
       .logAction({
         action: Action.OPEN_RSS,
-        objectType: ActionObjectType.TOOLBOX
+        objectType: ActionObjectType.TOOLBOX,
+        appId: APP_ID
       })
       .subscribe();
   }

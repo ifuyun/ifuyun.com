@@ -12,6 +12,7 @@ export interface AccessLog extends UserAgentData {
   resolution: string;
   colorDepth: string;
   isAjax: boolean;
+  appId: string;
 }
 
 export interface ActionLog {
@@ -30,4 +31,5 @@ export interface ActionLog {
   goodsURL?: string;
   goodsName?: string;
   extraData?: Record<string, any>;
+  appId: string;
 }

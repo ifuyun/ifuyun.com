@@ -1,3 +1,7 @@
+import { environment as env } from '../../environments/environment';
+
+export const APP_ID = env.appId;
+
 export const REGEXP_ID = /^[0-9a-zA-Z]{16}$/i;
 export const REGEXP_POST_NAME = /^[a-zA-Z0-9]+(?:[~@$%&*\-_=+;:,]+[a-zA-Z0-9]+)*$/i;
 

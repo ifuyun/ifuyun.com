@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { CookieService } from 'ngx-cookie-service';
 import { map, Observable, tap } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { environment as env } from '../../../environments/environment';
 import { ApiUrl } from '../../config/api-url';
 import { ResponseCode } from '../../config/response-code.enum';
 import { ApiService } from '../../core/api.service';
@@ -104,8 +104,8 @@ export class AuthService {
       if (loginData?.username) {
         this.cookieService.set('user', loginData.username, {
           path: '/',
-          domain: environment.cookie.domain,
-          expires: environment.cookie.expires
+          domain: env.cookie.domain,
+          expires: env.cookie.expires
         });
       }
     }

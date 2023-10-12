@@ -21,6 +21,7 @@ import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.ser
 import { CommentObjectType } from '../../../components/comment/comment.enum';
 import { CommentService } from '../../../components/comment/comment.service';
 import {
+  APP_ID,
   PATH_WECHAT_CARD,
   PATH_WECHAT_REWARD,
   REGEXP_ID,
@@ -281,7 +282,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
             .logAction({
               action: Action.COPY_CODE,
               objectType: ActionObjectType.POST,
-              objectId: this.postId
+              objectId: this.postId,
+              appId: APP_ID
             })
             .subscribe();
 
@@ -364,14 +366,14 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   private initData(post: Post) {
     this.post = post.post;
-    this.postId = this.post?.postId;
+    this.postId = this.post.postId;
     this.postMeta = post.meta;
     this.postTags = post.tags;
     this.postCategories = post.categories;
     this.isFavorite = post.isFavorite;
     this.postVoted = post.voted;
     this.showPayMask =
-      (post.post.postPayFlag && !this.user.isAdmin && post.post.postOwner !== this.user.userId) ||
+      (this.post.postPayFlag && !this.user.isAdmin && this.post.postOwner !== this.user.userId) ||
       (!!post.meta['should_login'] && !this.isLoggedIn);
 
     if (this.postType !== PostType.PAGE) {
@@ -392,7 +394,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       });
       this.breadcrumbService.updateBreadcrumb(this.breadcrumbs);
     } else {
-      this.pageIndex = post.post.postName;
+      this.pageIndex = this.post.postName;
       this.showCrumb = false;
     }
 

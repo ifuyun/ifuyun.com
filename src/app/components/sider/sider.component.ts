@@ -6,6 +6,7 @@ import { isEmpty } from 'lodash';
 import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
 import { environment as env } from '../../../environments/environment';
+import { APP_ID } from '../../config/common.constant';
 import { ArchiveData } from '../../core/common.interface';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
@@ -141,7 +142,8 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
         .logAction({
           action: Action.SEARCH,
           objectType: ActionObjectType.SEARCH,
-          keyword: this.keyword
+          keyword: this.keyword,
+          appId: APP_ID
         })
         .subscribe();
       this.router.navigate(['/'], { queryParams: { keyword: this.keyword } });

@@ -6,7 +6,7 @@ import { RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Response } from 'express';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment as env } from '../../environments/environment';
 import { MEDIA_QUERY_THEME_DARK, MEDIA_QUERY_THEME_LIGHT, STORAGE_KEY_THEME } from '../config/common.constant';
 import { Theme } from '../config/common.enum';
 import { OptionEntity } from '../interfaces/option.interface';
@@ -91,8 +91,8 @@ export class CommonService {
   cacheTheme(theme: Theme) {
     this.cookieService.set(STORAGE_KEY_THEME, theme, {
       path: '/',
-      domain: environment.cookie.domain,
-      expires: environment.cookie.expires
+      domain: env.cookie.domain,
+      expires: env.cookie.expires
     });
   }
 
