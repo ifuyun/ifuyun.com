@@ -4,6 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { map, Observable, tap } from 'rxjs';
 import { environment as env } from '../../../environments/environment';
 import { ApiUrl } from '../../config/api-url';
+import { APP_ID } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
 import { ApiService } from '../../core/api.service';
 import { PlatformService } from '../../core/platform.service';
@@ -22,14 +23,14 @@ export class AuthService {
   ) {}
 
   login(loginData: LoginEntity): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.LOGIN), loginData).pipe(
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.USER_LOGIN), loginData).pipe(
       map((res) => res || {}),
       tap((res) => this.setAuth(res.data, loginData))
     );
   }
 
   logout(): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.LOGOUT)).pipe(
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.USER_LOGOUT)).pipe(
       tap((res) => {
         if (res.code === ResponseCode.SUCCESS) {
           this.clearAuth();
@@ -40,22 +41,30 @@ export class AuthService {
 
   register(user: UserEntity): Observable<UserModel> {
     return this.apiService
-      .httpPost(this.apiService.getApiUrl(ApiUrl.REGISTER), user)
+      .httpPost(this.apiService.getApiUrl(ApiUrl.USER_REGISTER), user)
       .pipe(map((res) => <any>(res?.data || {})));
   }
 
   verify(payload: { userId: string; code: string }): Observable<LoginResponse> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.VERIFY_USER), payload).pipe(
-      map((res) => <any>(res?.data || '')),
-      tap((res) => {
-        this.setAuth(res);
+    return this.apiService
+      .httpPost(this.apiService.getApiUrl(ApiUrl.USER_VERIFY), {
+        ...payload,
+        appId: APP_ID
       })
-    );
+      .pipe(
+        map((res) => <any>(res?.data || '')),
+        tap((res) => {
+          this.setAuth(res);
+        })
+      );
   }
 
   resend(userId: string): Observable<UserModel> {
     return this.apiService
-      .httpPost(this.apiService.getApiUrl(ApiUrl.RESEND_CODE), { userId })
+      .httpPost(this.apiService.getApiUrl(ApiUrl.USER_RESEND_CODE), {
+        userId,
+        appId: APP_ID
+      })
       .pipe(map((res) => <any>(res?.data || {})));
   }
 

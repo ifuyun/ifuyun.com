@@ -17,7 +17,7 @@ export enum Action {
   // post
   COPY_CODE = 'copy_code',
   // wallpaper
-  DOWNLOAD_WALLPAPER = 'download_wallpaper',
+  WALLPAPER_DOWNLOAD = 'download_wallpaper',
   TRANSLATE_WALLPAPER = 'translate_wallpaper',
   // wallpaper list
   CHANGE_WALLPAPER_LIST_MODE = 'change_wallpaper_list_mode',

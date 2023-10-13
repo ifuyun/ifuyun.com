@@ -4,6 +4,7 @@ import { isEmpty, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { APP_ID } from '../../../config/common.constant';
 import { PostType } from '../../../config/common.enum';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -106,7 +107,8 @@ export class PostListComponent extends PageComponent implements OnInit {
     const param: PostQueryParam = {
       page: this.page,
       pageSize: this.pageSize,
-      postType: this.postType
+      postType: this.postType,
+      appId: APP_ID
     };
     if (this.keyword) {
       param.keyword = this.keyword;

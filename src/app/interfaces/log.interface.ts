@@ -1,8 +1,8 @@
 import { Theme } from '../config/common.enum';
-import { UserAgentData } from '../core/common.interface';
+import { AppParam, UserAgentData } from '../core/common.interface';
 import { Action, ActionObjectType } from './log.enum';
 
-export interface AccessLog extends UserAgentData {
+export interface AccessLog extends UserAgentData, AppParam {
   requestUrl: string;
   requestTime?: Date;
   referer: string;
@@ -12,10 +12,9 @@ export interface AccessLog extends UserAgentData {
   resolution: string;
   colorDepth: string;
   isAjax: boolean;
-  appId: string;
 }
 
-export interface ActionLog {
+export interface ActionLog extends AppParam {
   action: Action;
   objectType: ActionObjectType;
   objectId?: string;
@@ -31,5 +30,4 @@ export interface ActionLog {
   goodsURL?: string;
   goodsName?: string;
   extraData?: Record<string, any>;
-  appId: string;
 }

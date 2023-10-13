@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { ApiUrl } from '../../config/api-url';
-import { STORAGE_KEY_USER } from '../../config/common.constant';
+import { APP_ID, STORAGE_KEY_USER } from '../../config/common.constant';
 import { ApiService } from '../../core/api.service';
 import { ResultList } from '../../core/common.interface';
 import { HttpResponseEntity } from '../../core/http-response.interface';
@@ -20,22 +20,27 @@ export class CommentService {
     this.objectId.next(objectId);
   }
 
-  constructor(private apiService: ApiService, private platform: PlatformService) {}
+  constructor(
+    private apiService: ApiService,
+    private platform: PlatformService
+  ) {}
 
   getCommentsByPostId(postId: string): Observable<ResultList<Comment>> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_COMMENTS), {
+      .httpGet(this.apiService.getApiUrl(ApiUrl.COMMENT_LIST), {
         objectId: postId,
-        objectType: CommentObjectType.POST
+        objectType: CommentObjectType.POST,
+        appId: APP_ID
       })
       .pipe(map((res) => res?.data || {}));
   }
 
   getCommentsByWallpaperId(wallpaperId: string): Observable<ResultList<Comment>> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_COMMENTS), {
+      .httpGet(this.apiService.getApiUrl(ApiUrl.COMMENT_LIST), {
         objectId: wallpaperId,
-        objectType: CommentObjectType.WALLPAPER
+        objectType: CommentObjectType.WALLPAPER,
+        appId: APP_ID
       })
       .pipe(map((res) => res?.data || {}));
   }
@@ -57,6 +62,6 @@ export class CommentService {
         })
       );
     }
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_COMMENT), comment);
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.COMMENT), comment);
   }
 }

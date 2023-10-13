@@ -12,7 +12,10 @@ import { SitemapService } from './sitemap.service';
 
 @Controller()
 export class SitemapController {
-  constructor(private readonly sitemapService: SitemapService, private readonly configService: ConfigService) {}
+  constructor(
+    private readonly sitemapService: SitemapService,
+    private readonly configService: ConfigService
+  ) {}
 
   @Get('sitemap.xml')
   async generateRss(@Res() res: Response) {
@@ -132,20 +135,22 @@ export class SitemapController {
     });
 
     streamToPromise(
-      <Readable>Readable.from(
-        links.concat(
-          pages,
-          posts,
-          wallpapersCn,
-          wallpapersEn,
-          postArchivesByYear,
-          postArchivesByMonth,
-          wallpaperArchivesByYear,
-          wallpaperArchivesByMonth,
-          taxonomies,
-          tools
-        )
-      ).pipe(sitemapStream)
+      <Readable>(
+        Readable.from(
+          links.concat(
+            pages,
+            posts,
+            wallpapersCn,
+            wallpapersEn,
+            postArchivesByYear,
+            postArchivesByMonth,
+            wallpaperArchivesByYear,
+            wallpaperArchivesByMonth,
+            taxonomies,
+            tools
+          )
+        ).pipe(sitemapStream)
+      )
     ).then((data) => res.header('Content-Type', 'text/xml').send(data.toString()));
   }
 }

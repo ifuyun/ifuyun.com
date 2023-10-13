@@ -193,7 +193,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     const voteData: VoteEntity = {
       objectId: this.postId,
       value: like ? VoteValue.LIKE : VoteValue.DISLIKE,
-      type: voteType
+      type: voteType,
+      appId: APP_ID
     };
     if (this.commentUser && this.commentUser.name) {
       voteData.user = this.commentUser;

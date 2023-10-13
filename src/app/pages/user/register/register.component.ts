@@ -4,6 +4,7 @@ import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@ang
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { combineLatestWith, Observer, skipWhile, takeUntil } from 'rxjs';
+import { APP_ID } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { MessageService } from '../../../core/message.service';
@@ -119,7 +120,8 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
         .register({
           userEmail: email,
           userPassword: md5(password),
-          userNiceName: email.split('@')[0]
+          userNiceName: email.split('@')[0],
+          appId: APP_ID
         })
         .subscribe((res) => {
           this.regLoading = false;

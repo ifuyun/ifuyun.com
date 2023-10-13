@@ -192,7 +192,8 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     const voteData: VoteEntity = {
       objectId: this.wallpaperId,
       value: like ? VoteValue.LIKE : VoteValue.DISLIKE,
-      type: VoteType.WALLPAPER
+      type: VoteType.WALLPAPER,
+      appId: APP_ID
     };
     if (this.commentUser && this.commentUser.name) {
       voteData.user = this.commentUser;

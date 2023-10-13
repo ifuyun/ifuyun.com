@@ -9,7 +9,8 @@ import {
   URL_AVATAR_API,
   PATH_FAVICON,
   STORAGE_KEY_DISLIKED_COMMENTS,
-  STORAGE_KEY_LIKED_COMMENTS
+  STORAGE_KEY_LIKED_COMMENTS,
+  APP_ID
 } from '../../config/common.constant';
 import { VoteType, VoteValue } from '../../config/common.enum';
 import { ResponseCode } from '../../config/response-code.enum';
@@ -161,7 +162,8 @@ export class CommentComponent implements OnInit, AfterViewInit {
         commentContent: content,
         authorName: author,
         authorEmail: email,
-        userId: this.user.userId
+        userId: this.user.userId,
+        appId: APP_ID
       };
       this.saveLoading = true;
       this.commentService
@@ -201,7 +203,8 @@ export class CommentComponent implements OnInit, AfterViewInit {
     const voteData: VoteEntity = {
       objectId: comment.commentId,
       value: like ? VoteValue.LIKE : VoteValue.DISLIKE,
-      type: VoteType.COMMENT
+      type: VoteType.COMMENT,
+      appId: APP_ID
     };
     if (this.commentUser && this.commentUser.name) {
       voteData.user = this.commentUser;

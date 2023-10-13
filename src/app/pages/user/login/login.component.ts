@@ -8,7 +8,7 @@ import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
 import { combineLatestWith, Observer, skipWhile, takeUntil } from 'rxjs';
-import { ADMIN_URL_PARAM } from '../../../config/common.constant';
+import { ADMIN_URL_PARAM, APP_ID } from '../../../config/common.constant';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -148,7 +148,8 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
       this.authService
         .login({
           username: username || '',
-          password: md5(password || '')
+          password: md5(password || ''),
+          appId: APP_ID
         })
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {

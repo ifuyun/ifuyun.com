@@ -10,9 +10,7 @@ import { ResultList, SearchParam, SearchResponse } from '../core/common.interfac
 export class SearchService {
   constructor(private apiService: ApiService) {}
 
-  searchAll(param: SearchParam): Observable<ResultList<SearchResponse>> {
-    return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.SEARCH_SITE), param)
-      .pipe(map((res) => res?.data || {}));
+  search(param: SearchParam): Observable<ResultList<SearchResponse>> {
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.SEARCH), param).pipe(map((res) => res?.data || {}));
   }
 }

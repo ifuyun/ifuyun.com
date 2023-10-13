@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { lastValueFrom } from 'rxjs';
 import { ApiUrl } from '../../../src/app/config/api-url';
+import { APP_ID } from '../../../src/app/config/common.constant';
 import { HttpResponseEntity } from '../../common/http-response.interface';
 import { ResponseCode } from '../../common/response-code.enum';
 import { InternalServerErrorException } from '../../exceptions/internal-server-error.exception';
@@ -10,13 +11,16 @@ import { SitemapData } from './sitemap.interface';
 
 @Injectable()
 export class SitemapService {
-  constructor(private readonly httpService: HttpService, private readonly configService: ConfigService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService
+  ) {}
 
   async getSitemap(): Promise<SitemapData> {
-    const apiUrl = this.configService.get('app.api.host') + ApiUrl.API_URL_PREFIX + ApiUrl.GET_SITEMAP;
+    const apiUrl = this.configService.get('app.api.host') + ApiUrl.API_URL_PREFIX + ApiUrl.SITEMAP;
     let response: HttpResponseEntity;
     try {
-      response = (await lastValueFrom(this.httpService.get(apiUrl))).data;
+      response = (await lastValueFrom(this.httpService.get(apiUrl + '?appId=' + APP_ID))).data;
     } catch (e) {
       response = {
         code: ResponseCode.INTERNAL_SERVER_ERROR

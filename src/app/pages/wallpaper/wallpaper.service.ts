@@ -2,7 +2,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ApiUrl } from '../../config/api-url';
-import { STORAGE_KEY_LIKED_WALLPAPER } from '../../config/common.constant';
+import { APP_ID, STORAGE_KEY_LIKED_WALLPAPER } from '../../config/common.constant';
 import { ApiService } from '../../core/api.service';
 import { ArchiveData, ArchiveDataMap, ArchiveList, ResultList } from '../../core/common.interface';
 import { HttpResponseEntity } from '../../core/http-response.interface';
@@ -16,32 +16,43 @@ export class WallpaperService {
 
   getWallpapers(param: WallpaperQueryParam): Observable<ResultList<Wallpaper>> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_WALLPAPERS), param)
+      .httpGet(this.apiService.getApiUrl(ApiUrl.WALLPAPER_LIST), param)
       .pipe(map((res) => res?.data || {}));
   }
 
   getRandomWallpapers(size: number, remote = 1, resolution = '1920x1080'): Observable<Wallpaper[]> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_WALLPAPERS_BY_RANDOM), { size, remote, resolution })
+      .httpGet(this.apiService.getApiUrl(ApiUrl.WALLPAPER_RANDOM), {
+        size,
+        remote,
+        resolution,
+        appId: APP_ID
+      })
       .pipe(map((res) => res?.data || []));
   }
 
   getWallpaperById(wallpaperId: string): Observable<Wallpaper> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_WALLPAPER_BY_ID), { wallpaperId })
+      .httpGet(this.apiService.getApiUrl(ApiUrl.WALLPAPER), {
+        wallpaperId,
+        appId: APP_ID
+      })
       .pipe(map((res) => res?.data || {}));
   }
 
   downloadWallpaper(wallpaperId: string, isUhd: boolean): Observable<HttpResponse<Blob>> {
-    return this.apiService
-      .downloadFile(this.apiService.getApiUrl(ApiUrl.DOWNLOAD_WALLPAPER), {
-        wallpaperId,
-        uhd: isUhd ? 1 : 0
-      });
+    return this.apiService.downloadFile(this.apiService.getApiUrl(ApiUrl.WALLPAPER_DOWNLOAD), {
+      wallpaperId,
+      uhd: isUhd ? 1 : 0,
+      appId: APP_ID
+    });
   }
 
   increaseDownload(wallpaperId: string): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.DOWNLOAD_WALLPAPER), { wallpaperId });
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.WALLPAPER_DOWNLOAD), {
+      wallpaperId,
+      appId: APP_ID
+    });
   }
 
   getWallpapersOfPrevAndNext(
@@ -49,9 +60,10 @@ export class WallpaperService {
     lang: WallpaperLang
   ): Observable<{ prevWallpaper: Wallpaper; nextWallpaper: Wallpaper }> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_WALLPAPERS_OF_PREV_AND_NEXT), {
+      .httpGet(this.apiService.getApiUrl(ApiUrl.WALLPAPER_PREV_AND_NEXT), {
         wallpaperId,
-        lang
+        lang,
+        appId: APP_ID
       })
       .pipe(map((res) => res?.data || {}));
   }
@@ -72,9 +84,10 @@ export class WallpaperService {
 
   getWallpaperArchives({ showCount = false, limit = 10 }): Observable<ArchiveData[]> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_WALLPAPER_ARCHIVES), {
+      .httpGet(this.apiService.getApiUrl(ApiUrl.WALLPAPER_ARCHIVES), {
         showCount: showCount ? 1 : 0,
-        limit
+        limit,
+        appId: APP_ID
       })
       .pipe(map((res) => res?.data?.archives || []));
   }

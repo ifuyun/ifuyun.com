@@ -4,6 +4,7 @@ import { isEmpty, omit, uniq } from 'lodash';
 import { combineLatestWith, Observer, skipWhile, takeUntil, tap } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { APP_ID } from '../../../config/common.constant';
 import { SearchType } from '../../../config/common.enum';
 import { SearchResponse } from '../../../core/common.interface';
 import { CommonService } from '../../../core/common.service';
@@ -114,7 +115,8 @@ export class HomeComponent extends PageComponent implements OnInit {
     this.postService
       .getPosts({
         page: 1,
-        sticky: 0
+        sticky: 0,
+        appId: APP_ID
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -130,7 +132,8 @@ export class HomeComponent extends PageComponent implements OnInit {
       .getWallpapers({
         page: 1,
         pageSize: 10,
-        lang: [WallpaperLang.CN, WallpaperLang.EN]
+        lang: [WallpaperLang.CN, WallpaperLang.EN],
+        appId: APP_ID
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -143,9 +146,10 @@ export class HomeComponent extends PageComponent implements OnInit {
 
   private search() {
     this.searchService
-      .searchAll({
+      .search({
         keyword: this.keyword,
-        page: this.page
+        page: this.page,
+        appId: APP_ID
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {

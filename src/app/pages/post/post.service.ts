@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interface';
 import { ApiUrl } from '../../config/api-url';
-import { STORAGE_KEY_VOTED_POSTS } from '../../config/common.constant';
+import { APP_ID, STORAGE_KEY_VOTED_POSTS } from '../../config/common.constant';
 import { PostType } from '../../config/common.enum';
 import { ApiService } from '../../core/api.service';
 import { ArchiveData, ArchiveDataMap, ArchiveList, ResultList } from '../../core/common.interface';
@@ -16,28 +16,28 @@ export class PostService {
 
   getPosts(param: PostQueryParam): Observable<{ postList: ResultList<Post>; breadcrumbs: BreadcrumbEntity[] }> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS), param)
+      .httpGet(this.apiService.getApiUrl(ApiUrl.POST_LIST), param)
       .pipe(map((res) => res?.data || {}));
   }
 
   getPostById(postId: string, postType: PostType, referer?: string): Observable<Post> {
     const param: Record<string, any> = {
       postId,
-      postType
+      postType,
+      appId: APP_ID
     };
     if (referer?.trim()) {
       param['ref'] = referer;
     }
-    return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POST), param)
-      .pipe(map((res) => res?.data || {}));
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.POST), param).pipe(map((res) => res?.data || {}));
   }
 
   getPostBySlug(slug: string, postType: PostType): Observable<Post> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POST), {
+      .httpGet(this.apiService.getApiUrl(ApiUrl.POST), {
         slug,
-        postType
+        postType,
+        appId: APP_ID
       })
       .pipe(map((res) => res?.data || {}));
   }
@@ -48,16 +48,20 @@ export class PostService {
     postType?: PostType;
   }): Observable<{ prevPost: PostEntity; nextPost: PostEntity }> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS_OF_PREV_AND_NEXT), param)
+      .httpGet(this.apiService.getApiUrl(ApiUrl.POST_PREV_AND_NEXT), {
+        ...param,
+        appId: APP_ID
+      })
       .pipe(map((res) => res?.data || {}));
   }
 
   getPostArchives({ showCount = false, limit = 10, postType = PostType.POST }): Observable<ArchiveData[]> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POST_ARCHIVES), {
+      .httpGet(this.apiService.getApiUrl(ApiUrl.POST_ARCHIVES), {
         postType,
         showCount: showCount ? 1 : 0,
-        limit
+        limit,
+        appId: APP_ID
       })
       .pipe(map((res) => res?.data?.archives || []));
   }
@@ -84,13 +88,17 @@ export class PostService {
 
   getHotPosts(): Observable<PostEntity[]> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS_OF_HOT))
+      .httpGet(this.apiService.getApiUrl(ApiUrl.POST_HOT), {
+        appId: APP_ID
+      })
       .pipe(map((res) => res?.data || []));
   }
 
   getRandomPosts(): Observable<PostEntity[]> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.GET_POSTS_BY_RANDOM))
+      .httpGet(this.apiService.getApiUrl(ApiUrl.POST_RANDOM), {
+        appId: APP_ID
+      })
       .pipe(map((res) => res?.data || []));
   }
 

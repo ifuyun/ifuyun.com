@@ -68,18 +68,14 @@ export class ApiService {
       );
   }
 
-  downloadFile<T extends HttpResponse<Blob>>(
-    url: string,
-    param: Record<string, any> = {}
-  ): Observable<HttpResponse<Blob>> {
-    return this.http
-      .get(url, {
-        params: new HttpParams({
-          fromObject: param
-        }),
-        observe: 'response',
-        responseType: 'blob'
-      });
+  downloadFile(url: string, param: Record<string, any> = {}): Observable<HttpResponse<Blob>> {
+    return this.http.get(url, {
+      params: new HttpParams({
+        fromObject: param
+      }),
+      observe: 'response',
+      responseType: 'blob'
+    });
   }
 
   httpPost<T extends HttpResponseEntity>(

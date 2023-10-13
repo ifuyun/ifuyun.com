@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { lastValueFrom } from 'rxjs';
 import { ApiUrl } from '../../../src/app/config/api-url';
+import { APP_ID } from '../../../src/app/config/common.constant';
 import { ResultList } from '../../../src/app/core/common.interface';
 import { Post } from '../../../src/app/pages/post/post.interface';
 import { HttpResponseEntity } from '../../common/http-response.interface';
@@ -11,11 +12,14 @@ import { InternalServerErrorException } from '../../exceptions/internal-server-e
 
 @Injectable()
 export class RssService {
-  constructor(private readonly httpService: HttpService, private readonly configService: ConfigService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService
+  ) {}
 
   async getPosts(page: number, pageSize: number, detail: boolean): Promise<{ postList: ResultList<Post> }> {
-    const apiUrl = this.configService.get('app.api.host') + ApiUrl.API_URL_PREFIX + ApiUrl.GET_POSTS;
-    const apiParam = `?page=${page}&pageSize=${pageSize}&sticky=0&detail=${detail ? '1' : '0'}`;
+    const apiUrl = this.configService.get('app.api.host') + ApiUrl.API_URL_PREFIX + ApiUrl.POST_LIST;
+    const apiParam = `?appId=${APP_ID}&page=${page}&pageSize=${pageSize}&sticky=0&detail=${detail ? '1' : '0'}`;
     let response: HttpResponseEntity;
     try {
       response = (await lastValueFrom(this.httpService.get(apiUrl + apiParam))).data;

@@ -1,4 +1,6 @@
-export interface LoginEntity {
+import { AppParam } from '../../core/common.interface';
+
+export interface LoginEntity extends AppParam {
   username: string;
   password: string;
 }

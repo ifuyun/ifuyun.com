@@ -18,7 +18,10 @@ export class WallpaperItemComponent implements OnInit {
 
   private lang!: WallpaperLang;
 
-  constructor(private route: ActivatedRoute, private destroy$: DestroyService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private destroy$: DestroyService
+  ) {}
 
   ngOnInit(): void {
     this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe((queryParams) => {

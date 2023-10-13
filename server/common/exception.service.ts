@@ -9,7 +9,10 @@ import { Message } from './message.enum';
 
 @Injectable()
 export class ExceptionService {
-  constructor(private readonly configService: ConfigService, private readonly logger: LoggerService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly logger: LoggerService
+  ) {}
 
   async handleException(
     exception: CustomException | HttpException | Error | unknown,

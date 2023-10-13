@@ -150,7 +150,8 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
         pageSize: this.carouselOptions.size || 4,
         lang: [WallpaperLang.CN, WallpaperLang.EN],
         resolution: this.carouselOptions.resolution || '1280x720',
-        orderBy: this.carouselOptions.orderBy === 'oldest' ? [['wallpaperDate', 'asc']] : [['wallpaperDate', 'desc']]
+        orderBy: this.carouselOptions.orderBy === 'oldest' ? [['wallpaperDate', 'asc']] : [['wallpaperDate', 'desc']],
+        appId: APP_ID
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {

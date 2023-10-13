@@ -1,4 +1,6 @@
-export interface UserEntity {
+import { AppParam } from '../core/common.interface';
+
+export interface UserEntity extends AppParam {
   userId?: string;
   userNiceName: string;
   userEmail?: string;

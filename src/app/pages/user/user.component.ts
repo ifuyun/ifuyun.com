@@ -7,7 +7,10 @@ import { WallpaperService } from '../wallpaper/wallpaper.service';
 export abstract class UserComponent extends PageComponent {
   abstract wallpaper: Wallpaper | null;
 
-  constructor(protected document: Document, protected wallpaperService: WallpaperService) {
+  constructor(
+    protected document: Document,
+    protected wallpaperService: WallpaperService
+  ) {
     super();
   }
 

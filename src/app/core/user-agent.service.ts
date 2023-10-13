@@ -13,7 +13,10 @@ export class UserAgentService {
 
   private userAgentString = '';
 
-  constructor(private platform: PlatformService, @Optional() @Inject(REQUEST) private request: Request) {
+  constructor(
+    private platform: PlatformService,
+    @Optional() @Inject(REQUEST) private request: Request
+  ) {
     this.userAgentString = this.platform.isBrowser ? navigator.userAgent : this.request.headers['user-agent'] || '';
     this.userAgent = UAParser(this.userAgentString);
   }

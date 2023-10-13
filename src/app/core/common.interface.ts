@@ -2,6 +2,10 @@ import { SearchType } from '../config/common.enum';
 import { Post } from '../pages/post/post.interface';
 import { Wallpaper } from '../pages/wallpaper/wallpaper.interface';
 
+export interface AppParam {
+  appId: string;
+}
+
 export interface PageOptions {
   showHeader: boolean;
   showFooter: boolean;
@@ -14,7 +18,7 @@ export interface MetaData {
   metaValue: string;
 }
 
-export interface QueryParam {
+export interface QueryParam extends AppParam {
   page: number;
   pageSize?: number;
   keyword?: string;
@@ -73,7 +77,7 @@ export interface UserAgentData {
   userAgent: string;
 }
 
-export interface SearchParam {
+export interface SearchParam extends AppParam {
   keyword: string;
   page?: number;
   size?: number;

@@ -115,7 +115,8 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     const voteData: VoteEntity = {
       objectId: wallpaper.wallpaperId,
       value: like ? VoteValue.LIKE : VoteValue.DISLIKE,
-      type: VoteType.WALLPAPER
+      type: VoteType.WALLPAPER,
+      appId: APP_ID
     };
     if (this.commentUser && this.commentUser.name) {
       voteData.user = this.commentUser;
@@ -181,7 +182,8 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   private fetchWallpapers() {
     const param: WallpaperQueryParam = {
       page: this.page,
-      pageSize: this.pageSize
+      pageSize: this.pageSize,
+      appId: APP_ID
     };
     if (this.lang) {
       param.lang = this.lang;

@@ -11,7 +11,10 @@ import { RssService } from './rss.service';
 
 @Controller()
 export class RssController {
-  constructor(private readonly rssService: RssService, private readonly optionService: OptionService) {}
+  constructor(
+    private readonly rssService: RssService,
+    private readonly optionService: OptionService
+  ) {}
 
   @Get('rss.xml')
   async generateRss(

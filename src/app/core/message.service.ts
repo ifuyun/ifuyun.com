@@ -7,7 +7,10 @@ import { PlatformService } from './platform.service';
   providedIn: 'root'
 })
 export class MessageService {
-  constructor(private platform: PlatformService, private message: NzMessageService) {}
+  constructor(
+    private platform: PlatformService,
+    private message: NzMessageService
+  ) {}
 
   success(content: string | TemplateRef<void>, options?: NzMessageDataOptions): NzMessageRef | void {
     if (this.platform.isBrowser) {

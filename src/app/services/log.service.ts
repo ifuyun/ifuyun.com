@@ -11,7 +11,10 @@ import { AccessLog, ActionLog } from '../interfaces/log.interface';
   providedIn: 'root'
 })
 export class LogService {
-  constructor(private apiService: ApiService, private userAgentService: UserAgentService) {}
+  constructor(
+    private apiService: ApiService,
+    private userAgentService: UserAgentService
+  ) {}
 
   parseAccessLog(initialized: boolean, referer: string): AccessLog {
     return {
@@ -27,10 +30,10 @@ export class LogService {
   }
 
   logAccess(log: AccessLog): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_ACCESS_LOG), log, true);
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.ACCESS_LOG_LIST), log, true);
   }
 
   logAction(log: ActionLog): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.SAVE_ACTION_LOG), log, true);
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.ACTION_LOG_LIST), log, true);
   }
 }
