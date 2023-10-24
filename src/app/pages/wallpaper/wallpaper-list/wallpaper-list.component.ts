@@ -147,7 +147,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   logLang(lang: string) {
     this.logService
       .logAction({
-        action: Action.CHANGE_LANG,
+        action: Action.CHANGE_WALLPAPER_LANG,
         objectType: ActionObjectType.WALLPAPER_LIST,
         lang,
         appId: APP_ID

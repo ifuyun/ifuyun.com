@@ -36,7 +36,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
   private authCode = '';
   private appId = '';
   private scope = '';
-  private from = '';
+  private source = '';
   private referer = '';
   private errorCode = '';
   private adminUrl = '';
@@ -80,15 +80,15 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
           const loginParam = ref ? `?ref=${ref}` : '';
           this.loginURL = options['login_url'] + loginParam;
 
-          this.from = params.get('from')?.trim() || '';
-          if (this.from === 'alipay' || this.from === 'm_alipay') {
+          this.source = params.get('from')?.trim() || '';
+          if (this.source === 'alipay' || this.source === 'm_alipay') {
             this.authCode = params.get('auth_code')?.trim() || '';
             this.appId = params.get('app_id')?.trim() || '';
             this.scope = params.get('scope')?.trim() || '';
-          } else if (this.from === 'weibo') {
+          } else if (this.source === 'weibo') {
             this.authCode = params.get('code')?.trim() || '';
             this.errorCode = params.get('error_code')?.trim() || '';
-          } else if (this.from === 'github') {
+          } else if (this.source === 'github') {
             this.authCode = params.get('code')?.trim() || '';
             this.errorCode = params.get('error')?.trim() || '';
           }
@@ -104,20 +104,20 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
     if (this.platform.isServer) {
       return;
     }
-    if (this.from === 'weibo' && this.errorCode === '21330') {
+    if (this.source === 'weibo' && this.errorCode === '21330') {
       // cancel
       this.loginStatus = 'cancel';
       this.userService.gotoLogin(this.loginURL);
       return;
     }
-    if (this.from === 'github' && this.errorCode === 'access_denied') {
+    if (this.source === 'github' && this.errorCode === 'access_denied') {
       // cancel
       this.loginStatus = 'cancel';
       this.userService.gotoLogin(this.loginURL);
       return;
     }
     this.userService
-      .thirdLogin(this.authCode, this.from)
+      .thirdLogin(this.authCode, this.source)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res.code === ResponseCode.SUCCESS) {

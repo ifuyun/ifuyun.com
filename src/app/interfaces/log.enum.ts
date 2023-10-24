@@ -20,6 +20,7 @@ export enum Action {
   WALLPAPER_DOWNLOAD = 'download_wallpaper',
   TRANSLATE_WALLPAPER = 'translate_wallpaper',
   // wallpaper list
+  CHANGE_WALLPAPER_LANG = 'change_wallpaper_lang',
   CHANGE_WALLPAPER_LIST_MODE = 'change_wallpaper_list_mode',
   // user
   LOGIN = 'login',

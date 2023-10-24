@@ -20,7 +20,9 @@ export class UserService {
   constructor(private apiService: ApiService) {}
 
   getLoginUser(): Observable<UserModel> {
-    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.USER_INFO)).pipe(
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.USER_INFO), {
+      appId: APP_ID
+    }).pipe(
       map((res) => res?.data || {}),
       tap((user) => this.loginUser.next(user))
     );
@@ -43,10 +45,10 @@ export class UserService {
     }
   }
 
-  thirdLogin(authCode: string, from: string): Observable<HttpResponseEntity> {
+  thirdLogin(authCode: string, source: string): Observable<HttpResponseEntity> {
     return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.USER_THIRD_LOGIN), {
       authCode,
-      from,
+      source,
       appId: APP_ID
     });
   }
