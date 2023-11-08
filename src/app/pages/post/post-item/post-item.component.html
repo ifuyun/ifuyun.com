@@ -8,7 +8,7 @@
   </h3>
   <div class="post-item-stat">
     <span><i class="icon icon-eye"></i><span>{{post.post.postViews | numberView}}</span></span>
-    <ng-container *ngIf="post.post.commentFlag !== 'close'">
+    <ng-container *ngIf="post.post.commentFlag !== 'closed'">
       <a [routerLink]="[post.post.postGuid]" fragment="comments" title="《{{post.post.postTitle}}》评论">
         <ng-container *ngIf="post.post.postComments > 0">
           <i class="icon icon-chat-dots"></i><span>{{post.post.postComments | numberView:'K'}}</span>
