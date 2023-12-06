@@ -108,7 +108,7 @@ const namedEntities = buildEntitiesLookup(entityList.join(''), 32) as EntitiesMa
 /**
  * Decodes the specified string, this will replace entities with raw UTF characters.
  *
- * @method decode
+ * @method decodeEntities
  * @param {String} text Text to entity decode.
  * @return {String} Entity decoded string.
  */

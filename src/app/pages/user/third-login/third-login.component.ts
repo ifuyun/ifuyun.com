@@ -123,7 +123,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
         if (res.code === ResponseCode.SUCCESS) {
           this.loginStatus = 'success';
           this.authService.setAuth(res.data);
-          const redirectUrl = this.referer ? this.options['site_url'] + this.referer : this.adminUrl;
+          const redirectUrl = this.referer ? this.options['site_url'] + `?ref=${this.referer}` : this.adminUrl;
           location.replace(redirectUrl);
         } else {
           this.message.error(res.message || '登录失败');

@@ -159,7 +159,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
             const urlParam = format(ADMIN_URL_PARAM, loginRes.accessToken, loginRes.expiresAt);
             let redirectUrl: string;
             if (this.referer && this.referer !== 'logout') {
-              redirectUrl = this.options['site_url'] + this.referer;
+              redirectUrl = this.options['site_url'] + `?ref=${this.referer}`;
             } else {
               redirectUrl = this.adminUrl + urlParam;
             }
