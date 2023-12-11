@@ -56,6 +56,7 @@ export class CommonService {
   transformMeta(meta: MetaData[]): Record<string, string> {
     const result: Record<string, string> = {};
     meta.forEach((item) => (result[item.metaKey] = item.metaValue));
+
     return result;
   }
 

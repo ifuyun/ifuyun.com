@@ -59,7 +59,8 @@
               </a>
             </div>
           </div>
-          <div class="comment-item comment-item-mobile" *ngIf="isMobile" id="{{comment.commentId | commentHash}}"
+          <div class="comment-item comment-item-mobile"
+               *ngIf="isMobile" id="{{comment.commentId | commentHash}}"
                [ngStyle]="{'padding-left': (comment.level - 1) * 32 + 'px'}">
             <div class="avatar">
               <img src="{{comment.authorAvatar}}" alt="{{comment.user?.userNiceName || comment.authorName}}"/>
@@ -68,7 +69,7 @@
               <div class="from">
                 <span class="name">{{comment.user?.userNiceName || comment.authorName}}</span>
                 <span class="location">from {{
-                  comment.userLocation?.region ? comment.userLocation.region + ' · ' + comment.userLocation.city : 'Mars'
+                  comment.ipInfo ? comment.ipInfo.ipRegion + ' · ' + comment.ipInfo.ipCity : 'Mars'
                   }}</span>
               </div>
               <div class="content">

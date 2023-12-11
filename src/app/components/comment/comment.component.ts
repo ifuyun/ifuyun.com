@@ -292,11 +292,6 @@ export class CommentComponent implements OnInit, AfterViewInit {
         data.user?.userAvatar ||
         format(URL_AVATAR_API, data.user?.userEmailHash || data.authorEmailHash, defaultAvatarType);
       data.commentMetaMap = this.commonService.transformMeta(data.commentMeta || []);
-      try {
-        data.userLocation = JSON.parse(data.commentMetaMap['user_location']);
-      } catch (e) {
-        data.userLocation = {};
-      }
     };
     initialFn(comment);
     comment.children.forEach((item) => initialFn(item));

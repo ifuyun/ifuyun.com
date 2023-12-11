@@ -1,4 +1,4 @@
-import { AppParam, IPLocation, MetaData } from '../../core/common.interface';
+import { AppParam, IpInfo, MetaData } from '../../core/common.interface';
 import { UserModel } from '../../interfaces/user.interface';
 import { CommentObjectType } from './comment.enum';
 
@@ -22,7 +22,7 @@ export interface CommentModel extends CommentEntity {
   authorLink?: string;
   authorIp?: string;
   user?: UserModel;
-  userLocation: IPLocation;
+  ipInfo: IpInfo;
   commentLikes: number;
   commentDislikes: number;
   commentMeta?: MetaData[];
