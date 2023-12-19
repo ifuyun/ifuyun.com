@@ -5,9 +5,9 @@ import { Action, ActionObjectType } from './log.enum';
 export interface AccessLog extends UserAgentData, AppParam {
   requestUrl: string;
   requestTime?: Date;
-  referer: string;
+  referrer: string;
   requestMethod?: string;
-  site: 'web' | 'admin';
+  requestSite: 'web' | 'admin';
   userIp?: string;
   resolution: string;
   colorDepth: string;

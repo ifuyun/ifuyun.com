@@ -16,12 +16,12 @@ export class LogService {
     private userAgentService: UserAgentService
   ) {}
 
-  parseAccessLog(initialized: boolean, referer: string): AccessLog {
+  parseAccessLog(initialized: boolean, referrer: string): AccessLog {
     return {
       ...this.userAgentService.getUserAgentInfo(),
       requestUrl: location.href,
-      referer: initialized ? referer : document.referrer,
-      site: 'web',
+      referrer: initialized ? referrer : document.referrer,
+      requestSite: 'web',
       resolution: window.screen.width + 'x' + window.screen.height,
       colorDepth: window.screen.colorDepth.toString(),
       isAjax: initialized,
@@ -34,6 +34,9 @@ export class LogService {
   }
 
   logAction(log: ActionLog): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.ACTION_LOG_LIST), log, true);
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.ACTION_LOG_LIST), {
+      ...log,
+      requestSite: 'web'
+    }, true);
   }
 }
