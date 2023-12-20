@@ -74,8 +74,8 @@ export interface UserAgentData {
   browserVersion: string;
   engine: string;
   engineVersion: string;
-  isMobile: boolean;
-  isCrawler: boolean;
+  isMobile: 0 | 1;
+  isCrawler: 0 | 1;
   userAgent: string;
 }
 

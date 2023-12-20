@@ -7,7 +7,7 @@ import { Response } from 'express';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment as env } from '../../environments/environment';
-import { MEDIA_QUERY_THEME_DARK, MEDIA_QUERY_THEME_LIGHT, STORAGE_KEY_THEME } from '../config/common.constant';
+import { MEDIA_QUERY_THEME_DARK, MEDIA_QUERY_THEME_LIGHT, COOKIE_KEY_THEME } from '../config/common.constant';
 import { Theme } from '../config/common.enum';
 import { OptionEntity } from '../interfaces/option.interface';
 import { MetaData, PageOptions } from './common.interface';
@@ -65,7 +65,7 @@ export class CommonService {
   }
 
   getTheme(): Theme {
-    const cacheTheme = this.cookieService.get(STORAGE_KEY_THEME);
+    const cacheTheme = this.cookieService.get(COOKIE_KEY_THEME);
     if (cacheTheme) {
       return cacheTheme === Theme.Dark ? Theme.Dark : Theme.Light;
     }
@@ -90,7 +90,7 @@ export class CommonService {
   }
 
   cacheTheme(theme: Theme) {
-    this.cookieService.set(STORAGE_KEY_THEME, theme, {
+    this.cookieService.set(COOKIE_KEY_THEME, theme, {
       path: '/',
       domain: env.cookie.domain,
       expires: env.cookie.expires
@@ -98,7 +98,7 @@ export class CommonService {
   }
 
   isThemeCached(): boolean {
-    return !!this.cookieService.get(STORAGE_KEY_THEME);
+    return !!this.cookieService.get(COOKIE_KEY_THEME);
   }
 
   updateTheme(theme: Theme) {

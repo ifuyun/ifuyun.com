@@ -1,13 +1,17 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import * as murmurhash from 'murmurhash';
+import { CookieService } from 'ngx-cookie-service';
 import { filter } from 'rxjs';
-import { CLASS_BLOCK_SCROLL, MEDIA_QUERY_THEME_DARK } from './config/common.constant';
+import { environment as env } from '../environments/environment';
+import { CLASS_BLOCK_SCROLL, COOKIE_KEY_UV_ID, MEDIA_QUERY_THEME_DARK } from './config/common.constant';
 import { Theme } from './config/common.enum';
 import { CommonService } from './core/common.service';
 import { PlatformService } from './core/platform.service';
 import { UrlService } from './core/url.service';
 import { UserAgentService } from './core/user-agent.service';
+import { generateUid } from './helpers/helper';
 import { TaxonomyNode } from './interfaces/taxonomy.interface';
 import { LogService } from './services/log.service';
 import { OptionService } from './services/option.service';
@@ -32,6 +36,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     private platform: PlatformService,
     private userAgentService: UserAgentService,
+    private cookieService: CookieService,
     private commonService: CommonService,
     private urlService: UrlService,
     private optionService: OptionService,
@@ -46,16 +51,30 @@ export class AppComponent implements OnInit {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
       const previous = this.currentUrl.split('#')[0];
       const current = (event as NavigationEnd).url.split('#')[0];
+      const userAgent = this.userAgentService.getUserAgentString();
+
+      let waId = this.cookieService.get(COOKIE_KEY_UV_ID);
+      let isNew = false;
+      if (!waId) {
+        isNew = true;
+        waId = generateUid(userAgent);
+        this.cookieService.set(COOKIE_KEY_UV_ID, waId, {
+          path: '/',
+          domain: env.cookie.domain,
+          expires: 400
+        });
+      }
       if (previous !== current) {
         this.urlService.updateUrlHistory({
           previous: this.currentUrl,
           current: (event as NavigationEnd).url
         });
         if (this.platform.isBrowser) {
-          this.logService.logAccess(this.logService.parseAccessLog(this.initialized, this.currentUrl)).subscribe();
+          this.logService.logAccess(this.logService.parseAccessLog(this.initialized, this.currentUrl, isNew)).subscribe();
         }
         this.currentUrl = (event as NavigationEnd).url;
       }
+
       this.initialized = true;
       this.siderOpen = false;
       this.onSiderOpenChange(false);

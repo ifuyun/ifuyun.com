@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { ApiUrl } from '../config/api-url';
-import { APP_ID } from '../config/common.constant';
+import { APP_ID, COOKIE_KEY_UV_ID } from '../config/common.constant';
 import { ApiService } from '../core/api.service';
 import { HttpResponseEntity } from '../core/http-response.interface';
 import { UserAgentService } from '../core/user-agent.service';
@@ -13,18 +14,21 @@ import { AccessLog, ActionLog } from '../interfaces/log.interface';
 export class LogService {
   constructor(
     private apiService: ApiService,
-    private userAgentService: UserAgentService
+    private userAgentService: UserAgentService,
+    private cookieService: CookieService
   ) {}
 
-  parseAccessLog(initialized: boolean, referrer: string): AccessLog {
+  parseAccessLog(initialized: boolean, referrer: string, isNew: boolean): AccessLog {
     return {
       ...this.userAgentService.getUserAgentInfo(),
-      requestUrl: location.href,
+      waId: this.cookieService.get(COOKIE_KEY_UV_ID),
+      isNew: isNew ? 1 : 0,
+      accessUrl: location.href,
       referrer: initialized ? referrer : document.referrer,
-      requestSite: 'web',
+      accessSite: 'web',
       resolution: window.screen.width + 'x' + window.screen.height,
       colorDepth: window.screen.colorDepth.toString(),
-      isAjax: initialized,
+      isAjax: initialized ? 1 : 0,
       appId: APP_ID
     };
   }
@@ -33,10 +37,11 @@ export class LogService {
     return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.ACCESS_LOG_LIST), log, true);
   }
 
-  logAction(log: ActionLog): Observable<HttpResponseEntity> {
+  logAction(log: Omit<ActionLog, 'waId'>): Observable<HttpResponseEntity> {
     return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.ACTION_LOG_LIST), {
       ...log,
-      requestSite: 'web'
+      waId: this.cookieService.get(COOKIE_KEY_UV_ID),
+      accessSite: 'web'
     }, true);
   }
 }

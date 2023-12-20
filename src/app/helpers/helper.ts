@@ -1,3 +1,5 @@
+import * as murmurhash from 'murmurhash';
+
 /**
  * 生成随机ID字符串：10位36进制时间戳+6位36进制随机数
  * @return {string} ID
@@ -20,6 +22,15 @@ export function generateId() {
   }
 
   return prefix + id + randomStr;
+}
+
+export function generateUid(ua: string) {
+  let randomStr = '';
+  for (let i = 0; i < 3; i += 1) {
+    randomStr += ((Math.random() * 36) | 0).toString(36);
+  }
+
+  return `WA1.${murmurhash(ua, 20160124)}.${(Date.now() / 1000) | 0}.${randomStr}`;
 }
 
 /**

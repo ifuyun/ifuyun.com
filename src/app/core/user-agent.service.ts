@@ -54,8 +54,8 @@ export class UserAgentService {
       browserVersion: this.browser.version || '',
       engine: this.engine.name || '',
       engineVersion: this.engine.version || '',
-      isMobile: this.isMobile(),
-      isCrawler: this.isCrawler(),
+      isMobile: this.isMobile() ? 1 : 0,
+      isCrawler: this.isCrawler() ? 1 : 0,
       userAgent: this.userAgentString
     };
   }
