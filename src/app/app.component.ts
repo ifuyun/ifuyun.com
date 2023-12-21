@@ -1,22 +1,22 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import * as murmurhash from 'murmurhash';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { filter } from 'rxjs';
 import { environment as env } from '../environments/environment';
 import { CLASS_BLOCK_SCROLL, COOKIE_KEY_UV_ID, MEDIA_QUERY_THEME_DARK } from './config/common.constant';
 import { Theme } from './config/common.enum';
+import { ResponseCode } from './config/response-code.enum';
 import { CommonService } from './core/common.service';
 import { PlatformService } from './core/platform.service';
 import { UrlService } from './core/url.service';
 import { UserAgentService } from './core/user-agent.service';
 import { generateUid } from './helpers/helper';
 import { TaxonomyNode } from './interfaces/taxonomy.interface';
+import { UserService } from './pages/user/user.service';
 import { LogService } from './services/log.service';
 import { OptionService } from './services/option.service';
 import { TaxonomyService } from './services/taxonomy.service';
-import { UserService } from './pages/user/user.service';
 
 @Component({
   selector: 'app-root',
@@ -30,6 +30,7 @@ export class AppComponent implements OnInit {
 
   private currentUrl = '';
   private initialized = false;
+  private accessLogId = '';
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -48,6 +49,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.router.events.pipe(filter((event) => event instanceof NavigationStart)).subscribe(() => {
+      this.saveLeaveLog();
+    });
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
       const previous = this.currentUrl.split('#')[0];
       const current = (event as NavigationEnd).url.split('#')[0];
@@ -70,7 +74,11 @@ export class AppComponent implements OnInit {
           current: (event as NavigationEnd).url
         });
         if (this.platform.isBrowser) {
-          this.logService.logAccess(this.logService.parseAccessLog(this.initialized, this.currentUrl, isNew)).subscribe();
+          this.logService.logAccess(this.logService.parseAccessLog(this.initialized, this.currentUrl, isNew)).subscribe((res) => {
+            if (res.code === ResponseCode.SUCCESS) {
+              this.accessLogId = res.data.logId || '';
+            }
+          });
         }
         this.currentUrl = (event as NavigationEnd).url;
       }
@@ -99,6 +107,16 @@ export class AppComponent implements OnInit {
       htmlNode.classList.add(CLASS_BLOCK_SCROLL);
     } else {
       htmlNode.classList.remove(CLASS_BLOCK_SCROLL);
+    }
+  }
+
+  private saveLeaveLog() {
+    if (this.accessLogId) {
+      this.logService
+        .logLeave({
+          logId: this.accessLogId
+        })
+        .subscribe();
     }
   }
 

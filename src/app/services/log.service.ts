@@ -6,7 +6,7 @@ import { APP_ID, COOKIE_KEY_UV_ID } from '../config/common.constant';
 import { ApiService } from '../core/api.service';
 import { HttpResponseEntity } from '../core/http-response.interface';
 import { UserAgentService } from '../core/user-agent.service';
-import { AccessLog, ActionLog } from '../interfaces/log.interface';
+import { AccessLog, ActionLog, LeaveLog } from '../interfaces/log.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +35,17 @@ export class LogService {
 
   logAccess(log: AccessLog): Observable<HttpResponseEntity> {
     return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.ACCESS_LOG_LIST), log, true);
+  }
+
+  logLeave(log: Omit<LeaveLog, 'appId'>): Observable<HttpResponseEntity> {
+    return this.apiService.httpPost(
+      this.apiService.getApiUrl(ApiUrl.LEAVE_LOG),
+      {
+        ...log,
+        appId: APP_ID
+      },
+      true
+    );
   }
 
   logAction(log: Omit<ActionLog, 'waId'>): Observable<HttpResponseEntity> {

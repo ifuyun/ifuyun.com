@@ -16,6 +16,11 @@ export interface AccessLog extends UserAgentData, AppParam {
   isNew: 0 | 1;
 }
 
+export interface LeaveLog {
+  logId: string;
+  appId: string;
+}
+
 export interface ActionLog extends AppParam {
   waId: string;
   action: Action;

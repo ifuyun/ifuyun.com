@@ -40,6 +40,7 @@ export enum ApiUrl {
   FAVORITE = '/favorites/favorite',
   // log
   ACCESS_LOG_LIST = '/logs/access',
+  LEAVE_LOG = '/logs/leave',
   ACTION_LOG_LIST = '/logs/action',
   // wallpaper
   WALLPAPER_LIST = '/wallpapers',
