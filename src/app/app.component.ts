@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
-import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { filter } from 'rxjs';
 import { environment as env } from '../environments/environment';
@@ -23,7 +23,7 @@ import { TaxonomyService } from './services/taxonomy.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   isMobile = false;
   postTaxonomies: TaxonomyNode[] = [];
   siderOpen = false;
@@ -49,9 +49,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.router.events.pipe(filter((event) => event instanceof NavigationStart)).subscribe(() => {
-      this.saveLeaveLog();
-    });
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
       const previous = this.currentUrl.split('#')[0];
       const current = (event as NavigationEnd).url.split('#')[0];
@@ -74,11 +71,13 @@ export class AppComponent implements OnInit {
           current: (event as NavigationEnd).url
         });
         if (this.platform.isBrowser) {
-          this.logService.logAccess(this.logService.parseAccessLog(this.initialized, this.currentUrl, isNew)).subscribe((res) => {
-            if (res.code === ResponseCode.SUCCESS) {
-              this.accessLogId = res.data.logId || '';
-            }
-          });
+          this.logService
+            .logAccess(this.logService.parseAccessLog(this.initialized, this.currentUrl, isNew, this.accessLogId))
+            .subscribe((res) => {
+              if (res.code === ResponseCode.SUCCESS) {
+                this.accessLogId = res.data.logId || '';
+              }
+            });
         }
         this.currentUrl = (event as NavigationEnd).url;
       }
@@ -87,12 +86,21 @@ export class AppComponent implements OnInit {
       this.siderOpen = false;
       this.onSiderOpenChange(false);
     });
+
     this.initTheme();
     this.initThemeListener();
     this.optionService.getOptions().subscribe();
     this.taxonomyService.getTaxonomies().subscribe((taxonomies) => (this.postTaxonomies = taxonomies));
     if (this.platform.isBrowser) {
       this.userService.getLoginUser().subscribe();
+    }
+  }
+
+  ngAfterViewInit() {
+    if (this.platform.isBrowser) {
+      window.addEventListener('beforeunload', () => {
+        this.saveLeaveLog();
+      });
     }
   }
 

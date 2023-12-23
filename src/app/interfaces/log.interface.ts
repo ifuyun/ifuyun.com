@@ -3,6 +3,7 @@ import { AppParam, UserAgentData } from '../core/common.interface';
 import { Action, ActionObjectType } from './log.enum';
 
 export interface AccessLog extends UserAgentData, AppParam {
+  logId: string;
   waId: string;
   accessUrl: string;
   accessTime?: Date;

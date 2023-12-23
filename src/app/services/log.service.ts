@@ -18,9 +18,10 @@ export class LogService {
     private cookieService: CookieService
   ) {}
 
-  parseAccessLog(initialized: boolean, referrer: string, isNew: boolean): AccessLog {
+  parseAccessLog(initialized: boolean, referrer: string, isNew: boolean, logId: string): AccessLog {
     return {
       ...this.userAgentService.getUserAgentInfo(),
+      logId,
       waId: this.cookieService.get(COOKIE_KEY_UV_ID),
       isNew: isNew ? 1 : 0,
       accessUrl: location.href,
