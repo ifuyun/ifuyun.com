@@ -6,7 +6,7 @@ import { APP_ID, STORAGE_KEY_LIKED_WALLPAPER } from '../../config/common.constan
 import { ApiService } from '../../core/api.service';
 import { ArchiveData, ArchiveDataMap, ArchiveList, ResultList } from '../../core/common.interface';
 import { HttpResponseEntity } from '../../core/http-response.interface';
-import { Wallpaper, WallpaperLang, WallpaperQueryParam } from './wallpaper.interface';
+import { HotWallpaper, Wallpaper, WallpaperLang, WallpaperQueryParam } from './wallpaper.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +30,14 @@ export class WallpaperService {
       .pipe(map((res) => res?.data || []));
   }
 
+  getHotWallpapers(): Observable<HotWallpaper[]> {
+    return this.apiService
+      .httpGet(this.apiService.getApiUrl(ApiUrl.WALLPAPER_HOT), {
+        appId: APP_ID
+      })
+      .pipe(map((res) => res?.data || []));
+  }
+
   getWallpaperById(wallpaperId: string): Observable<Wallpaper> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.WALLPAPER), {
@@ -43,13 +51,6 @@ export class WallpaperService {
     return this.apiService.downloadFile(this.apiService.getApiUrl(ApiUrl.WALLPAPER_DOWNLOAD), {
       wallpaperId,
       uhd: isUhd ? 1 : 0,
-      appId: APP_ID
-    });
-  }
-
-  increaseDownload(wallpaperId: string): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.WALLPAPER_DOWNLOAD), {
-      wallpaperId,
       appId: APP_ID
     });
   }

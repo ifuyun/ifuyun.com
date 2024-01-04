@@ -58,3 +58,14 @@ export interface Wallpaper {
   hasTranslation: boolean;
   isFavorite: boolean;
 }
+
+export interface HotWallpaper {
+  wallpaperId: string;
+  wallpaperTitle: string;
+  wallpaperTitleCn: string;
+  wallpaperTitleEn: string;
+  wallpaperCopyright: string;
+  wallpaperCopyrightCn: string;
+  wallpaperCopyrightEn: string;
+  score: number;
+}

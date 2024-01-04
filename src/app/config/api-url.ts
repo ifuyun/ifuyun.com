@@ -45,6 +45,7 @@ export enum ApiUrl {
   // wallpaper
   WALLPAPER_LIST = '/wallpapers',
   WALLPAPER_RANDOM = '/wallpapers/random',
+  WALLPAPER_HOT = '/wallpapers/hot',
   WALLPAPER_PREV_AND_NEXT = '/wallpapers/prev-and-next',
   WALLPAPER = '/wallpapers/wallpaper',
   WALLPAPER_ARCHIVES = '/wallpapers/archives',

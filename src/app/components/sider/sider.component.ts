@@ -19,6 +19,7 @@ import { OptionEntity } from '../../interfaces/option.interface';
 import { NgZorroAntdModule } from '../../modules/antd/ng-zorro-antd.module';
 import { PostEntity } from '../../pages/post/post.interface';
 import { PostService } from '../../pages/post/post.service';
+import { HotWallpaper } from '../../pages/wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
 import { LinkService } from '../../services/link.service';
 import { LogService } from '../../services/log.service';
@@ -42,10 +43,11 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   isHomePage = false;
   isPostPage = false;
   isWallpaperPage = false;
-  postArchives: ArchiveData[] = [];
-  wallpaperArchives: ArchiveData[] = [];
   hotPosts: PostEntity[] = [];
   randomPosts: PostEntity[] = [];
+  postArchives: ArchiveData[] = [];
+  hotWallpapers: HotWallpaper[] = [];
+  wallpaperArchives: ArchiveData[] = [];
   friendLinks: LinkEntity[] = [];
   keyword = '';
   adsFlag = false;
@@ -83,14 +85,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
           this.showAlipayRedPacketQrcode();
         }
       });
-    this.postService
-      .getHotPosts()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => (this.hotPosts = res));
-    this.postService
-      .getRandomPosts()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => (this.randomPosts = res));
     this.urlService.urlInfo$.pipe(takeUntil(this.destroy$)).subscribe((url) => {
       const isHome = url.current.split('?')[0] === '/';
       this.linkService
@@ -110,12 +104,16 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
         this.pageIndex = page;
         this.updatePageIndex();
         if (this.isHomePage || this.isPostPage) {
+          this.fetchHotPosts();
           this.fetchPostArchives();
         }
         if (this.isHomePage || this.isWallpaperPage) {
+          this.fetchHotWallpapers();
           this.fetchWallpaperArchives();
         }
       });
+
+    this.fetchRandomPosts();
   }
 
   ngAfterViewInit() {
@@ -150,6 +148,20 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  private fetchHotPosts() {
+    this.postService
+      .getHotPosts()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => (this.hotPosts = res));
+  }
+
+  private fetchRandomPosts() {
+    this.postService
+      .getRandomPosts()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => (this.randomPosts = res));
+  }
+
   private fetchPostArchives() {
     this.postService
       .getPostArchives({
@@ -157,6 +169,21 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => (this.postArchives = res));
+  }
+
+  private fetchHotWallpapers() {
+    this.wallpaperService
+      .getHotWallpapers()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.hotWallpapers = res.map((item) => {
+          return {
+            ...item,
+            wallpaperTitle: item.wallpaperTitleCn || item.wallpaperTitleEn,
+            wallpaperCopyright: item.wallpaperCopyrightCn || item.wallpaperCopyrightEn
+          };
+        });
+      });
   }
 
   private fetchWallpaperArchives() {
