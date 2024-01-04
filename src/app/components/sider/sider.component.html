@@ -27,9 +27,9 @@
     <ul class="hot-list">
       <li *ngFor="let wallpaper of hotWallpapers; let i = index">
         <span class="hot-num">{{i + 1}}</span>
-        <a title="{{wallpaper.wallpaperTitle}}"
+        <a title="{{wallpaper.wallpaperCopyright}}"
            [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
-           [queryParams]="getWallpaperLangParams(wallpaper.isCn)">{{wallpaper.wallpaperTitle}}</a>
+           [queryParams]="getWallpaperLangParams(wallpaper.isCn)">{{wallpaper.wallpaperCopyright}}</a>
       </li>
     </ul>
   </div>
@@ -88,9 +88,9 @@
     <h3 class="widget-title"><div><i class="icon icon-shuffle"></i><span>手气不错</span></div></h3>
     <ul>
       <li *ngFor="let wallpaper of randomWallpapers">
-        <a title="{{wallpaper.wallpaperTitle}}"
+        <a title="{{wallpaper.wallpaperCopyright}}"
            [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
-           [queryParams]="getWallpaperLangParams(wallpaper.isCn)">{{wallpaper.wallpaperTitle}}</a>
+           [queryParams]="getWallpaperLangParams(wallpaper.isCn)">{{wallpaper.wallpaperCopyright}}</a>
       </li>
     </ul>
   </div>
