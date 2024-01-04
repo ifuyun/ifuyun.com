@@ -124,7 +124,10 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private fetchRandomWallpapers() {
     this.wallpaperService
-      .getRandomWallpapers(this.carouselOptions.size || 4, this.carouselOptions.resolution || '1280x720')
+      .getRandomWallpapers({
+        size: this.carouselOptions.size || 4,
+        resolution: this.carouselOptions.resolution || '1280x720'
+      })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.carousels = res.map((wallpaper, index) => {

@@ -56,6 +56,8 @@ export interface Wallpaper {
   wallpaperVoted?: boolean;
   wallpaperModified: Date;
   hasTranslation: boolean;
+  isCn: boolean;
+  isEn: boolean;
   isFavorite: boolean;
 }
 
@@ -68,4 +70,6 @@ export interface HotWallpaper {
   wallpaperCopyrightCn: string;
   wallpaperCopyrightEn: string;
   score: number;
+  isCn: boolean;
+  isEn: boolean;
 }

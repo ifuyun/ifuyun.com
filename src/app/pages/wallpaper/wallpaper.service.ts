@@ -20,13 +20,23 @@ export class WallpaperService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  getRandomWallpapers(size: number, resolution = '1920x1080'): Observable<Wallpaper[]> {
+  getRandomWallpapers(param: {
+    size: number;
+    resolution?: string;
+    simple?: boolean
+  }): Observable<Wallpaper[]> {
+    const { size, resolution, simple } = param;
+    const payload: Record<string, any> = {
+      size,
+      simple: simple ? 1 : 0,
+      appId: APP_ID
+    };
+    if (resolution) {
+      payload['resolution'] = resolution;
+    }
+
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.WALLPAPER_RANDOM), {
-        size,
-        resolution,
-        appId: APP_ID
-      })
+      .httpGet(this.apiService.getApiUrl(ApiUrl.WALLPAPER_RANDOM), payload)
       .pipe(map((res) => res?.data || []));
   }
 

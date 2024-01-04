@@ -137,9 +137,9 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
       });
   }
 
-  getLangParams(wallpaper: Wallpaper): Params {
+  getLangParams(isCn: boolean): Params {
     if (!this.lang) {
-      return !!wallpaper.bingIdCn ? {} : { lang: WallpaperLang.EN };
+      return isCn ? {} : { lang: WallpaperLang.EN };
     }
     return { lang: this.lang };
   }
@@ -226,7 +226,9 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
             wallpaperLocation,
             wallpaperStory: story,
             wallpaperUrl: urlPrefix + item.wallpaperUrl,
-            wallpaperThumbUrl: urlPrefix + item.wallpaperThumbUrl
+            wallpaperThumbUrl: urlPrefix + item.wallpaperThumbUrl,
+            isCn: !!item.wallpaperCopyright,
+            isEn: !!item.wallpaperCopyrightEn
           };
         });
         if (this.platform.isBrowser) {

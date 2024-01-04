@@ -29,7 +29,7 @@
           <div class="photo">
             <a class="photo-link"
                [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
-               [queryParams]="getLangParams(wallpaper)"
+               [queryParams]="getLangParams(wallpaper.isCn)"
                [title]="wallpaper.wallpaperCopyright">
               <img [src]="wallpaper.wallpaperThumbUrl" [alt]="wallpaper.wallpaperCopyright"/><div class="overlay"></div>
             </a>
@@ -37,7 +37,7 @@
           <div class="content">
             <h2 [title]="wallpaper.wallpaperCopyright">
               <a [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
-                 [queryParams]="getLangParams(wallpaper)"
+                 [queryParams]="getLangParams(wallpaper.isCn)"
                  [title]="wallpaper.wallpaperCopyright">{{wallpaper.wallpaperCopyright}}</a>
             </h2>
             <div class="content-location" *ngIf="!isMobile" [title]="wallpaper.wallpaperLocation">

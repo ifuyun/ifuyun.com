@@ -1,7 +1,7 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Params, Router, RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
@@ -19,7 +19,7 @@ import { OptionEntity } from '../../interfaces/option.interface';
 import { NgZorroAntdModule } from '../../modules/antd/ng-zorro-antd.module';
 import { PostEntity } from '../../pages/post/post.interface';
 import { PostService } from '../../pages/post/post.service';
-import { HotWallpaper } from '../../pages/wallpaper/wallpaper.interface';
+import { HotWallpaper, Wallpaper, WallpaperLang } from '../../pages/wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
 import { LinkService } from '../../services/link.service';
 import { LogService } from '../../services/log.service';
@@ -47,6 +47,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   randomPosts: PostEntity[] = [];
   postArchives: ArchiveData[] = [];
   hotWallpapers: HotWallpaper[] = [];
+  randomWallpapers: Wallpaper[] = [];
   wallpaperArchives: ArchiveData[] = [];
   friendLinks: LinkEntity[] = [];
   keyword = '';
@@ -105,15 +106,15 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
         this.updatePageIndex();
         if (this.isHomePage || this.isPostPage) {
           this.fetchHotPosts();
+          this.fetchRandomPosts();
           this.fetchPostArchives();
         }
         if (this.isHomePage || this.isWallpaperPage) {
           this.fetchHotWallpapers();
+          this.fetchRandomWallpapers();
           this.fetchWallpaperArchives();
         }
       });
-
-    this.fetchRandomPosts();
   }
 
   ngAfterViewInit() {
@@ -148,6 +149,10 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  getWallpaperLangParams(isCn: boolean): Params {
+    return isCn ? {} : { lang: WallpaperLang.EN };
+  }
+
   private fetchHotPosts() {
     this.postService
       .getHotPosts()
@@ -180,8 +185,30 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
           return {
             ...item,
             wallpaperTitle: item.wallpaperTitleCn || item.wallpaperTitleEn,
-            wallpaperCopyright: item.wallpaperCopyrightCn || item.wallpaperCopyrightEn
+            wallpaperCopyright: item.wallpaperCopyrightCn || item.wallpaperCopyrightEn,
+            isCn: !!item.wallpaperCopyrightCn,
+            isEn: !!item.wallpaperCopyrightEn
           };
+        });
+      });
+  }
+
+  private fetchRandomWallpapers() {
+    this.wallpaperService
+      .getRandomWallpapers({
+        size: 10,
+        simple: true
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.randomWallpapers = res.map((item) => {
+          return {
+            ...item,
+            wallpaperTitle: item.wallpaperTitle || item.wallpaperTitleEn,
+            wallpaperCopyright: item.wallpaperCopyright || item.wallpaperCopyrightEn,
+            isCn: !!item.wallpaperCopyright,
+            isEn: !!item.wallpaperCopyrightEn
+          }
         });
       });
   }

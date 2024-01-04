@@ -29,9 +29,9 @@ export class WallpaperItemComponent implements OnInit {
     });
   }
 
-  getWallpaperLangParams(wallpaper: Wallpaper): Params {
+  getWallpaperLangParams(isCn: boolean): Params {
     if (!this.lang) {
-      return !!wallpaper.bingIdCn ? {} : { lang: WallpaperLang.EN };
+      return isCn ? {} : { lang: WallpaperLang.EN };
     }
     return { lang: this.lang };
   }

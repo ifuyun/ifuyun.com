@@ -76,7 +76,9 @@ export class WallpaperBoxComponent implements OnChanges {
   private fetchData() {
     this.loading = true;
     this.wallpaperService
-      .getRandomWallpapers(8)
+      .getRandomWallpapers({
+        size: 8
+      })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.wallpapers = res.map((item) => {

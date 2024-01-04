@@ -28,7 +28,8 @@
       <li *ngFor="let wallpaper of hotWallpapers; let i = index">
         <span class="hot-num">{{i + 1}}</span>
         <a title="{{wallpaper.wallpaperTitle}}"
-           [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]">{{wallpaper.wallpaperTitle}}</a>
+           [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
+           [queryParams]="getWallpaperLangParams(wallpaper.isCn)">{{wallpaper.wallpaperTitle}}</a>
       </li>
     </ul>
   </div>
@@ -73,11 +74,23 @@
       </li>
     </ul>
   </div>
-  <div class="widget">
+  <!--首页、文章页-->
+  <div class="widget" *ngIf="isHomePage || isPostPage">
     <h3 class="widget-title"><div><i class="icon icon-shuffle"></i><span>手气不错</span></div></h3>
     <ul>
       <li *ngFor="let post of randomPosts">
         <a title="{{post.postTitle}}" [routerLink]="[post.postGuid]">{{post.postTitle}}</a>
+      </li>
+    </ul>
+  </div>
+  <!--壁纸页-->
+  <div class="widget" *ngIf="isWallpaperPage">
+    <h3 class="widget-title"><div><i class="icon icon-shuffle"></i><span>手气不错</span></div></h3>
+    <ul>
+      <li *ngFor="let wallpaper of randomWallpapers">
+        <a title="{{wallpaper.wallpaperTitle}}"
+           [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
+           [queryParams]="getWallpaperLangParams(wallpaper.isCn)">{{wallpaper.wallpaperTitle}}</a>
       </li>
     </ul>
   </div>
