@@ -3,14 +3,12 @@ import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewCh
 import { FormsModule } from '@angular/forms';
 import { Params, Router, RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
-import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
 import { environment as env } from '../../../environments/environment';
 import { APP_ID } from '../../config/common.constant';
 import { ArchiveData } from '../../core/common.interface';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
-import { MessageService } from '../../core/message.service';
 import { PlatformService } from '../../core/platform.service';
 import { UrlService } from '../../core/url.service';
 import { LinkEntity } from '../../interfaces/link.interface';
@@ -67,7 +65,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     private postService: PostService,
     private linkService: LinkService,
     private wallpaperService: WallpaperService,
-    private message: MessageService,
     private logService: LogService
   ) {}
 
@@ -82,9 +79,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
         const adsFlag = this.options['ads_flag'] || '';
         this.adsFlag =
           (env.production && ['1', '0'].includes(adsFlag)) || (!env.production && ['2', '0'].includes(adsFlag));
-        if (this.platform.isBrowser) {
-          this.showAlipayRedPacketQrcode();
-        }
       });
     this.urlService.urlInfo$.pipe(takeUntil(this.destroy$)).subscribe((url) => {
       const isHome = url.current.split('?')[0] === '/';
@@ -220,24 +214,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => (this.wallpaperArchives = res));
-  }
-
-  private showAlipayRedPacketQrcode() {
-    QRCode.toCanvas(this.options['alipay_red_packet_code'], {
-      width: 560,
-      margin: 0
-    })
-      .then((canvas) => {
-        canvas.removeAttribute('style');
-        const imageEle = this.document.createElement('img');
-        imageEle.src = canvas.toDataURL();
-        imageEle.alt = '支付宝红包';
-        imageEle.style.maxWidth = '100%';
-        this.redPacketEle.nativeElement.innerHTML = '';
-        this.redPacketEle.nativeElement.appendChild(imageEle);
-        this.redPacketEle.nativeElement.style.display = 'block';
-      })
-      .catch((err) => this.message.error(err));
   }
 
   private scrollHandler() {

@@ -11,7 +11,9 @@
   </div>
   <div class="widget">
     <h3 class="widget-title"><div><i class="icon icon-heart"></i><span>支付宝扫码领红包</span></div></h3>
-    <div class="red-packet" #redPacket></div>
+    <div class="red-packet" #redPacket>
+      <img src="/assets/images/red-packet.png" alt="支付宝红包">
+    </div>
   </div>
   <div class="widget" *ngIf="(isHomePage || isPostPage) && hotPosts.length > 0">
     <h3 class="widget-title"><div><i class="icon icon-fire"></i><span>热门文章</span></div></h3>

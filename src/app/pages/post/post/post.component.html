@@ -116,7 +116,7 @@
         <button *ngIf="postType !== 'page'"
                 [ngClass]="{liked: isFavorite}"
                 (click)="addFavorite()"
-                [title]="isFavorite ? '已收藏' : '添加收藏'">
+                [title]="isFavorite ? '已收藏' : '收藏'">
           <i class="icon icon-star-fill" *ngIf="!favoriteLoading"></i>
           <i class="icon icon-loading" *ngIf="favoriteLoading"></i>
         </button>

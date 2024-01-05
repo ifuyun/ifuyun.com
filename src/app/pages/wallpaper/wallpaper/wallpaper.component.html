@@ -24,7 +24,7 @@
       <figcaption>{{wallpaper?.wallpaperTitle}}</figcaption>
     </figure>
     <div class="wallpaper-actions">
-      <a nz-button nzType="primary" (click)="showWallpaper()" title="全屏查看壁纸">
+      <a nz-button nzType="primary" *ngIf="!isMobile" (click)="showWallpaper()" title="查看高清壁纸">
         <span nz-icon nzType="zoom-in"></span><span>查看大图</span>
       </a>
       <a nz-button nzType="primary" (click)="download()" [nzLoading]="downloading" title="下载高清壁纸">
@@ -78,7 +78,7 @@
         </button>
         <button [ngClass]="{liked: isFavorite}"
                 (click)="addFavorite()"
-                [title]="isFavorite ? '已收藏' : '添加收藏'">
+                [title]="isFavorite ? '已收藏' : '收藏'">
           <i class="icon icon-star-fill" *ngIf="!favoriteLoading"></i>
           <i class="icon icon-loading" *ngIf="favoriteLoading"></i>
         </button>
