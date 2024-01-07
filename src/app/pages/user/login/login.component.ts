@@ -246,7 +246,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
     this.fetchWallpaper()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.wallpaper = this.transformWallpaper(res)[0] || null;
+        this.wallpaper = this.transformWallpaper(res, this.options['wallpaper_server'])[0] || null;
         this.wallpaper && this.initStyles();
       });
   }

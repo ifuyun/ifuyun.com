@@ -154,7 +154,7 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
     this.fetchWallpaper()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.wallpaper = this.transformWallpaper(res)[0] || null;
+        this.wallpaper = this.transformWallpaper(res, this.options['wallpaper_server'])[0] || null;
         this.wallpaper && this.initStyles();
       });
   }

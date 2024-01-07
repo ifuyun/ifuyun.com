@@ -1,6 +1,5 @@
 import { Observable } from 'rxjs';
 import { PageComponent } from '../../core/page.component';
-import { BING_DOMAIN } from '../wallpaper/wallpaper.constant';
 import { Wallpaper } from '../wallpaper/wallpaper.interface';
 import { WallpaperService } from '../wallpaper/wallpaper.service';
 
@@ -20,10 +19,10 @@ export abstract class UserComponent extends PageComponent {
     });
   }
 
-  protected transformWallpaper(wallpapers: Wallpaper[]): Wallpaper[] {
+  protected transformWallpaper(wallpapers: Wallpaper[], urlPrefix: string): Wallpaper[] {
     return wallpapers.map((wallpaper) => ({
       ...wallpaper,
-      wallpaperUrl: `${BING_DOMAIN}${wallpaper.wallpaperUrl}`
+      wallpaperUrl: `${urlPrefix}${wallpaper.wallpaperUrl}`
     }));
   }
 
