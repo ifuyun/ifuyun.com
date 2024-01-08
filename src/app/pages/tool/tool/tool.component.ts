@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { NzImageService } from 'ng-zorro-antd/image';
-import * as QRCode from 'qrcode';
 import { skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { PATH_RED_PACKET } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
-import { MessageService } from '../../../core/message.service';
 import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { UserAgentService } from '../../../core/user-agent.service';
@@ -33,7 +31,6 @@ export class ToolComponent extends PageComponent implements OnInit {
   private breadcrumbs: BreadcrumbEntity[] = [];
 
   constructor(
-    private route: ActivatedRoute,
     private userAgentService: UserAgentService,
     private destroy$: DestroyService,
     private metaService: MetaService,
@@ -41,7 +38,6 @@ export class ToolComponent extends PageComponent implements OnInit {
     private breadcrumbService: BreadcrumbService,
     private optionService: OptionService,
     private imageService: NzImageService,
-    private message: MessageService,
     private linkService: LinkService
   ) {
     super();
@@ -65,19 +61,12 @@ export class ToolComponent extends PageComponent implements OnInit {
   }
 
   showAlipayRedPacketQrcode() {
-    QRCode.toCanvas(this.options['alipay_red_packet_code'], {
-      width: 320,
-      margin: 0
-    })
-      .then((canvas) => {
-        const previewRef = this.imageService.preview([
-          {
-            src: canvas.toDataURL()
-          }
-        ]);
-        this.commonService.addPaddingToImagePreview(previewRef.previewInstance.imagePreviewWrapper);
-      })
-      .catch((err) => this.message.error(err));
+    const previewRef = this.imageService.preview([
+      {
+        src: PATH_RED_PACKET
+      }
+    ]);
+    this.commonService.addPaddingToImagePreview(previewRef.previewInstance.imagePreviewWrapper);
   }
 
   protected updateActivePage(): void {
