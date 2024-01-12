@@ -292,6 +292,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
         data.user?.userAvatar ||
         format(URL_AVATAR_API, data.user?.userEmailHash || data.authorEmailHash, defaultAvatarType);
       data.commentMetaMap = this.commonService.transformMeta(data.commentMeta || []);
+      data.userLocation = data.ipInfo ? data.ipInfo.ipRegion + ' · ' + data.ipInfo.ipCity : '';
     };
     initialFn(comment);
     comment.children.forEach((item) => initialFn(item));
@@ -301,6 +302,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
     if (this.platform.isBrowser) {
       const likedComments = (localStorage.getItem(STORAGE_KEY_LIKED_COMMENTS) || '').split(',');
       const dislikedComments = (localStorage.getItem(STORAGE_KEY_DISLIKED_COMMENTS) || '').split(',');
+
       comments.forEach((item) => {
         likedComments.includes(item.commentId) && (item.liked = true);
         dislikedComments.includes(item.commentId) && (item.disliked = true);
@@ -324,6 +326,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
         this.comments.forEach((item) => {
           this.initComment(item);
           this.initCommentStatus(item.children);
+
           item.children = this.generateCommentTree(item.children);
           item.children.forEach((child) => (child.parent = cloneDeep(item)));
         });

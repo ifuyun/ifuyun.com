@@ -13,9 +13,7 @@
                 <div class="author">
                   <span class="from">
                     <span class="name">{{comment.user?.userNiceName || comment.authorName}}</span>
-                    <span class="location">from {{
-                      comment.userLocation?.region ? comment.userLocation.region + ' · ' + comment.userLocation.city : 'Mars'
-                      }}</span>
+                    <span class="location">from {{comment.userLocation || 'Mars'}}</span>
                   </span>
                   <span class="time">{{comment.commentCreated | date:'yyyy-MM-dd HH:mm'}}</span>
                 </div>

@@ -23,6 +23,7 @@ export interface CommentModel extends CommentEntity {
   authorIp?: string;
   user?: UserModel;
   ipInfo: IpInfo;
+  userLocation: string;
   commentLikes: number;
   commentDislikes: number;
   commentMeta?: MetaData[];
