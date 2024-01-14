@@ -1,13 +1,11 @@
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
-import { Request, Response } from 'express';
+import { ActivatedRoute, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
-import { combineLatestWith, Observer, skipWhile, takeUntil } from 'rxjs';
+import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM, APP_ID } from '../../../config/common.constant';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
@@ -27,7 +25,7 @@ import { WallpaperService } from '../../wallpaper/wallpaper.service';
 import { LoginResponse } from '../auth.interface';
 import { AuthService } from '../auth.service';
 import { UserComponent } from '../user.component';
-import { THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK, USER_NAME_LENGTH, USER_PASSWORD_LENGTH } from '../user.constant';
+import { THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK, USER_EMAIL_LENGTH, USER_PASSWORD_LENGTH } from '../user.constant';
 
 const margin = 24;
 const offsets = [margin, 0, -margin, 0];
@@ -52,7 +50,7 @@ const duration = 500; // ms
   providers: [DestroyService]
 })
 export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
-  readonly maxUsernameLength = USER_NAME_LENGTH;
+  readonly maxLoginLength = USER_EMAIL_LENGTH;
   readonly maxPasswordLength = USER_PASSWORD_LENGTH;
 
   isMobile = false;
@@ -60,7 +58,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
   loginForm = this.fb.group({
     username: [
       this.cookieService.get('user') || '',
-      [Validators.required, Validators.maxLength(this.maxUsernameLength)]
+      [Validators.required, Validators.maxLength(this.maxLoginLength)]
     ],
     password: [null, [Validators.required, Validators.maxLength(this.maxPasswordLength)]]
   });
@@ -78,8 +76,6 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(DOCUMENT) protected override document: Document,
     protected override wallpaperService: WallpaperService,
-    @Optional() @Inject(RESPONSE) private response: Response,
-    @Optional() @Inject(REQUEST) private request: Request,
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -106,34 +102,33 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
         combineLatestWith(this.route.queryParamMap),
         takeUntil(this.destroy$)
       )
-      .subscribe(<Observer<[OptionEntity, ParamMap]>>{
-        next: ([options, queryParams]) => {
-          this.options = options;
-          this.pageLoaded = true;
-          this.updatePageInfo();
+      .subscribe(([options, queryParams]) => {
+        this.options = options;
+        this.pageLoaded = true;
 
-          const ref = queryParams.get('ref')?.trim() || '';
-          try {
-            this.referer = decodeURIComponent(ref);
-          } catch (e) {
-            this.referer = ref;
-          }
+        this.updatePageInfo();
+        this.initWallpaper();
 
-          this.adminUrl = this.options['admin_url'];
-          if (ref === 'logout') {
-            this.authService.clearAuth();
-          } else {
-            // 登录状态直接跳转来源页或后台首页
-            if (this.authService.isLoggedIn()) {
-              if (this.platform.isBrowser) {
-                const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration());
-                location.href = this.referer || this.adminUrl + urlParam;
-              }
+        const ref = queryParams.get('ref')?.trim() || '';
+        try {
+          this.referer = decodeURIComponent(ref);
+        } catch (e) {
+          this.referer = ref;
+        }
+
+        this.adminUrl = this.options['admin_url'];
+        if (ref === 'logout') {
+          this.authService.clearAuth();
+        } else {
+          // 登录状态直接跳转来源页或后台首页
+          if (this.authService.isLoggedIn()) {
+            if (this.platform.isBrowser) {
+              const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration());
+              location.href = this.referer || this.adminUrl + urlParam;
             }
           }
         }
       });
-    this.initWallpaper();
   }
 
   ngOnDestroy() {

@@ -1,13 +1,12 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
-import { combineLatestWith, Observer, skipWhile, takeUntil } from 'rxjs';
+import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { APP_ID } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
-import { MessageService } from '../../../core/message.service';
 import { HTMLMetaData } from '../../../core/meta.interface';
 import { MetaService } from '../../../core/meta.service';
 import { UserAgentService } from '../../../core/user-agent.service';
@@ -36,7 +35,7 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
     {
       email: ['', [Validators.required, Validators.email, Validators.maxLength(this.maxEmailLength)]],
       password: [null, [Validators.required, Validators.maxLength(this.maxPasswordLength)]],
-      confirmPassword: [null, [Validators.required, Validators.maxLength(this.maxPasswordLength)]]
+      confirmPassword: [null, []]
     },
     {
       validators: [
@@ -44,6 +43,7 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
           const password = control.get('password')?.value;
           const confirmPassword = control.get('confirmPassword')?.value;
           const result: ValidationErrors = { confirmPassword: {} };
+
           if (!confirmPassword) {
             result['confirmPassword'].required = true;
             return result;
@@ -82,8 +82,7 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
     private metaService: MetaService,
     private commonService: CommonService,
     private optionService: OptionService,
-    private authService: AuthService,
-    private message: MessageService
+    private authService: AuthService
   ) {
     super(document, wallpaperService);
     this.isMobile = this.userAgentService.isMobile();
@@ -98,13 +97,12 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
         combineLatestWith(this.route.queryParamMap),
         takeUntil(this.destroy$)
       )
-      .subscribe(<Observer<[OptionEntity, ParamMap]>>{
-        next: ([options]) => {
-          this.options = options;
-          this.updatePageInfo();
-        }
+      .subscribe(([options]) => {
+        this.options = options;
+
+        this.updatePageInfo();
+        this.initWallpaper();
       });
-    this.initWallpaper();
   }
 
   ngOnDestroy() {

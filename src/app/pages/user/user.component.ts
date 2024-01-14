@@ -15,7 +15,8 @@ export abstract class UserComponent extends PageComponent {
 
   protected fetchWallpaper(): Observable<Wallpaper[]> {
     return this.wallpaperService.getRandomWallpapers({
-      size: 1
+      size: 1,
+      simple: true
     });
   }
 

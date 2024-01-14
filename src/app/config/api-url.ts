@@ -34,7 +34,7 @@ export enum ApiUrl {
   USER_VERIFY = '/users/verify',
   USER_RESEND_CODE = '/users/resend',
   USER_THIRD_LOGIN = '/users/third-login',
-  USER_INFO = '/users/login-user',
+  USER_LOGIN_INFO = '/users/login-user',
   USER_REGISTER_INFO = '/users/register-user',
   // favorite
   FAVORITE = '/favorites/favorite',

@@ -1,9 +1,9 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
-import { combineLatestWith, Observer, skipWhile, takeUntil } from 'rxjs';
+import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -37,7 +37,6 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
   confirmLoading = false;
   user?: UserModel;
   countdown = 0; // 60s
-  isLoggedIn = false;
 
   protected pageIndex = 'register';
 
@@ -69,28 +68,26 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
     this.optionService.options$
       .pipe(
         skipWhile((options) => isEmpty(options)),
-        combineLatestWith(this.route.queryParamMap, this.userService.loginUser$),
+        combineLatestWith(this.route.queryParamMap),
         takeUntil(this.destroy$)
       )
-      .subscribe(<Observer<[OptionEntity, ParamMap, UserModel]>>{
-        next: ([options, queryParams, loginUser]) => {
-          this.options = options;
-          this.adminUrl = this.options['admin_url'];
-          this.isLoggedIn = !!loginUser.userId;
-          this.updatePageInfo();
+      .subscribe(([options, queryParams]) => {
+        this.options = options;
+        this.adminUrl = this.options['admin_url'];
 
-          const ref = queryParams.get('ref')?.trim() || '';
-          try {
-            this.referer = decodeURIComponent(ref);
-          } catch (e) {
-            this.referer = ref;
-          }
-          this.userId = queryParams.get('userId') || '';
+        this.updatePageInfo();
+        this.initWallpaper();
 
-          this.fetchUser();
+        const ref = queryParams.get('ref')?.trim() || '';
+        try {
+          this.referer = decodeURIComponent(ref);
+        } catch (e) {
+          this.referer = ref;
         }
+        this.userId = queryParams.get('userId') || '';
+
+        this.fetchUser();
       });
-    this.initWallpaper();
   }
 
   ngOnDestroy() {
@@ -160,11 +157,7 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
         this.user = res;
         if (res.userStatus === UserStatus.NORMAL) {
           this.message.info('账号已验证，无需重复验证');
-          if (this.isLoggedIn) {
-            this.router.navigate(['/']);
-          } else {
-            this.router.navigate(['/user/login']);
-          }
+          this.router.navigate(['/user/login']);
         }
       });
   }

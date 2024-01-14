@@ -20,7 +20,7 @@ export class UserService {
   constructor(private apiService: ApiService) {}
 
   getLoginUser(): Observable<UserModel> {
-    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.USER_INFO), {
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.USER_LOGIN_INFO), {
       appId: APP_ID
     }).pipe(
       map((res) => res?.data || {}),
