@@ -20,12 +20,14 @@ export class UserService {
   constructor(private apiService: ApiService) {}
 
   getLoginUser(): Observable<UserModel> {
-    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.USER_LOGIN_INFO), {
-      appId: APP_ID
-    }).pipe(
-      map((res) => res?.data || {}),
-      tap((user) => this.loginUser.next(user))
-    );
+    return this.apiService
+      .httpGet(this.apiService.getApiUrl(ApiUrl.USER_LOGIN_INFO), {
+        appId: APP_ID
+      })
+      .pipe(
+        map((res) => res?.data || {}),
+        tap((user) => this.loginUser.next(user))
+      );
   }
 
   getRegisterUser(userId: string): Observable<UserModel> {

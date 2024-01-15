@@ -2,7 +2,7 @@
 <div class="container" [ngClass]="{'container-desktop': !isMobile, 'container-mobile': isMobile}">
   <form class="encrypt-form">
     <div>
-      <textarea class="input input-textarea input-bg" rows="12" name="hashKey"
+      <textarea class="input input-bg" rows="12" name="hashKey"
                 [(ngModel)]="hashKey"
                 (ngModelChange)="onContentChange($event)"
                 [maxLength]="maxHashKeyLength"
@@ -26,10 +26,10 @@
               (cbOnSuccess)="onCopied()">复制结果</button>
       <button type="button" class="button button-submit" [class.disabled]="!hashKey"
               [disabled]="!hashKey"
-              (click)="reset()">清空内容</button>
+              (click)="reset()">清空</button>
     </div>
     <div>
-      <textarea class="input input-textarea input-bg" rows="4" name="hashResult" readonly="readonly"
+      <textarea class="input input-bg" rows="4" name="hashResult" readonly="readonly"
                 [(ngModel)]="hashResult" placeholder="MurmurHash Result"></textarea>
     </div>
     <h2 class="encrypt-header">MurmurHash 说明</h2>

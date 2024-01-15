@@ -202,7 +202,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
             wallpaperCopyright: item.wallpaperCopyright || item.wallpaperCopyrightEn,
             isCn: !!item.wallpaperCopyright,
             isEn: !!item.wallpaperCopyrightEn
-          }
+          };
         });
       });
   }

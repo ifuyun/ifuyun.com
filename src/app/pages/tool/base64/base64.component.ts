@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
-import * as murmurhash from 'murmurhash';
 import { BehaviorSubject, debounceTime, Observable, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
+import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { MessageService } from '../../../core/message.service';
@@ -12,23 +12,22 @@ import { PageComponent } from '../../../core/page.component';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { OptionService } from '../../../services/option.service';
-import { MURMURHASH_PAGE_DESCRIPTION, MURMURHASH_PAGE_KEYWORDS } from '../tool.constant';
+import { BASE64_PAGE_DESCRIPTION, BASE64_PAGE_KEYWORDS } from '../tool.constant';
+import { Base64Service } from './base64.service';
 
 @Component({
-  selector: 'app-murmurhash',
-  templateUrl: './murmurhash.component.html',
+  selector: 'app-base64',
+  templateUrl: './base64.component.html',
   styleUrls: ['../md5/md5.component.less'],
   providers: [DestroyService]
 })
-export class MurmurhashComponent extends PageComponent implements OnInit {
-  readonly maxHashKeyLength = 2000;
-  readonly maxHashSeedLength = 10;
+export class Base64Component extends PageComponent implements OnInit {
+  readonly maxContentLength = 2000;
 
   isMobile = false;
   options: OptionEntity = {};
-  hashKey = '';
-  hashSeed = '';
-  hashResult = '';
+  encryptContent = '';
+  encryptResult = '';
 
   protected pageIndex = 'tool';
 
@@ -42,7 +41,8 @@ export class MurmurhashComponent extends PageComponent implements OnInit {
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
     private optionService: OptionService,
-    private message: MessageService
+    private message: MessageService,
+    private base64Service: Base64Service
   ) {
     super();
     this.isMobile = this.userAgentService.isMobile();
@@ -68,31 +68,29 @@ export class MurmurhashComponent extends PageComponent implements OnInit {
     this.contentChange$.next(content);
   }
 
-  hash() {
-    if (!this.hashKey) {
+  transform(action: 'encode' | 'decode') {
+    if (!this.encryptContent) {
       return;
     }
-    if (this.hashKey.length > this.maxHashKeyLength) {
-      this.message.error(`MurmurHash Key 最大长度为 ${this.maxHashKeyLength} 字符，当前为 ${this.hashKey.length} 字符`);
+    if (this.encryptContent.length > this.maxContentLength) {
+      this.message.error(
+        `待编解码内容最大长度为 ${this.maxContentLength} 字符，当前为 ${this.encryptContent.length} 字符`
+      );
       return;
     }
-    const hashSeed = this.hashSeed.trim();
-    if (hashSeed && !/^[1-9]\d*$/i.test(hashSeed)) {
-      this.message.error('MurmurHash Seed 应为正整数');
-      return;
-    }
-    if (hashSeed.length > this.maxHashSeedLength) {
-      this.message.error(`MurmurHash Seed 最大长度为 ${this.maxHashSeedLength} 字符，当前为 ${hashSeed.length} 字符`);
-      return;
-    }
-    const result = murmurhash(this.hashKey, hashSeed ? Number(hashSeed) : undefined);
-    this.hashResult = result.toString();
+    this.base64Service
+      .transform(this.encryptContent, action)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res.code === ResponseCode.SUCCESS) {
+          this.encryptResult = res.data || '';
+        }
+      });
   }
 
   reset() {
-    this.hashKey = '';
-    this.hashSeed = '';
-    this.hashResult = '';
+    this.encryptContent = '';
+    this.encryptResult = '';
   }
 
   onCopied() {
@@ -115,16 +113,16 @@ export class MurmurhashComponent extends PageComponent implements OnInit {
   private initInput() {
     const contentInput$: Observable<string> = this.contentChange$.asObservable();
     contentInput$.pipe(debounceTime(500), takeUntil(this.destroy$)).subscribe(() => {
-      this.hashResult = '';
+      this.encryptResult = '';
     });
   }
 
   private updatePageInfo() {
     const siteName: string = this.options['site_name'] || '';
-    const titles: string[] = ['MurmurHash', '百宝箱', siteName];
-    const description = `${siteName}${MURMURHASH_PAGE_DESCRIPTION}`;
+    const titles: string[] = ['Base64编解码', '百宝箱', siteName];
+    const description = `${siteName}${BASE64_PAGE_DESCRIPTION}`;
     const keywords: string[] = (this.options['site_keywords'] || '').split(',');
-    keywords.unshift(...MURMURHASH_PAGE_KEYWORDS);
+    keywords.unshift(...BASE64_PAGE_KEYWORDS);
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
@@ -143,9 +141,9 @@ export class MurmurhashComponent extends PageComponent implements OnInit {
         isHeader: false
       },
       {
-        label: 'MurmurHash',
-        tooltip: 'MurmurHash',
-        url: '/tool/murmurhash',
+        label: 'Base64编解码',
+        tooltip: 'Base64编解码',
+        url: '/tool/base64',
         isHeader: true
       }
     ];

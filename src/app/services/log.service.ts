@@ -50,10 +50,14 @@ export class LogService {
   }
 
   logAction(log: Omit<ActionLog, 'waId'>): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.ACTION_LOG_LIST), {
-      ...log,
-      waId: this.cookieService.get(COOKIE_KEY_UV_ID),
-      accessSite: 'web'
-    }, true);
+    return this.apiService.httpPost(
+      this.apiService.getApiUrl(ApiUrl.ACTION_LOG_LIST),
+      {
+        ...log,
+        waId: this.cookieService.get(COOKIE_KEY_UV_ID),
+        accessSite: 'web'
+      },
+      true
+    );
   }
 }

@@ -10,6 +10,7 @@ import { MurmurhashComponent } from './murmurhash/murmurhash.component';
 import { ShoppingComponent } from './shopping/shopping.component';
 import { ToolRoutingModule } from './tool-routing.module';
 import { ToolComponent } from './tool/tool.component';
+import { Base64Component } from './base64/base64.component';
 
 @NgModule({
   imports: [
@@ -25,7 +26,7 @@ import { ToolComponent } from './tool/tool.component';
     EmptyComponent,
     MakeMoneyComponent
   ],
-  declarations: [ShoppingComponent, Md5Component, ToolComponent, MurmurhashComponent],
-  exports: [ShoppingComponent, Md5Component, ToolComponent, MurmurhashComponent]
+  declarations: [ShoppingComponent, Md5Component, ToolComponent, MurmurhashComponent, Base64Component],
+  exports: [ShoppingComponent, Md5Component, ToolComponent, MurmurhashComponent, Base64Component]
 })
 export class ToolModule {}

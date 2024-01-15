@@ -51,8 +51,10 @@ export enum ApiUrl {
   WALLPAPER_ARCHIVES = '/wallpapers/archives',
   WALLPAPER_DOWNLOAD = '/wallpapers/download',
   // jd
-  JD_SELLING_PROMOTION = '/tool/jd/selling-promotion',
-  JD_PROMOTION_COMMON = '/tool/jd/promotion-common',
-  JD_GOODS_MATERIAL = '/tool/jd/goods-material',
-  JD_GOODS_JINGFEN = '/tool/jd/goods-jingfen'
+  JD_SELLING_PROMOTION = '/union/jd/selling-promotion',
+  JD_PROMOTION_COMMON = '/union/jd/promotion-common',
+  JD_GOODS_MATERIAL = '/union/jd/goods-material',
+  JD_GOODS_JINGFEN = '/union/jd/goods-jingfen',
+  // tool
+  TOOL_BASE64 = '/tool/base64'
 }

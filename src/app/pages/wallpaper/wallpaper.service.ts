@@ -5,7 +5,6 @@ import { ApiUrl } from '../../config/api-url';
 import { APP_ID, STORAGE_KEY_LIKED_WALLPAPER } from '../../config/common.constant';
 import { ApiService } from '../../core/api.service';
 import { ArchiveData, ArchiveDataMap, ArchiveList, ResultList } from '../../core/common.interface';
-import { HttpResponseEntity } from '../../core/http-response.interface';
 import { HotWallpaper, Wallpaper, WallpaperLang, WallpaperQueryParam } from './wallpaper.interface';
 
 @Injectable({
@@ -20,11 +19,7 @@ export class WallpaperService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  getRandomWallpapers(param: {
-    size: number;
-    resolution?: string;
-    simple?: boolean
-  }): Observable<Wallpaper[]> {
+  getRandomWallpapers(param: { size: number; resolution?: string; simple?: boolean }): Observable<Wallpaper[]> {
     const { size, resolution, simple } = param;
     const payload: Record<string, any> = {
       size,

@@ -15,6 +15,13 @@ export const TOOL_LINKS = Object.freeze([
     priority: 0.7
   },
   {
+    label: 'Base64 编解码',
+    url: TOOL_URL_ENTRY + '/base64',
+    title: 'Base64 编解码',
+    changefreq: 'monthly',
+    priority: 0.7
+  },
+  {
     label: 'MurmurHash',
     url: TOOL_URL_ENTRY + '/murmurhash',
     title: 'MurmurHash',
@@ -45,4 +52,22 @@ export const MURMURHASH_PAGE_KEYWORDS = Object.freeze([
   'Murmur哈希工具',
   'MurmurHash在线哈希工具',
   'MurmurHash算法'
+]);
+
+export const BASE64_PAGE_DESCRIPTION =
+  'Base64 在线编解码工具，在线实现 Base64 编解码算法，轻松校验、复制 Base64 编解码结果。';
+export const BASE64_PAGE_KEYWORDS = Object.freeze([
+  'Base64',
+  'Base64编码',
+  'Base64解码',
+  'Base64加密',
+  'Base64解密',
+  'Base64编码算法',
+  'Base64解码算法',
+  'Base64加密算法',
+  'Base64解密算法',
+  'Base64加密工具',
+  'Base64解密工具',
+  'Base64在线加密',
+  'Base64在线解密'
 ]);

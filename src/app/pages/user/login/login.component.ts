@@ -56,10 +56,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
   isMobile = false;
   wallpaper: Wallpaper | null = null;
   loginForm = this.fb.group({
-    username: [
-      this.cookieService.get('user') || '',
-      [Validators.required, Validators.maxLength(this.maxLoginLength)]
-    ],
+    username: [this.cookieService.get('user') || '', [Validators.required, Validators.maxLength(this.maxLoginLength)]],
     password: [null, [Validators.required, Validators.maxLength(this.maxPasswordLength)]]
   });
   passwordVisible = false;
