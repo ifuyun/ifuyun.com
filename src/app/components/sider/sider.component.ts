@@ -231,8 +231,8 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private updatePageIndex() {
-    this.isHomePage = this.pageIndex === 'index';
     this.isPostPage = ['post', 'postArchive'].includes(this.pageIndex);
     this.isWallpaperPage = ['wallpaper', 'wallpaperArchive'].includes(this.pageIndex);
+    this.isHomePage = !this.isPostPage && !this.isWallpaperPage;
   }
 }
