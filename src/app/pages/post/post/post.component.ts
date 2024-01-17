@@ -84,7 +84,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   voteLoading = false;
   favoriteLoading = false;
   showPayMask = false;
-  promptCopyMap: Record<string, boolean> = {};
 
   private readonly copyHTML = '<i class="icon icon-copy"></i>Copy code';
   private readonly copiedHTML = '<i class="icon icon-check-lg"></i>Copied!';
@@ -129,14 +128,12 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.optionService.options$
       .pipe(
         skipWhile((options) => isEmpty(options)),
-        combineLatestWith(this.route.params, this.urlService.urlInfo$, this.userService.loginUser$),
+        combineLatestWith(this.route.params, this.urlService.urlInfo$),
         takeUntil(this.destroy$)
       )
-      .subscribe(([options, params, url, user]) => {
+      .subscribe(([options, params, url]) => {
         this.options = options;
         this.referer = url.previous;
-        this.user = user;
-        this.isLoggedIn = !!this.user.userId;
 
         const postName = params['postName']?.trim();
         if (!postName) {
@@ -152,6 +149,11 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         }
         this.commentService.updateObjectId(this.postId);
       });
+    this.userService.loginUser$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+      this.user = user;
+      this.isLoggedIn = !!user.userId;
+      this.initPayMaskFlag();
+    });
   }
 
   ngAfterViewInit() {
@@ -373,9 +375,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.postCategories = post.categories;
     this.isFavorite = post.isFavorite;
     this.postVoted = post.voted;
-    this.showPayMask =
-      (this.post.postPayFlag && !this.user.isAdmin && this.post.postOwner !== this.user.userId) ||
-      (!!post.meta['should_login'] && !this.isLoggedIn);
+    this.initPayMaskFlag();
 
     if (this.postType !== PostType.PAGE) {
       const urlType = 'post';
@@ -403,6 +403,13 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.updateActivePage();
     this.initMeta();
     this.parseHtml();
+  }
+
+  private initPayMaskFlag() {
+    if (this.post && this.user) {
+      this.showPayMask = (this.post.postPayFlag && !this.user.isAdmin && this.post.postOwner !== this.user.userId) ||
+        (!!this.postMeta['should_login'] && !this.isLoggedIn);
+    }
   }
 
   private parseHtml() {

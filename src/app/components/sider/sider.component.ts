@@ -96,17 +96,19 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe((page) => {
-        this.pageIndex = page;
-        this.updatePageIndex();
-        if (this.isHomePage || this.isPostPage) {
-          this.fetchHotPosts();
-          this.fetchRandomPosts();
-          this.fetchPostArchives();
-        }
-        if (this.isHomePage || this.isWallpaperPage) {
-          this.fetchHotWallpapers();
-          this.fetchRandomWallpapers();
-          this.fetchWallpaperArchives();
+        if (this.pageIndex !== page) {
+          this.pageIndex = page;
+          this.updatePageIndex();
+          if (this.isHomePage || this.isPostPage) {
+            this.fetchHotPosts();
+            this.fetchRandomPosts();
+            this.fetchPostArchives();
+          }
+          if (this.isHomePage || this.isWallpaperPage) {
+            this.fetchHotWallpapers();
+            this.fetchRandomWallpapers();
+            this.fetchWallpaperArchives();
+          }
         }
       });
   }
