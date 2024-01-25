@@ -12,6 +12,6 @@ export class VoteService {
   constructor(private apiService: ApiService) {}
 
   saveVote(voteDto: VoteEntity): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.VOTE), voteDto);
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.VOTE), voteDto, false);
   }
 }

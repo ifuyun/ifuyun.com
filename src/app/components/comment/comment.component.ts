@@ -176,6 +176,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
             this.message.success(msg);
             const cachedReplyMode = this.replyMode;
             this.replyMode = false;
+
             this.resetCommentForm(form);
             this.resetReplyVisible();
             this.refreshCaptcha();

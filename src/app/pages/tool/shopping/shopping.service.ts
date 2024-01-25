@@ -35,7 +35,7 @@ export class ShoppingService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  getGoodsMaterial(param: JdUnionParamGoodsMaterial, disableMessage = false): Observable<JdUnionResponseGoodsMaterial> {
+  getGoodsMaterial(param: JdUnionParamGoodsMaterial, disableMessage = true): Observable<JdUnionResponseGoodsMaterial> {
     return this.apiService
       .httpGet(
         this.apiService.getApiUrl(ApiUrl.JD_GOODS_MATERIAL),
@@ -48,7 +48,7 @@ export class ShoppingService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  getGoodsJingfen(param: JdUnionParamGoodsJingfen, disableMessage = false): Observable<JdUnionResponseGoodsJingfen> {
+  getGoodsJingfen(param: JdUnionParamGoodsJingfen, disableMessage = true): Observable<JdUnionResponseGoodsJingfen> {
     return this.apiService
       .httpGet(
         this.apiService.getApiUrl(ApiUrl.JD_GOODS_JINGFEN),

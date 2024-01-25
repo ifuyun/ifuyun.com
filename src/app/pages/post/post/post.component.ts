@@ -407,7 +407,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   private initPayMaskFlag() {
     if (this.post && this.user) {
-      this.showPayMask = (this.post.postPayFlag && !this.user.isAdmin && this.post.postOwner !== this.user.userId) ||
+      this.showPayMask =
+        (this.post.postPayFlag && !this.user.isAdmin && this.post.postOwner !== this.user.userId) ||
         (!!this.postMeta['should_login'] && !this.isLoggedIn);
     }
   }

@@ -38,7 +38,7 @@ export class ApiService {
   httpGet<T extends HttpResponseEntity>(
     url: string,
     param: Record<string, any> = {},
-    disableMessage = false
+    disableMessage = true
   ): Observable<T> {
     return this.http
       .get<T>(url, {
@@ -53,7 +53,7 @@ export class ApiService {
   httpGetData<T extends HttpResponseEntity>(
     url: string,
     param: Record<string, any> = {},
-    disableMessage = false
+    disableMessage = true
   ): Observable<any> {
     return this.http
       .get<T>(url, {
@@ -81,7 +81,7 @@ export class ApiService {
   httpPost<T extends HttpResponseEntity>(
     url: string,
     body: Record<string, any> | FormData = {},
-    disableMessage = false
+    disableMessage = true
   ): Observable<T> {
     return this.http
       .post<T>(url, body, {
@@ -90,7 +90,7 @@ export class ApiService {
       .pipe(catchError(this.handleError<T>(disableMessage)));
   }
 
-  private handleError<T>(disableMessage = false) {
+  private handleError<T>(disableMessage = true) {
     return (error: HttpErrorResponse): Observable<T> => {
       if (error.status !== HttpStatusCode.NotFound) {
         if (!disableMessage) {

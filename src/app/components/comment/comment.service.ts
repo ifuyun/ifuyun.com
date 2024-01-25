@@ -27,21 +27,29 @@ export class CommentService {
 
   getCommentsByPostId(postId: string): Observable<ResultList<Comment>> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.COMMENT_LIST), {
-        objectId: postId,
-        objectType: CommentObjectType.POST,
-        appId: APP_ID
-      })
+      .httpGet(
+        this.apiService.getApiUrl(ApiUrl.COMMENT_LIST),
+        {
+          objectId: postId,
+          objectType: CommentObjectType.POST,
+          appId: APP_ID
+        },
+        false
+      )
       .pipe(map((res) => res?.data || {}));
   }
 
   getCommentsByWallpaperId(wallpaperId: string): Observable<ResultList<Comment>> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.COMMENT_LIST), {
-        objectId: wallpaperId,
-        objectType: CommentObjectType.WALLPAPER,
-        appId: APP_ID
-      })
+      .httpGet(
+        this.apiService.getApiUrl(ApiUrl.COMMENT_LIST),
+        {
+          objectId: wallpaperId,
+          objectType: CommentObjectType.WALLPAPER,
+          appId: APP_ID
+        },
+        false
+      )
       .pipe(map((res) => res?.data || {}));
   }
 
@@ -62,6 +70,7 @@ export class CommentService {
         })
       );
     }
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.COMMENT), comment);
+
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.COMMENT), comment, false);
   }
 }
