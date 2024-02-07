@@ -47,7 +47,6 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
 
   constructor(
     @Inject(DOCUMENT) protected override document: Document,
-    protected override wallpaperService: WallpaperService,
     private destroy$: DestroyService,
     private fb: FormBuilder,
     private router: Router,
@@ -58,9 +57,10 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
     private message: MessageService,
     private optionService: OptionService,
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
+    private wallpaperService: WallpaperService
   ) {
-    super(document, wallpaperService);
+    super(document);
     this.isMobile = this.userAgentService.isMobile();
   }
 
@@ -172,10 +172,14 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
   }
 
   private initWallpaper() {
-    this.fetchWallpaper()
+    this.wallpaperService
+      .getRandomWallpapers({
+        size: 1,
+        simple: true
+      })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.wallpaper = this.transformWallpaper(res, this.options['wallpaper_server'])[0] || null;
+        this.wallpaper = res[0] || null;
         this.wallpaper && this.initStyles();
       });
   }

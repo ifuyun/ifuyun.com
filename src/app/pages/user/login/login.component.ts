@@ -72,7 +72,6 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(DOCUMENT) protected override document: Document,
-    protected override wallpaperService: WallpaperService,
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -84,9 +83,10 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
     private optionService: OptionService,
     private cookieService: CookieService,
     private authService: AuthService,
-    private message: MessageService
+    private message: MessageService,
+    private wallpaperService: WallpaperService
   ) {
-    super(document, wallpaperService);
+    super(document);
     this.isMobile = this.userAgentService.isMobile();
   }
 
@@ -235,10 +235,14 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
   }
 
   private initWallpaper() {
-    this.fetchWallpaper()
+    this.wallpaperService
+      .getRandomWallpapers({
+        size: 1,
+        simple: true
+      })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.wallpaper = this.transformWallpaper(res, this.options['wallpaper_server'])[0] || null;
+        this.wallpaper = res[0] || null;
         this.wallpaper && this.initStyles();
       });
   }

@@ -73,7 +73,6 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
 
   constructor(
     @Inject(DOCUMENT) protected override document: Document,
-    protected override wallpaperService: WallpaperService,
     private destroy$: DestroyService,
     private router: Router,
     private route: ActivatedRoute,
@@ -82,9 +81,10 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
     private metaService: MetaService,
     private commonService: CommonService,
     private optionService: OptionService,
-    private authService: AuthService
+    private authService: AuthService,
+    private wallpaperService: WallpaperService
   ) {
-    super(document, wallpaperService);
+    super(document);
     this.isMobile = this.userAgentService.isMobile();
   }
 
@@ -149,10 +149,14 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
   }
 
   private initWallpaper() {
-    this.fetchWallpaper()
+    this.wallpaperService
+      .getRandomWallpapers({
+        size: 1,
+        simple: true
+      })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.wallpaper = this.transformWallpaper(res, this.options['wallpaper_server'])[0] || null;
+        this.wallpaper = res[0] || null;
         this.wallpaper && this.initStyles();
       });
   }

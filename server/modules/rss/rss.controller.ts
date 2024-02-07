@@ -29,11 +29,11 @@ export class RssController {
     const posts: Post[] = result.postList.list || [];
     const feed = new RSS({
       title: options['site_name'],
-      description: options['site_slogan'],
+      description: options['site_description'],
       generator: options['site_domain'],
       feed_url: `${options['site_url']}/rss.xml`,
       site_url: options['site_url'],
-      image_url: `${options['site_url']}/${PATH_LOGO}`,
+      image_url: `${options['site_url']}${PATH_LOGO}`,
       managingEditor: options['site_author'],
       webMaster: options['site_author'],
       copyright: `2014-${new Date().getFullYear()} ${options['site_domain']}`,

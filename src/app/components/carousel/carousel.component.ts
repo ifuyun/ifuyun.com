@@ -9,7 +9,6 @@ import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { Action, ActionObjectType } from '../../interfaces/log.enum';
 import { CarouselOptions, CarouselVo, OptionEntity } from '../../interfaces/option.interface';
-import { BING_DOMAIN } from '../../pages/wallpaper/wallpaper.constant';
 import { WallpaperLang } from '../../pages/wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
 import { LogService } from '../../services/log.service';
@@ -32,7 +31,6 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   timer!: number;
 
   private carouselOptions!: CarouselOptions;
-  private staticResourceHost = '';
 
   constructor(
     private destroy$: DestroyService,
@@ -53,7 +51,6 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       )
       .subscribe((options) => {
         this.options = options;
-        this.staticResourceHost = options['static_resource_host'];
         try {
           this.carouselOptions = JSON.parse(options['carousel_config']);
         } catch (e) {
@@ -117,7 +114,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((res) => {
         this.carousels = res;
         this.carousels.forEach((item) => {
-          item.fullUrl = /^https?:\/\//i.test(item.url) ? item.url : this.staticResourceHost + item.url;
+          item.fullUrl = item.url;
         });
       });
   }
@@ -131,13 +128,12 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.carousels = res.map((wallpaper, index) => {
-          const url = `${BING_DOMAIN}${wallpaper.wallpaperUrl}`;
           return {
             id: wallpaper.wallpaperId,
             title: wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn,
             caption: wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn,
-            url,
-            fullUrl: url,
+            url: wallpaper.wallpaperUrl,
+            fullUrl: wallpaper.wallpaperUrl,
             link: this.getWallpaperLink(wallpaper.wallpaperId, !wallpaper.wallpaperTitle),
             target: LinkTarget.SELF,
             order: index + 1
@@ -159,13 +155,12 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.carousels = (res.list || []).map((wallpaper, index) => {
-          const url = `${BING_DOMAIN}${wallpaper.wallpaperUrl}`;
           return {
             id: wallpaper.wallpaperId,
             title: wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn,
             caption: wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn,
-            url,
-            fullUrl: url,
+            url: wallpaper.wallpaperUrl,
+            fullUrl: wallpaper.wallpaperUrl,
             link: this.getWallpaperLink(wallpaper.wallpaperId, !wallpaper.wallpaperTitle),
             target: LinkTarget.SELF,
             order: index + 1

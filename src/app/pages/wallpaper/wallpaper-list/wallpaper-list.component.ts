@@ -206,7 +206,6 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
         this.updatePageInfo();
         this.updateBreadcrumb();
 
-        const urlPrefix = this.options['wallpaper_server'];
         this.wallpapers = (res.list || []).map((item) => {
           let wallpaperLocation: string;
           let copyright: string;
@@ -225,8 +224,6 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
             wallpaperCopyright: copyright,
             wallpaperLocation,
             wallpaperStory: story,
-            wallpaperUrl: urlPrefix + item.wallpaperUrl,
-            wallpaperThumbUrl: urlPrefix + item.wallpaperThumbUrl,
             isCn: !!item.wallpaperCopyright,
             isEn: !!item.wallpaperCopyrightEn
           };

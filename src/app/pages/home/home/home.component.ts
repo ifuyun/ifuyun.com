@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap, Params } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
-import { combineLatestWith, Observer, skipWhile, takeUntil, tap } from 'rxjs';
+import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { APP_ID } from '../../../config/common.constant';
@@ -45,7 +45,6 @@ export class HomeComponent extends PageComponent implements OnInit {
   pageUrlParam: Params = {};
 
   private pageSize = 10;
-  private wallpaperURLPrefix = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -77,24 +76,21 @@ export class HomeComponent extends PageComponent implements OnInit {
           this.keyword = queryParams.get('keyword')?.trim() || '';
         })
       )
-      .subscribe(<Observer<[OptionEntity, ParamMap]>>{
-        next: ([options]) => {
-          this.options = options;
-          this.wallpaperURLPrefix = this.options['wallpaper_server'];
-          this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
-          if (this.keyword) {
-            this.pageIndex = 'search';
-            this.bizType = 'search';
-            this.updateBreadcrumb();
-            this.search();
-          } else {
-            this.bizType = 'index';
-            this.fetchPosts();
-            this.fetchWallpapers();
-          }
-          this.updateActivePage();
-          this.updatePageInfo();
+      .subscribe(([options]) => {
+        this.options = options;
+        this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
+        if (this.keyword) {
+          this.pageIndex = 'search';
+          this.bizType = 'search';
+          this.updateBreadcrumb();
+          this.search();
+        } else {
+          this.bizType = 'index';
+          this.fetchPosts();
+          this.fetchWallpapers();
         }
+        this.updateActivePage();
+        this.updatePageInfo();
       });
   }
 
@@ -181,9 +177,7 @@ export class HomeComponent extends PageComponent implements OnInit {
         ...wallpaper,
         wallpaperCopyright: wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn,
         wallpaperLocation,
-        wallpaperStory: wallpaper.wallpaperStory || wallpaper.wallpaperStoryEn,
-        wallpaperUrl: this.wallpaperURLPrefix + wallpaper.wallpaperUrl,
-        wallpaperThumbUrl: this.wallpaperURLPrefix + wallpaper.wallpaperThumbUrl
+        wallpaperStory: wallpaper.wallpaperStory || wallpaper.wallpaperStoryEn
       };
     };
     if (!Array.isArray(wallpapers)) {

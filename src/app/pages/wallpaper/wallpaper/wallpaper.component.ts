@@ -1,11 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { saveAs } from 'file-saver';
 import { isEmpty, uniq } from 'lodash';
 import { NzImageService } from 'ng-zorro-antd/image';
 import * as QRCode from 'qrcode';
-import { combineLatestWith, Observer, skipWhile, takeUntil, tap } from 'rxjs';
+import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
@@ -67,7 +67,6 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
 
   private breadcrumbs: BreadcrumbEntity[] = [];
   private commentUser: Guest | null = null;
-  private urlPrefix = '';
   private unknownLocation = '';
 
   constructor(
@@ -108,13 +107,10 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
           this.commentService.updateObjectId(this.wallpaperId);
         })
       )
-      .subscribe(<Observer<[OptionEntity, ParamMap, ParamMap]>>{
-        next: ([options]) => {
-          this.options = options;
-          this.urlPrefix = this.options['wallpaper_server'];
-          this.fetchWallpaper();
-          this.fetchPrevAndNext();
-        }
+      .subscribe(([options]) => {
+        this.options = options;
+        this.fetchWallpaper();
+        this.fetchPrevAndNext();
       });
     this.userService.loginUser$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.isLoggedIn = !!user.userId;
@@ -294,7 +290,6 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         if (wallpaper && wallpaper.wallpaperId) {
           this.wallpaper = {
             ...wallpaper,
-            wallpaperUrl: this.urlPrefix + wallpaper.wallpaperUrl,
             wallpaperCopyrightAuthor: wallpaper.wallpaperCopyrightAuthor.replace(/^©\s*/i, '')
           };
           let wallpaperLocation = '';
@@ -338,8 +333,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
             wallpaperCopyright:
               this.lang === WallpaperLang.CN
                 ? res.prevWallpaper.wallpaperCopyright
-                : res.prevWallpaper.wallpaperCopyrightEn,
-            wallpaperThumbUrl: this.urlPrefix + res.prevWallpaper.wallpaperThumbUrl
+                : res.prevWallpaper.wallpaperCopyrightEn
           };
         }
         if (res.nextWallpaper) {
@@ -348,8 +342,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
             wallpaperCopyright:
               this.lang === WallpaperLang.CN
                 ? res.nextWallpaper.wallpaperCopyright
-                : res.nextWallpaper.wallpaperCopyrightEn,
-            wallpaperThumbUrl: this.urlPrefix + res.nextWallpaper.wallpaperThumbUrl
+                : res.nextWallpaper.wallpaperCopyrightEn
           };
         }
       });

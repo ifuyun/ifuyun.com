@@ -6,11 +6,11 @@ import { cloneDeep, isEmpty, uniq } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
 import { ApiUrl } from '../../config/api-url';
 import {
-  URL_AVATAR_API,
+  APP_ID,
   PATH_FAVICON,
   STORAGE_KEY_DISLIKED_COMMENTS,
   STORAGE_KEY_LIKED_COMMENTS,
-  APP_ID
+  URL_AVATAR_API
 } from '../../config/common.constant';
 import { VoteType, VoteValue } from '../../config/common.enum';
 import { ResponseCode } from '../../config/response-code.enum';
@@ -23,9 +23,9 @@ import { format } from '../../helpers/helper';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { Guest, UserModel } from '../../interfaces/user.interface';
 import { VoteEntity } from '../../interfaces/vote.interface';
-import { CommentHashPipe } from '../../pipes/comment-hash.pipe';
 import { OptionService } from '../../services/option.service';
 import { UserService } from '../../pages/user/user.service';
+import { CommentHashPipe } from '../../pipes/comment-hash.pipe';
 import { VoteService } from '../../services/vote.service';
 import { CommentObjectType } from './comment.enum';
 import { Comment, CommentEntity, CommentModel } from './comment.interface';
