@@ -4,7 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
-import { ADMIN_URL_PARAM } from '../../../config/common.constant';
+import { ADMIN_URL_PARAM, APP_ID } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
 import { MessageService } from '../../../core/message.service';
@@ -110,7 +110,7 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
         .subscribe((res) => {
           this.confirmLoading = false;
           if (res.accessToken) {
-            const urlParam = format(ADMIN_URL_PARAM, res.accessToken, res.expiresAt);
+            const urlParam = format(ADMIN_URL_PARAM, res.accessToken, res.expiresAt, APP_ID);
             let redirectUrl: string;
             if (this.referer && this.referer !== 'logout') {
               redirectUrl = this.options['site_url'] + this.referer;

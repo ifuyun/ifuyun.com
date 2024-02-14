@@ -23,7 +23,7 @@ export const PATH_WECHAT_CARD = '/assets/images/wechat-card.png';
 export const PATH_WECHAT_MINI_APP_CARD = '/assets/images/wechat-mini.png';
 export const PATH_WECHAT_REWARD = '/assets/images/reward.jpg';
 export const PATH_RED_PACKET = '/assets/images/red-packet.png';
-export const ADMIN_URL_PARAM = '?token=$0&expiresAt=$1';
+export const ADMIN_URL_PARAM = '?token=$0&expiresAt=$1&appId=$2';
 export const URL_AVATAR_API = 'https://cravatar.cn/avatar/$0.png?d=$1';
 export const CLASS_BLOCK_SCROLL = 'cdk-global-scrollblock';
 

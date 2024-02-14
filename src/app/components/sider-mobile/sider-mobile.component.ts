@@ -6,6 +6,7 @@ import { NzImageService } from 'ng-zorro-antd/image';
 import { skipWhile, takeUntil } from 'rxjs';
 import {
   ADMIN_URL_PARAM,
+  APP_ID,
   PATH_FAVICON,
   PATH_WECHAT_CARD,
   PATH_WECHAT_MINI_APP_CARD
@@ -69,9 +70,13 @@ export class SiderMobileComponent implements OnInit {
       )
       .subscribe((options) => {
         this.options = options;
-        this.adminUrl = this.options['admin_url'];
         if (this.platform.isBrowser) {
-          this.adminUrl += format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration());
+          this.adminUrl = this.options['admin_url'] + format(
+            ADMIN_URL_PARAM,
+            this.authService.getToken(),
+            this.authService.getExpiration(),
+            APP_ID
+          );
         }
       });
     this.commonService.pageIndex$
