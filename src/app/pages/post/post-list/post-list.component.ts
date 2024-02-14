@@ -69,7 +69,12 @@ export class PostListComponent extends PageComponent implements OnInit {
 
     this.updatePageOptions();
 
-    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.paramMap, this.route.queryParamMap])
+    combineLatest([
+      this.tenantAppService.appInfo$,
+      this.optionService.options$,
+      this.route.paramMap,
+      this.route.queryParamMap
+    ])
       .pipe(
         skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)

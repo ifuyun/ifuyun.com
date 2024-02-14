@@ -118,9 +118,12 @@ export class Base64Component extends PageComponent implements OnInit {
   }
 
   private initInput() {
-    this.contentChange$.asObservable().pipe(debounceTime(500), takeUntil(this.destroy$)).subscribe(() => {
-      this.encryptResult = '';
-    });
+    this.contentChange$
+      .asObservable()
+      .pipe(debounceTime(500), takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.encryptResult = '';
+      });
   }
 
   private updatePageInfo() {

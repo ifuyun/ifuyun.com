@@ -5,7 +5,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
-import { combineLatest, combineLatestWith, skipWhile, takeUntil } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM, APP_ID } from '../../../config/common.constant';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';

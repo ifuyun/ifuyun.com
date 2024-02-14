@@ -18,7 +18,7 @@ export class TenantAppService {
   getAppInfo(): Observable<TenantAppModel> {
     return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.TENANT_APP), { appId: APP_ID }).pipe(
       map((res) => <TenantAppModel>(res?.data || {})),
-      tap((app): TenantAppModel => {
+      map((app): TenantAppModel => {
         return {
           ...app,
           keywords: (app.appKeywords || '').split(','),

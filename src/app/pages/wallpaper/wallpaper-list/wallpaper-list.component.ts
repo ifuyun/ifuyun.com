@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
-import { combineLatest, combineLatestWith, skipWhile, takeUntil } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { APP_ID, STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
@@ -78,7 +78,12 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   ngOnInit(): void {
     this.updatePageOptions();
 
-    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.paramMap, this.route.queryParamMap])
+    combineLatest([
+      this.tenantAppService.appInfo$,
+      this.optionService.options$,
+      this.route.paramMap,
+      this.route.queryParamMap
+    ])
       .pipe(
         skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)

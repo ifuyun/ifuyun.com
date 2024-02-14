@@ -36,7 +36,7 @@ export class BreadcrumbComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([this.tenantAppService.appInfo$, this.breadcrumbService.crumb$])
       .pipe(
-        skipWhile(([appInfo, breadcrumbs]) => isEmpty(appInfo)),
+        skipWhile(([appInfo]) => isEmpty(appInfo)),
         takeUntil(this.destroy$)
       )
       .subscribe(([appInfo, breadcrumbs]) => {

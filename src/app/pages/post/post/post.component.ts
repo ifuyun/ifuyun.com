@@ -131,7 +131,12 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
     this.updatePageOptions();
 
-    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.params, this.urlService.urlInfo$])
+    combineLatest([
+      this.tenantAppService.appInfo$,
+      this.optionService.options$,
+      this.route.params,
+      this.urlService.urlInfo$
+    ])
       .pipe(
         skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
