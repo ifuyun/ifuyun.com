@@ -3,12 +3,12 @@
     <div class="header-bg"></div>
     <nav class="nav">
       <div class="nav-wrap">
-        <a class="logo" [routerLink]="['/']" title="{{appInfo.appName}}">
-          <img [src]="logoPath" width="135" height="50" alt="{{appInfo.appName}}"/>
+        <a class="logo" [routerLink]="['/']" title="{{appInfo?.appName}}">
+          <img [src]="logoPath" width="135" height="50" alt="{{appInfo?.appName}}"/>
         </a>
         <ul class="nav-list">
           <li [ngClass]="{'active': activePage === 'index'}">
-            <a class="nav-link" title="{{appInfo.appName}}首页" [routerLink]="['/']">首页</a>
+            <a class="nav-link" title="{{appInfo?.appName}}首页" [routerLink]="['/']">首页</a>
           </li>
           <li [ngClass]="{'active': activePage === 'post' || activePage === 'postArchive'}">
             <a class="nav-link" routerLink="/post" title="文章">
@@ -98,8 +98,8 @@
     <div class="header-mobile">
       <ng-container *ngIf="!showSearch">
         <i class="icon icon-menu" (click)="toggleSiderOpen()"></i>
-        <a class="logo" [routerLink]="['/']" title="{{appInfo.appName}}">
-          <img [src]="logoPath" alt="{{appInfo.appName}}"/>
+        <a class="logo" [routerLink]="['/']" title="{{appInfo?.appName}}">
+          <img [src]="logoPath" alt="{{appInfo?.appName}}"/>
         </a>
         <i class="icon icon-search" (click)="toggleSearchStatus()"></i>
       </ng-container>

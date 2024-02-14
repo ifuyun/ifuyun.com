@@ -15,7 +15,7 @@
       <div (click)="showMiniAppCard()" title="微信小程序：壁纸之旅"><i class="icon icon-mini-program"></i></div>
     </div>
     <div class="toolbox-item toolbox-item-rss">
-      <a [href]="appInfo.appUrl + '/rss.xml'" (click)="logRSS()"
+      <a [href]="appInfo?.appUrl + '/rss.xml'" (click)="logRSS()"
          target="_blank" title="RSS 订阅"><i class="icon icon-rss-fill"></i></a>
     </div>
   </div>
