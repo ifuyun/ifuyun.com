@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
-import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
+import { combineLatest, combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { APP_ID, STORAGE_KEY_LIKED_WALLPAPER } from '../../../config/common.constant';
 import { VoteType, VoteValue } from '../../../config/common.enum';
@@ -16,10 +16,12 @@ import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { Action, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { Guest } from '../../../interfaces/user.interface';
 import { VoteEntity } from '../../../interfaces/vote.interface';
 import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
+import { TenantAppService } from '../../../services/tenant-app.service';
 import { VoteService } from '../../../services/vote.service';
 import { UserService } from '../../user/user.service';
 import { Wallpaper, WallpaperLang, WallpaperListMode, WallpaperQueryParam } from '../wallpaper.interface';
@@ -33,7 +35,6 @@ import { WallpaperService } from '../wallpaper.service';
 })
 export class WallpaperListComponent extends PageComponent implements OnInit, AfterViewInit {
   isMobile = false;
-  options: OptionEntity = {};
   page = 1;
   total = 0;
   lang!: WallpaperLang;
@@ -49,6 +50,8 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
 
   protected pageIndex = 'wallpaper';
 
+  private appInfo!: TenantAppModel;
+  private options: OptionEntity = {};
   private pageSize = 10;
   private commentUser: Guest | null = null;
 
@@ -60,6 +63,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
     private metaService: MetaService,
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private wallpaperService: WallpaperService,
     private paginator: PaginatorService,
@@ -73,25 +77,28 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
 
   ngOnInit(): void {
     this.updatePageOptions();
-    this.optionService.options$
+
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.paramMap, this.route.queryParamMap])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
-        combineLatestWith(this.route.paramMap, this.route.queryParamMap),
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe(([options, params, queryParams]) => {
+      .subscribe(([appInfo, options, p, qp]) => {
+        this.appInfo = appInfo;
         this.options = options;
+
         this.pageSize = Number(this.options['wallpaper_page_size']) || 10;
-        this.page = Number(queryParams.get('page')) || 1;
-        this.year = params.get('year')?.trim() || '';
-        this.month = params.get('month')?.trim() || '';
-        this.keyword = queryParams.get('keyword')?.trim() || '';
-        this.lang = <WallpaperLang>queryParams.get('lang')?.trim();
-        this.mode = <WallpaperListMode>queryParams.get('mode')?.trim();
+        this.page = Number(qp.get('page')) || 1;
+        this.year = p.get('year')?.trim() || '';
+        this.month = p.get('month')?.trim() || '';
+        this.keyword = qp.get('keyword')?.trim() || '';
+        this.lang = <WallpaperLang>qp.get('lang')?.trim();
+        this.mode = <WallpaperListMode>qp.get('mode')?.trim();
         this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
         if (this.year) {
           this.pageIndex = 'wallpaperArchive';
         }
+
         this.updateActivePage();
         this.fetchWallpapers();
       });
@@ -241,7 +248,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   }
 
   private updatePageInfo() {
-    const siteName = this.options['site_name'] || '';
+    const siteName = this.appInfo.appName;
     let description = '';
     const titles = ['高清壁纸', siteName];
     const keywords = (this.options['wallpaper_keywords'] || '').split(',');

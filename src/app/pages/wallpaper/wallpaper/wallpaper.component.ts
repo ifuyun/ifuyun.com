@@ -5,7 +5,7 @@ import { saveAs } from 'file-saver';
 import { isEmpty, uniq } from 'lodash';
 import { NzImageService } from 'ng-zorro-antd/image';
 import * as QRCode from 'qrcode';
-import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
@@ -30,11 +30,13 @@ import { filterHtmlTag, truncateString } from '../../../helpers/helper';
 import { FavoriteType } from '../../../interfaces/favorite.enum';
 import { Action, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { Guest } from '../../../interfaces/user.interface';
 import { VoteEntity } from '../../../interfaces/vote.interface';
 import { FavoriteService } from '../../../services/favorite.service';
 import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
+import { TenantAppService } from '../../../services/tenant-app.service';
 import { VoteService } from '../../../services/vote.service';
 import { UserService } from '../../user/user.service';
 import { Wallpaper, WallpaperLang } from '../wallpaper.interface';
@@ -65,6 +67,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
 
   protected pageIndex = 'wallpaper';
 
+  private appInfo!: TenantAppModel;
   private breadcrumbs: BreadcrumbEntity[] = [];
   private commentUser: Guest | null = null;
   private unknownLocation = '';
@@ -78,6 +81,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     private metaService: MetaService,
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private userService: UserService,
     private wallpaperService: WallpaperService,
@@ -95,20 +99,20 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   ngOnInit(): void {
     this.updateActivePage();
     this.updatePageOptions();
-    this.optionService.options$
+
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.paramMap, this.route.queryParamMap])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
-        combineLatestWith(this.route.paramMap, this.route.queryParamMap),
-        takeUntil(this.destroy$),
-        tap(([, params, queryParams]) => {
-          this.wallpaperId = params.get('wid')?.trim() || '';
-          this.lang = <WallpaperLang>queryParams.get('lang')?.trim() || WallpaperLang.CN;
-          this.unknownLocation = this.lang === WallpaperLang.CN ? '未知' : 'Unknown';
-          this.commentService.updateObjectId(this.wallpaperId);
-        })
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
+        takeUntil(this.destroy$)
       )
-      .subscribe(([options]) => {
+      .subscribe(([appInfo, options, p, qp]) => {
+        this.appInfo = appInfo;
         this.options = options;
+        this.wallpaperId = p.get('wid')?.trim() || '';
+        this.lang = <WallpaperLang>qp.get('lang')?.trim() || WallpaperLang.CN;
+        this.unknownLocation = this.lang === WallpaperLang.CN ? '未知' : 'Unknown';
+        this.commentService.updateObjectId(this.wallpaperId);
+
         this.fetchWallpaper();
         this.fetchPrevAndNext();
       });
@@ -147,7 +151,9 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   download(uhd = false) {
     if (!this.isLoggedIn && uhd) {
       this.router.navigate(['/user/login'], {
-        queryParams: { ref: `/wallpaper/${this.wallpaperId}?lang=${this.lang}` }
+        queryParams: {
+          ref: `/wallpaper/${this.wallpaperId}?lang=${this.lang}`
+        }
       });
       return;
     }
@@ -218,7 +224,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   }
 
   showShareQrcode() {
-    const siteUrl = this.options['site_url'].replace(/\/$/i, '');
+    const siteUrl = this.appInfo.appUrl.replace(/\/$/i, '');
     const langParam = this.lang === WallpaperLang.EN ? '&lang=' + this.lang : '';
     const shareUrl = `${siteUrl}/wallpaper/${this.wallpaper.wallpaperId}?ref=qrcode${langParam}`;
 
@@ -356,8 +362,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   }
 
   private updatePageInfo() {
-    const siteName: string = this.options['site_name'] || '';
-    const titles: string[] = ['高清壁纸', siteName];
+    const titles: string[] = ['高清壁纸', this.appInfo.appName];
     let description = '';
     const fullStop = this.lang === WallpaperLang.EN ? '.' : '。';
     const comma = this.lang === WallpaperLang.EN ? ', ' : '，';

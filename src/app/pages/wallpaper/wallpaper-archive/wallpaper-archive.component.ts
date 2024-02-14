@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
-import { skipWhile, takeUntil } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ArchiveDataMap } from '../../../core/common.interface';
@@ -11,7 +11,9 @@ import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { OptionService } from '../../../services/option.service';
+import { TenantAppService } from '../../../services/tenant-app.service';
 import { WallpaperService } from '../wallpaper.service';
 
 @Component({
@@ -26,6 +28,7 @@ export class WallpaperArchiveComponent extends PageComponent implements OnInit {
   archiveDateList!: ArchiveDataMap;
   archiveYearList: string[] = [];
 
+  private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
   private breadcrumbs: BreadcrumbEntity[] = [];
 
@@ -35,6 +38,7 @@ export class WallpaperArchiveComponent extends PageComponent implements OnInit {
     private metaService: MetaService,
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private wallpaperService: WallpaperService
   ) {
@@ -46,16 +50,19 @@ export class WallpaperArchiveComponent extends PageComponent implements OnInit {
     this.updateActivePage();
     this.updatePageOptions();
     this.updateBreadcrumb();
-    this.optionService.options$
+    this.fetchArchiveData();
+
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe((options) => {
+      .subscribe(([appInfo, options]) => {
+        this.appInfo = appInfo;
         this.options = options;
+
         this.updatePageInfo();
       });
-    this.fetchArchiveData();
   }
 
   protected updateActivePage(): void {
@@ -86,11 +93,11 @@ export class WallpaperArchiveComponent extends PageComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = ['归档', '壁纸', this.options['site_name']];
-    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    const titles = ['归档', '壁纸', this.appInfo.appName];
+    const keywords: string[] = this.appInfo.keywords;
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
-      description: `${this.options['site_name']}壁纸归档。${this.options['site_description']}`,
+      description: `${this.appInfo.appName}壁纸归档。${this.appInfo.appDescription}`,
       author: this.options['site_author'],
       keywords: uniq(keywords).join(',')
     };

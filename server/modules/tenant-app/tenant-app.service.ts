@@ -4,19 +4,20 @@ import { ConfigService } from '@nestjs/config';
 import { lastValueFrom } from 'rxjs';
 import { ApiUrl } from '../../../src/app/config/api-url';
 import { APP_ID } from '../../../src/app/config/common.constant';
+import { TenantAppModel } from '../../../src/app/interfaces/tenant-app.interface';
 import { HttpResponseEntity } from '../../common/http-response.interface';
 import { ResponseCode } from '../../common/response-code.enum';
 import { InternalServerErrorException } from '../../exceptions/internal-server-error.exception';
 
 @Injectable()
-export class OptionService {
+export class TenantAppService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService
   ) {}
 
-  async getOptions(): Promise<Record<string, string>> {
-    const apiUrl = this.configService.get('app.api.host') + ApiUrl.API_URL_PREFIX + ApiUrl.OPTION_FRONTEND;
+  async getAppInfo(): Promise<TenantAppModel> {
+    const apiUrl = this.configService.get('app.api.host') + ApiUrl.API_URL_PREFIX + ApiUrl.TENANT_APP;
     let response: HttpResponseEntity;
     try {
       response = (await lastValueFrom(this.httpService.get(apiUrl + '?appId=' + APP_ID))).data;

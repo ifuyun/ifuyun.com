@@ -13,15 +13,15 @@ import { UserAgentService } from '../../core/user-agent.service';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
 import { format } from '../../helpers/helper';
 import { Action, ActionObjectType } from '../../interfaces/log.enum';
-import { OptionEntity } from '../../interfaces/option.interface';
 import { TaxonomyNode } from '../../interfaces/taxonomy.interface';
+import { TenantAppModel } from '../../interfaces/tenant-app.interface';
 import { UserModel } from '../../interfaces/user.interface';
 import { NgZorroAntdModule } from '../../modules/antd/ng-zorro-antd.module';
 import { TOOL_LINKS } from '../../pages/tool/tool.constant';
 import { AuthService } from '../../pages/user/auth.service';
 import { UserService } from '../../pages/user/user.service';
 import { LogService } from '../../services/log.service';
-import { OptionService } from '../../services/option.service';
+import { TenantAppService } from '../../services/tenant-app.service';
 
 @Component({
   selector: 'app-header',
@@ -36,10 +36,10 @@ export class HeaderComponent implements OnInit {
   @Input() siderOpen = false;
   @Output() siderOpenChange = new EventEmitter<boolean>();
 
+  appInfo!: TenantAppModel;
   isMobile = false;
   isFirefox = false;
   activePage = '';
-  options: OptionEntity = {};
   showSearch = false;
   keyword = '';
   focusSearch = false;
@@ -57,7 +57,7 @@ export class HeaderComponent implements OnInit {
     private userAgentService: UserAgentService,
     private platform: PlatformService,
     private commonService: CommonService,
-    private optionService: OptionService,
+    private tenantAppService: TenantAppService,
     private userService: UserService,
     private authService: AuthService,
     private logService: LogService
@@ -70,20 +70,18 @@ export class HeaderComponent implements OnInit {
     this.commonService.darkMode$.pipe(takeUntil(this.destroy$)).subscribe((darkMode) => {
       this.logoPath = darkMode ? PATH_LOGO_DARK : PATH_LOGO;
     });
-    this.optionService.options$
+    this.tenantAppService.appInfo$
       .pipe(
-        skipWhile((options) => isEmpty(options)),
+        skipWhile((appInfo) => isEmpty(appInfo)),
         takeUntil(this.destroy$)
       )
-      .subscribe((options) => {
-        this.options = options;
+      .subscribe((appInfo) => {
+        this.appInfo = appInfo;
+
         if (this.platform.isBrowser) {
-          this.adminUrl = this.options['admin_url'] + format(
-            ADMIN_URL_PARAM,
-            this.authService.getToken(),
-            this.authService.getExpiration(),
-            APP_ID
-          );
+          this.adminUrl =
+            this.appInfo.appAdminUrl +
+            format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration(), APP_ID);
         }
       });
     this.commonService.pageIndex$

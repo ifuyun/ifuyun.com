@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import * as QRCode from 'qrcode';
-import { skipWhile, takeUntil } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { APP_ID } from '../../../config/common.constant';
@@ -15,8 +15,10 @@ import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { Action, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
+import { TenantAppService } from '../../../services/tenant-app.service';
 import { JdUnionPromotionResponseBody } from '../jd-union.interface';
 import { REGEXP_JD_PRODUCT_DETAIL_URL } from '../tool.constant';
 import { ShoppingService } from './shopping.service';
@@ -37,6 +39,7 @@ export class ShoppingComponent extends PageComponent implements OnInit {
 
   protected pageIndex = 'tool';
 
+  private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
   private breadcrumbs: BreadcrumbEntity[] = [];
 
@@ -48,6 +51,7 @@ export class ShoppingComponent extends PageComponent implements OnInit {
     private metaService: MetaService,
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private message: MessageService,
     private shoppingService: ShoppingService,
@@ -61,17 +65,20 @@ export class ShoppingComponent extends PageComponent implements OnInit {
     this.updateActivePage();
     this.updatePageOptions();
     this.updateBreadcrumb();
-    this.optionService.options$
+
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe((options) => {
+      .subscribe(([appInfo, options]) => {
+        this.appInfo = appInfo;
         this.options = options;
+
         this.updatePageInfo();
       });
-    this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe((queryParams) => {
-      this.keyword = queryParams.get('keyword')?.trim() || '';
+    this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe((qp) => {
+      this.keyword = qp.get('keyword')?.trim() || '';
       if (this.keyword && this.checkKeyword()) {
         this.fetchPromotion();
       }
@@ -160,7 +167,7 @@ export class ShoppingComponent extends PageComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const siteName: string = this.options['site_name'] || '';
+    const siteName: string = this.appInfo.appName;
     const titles: string[] = ['电商工具', '百宝箱', siteName];
     const description = `${siteName}${this.options['shopping_description']}`;
     const keywords: string[] = this.options['shopping_keywords'].split(',');

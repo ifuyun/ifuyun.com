@@ -10,6 +10,7 @@ import { environment as env } from '../../environments/environment';
 import { MEDIA_QUERY_THEME_DARK, MEDIA_QUERY_THEME_LIGHT, COOKIE_KEY_THEME } from '../config/common.constant';
 import { Theme } from '../config/common.enum';
 import { OptionEntity } from '../interfaces/option.interface';
+import { TenantAppModel } from '../interfaces/tenant-app.interface';
 import { MetaData, PageOptions } from './common.interface';
 import { PlatformService } from './platform.service';
 
@@ -60,8 +61,8 @@ export class CommonService {
     return result;
   }
 
-  getURL(options: OptionEntity, url: string) {
-    return `${options['site_url']}${url}`;
+  getURL(appInfo: TenantAppModel, url: string) {
+    return `${appInfo.appUrl}${url}`;
   }
 
   getTheme(): Theme {

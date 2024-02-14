@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ElementRef, Inject, Input, OnInit, ViewChild 
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { cloneDeep, isEmpty, uniq } from 'lodash';
-import { skipWhile, takeUntil } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { ApiUrl } from '../../config/api-url';
 import {
   APP_ID,
@@ -21,11 +21,13 @@ import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { format } from '../../helpers/helper';
 import { OptionEntity } from '../../interfaces/option.interface';
+import { TenantAppModel } from '../../interfaces/tenant-app.interface';
 import { Guest, UserModel } from '../../interfaces/user.interface';
 import { VoteEntity } from '../../interfaces/vote.interface';
 import { OptionService } from '../../services/option.service';
 import { UserService } from '../../pages/user/user.service';
 import { CommentHashPipe } from '../../pipes/comment-hash.pipe';
+import { TenantAppService } from '../../services/tenant-app.service';
 import { VoteService } from '../../services/vote.service';
 import { CommentObjectType } from './comment.enum';
 import { Comment, CommentEntity, CommentModel } from './comment.interface';
@@ -55,6 +57,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
   commentVoteLoading: Record<string, boolean> = {};
   saveLoading = false;
 
+  private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
   private commentFormConfig = {
     author: ['', [Validators.required, Validators.maxLength(10)]],
@@ -77,6 +80,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
     private userAgentService: UserAgentService,
     private fb: FormBuilder,
     private commonService: CommonService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private userService: UserService,
     private commentService: CommentService,
@@ -89,7 +93,19 @@ export class CommentComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.initOptions();
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
+      .pipe(
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(([appInfo, options]) => {
+        this.appInfo = appInfo;
+        this.options = options;
+
+        if (this.appInfo.appUrl && this.platform.isBrowser) {
+          this.captchaUrl = `${this.appInfo.appUrl}${ApiUrl.API_URL_PREFIX}${ApiUrl.CAPTCHA}?r=${Math.random()}`;
+        }
+      });
     this.commentService.objectId$.pipe(takeUntil(this.destroy$)).subscribe((objectId) => {
       this.objectId = objectId;
       this.resetCommentForm(this.commentForm);
@@ -267,20 +283,6 @@ export class CommentComponent implements OnInit, AfterViewInit {
     if (offsetTop > 0) {
       this.scroller.scrollToPosition([0, offsetTop - this.headerHeight]);
     }
-  }
-
-  private initOptions() {
-    this.optionService.options$
-      .pipe(
-        skipWhile((options) => isEmpty(options)),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((options) => {
-        this.options = options;
-        if (this.options['site_url'] && this.platform.isBrowser) {
-          this.captchaUrl = `${this.options['site_url']}${ApiUrl.API_URL_PREFIX}${ApiUrl.CAPTCHA}?r=${Math.random()}`;
-        }
-      });
   }
 
   private initComment(comment: Comment) {

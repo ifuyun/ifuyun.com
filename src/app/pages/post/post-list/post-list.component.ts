@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
-import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { APP_ID } from '../../../config/common.constant';
@@ -14,7 +14,9 @@ import { PaginatorEntity } from '../../../core/paginator.interface';
 import { PaginatorService } from '../../../core/paginator.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { OptionService } from '../../../services/option.service';
+import { TenantAppService } from '../../../services/tenant-app.service';
 import { Post, PostQueryParam } from '../post.interface';
 import { PostService } from '../post.service';
 
@@ -29,7 +31,6 @@ export class PostListComponent extends PageComponent implements OnInit {
 
   isMobile = false;
   pageIndex = 'post';
-  options: OptionEntity = {};
   page = 1;
   keyword = '';
   category = '';
@@ -40,6 +41,8 @@ export class PostListComponent extends PageComponent implements OnInit {
   pageUrl = '';
   pageUrlParam: Params = {};
 
+  private appInfo!: TenantAppModel;
+  private options: OptionEntity = {};
   private isPost = false;
   private pageSize = 10;
   private year = '';
@@ -52,6 +55,7 @@ export class PostListComponent extends PageComponent implements OnInit {
     private metaService: MetaService,
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private postService: PostService,
     private paginator: PaginatorService
@@ -62,23 +66,25 @@ export class PostListComponent extends PageComponent implements OnInit {
 
   ngOnInit(): void {
     this.isPost = this.postType === PostType.POST;
+
     this.updatePageOptions();
-    this.optionService.options$
+
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.paramMap, this.route.queryParamMap])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
-        combineLatestWith(this.route.paramMap, this.route.queryParamMap),
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe(([options, params, queryParams]) => {
+      .subscribe(([appInfo, options, p, qp]) => {
+        this.appInfo = appInfo;
         this.options = options;
 
         this.pageSize = Number(this.options['post_page_size']) || 10;
-        this.page = Number(queryParams.get('page')) || 1;
-        this.category = params.get('category')?.trim() || '';
-        this.tag = params.get('tag')?.trim() || '';
-        this.year = params.get('year')?.trim() || '';
-        this.month = params.get('month')?.trim() || '';
-        this.keyword = queryParams.get('keyword')?.trim() || '';
+        this.page = Number(qp.get('page')) || 1;
+        this.category = p.get('category')?.trim() || '';
+        this.tag = p.get('tag')?.trim() || '';
+        this.year = p.get('year')?.trim() || '';
+        this.month = p.get('month')?.trim() || '';
+        this.keyword = qp.get('keyword')?.trim() || '';
         if (this.year) {
           this.pageIndex = 'postArchive';
         } else {
@@ -150,14 +156,11 @@ export class PostListComponent extends PageComponent implements OnInit {
   }
 
   private updatePageInfo(postBreadcrumbs: BreadcrumbEntity[]) {
-    const siteName: string = this.options['site_name'] || '';
-    const pageType = this.isPost ? '文章' : 'Prompt';
-
-    let description = '';
-    const titles: string[] = [pageType, siteName];
+    const pageType = '文章';
+    const titles: string[] = [pageType, this.appInfo.appName];
     const taxonomies: string[] = [];
-    const pageKeywords = this.isPost ? this.options['post_keywords'] : this.options['prompt_keywords'];
-    const keywords: string[] = (pageKeywords || '').split(',');
+    const keywords: string[] = (this.options['post_keywords'] || '').split(',');
+    let description = '';
 
     if (this.category && postBreadcrumbs.length > 0) {
       const label = postBreadcrumbs[postBreadcrumbs.length - 1].label;
@@ -194,7 +197,7 @@ export class PostListComponent extends PageComponent implements OnInit {
     if (description) {
       description += '。';
     }
-    description += this.options['site_description'];
+    description += this.appInfo.appDescription;
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),

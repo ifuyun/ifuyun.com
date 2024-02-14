@@ -56,5 +56,7 @@ export enum ApiUrl {
   JD_GOODS_MATERIAL = '/union/jd/goods-material',
   JD_GOODS_JINGFEN = '/union/jd/goods-jingfen',
   // tool
-  TOOL_BASE64 = '/tool/base64'
+  TOOL_BASE64 = '/tool/base64',
+  // app
+  TENANT_APP = '/apps/app'
 }

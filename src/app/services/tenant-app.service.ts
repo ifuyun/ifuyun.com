@@ -1,0 +1,31 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { ApiUrl } from '../config/api-url';
+import { APP_ID } from '../config/common.constant';
+import { ApiService } from '../core/api.service';
+import { TenantAppModel } from '../interfaces/tenant-app.interface';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TenantAppService {
+  private appInfo: BehaviorSubject<TenantAppModel> = new BehaviorSubject<TenantAppModel>(<TenantAppModel>{});
+  public appInfo$: Observable<TenantAppModel> = this.appInfo.asObservable();
+
+  constructor(private apiService: ApiService) {}
+
+  getAppInfo(): Observable<TenantAppModel> {
+    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.TENANT_APP), { appId: APP_ID }).pipe(
+      map((res) => <TenantAppModel>(res?.data || {})),
+      tap((app): TenantAppModel => {
+        return {
+          ...app,
+          keywords: (app.appKeywords || '').split(','),
+          adminEmail: (app.appAdminEmail || '').split(',')
+        };
+      }),
+      tap((app) => this.appInfo.next(app))
+    );
+  }
+}

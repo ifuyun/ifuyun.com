@@ -4,14 +4,15 @@ import { RouterLink } from '@angular/router';
 import { RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Response } from 'express';
 import { isEmpty } from 'lodash';
-import { skipWhile, takeUntil } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
 import { MetaService } from '../../core/meta.service';
 import { PageComponent } from '../../core/page.component';
 import { PlatformService } from '../../core/platform.service';
-import { OptionEntity } from '../../interfaces/option.interface';
+import { TenantAppModel } from '../../interfaces/tenant-app.interface';
 import { OptionService } from '../../services/option.service';
+import { TenantAppService } from '../../services/tenant-app.service';
 
 @Component({
   selector: 'app-not-found',
@@ -22,17 +23,18 @@ import { OptionService } from '../../services/option.service';
   providers: [DestroyService]
 })
 export class NotFoundComponent extends PageComponent implements OnInit {
-  options: OptionEntity = {};
+  appInfo!: TenantAppModel;
 
   protected pageIndex = '404';
 
   constructor(
-    private platform: PlatformService,
+    @Optional() @Inject(RESPONSE) private response: Response,
     private destroy$: DestroyService,
+    private platform: PlatformService,
     private metaService: MetaService,
     private commonService: CommonService,
-    private optionService: OptionService,
-    @Optional() @Inject(RESPONSE) private response: Response
+    private tenantAppService: TenantAppService,
+    private optionService: OptionService
   ) {
     super();
     if (this.platform.isServer) {
@@ -43,18 +45,20 @@ export class NotFoundComponent extends PageComponent implements OnInit {
   ngOnInit(): void {
     this.updatePageOptions();
     this.updateActivePage();
-    this.optionService.options$
+
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe((options) => {
-        this.options = options;
+      .subscribe(([appInfo, options]) => {
+        this.appInfo = appInfo;
+
         this.metaService.updateHTMLMeta({
-          title: `404 - ${options['site_name']}`,
-          description: options['site_description'],
+          title: `404 - ${appInfo.appName}`,
+          description: appInfo.appDescription,
           author: options['site_author'],
-          keywords: options['site_keywords']
+          keywords: appInfo.appKeywords
         });
       });
   }

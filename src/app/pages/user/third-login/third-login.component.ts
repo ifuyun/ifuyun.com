@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
-import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -14,7 +14,9 @@ import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { OptionService } from '../../../services/option.service';
+import { TenantAppService } from '../../../services/tenant-app.service';
 import { AuthService } from '../auth.service';
 import { UserService } from '../user.service';
 
@@ -32,6 +34,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
 
   protected pageIndex = 'login';
 
+  private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
   private authCode = '';
   private appId = '';
@@ -50,6 +53,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
     private destroy$: DestroyService,
     private metaService: MetaService,
     private commonService: CommonService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private userService: UserService,
     private authService: AuthService,
@@ -62,39 +66,39 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
   ngOnInit(): void {
     this.updatePageOptions();
     this.updateActivePage();
-    this.route.queryParamMap
+
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.queryParamMap])
       .pipe(
-        combineLatestWith(this.optionService.options$),
-        skipWhile<[ParamMap, OptionEntity]>(([, options]) => isEmpty(options)),
-        takeUntil(this.destroy$),
-        tap(([params, options]) => {
-          this.options = options;
-          this.adminUrl = this.options['admin_url'];
-
-          const ref = params.get('ref')?.trim() || '';
-          try {
-            this.referer = decodeURIComponent(ref);
-          } catch (e) {
-            this.referer = ref;
-          }
-          const loginParam = ref ? `?ref=${ref}` : '';
-          this.loginURL = options['login_url'] + loginParam;
-
-          this.source = params.get('from')?.trim() || '';
-          if (this.source === 'alipay' || this.source === 'm_alipay') {
-            this.authCode = params.get('auth_code')?.trim() || '';
-            this.appId = params.get('app_id')?.trim() || '';
-            this.scope = params.get('scope')?.trim() || '';
-          } else if (this.source === 'weibo') {
-            this.authCode = params.get('code')?.trim() || '';
-            this.errorCode = params.get('error_code')?.trim() || '';
-          } else if (this.source === 'github') {
-            this.authCode = params.get('code')?.trim() || '';
-            this.errorCode = params.get('error')?.trim() || '';
-          }
-        })
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
+        takeUntil(this.destroy$)
       )
-      .subscribe(() => {
+      .subscribe(([appInfo, options, qp]) => {
+        this.appInfo = appInfo;
+        this.options = options;
+        this.adminUrl = this.appInfo.appAdminUrl;
+
+        const ref = qp.get('ref')?.trim() || '';
+        try {
+          this.referer = decodeURIComponent(ref);
+        } catch (e) {
+          this.referer = ref;
+        }
+        const loginParam = ref ? `?ref=${ref}` : '';
+        this.loginURL = this.appInfo.appLoginUrl + loginParam;
+
+        this.source = qp.get('from')?.trim() || '';
+        if (this.source === 'alipay' || this.source === 'm_alipay') {
+          this.authCode = qp.get('auth_code')?.trim() || '';
+          this.appId = qp.get('app_id')?.trim() || '';
+          this.scope = qp.get('scope')?.trim() || '';
+        } else if (this.source === 'weibo') {
+          this.authCode = qp.get('code')?.trim() || '';
+          this.errorCode = qp.get('error_code')?.trim() || '';
+        } else if (this.source === 'github') {
+          this.authCode = qp.get('code')?.trim() || '';
+          this.errorCode = qp.get('error')?.trim() || '';
+        }
+
         this.updatePageInfo();
         this.thirdLogin();
       });
@@ -123,7 +127,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
         if (res.code === ResponseCode.SUCCESS) {
           this.loginStatus = 'success';
           this.authService.setAuth(res.data);
-          const redirectUrl = this.referer ? this.options['site_url'] + `?ref=${this.referer}` : this.adminUrl;
+          const redirectUrl = this.referer ? this.appInfo.appUrl + `?ref=${this.referer}` : this.adminUrl;
           location.replace(redirectUrl);
         } else {
           this.message.error(res.message || '登录失败');
@@ -147,11 +151,11 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = ['登录', this.options['site_name']];
-    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    const titles = ['登录', this.appInfo.appName];
+    const keywords: string[] = this.appInfo.keywords;
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
-      description: this.options['site_description'],
+      description: this.appInfo.appDescription,
       author: this.options['site_author'],
       keywords: uniq(keywords).join(',')
     };

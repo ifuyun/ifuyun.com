@@ -7,9 +7,9 @@ import { Theme } from '../../config/common.enum';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
 import { Action, ActionObjectType } from '../../interfaces/log.enum';
-import { OptionEntity } from '../../interfaces/option.interface';
+import { TenantAppModel } from '../../interfaces/tenant-app.interface';
 import { LogService } from '../../services/log.service';
-import { OptionService } from '../../services/option.service';
+import { TenantAppService } from '../../services/tenant-app.service';
 import { WallpaperBoxComponent } from '../wallpaper-box/wallpaper-box.component';
 
 @Component({
@@ -21,14 +21,14 @@ import { WallpaperBoxComponent } from '../wallpaper-box/wallpaper-box.component'
   providers: [DestroyService]
 })
 export class ToolboxComponent implements OnInit {
-  options: OptionEntity = {};
+  appInfo!: TenantAppModel;
   wallpaperVisible = false;
   darkMode = false;
 
   constructor(
     private destroy$: DestroyService,
     private commonService: CommonService,
-    private optionService: OptionService,
+    private tenantAppService: TenantAppService,
     private imageService: NzImageService,
     private logService: LogService
   ) {}
@@ -37,12 +37,12 @@ export class ToolboxComponent implements OnInit {
     this.commonService.darkMode$.pipe(takeUntil(this.destroy$)).subscribe((darkMode) => {
       this.darkMode = darkMode;
     });
-    this.optionService.options$
+    this.tenantAppService.appInfo$
       .pipe(
-        skipWhile((options) => isEmpty(options)),
+        skipWhile((appInfo) => isEmpty(appInfo)),
         takeUntil(this.destroy$)
       )
-      .subscribe((options) => (this.options = options));
+      .subscribe((appInfo) => (this.appInfo = appInfo));
     this.darkMode = this.commonService.getTheme() === Theme.Dark;
   }
 

@@ -2,11 +2,11 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
-import { skipWhile, takeUntil } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { DestroyService } from '../../core/destroy.service';
 import { UserAgentService } from '../../core/user-agent.service';
-import { OptionEntity } from '../../interfaces/option.interface';
-import { OptionService } from '../../services/option.service';
+import { TenantAppModel } from '../../interfaces/tenant-app.interface';
+import { TenantAppService } from '../../services/tenant-app.service';
 import { BreadcrumbEntity } from './breadcrumb.interface';
 import { BreadcrumbService } from './breadcrumb.service';
 
@@ -21,32 +21,33 @@ import { BreadcrumbService } from './breadcrumb.service';
 export class BreadcrumbComponent implements OnInit {
   isMobile = false;
   breadcrumbs: BreadcrumbEntity[] = [];
-  options: OptionEntity = {};
+
+  private appInfo!: TenantAppModel;
 
   constructor(
     private destroy$: DestroyService,
     private breadcrumbService: BreadcrumbService,
-    private optionService: OptionService,
+    private tenantAppService: TenantAppService,
     private userAgentService: UserAgentService
   ) {
     this.isMobile = this.userAgentService.isMobile();
   }
 
   ngOnInit(): void {
-    this.optionService.options$
+    combineLatest([this.tenantAppService.appInfo$, this.breadcrumbService.crumb$])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
+        skipWhile(([appInfo, breadcrumbs]) => isEmpty(appInfo)),
         takeUntil(this.destroy$)
       )
-      .subscribe((options) => (this.options = options));
-    this.breadcrumbService.crumb$.pipe(takeUntil(this.destroy$)).subscribe((breadcrumbs) => {
-      this.breadcrumbs = [...breadcrumbs];
-      this.breadcrumbs.unshift({
-        label: '首页',
-        url: '/',
-        tooltip: (this.options && this.options['site_name']) || '',
-        isHeader: false
+      .subscribe(([appInfo, breadcrumbs]) => {
+        this.appInfo = appInfo;
+        this.breadcrumbs = [...breadcrumbs];
+        this.breadcrumbs.unshift({
+          label: '首页',
+          url: '/',
+          tooltip: this.appInfo.appName,
+          isHeader: false
+        });
       });
-    });
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
-import { BehaviorSubject, debounceTime, Observable, skipWhile, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { ResponseCode } from '../../../config/response-code.enum';
@@ -11,7 +11,9 @@ import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { OptionService } from '../../../services/option.service';
+import { TenantAppService } from '../../../services/tenant-app.service';
 import { BASE64_PAGE_DESCRIPTION, BASE64_PAGE_KEYWORDS } from '../tool.constant';
 import { Base64Service } from './base64.service';
 
@@ -25,12 +27,13 @@ export class Base64Component extends PageComponent implements OnInit {
   readonly maxContentLength = 2000;
 
   isMobile = false;
-  options: OptionEntity = {};
   encryptContent = '';
   encryptResult = '';
 
   protected pageIndex = 'tool';
 
+  private appInfo!: TenantAppModel;
+  private options: OptionEntity = {};
   private breadcrumbs: BreadcrumbEntity[] = [];
   private contentChange$ = new BehaviorSubject('');
 
@@ -40,6 +43,7 @@ export class Base64Component extends PageComponent implements OnInit {
     private metaService: MetaService,
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private message: MessageService,
     private base64Service: Base64Service
@@ -52,16 +56,19 @@ export class Base64Component extends PageComponent implements OnInit {
     this.updateActivePage();
     this.updatePageOptions();
     this.updateBreadcrumb();
-    this.optionService.options$
+    this.initInput();
+
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe((options) => {
+      .subscribe(([appInfo, options]) => {
+        this.appInfo = appInfo;
         this.options = options;
+
         this.updatePageInfo();
       });
-    this.initInput();
   }
 
   onContentChange(content: string) {
@@ -111,17 +118,17 @@ export class Base64Component extends PageComponent implements OnInit {
   }
 
   private initInput() {
-    const contentInput$: Observable<string> = this.contentChange$.asObservable();
-    contentInput$.pipe(debounceTime(500), takeUntil(this.destroy$)).subscribe(() => {
+    this.contentChange$.asObservable().pipe(debounceTime(500), takeUntil(this.destroy$)).subscribe(() => {
       this.encryptResult = '';
     });
   }
 
   private updatePageInfo() {
-    const siteName: string = this.options['site_name'] || '';
+    const siteName: string = this.appInfo.appName;
     const titles: string[] = ['Base64编解码', '百宝箱', siteName];
     const description = `${siteName}${BASE64_PAGE_DESCRIPTION}`;
-    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    const keywords: string[] = this.appInfo.keywords;
+
     keywords.unshift(...BASE64_PAGE_KEYWORDS);
 
     this.metaService.updateHTMLMeta({

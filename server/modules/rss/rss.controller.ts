@@ -7,12 +7,14 @@ import { PageSizePipe } from '../../pipes/page-size.pipe';
 import { ParseIntPipe } from '../../pipes/parse-int.pipe';
 import { TrimPipe } from '../../pipes/trim.pipe';
 import { OptionService } from '../option/option.service';
+import { TenantAppService } from '../tenant-app/tenant-app.service';
 import { RssService } from './rss.service';
 
 @Controller()
 export class RssController {
   constructor(
     private readonly rssService: RssService,
+    private readonly tenantAppService: TenantAppService,
     private readonly optionService: OptionService
   ) {}
 
@@ -24,35 +26,38 @@ export class RssController {
     @Res() res: Response
   ) {
     const showDetail = detail === '1';
+    const appInfo = await this.tenantAppService.getAppInfo();
     const options = await this.optionService.getOptions();
     const result = await this.rssService.getPosts(page, pageSize, showDetail);
     const posts: Post[] = result.postList.list || [];
     const feed = new RSS({
-      title: options['site_name'],
-      description: options['site_description'],
-      generator: options['site_domain'],
-      feed_url: `${options['site_url']}/rss.xml`,
-      site_url: options['site_url'],
-      image_url: `${options['site_url']}${PATH_LOGO}`,
+      title: appInfo.appName,
+      description: appInfo.appDescription,
+      generator: appInfo.appDomain,
+      feed_url: `${appInfo.appUrl}/rss.xml`,
+      site_url: appInfo.appUrl,
+      image_url: `${appInfo.appUrl}${PATH_LOGO}`,
       managingEditor: options['site_author'],
       webMaster: options['site_author'],
-      copyright: `2014-${new Date().getFullYear()} ${options['site_domain']}`,
+      copyright: `2014-${new Date().getFullYear()} ${appInfo.appDomain}`,
       language: 'zh-cn',
       pubDate: new Date(),
       ttl: 60
     });
+
     posts.forEach((item) => {
       const post = item.post;
       feed.item({
         title: post.postTitle,
         description: showDetail ? post.postContent : post.postExcerpt,
-        url: options['site_url'] + post.postGuid,
+        url: appInfo.appUrl + post.postGuid,
         guid: post.postId,
         categories: item.categories.map((category) => category.taxonomySlug),
         author: item.meta['post_author'] || post.owner.userNiceName,
         date: post.postDate
       });
     });
+
     res.header('Content-Type', 'text/xml').send(feed.xml({ indent: true }));
   }
 }

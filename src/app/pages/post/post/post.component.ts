@@ -15,7 +15,7 @@ import { isEmpty, uniq } from 'lodash';
 import { NzImageService } from 'ng-zorro-antd/image';
 import { ClipboardService } from 'ngx-clipboard';
 import * as QRCode from 'qrcode';
-import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommentObjectType } from '../../../components/comment/comment.enum';
@@ -43,11 +43,13 @@ import { FavoriteType } from '../../../interfaces/favorite.enum';
 import { Action, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { TaxonomyEntity } from '../../../interfaces/taxonomy.interface';
+import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { Guest, UserModel } from '../../../interfaces/user.interface';
 import { VoteEntity } from '../../../interfaces/vote.interface';
 import { FavoriteService } from '../../../services/favorite.service';
 import { LogService } from '../../../services/log.service';
 import { OptionService } from '../../../services/option.service';
+import { TenantAppService } from '../../../services/tenant-app.service';
 import { VoteService } from '../../../services/vote.service';
 import { UserService } from '../../user/user.service';
 import { Post, PostEntity, PostModel } from '../post.interface';
@@ -88,10 +90,11 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private readonly copyHTML = '<i class="icon icon-copy"></i>Copy code';
   private readonly copiedHTML = '<i class="icon icon-check-lg"></i>Copied!';
 
+  private appInfo!: TenantAppModel;
+  private options: OptionEntity = {};
   private breadcrumbs: BreadcrumbEntity[] = [];
   private postId = '';
   private postSlug = '';
-  private options: OptionEntity = {};
   private unlistenImgClick!: () => void;
   private referer = '';
   private commentUser: Guest | null = null;
@@ -105,6 +108,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
     private urlService: UrlService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private userService: UserService,
     private postService: PostService,
@@ -124,14 +128,16 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   ngOnInit(): void {
     this.isPost = this.postType === PostType.POST;
     this.commentObjectType = CommentObjectType.POST;
+
     this.updatePageOptions();
-    this.optionService.options$
+
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.params, this.urlService.urlInfo$])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
-        combineLatestWith(this.route.params, this.urlService.urlInfo$),
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe(([options, params, url]) => {
+      .subscribe(([appInfo, options, params, url]) => {
+        this.appInfo = appInfo;
         this.options = options;
         this.referer = url.previous;
 
@@ -152,6 +158,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.userService.loginUser$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.user = user;
       this.isLoggedIn = !!user.userId;
+
       this.initPayMaskFlag();
     });
   }
@@ -230,7 +237,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   }
 
   showShareQrcode() {
-    const siteUrl = this.options['site_url'].replace(/\/$/i, '');
+    const siteUrl = this.appInfo.appUrl.replace(/\/$/i, '');
     const postGuid = this.post.postGuid.replace(/^\//i, '');
     const shareUrl = siteUrl + '/' + postGuid + '?ref=qrcode';
 
@@ -316,7 +323,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private initMeta() {
     const keywords: string[] = (this.options['post_keywords'] || '').split(',');
     this.metaService.updateHTMLMeta({
-      title: `${this.post.postTitle} - ${this.options['site_name']}`,
+      title: `${this.post.postTitle} - ${this.appInfo.appName}`,
       description: this.post.postExcerpt,
       keywords: uniq(this.postTags.map((item) => item.taxonomyName).concat(keywords)).join(','),
       author: this.options['site_author']

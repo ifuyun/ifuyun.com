@@ -1,7 +1,7 @@
 import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
-import { skipWhile, takeUntil } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { APP_ID } from '../../config/common.constant';
 import { LinkTarget } from '../../config/common.enum';
 import { DestroyService } from '../../core/destroy.service';
@@ -9,10 +9,12 @@ import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { Action, ActionObjectType } from '../../interfaces/log.enum';
 import { CarouselOptions, CarouselVo, OptionEntity } from '../../interfaces/option.interface';
+import { TenantAppModel } from '../../interfaces/tenant-app.interface';
 import { WallpaperLang } from '../../pages/wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
 import { LogService } from '../../services/log.service';
 import { OptionService } from '../../services/option.service';
+import { TenantAppService } from '../../services/tenant-app.service';
 
 @Component({
   selector: 'i-carousel',
@@ -24,18 +26,20 @@ import { OptionService } from '../../services/option.service';
 })
 export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   isMobile = false;
-  options: OptionEntity = {};
   carousels: CarouselVo[] = [];
   activeIndex = 0;
   isRevert = false;
   timer!: number;
 
+  private appInfo!: TenantAppModel;
+  private options: OptionEntity = {};
   private carouselOptions!: CarouselOptions;
 
   constructor(
     private destroy$: DestroyService,
     private platform: PlatformService,
     private userAgentService: UserAgentService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private wallpaperService: WallpaperService,
     private logService: LogService
@@ -44,13 +48,15 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.optionService.options$
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe((options) => {
+      .subscribe(([appInfo, options]) => {
+        this.appInfo = appInfo;
         this.options = options;
+
         try {
           this.carouselOptions = JSON.parse(options['carousel_config']);
         } catch (e) {
@@ -170,8 +176,9 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private getWallpaperLink(wallpaperId: string, isEn: boolean) {
-    const url = `${this.options['site_url']}/wallpaper/${wallpaperId}`;
+    const url = `${this.appInfo.appUrl}/wallpaper/${wallpaperId}`;
     const langParam = isEn ? '?lang=en' : '';
+
     return url + langParam;
   }
 }

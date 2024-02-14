@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
 import * as murmurhash from 'murmurhash';
-import { BehaviorSubject, debounceTime, Observable, skipWhile, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { CommonService } from '../../../core/common.service';
@@ -11,7 +11,9 @@ import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { OptionService } from '../../../services/option.service';
+import { TenantAppService } from '../../../services/tenant-app.service';
 import { MURMURHASH_PAGE_DESCRIPTION, MURMURHASH_PAGE_KEYWORDS } from '../tool.constant';
 
 @Component({
@@ -25,13 +27,14 @@ export class MurmurhashComponent extends PageComponent implements OnInit {
   readonly maxHashSeedLength = 10;
 
   isMobile = false;
-  options: OptionEntity = {};
   hashKey = '';
   hashSeed = '';
   hashResult = '';
 
   protected pageIndex = 'tool';
 
+  private appInfo!: TenantAppModel;
+  private options: OptionEntity = {};
   private breadcrumbs: BreadcrumbEntity[] = [];
   private contentChange$ = new BehaviorSubject('');
 
@@ -41,6 +44,7 @@ export class MurmurhashComponent extends PageComponent implements OnInit {
     private metaService: MetaService,
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private message: MessageService
   ) {
@@ -52,16 +56,19 @@ export class MurmurhashComponent extends PageComponent implements OnInit {
     this.updateActivePage();
     this.updatePageOptions();
     this.updateBreadcrumb();
-    this.optionService.options$
+    this.initInput();
+
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe((options) => {
+      .subscribe(([appInfo, options]) => {
+        this.appInfo = appInfo;
         this.options = options;
+
         this.updatePageInfo();
       });
-    this.initInput();
   }
 
   onContentChange(content: string) {
@@ -113,17 +120,17 @@ export class MurmurhashComponent extends PageComponent implements OnInit {
   }
 
   private initInput() {
-    const contentInput$: Observable<string> = this.contentChange$.asObservable();
-    contentInput$.pipe(debounceTime(500), takeUntil(this.destroy$)).subscribe(() => {
+    this.contentChange$.asObservable().pipe(debounceTime(500), takeUntil(this.destroy$)).subscribe(() => {
       this.hashResult = '';
     });
   }
 
   private updatePageInfo() {
-    const siteName: string = this.options['site_name'] || '';
+    const siteName: string = this.appInfo.appName;
     const titles: string[] = ['MurmurHash', '百宝箱', siteName];
     const description = `${siteName}${MURMURHASH_PAGE_DESCRIPTION}`;
-    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    const keywords: string[] = this.appInfo.keywords;
+
     keywords.unshift(...MURMURHASH_PAGE_KEYWORDS);
 
     this.metaService.updateHTMLMeta({

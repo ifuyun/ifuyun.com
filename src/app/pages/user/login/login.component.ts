@@ -5,7 +5,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { CookieService } from 'ngx-cookie-service';
-import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
+import { combineLatest, combineLatestWith, skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM, APP_ID } from '../../../config/common.constant';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
@@ -18,8 +18,10 @@ import { UserAgentService } from '../../../core/user-agent.service';
 import { format, generateId } from '../../../helpers/helper';
 import md5 from '../../../helpers/md5';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { UserModel } from '../../../interfaces/user.interface';
 import { OptionService } from '../../../services/option.service';
+import { TenantAppService } from '../../../services/tenant-app.service';
 import { Wallpaper } from '../../wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../wallpaper/wallpaper.service';
 import { LoginResponse } from '../auth.interface';
@@ -66,6 +68,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
 
   protected pageIndex = 'login';
 
+  private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
   private adminUrl = '';
   private referer = '';
@@ -80,6 +83,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
     private destroy$: DestroyService,
     private metaService: MetaService,
     private commonService: CommonService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private cookieService: CookieService,
     private authService: AuthService,
@@ -93,27 +97,28 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.updatePageOptions();
     this.updateActivePage();
-    this.optionService.options$
+
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.queryParamMap])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
-        combineLatestWith(this.route.queryParamMap),
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe(([options, queryParams]) => {
+      .subscribe(([appInfo, options, qp]) => {
+        this.appInfo = appInfo;
         this.options = options;
         this.pageLoaded = true;
 
         this.updatePageInfo();
         this.initWallpaper();
 
-        const ref = queryParams.get('ref')?.trim() || '';
+        const ref = qp.get('ref')?.trim() || '';
         try {
           this.referer = decodeURIComponent(ref);
         } catch (e) {
           this.referer = ref;
         }
 
-        this.adminUrl = this.options['admin_url'];
+        this.adminUrl = this.appInfo.appAdminUrl;
         if (ref === 'logout') {
           this.authService.clearAuth();
         } else {
@@ -156,7 +161,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
             const urlParam = format(ADMIN_URL_PARAM, loginRes.accessToken, loginRes.expiresAt, APP_ID);
             let redirectUrl: string;
             if (this.referer && this.referer !== 'logout') {
-              redirectUrl = this.options['site_url'] + `?ref=${this.referer}`;
+              redirectUrl = this.appInfo.appUrl + `?ref=${this.referer}`;
             } else {
               redirectUrl = this.adminUrl + urlParam;
             }
@@ -253,18 +258,19 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
   }
 
   private getCallbackURL(channel: string) {
-    return this.commonService.getURL(this.options, format(THIRD_LOGIN_CALLBACK, channel, this.referer));
+    return this.commonService.getURL(this.appInfo, format(THIRD_LOGIN_CALLBACK, channel, this.referer));
   }
 
   private updatePageInfo() {
-    const titles = ['登录', this.options['site_name']];
-    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    const titles = ['登录', this.appInfo.appName];
+    const keywords: string[] = this.appInfo.keywords;
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
-      description: this.options['site_description'],
+      description: this.appInfo.appDescription,
       author: this.options['site_author'],
       keywords: uniq(keywords).join(',')
     };
+
     this.metaService.updateHTMLMeta(metaData);
   }
 

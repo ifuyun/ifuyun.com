@@ -18,11 +18,11 @@ import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { format } from '../../helpers/helper';
-import { OptionEntity } from '../../interfaces/option.interface';
+import { TenantAppModel } from '../../interfaces/tenant-app.interface';
 import { UserModel } from '../../interfaces/user.interface';
 import { AuthService } from '../../pages/user/auth.service';
 import { UserService } from '../../pages/user/user.service';
-import { OptionService } from '../../services/option.service';
+import { TenantAppService } from '../../services/tenant-app.service';
 
 @Component({
   selector: 'app-sider-mobile',
@@ -38,10 +38,10 @@ export class SiderMobileComponent implements OnInit {
 
   readonly logoUrl = PATH_FAVICON;
 
+  appInfo!: TenantAppModel;
   darkMode = false;
   isMobile = false;
   activePage = '';
-  options: OptionEntity = {};
   user!: UserModel;
   isLoggedIn = false;
   adminUrl = '';
@@ -51,7 +51,7 @@ export class SiderMobileComponent implements OnInit {
     private userAgentService: UserAgentService,
     private platform: PlatformService,
     private commonService: CommonService,
-    private optionService: OptionService,
+    private tenantAppService: TenantAppService,
     private userService: UserService,
     private authService: AuthService,
     private imageService: NzImageService
@@ -63,20 +63,18 @@ export class SiderMobileComponent implements OnInit {
     this.commonService.darkMode$.pipe(takeUntil(this.destroy$)).subscribe((darkMode) => {
       this.darkMode = darkMode;
     });
-    this.optionService.options$
+    this.tenantAppService.appInfo$
       .pipe(
-        skipWhile((options) => isEmpty(options)),
+        skipWhile((appInfo) => isEmpty(appInfo)),
         takeUntil(this.destroy$)
       )
-      .subscribe((options) => {
-        this.options = options;
+      .subscribe((appInfo) => {
+        this.appInfo = appInfo;
+
         if (this.platform.isBrowser) {
-          this.adminUrl = this.options['admin_url'] + format(
-            ADMIN_URL_PARAM,
-            this.authService.getToken(),
-            this.authService.getExpiration(),
-            APP_ID
-          );
+          this.adminUrl =
+            this.appInfo.appAdminUrl +
+            format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration(), APP_ID);
         }
       });
     this.commonService.pageIndex$

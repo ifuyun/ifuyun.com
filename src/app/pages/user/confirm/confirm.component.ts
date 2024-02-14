@@ -3,7 +3,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
-import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM, APP_ID } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -13,8 +13,10 @@ import { MetaService } from '../../../core/meta.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { format } from '../../../helpers/helper';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { UserModel } from '../../../interfaces/user.interface';
 import { OptionService } from '../../../services/option.service';
+import { TenantAppService } from '../../../services/tenant-app.service';
 import { Wallpaper } from '../../wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../wallpaper/wallpaper.service';
 import { AuthService } from '../auth.service';
@@ -40,6 +42,7 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
 
   protected pageIndex = 'register';
 
+  private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
   private userId = '';
   private referer = '';
@@ -55,6 +58,7 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
     private metaService: MetaService,
     private commonService: CommonService,
     private message: MessageService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private userService: UserService,
     private authService: AuthService,
@@ -65,26 +69,26 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
   }
 
   ngOnInit() {
-    this.optionService.options$
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.queryParamMap])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
-        combineLatestWith(this.route.queryParamMap),
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe(([options, queryParams]) => {
+      .subscribe(([appInfo, options, qp]) => {
+        this.appInfo = appInfo;
         this.options = options;
-        this.adminUrl = this.options['admin_url'];
+        this.adminUrl = this.appInfo.appAdminUrl;
 
         this.updatePageInfo();
         this.initWallpaper();
 
-        const ref = queryParams.get('ref')?.trim() || '';
+        const ref = qp.get('ref')?.trim() || '';
         try {
           this.referer = decodeURIComponent(ref);
         } catch (e) {
           this.referer = ref;
         }
-        this.userId = queryParams.get('userId') || '';
+        this.userId = qp.get('userId') || '';
 
         this.fetchUser();
       });
@@ -113,7 +117,7 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
             const urlParam = format(ADMIN_URL_PARAM, res.accessToken, res.expiresAt, APP_ID);
             let redirectUrl: string;
             if (this.referer && this.referer !== 'logout') {
-              redirectUrl = this.options['site_url'] + this.referer;
+              redirectUrl = this.appInfo.appUrl + this.referer;
             } else {
               redirectUrl = this.adminUrl + urlParam;
             }
@@ -185,11 +189,11 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
   }
 
   private updatePageInfo() {
-    const titles = ['注册验证', this.options['site_name']];
-    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    const titles = ['注册验证', this.appInfo.appName];
+    const keywords: string[] = this.appInfo.keywords;
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
-      description: this.options['site_description'],
+      description: this.appInfo.appDescription,
       author: this.options['site_author'],
       keywords: uniq(keywords).join(',')
     };

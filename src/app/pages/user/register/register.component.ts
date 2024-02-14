@@ -3,7 +3,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
-import { combineLatestWith, skipWhile, takeUntil } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { APP_ID } from '../../../config/common.constant';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -12,7 +12,9 @@ import { MetaService } from '../../../core/meta.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import md5 from '../../../helpers/md5';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { OptionService } from '../../../services/option.service';
+import { TenantAppService } from '../../../services/tenant-app.service';
 import { Wallpaper } from '../../wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../wallpaper/wallpaper.service';
 import { AuthService } from '../auth.service';
@@ -69,6 +71,7 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
 
   protected pageIndex = 'register';
 
+  private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
 
   constructor(
@@ -80,6 +83,7 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
     private userAgentService: UserAgentService,
     private metaService: MetaService,
     private commonService: CommonService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private authService: AuthService,
     private wallpaperService: WallpaperService
@@ -91,13 +95,14 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
   ngOnInit(): void {
     this.updatePageOptions();
     this.updateActivePage();
-    this.optionService.options$
+
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
-        combineLatestWith(this.route.queryParamMap),
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe(([options]) => {
+      .subscribe(([appInfo, options]) => {
+        this.appInfo = appInfo;
         this.options = options;
 
         this.updatePageInfo();
@@ -162,11 +167,11 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
   }
 
   private updatePageInfo() {
-    const titles = ['注册', this.options['site_name']];
-    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    const titles = ['注册', this.appInfo.appName];
+    const keywords: string[] = this.appInfo.keywords;
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
-      description: this.options['site_description'],
+      description: this.appInfo.appDescription,
       author: this.options['site_author'],
       keywords: uniq(keywords).join(',')
     };

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, omit, uniq } from 'lodash';
-import { combineLatestWith, skipWhile, takeUntil, tap } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { APP_ID } from '../../../config/common.constant';
@@ -16,8 +16,10 @@ import { PaginatorService } from '../../../core/paginator.service';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { OptionService } from '../../../services/option.service';
 import { SearchService } from '../../../services/search.service';
+import { TenantAppService } from '../../../services/tenant-app.service';
 import { Post } from '../../post/post.interface';
 import { PostService } from '../../post/post.service';
 import { Wallpaper, WallpaperLang } from '../../wallpaper/wallpaper.interface';
@@ -32,7 +34,6 @@ import { WallpaperService } from '../../wallpaper/wallpaper.service';
 export class HomeComponent extends PageComponent implements OnInit {
   isMobile = false;
   pageIndex = 'index';
-  options: OptionEntity = {};
   keyword = '';
   postList: Post[] = [];
   wallpapers: Wallpaper[] = [];
@@ -44,6 +45,8 @@ export class HomeComponent extends PageComponent implements OnInit {
   pageUrl = '/';
   pageUrlParam: Params = {};
 
+  private appInfo!: TenantAppModel;
+  private options: OptionEntity = {};
   private pageSize = 10;
 
   constructor(
@@ -54,6 +57,7 @@ export class HomeComponent extends PageComponent implements OnInit {
     private metaService: MetaService,
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private postService: PostService,
     private paginator: PaginatorService,
@@ -66,19 +70,19 @@ export class HomeComponent extends PageComponent implements OnInit {
 
   ngOnInit(): void {
     this.updatePageOptions();
-    this.optionService.options$
+
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.queryParamMap])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
-        combineLatestWith(this.route.queryParamMap),
-        takeUntil(this.destroy$),
-        tap(([, queryParams]) => {
-          this.page = Number(queryParams.get('page')) || 1;
-          this.keyword = queryParams.get('keyword')?.trim() || '';
-        })
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
+        takeUntil(this.destroy$)
       )
-      .subscribe(([options]) => {
+      .subscribe(([appInfo, options, qp]) => {
+        this.appInfo = appInfo;
         this.options = options;
         this.pageUrlParam = omit({ ...this.route.snapshot.queryParams }, ['page']);
+        this.page = Number(qp.get('page')) || 1;
+        this.keyword = qp.get('keyword')?.trim() || '';
+
         if (this.keyword) {
           this.pageIndex = 'search';
           this.bizType = 'search';
@@ -216,9 +220,9 @@ export class HomeComponent extends PageComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = [this.options['site_name']];
+    const titles = [this.appInfo.appName];
     let description = '';
-    const keywords: string[] = (this.options['site_keywords'] || '').split(',');
+    const keywords: string[] = this.appInfo.keywords;
     if (this.bizType === 'search') {
       titles.unshift(this.keyword, '搜索');
       description += `「${this.keyword}」搜索结果`;
@@ -232,9 +236,9 @@ export class HomeComponent extends PageComponent implements OnInit {
       }
       description += '。';
     } else {
-      titles.unshift(this.options['site_slogan']);
+      titles.unshift(this.appInfo.appSlogan);
     }
-    description += `${this.options['site_description']}`;
+    description += `${this.appInfo.appDescription}`;
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),

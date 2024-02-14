@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
 import { NzImageService } from 'ng-zorro-antd/image';
-import { skipWhile, takeUntil } from 'rxjs';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { PATH_RED_PACKET } from '../../../config/common.constant';
@@ -12,8 +12,10 @@ import { PageComponent } from '../../../core/page.component';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { FavoriteLink } from '../../../interfaces/link.interface';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { LinkService } from '../../../services/link.service';
 import { OptionService } from '../../../services/option.service';
+import { TenantAppService } from '../../../services/tenant-app.service';
 
 @Component({
   selector: 'app-tool',
@@ -23,11 +25,12 @@ import { OptionService } from '../../../services/option.service';
 })
 export class ToolComponent extends PageComponent implements OnInit {
   isMobile = false;
-  options: OptionEntity = {};
   favoriteLinks: FavoriteLink[] = [];
 
   protected pageIndex = 'tool';
 
+  private appInfo!: TenantAppModel;
+  private options: OptionEntity = {};
   private breadcrumbs: BreadcrumbEntity[] = [];
 
   constructor(
@@ -36,6 +39,7 @@ export class ToolComponent extends PageComponent implements OnInit {
     private metaService: MetaService,
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private imageService: NzImageService,
     private linkService: LinkService
@@ -48,16 +52,19 @@ export class ToolComponent extends PageComponent implements OnInit {
     this.updateActivePage();
     this.updatePageOptions();
     this.updateBreadcrumb();
-    this.optionService.options$
+    this.fetchFavoriteLinks();
+
+    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
       .pipe(
-        skipWhile((options) => isEmpty(options)),
+        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe((options) => {
+      .subscribe(([appInfo, options]) => {
+        this.appInfo = appInfo;
         this.options = options;
+
         this.updatePageInfo();
       });
-    this.fetchFavoriteLinks();
   }
 
   showAlipayRedPacketQrcode() {
@@ -92,7 +99,7 @@ export class ToolComponent extends PageComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const siteName: string = this.options['site_name'] || '';
+    const siteName: string = this.appInfo.appName;
     const titles: string[] = ['百宝箱', siteName];
     const description = `${siteName}${this.options['tool_description']}`;
     const keywords: string[] = (this.options['tool_keywords'] || '').split(',');

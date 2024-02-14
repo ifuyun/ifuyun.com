@@ -17,6 +17,7 @@ import { UserService } from './pages/user/user.service';
 import { LogService } from './services/log.service';
 import { OptionService } from './services/option.service';
 import { TaxonomyService } from './services/taxonomy.service';
+import { TenantAppService } from './services/tenant-app.service';
 
 @Component({
   selector: 'app-root',
@@ -40,6 +41,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private cookieService: CookieService,
     private commonService: CommonService,
     private urlService: UrlService,
+    private tenantAppService: TenantAppService,
     private optionService: OptionService,
     private userService: UserService,
     private taxonomyService: TaxonomyService,
@@ -90,6 +92,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.initTheme();
     this.initThemeListener();
     this.optionService.getOptions().subscribe();
+    this.tenantAppService.getAppInfo().subscribe();
     this.taxonomyService.getTaxonomies().subscribe((taxonomies) => (this.postTaxonomies = taxonomies));
     if (this.platform.isBrowser) {
       this.userService.getLoginUser().subscribe();
