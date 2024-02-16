@@ -42,6 +42,7 @@ import { decodeEntities } from '../../../helpers/entities';
 import { FavoriteType } from '../../../interfaces/favorite.enum';
 import { Action, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
+import { TagEntity } from '../../../interfaces/tag.interface';
 import { TaxonomyEntity } from '../../../interfaces/taxonomy.interface';
 import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { Guest, UserModel } from '../../../interfaces/user.interface';
@@ -78,8 +79,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   nextPost: PostEntity | null = null;
   post!: PostModel;
   postMeta: Record<string, any> = {};
-  postTags: TaxonomyEntity[] = [];
   postCategories: TaxonomyEntity[] = [];
+  postTags: TagEntity[] = [];
   isFavorite = false;
   showCrumb = true;
   postVoted = false;
@@ -330,7 +331,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.metaService.updateHTMLMeta({
       title: `${this.post.postTitle} - ${this.appInfo.appName}`,
       description: this.post.postExcerpt,
-      keywords: uniq(this.postTags.map((item) => item.taxonomyName).concat(keywords)).join(','),
+      keywords: uniq(this.postTags.map((item) => item.tagName).concat(keywords)).join(','),
       author: this.options['site_author']
     });
   }
@@ -383,8 +384,8 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.post = post.post;
     this.postId = this.post.postId;
     this.postMeta = post.meta;
-    this.postTags = post.tags;
     this.postCategories = post.categories;
+    this.postTags = post.tags;
     this.isFavorite = post.isFavorite;
     this.postVoted = post.voted;
     this.initPayMaskFlag();

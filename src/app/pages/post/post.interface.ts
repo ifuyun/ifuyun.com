@@ -2,6 +2,7 @@ import { BreadcrumbEntity } from '../../components/breadcrumb/breadcrumb.interfa
 import { CommentFlag } from '../../components/comment/comment.enum';
 import { PostType } from '../../config/common.enum';
 import { QueryParam } from '../../core/common.interface';
+import { TagEntity } from '../../interfaces/tag.interface';
 import { TaxonomyEntity } from '../../interfaces/taxonomy.interface';
 import { UserEntity } from '../../interfaces/user.interface';
 
@@ -37,8 +38,8 @@ export interface PostModel extends PostEntity {
 export interface Post {
   post: PostModel;
   meta: Record<string, string>;
-  tags: TaxonomyEntity[];
   categories: TaxonomyEntity[];
+  tags: TagEntity[];
   breadcrumbs?: BreadcrumbEntity[];
   isFavorite: boolean;
   voted: boolean;

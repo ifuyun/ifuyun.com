@@ -21,6 +21,12 @@ export enum TaxonomyStatus {
   TRASH = 'trash'
 }
 
+export enum TagStatus {
+  PUBLIC = 'public',
+  PRIVATE = 'private',
+  TRASH = 'trash'
+}
+
 export enum VoteValue {
   LIKE = 'like',
   DISLIKE = 'dislike'

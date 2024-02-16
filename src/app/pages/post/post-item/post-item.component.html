@@ -57,8 +57,8 @@
     <div class="post-item-meta-icon"><i class="icon icon-tag"></i></div>
     <ul class="post-item-meta-info">
       <li *ngFor="let tag of post.tags">
-        <a [routerLink]="['/' + post.post.postType + '/tag/' + tag.taxonomySlug]"
-           title="{{tag.taxonomyName}}" rel="category">{{tag.taxonomyName}}</a>
+        <a [routerLink]="['/' + post.post.postType + '/tag/' + tag.tagName]"
+           title="{{tag.tagName}}" rel="category">{{tag.tagName}}</a>
       </li>
     </ul>
   </div>
