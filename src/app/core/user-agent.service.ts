@@ -11,14 +11,14 @@ import { PlatformService } from './platform.service';
 export class UserAgentService {
   public readonly userAgent!: IResult;
 
-  private userAgentString = '';
+  private uaString = '';
 
   constructor(
     private platform: PlatformService,
     @Optional() @Inject(REQUEST) private request: Request
   ) {
-    this.userAgentString = this.platform.isBrowser ? navigator.userAgent : this.request.headers['user-agent'] || '';
-    this.userAgent = UAParser(this.userAgentString);
+    this.uaString = this.platform.isBrowser ? navigator.userAgent : this.request.headers['user-agent'] || '';
+    this.userAgent = UAParser(this.uaString);
   }
 
   get browser(): IBrowser {
@@ -42,7 +42,7 @@ export class UserAgentService {
   }
 
   getUserAgentString() {
-    return this.userAgentString;
+    return this.uaString;
   }
 
   getUserAgentInfo(): UserAgentData {
@@ -56,7 +56,7 @@ export class UserAgentService {
       engineVersion: this.engine.version || '',
       isMobile: this.isMobile() ? 1 : 0,
       isCrawler: this.isCrawler() ? 1 : 0,
-      userAgent: this.userAgentString
+      userAgent: this.uaString
     };
   }
 
@@ -105,7 +105,11 @@ export class UserAgentService {
   }
 
   isCrawler() {
-    return /spider|googlebot|crawler|robot/i.test(this.userAgentString);
+    // 常规爬虫
+    if (/spider|googlebot|crawler|robot/i.test(this.uaString)) {
+      return true;
+    }
+    return /Mediapartners-Google|Storebot-Google|Google-InspectionTool|GoogleOther|APIs-Google|AdsBot-Google/i.test(this.uaString);
   }
 
   private checkBrowser(browserNames: string[]) {
