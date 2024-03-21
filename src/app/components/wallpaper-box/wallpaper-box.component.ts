@@ -89,7 +89,6 @@ export class WallpaperBoxComponent implements OnChanges {
           return {
             ...item,
             wallpaperTitle: item.wallpaperTitle || item.wallpaperTitleEn,
-            wallpaperUrl: `${BING_DOMAIN}${item.wallpaperUrl}`,
             wallpaperCopyrightLink: `${BING_DOMAIN}${item.wallpaperCopyrightLink || enLink}`,
             wallpaperDescription: description
           };
