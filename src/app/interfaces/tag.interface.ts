@@ -1,4 +1,4 @@
-import { TagStatus } from "../config/common.enum";
+import { TagStatus } from '../config/common.enum';
 
 export interface TagEntity {
   tagId: string;

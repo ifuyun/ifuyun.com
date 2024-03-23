@@ -109,7 +109,9 @@ export class UserAgentService {
     if (/spider|googlebot|crawler|robot/i.test(this.uaString)) {
       return true;
     }
-    return /Mediapartners-Google|Storebot-Google|Google-InspectionTool|GoogleOther|APIs-Google|AdsBot-Google/i.test(this.uaString);
+    return /Mediapartners-Google|Storebot-Google|Google-InspectionTool|GoogleOther|APIs-Google|AdsBot-Google/i.test(
+      this.uaString
+    );
   }
 
   private checkBrowser(browserNames: string[]) {

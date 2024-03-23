@@ -60,7 +60,7 @@ export class CommonService {
     return result;
   }
 
-  getURL(appInfo: TenantAppModel, url: string) {
+  getURL(url: string, appInfo: TenantAppModel) {
     return `${appInfo.appUrl}${url}`;
   }
 

@@ -15,7 +15,7 @@ import { HTMLMetaData } from '../../../core/meta.interface';
 import { MetaService } from '../../../core/meta.service';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
-import { format, generateId } from '../../../helpers/helper';
+import { format } from '../../../helpers/helper';
 import md5 from '../../../helpers/md5';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
@@ -27,7 +27,8 @@ import { WallpaperService } from '../../wallpaper/wallpaper.service';
 import { LoginResponse } from '../auth.interface';
 import { AuthService } from '../auth.service';
 import { UserComponent } from '../user.component';
-import { THIRD_LOGIN_API, THIRD_LOGIN_CALLBACK, USER_EMAIL_LENGTH, USER_PASSWORD_LENGTH } from '../user.constant';
+import { USER_EMAIL_LENGTH, USER_PASSWORD_LENGTH } from '../user.constant';
+import { UserService } from '../user.service';
 
 const margin = 24;
 const offsets = [margin, 0, -margin, 0];
@@ -88,7 +89,8 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
     private cookieService: CookieService,
     private authService: AuthService,
     private message: MessageService,
-    private wallpaperService: WallpaperService
+    private wallpaperService: WallpaperService,
+    private userService: UserService
   ) {
     super(document);
     this.isMobile = this.userAgentService.isMobile();
@@ -185,7 +187,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
     }
   }
 
-  getUser(type: string): void {
+  gotoThirdLogin(type: string): void {
     if (!['alipay', 'weibo', 'github'].includes(type)) {
       this.message.warning('Sorry, we are stepping up our efforts to launch this feature, please wait...');
       return;
@@ -193,42 +195,16 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
     if (isEmpty(this.options)) {
       return;
     }
-    let url = '';
-    switch (type) {
-      case 'alipay':
-        if (this.isMobile) {
-          const authUrl = format(
-            THIRD_LOGIN_API[type],
-            this.options['open_alipay_app_id'],
-            encodeURIComponent(this.getCallbackURL('m_alipay')),
-            generateId()
-          );
-          url = `alipays://platformapi/startapp?appId=20000067&url=${encodeURIComponent(authUrl)}`;
-        } else {
-          url = format(
-            THIRD_LOGIN_API[type],
-            this.options['open_alipay_app_id'],
-            encodeURIComponent(this.getCallbackURL('alipay')),
-            generateId()
-          );
-        }
-        break;
-      case 'weibo':
-        url = format(
-          THIRD_LOGIN_API[type],
-          this.options['open_weibo_app_key'],
-          encodeURIComponent(this.getCallbackURL('weibo'))
-        );
-        break;
-      case 'github':
-        url = format(
-          THIRD_LOGIN_API[type],
-          this.options['open_github_client_id'],
-          encodeURIComponent(this.getCallbackURL('github')),
-          generateId()
-        );
+    const url = this.userService.getThirdLoginURL({
+      type,
+      options: this.options,
+      appInfo: this.appInfo,
+      ref: this.referer,
+      isMobile: this.isMobile
+    });
+    if (url) {
+      location.href = url;
     }
-    location.href = url;
   }
 
   protected updateActivePage(): void {
@@ -255,10 +231,6 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
         this.wallpaper = res[0] || null;
         this.wallpaper && this.initStyles();
       });
-  }
-
-  private getCallbackURL(channel: string) {
-    return this.commonService.getURL(this.appInfo, format(THIRD_LOGIN_CALLBACK, channel, this.referer));
   }
 
   private updatePageInfo() {
