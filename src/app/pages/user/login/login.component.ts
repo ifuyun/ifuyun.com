@@ -27,7 +27,7 @@ import { WallpaperService } from '../../wallpaper/wallpaper.service';
 import { LoginResponse } from '../auth.interface';
 import { AuthService } from '../auth.service';
 import { UserComponent } from '../user.component';
-import { USER_EMAIL_LENGTH, USER_PASSWORD_LENGTH } from '../user.constant';
+import { USER_EMAIL_LENGTH, USER_PASSWORD_MAX_LENGTH } from '../user.constant';
 import { UserService } from '../user.service';
 
 const margin = 24;
@@ -54,7 +54,7 @@ const duration = 500; // ms
 })
 export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
   readonly maxLoginLength = USER_EMAIL_LENGTH;
-  readonly maxPasswordLength = USER_PASSWORD_LENGTH;
+  readonly maxPasswordLength = USER_PASSWORD_MAX_LENGTH;
 
   isMobile = false;
   wallpaper: Wallpaper | null = null;

@@ -24,7 +24,7 @@ import { TenantAppModel } from '../../interfaces/tenant-app.interface';
 import { UserModel } from '../../interfaces/user.interface';
 import { LoginResponse } from '../../pages/user/auth.interface';
 import { AuthService } from '../../pages/user/auth.service';
-import { USER_EMAIL_LENGTH, USER_PASSWORD_LENGTH } from '../../pages/user/user.constant';
+import { USER_EMAIL_LENGTH, USER_PASSWORD_MAX_LENGTH } from '../../pages/user/user.constant';
 import { UserService } from '../../pages/user/user.service';
 import { OptionService } from '../../services/option.service';
 import { TenantAppService } from '../../services/tenant-app.service';
@@ -52,7 +52,7 @@ export class LoginModalComponent extends BaseComponent implements OnInit {
   @Output() closeModal = new EventEmitter();
 
   readonly maxLoginLength = USER_EMAIL_LENGTH;
-  readonly maxPasswordLength = USER_PASSWORD_LENGTH;
+  readonly maxPasswordLength = USER_PASSWORD_MAX_LENGTH;
 
   isMobile = false;
   loginForm = this.fb.group({

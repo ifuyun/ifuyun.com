@@ -9,11 +9,11 @@
                  formControlName="email"
                  [maxlength]="maxEmailLength"
                  [autofocus]="true"
-                 placeholder="请输入邮箱"/>
+                 placeholder="邮箱地址"/>
           <ng-template #nameErrorTpl let-control>
             <ng-container *ngIf="control.hasError('required')">请输入邮箱</ng-container>
             <ng-container *ngIf="control.hasError('email')">请输入有效的邮箱</ng-container>
-            <ng-container *ngIf="control.hasError('maxlength')">邮箱最大长度为{{maxEmailLength}}字符</ng-container>
+            <ng-container *ngIf="control.hasError('maxlength')">邮箱最大长度为{{maxEmailLength}}位</ng-container>
           </ng-template>
         </nz-form-control>
       </nz-form-item>
@@ -25,7 +25,7 @@
                    [type]="passwordVisible ? 'text' : 'password'"
                    formControlName="password"
                    [maxlength]="maxPasswordLength"
-                   placeholder="请输入密码"/>
+                   placeholder="{{minPasswordLength}}-{{maxPasswordLength}}位密码，字母、数字、符号"/>
           </nz-input-group>
           <ng-template #pwdSuffix>
             <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
@@ -33,7 +33,9 @@
           </ng-template>
           <ng-template #pwdErrorTpl let-control>
             <ng-container *ngIf="control.hasError('required')">请输入密码</ng-container>
-            <ng-container *ngIf="control.hasError('maxlength')">密码最大长度为{{maxPasswordLength}}字符</ng-container>
+            <ng-container *ngIf="control.hasError('minlength')">密码最小长度为{{minPasswordLength}}位</ng-container>
+            <ng-container *ngIf="control.hasError('maxlength')">密码最大长度为{{maxPasswordLength}}位</ng-container>
+            <ng-container *ngIf="control.hasError('pattern')">密码为{{minPasswordLength}}-{{maxPasswordLength}}位字母、数字、符号的组合</ng-container>
           </ng-template>
         </nz-form-control>
       </nz-form-item>

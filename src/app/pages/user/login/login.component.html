@@ -9,10 +9,10 @@
                  formControlName="username"
                  [maxlength]="maxLoginLength"
                  [autofocus]="true"
-                 placeholder="请输入用户名或邮箱"/>
+                 placeholder="用户名或邮箱地址"/>
           <ng-template #nameErrorTpl let-control>
             <ng-container *ngIf="control.hasError('required')">请输入用户名或邮箱</ng-container>
-            <ng-container *ngIf="control.hasError('maxlength')">用户名或邮箱最大长度为{{maxLoginLength}}字符</ng-container>
+            <ng-container *ngIf="control.hasError('maxlength')">用户名或邮箱最大长度为{{maxLoginLength}}位</ng-container>
           </ng-template>
         </nz-form-control>
       </nz-form-item>
@@ -24,7 +24,7 @@
                    [type]="passwordVisible ? 'text' : 'password'"
                    formControlName="password"
                    [maxlength]="maxPasswordLength"
-                   placeholder="请输入密码"/>
+                   placeholder="用户密码"/>
           </nz-input-group>
           <ng-template #confirmPwdSuffix>
             <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
@@ -32,7 +32,7 @@
           </ng-template>
           <ng-template #confirmErrorTpl let-control>
             <ng-container *ngIf="control.hasError('required')">请输入密码</ng-container>
-            <ng-container *ngIf="control.hasError('maxlength')">密码最大长度为{{maxPasswordLength}}字符</ng-container>
+            <ng-container *ngIf="control.hasError('maxlength')">密码最大长度为{{maxPasswordLength}}位</ng-container>
           </ng-template>
         </nz-form-control>
       </nz-form-item>

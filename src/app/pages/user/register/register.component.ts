@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
@@ -19,7 +19,12 @@ import { Wallpaper } from '../../wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../wallpaper/wallpaper.service';
 import { AuthService } from '../auth.service';
 import { UserComponent } from '../user.component';
-import { USER_EMAIL_LENGTH, USER_PASSWORD_LENGTH } from '../user.constant';
+import {
+  USER_EMAIL_LENGTH,
+  USER_PASSWORD_MAX_LENGTH,
+  USER_PASSWORD_MIN_LENGTH,
+  USER_PASSWORD_PATTERN
+} from '../user.constant';
 
 @Component({
   selector: 'app-register',
@@ -29,13 +34,38 @@ import { USER_EMAIL_LENGTH, USER_PASSWORD_LENGTH } from '../user.constant';
 })
 export class RegisterComponent extends UserComponent implements OnInit, OnDestroy {
   readonly maxEmailLength = USER_EMAIL_LENGTH;
-  readonly maxPasswordLength = USER_PASSWORD_LENGTH;
+  readonly minPasswordLength = USER_PASSWORD_MIN_LENGTH;
+  readonly maxPasswordLength = USER_PASSWORD_MAX_LENGTH;
 
   isMobile = false;
   wallpaper: Wallpaper | null = null;
   regForm = this.fb.group({
     email: ['', [Validators.required, Validators.email, Validators.maxLength(this.maxEmailLength)]],
-    password: [null, [Validators.required, Validators.maxLength(this.maxPasswordLength)]]
+    password: [
+      null,
+      [
+        (control: AbstractControl): ValidationErrors | null => {
+          const password = control.value;
+
+          if (!password) {
+            return { required: true };
+          }
+
+          const passwordLength = password.length;
+
+          if (!USER_PASSWORD_PATTERN.test(password)) {
+            return { pattern: true };
+          }
+          if (passwordLength < this.minPasswordLength) {
+            return { minlength: true };
+          }
+          if (passwordLength > this.maxPasswordLength) {
+            return { maxlength: true };
+          }
+          return null;
+        }
+      ]
+    ]
   });
   passwordVisible = false;
   regLoading = false;
