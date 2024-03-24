@@ -6,6 +6,7 @@ import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highli
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
 import { CommentComponent } from '../../components/comment/comment.component';
 import { EmptyComponent } from '../../components/empty/empty.component';
+import { LoginModalComponent } from '../../components/login-modal/login-modal.component';
 import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
 import { PageBarComponent } from '../../components/page-bar/page-bar.component';
 import { CopyrightTypeDescPipe } from '../../pipes/copyright-type-desc.pipe';
@@ -32,6 +33,7 @@ import { PostComponent } from './post/post.component';
     CommentComponent,
     PageBarComponent,
     MakeMoneyComponent,
+    LoginModalComponent,
     EmptyComponent,
     DatePipe,
     CopyrightTypePipe,

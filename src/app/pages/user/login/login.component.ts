@@ -72,7 +72,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
   private adminUrl = '';
-  private referer = '';
+  private referrer = '';
 
   constructor(
     @Inject(DOCUMENT) protected override document: Document,
@@ -115,9 +115,9 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
 
         const ref = qp.get('ref')?.trim() || '';
         try {
-          this.referer = decodeURIComponent(ref);
+          this.referrer = decodeURIComponent(ref);
         } catch (e) {
-          this.referer = ref;
+          this.referrer = ref;
         }
 
         this.adminUrl = this.appInfo.appAdminUrl;
@@ -133,7 +133,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
                 this.authService.getExpiration(),
                 APP_ID
               );
-              location.href = this.referer || this.adminUrl + urlParam;
+              location.href = this.referrer || this.adminUrl + urlParam;
             }
           }
         }
@@ -146,45 +146,52 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
 
   login() {
     const { value, valid } = this.validateForm(this.loginForm);
-    if (valid) {
-      const { username, password } = value;
-      this.loginLoading = true;
-      this.authService
-        .login({
-          username: username || '',
-          password: md5(password || ''),
-          appId: APP_ID
-        })
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => {
-          this.loginLoading = false;
-          const loginRes: LoginResponse = res.data || {};
-          if (res.code === ResponseCode.SUCCESS && loginRes.accessToken) {
-            const urlParam = format(ADMIN_URL_PARAM, loginRes.accessToken, loginRes.expiresAt, APP_ID);
-            let redirectUrl: string;
-            if (this.referer && this.referer !== 'logout') {
-              redirectUrl = this.appInfo.appUrl + `?ref=${this.referer}`;
+    if (!valid) {
+      this.shakeForm();
+      return;
+    }
+    const { username, password } = value;
+    this.loginLoading = true;
+    this.authService
+      .login({
+        username: username || '',
+        password: md5(password || ''),
+        appId: APP_ID
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.loginLoading = false;
+        const loginRes: LoginResponse = res.data || {};
+
+        if (res.code === ResponseCode.SUCCESS && loginRes.accessToken) {
+          const urlParam = format(ADMIN_URL_PARAM, loginRes.accessToken, loginRes.expiresAt, APP_ID);
+          let redirectUrl: string;
+          if (this.referrer && this.referrer !== 'logout') {
+            if (/^https?:\/\//i.test(this.referrer)) {
+              // 绝对路径
+              redirectUrl = this.referrer;
             } else {
-              redirectUrl = this.adminUrl + urlParam;
-            }
-            window.location.href = redirectUrl;
-          } else if (res.code === ResponseCode.USER_UNVERIFIED) {
-            const user: UserModel = res.data?.user || {};
-            if (user.userId) {
-              this.router.navigate(['../confirm'], {
-                relativeTo: this.route,
-                queryParams: {
-                  userId: user.userId
-                }
-              });
+              // 相对路径
+              redirectUrl = this.appInfo.appUrl + '/' + this.referrer.replace(/^\//i, '');
             }
           } else {
-            this.shakeForm();
+            redirectUrl = this.adminUrl + urlParam;
           }
-        });
-    } else {
-      this.shakeForm();
-    }
+          window.location.href = redirectUrl;
+        } else if (res.code === ResponseCode.USER_UNVERIFIED) {
+          const user: UserModel = res.data?.user || {};
+          if (user.userId) {
+            this.router.navigate(['../confirm'], {
+              relativeTo: this.route,
+              queryParams: {
+                userId: user.userId
+              }
+            });
+          }
+        } else {
+          this.shakeForm();
+        }
+      });
   }
 
   gotoThirdLogin(type: string): void {
@@ -199,7 +206,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
       type,
       options: this.options,
       appInfo: this.appInfo,
-      ref: this.referer,
+      ref: this.referrer,
       isMobile: this.isMobile
     });
     if (url) {

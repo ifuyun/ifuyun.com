@@ -1,6 +1,6 @@
 <div class="user-box" [class.login-desktop]="!isMobile" [class.login-mobile]="isMobile">
   <div class="user-box-body">
-    <form nz-form nzLayout="vertical" class="user-form" [formGroup]="regForm">
+    <form nz-form nzLayout="vertical" class="auth-form" [formGroup]="regForm">
       <nz-form-item>
         <nz-form-label>邮箱</nz-form-label>
         <nz-form-control [nzErrorTip]="nameErrorTpl">
@@ -61,9 +61,9 @@
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
-        <div class="user-form-row">
-          <div class="user-form-col"></div>
-          <div class="user-form-col">
+        <div class="auth-actions">
+          <div></div>
+          <div>
             <button nz-button nzType="primary" (click)="register()" [nzLoading]="regLoading">注册</button>
           </div>
         </div>

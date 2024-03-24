@@ -23,14 +23,14 @@ export class AuthService {
   ) {}
 
   login(loginData: LoginEntity): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.USER_LOGIN), loginData).pipe(
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.USER_LOGIN), loginData, false).pipe(
       map((res) => res || {}),
       tap((res) => this.setAuth(res.data, loginData))
     );
   }
 
   logout(): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.USER_LOGOUT)).pipe(
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.USER_LOGOUT), {}, false).pipe(
       tap((res) => {
         if (res.code === ResponseCode.SUCCESS) {
           this.clearAuth();
@@ -41,16 +41,20 @@ export class AuthService {
 
   register(user: UserEntity): Observable<UserModel> {
     return this.apiService
-      .httpPost(this.apiService.getApiUrl(ApiUrl.USER_REGISTER), user)
+      .httpPost(this.apiService.getApiUrl(ApiUrl.USER_REGISTER), user, false)
       .pipe(map((res) => <any>(res?.data || {})));
   }
 
   verify(payload: { userId: string; code: string }): Observable<LoginResponse> {
     return this.apiService
-      .httpPost(this.apiService.getApiUrl(ApiUrl.USER_VERIFY), {
-        ...payload,
-        appId: APP_ID
-      })
+      .httpPost(
+        this.apiService.getApiUrl(ApiUrl.USER_VERIFY),
+        {
+          ...payload,
+          appId: APP_ID
+        },
+        false
+      )
       .pipe(
         map((res) => <any>(res?.data || '')),
         tap((res) => {
@@ -61,10 +65,14 @@ export class AuthService {
 
   resend(userId: string): Observable<UserModel> {
     return this.apiService
-      .httpPost(this.apiService.getApiUrl(ApiUrl.USER_RESEND_CODE), {
-        userId,
-        appId: APP_ID
-      })
+      .httpPost(
+        this.apiService.getApiUrl(ApiUrl.USER_RESEND_CODE),
+        {
+          userId,
+          appId: APP_ID
+        },
+        false
+      )
       .pipe(map((res) => <any>(res?.data || {})));
   }
 

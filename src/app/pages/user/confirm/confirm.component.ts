@@ -45,7 +45,7 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
   private userId = '';
-  private referer = '';
+  private referrer = '';
   private adminUrl = '';
 
   constructor(
@@ -84,9 +84,9 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
 
         const ref = qp.get('ref')?.trim() || '';
         try {
-          this.referer = decodeURIComponent(ref);
+          this.referrer = decodeURIComponent(ref);
         } catch (e) {
-          this.referer = ref;
+          this.referrer = ref;
         }
         this.userId = qp.get('userId') || '';
 
@@ -116,8 +116,8 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
           if (res.accessToken) {
             const urlParam = format(ADMIN_URL_PARAM, res.accessToken, res.expiresAt, APP_ID);
             let redirectUrl: string;
-            if (this.referer && this.referer !== 'logout') {
-              redirectUrl = this.appInfo.appUrl + this.referer;
+            if (this.referrer && this.referrer !== 'logout') {
+              redirectUrl = this.appInfo.appUrl + this.referrer;
             } else {
               redirectUrl = this.adminUrl + urlParam;
             }

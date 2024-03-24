@@ -40,7 +40,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
   private appId = '';
   private scope = '';
   private source = '';
-  private referer = '';
+  private referrer = '';
   private errorCode = '';
   private adminUrl = '';
 
@@ -79,9 +79,9 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
 
         const ref = qp.get('ref')?.trim() || '';
         try {
-          this.referer = decodeURIComponent(ref);
+          this.referrer = decodeURIComponent(ref);
         } catch (e) {
-          this.referer = ref;
+          this.referrer = ref;
         }
         const loginParam = ref ? `?ref=${ref}` : '';
         this.loginURL = this.appInfo.appLoginUrl + loginParam;
@@ -127,7 +127,7 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
         if (res.code === ResponseCode.SUCCESS) {
           this.loginStatus = 'success';
           this.authService.setAuth(res.data);
-          const redirectUrl = this.referer ? this.appInfo.appUrl + `?ref=${this.referer}` : this.adminUrl;
+          const redirectUrl = this.referrer ? this.appInfo.appUrl + `?ref=${this.referrer}` : this.adminUrl;
           location.replace(redirectUrl);
         } else {
           this.message.error(res.message || '登录失败');

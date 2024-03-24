@@ -87,6 +87,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   voteLoading = false;
   favoriteLoading = false;
   showPayMask = false;
+  loginModalVisible = false;
 
   private readonly copyHTML = '<i class="icon icon-copy"></i>Copy code';
   private readonly copiedHTML = '<i class="icon icon-check-lg"></i>Copied!';
@@ -97,7 +98,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   private postId = '';
   private postSlug = '';
   private unlistenImgClick!: () => void;
-  private referer = '';
+  private referrer = '';
   private commentUser: Guest | null = null;
 
   constructor(
@@ -145,7 +146,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       .subscribe(([appInfo, options, params, url]) => {
         this.appInfo = appInfo;
         this.options = options;
-        this.referer = url.previous;
+        this.referrer = url.previous;
 
         const postName = params['postName']?.trim();
         if (!postName) {
@@ -313,6 +314,14 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     }
   }
 
+  showLoginModal() {
+    this.loginModalVisible = true;
+  }
+
+  closeLoginModal() {
+    this.loginModalVisible = false;
+  }
+
   protected updateActivePage(): void {
     this.commonService.updateActivePage(this.pageIndex);
   }
@@ -338,7 +347,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
   private fetchPost() {
     this.postService
-      .getPostById(this.postId, this.postType, this.referer)
+      .getPostById(this.postId, this.postType, this.referrer)
       .pipe(takeUntil(this.destroy$))
       .subscribe((post) => {
         if (post && post.post && post.post.postId) {

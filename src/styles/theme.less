@@ -2,8 +2,8 @@
 
 :root {
   &[data-theme='light'] {
-    --base-color: #333;
-    --base-font-color: #333;
+    --base-color: @base-color;
+    --base-font-color: @base-color;
     --base-bg-color: #f6f6f6;
     --primary-color: @primary-color;
     --minor-color: #999;
@@ -90,11 +90,14 @@
     // antd variables
     --text-color: fade(#000, 85%);
     --popover-background: #fff;
+    --border-color-split: hsv(0, 0, 94%);
+    --text-color-secondary: fade(#000, 45%);
+    --icon-color-hover: fade(#000, 75%);
   }
 
   &[data-theme='dark'] {
-    --base-color: rgba(255, 255, 255, .65);
-    --base-font-color: #333;
+    --base-color: rgba(255, 255, 255, .8);
+    --base-font-color: @base-color;
     --base-bg-color: #111;
     --primary-bg-color: rgba(255, 255, 255, .05);
     --primary-color: @primary-color;
@@ -182,5 +185,8 @@
     // antd variables
     --text-color: fade(#fff, 85%);
     --popover-background: #1f1f1f;
+    --border-color-split: #303030;
+    --text-color-secondary: fade(#fff, 45%);
+    --icon-color-hover: fade(#fff, 75%);
   }
 }

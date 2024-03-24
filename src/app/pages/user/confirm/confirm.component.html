@@ -1,6 +1,6 @@
 <div class="user-box" [class.login-desktop]="!isMobile" [class.login-mobile]="isMobile">
   <div class="user-box-body">
-    <form nz-form nzLayout="vertical" class="user-form" [formGroup]="confirmForm">
+    <form nz-form nzLayout="vertical" class="auth-form" [formGroup]="confirmForm">
       <nz-form-item>
         <nz-form-label>邮箱</nz-form-label>
         <nz-form-control>
@@ -23,12 +23,12 @@
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
-        <div class="user-form-row">
-          <div class="user-form-col">
+        <div class="auth-actions">
+          <div>
             <button nz-button (click)="resendCode()"
                     [disabled]="countdown > 0">重新发送{{countdown > 0 ? ' (' + countdown + 's)' : ''}}</button>
           </div>
-          <div class="user-form-col">
+          <div>
             <button nz-button nzType="primary" (click)="verify()" [nzLoading]="confirmLoading">确定</button>
           </div>
         </div>

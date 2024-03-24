@@ -38,7 +38,7 @@
             <div>请扫描下方二维码关注公众号后，回复“<span class="keyword">{{postMeta['wechat_index']}}</span>”继续阅读。</div>
           </ng-container>
           <ng-container *ngIf="postMeta['should_login']">
-            <div>本文仅限注册用户阅读，请先<a routerLink="/user/login" [queryParams]="{ref: post.postGuid}" title="登录">登录</a>。</div>
+            <div>本文仅限注册用户阅读，请先<a (click)="showLoginModal()" title="登录">登录</a>。</div>
           </ng-container>
         </div>
       </div>
@@ -143,3 +143,4 @@
 <ng-container *ngIf="post?.commentFlag !== 'closed'">
   <i-comment [objectType]="commentObjectType"></i-comment>
 </ng-container>
+<i-login-modal *ngIf="loginModalVisible" [ref]="post.postGuid" (closeModal)="closeLoginModal()"></i-login-modal>
