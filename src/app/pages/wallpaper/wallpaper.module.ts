@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
 import { CommentComponent } from '../../components/comment/comment.component';
 import { EmptyComponent } from '../../components/empty/empty.component';
+import { LoginModalComponent } from '../../components/login-modal/login-modal.component';
 import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
 import { PageBarComponent } from '../../components/page-bar/page-bar.component';
 import { NgZorroAntdModule } from '../../modules/antd/ng-zorro-antd.module';
@@ -26,6 +27,7 @@ import { WallpaperComponent } from './wallpaper/wallpaper.component';
     BreadcrumbComponent,
     CommentComponent,
     MakeMoneyComponent,
+    LoginModalComponent,
     PageBarComponent,
     EmptyComponent,
     NumberViewPipe,

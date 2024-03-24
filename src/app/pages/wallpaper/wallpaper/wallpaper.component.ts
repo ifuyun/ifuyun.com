@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { saveAs } from 'file-saver';
 import { isEmpty, uniq } from 'lodash';
 import { NzImageService } from 'ng-zorro-antd/image';
@@ -64,6 +64,11 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   isFavorite = false;
   favoriteLoading = false;
   downloading = false;
+  loginModalVisible = false;
+
+  get pageRef() {
+    return `/wallpaper/${this.wallpaperId}?lang=${this.lang}`;
+  }
 
   protected pageIndex = 'wallpaper';
 
@@ -74,7 +79,6 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private platform: PlatformService,
     private userAgentService: UserAgentService,
     private destroy$: DestroyService,
@@ -155,11 +159,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
 
   download(uhd = false) {
     if (!this.isLoggedIn && uhd) {
-      this.router.navigate(['/user/login'], {
-        queryParams: {
-          ref: `/wallpaper/${this.wallpaperId}?lang=${this.lang}`
-        }
-      });
+      this.showLoginModal();
       return;
     }
     this.downloading = true;
@@ -287,6 +287,14 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         appId: APP_ID
       })
       .subscribe();
+  }
+
+  showLoginModal() {
+    this.loginModalVisible = true;
+  }
+
+  closeLoginModal() {
+    this.loginModalVisible = false;
   }
 
   protected updateActivePage(): void {
