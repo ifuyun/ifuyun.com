@@ -22,41 +22,18 @@
         <nz-form-control [nzErrorTip]="pwdErrorTpl">
           <nz-input-group [nzSuffix]="pwdSuffix">
             <input nz-input
-                   [type]="passwordVisible.password ? 'text' : 'password'"
+                   [type]="passwordVisible ? 'text' : 'password'"
                    formControlName="password"
                    [maxlength]="maxPasswordLength"
                    placeholder="请输入密码"/>
           </nz-input-group>
           <ng-template #pwdSuffix>
-            <span nz-icon [nzType]="passwordVisible.password ? 'eye-invisible' : 'eye'"
-                  (click)="passwordVisible.password = !passwordVisible.password"></span>
+            <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                  (click)="passwordVisible = !passwordVisible"></span>
           </ng-template>
           <ng-template #pwdErrorTpl let-control>
             <ng-container *ngIf="control.hasError('required')">请输入密码</ng-container>
             <ng-container *ngIf="control.hasError('maxlength')">密码最大长度为{{maxPasswordLength}}字符</ng-container>
-          </ng-template>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label>确认密码</nz-form-label>
-        <nz-form-control
-          [nzValidateStatus]="regForm.get('password')?.dirty && regForm.errors?.['confirmPassword'] ? 'error' : 'success'"
-          [nzErrorTip]="confirmPwdErrorTpl">
-          <nz-input-group [nzSuffix]="confirmPwdSuffix">
-            <input nz-input
-                   [type]="passwordVisible.confirmPassword ? 'text' : 'password'"
-                   formControlName="confirmPassword"
-                   [maxlength]="maxPasswordLength"
-                   placeholder="请再次输入密码"/>
-          </nz-input-group>
-          <ng-template #confirmPwdSuffix>
-            <span nz-icon [nzType]="passwordVisible.confirmPassword ? 'eye-invisible' : 'eye'"
-                  (click)="passwordVisible.confirmPassword = !passwordVisible.confirmPassword"></span>
-          </ng-template>
-          <ng-template #confirmPwdErrorTpl>
-            <ng-container *ngIf="regForm.errors?.['confirmPassword'].required">请输入密码</ng-container>
-            <ng-container *ngIf="regForm.errors?.['confirmPassword'].maxlength">密码最大长度为{{maxPasswordLength}}字符</ng-container>
-            <ng-container *ngIf="regForm.errors?.['confirmPassword'].invalid">两次密码不一致</ng-container>
           </ng-template>
         </nz-form-control>
       </nz-form-item>

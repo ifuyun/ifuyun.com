@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
@@ -33,40 +33,11 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
 
   isMobile = false;
   wallpaper: Wallpaper | null = null;
-  regForm = this.fb.group(
-    {
-      email: ['', [Validators.required, Validators.email, Validators.maxLength(this.maxEmailLength)]],
-      password: [null, [Validators.required, Validators.maxLength(this.maxPasswordLength)]],
-      confirmPassword: [null, []]
-    },
-    {
-      validators: [
-        (control: AbstractControl): ValidationErrors | null => {
-          const password = control.get('password')?.value;
-          const confirmPassword = control.get('confirmPassword')?.value;
-          const result: ValidationErrors = { confirmPassword: {} };
-
-          if (!confirmPassword) {
-            result['confirmPassword'].required = true;
-            return result;
-          }
-          if (confirmPassword.length > this.maxPasswordLength) {
-            result['confirmPassword'].maxlength = true;
-            return result;
-          }
-          if (confirmPassword !== password) {
-            result['confirmPassword'].invalid = true;
-            return result;
-          }
-          return null;
-        }
-      ]
-    }
-  );
-  passwordVisible = {
-    password: false,
-    confirmPassword: false
-  };
+  regForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(this.maxEmailLength)]],
+    password: [null, [Validators.required, Validators.maxLength(this.maxPasswordLength)]]
+  });
+  passwordVisible = false;
   regLoading = false;
 
   protected pageIndex = 'register';
