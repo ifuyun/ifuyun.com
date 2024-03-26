@@ -50,16 +50,13 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
           if (!password) {
             return { required: true };
           }
-
-          const passwordLength = password.length;
-
           if (!USER_PASSWORD_PATTERN.test(password)) {
             return { pattern: true };
           }
-          if (passwordLength < this.minPasswordLength) {
+          if (password.length < this.minPasswordLength) {
             return { minlength: true };
           }
-          if (passwordLength > this.maxPasswordLength) {
+          if (password.length > this.maxPasswordLength) {
             return { maxlength: true };
           }
           return null;
