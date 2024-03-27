@@ -287,6 +287,13 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
   onPostClick(e: MouseEvent) {
     const $target = e.target as HTMLElement;
     if ($target.classList.contains('i-code-copy')) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!this.isLoggedIn) {
+        this.showLoginModal();
+        return;
+      }
       const $parent = $target.parentNode?.parentNode;
       if ($parent) {
         const $code = $parent.querySelector('.i-code-text');
@@ -309,8 +316,6 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
           }, 2000);
         }
       }
-      e.preventDefault();
-      e.stopPropagation();
     }
   }
 

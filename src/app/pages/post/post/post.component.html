@@ -20,6 +20,7 @@
   <div class="divider"></div>
   <div #postEle>
     <article class="post-content"
+             [class.no-auth]="!isLoggedIn"
              [ngStyle]="{'user-select': post?.postPayFlag || postMeta['should_login'] && !isLoggedIn ? 'none' : ''}"
              [innerHTML]="post?.postContent | safeHtml"
              (click)="onPostClick($event)"></article>
