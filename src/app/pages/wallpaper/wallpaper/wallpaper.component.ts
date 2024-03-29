@@ -28,7 +28,7 @@ import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { filterHtmlTag, truncateString } from '../../../helpers/helper';
 import { FavoriteType } from '../../../interfaces/favorite.enum';
-import { Action, ActionObjectType } from '../../../interfaces/log.enum';
+import { ActionType, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { Guest } from '../../../interfaces/user.interface';
@@ -280,7 +280,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   logTranslate() {
     this.logService
       .logAction({
-        action: Action.TRANSLATE_WALLPAPER,
+        action: ActionType.TRANSLATE_WALLPAPER,
         objectType: ActionObjectType.WALLPAPER,
         objectId: this.wallpaperId,
         lang: this.lang === WallpaperLang.CN ? WallpaperLang.EN : WallpaperLang.CN,

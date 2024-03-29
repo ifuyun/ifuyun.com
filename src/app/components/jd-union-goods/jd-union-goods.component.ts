@@ -8,7 +8,7 @@ import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UrlService } from '../../core/url.service';
 import { UserAgentService } from '../../core/user-agent.service';
-import { Action, ActionObjectType } from '../../interfaces/log.enum';
+import { ActionType, ActionObjectType } from '../../interfaces/log.enum';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { JdUnionGoodsJingfen, JdUnionGoodsMaterial } from '../../pages/tool/jd-union.interface';
 import { ShoppingService } from '../../pages/tool/shopping/shopping.service';
@@ -100,7 +100,7 @@ export class JdUnionGoodsComponent implements OnInit {
   logClick(goods: JdUnionGoodsMaterial | JdUnionGoodsJingfen, isCoupon = false) {
     this.logService
       .logAction({
-        action: isCoupon ? Action.CLICK_JD_UNION_COUPON : Action.CLICK_JD_UNION,
+        action: isCoupon ? ActionType.CLICK_JD_UNION_COUPON : ActionType.CLICK_JD_UNION,
         objectType: ActionObjectType.ADS,
         adsPosition: this.isMobile ? 'mobile' : this.position,
         goodsName: goods.skuName,

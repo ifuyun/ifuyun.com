@@ -121,7 +121,7 @@ export class RegisterComponent extends UserComponent implements OnInit, OnDestro
         .register({
           userEmail: email,
           userPassword: md5(password),
-          userNiceName: email.split('@')[0],
+          userNickname: email.split('@')[0],
           appId: APP_ID
         })
         .subscribe((res) => {

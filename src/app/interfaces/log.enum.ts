@@ -13,7 +13,7 @@ export enum ActionObjectType {
   ADS = 'ads'
 }
 
-export enum Action {
+export enum ActionType {
   // post
   COPY_CODE = 'copy_code',
   // wallpaper

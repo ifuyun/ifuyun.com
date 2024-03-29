@@ -40,7 +40,7 @@ import { UrlService } from '../../../core/url.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { decodeEntities } from '../../../helpers/entities';
 import { FavoriteType } from '../../../interfaces/favorite.enum';
-import { Action, ActionObjectType } from '../../../interfaces/log.enum';
+import { ActionType, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { TagEntity } from '../../../interfaces/tag.interface';
 import { TaxonomyEntity } from '../../../interfaces/taxonomy.interface';
@@ -304,7 +304,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
 
           this.logService
             .logAction({
-              action: Action.COPY_CODE,
+              action: ActionType.COPY_CODE,
               objectType: ActionObjectType.POST,
               objectId: this.postId,
               appId: APP_ID

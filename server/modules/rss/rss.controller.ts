@@ -53,7 +53,7 @@ export class RssController {
         url: appInfo.appUrl + post.postGuid,
         guid: post.postId,
         categories: item.categories.map((category) => category.taxonomySlug),
-        author: item.meta['post_author'] || post.owner.userNiceName,
+        author: item.meta['post_author'] || post.owner.userNickname,
         date: post.postDate
       });
     });

@@ -2,7 +2,7 @@ import { AppParam } from '../core/common.interface';
 
 export interface UserEntity extends AppParam {
   userId?: string;
-  userNiceName: string;
+  userNickname: string;
   userEmail?: string;
   userPassword?: string;
   userCreated?: Date;
@@ -10,7 +10,7 @@ export interface UserEntity extends AppParam {
 }
 
 export interface UserModel extends UserEntity {
-  userLogin?: string;
+  userName?: string;
   userLink?: string;
   userEmailHash?: string;
   userAvatar?: string;

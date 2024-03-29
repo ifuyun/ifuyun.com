@@ -18,7 +18,7 @@ export class UserService {
   private loginUser: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>({
     appId: '',
     userId: '',
-    userNiceName: ''
+    userNickname: ''
   });
   loginUser$: Observable<UserModel> = this.loginUser.asObservable();
 

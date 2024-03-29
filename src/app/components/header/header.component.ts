@@ -12,7 +12,7 @@ import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
 import { format } from '../../helpers/helper';
-import { Action, ActionObjectType } from '../../interfaces/log.enum';
+import { ActionType, ActionObjectType } from '../../interfaces/log.enum';
 import { TaxonomyNode } from '../../interfaces/taxonomy.interface';
 import { TenantAppModel } from '../../interfaces/tenant-app.interface';
 import { UserModel } from '../../interfaces/user.interface';
@@ -108,7 +108,7 @@ export class HeaderComponent implements OnInit {
       this.showSearch = false;
       this.logService
         .logAction({
-          action: Action.SEARCH,
+          action: ActionType.SEARCH,
           objectType: ActionObjectType.SEARCH,
           keyword: this.keyword,
           appId: APP_ID

@@ -8,11 +8,11 @@
             <div class="meta">
               <div class="info">
                 <div class="avatar">
-                  <img src="{{comment.authorAvatar}}" alt="{{comment.user?.userNiceName || comment.authorName}}"/>
+                  <img src="{{comment.authorAvatar}}" alt="{{comment.user?.userNickname || comment.authorName}}"/>
                 </div>
                 <div class="author">
                   <span class="from">
-                    <span class="name">{{comment.user?.userNiceName || comment.authorName}}</span>
+                    <span class="name">{{comment.user?.userNickname || comment.authorName}}</span>
                     <span class="location">from {{comment.userLocation || 'Mars'}}</span>
                   </span>
                   <span class="time">{{comment.commentCreated | date:'yyyy-MM-dd HH:mm'}}</span>
@@ -28,7 +28,7 @@
                 <a class="author"
                    [attr.data-hash]="comment.parent.commentId | commentHash"
                    (click)="scrollToComment($event)"
-                >#{{comment.parent.commentId | commentHash}} @{{comment.parent.user?.userNiceName || comment.parent.authorName}}</a>
+                >#{{comment.parent.commentId | commentHash}} @{{comment.parent.user?.userNickname || comment.parent.authorName}}</a>
               </div>
               <div>{{comment.commentContent}}</div>
             </div>
@@ -61,11 +61,11 @@
                *ngIf="isMobile" id="{{comment.commentId | commentHash}}"
                [ngStyle]="{'padding-left': (comment.level - 1) * 32 + 'px'}">
             <div class="avatar">
-              <img src="{{comment.authorAvatar}}" alt="{{comment.user?.userNiceName || comment.authorName}}"/>
+              <img src="{{comment.authorAvatar}}" alt="{{comment.user?.userNickname || comment.authorName}}"/>
             </div>
             <div class="body">
               <div class="from">
-                <span class="name">{{comment.user?.userNiceName || comment.authorName}}</span>
+                <span class="name">{{comment.user?.userNickname || comment.authorName}}</span>
                 <span class="location">from {{
                   comment.ipInfo ? comment.ipInfo.ipRegion + ' · ' + comment.ipInfo.ipCity : 'Mars'
                   }}</span>
@@ -76,7 +76,7 @@
                   <a class="author"
                      [attr.data-hash]="comment.parent.commentId | commentHash"
                      (click)="scrollToComment($event)"
-                  >#{{comment.parent.commentId | commentHash}} @{{comment.parent.user?.userNiceName || comment.parent.authorName}}</a>
+                  >#{{comment.parent.commentId | commentHash}} @{{comment.parent.user?.userNickname || comment.parent.authorName}}</a>
                 </div>
                 <div>{{comment.commentContent}}</div>
               </div>

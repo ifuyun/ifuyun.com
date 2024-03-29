@@ -7,7 +7,7 @@ import { LinkTarget } from '../../config/common.enum';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
-import { Action, ActionObjectType } from '../../interfaces/log.enum';
+import { ActionType, ActionObjectType } from '../../interfaces/log.enum';
 import { CarouselOptions, CarouselVo, OptionEntity } from '../../interfaces/option.interface';
 import { TenantAppModel } from '../../interfaces/tenant-app.interface';
 import { WallpaperLang } from '../../pages/wallpaper/wallpaper.interface';
@@ -104,7 +104,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   logClick(carousel: CarouselVo) {
     this.logService
       .logAction({
-        action: Action.CLICK_CAROUSEL,
+        action: ActionType.CLICK_CAROUSEL,
         objectType: ActionObjectType.CAROUSEL,
         carouselTitle: carousel.title,
         carouselURL: carousel.link,

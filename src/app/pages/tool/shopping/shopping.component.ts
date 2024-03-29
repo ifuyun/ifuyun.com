@@ -13,7 +13,7 @@ import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
-import { Action, ActionObjectType } from '../../../interfaces/log.enum';
+import { ActionType, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { LogService } from '../../../services/log.service';
@@ -94,7 +94,7 @@ export class ShoppingComponent extends PageComponent implements OnInit {
     if (this.keyword && this.checkKeyword()) {
       this.logService
         .logAction({
-          action: Action.PROMOTE_JD_UNION,
+          action: ActionType.PROMOTE_JD_UNION,
           objectType: ActionObjectType.ADS,
           goodsURL: this.keyword,
           appId: APP_ID

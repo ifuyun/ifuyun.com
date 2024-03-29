@@ -9,7 +9,7 @@ import { ConsoleService } from '../../core/console.service';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
-import { Action, ActionObjectType } from '../../interfaces/log.enum';
+import { ActionType, ActionObjectType } from '../../interfaces/log.enum';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { LogService } from '../../services/log.service';
 import { OptionService } from '../../services/option.service';
@@ -105,7 +105,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
   logClick() {
     this.logService
       .logAction({
-        action: Action.CLICK_ADSENSE,
+        action: ActionType.CLICK_ADSENSE,
         objectType: ActionObjectType.ADS,
         adsPosition: this.position,
         appId: APP_ID

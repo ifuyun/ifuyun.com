@@ -12,7 +12,7 @@ import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UrlService } from '../../core/url.service';
 import { LinkEntity } from '../../interfaces/link.interface';
-import { Action, ActionObjectType } from '../../interfaces/log.enum';
+import { ActionType, ActionObjectType } from '../../interfaces/log.enum';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { NgZorroAntdModule } from '../../modules/antd/ng-zorro-antd.module';
 import { PostEntity } from '../../pages/post/post.interface';
@@ -135,7 +135,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.keyword) {
       this.logService
         .logAction({
-          action: Action.SEARCH,
+          action: ActionType.SEARCH,
           objectType: ActionObjectType.SEARCH,
           keyword: this.keyword,
           appId: APP_ID

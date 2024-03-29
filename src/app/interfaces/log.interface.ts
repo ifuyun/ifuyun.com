@@ -1,6 +1,6 @@
 import { Theme } from '../config/common.enum';
 import { AppParam, UserAgentData } from '../core/common.interface';
-import { Action, ActionObjectType } from './log.enum';
+import { ActionType, ActionObjectType } from './log.enum';
 
 export interface AccessLog extends UserAgentData, AppParam {
   logId: string;
@@ -24,7 +24,7 @@ export interface LeaveLog {
 
 export interface ActionLog extends AppParam {
   waId: string;
-  action: Action;
+  action: ActionType;
   objectType: ActionObjectType;
   objectId?: string;
   resolution?: string;

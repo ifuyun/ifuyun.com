@@ -6,7 +6,7 @@ import { APP_ID, PATH_WECHAT_CARD } from '../../config/common.constant';
 import { Theme } from '../../config/common.enum';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
-import { Action, ActionObjectType } from '../../interfaces/log.enum';
+import { ActionType, ActionObjectType } from '../../interfaces/log.enum';
 import { TenantAppModel } from '../../interfaces/tenant-app.interface';
 import { LogService } from '../../services/log.service';
 import { TenantAppService } from '../../services/tenant-app.service';
@@ -50,7 +50,7 @@ export class ToolboxComponent implements OnInit {
     this.wallpaperVisible = true;
     this.logService
       .logAction({
-        action: Action.SHOW_WALLPAPER_BOX,
+        action: ActionType.SHOW_WALLPAPER_BOX,
         objectType: ActionObjectType.TOOLBOX,
         appId: APP_ID
       })
@@ -62,7 +62,7 @@ export class ToolboxComponent implements OnInit {
     this.commonService.updateTheme(theme);
     this.logService
       .logAction({
-        action: Action.CHANGE_THEME,
+        action: ActionType.CHANGE_THEME,
         objectType: ActionObjectType.TOOLBOX,
         theme,
         appId: APP_ID
@@ -78,7 +78,7 @@ export class ToolboxComponent implements OnInit {
     ]);
     this.logService
       .logAction({
-        action: Action.SHOW_WECHAT_CARD,
+        action: ActionType.SHOW_WECHAT_CARD,
         objectType: ActionObjectType.TOOLBOX,
         appId: APP_ID
       })
@@ -88,7 +88,7 @@ export class ToolboxComponent implements OnInit {
   logRSS() {
     this.logService
       .logAction({
-        action: Action.OPEN_RSS,
+        action: ActionType.OPEN_RSS,
         objectType: ActionObjectType.TOOLBOX,
         appId: APP_ID
       })

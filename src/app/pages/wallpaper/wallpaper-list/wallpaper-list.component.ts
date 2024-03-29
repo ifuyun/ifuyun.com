@@ -14,7 +14,7 @@ import { PaginatorEntity } from '../../../core/paginator.interface';
 import { PaginatorService } from '../../../core/paginator.service';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
-import { Action, ActionObjectType } from '../../../interfaces/log.enum';
+import { ActionType, ActionObjectType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { Guest } from '../../../interfaces/user.interface';
@@ -159,7 +159,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   logLang(lang: string) {
     this.logService
       .logAction({
-        action: Action.CHANGE_WALLPAPER_LANG,
+        action: ActionType.CHANGE_WALLPAPER_LANG,
         objectType: ActionObjectType.WALLPAPER_LIST,
         lang,
         appId: APP_ID
@@ -170,7 +170,7 @@ export class WallpaperListComponent extends PageComponent implements OnInit, Aft
   logListMode(mode: string) {
     this.logService
       .logAction({
-        action: Action.CHANGE_WALLPAPER_LIST_MODE,
+        action: ActionType.CHANGE_WALLPAPER_LIST_MODE,
         objectType: ActionObjectType.WALLPAPER_LIST,
         listMode: mode,
         appId: APP_ID
