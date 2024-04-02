@@ -126,19 +126,33 @@
         </button>
       </div>
     </div>
-    <div class="post-link" *ngIf="postType !== 'page' && (prevPost || nextPost)">
-      <div class="post-link-prev">
-        <a *ngIf="prevPost" [routerLink]="[prevPost.postGuid]" title="{{prevPost.postTitle}}">
-          <span class="post-link-text">上一篇：{{prevPost.postTitle}}</span>
-        </a>
-      </div>
-      <div class="post-link-next">
-        <a *ngIf="nextPost" [routerLink]="[nextPost.postGuid]" title="{{nextPost.postTitle}}">
-          <span class="post-link-text">下一篇：{{nextPost.postTitle}}</span><span>&gt;</span>
-        </a>
-      </div>
-    </div>
   </footer>
+  <div class="post-more">
+    <div class="post-more-prev" *ngIf="prevPost">
+      <div class="post-more-photo">
+        <div class="post-more-photo-content" [style.background-image]="'url(' + prevPost.postCover + ')'"></div>
+        <div class="post-more-photo-overlay"></div>
+      </div>
+      <div class="post-more-content">
+        <div class="post-more-content-title">{{prevPost.postTitle}}</div>
+        <div>上一篇</div>
+      </div>
+      <a class="post-more-link" [routerLink]="[prevPost.postGuid]" [title]="prevPost.postTitle"></a>
+    </div>
+    <div *ngIf="!prevPost"></div>
+    <div class="post-more-next" *ngIf="nextPost">
+      <div class="post-more-photo">
+        <div class="post-more-photo-content" [style.background-image]="'url(' + nextPost.postCover + ')'"></div>
+        <div class="post-more-photo-overlay"></div>
+      </div>
+      <div class="post-more-content">
+        <div class="post-more-content-title">{{nextPost.postTitle}}</div>
+        <div>下一篇</div>
+      </div>
+      <a class="post-more-link" [routerLink]="[nextPost.postGuid]" [title]="nextPost.postTitle"></a>
+    </div>
+    <div *ngIf="!nextPost"></div>
+  </div>
 </div>
 <i-make-money></i-make-money>
 <ng-container *ngIf="post?.commentFlag !== 'closed'">
