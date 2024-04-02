@@ -38,6 +38,16 @@
   </span>
 </div>
 <div class="post-item-excerpt">
+  <div class="post-item-thumb" *ngIf="post.post.postCover">
+    <a class="post-thumb-link"
+       [routerLink]="[post.post.postGuid]"
+       [title]="post.post.postTitle">
+      <img class="lazyload"
+           [attr.src]="blankImage"
+           [attr.data-src]="post.post.postCover"
+           [alt]="post.post.postTitle"/><div class="overlay"></div>
+    </a>
+  </div>
   <div>
     <span [innerHTML]="post.post.postExcerpt"></span>
     <a class="read-more" [routerLink]="[post.post.postGuid]" [title]="post.post.postTitle">[阅读全文]</a>

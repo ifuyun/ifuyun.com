@@ -7,13 +7,13 @@
 
 Website of [ifuyun.com](https://www.ifuyun.com), implementation of Wutong CMS.
 
-[ifuyun.com](https://www.ifuyun.com) is powered by [Angular Universal](https://angular.io/guide/universal), API services is provided by [Wutong CMS API](https://jihulab.com/fuyun/wutong-api).
+[ifuyun.com](https://www.ifuyun.com) is powered by [Angular Universal](https://angular.io/guide/universal), API services is provided by [Wutong CMS API](https://bitbucket.org/ifuyun/wutong-api).
 
 ## Related projects
 
-- **RESTful API service for Wutong CMS:** [`Wutong CMS API`](https://jihulab.com/fuyun/wutong-api), powered by [`Nest.js`](https://nestjs.com).
-- **Wutong CMS admin site:** [`Wutong CMS Admin`](https://jihulab.com/fuyun/wutong-admin), powered by [`Angular`](https://angular.io) and [`NG-ZORRO`](https://github.com/NG-ZORRO/ng-zorro-antd).
-- **Wutong CMS rich text editor:**[`TinyMCE`](https://jihulab.com/fuyun/tinymce), powered by [`TinyMCE`](https://www.tiny.cloud).
+- **RESTful API service for Wutong CMS:** [`Wutong CMS API`](https://bitbucket.org/ifuyun/wutong-api), powered by [`Nest.js`](https://nestjs.com).
+- **Wutong CMS admin app:** [`Wutong CMS Admin`](https://bitbucket.org/ifuyun/wutong-admin), powered by [`Angular`](https://angular.io) and [`NG-ZORRO`](https://github.com/NG-ZORRO/ng-zorro-antd).
+- **Wutong CMS rich text editor:**[`Wutong Editor`](https://bitbucket.org/ifuyun/tinymce), powered by [`TinyMCE`](https://www.tiny.cloud).
 
 ## Development setup
 
