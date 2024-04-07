@@ -13,6 +13,7 @@ export interface PostEntity {
   postOwner: string;
   postDate: Date;
   postCover: string;
+  cover: string;
   postContent: string;
   postExcerpt: string;
   postStatus: string;

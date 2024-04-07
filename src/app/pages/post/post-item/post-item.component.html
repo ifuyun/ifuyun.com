@@ -38,13 +38,11 @@
   </span>
 </div>
 <div class="post-item-excerpt">
-  <div class="post-item-thumb" *ngIf="post.post.postCover">
-    <a class="post-thumb-link"
-       [routerLink]="[post.post.postGuid]"
-       [title]="post.post.postTitle">
+  <div class="post-item-thumb" *ngIf="post.post.cover">
+    <a class="post-thumb-link" [routerLink]="[post.post.postGuid]" [title]="post.post.postTitle">
       <img class="lazyload"
            [attr.src]="blankImage"
-           [attr.data-src]="post.post.postCover"
+           [attr.data-src]="post.post.cover"
            [alt]="post.post.postTitle"/><div class="overlay"></div>
     </a>
   </div>
