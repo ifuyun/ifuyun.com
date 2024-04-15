@@ -95,7 +95,7 @@
 </ng-container>
 <ng-container *ngIf="isMobile && showMobileHeader">
   <header class="header">
-    <div class="header-mobile">
+    <div class="header-mobile" [class.header-search]="showSearch">
       <ng-container *ngIf="!showSearch">
         <i class="icon icon-menu" (click)="toggleSiderOpen()"></i>
         <a class="logo" [routerLink]="['/']" title="{{appInfo?.appName}}">
@@ -106,7 +106,8 @@
       <ng-container *ngIf="showSearch">
         <form class="search-form" method="get" action="/" (submit)="search()">
           <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchBtn">
-            <input type="text" nz-input
+            <input nz-input
+                   type="text"
                    [(ngModel)]="keyword"
                    [autofocus]="focusSearch"
                    name="keyword"

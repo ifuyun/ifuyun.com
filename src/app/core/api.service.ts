@@ -6,7 +6,6 @@ import { Message } from '../config/message.enum';
 import { CommonService } from './common.service';
 import { HttpResponseEntity } from './http-response.interface';
 import { MessageService } from './message.service';
-import { PlatformService } from './platform.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +15,6 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    private platform: PlatformService,
     private commonService: CommonService,
     private message: MessageService
   ) {}

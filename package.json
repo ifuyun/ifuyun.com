@@ -1,6 +1,6 @@
 {
   "name": "ifuyun.com",
-  "version": "6.2.0",
+  "version": "6.2.1",
   "description": "Website of ifuyun.com",
   "keywords": [
     "Angular",
@@ -10,7 +10,6 @@
     "ElasticSeaarch",
     "CMS",
     "Blog",
-    "Prompt",
     "Wallpaper",
     "AI",
     "ChatGPT",
