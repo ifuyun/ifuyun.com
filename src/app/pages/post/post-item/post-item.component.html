@@ -51,7 +51,7 @@
     <a class="read-more" [routerLink]="[post.post.postGuid]" [title]="post.post.postTitle">[阅读全文]</a>
   </div>
 </div>
-<div class="post-item-meta post-item-meta-bottom" *ngIf="post.categories.length > 0 || post.tags.length > 0">
+<div class="post-item-meta post-item-meta-bottom" *ngIf="isMobile && post.categories.length > 0 || post.tags.length > 0">
   <div class="post-item-meta-taxonomy" *ngIf="isMobile && post.categories.length > 0">
     <div class="post-item-meta-icon"><i class="icon icon-folder"></i></div>
     <ul class="post-item-meta-info">

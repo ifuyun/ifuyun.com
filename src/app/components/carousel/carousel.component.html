@@ -1,7 +1,8 @@
 <div class="carousel-container"
      [class.carousel-desktop]="!isMobile"
      [class.carousel-mobile]="isMobile"
-     (mouseover)="stop()" (mouseout)="start()">
+     (mouseover)="stop()"
+     (mouseout)="start()">
   <div class="carousel"
        [style.width]="(100 * carousels.length) + '%'"
        [style.transform]="'translateX(-' + (100 / carousels.length) * activeIndex + '%)'">
@@ -9,22 +10,27 @@
          *ngFor="let carousel of carousels; let i = index"
          [ngStyle]="{'width': (100 / carousels.length) + '%'}">
       <ng-container *ngIf="i < 2">
-        <div class="carousel-img" *ngIf="!carousel.link"
+        <div class="carousel-img"
+             *ngIf="!carousel.link"
              [title]="carousel.caption"
              [style.background-image]="'url(' + carousel.fullUrl + ')'"></div>
-        <a class="carousel-link" *ngIf="carousel.link"
-           [href]="carousel.link" [title]="carousel.caption"
+        <a class="carousel-link"
+           *ngIf="carousel.link"
+           [href]="carousel.link"
+           [title]="carousel.caption"
            (click)="logClick(carousel)"
            [target]="carousel.target">
           <div class="carousel-img" [style.background-image]="'url(' + carousel.fullUrl + ')'"></div>
         </a>
       </ng-container>
       <ng-container *ngIf="i > 1">
-        <div class="carousel-img lazyload" *ngIf="!carousel.link"
+        <div class="carousel-img lazyload"
+             *ngIf="!carousel.link"
              [title]="carousel.caption"
              [attr.data-bg]="carousel.fullUrl"></div>
         <a class="carousel-link" *ngIf="carousel.link"
-           [href]="carousel.link" [title]="carousel.caption"
+           [href]="carousel.link"
+           [title]="carousel.caption"
            (click)="logClick(carousel)"
            [target]="carousel.target">
           <div class="carousel-img lazyload" [attr.data-bg]="carousel.fullUrl"></div>

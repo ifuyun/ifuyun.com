@@ -7,8 +7,8 @@ import { LinkTarget } from '../../config/common.enum';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
-import { ActionType, ActionObjectType } from '../../interfaces/log.enum';
-import { CarouselOptions, CarouselVo, OptionEntity } from '../../interfaces/option.interface';
+import { ActionObjectType, ActionType } from '../../interfaces/log.enum';
+import { CarouselOptions, CarouselVo } from '../../interfaces/option.interface';
 import { TenantAppModel } from '../../interfaces/tenant-app.interface';
 import { WallpaperLang } from '../../pages/wallpaper/wallpaper.interface';
 import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
@@ -32,7 +32,6 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   timer!: number;
 
   private appInfo!: TenantAppModel;
-  private options: OptionEntity = {};
   private carouselOptions!: CarouselOptions;
 
   constructor(
@@ -55,7 +54,6 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       )
       .subscribe(([appInfo, options]) => {
         this.appInfo = appInfo;
-        this.options = options;
 
         try {
           this.carouselOptions = JSON.parse(options['carousel_config']);

@@ -1,6 +1,11 @@
-<div class="post-list" [class.post-list-desktop]="!isMobile" [class.post-list-mobile]="isMobile">
+<div *ngIf="posts && posts.length > 0"
+     class="post-list"
+     [class.post-list-desktop]="!isMobile"
+     [class.post-list-mobile]="isMobile">
   <article *ngFor="let post of posts"
-           class="post-item" [class.post-item-desktop]="!isMobile" [class.post-item-mobile]="isMobile">
+           class="post-item"
+           [class.post-item-desktop]="!isMobile"
+           [class.post-item-mobile]="isMobile">
     <i-post-item [post]="post"></i-post-item>
   </article>
 </div>

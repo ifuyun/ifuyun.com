@@ -1,7 +1,7 @@
 <div class="breadcrumb" [ngClass]="{'breadcrumb-desktop': !isMobile, 'breadcrumb-mobile': isMobile}">
   <span>当前位置：</span>
   <ng-container *ngFor="let breadcrumb of breadcrumbs; let i = index">
-    <ng-container *ngIf="i > 0"><span class="separator">/</span></ng-container>
+    <span class="separator" *ngIf="i > 0">/</span>
     <ng-container *ngIf="breadcrumb.url !== ''">
       <a *ngIf="!breadcrumb.isHeader"
          [routerLink]="[breadcrumb.url]"

@@ -15,7 +15,6 @@ export class PageBarComponent {
   @Input() paginator: PaginatorEntity | null = null;
   @Input() url = '';
   @Input() isPath = true;
-  @Input() showBackground = true;
   @Input() param: Params = {};
 
   isMobile = false;
