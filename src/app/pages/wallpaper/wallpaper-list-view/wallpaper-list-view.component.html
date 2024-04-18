@@ -9,4 +9,7 @@
     <i-wallpaper-item [wallpaper]="wallpaper"></i-wallpaper-item>
   </article>
 </div>
-<i-empty *ngIf="!wallpapers || wallpapers.length < 1" [showBorder]="false" [showShadow]="true"></i-empty>
+<div *ngIf="wallpapers.length < 1"
+     class="empty-wrap" [class.empty-wrap-desktop]="!isMobile" [class.empty-wrap-mobile]="isMobile">
+  <i-empty [showBorder]="false" [showShadow]="true"></i-empty>
+</div>

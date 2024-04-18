@@ -22,7 +22,7 @@
   </div>
 </div>
 <ng-container *ngIf="mode !== 'list'">
-  <div class="wallpaper" [class.wallpaper-desktop]="!isMobile" [class.wallpaper-mobile]="isMobile">
+  <div *ngIf="wallpapers.length > 0" class="wallpaper" [class.wallpaper-desktop]="!isMobile" [class.wallpaper-mobile]="isMobile">
     <div class="wallpaper-list">
       <div class="wallpaper-item" *ngFor="let wallpaper of wallpapers">
         <div class="wallpaper-box">

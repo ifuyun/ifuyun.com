@@ -43,7 +43,6 @@ export class PostListComponent extends PageComponent implements OnInit {
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
-  private isPost = false;
   private pageSize = 10;
   private year = '';
   private month = '';
@@ -65,8 +64,6 @@ export class PostListComponent extends PageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isPost = this.postType === PostType.POST;
-
     this.updatePageOptions();
 
     combineLatest([
@@ -144,10 +141,10 @@ export class PostListComponent extends PageComponent implements OnInit {
         this.page = res.postList?.page || 1;
         this.total = res.postList?.total || 0;
 
-        res.breadcrumbs = (res.breadcrumbs || []).map((item) => {
-          item.url = `/${this.postType}/category/${item.slug}`;
-          return item;
-        });
+        res.breadcrumbs = (res.breadcrumbs || []).map((item) => ({
+          ...item,
+          url: `/${this.postType}/category/${item.slug}`
+        }));
         this.updatePageInfo(res.breadcrumbs);
         this.updateBreadcrumb(res.breadcrumbs);
 
