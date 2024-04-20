@@ -10,9 +10,8 @@ export enum PostType {
 
 export enum TaxonomyType {
   POST = 'post',
-  LINK = 'link',
-  TAG = 'tag',
-  MENU = 'menu'
+  BOT = 'bot',
+  LINK = 'link'
 }
 
 export enum TaxonomyStatus {

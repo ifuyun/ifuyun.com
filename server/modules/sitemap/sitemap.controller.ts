@@ -5,7 +5,7 @@ import { uniq } from 'lodash';
 import * as moment from 'moment';
 import { EnumChangefreq, SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
-import { PostType, TaxonomyType } from '../../../src/app/config/common.enum';
+import { PostType } from '../../../src/app/config/common.enum';
 import { TOOL_LINKS, TOOL_URL_ENTRY } from '../../../src/app/pages/tool/tool.constant';
 import { SitemapItem } from './sitemap.interface';
 import { SitemapService } from './sitemap.service';
@@ -115,24 +115,16 @@ export class SitemapController {
       changefreq: <EnumChangefreq>item.changefreq,
       priority: item.priority
     }));
-    const taxonomies: SitemapItem[] = data.taxonomies.map((item) => {
-      let urlPrefix = '';
-      let taxonomyType = '';
-      switch (item.taxonomyType) {
-        case TaxonomyType.POST:
-          urlPrefix = 'post';
-          taxonomyType = 'category';
-          break;
-        case TaxonomyType.TAG:
-          urlPrefix = 'post';
-          taxonomyType = 'tag';
-      }
-      return {
-        url: `${siteUrl}/${urlPrefix}/${taxonomyType}/${item.taxonomySlug}`,
-        changefreq: EnumChangefreq.DAILY,
-        priority: 0.7
-      };
-    });
+    const taxonomies: SitemapItem[] = data.taxonomies.map((item) => ({
+      url: `${siteUrl}/post/category/${item.taxonomySlug}`,
+      changefreq: EnumChangefreq.DAILY,
+      priority: 0.7
+    }));
+    const tags: SitemapItem[] = data.tags.map((item) => ({
+      url: `${siteUrl}/post/tag/${item.tagName}`,
+      changefreq: EnumChangefreq.DAILY,
+      priority: 0.7
+    }));
 
     streamToPromise(
       <Readable>(
@@ -147,6 +139,7 @@ export class SitemapController {
             wallpaperArchivesByYear,
             wallpaperArchivesByMonth,
             taxonomies,
+            tags,
             tools
           )
         ).pipe(sitemapStream)
