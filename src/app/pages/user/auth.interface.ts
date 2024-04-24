@@ -6,6 +6,12 @@ export interface LoginEntity extends AppParam {
 }
 
 export interface LoginResponse {
-  accessToken: string;
-  expiresAt: number;
+  user: {
+    userId: string;
+    userNickname: string;
+  };
+  token: {
+    accessToken: string;
+    expiresAt: number;
+  };
 }

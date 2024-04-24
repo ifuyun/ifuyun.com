@@ -115,9 +115,9 @@ export class AuthService {
   }
 
   setAuth(authResult: LoginResponse, loginData?: LoginEntity) {
-    if (authResult?.accessToken) {
-      localStorage?.setItem('token', authResult.accessToken);
-      localStorage?.setItem('token_expires', authResult.expiresAt.toString());
+    if (authResult.token?.accessToken) {
+      localStorage?.setItem('token', authResult.token.accessToken);
+      localStorage?.setItem('token_expires', authResult.token.expiresAt.toString());
       if (loginData?.username) {
         this.cookieService.set('user', loginData.username, {
           path: '/',

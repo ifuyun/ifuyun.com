@@ -2,7 +2,6 @@ import { Controller, Get, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
 import * as RSS from 'rss';
 import { Post } from '../../../src/app/pages/post/post.interface';
-import { PATH_LOGO } from '../../common/common.constant';
 import { PageSizePipe } from '../../pipes/page-size.pipe';
 import { ParseIntPipe } from '../../pipes/parse-int.pipe';
 import { TrimPipe } from '../../pipes/trim.pipe';
@@ -36,7 +35,7 @@ export class RssController {
       generator: appInfo.appDomain,
       feed_url: `${appInfo.appUrl}/rss.xml`,
       site_url: appInfo.appUrl,
-      image_url: `${appInfo.appUrl}${PATH_LOGO}`,
+      image_url: appInfo.appLogoUrl,
       managingEditor: options['site_author'],
       webMaster: options['site_author'],
       copyright: `2014-${new Date().getFullYear()} ${appInfo.appDomain}`,

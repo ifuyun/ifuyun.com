@@ -21,7 +21,9 @@ export class ApiRequestInterceptor implements HttpInterceptor {
     if (isApiRequest) {
       if (token) {
         httpRequest = httpRequest.clone({
-          setHeaders: { Authorization: 'Bearer ' + token }
+          setHeaders: {
+            Authorization: 'Bearer ' + token
+          }
         });
       }
       httpRequest = httpRequest.clone({
