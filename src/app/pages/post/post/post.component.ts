@@ -401,7 +401,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
     this.postCategories = post.categories;
     this.postTags = post.tags;
     this.isFavorite = post.isFavorite;
-    this.postVoted = post.voted;
+    this.postVoted = post.isVoted;
     this.initPayMaskFlag();
 
     if (this.postType !== PostType.PAGE) {

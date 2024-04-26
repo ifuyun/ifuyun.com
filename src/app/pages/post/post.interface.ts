@@ -44,7 +44,7 @@ export interface Post {
   tags: TagEntity[];
   breadcrumbs?: BreadcrumbEntity[];
   isFavorite: boolean;
-  voted: boolean;
+  isVoted: boolean;
 }
 
 export interface PostQueryParam extends QueryParam {

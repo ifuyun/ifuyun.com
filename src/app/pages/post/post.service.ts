@@ -107,12 +107,12 @@ export class PostService {
     if (!Array.isArray(posts)) {
       return {
         ...posts,
-        voted: voted.includes(posts.post.postId)
+        isVoted: voted.includes(posts.post.postId)
       };
     }
     return posts.map((item) => ({
       ...item,
-      voted: voted.includes(item.post.postId)
+      isVoted: voted.includes(item.post.postId)
     })) as T;
   }
 }

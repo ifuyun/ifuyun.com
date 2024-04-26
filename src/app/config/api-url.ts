@@ -26,7 +26,7 @@ export enum ApiUrl {
   COMMENT_LIST = '/comments',
   COMMENT = '/comments/comment',
   // vote
-  VOTE = '/votes/vote',
+  VOTE = '/votes/public-vote',
   // user
   USER_LOGIN = '/users/login',
   USER_LOGOUT = '/users/logout',
