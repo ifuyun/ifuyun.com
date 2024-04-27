@@ -301,6 +301,15 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     this.commonService.updateActivePage(this.pageIndex);
   }
 
+  protected updatePageOptions(): void {
+    this.commonService.updatePageOptions({
+      showHeader: true,
+      showFooter: true,
+      showMobileHeader: true,
+      showMobileFooter: true
+    });
+  }
+
   private fetchWallpaper() {
     this.wallpaperService
       .getWallpaperById(this.wallpaperId)
@@ -331,10 +340,11 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
           this.wallpaper.wallpaperLocation = wallpaperLocation || this.unknownLocation;
           this.wallpaper.hasTranslation = hasTranslation;
           this.isFavorite = wallpaper.isFavorite;
+
+          this.updatePageInfo();
+          this.updateBreadcrumb();
+          this.initWallpaperStatus();
         }
-        this.updatePageInfo();
-        this.updateBreadcrumb();
-        this.initWallpaperStatus();
       });
   }
 
@@ -375,40 +385,24 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
   }
 
   private updatePageInfo() {
-    const titles: string[] = ['高清壁纸', this.appInfo.appName];
+    const titles: string[] = [this.wallpaper.wallpaperCopyright, '高清壁纸', this.appInfo.appName];
     let description = '';
     const fullStop = this.lang === WallpaperLang.EN ? '.' : '。';
     const comma = this.lang === WallpaperLang.EN ? ', ' : '，';
     const wallpaperLocation = this.wallpaper?.wallpaperLocation ? comma + this.wallpaper.wallpaperLocation : '';
-    let story = '';
 
-    if (this.wallpaper) {
-      titles.unshift(this.wallpaper.wallpaperCopyright);
-      description += `${this.wallpaper.wallpaperCopyright}${wallpaperLocation}`;
-      description += description.endsWith(fullStop) ? '' : fullStop;
-      if (this.lang === WallpaperLang.EN) {
-        description += ' ';
-        story = this.wallpaper.wallpaperStoryEn || this.wallpaper.wallpaperStory;
-      } else {
-        story = this.wallpaper.wallpaperStory || this.wallpaper.wallpaperStoryEn;
-      }
+    description += `${this.wallpaper.wallpaperCopyright}${wallpaperLocation}`;
+    description += description.endsWith(fullStop) ? '' : fullStop;
+    if (this.lang === WallpaperLang.EN) {
+      description += ' ';
     }
-    const wallpaperDesc = truncateString(filterHtmlTag(story), 140);
+    const wallpaperDesc = truncateString(filterHtmlTag(this.wallpaper.wallpaperStory), 140);
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
       description: `${description}${wallpaperDesc}`,
       keywords: this.options['wallpaper_keywords'],
       author: this.options['site_author']
-    });
-  }
-
-  protected updatePageOptions(): void {
-    this.commonService.updatePageOptions({
-      showHeader: true,
-      showFooter: true,
-      showMobileHeader: true,
-      showMobileFooter: true
     });
   }
 

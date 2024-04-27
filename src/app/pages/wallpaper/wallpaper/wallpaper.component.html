@@ -3,7 +3,8 @@
   <header class="post-header">
     <h1 class="post-title">
       <a routerLink="." [queryParams]="getLangParams()"
-         title="{{wallpaper?.wallpaperCopyright}}" rel="bookmark">{{wallpaper?.wallpaperCopyright}}</a>
+         title="{{wallpaper?.wallpaperCopyright}}"
+         rel="bookmark">{{wallpaper?.wallpaperCopyright}}</a>
     </h1>
     <div class="post-meta post-meta-top">
       <span title="日期: {{wallpaper?.wallpaperDate}}">
@@ -64,7 +65,8 @@
     <div class="post-actions">
       <div>
         <button class="button-like"
-                [ngClass]="{liked: wallpaper?.wallpaperVoted, loading: voteLoading}" (click)="voteWallpaper()">
+                [ngClass]="{liked: wallpaper?.wallpaperVoted, loading: voteLoading}"
+                (click)="voteWallpaper()">
           <i class="icon icon-like-fill"></i>
           <span class="text">真棒！{{wallpaper && wallpaper.wallpaperLikes > 0 ? wallpaper.wallpaperLikes : ''}}</span>
           <span class="parkinson-mask" *ngIf="!voteLoading"><i class="icon icon-like-fill"></i></span>
@@ -89,7 +91,7 @@
     <div class="post-more-prev" *ngIf="prevWallpaper">
       <div class="post-more-photo">
         <div class="post-more-photo-content"
-             [style.background-image]="'url(' + (prevWallpaper?.wallpaperThumbUrl || '') + ')'"></div>
+             [style.background-image]="'url(' + (prevWallpaper.wallpaperThumbUrl || '') + ')'"></div>
         <div class="post-more-photo-overlay"></div>
       </div>
       <div class="post-more-content">
@@ -105,7 +107,7 @@
     <div class="post-more-next" *ngIf="nextWallpaper">
       <div class="post-more-photo">
         <div class="post-more-photo-content"
-             [style.background-image]="'url(' + (nextWallpaper?.wallpaperThumbUrl || '') + ')'"></div>
+             [style.background-image]="'url(' + (nextWallpaper.wallpaperThumbUrl || '') + ')'"></div>
         <div class="post-more-photo-overlay"></div>
       </div>
       <div class="post-more-content">
