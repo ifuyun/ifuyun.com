@@ -60,14 +60,10 @@ export class WallpaperService {
     });
   }
 
-  getWallpapersOfPrevAndNext(
-    wallpaperId: string,
-    lang: WallpaperLang
-  ): Observable<{ prevWallpaper: Wallpaper; nextWallpaper: Wallpaper }> {
+  getWallpapersOfPrevAndNext(wallpaperId: string): Observable<{ prevWallpaper: Wallpaper; nextWallpaper: Wallpaper }> {
     return this.apiService
       .httpGet(this.apiService.getApiUrl(ApiUrl.WALLPAPER_PREV_AND_NEXT), {
         wallpaperId,
-        lang,
         appId: APP_ID
       })
       .pipe(map((res) => res?.data || {}));

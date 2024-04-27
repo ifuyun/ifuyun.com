@@ -28,7 +28,7 @@ import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
 import { filterHtmlTag, truncateString } from '../../../helpers/helper';
 import { FavoriteType } from '../../../interfaces/favorite.enum';
-import { ActionType, ActionObjectType } from '../../../interfaces/log.enum';
+import { ActionObjectType, ActionType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { Guest } from '../../../interfaces/user.interface';
@@ -273,6 +273,13 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
     return this.lang === WallpaperLang.CN ? {} : { lang: this.lang };
   }
 
+  getPrevAndNextLangParams(wallpaper: Wallpaper): Params {
+    if (this.lang === WallpaperLang.CN) {
+      return !wallpaper.isCn ? { lang: WallpaperLang.EN } : {};
+    }
+    return !wallpaper.isEn ? {} : { lang: WallpaperLang.EN };
+  }
+
   getTranslateLangParams(): Params {
     return this.lang === WallpaperLang.CN ? { lang: WallpaperLang.EN } : {};
   }
@@ -350,7 +357,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
 
   private fetchPrevAndNext() {
     this.wallpaperService
-      .getWallpapersOfPrevAndNext(this.wallpaperId, this.lang)
+      .getWallpapersOfPrevAndNext(this.wallpaperId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.prevWallpaper = null;
@@ -360,18 +367,22 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
           this.prevWallpaper = {
             ...res.prevWallpaper,
             wallpaperCopyright:
-              this.lang === WallpaperLang.CN
-                ? res.prevWallpaper.wallpaperCopyright
-                : res.prevWallpaper.wallpaperCopyrightEn
+              this.lang === WallpaperLang.EN
+                ? res.prevWallpaper.wallpaperCopyrightEn || res.prevWallpaper.wallpaperCopyright
+                : res.prevWallpaper.wallpaperCopyright || res.prevWallpaper.wallpaperCopyrightEn,
+            isCn: !!res.prevWallpaper.wallpaperCopyright,
+            isEn: !!res.prevWallpaper.wallpaperCopyrightEn
           };
         }
         if (res.nextWallpaper) {
           this.nextWallpaper = {
             ...res.nextWallpaper,
             wallpaperCopyright:
-              this.lang === WallpaperLang.CN
-                ? res.nextWallpaper.wallpaperCopyright
-                : res.nextWallpaper.wallpaperCopyrightEn
+              this.lang === WallpaperLang.EN
+                ? res.nextWallpaper.wallpaperCopyrightEn || res.nextWallpaper.wallpaperCopyright
+                : res.nextWallpaper.wallpaperCopyright || res.nextWallpaper.wallpaperCopyrightEn,
+            isCn: !!res.nextWallpaper.wallpaperCopyright,
+            isEn: !!res.nextWallpaper.wallpaperCopyrightEn
           };
         }
       });

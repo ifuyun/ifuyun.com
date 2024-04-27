@@ -100,7 +100,7 @@
       </div>
       <a class="post-more-link"
          [routerLink]="['../' + prevWallpaper.wallpaperId]"
-         [queryParams]="getLangParams()"
+         [queryParams]="getPrevAndNextLangParams(prevWallpaper)"
          [title]="prevWallpaper.wallpaperCopyright"></a>
     </div>
     <div *ngIf="!prevWallpaper"></div>
@@ -116,7 +116,7 @@
       </div>
       <a class="post-more-link"
          [routerLink]="['../' + nextWallpaper.wallpaperId]"
-         [queryParams]="getLangParams()"
+         [queryParams]="getPrevAndNextLangParams(nextWallpaper)"
          [title]="nextWallpaper.wallpaperCopyright"></a>
     </div>
     <div *ngIf="!nextWallpaper"></div>
