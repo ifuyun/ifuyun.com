@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
@@ -24,12 +24,8 @@ import { PostService } from '../post.service';
   providers: [DestroyService]
 })
 export class PostArchiveComponent extends PageComponent implements OnInit {
-  @Input() postType: PostType = PostType.POST;
-
-  isPost = false;
   isMobile = false;
   pageIndex = '';
-  urlPrefix = '';
   archiveDateList!: ArchiveDataMap;
   archiveYearList: string[] = [];
 
@@ -52,9 +48,6 @@ export class PostArchiveComponent extends PageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isPost = this.postType === PostType.POST;
-    this.urlPrefix = 'post';
-
     this.updatePageOptions();
     this.updateBreadcrumb();
     this.fetchArchiveData();
@@ -103,12 +96,11 @@ export class PostArchiveComponent extends PageComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const pageType = '文章';
-    const titles = ['归档', pageType, this.appInfo.appName];
+    const titles = ['归档', '文章', this.appInfo.appName];
     const keywords: string[] = (this.options['post_keywords'] || '').split(',');
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
-      description: `${this.appInfo.appName}${pageType}归档。${this.appInfo.appDescription}`,
+      description: `${this.appInfo.appName}文章归档。${this.appInfo.appDescription}`,
       author: this.options['site_author'],
       keywords: uniq(keywords).join(',')
     };
@@ -116,18 +108,17 @@ export class PostArchiveComponent extends PageComponent implements OnInit {
   }
 
   private updateBreadcrumb(): void {
-    const pageType = '文章';
     this.breadcrumbs = [
       {
-        label: pageType,
-        tooltip: `${pageType}列表`,
-        url: `/${this.urlPrefix}`,
+        label: '文章',
+        tooltip: '文章列表',
+        url: '/post',
         isHeader: false
       },
       {
         label: '归档',
-        tooltip: `${pageType}归档`,
-        url: `/${this.urlPrefix}/archive`,
+        tooltip: '文章归档',
+        url: '/post/archive',
         isHeader: true
       }
     ];
