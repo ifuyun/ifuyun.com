@@ -115,7 +115,7 @@ export class LoginModalComponent extends BaseComponent implements OnInit {
         const loginRes: LoginResponse = res.data || {};
 
         if (res.code === ResponseCode.SUCCESS && loginRes.token.accessToken) {
-          const urlParam = format(ADMIN_URL_PARAM, loginRes.token.accessToken, loginRes.token.expiresAt, APP_ID);
+          const urlParam = format(ADMIN_URL_PARAM, loginRes.token.accessToken, APP_ID);
           let redirectUrl: string;
           if (this.ref) {
             if (/^https?:\/\//i.test(this.ref)) {

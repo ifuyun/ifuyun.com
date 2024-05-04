@@ -114,10 +114,10 @@ export class ConfirmComponent extends UserComponent implements OnInit, OnDestroy
         .subscribe((res) => {
           this.confirmLoading = false;
           if (res.token.accessToken) {
-            const urlParam = format(ADMIN_URL_PARAM, res.token.accessToken, res.token.expiresAt, APP_ID);
+            const urlParam = format(ADMIN_URL_PARAM, res.token.accessToken, APP_ID);
             let redirectUrl: string;
             if (this.referrer && this.referrer !== 'logout') {
-              redirectUrl = this.appInfo.appUrl + this.referrer;
+              redirectUrl = this.appInfo.appUrl + '/' + this.referrer.replace(/^\//i, '');
             } else {
               redirectUrl = this.adminUrl + urlParam;
             }

@@ -127,12 +127,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
           // 登录状态直接跳转来源页或后台首页
           if (this.authService.isLoggedIn()) {
             if (this.platform.isBrowser) {
-              const urlParam = format(
-                ADMIN_URL_PARAM,
-                this.authService.getToken(),
-                this.authService.getExpiration(),
-                APP_ID
-              );
+              const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), APP_ID);
               location.href = this.referrer || this.adminUrl + urlParam;
             }
           }
@@ -164,7 +159,7 @@ export class LoginComponent extends UserComponent implements OnInit, OnDestroy {
         const loginRes: LoginResponse = res.data || {};
 
         if (res.code === ResponseCode.SUCCESS && loginRes.token.accessToken) {
-          const urlParam = format(ADMIN_URL_PARAM, loginRes.token.accessToken, loginRes.token.expiresAt, APP_ID);
+          const urlParam = format(ADMIN_URL_PARAM, loginRes.token.accessToken, APP_ID);
           let redirectUrl: string;
           if (this.referrer && this.referrer !== 'logout') {
             if (/^https?:\/\//i.test(this.referrer)) {

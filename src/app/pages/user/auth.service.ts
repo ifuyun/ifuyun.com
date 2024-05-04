@@ -25,7 +25,7 @@ export class AuthService {
   login(loginData: LoginEntity): Observable<HttpResponseEntity> {
     return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.USER_LOGIN), loginData, false).pipe(
       map((res) => res || {}),
-      tap((res) => this.setAuth(res.data, loginData))
+      tap((res) => this.setAuth(res.data))
     );
   }
 
@@ -114,17 +114,16 @@ export class AuthService {
     return !this.isLoggedIn();
   }
 
-  setAuth(authResult: LoginResponse, loginData?: LoginEntity) {
+  setAuth(authResult: LoginResponse) {
     if (authResult.token?.accessToken) {
       localStorage?.setItem('token', authResult.token.accessToken);
       localStorage?.setItem('token_expires', authResult.token.expiresAt.toString());
-      if (loginData?.username) {
-        this.cookieService.set('user', loginData.username, {
-          path: '/',
-          domain: env.cookie.domain,
-          expires: env.cookie.expires
-        });
-      }
+
+      this.cookieService.set('user', authResult.user.userNickname, {
+        path: '/',
+        domain: env.cookie.domain,
+        expires: env.cookie.expires
+      });
     }
   }
 }

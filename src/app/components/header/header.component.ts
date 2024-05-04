@@ -79,9 +79,7 @@ export class HeaderComponent implements OnInit {
         this.appInfo = appInfo;
 
         if (this.platform.isBrowser) {
-          this.adminUrl =
-            this.appInfo.appAdminUrl +
-            format(ADMIN_URL_PARAM, this.authService.getToken(), this.authService.getExpiration(), APP_ID);
+          this.adminUrl = this.appInfo.appAdminUrl + format(ADMIN_URL_PARAM, this.authService.getToken(), APP_ID);
         }
       });
     this.commonService.pageIndex$
