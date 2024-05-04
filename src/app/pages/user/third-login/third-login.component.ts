@@ -4,6 +4,7 @@ import { REQUEST, RESPONSE } from '@nestjs/ng-universal/dist/tokens';
 import { Request, Response } from 'express';
 import { isEmpty, uniq } from 'lodash';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
+import { ADMIN_URL_PARAM, APP_ID } from '../../../config/common.constant';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { CommonService } from '../../../core/common.service';
 import { DestroyService } from '../../../core/destroy.service';
@@ -13,6 +14,7 @@ import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
+import { format } from '../../../helpers/helper';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { OptionService } from '../../../services/option.service';
@@ -42,7 +44,6 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
   private source = '';
   private referrer = '';
   private errorCode = '';
-  private adminUrl = '';
 
   constructor(
     @Optional() @Inject(RESPONSE) private response: Response,
@@ -75,7 +76,6 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
       .subscribe(([appInfo, options, qp]) => {
         this.appInfo = appInfo;
         this.options = options;
-        this.adminUrl = this.appInfo.appAdminUrl;
 
         const ref = qp.get('ref')?.trim() || '';
         try {
@@ -127,7 +127,20 @@ export class ThirdLoginComponent extends PageComponent implements OnInit {
         if (res.code === ResponseCode.SUCCESS) {
           this.loginStatus = 'success';
           this.authService.setAuth(res.data);
-          const redirectUrl = this.referrer ? this.appInfo.appUrl + `?ref=${this.referrer}` : this.adminUrl;
+
+          const urlParam = format(ADMIN_URL_PARAM, res.data.token.accessToken, APP_ID);
+          let redirectUrl: string;
+          if (this.referrer) {
+            if (/^https?:\/\//i.test(this.referrer)) {
+              // 绝对路径
+              redirectUrl = this.referrer;
+            } else {
+              // 相对路径
+              redirectUrl = this.appInfo.appUrl + '/' + this.referrer.replace(/^\//i, '');
+            }
+          } else {
+            redirectUrl = this.appInfo.appAdminUrl + urlParam;
+          }
           location.replace(redirectUrl);
         } else {
           this.message.error(res.message || '登录失败');
