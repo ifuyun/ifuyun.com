@@ -2,30 +2,41 @@
 <div class="container" [ngClass]="{'container-desktop': !isMobile, 'container-mobile': isMobile}">
   <form class="encrypt-form">
     <div>
-      <textarea class="input input-bg" rows="12" name="encryptContent"
+      <textarea class="input input-bg"
+                rows="12"
+                name="encryptContent"
                 [(ngModel)]="encryptContent"
                 (ngModelChange)="onContentChange($event)"
-                [maxLength]="maxContentLength" placeholder="待编解码内容"></textarea>
+                [maxLength]="maxContentLength"
+                placeholder="待编解码内容"></textarea>
     </div>
     <div class="encrypt-form-btns">
-      <button type="button" class="button button-submit" [class.disabled]="!encryptContent"
+      <button type="button" class="button button-submit"
+              [class.disabled]="!encryptContent"
               [disabled]="!encryptContent"
               (click)="transform('encode')">编码</button>
-      <button type="button" class="button button-submit" [class.disabled]="!encryptContent"
+      <button type="button" class="button button-submit"
+              [class.disabled]="!encryptContent"
               [disabled]="!encryptContent"
               (click)="transform('decode')">解码</button>
-      <button type="button" class="button button-submit" [class.disabled]="!encryptResult"
+      <button type="button" class="button button-submit"
+              [class.disabled]="!encryptResult"
               ngxClipboard
               [cbContent]="encryptResult"
               [disabled]="!encryptResult"
               (cbOnSuccess)="onCopied()">复制结果</button>
-      <button type="button" class="button button-submit" [class.disabled]="!encryptContent"
+      <button type="button" class="button button-submit"
+              [class.disabled]="!encryptContent"
               [disabled]="!encryptContent"
               (click)="reset()">清空</button>
     </div>
     <div>
-      <textarea class="input input-bg" rows="4" name="encryptResult" readonly="readonly"
-                [(ngModel)]="encryptResult" placeholder="Base64 编解码结果"></textarea>
+      <textarea class="input input-bg"
+                rows="4"
+                name="encryptResult"
+                readonly="readonly"
+                [(ngModel)]="encryptResult"
+                placeholder="Base64 编解码结果"></textarea>
     </div>
     <h2 class="encrypt-header">Base64 编解码说明</h2>
     <div class="encrypt-description">

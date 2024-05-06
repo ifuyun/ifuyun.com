@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { isEmpty, uniq } from 'lodash';
+import { isEmpty } from 'lodash';
 import * as QRCode from 'qrcode';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbEntity } from '../../../components/breadcrumb/breadcrumb.interface';
@@ -13,7 +13,7 @@ import { MetaService } from '../../../core/meta.service';
 import { PageComponent } from '../../../core/page.component';
 import { PlatformService } from '../../../core/platform.service';
 import { UserAgentService } from '../../../core/user-agent.service';
-import { ActionType, ActionObjectType } from '../../../interfaces/log.enum';
+import { ActionObjectType, ActionType } from '../../../interfaces/log.enum';
 import { OptionEntity } from '../../../interfaces/option.interface';
 import { TenantAppModel } from '../../../interfaces/tenant-app.interface';
 import { LogService } from '../../../services/log.service';
@@ -160,7 +160,7 @@ export class ShoppingComponent extends PageComponent implements OnInit {
     this.keyword = this.keyword.trim().split('?')[0].split('#')[0];
 
     if (!REGEXP_JD_PRODUCT_DETAIL_URL.test(this.keyword) && !/^\d+$/i.test(this.keyword)) {
-      this.message.error('输入内容有误，请重新输入有效的京东商品详情页地址或商品ID');
+      this.message.error('输入内容有误，请输入有效的京东商品详情页地址或商品ID');
       return false;
     }
     return true;
@@ -170,12 +170,11 @@ export class ShoppingComponent extends PageComponent implements OnInit {
     const siteName: string = this.appInfo.appName;
     const titles: string[] = ['电商工具', '百宝箱', siteName];
     const description = `${siteName}${this.options['shopping_description']}`;
-    const keywords: string[] = this.options['shopping_keywords'].split(',');
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
       description,
-      keywords: uniq(keywords).join(','),
+      keywords: this.options['shopping_keywords'],
       author: this.options['site_author']
     });
   }

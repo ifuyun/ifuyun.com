@@ -92,6 +92,7 @@ export class MurmurhashComponent extends PageComponent implements OnInit {
       this.message.error(`MurmurHash Seed 最大长度为 ${this.maxHashSeedLength} 字符，当前为 ${hashSeed.length} 字符`);
       return;
     }
+
     const result = murmurhash(this.hashKey, hashSeed ? Number(hashSeed) : undefined);
     this.hashResult = result.toString();
   }
@@ -131,10 +132,8 @@ export class MurmurhashComponent extends PageComponent implements OnInit {
   private updatePageInfo() {
     const siteName: string = this.appInfo.appName;
     const titles: string[] = ['MurmurHash', '百宝箱', siteName];
-    const description = `${siteName}${MURMURHASH_PAGE_DESCRIPTION}`;
-    const keywords: string[] = this.appInfo.keywords;
-
-    keywords.unshift(...MURMURHASH_PAGE_KEYWORDS);
+    const description = `${siteName} ${MURMURHASH_PAGE_DESCRIPTION}`;
+    const keywords: string[] = MURMURHASH_PAGE_KEYWORDS.concat(this.appInfo.keywords);
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),

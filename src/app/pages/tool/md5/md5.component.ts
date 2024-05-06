@@ -121,10 +121,8 @@ export class Md5Component extends PageComponent implements OnInit {
   private updatePageInfo() {
     const siteName: string = this.appInfo.appName;
     const titles: string[] = ['MD5加密', '百宝箱', siteName];
-    const description = `${siteName}${MD5_PAGE_DESCRIPTION}`;
-    const keywords: string[] = this.appInfo.keywords;
-
-    keywords.unshift(...MD5_PAGE_KEYWORDS);
+    const description = `${siteName} ${MD5_PAGE_DESCRIPTION}`;
+    const keywords: string[] = MD5_PAGE_KEYWORDS.concat(this.appInfo.keywords);
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),

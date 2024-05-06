@@ -129,10 +129,8 @@ export class Base64Component extends PageComponent implements OnInit {
   private updatePageInfo() {
     const siteName: string = this.appInfo.appName;
     const titles: string[] = ['Base64编解码', '百宝箱', siteName];
-    const description = `${siteName}${BASE64_PAGE_DESCRIPTION}`;
-    const keywords: string[] = this.appInfo.keywords;
-
-    keywords.unshift(...BASE64_PAGE_KEYWORDS);
+    const description = `${siteName} ${BASE64_PAGE_DESCRIPTION}`;
+    const keywords: string[] = BASE64_PAGE_KEYWORDS.concat(this.appInfo.keywords);
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
