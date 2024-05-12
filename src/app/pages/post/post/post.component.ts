@@ -156,11 +156,11 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
         if (REGEXP_ID.test(postName)) {
           this.postId = postName;
           this.fetchPost();
+          this.commentService.updateObjectId(this.postId);
         } else {
           this.postSlug = postName;
           this.fetchPage();
         }
-        this.commentService.updateObjectId(this.postId);
       });
     this.userService.loginUser$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.user = user;
@@ -378,6 +378,7 @@ export class PostComponent extends PageComponent implements OnInit, OnDestroy, A
       .subscribe((post) => {
         if (post && post.post && post.post.postId) {
           this.initData(post);
+          this.commentService.updateObjectId(post.post.postId);
         }
       });
     if (this.postType !== PostType.PAGE) {

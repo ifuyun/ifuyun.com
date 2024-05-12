@@ -60,7 +60,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
   private readonly adsenseClass = 'adsbygoogle';
   private readonly customClassPrefix = 'make-money';
 
-  private adsFlag = false;
+  private adsenseFlag = false;
   private options: OptionEntity = {};
   private pageLevelAds = false;
 
@@ -85,12 +85,12 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
       )
       .subscribe((options) => {
         this.options = options;
-        const adsFlag = this.options['ads_flag'] || '';
-        this.adsFlag =
-          (env.production && ['1', '0'].includes(adsFlag)) || (!env.production && ['2', '0'].includes(adsFlag));
+        const adsenseFlag = this.options['ads_flag'] || '';
+        this.adsenseFlag =
+          (env.production && ['1', '0'].includes(adsenseFlag)) || (!env.production && ['2', '0'].includes(adsenseFlag));
 
         this.initOptions();
-        this.loadAds();
+        this.loadAdsense();
       });
   }
 
@@ -156,9 +156,9 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
     return typeof size === 'number' ? size + 'px' : size;
   };
 
-  private loadAds() {
+  private loadAdsense() {
     if (this.platform.isBrowser) {
-      if (this.adsFlag && this.visible) {
+      if (this.adsenseFlag && this.visible) {
         const ads: Record<string, string | boolean> = {};
         if (this.pageLevelAds) {
           ads['google_ad_client'] = this.clientId;
@@ -166,27 +166,27 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
         }
         if (window) {
           try {
-            this.createAdsEle();
+            this.renderAdsense();
             ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(ads);
             if (Array.isArray((window as any).adsbygoogle)) {
               this.console.warn('Ads is blocked.');
-              this.hideAdsEle();
+              this.hideAdsense();
             } else {
               this.commonService.updateAdsFlag(false);
             }
           } catch (e: any) {
             this.console.error('Ads: ', e.message || 'is not working.');
-            this.hideAdsEle();
+            this.hideAdsense();
           }
         }
       } else {
         this.console.warn('Ads is disabled.');
-        this.hideAdsEle();
+        this.hideAdsense();
       }
     }
   }
 
-  private createAdsEle() {
+  private renderAdsense() {
     const adsEle = this.document.createElement('ins');
 
     adsEle.className = this.className;
@@ -211,7 +211,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
     this.adsenseEle.nativeElement.appendChild(adsEle);
   }
 
-  private hideAdsEle() {
+  private hideAdsense() {
     this.adsenseEle.nativeElement.style.display = 'none';
     this.commonService.updateAdsFlag(true);
   }
