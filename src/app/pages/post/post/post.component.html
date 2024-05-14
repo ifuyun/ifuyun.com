@@ -127,7 +127,7 @@
       </div>
     </div>
   </footer>
-  <div class="post-more">
+  <div class="post-more" *ngIf="prevPost || nextPost">
     <div class="post-more-prev" *ngIf="prevPost">
       <div class="post-more-photo">
         <div class="post-more-photo-content" [style.background-image]="'url(' + prevPost.postCover + ')'"></div>

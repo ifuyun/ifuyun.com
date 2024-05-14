@@ -2,7 +2,7 @@
   <ng-container *ngIf="comments.length > 0">
     <div class="comment-list" id="comments">
       <ng-template #commentsTpl let-comments>
-        <ng-container *ngFor="let comment of comments; let i = index">
+        <ng-container *ngFor="let comment of comments">
           <div class="comment-item comment-item-desktop" *ngIf="!isMobile" id="{{comment.commentId | commentHash}}"
                [ngStyle]="{'padding-left': (comment.level - 1) * 50 + 'px'}">
             <div class="meta">
@@ -18,7 +18,7 @@
                   <span class="time">{{comment.commentCreated | date:'yyyy-MM-dd HH:mm'}}</span>
                 </div>
               </div>
-              <div class="hash" *ngIf="!isMobile">
+              <div class="hash">
                 <a [routerLink]="['.']" [fragment]="comment.commentId | commentHash">#{{comment.commentId | commentHash}}</a>
               </div>
             </div>
@@ -66,9 +66,7 @@
             <div class="body">
               <div class="from">
                 <span class="name">{{comment.user?.userNickname || comment.authorName}}</span>
-                <span class="location">from {{
-                  comment.ipInfo ? comment.ipInfo.ipRegion + ' · ' + comment.ipInfo.ipCity : 'Mars'
-                  }}</span>
+                <span class="location">from {{comment.userLocation || 'Mars'}}</span>
               </div>
               <div class="content">
                 <div class="parent" *ngIf="comment.parent">

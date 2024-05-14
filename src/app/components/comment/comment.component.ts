@@ -286,19 +286,15 @@ export class CommentComponent implements OnInit, AfterViewInit {
   }
 
   private initComment(comment: Comment) {
-    const initialFn = (data: Comment) => {
-      let defaultAvatarType = this.options['avatar_default_type'];
-      if (!defaultAvatarType || defaultAvatarType === 'logo') {
-        defaultAvatarType = PATH_FAVICON;
-      }
-      data.authorAvatar =
-        data.user?.userAvatar ||
-        format(URL_AVATAR_API, data.user?.userEmailHash || data.authorEmailHash, defaultAvatarType);
-      data.commentMetaMap = this.commonService.transformMeta(data.commentMeta || []);
-      data.userLocation = data.ipInfo ? data.ipInfo.ipRegion + ' · ' + data.ipInfo.ipCity : '';
-    };
-    initialFn(comment);
-    comment.children.forEach((item) => initialFn(item));
+    let defaultAvatarType = this.options['avatar_default_type'];
+    if (!defaultAvatarType || defaultAvatarType === 'logo') {
+      defaultAvatarType = PATH_FAVICON;
+    }
+    comment.authorAvatar =
+      comment.user?.userAvatar ||
+      format(URL_AVATAR_API, comment.user?.userEmailHash || comment.authorEmailHash, defaultAvatarType);
+    comment.commentMetaMap = this.commonService.transformMeta(comment.commentMeta || []);
+    comment.userLocation = comment.ipInfo ? comment.ipInfo.ipRegion + ' · ' + comment.ipInfo.ipCity : '';
   }
 
   private initCommentStatus(comments: Comment[]) {
@@ -327,7 +323,10 @@ export class CommentComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         this.comments = res.list || [];
         this.comments.forEach((item) => {
+          item.level = 1;
           this.initComment(item);
+          item.children.forEach((item) => this.initComment(item));
+
           this.initCommentStatus(item.children);
 
           item.children = this.generateCommentTree(item.children);
