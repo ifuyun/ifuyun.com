@@ -24,7 +24,7 @@ export enum ApiUrl {
   LINK_FAVORITE = '/links/favorites',
   // comment
   COMMENT_LIST = '/comments',
-  COMMENT = '/comments/comment',
+  COMMENT_FREE = '/comments/free-comment',
   // vote
   VOTE = '/votes/public-vote',
   // user

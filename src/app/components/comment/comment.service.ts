@@ -71,6 +71,6 @@ export class CommentService {
       );
     }
 
-    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.COMMENT), comment, false);
+    return this.apiService.httpPost(this.apiService.getApiUrl(ApiUrl.COMMENT_FREE), comment, false);
   }
 }

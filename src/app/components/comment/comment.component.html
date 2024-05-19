@@ -3,7 +3,9 @@
     <div class="comment-list" id="comments">
       <ng-template #commentsTpl let-comments>
         <ng-container *ngFor="let comment of comments">
-          <div class="comment-item comment-item-desktop" *ngIf="!isMobile" id="{{comment.commentId | commentHash}}"
+          <div class="comment-item comment-item-desktop"
+               *ngIf="!isMobile"
+               id="{{comment.commentId | commentHash}}"
                [ngStyle]="{'padding-left': (comment.level - 1) * 50 + 'px'}">
             <div class="meta">
               <div class="info">
@@ -109,7 +111,8 @@
               </div>
             </div>
           </div>
-          <div *ngIf="replyVisibleMap[comment.commentId]" [ngStyle]="{'padding-left': (comment.level - 1) * 50 + 'px'}">
+          <div *ngIf="replyVisibleMap[comment.commentId]"
+               [ngStyle]="{'padding-left': (comment.level - 1) * (isMobile ? 32 : 50) + 'px'}">
             <ng-container *ngTemplateOutlet="commentFormTpl; context: { $implicit: replyForm }"></ng-container>
           </div>
           <ng-container *ngIf="comment.children.length > 0">
@@ -145,6 +148,7 @@
         </div>
         <div class="form-row form-btns">
           <input type="hidden" formControlName="commentParent"/>
+          <input type="hidden" formControlName="commentTop"/>
           <button type="submit" class="button button-submit" [ngClass]="{loading: saveLoading}" [disabled]="saveLoading">
             <i *ngIf="saveLoading" class="icon icon-loading"></i>
             <span>提交</span>
