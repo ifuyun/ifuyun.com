@@ -3,13 +3,12 @@ import { AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, ViewChi
 import { isEmpty, uniq } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
 import { environment as env } from '../../../environments/environment';
-import { APP_ID } from '../../config/common.constant';
 import { CommonService } from '../../core/common.service';
 import { ConsoleService } from '../../core/console.service';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UserAgentService } from '../../core/user-agent.service';
-import { ActionType, ActionObjectType } from '../../interfaces/log.enum';
+import { ActionObjectType, ActionType } from '../../interfaces/log.enum';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { LogService } from '../../services/log.service';
 import { OptionService } from '../../services/option.service';
@@ -107,8 +106,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
       .logAction({
         action: ActionType.CLICK_ADSENSE,
         objectType: ActionObjectType.ADS,
-        adsPosition: this.position,
-        appId: APP_ID
+        adsPosition: this.position
       })
       .subscribe();
   }

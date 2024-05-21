@@ -7,7 +7,7 @@ export interface AccessLog extends UserAgentData, AppParam {
   waId: string;
   accessUrl: string;
   accessTime?: Date;
-  accessSite: 'web' | 'admin';
+  site: 'web' | 'admin';
   referrer: string;
   requestMethod?: string;
   userIp?: string;
@@ -27,6 +27,7 @@ export interface ActionLog extends AppParam {
   action: ActionType;
   objectType: ActionObjectType;
   objectId?: string;
+  ref: string;
   resolution?: string;
   from?: string;
   lang?: string;

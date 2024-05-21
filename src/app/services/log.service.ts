@@ -24,9 +24,9 @@ export class LogService {
       logId,
       waId: this.cookieService.get(COOKIE_KEY_UV_ID),
       isNew: isNew ? 1 : 0,
-      accessUrl: location.href,
+      accessUrl: window.location.href,
       referrer: initialized ? referrer : document.referrer,
-      accessSite: 'web',
+      site: 'web',
       resolution: window.screen.width + 'x' + window.screen.height,
       colorDepth: window.screen.colorDepth.toString(),
       isAjax: initialized ? 1 : 0,
@@ -49,13 +49,15 @@ export class LogService {
     );
   }
 
-  logAction(log: Omit<ActionLog, 'waId'>): Observable<HttpResponseEntity> {
+  logAction(log: Omit<ActionLog, 'waId' | 'ref' | 'appId'>): Observable<HttpResponseEntity> {
     return this.apiService.httpPost(
       this.apiService.getApiUrl(ApiUrl.ACTION_LOG_LIST),
       {
         ...log,
+        ref: window.location.href,
         waId: this.cookieService.get(COOKIE_KEY_UV_ID),
-        accessSite: 'web'
+        site: 'web',
+        appId: APP_ID
       },
       true
     );

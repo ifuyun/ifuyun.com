@@ -290,8 +290,7 @@ export class WallpaperComponent extends PageComponent implements OnInit, AfterVi
         action: ActionType.TRANSLATE_WALLPAPER,
         objectType: ActionObjectType.WALLPAPER,
         objectId: this.wallpaperId,
-        lang: this.lang === WallpaperLang.CN ? WallpaperLang.EN : WallpaperLang.CN,
-        appId: APP_ID
+        lang: this.lang === WallpaperLang.CN ? WallpaperLang.EN : WallpaperLang.CN
       })
       .subscribe();
   }

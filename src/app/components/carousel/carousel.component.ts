@@ -105,8 +105,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
         action: ActionType.CLICK_CAROUSEL,
         objectType: ActionObjectType.CAROUSEL,
         carouselTitle: carousel.title,
-        carouselURL: carousel.link,
-        appId: APP_ID
+        carouselURL: carousel.link
       })
       .subscribe();
   }

@@ -5,14 +5,14 @@ import { Params, Router, RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
 import { environment as env } from '../../../environments/environment';
-import { APP_ID } from '../../config/common.constant';
 import { ArchiveData } from '../../core/common.interface';
 import { CommonService } from '../../core/common.service';
 import { DestroyService } from '../../core/destroy.service';
+import { MessageService } from '../../core/message.service';
 import { PlatformService } from '../../core/platform.service';
 import { UrlService } from '../../core/url.service';
 import { LinkEntity } from '../../interfaces/link.interface';
-import { ActionType, ActionObjectType } from '../../interfaces/log.enum';
+import { ActionObjectType, ActionType } from '../../interfaces/log.enum';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { NgZorroAntdModule } from '../../modules/antd/ng-zorro-antd.module';
 import { PostEntity } from '../../pages/post/post.interface';
@@ -60,6 +60,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     private platform: PlatformService,
     private router: Router,
     private urlService: UrlService,
+    private message: MessageService,
     private commonService: CommonService,
     private optionService: OptionService,
     private postService: PostService,
@@ -127,22 +128,26 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  search(event?: KeyboardEvent) {
-    if (event && event.key !== 'Enter') {
-      return;
-    }
+  search() {
     this.keyword = this.keyword.trim();
-    if (this.keyword) {
-      this.logService
-        .logAction({
-          action: ActionType.SEARCH,
-          objectType: ActionObjectType.SEARCH,
-          keyword: this.keyword,
-          appId: APP_ID
-        })
-        .subscribe();
-      this.router.navigate(['/'], { queryParams: { keyword: this.keyword } });
+    if (!this.keyword) {
+      this.message.error('请输入搜索关键词');
+      return false;
     }
+    this.logService
+      .logAction({
+        action: ActionType.SEARCH,
+        objectType: ActionObjectType.SEARCH,
+        keyword: this.keyword
+      })
+      .subscribe();
+    this.router.navigate(['/'], {
+      queryParams: {
+        keyword: this.keyword
+      }
+    });
+
+    return false;
   }
 
   getWallpaperLangParams(isCn: boolean): Params {

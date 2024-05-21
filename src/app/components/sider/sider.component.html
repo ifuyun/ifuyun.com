@@ -1,13 +1,15 @@
 <div id="sider">
   <div class="search">
-    <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchBtn">
-      <input type="text" nz-input [(ngModel)]="keyword" (keyup)="search($event)" placeholder="探索新世界……"/>
-    </nz-input-group>
-    <ng-template #searchBtn>
-      <button nz-button nzSearch nzType="primary" nzSize="large" (click)="search()">
-        <span nz-icon nzType="search"></span>
-      </button>
-    </ng-template>
+    <form method="get" action="/" (submit)="search()">
+      <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchBtn">
+        <input type="text" nz-input [(ngModel)]="keyword" name="keyword" placeholder="探索新世界……"/>
+      </nz-input-group>
+      <ng-template #searchBtn>
+        <button nz-button nzSearch nzType="primary" nzSize="large" (click)="search()">
+          <span nz-icon nzType="search"></span>
+        </button>
+      </ng-template>
+    </form>
   </div>
   <div class="widget">
     <h3 class="widget-title"><div><i class="icon icon-heart"></i><span>支付宝扫码领红包</span></div></h3>

@@ -3,12 +3,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { combineLatestWith, of, skipWhile, takeUntil } from 'rxjs';
 import { environment as env } from '../../../environments/environment';
-import { APP_ID } from '../../config/common.constant';
 import { DestroyService } from '../../core/destroy.service';
 import { PlatformService } from '../../core/platform.service';
 import { UrlService } from '../../core/url.service';
 import { UserAgentService } from '../../core/user-agent.service';
-import { ActionType, ActionObjectType } from '../../interfaces/log.enum';
+import { ActionObjectType, ActionType } from '../../interfaces/log.enum';
 import { OptionEntity } from '../../interfaces/option.interface';
 import { JdUnionGoodsJingfen, JdUnionGoodsMaterial } from '../../pages/tool/jd-union.interface';
 import { ShoppingService } from '../../pages/tool/shopping/shopping.service';
@@ -104,8 +103,7 @@ export class JdUnionGoodsComponent implements OnInit {
         objectType: ActionObjectType.ADS,
         adsPosition: this.isMobile ? 'mobile' : this.position,
         goodsName: goods.skuName,
-        goodsURL: goods.promotionInfo?.clickURL,
-        appId: APP_ID
+        goodsURL: goods.promotionInfo?.clickURL
       })
       .subscribe();
   }
