@@ -43,7 +43,6 @@ export class ToolboxComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe((appInfo) => (this.appInfo = appInfo));
-    this.darkMode = this.commonService.getTheme() === Theme.Dark;
   }
 
   openWallpaper() {

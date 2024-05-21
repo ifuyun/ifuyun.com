@@ -80,6 +80,7 @@ export class CommonService {
     // todo: init by different time zone
     const curHour = new Date().getHours();
     const isNight = curHour >= 19 || curHour <= 6;
+
     return isNight ? Theme.Dark : Theme.Light;
   }
 
