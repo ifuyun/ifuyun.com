@@ -22,7 +22,7 @@ export class LogService {
     return {
       ...this.userAgentService.getUserAgentInfo(),
       logId,
-      waId: this.cookieService.get(COOKIE_KEY_UV_ID),
+      faId: this.cookieService.get(COOKIE_KEY_UV_ID),
       isNew: isNew ? 1 : 0,
       accessUrl: window.location.href,
       referrer: initialized ? referrer : document.referrer,
@@ -49,13 +49,13 @@ export class LogService {
     );
   }
 
-  logAction(log: Omit<ActionLog, 'waId' | 'ref' | 'appId'>): Observable<HttpResponseEntity> {
+  logAction(log: Omit<ActionLog, 'faId' | 'ref' | 'appId'>): Observable<HttpResponseEntity> {
     return this.apiService.httpPost(
       this.apiService.getApiUrl(ApiUrl.ACTION_LOG_LIST),
       {
         ...log,
         ref: window.location.href,
-        waId: this.cookieService.get(COOKIE_KEY_UV_ID),
+        faId: this.cookieService.get(COOKIE_KEY_UV_ID),
         site: 'web',
         appId: APP_ID
       },

@@ -4,7 +4,7 @@ import { ActionType, ActionObjectType } from './log.enum';
 
 export interface AccessLog extends UserAgentData, AppParam {
   logId: string;
-  waId: string;
+  faId: string;
   accessUrl: string;
   accessTime?: Date;
   site: 'web' | 'admin';
@@ -23,7 +23,7 @@ export interface LeaveLog {
 }
 
 export interface ActionLog extends AppParam {
-  waId: string;
+  faId: string;
   action: ActionType;
   objectType: ActionObjectType;
   objectId?: string;

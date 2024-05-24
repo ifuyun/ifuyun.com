@@ -56,12 +56,12 @@ export class AppComponent implements OnInit, AfterViewInit {
       const current = (event as NavigationEnd).url.split('#')[0];
       const userAgent = this.userAgentService.getUserAgentString();
 
-      let waId = this.cookieService.get(COOKIE_KEY_UV_ID);
+      let faId = this.cookieService.get(COOKIE_KEY_UV_ID);
       let isNew = false;
-      if (!waId) {
+      if (!faId) {
         isNew = true;
-        waId = generateUid(userAgent);
-        this.cookieService.set(COOKIE_KEY_UV_ID, waId, {
+        faId = generateUid(userAgent);
+        this.cookieService.set(COOKIE_KEY_UV_ID, faId, {
           path: '/',
           domain: env.cookie.domain,
           expires: 400

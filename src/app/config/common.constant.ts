@@ -33,7 +33,7 @@ export const STORAGE_KEY_LIKED_COMMENTS = 'liked_comments';
 export const STORAGE_KEY_DISLIKED_COMMENTS = 'disliked_comments';
 export const STORAGE_KEY_LIKED_WALLPAPER = 'voted_wallpapers';
 export const COOKIE_KEY_THEME = 'theme';
-export const COOKIE_KEY_UV_ID = 'waid';
+export const COOKIE_KEY_UV_ID = 'faid';
 
 export const MEDIA_QUERY_THEME_DARK = '(prefers-color-scheme: dark)';
 export const MEDIA_QUERY_THEME_LIGHT = '(prefers-color-scheme: light)';
