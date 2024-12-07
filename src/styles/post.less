@@ -3,48 +3,8 @@
 .post {
   position: relative;
   overflow: hidden;
-
-  &-desktop {
-    .post-header {
-      padding: @content-header-margin @content-margin @primary-margin;
-    }
-
-    .post-content, .post-footer, .pay-body {
-      margin: @content-margin;
-    }
-
-    .post-more {
-      margin: @content-margin (@content-margin - (@primary-margin / 2)) (@content-margin - (@primary-margin / 2));
-
-      .post-more-prev, .post-more-next {
-        width: 50%;
-        padding: (@primary-margin / 2);
-      }
-    }
-
-    .wechat-card {
-      margin: @content-margin 0;
-    }
-  }
-
-  &-mobile {
-    .post-header {
-      padding: @m-content-header-margin @m-content-padding @m-content-padding;
-    }
-
-    .post-content, .post-footer, .pay-body, .wechat-card {
-      margin: @m-content-padding;
-    }
-
-    .post-more {
-      margin: @m-primary-margin (@m-content-padding / 2) (@m-primary-margin / 2);
-
-      .post-more-prev, .post-more-next {
-        width: 100%;
-        padding: (@m-content-padding / 2);
-      }
-    }
-  }
+  border: 1px solid var(--primary-border-color);
+  border-radius: @primary-border-radius;
 
   .post-header {
     text-align: center;
@@ -53,10 +13,10 @@
       margin-bottom: 12px;
       line-height: 32px;
       font-size: 20px;
-      font-weight: normal;
+      font-weight: 600;
 
       > a {
-        color: var(--base-color);
+        color: var(--base-font-color);
 
         &:hover {
           color: var(--primary-color);
@@ -64,7 +24,7 @@
       }
     }
 
-    .icon {
+    [nz-icon], .fi {
       margin-right: 4px;
     }
   }
@@ -79,9 +39,16 @@
       justify-content: center;
       padding: 0 @content-margin;
 
-      > span:not(:last-child)::after {
-        content: '|';
-        margin: 0 10px;
+      > span {
+        display: inline-flex;
+        align-items: center;
+
+        &:not(:last-child)::after {
+          content: ' ';
+          margin: 0 10px;
+          height: @meta-font-size;
+          border-right: 1px solid;
+        }
       }
 
       a:not(:last-child) {
@@ -142,7 +109,7 @@
 
     figcaption {
       margin-top: 12px;
-      color: var(--img-figcaption-color);
+      color: var(--post-img-caption-color);
       font-size: 13px;
       text-align: center;
     }
@@ -186,6 +153,7 @@
       flex-direction: column;
       border-radius: @primary-border-radius;
       border: 1px solid var(--post-pre-border-color);
+      font-size: @primary-font-size;
       background: var(--post-pre-bg-color);
       overflow: hidden;
 
@@ -207,7 +175,7 @@
           cursor: pointer;
         }
 
-        .icon {
+        [nz-icon] {
           margin-right: 6px;
         }
       }
@@ -245,13 +213,14 @@
     code {
       padding: 2px 6px;
       border-radius: 2px;
+      font-size: @primary-font-size;
       font-family: @code-family;
-      color: var(--base-color);
+      color: var(--base-font-color);
       background: var(--post-code-bg-color);
     }
 
     ol, ul {
-      padding-left: @content-list-padding-left;
+      padding-left: @primary-padding;
 
       p {
         margin: 0;
@@ -274,17 +243,16 @@
       margin: 0 auto;
 
       td, th {
-        padding: 5px 10px;
+        padding: 4px 8px;
+        line-height: 20px;
         border: 1px solid #ddd;
         word-wrap: break-word;
         word-break: break-all;
-        -webkit-hyphens: auto;
-        -ms-hyphens: auto;
         hyphens: auto;
       }
 
       th {
-        background-color: var(--tag-bg-color);
+        background-color: var(--post-table-th-bg-color);
       }
     }
 
@@ -297,22 +265,25 @@
   }
 
   .post-footer {
-    .icon {
-      margin-right: 4px;
+    [nz-icon] {
       line-height: @post-line-height + @tag-row-span * 2;
     }
 
     .post-meta {
+      display: flex;
+      align-items: center;
+
       &:not(:last-child) {
         margin-bottom: 4px;
       }
 
       .post-meta-icon {
-        float: left;
+        margin-right: 8px;
       }
 
       .post-meta-info {
-        padding-left: 20px;
+        display: flex;
+        flex-wrap: wrap;
       }
 
       ul li, .post-meta-info-text {
@@ -327,7 +298,7 @@
       ul a {
         padding: 4px 8px;
         border-radius: 2px;
-        color: var(--minor-color);
+        color: var(--tag-color);
         background-color: var(--tag-bg-color);
 
         &:hover {
@@ -347,6 +318,7 @@
       justify-content: center;
 
       > div {
+        display: flex;
         position: relative;
       }
 
@@ -389,7 +361,7 @@
           cursor: not-allowed;
         }
 
-        .icon {
+        [nz-icon], .fi {
           margin: 0;
           line-height: @button-height;
           font-size: 16px;
@@ -410,7 +382,7 @@
             transition-delay: .1s;
             opacity: 1;
 
-            .icon {
+            [nz-icon] {
               margin-left: 50%;
               transition: transform .25s, margin .25s;
               transition-delay: .5s;
@@ -499,87 +471,6 @@
     }
   }
 
-  .post-more {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    .post-more-prev, .post-more-next {
-      box-sizing: border-box;
-      position: relative;
-
-      &:hover {
-        .post-more-photo-content {
-          transform: scale(1.08);
-        }
-
-        .post-more-photo-overlay {
-          opacity: 0.5;
-        }
-      }
-    }
-
-    .post-more-next {
-      .post-more-content {
-        align-items: flex-end;
-      }
-
-      .post-more-content-title {
-        text-align: right;
-      }
-    }
-
-    .post-more-photo {
-      height: 120px;
-      overflow: hidden;
-
-      &, .post-more-photo-content, .post-more-photo-overlay {
-        border-radius: @primary-border-radius * 2;
-      }
-
-      .post-more-photo-content {
-        height: 100%;
-        background-position: center;
-        background-size: cover;
-        background-repeat: no-repeat;
-        transition: transform .5s;
-      }
-
-      .post-more-photo-overlay {
-        position: absolute;
-        inset: 0;
-        margin: (@primary-margin / 2);
-        background-color: var(--overlay-bg-color);
-        opacity: 0;
-        transition: @overlay-transition;
-      }
-    }
-
-    .post-more-content {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: absolute;
-      inset: 0;
-      padding: ((@content-margin / 2) + (@primary-margin / 2)) @content-margin;
-      color: var(--post-more-color);
-      text-shadow: var(--content-text-shadow);
-
-      .post-more-content-title {
-        width: 100%;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-    }
-
-    .post-more-link {
-      position: absolute;
-      inset: 0;
-      display: block;
-    }
-  }
-
   .original-sign {
     @sign-offset: 24px;
     @sign-height: 24px;
@@ -640,21 +531,40 @@
     }
 
     .keyword {
-      color: var(--highlight-color);
+      color: var(--primary-color);
     }
+  }
+}
+
+.p-post {
+  .post-header {
+    padding: @content-header-margin @content-margin @primary-margin;
+  }
+
+  .post-content, .post-footer, .pay-body {
+    margin: @content-margin;
   }
 
   .wechat-card {
-    text-align: center;
+    margin: @content-margin 0;
+  }
 
-    img {
-      max-width: 100%;
-      cursor: zoom-in;
-    }
+  .divider {
+    margin: 0 @content-margin;
+  }
+}
 
-    img.card {
-      width: 420px;
-    }
+.m-post {
+  .post-header {
+    padding: 1.75rem @m-content-padding @m-content-padding;
+  }
+
+  .post-content, .post-footer, .pay-body, .wechat-card {
+    margin: @m-content-padding;
+  }
+
+  .divider {
+    margin: 0 @m-primary-margin;
   }
 }
 

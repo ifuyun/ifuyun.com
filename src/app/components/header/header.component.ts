@@ -1,75 +1,70 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { skipWhile, takeUntil } from 'rxjs';
-import { ADMIN_URL_PARAM, APP_ID, PATH_LOGO, PATH_LOGO_DARK } from '../../config/common.constant';
-import { ResponseCode } from '../../config/response-code.enum';
-import { CommonService } from '../../core/common.service';
-import { DestroyService } from '../../core/destroy.service';
-import { PlatformService } from '../../core/platform.service';
-import { UserAgentService } from '../../core/user-agent.service';
-import { AutofocusDirective } from '../../directives/autofocus.directive';
-import { format } from '../../helpers/helper';
-import { ActionObjectType, ActionType } from '../../interfaces/log.enum';
-import { TaxonomyNode } from '../../interfaces/taxonomy.interface';
-import { TenantAppModel } from '../../interfaces/tenant-app.interface';
-import { UserModel } from '../../interfaces/user.interface';
-import { NgZorroAntdModule } from '../../modules/antd/ng-zorro-antd.module';
+import { format } from '../../../utils/helper';
+import { ADMIN_URL_PARAM, APP_ID } from '../../config/common.constant';
+import { TaxonomyNode } from '../../interfaces/taxonomy';
+import { TenantAppModel } from '../../interfaces/tenant-app';
+import { UserModel } from '../../interfaces/user';
 import { TOOL_LINKS } from '../../pages/tool/tool.constant';
-import { AuthService } from '../../pages/user/auth.service';
-import { UserService } from '../../pages/user/user.service';
-import { LogService } from '../../services/log.service';
+import { ApiService } from '../../services/api.service';
+import { CommonService } from '../../services/common.service';
+import { DestroyService } from '../../services/destroy.service';
+import { PlatformService } from '../../services/platform.service';
 import { TenantAppService } from '../../services/tenant-app.service';
+import { UserAgentService } from '../../services/user-agent.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-header',
+  imports: [RouterLink, CommonModule, FormsModule, NzInputModule, NzIconModule, NzButtonModule],
+  providers: [DestroyService],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.less'],
-  standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, AutofocusDirective, NgZorroAntdModule],
-  providers: [DestroyService]
+  styleUrl: './header.component.less'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, AfterViewInit {
   @Input() postTaxonomies: TaxonomyNode[] = [];
-  @Input() siderOpen = false;
-  @Output() siderOpenChange = new EventEmitter<boolean>();
 
-  appInfo!: TenantAppModel;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+
+  appInfo?: TenantAppModel;
   isMobile = false;
-  isFirefox = false;
+  isSignIn = false;
   activePage = '';
-  showSearch = false;
-  keyword = '';
-  focusSearch = false;
   user!: UserModel;
-  isLoggedIn = false;
-  showHeader = true;
-  showMobileHeader = true;
-  toolLinks = TOOL_LINKS;
-  logoPath = '';
   adminUrl = '';
+  toolLinks = TOOL_LINKS;
+  keyword = '';
 
-  constructor(
-    private router: Router,
-    private destroy$: DestroyService,
-    private userAgentService: UserAgentService,
-    private platform: PlatformService,
-    private commonService: CommonService,
-    private tenantAppService: TenantAppService,
-    private userService: UserService,
-    private authService: AuthService,
-    private logService: LogService
-  ) {
-    this.isMobile = this.userAgentService.isMobile();
-    this.isFirefox = this.userAgentService.isFirefox();
+  get isPostPage() {
+    return ['post', 'post-archive'].includes(this.activePage);
   }
 
+  get isWallpaperPage() {
+    return ['wallpaper', 'wallpaper-archive'].includes(this.activePage);
+  }
+
+  private inputFlag = false;
+
+  constructor(
+    private readonly router: Router,
+    private readonly destroy$: DestroyService,
+    private readonly platform: PlatformService,
+    private readonly message: NzMessageService,
+    private readonly commonService: CommonService,
+    private readonly tenantAppService: TenantAppService,
+    private readonly apiService: ApiService,
+    private readonly userService: UserService
+  ) {}
+
   ngOnInit(): void {
-    this.commonService.darkMode$.pipe(takeUntil(this.destroy$)).subscribe((darkMode) => {
-      this.logoPath = darkMode ? PATH_LOGO_DARK : PATH_LOGO;
-    });
     this.tenantAppService.appInfo$
       .pipe(
         skipWhile((appInfo) => isEmpty(appInfo)),
@@ -79,59 +74,43 @@ export class HeaderComponent implements OnInit {
         this.appInfo = appInfo;
 
         if (this.platform.isBrowser) {
-          this.adminUrl = this.appInfo.appAdminUrl + format(ADMIN_URL_PARAM, this.authService.getToken(), APP_ID);
+          this.adminUrl = this.appInfo.appAdminUrl + format(ADMIN_URL_PARAM, this.apiService.getToken(), APP_ID);
         }
       });
-    this.commonService.pageIndex$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((pageIndex) => (this.activePage = pageIndex));
-    this.commonService.pageOptions$.pipe(takeUntil(this.destroy$)).subscribe((options) => {
-      this.showHeader = options.showHeader;
-      this.showMobileHeader = options.showMobileHeader;
-    });
-    this.userService.loginUser$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+    this.commonService.activePage$.pipe(takeUntil(this.destroy$)).subscribe((page) => (this.activePage = page));
+    this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.user = user;
-      this.isLoggedIn = !!user.userId;
+      this.isSignIn = !!user.userId;
     });
   }
 
-  toggleSearchStatus() {
-    this.showSearch = !this.showSearch;
-    this.focusSearch = this.showSearch;
-  }
-
-  search() {
-    this.keyword = this.keyword.trim();
-    if (this.keyword) {
-      this.showSearch = false;
-      this.logService
-        .logAction({
-          action: ActionType.SEARCH,
-          objectType: ActionObjectType.SEARCH,
-          keyword: this.keyword
-        })
-        .subscribe();
-      this.router.navigate(['/'], {
-        queryParams: {
-          keyword: this.keyword
-        }
-      });
+  ngAfterViewInit() {
+    const $searchInput = <HTMLInputElement>this.searchInput?.nativeElement;
+    if ($searchInput) {
+      $searchInput.addEventListener('compositionstart', () => (this.inputFlag = true), false);
+      $searchInput.addEventListener('compositionend', () => (this.inputFlag = false), false);
     }
   }
 
-  toggleSiderOpen() {
-    this.siderOpen = !this.siderOpen;
-    this.siderOpenChange.emit(this.siderOpen);
+  onKeyDown(e: KeyboardEvent) {
+    const key = e.key.toLowerCase();
+    const isCtrlPressed = e.altKey || e.ctrlKey || e.metaKey || e.shiftKey;
+
+    if (key === 'enter' && !isCtrlPressed && !this.inputFlag) {
+      this.search();
+    }
   }
 
-  logout() {
-    this.authService
-      .logout()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res.code === ResponseCode.SUCCESS) {
-          location.reload();
-        }
-      });
+  search(): void {
+    this.keyword = this.keyword.trim();
+    if (!this.keyword) {
+      this.message.error('请输入搜索关键词');
+      return;
+    }
+    this.router.navigate(['/search'], {
+      queryParams: {
+        keyword: this.keyword
+      }
+    });
   }
 }

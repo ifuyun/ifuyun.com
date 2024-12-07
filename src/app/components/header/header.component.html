@@ -1,127 +1,135 @@
-<ng-container *ngIf="!isMobile && showHeader">
-  <header class="header header-desktop" [ngClass]="{'header-firefox': isFirefox}">
-    <div class="header-bg"></div>
-    <nav class="nav">
-      <div class="nav-wrap">
-        <a class="logo" [routerLink]="['/']" title="{{appInfo?.appName}}">
-          <img [src]="logoPath" width="135" height="50" alt="{{appInfo?.appName}}"/>
+<header class="header-wrap">
+  <div class="header">
+    <a class="logo" routerLink="/" [title]="appInfo?.appName">
+      <img src="/favicon.png" alt="{{appInfo?.appName}}"/><span>{{appInfo?.appName}}</span>
+    </a>
+    <ul class="nav">
+      <li [class.active]="activePage === 'index'">
+        <a routerLink="/" title="{{appInfo?.appName}}首页">首页</a>
+      </li>
+      <li [class.active]="isPostPage">
+        <a routerLink="/post" title="文章">
+          <span>文章</span><i class="nav-arrow" *ngIf="postTaxonomies.length > 0"></i>
         </a>
-        <ul class="nav-list">
-          <li [ngClass]="{'active': activePage === 'index'}">
-            <a class="nav-link" title="{{appInfo?.appName}}首页" [routerLink]="['/']">首页</a>
-          </li>
-          <li [ngClass]="{'active': activePage === 'post' || activePage === 'postArchive'}">
-            <a class="nav-link" routerLink="/post" title="文章">
-              <span>文章</span><i class="nav-arrow" *ngIf="postTaxonomies.length > 0"></i>
-            </a>
-            <div class="sub-nav-group" *ngIf="postTaxonomies.length > 0">
-              <div class="sub-nav-list">
-                <ul>
-                  <li *ngFor="let taxonomy of postTaxonomies">
-                    <a class="sub-nav-link" [routerLink]="['/post/category/'+taxonomy.taxonomySlug]"
-                       title="{{taxonomy.taxonomyDescription}}">
-                      <span>{{taxonomy.taxonomyName}}</span><i class="sub-nav-arrow" *ngIf="!taxonomy.isLeaf"></i>
-                    </a>
-                    <div class="child-nav-group" *ngIf="!taxonomy.isLeaf">
-                      <div class="child-nav-list">
-                        <ul>
-                          <li *ngFor="let subTaxonomy of taxonomy.children">
-                            <a class="child-nav-link" [routerLink]="['/post/category/'+subTaxonomy.taxonomySlug]"
-                               title="{{subTaxonomy.taxonomyDescription}}">{{subTaxonomy.taxonomyName}}</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </li>
-          <li [ngClass]="{'active': activePage === 'wallpaper' || activePage === 'wallpaperArchive'}">
-            <a class="nav-link" [routerLink]="['/wallpaper']" title="高清壁纸">壁纸</a>
-          </li>
-          <li [ngClass]="{'active': activePage === 'tool'}">
-            <a class="nav-link" routerLink="/tool" title="实用工具"><span>百宝箱</span><i class="nav-arrow"></i></a>
-            <div class="sub-nav-group">
-              <div class="sub-nav-list">
-                <ul>
-                  <li *ngFor="let link of toolLinks">
-                    <a class="sub-nav-link" [routerLink]="[link.url]" [title]="link.title">{{link.label}}</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </li>
-          <li>
-            <a class="nav-link" href="//admin.ifuyun.com/bots" title="ChatBot">ChatBot</a>
-          </li>
-        </ul>
+        <div class="sub-nav-wrap" *ngIf="postTaxonomies.length > 0">
+          <div class="sub-nav-list">
+            <ul>
+              <li *ngFor="let taxonomy of postTaxonomies">
+                <a class="sub-nav-link"
+                   [routerLink]="['/post/category/'+taxonomy.taxonomySlug]"
+                   title="{{taxonomy.taxonomyDescription}}">
+                  <span>{{taxonomy.taxonomyName}}</span><i *ngIf="!taxonomy.isLeaf" class="sub-nav-arrow"></i>
+                </a>
+                <div class="child-nav-wrap" *ngIf="!taxonomy.isLeaf">
+                  <div class="child-nav-list">
+                    <ul>
+                      <li *ngFor="let subTaxonomy of taxonomy.children">
+                        <a class="child-nav-link"
+                           [routerLink]="['/post/category/'+subTaxonomy.taxonomySlug]"
+                           title="{{subTaxonomy.taxonomyDescription}}">{{subTaxonomy.taxonomyName}}</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </li>
+      <li [class.active]="isWallpaperPage">
+        <a routerLink="/wallpaper" title="高清壁纸">壁纸</a>
+      </li>
+      <li [class.active]="activePage === 'tool'">
+        <a routerLink="/tool" title="实用工具"><span>实用工具</span><i class="nav-arrow"></i></a>
+        <div class="sub-nav-wrap">
+          <div class="sub-nav-list">
+            <ul>
+              <li *ngFor="let link of toolLinks">
+                <a class="sub-nav-link" [routerLink]="[link.url]" [title]="link.title">{{link.label}}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </li>
+      <li>
+        <a title="AI">AI</a>
+      </li>
+    </ul>
+    <div class="actions">
+      <div class="search">
+        <nz-input-group nzSearch [nzAddOnAfter]="searchBtnTpl">
+          <input #searchInput
+                 nz-input
+                 type="text"
+                 [(ngModel)]="keyword"
+                 (keydown)="onKeyDown($event)"
+                 placeholder="搜索全站（支持全文搜索）" />
+        </nz-input-group>
+        <ng-template #searchBtnTpl>
+          <button nz-button nzSearch nzType="primary" (click)="search()"><span nz-icon nzType="search"></span></button>
+        </ng-template>
       </div>
-      <ul class="link-list">
-        <li>
-          <a class="nav-link" href="https://github.com/ifuyun" title="Follow me on GitHub" target="_blank">
-            <i class="icon icon-github"></i><span>GitHub</span>
-          </a>
-        </li>
-        <li>
-          <a class="nav-link" routerLink="/user/login" title="登录" target="_blank" *ngIf="!isLoggedIn">
-            <i class="icon icon-login"></i><span>登录</span>
-          </a>
-          <ng-container *ngIf="isLoggedIn">
-            <a class="nav-link" href="javascript:">
-              <i class="icon icon-user"></i><span>{{user.userNickname}}</span><i class="nav-arrow"></i>
-            </a>
-            <div class="sub-nav-group">
-              <div class="sub-nav-list">
-                <ul>
-                  <li>
-                    <a class="sub-nav-link" [href]="adminUrl" target="_blank">
-                      <i class="icon icon-dashboard"></i><span>个人中心</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a class="sub-nav-link" href="javascript:" (click)="logout()">
-                      <i class="icon icon-logout"></i><span>退出登录</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
+      @if (!isSignIn) {
+        <a nz-button nzType="primary" routerLink="/user/login">登录</a>
+      } @else {
+        <div class="more-action-group">
+          <div class="more-action-nav">
+            <span nz-icon nzType="user"></span><span>{{ user.userNickname }}</span><i class="nav-arrow"></i>
+          </div>
+          <div class="more-action-list">
+            <div class="sub-nav-list">
+              <ul>
+                <li>
+                  <a class="sub-nav-link">
+                    <span nz-icon nzType="home"></span><span>个人中心</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="sub-nav-link">
+                    <span nz-icon nzType="logout"></span><span>退出登录</span>
+                  </a>
+                </li>
+              </ul>
             </div>
-          </ng-container>
-        </li>
-      </ul>
-    </nav>
-  </header>
-</ng-container>
-<ng-container *ngIf="isMobile && showMobileHeader">
-  <header class="header">
-    <div class="header-mobile" [class.header-search]="showSearch">
-      <ng-container *ngIf="!showSearch">
-        <i class="icon icon-menu" (click)="toggleSiderOpen()"></i>
-        <a class="logo" [routerLink]="['/']" title="{{appInfo?.appName}}">
-          <img [src]="logoPath" alt="{{appInfo?.appName}}"/>
-        </a>
-        <i class="icon icon-search" (click)="toggleSearchStatus()"></i>
-      </ng-container>
-      <ng-container *ngIf="showSearch">
-        <form class="search-form" method="get" action="/" (submit)="search()">
-          <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchBtn">
-            <input nz-input
-                   type="text"
-                   [(ngModel)]="keyword"
-                   [autofocus]="focusSearch"
-                   name="keyword"
-                   autocomplete="off"
-                   placeholder="探索新世界……"/>
-          </nz-input-group>
-          <ng-template #searchBtn>
-            <button nz-button nzSearch nzType="primary" nzSize="large" (click)="search()">
-              <span nz-icon nzType="search"></span>
-            </button>
-          </ng-template>
-        </form>
-        <div class="mask mask-search" (click)="toggleSearchStatus()"></div>
-      </ng-container>
+          </div>
+        </div>
+      }
+      <div class="more-action-group">
+        <div class="more-action-nav">
+          <span nz-icon nzType="ellipsis" class="more-action-icon"></span>
+        </div>
+        <div class="more-action-list">
+          <div class="sub-nav-list">
+            <ul>
+              <li>
+                <a class="sub-nav-link">
+                  <span nz-icon nzType="red-envelope"></span><span>每日红包</span>
+                </a>
+              </li>
+              <li>
+                <a class="sub-nav-link">
+                  <span nz-icon nzType="picture"></span><span>手气不错？</span>
+                </a>
+              </li>
+              <li>
+                <a class="sub-nav-link">
+                  <span nz-icon nzType="wifi"></span><span>文章RSS订阅</span>
+                </a>
+              </li>
+              <li>
+                <a class="sub-nav-link">
+                  <span nz-icon nzType="wifi"></span><span>壁纸RSS订阅</span>
+                </a>
+              </li>
+              <li>
+                <a class="sub-nav-link">
+                  <span nz-icon nzType="wechat"></span><span>微信公众号</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-  </header>
-</ng-container>
+  </div>
+</header>

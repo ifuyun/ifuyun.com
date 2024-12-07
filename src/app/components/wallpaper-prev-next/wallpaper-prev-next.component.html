@@ -1,0 +1,50 @@
+<div class="post-more" [class.p-post-more]="!isMobile" [class.m-post-more]="isMobile">
+  @if (prevWallpaper) {
+    <div class="post-more-prev">
+      <div class="post-more-photo">
+        @if (!isChanged) {
+          <div class="post-more-photo-content lazyload" [attr.data-bg]="prevWallpaper.wallpaperThumbUrl"></div>
+        } @else {
+          <div class="post-more-photo-content" [style.background-image]="'url(' + prevWallpaper.wallpaperThumbUrl + ')'"></div>
+        }
+        <div class="post-more-photo-overlay"></div>
+      </div>
+      <div class="post-more-content">
+        <div class="post-more-content-title">
+          {{ lang === 'en' ? prevWallpaper.wallpaperCopyrightEn : prevWallpaper.wallpaperCopyright }}
+        </div>
+        <div>上一篇</div>
+      </div>
+      <a class="post-more-link"
+         [routerLink]="['../' + prevWallpaper.wallpaperId]"
+         [queryParams]="getLangParams(prevWallpaper)"
+         [title]="lang === 'en' ? prevWallpaper.wallpaperCopyrightEn : prevWallpaper.wallpaperCopyright"></a>
+    </div>
+  } @else {
+    <div></div>
+  }
+  @if (nextWallpaper) {
+    <div class="post-more-next">
+      <div class="post-more-photo">
+        @if (!isChanged) {
+          <div class="post-more-photo-content lazyload" [attr.data-bg]="nextWallpaper.wallpaperThumbUrl"></div>
+        } @else {
+          <div class="post-more-photo-content" [style.background-image]="'url(' + nextWallpaper.wallpaperThumbUrl + ')'"></div>
+        }
+        <div class="post-more-photo-overlay"></div>
+      </div>
+      <div class="post-more-content">
+        <div class="post-more-content-title">
+          {{ lang === 'en' ? nextWallpaper.wallpaperCopyrightEn : nextWallpaper.wallpaperCopyright }}
+        </div>
+        <div>下一篇</div>
+      </div>
+      <a class="post-more-link"
+         [routerLink]="['../' + nextWallpaper.wallpaperId]"
+         [queryParams]="getLangParams(nextWallpaper)"
+         [title]="lang === 'en' ? nextWallpaper.wallpaperCopyrightEn : nextWallpaper.wallpaperCopyright"></a>
+    </div>
+  } @else {
+    <div></div>
+  }
+</div>

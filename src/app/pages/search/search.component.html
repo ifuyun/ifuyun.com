@@ -1,0 +1,17 @@
+<app-breadcrumb></app-breadcrumb>
+@if (total > 0) {
+  <div [class.post-list]="!isMobile" [class.m-post-list]="isMobile">
+    <ng-container *ngFor="let item of searchResult; let i = index">
+      @if (item.type === 'post') {
+        <app-post-item [post]="$any(item.data)" [index]="i"></app-post-item>
+      } @else {
+        <app-wallpaper-item [wallpaper]="$any(item.data)"
+                            [mode]="WallpaperListMode.LIST"
+                            [index]="i"></app-wallpaper-item>
+      }
+    </ng-container>
+  </div>
+} @else {
+
+}
+<app-pagination></app-pagination>

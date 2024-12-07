@@ -1,0 +1,10 @@
+@if (!isMobile) {
+  <main class="main">
+    <div class="content">
+      <router-outlet />
+    </div>
+    <app-sider></app-sider>
+  </main>
+} @else {
+  <router-outlet />
+}

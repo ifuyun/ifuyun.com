@@ -1,109 +1,74 @@
-<div id="sider">
-  <div class="search">
-    <form method="get" action="/" (submit)="search()">
-      <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchBtn">
-        <input type="text" nz-input [(ngModel)]="keyword" name="keyword" placeholder="探索新世界……"/>
-      </nz-input-group>
-      <ng-template #searchBtn>
-        <button nz-button nzSearch nzType="primary" nzSize="large" (click)="search()">
-          <span nz-icon nzType="search"></span>
-        </button>
-      </ng-template>
-    </form>
-  </div>
-  <div class="widget">
-    <h3 class="widget-title"><div><i class="icon icon-heart"></i><span>支付宝扫码领红包</span></div></h3>
-    <div class="red-packet" #redPacket>
-      <img src="/assets/images/red-packet.png" alt="支付宝红包">
+<aside class="sider" #siderEle>
+  <div>
+    <div class="widget" *ngIf="hotPosts && hotPosts.length > 0">
+      <h3 class="widget-title"><span><span nz-icon nzType="fire"></span><span>热门文章</span></span></h3>
+      <ul class="hot-list">
+        <li *ngFor="let post of hotPosts; let i = index">
+          <span class="hot-num">{{ i + 1 }}</span>
+          <a [routerLink]="post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</a>
+        </li>
+      </ul>
+    </div>
+    <div class="widget" *ngIf="hotWallpapers && hotWallpapers.length > 0">
+      <h3 class="widget-title"><span><span nz-icon nzType="fire"></span><span>热门壁纸</span></span></h3>
+      <ul class="hot-list">
+        <li *ngFor="let wallpaper of hotWallpapers; let i = index">
+          <span class="hot-num">{{ i + 1 }}</span>
+          <a [routerLink]="'/wallpaper/' + wallpaper.wallpaperId"
+             [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
+             [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</a>
+        </li>
+      </ul>
+    </div>
+    <div class="widget" *ngIf="postArchives && postArchives.length > 0">
+      <h3 class="widget-title">
+        <span><span class="fi fi-calendar-date"></span><span>文章归档</span></span>
+        <span class="more">
+          <a routerLink="/post/archive"
+             title="文章归档"><span>更多</span><span nz-icon nzType="double-right"></span></a>
+        </span>
+      </h3>
+      <ul>
+        <li *ngFor="let item of postArchives">
+          <a [routerLink]="'/post/archive/' + item.dateValue"
+             [title]="item.dateLabel">{{ item.dateLabel }}({{ item.count }})</a>
+        </li>
+      </ul>
+    </div>
+    <div class="widget" *ngIf="wallpaperArchives && wallpaperArchives.length > 0">
+      <h3 class="widget-title">
+        <span><span class="fi fi-calendar-date"></span><span>壁纸归档</span></span>
+        <span class="more">
+          <a routerLink="/wallpaper/archive"
+             title="壁纸归档"><span>更多</span><span nz-icon nzType="double-right"></span></a>
+        </span>
+      </h3>
+      <ul>
+        <li *ngFor="let item of wallpaperArchives">
+          <a [routerLink]="'/wallpaper/archive/' + item.dateValue"
+             [title]="item.dateLabel">{{ item.dateLabel }}({{ item.count }})</a>
+        </li>
+      </ul>
+    </div>
+    <!--非壁纸页-->
+    <div class="widget" *ngIf="randomPosts && randomPosts.length > 0">
+      <h3 class="widget-title"><span><span nz-icon nzType="gift"></span><span>手气不错</span></span></h3>
+      <ul>
+        <li *ngFor="let post of randomPosts">
+          <a [routerLink]="post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</a>
+        </li>
+      </ul>
+    </div>
+    <!--壁纸页-->
+    <div class="widget" *ngIf="randomWallpapers && randomWallpapers.length > 0">
+      <h3 class="widget-title"><span><span nz-icon nzType="gift"></span><span>手气不错</span></span></h3>
+      <ul>
+        <li *ngFor="let wallpaper of randomWallpapers">
+          <a [routerLink]="'/wallpaper/' + wallpaper.wallpaperId"
+             [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
+             [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</a>
+        </li>
+      </ul>
     </div>
   </div>
-  <div class="widget" *ngIf="(isHomePage || isPostPage) && hotPosts.length > 0">
-    <h3 class="widget-title"><div><i class="icon icon-fire"></i><span>热门文章</span></div></h3>
-    <ul class="hot-list">
-      <li *ngFor="let post of hotPosts; let i = index">
-        <span class="hot-num">{{i + 1}}</span>
-        <a title="{{post.postTitle}}" [routerLink]="[post.postGuid]">{{post.postTitle}}</a>
-      </li>
-    </ul>
-  </div>
-  <div class="widget" *ngIf="(isHomePage || isWallpaperPage) && hotWallpapers.length > 0">
-    <h3 class="widget-title"><div><i class="icon icon-fire"></i><span>热门壁纸</span></div></h3>
-    <ul class="hot-list">
-      <li *ngFor="let wallpaper of hotWallpapers; let i = index">
-        <span class="hot-num">{{i + 1}}</span>
-        <a title="{{wallpaper.wallpaperCopyright}}"
-           [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
-           [queryParams]="getWallpaperLangParams(wallpaper.isCn)">{{wallpaper.wallpaperCopyright}}</a>
-      </li>
-    </ul>
-  </div>
-  <div class="widget-other" *ngIf="adsFlag && !jdUnionVisible">
-    <i-adsense optionKey="adsense_config_sider"></i-adsense>
-  </div>
-  <div class="widget" *ngIf="adsFlag && jdUnionVisible">
-    <h3 class="widget-title"><div><i class="icon icon-bag-heart"></i><span>热销商品</span></div></h3>
-    <div class="widget-goods">
-      <i-jd-union-goods
-        [dynamic]="true" [optionKey]="'jd_union_config_sider'" [rowSize]="1" position="sider"
-        [showHeader]="false" [withBox]="false"
-        [showComments]="false" [showBorder]="false" [showEmptyBackground]="false"></i-jd-union-goods>
-    </div>
-  </div>
-  <div class="widget" *ngIf="(isHomePage || isPostPage) && postArchives.length > 0">
-    <h3 class="widget-title">
-      <div><i class="icon icon-pencil-square"></i><span>文章归档</span></div>
-      <div class="more">
-        <a [routerLink]="['/post/archive']" title="文章归档"><span>更多</span><i class="icon icon-double-right"></i></a>
-      </div>
-    </h3>
-    <ul>
-      <li *ngFor="let item of postArchives">
-        <a [routerLink]="['/post/archive/'+item.dateValue]"
-           title="{{item.dateLabel}}">{{item.dateLabel}}({{item.count}})</a>
-      </li>
-    </ul>
-  </div>
-  <div class="widget" *ngIf="(isHomePage || isWallpaperPage) && wallpaperArchives.length > 0">
-    <h3 class="widget-title">
-      <div><i class="icon icon-images"></i><span>壁纸归档</span></div>
-      <div class="more">
-        <a [routerLink]="['/wallpaper/archive']"
-           title="壁纸归档"><span>更多</span><i class="icon icon-double-right"></i></a>
-      </div>
-    </h3>
-    <ul>
-      <li *ngFor="let item of wallpaperArchives">
-        <a [routerLink]="['/wallpaper/archive/'+item.dateValue]"
-           title="{{item.dateLabel}}">{{item.dateLabel}}({{item.count}})</a>
-      </li>
-    </ul>
-  </div>
-  <!--首页、文章页-->
-  <div class="widget" *ngIf="isHomePage || isPostPage">
-    <h3 class="widget-title"><div><i class="icon icon-shuffle"></i><span>手气不错</span></div></h3>
-    <ul>
-      <li *ngFor="let post of randomPosts">
-        <a title="{{post.postTitle}}" [routerLink]="[post.postGuid]">{{post.postTitle}}</a>
-      </li>
-    </ul>
-  </div>
-  <!--壁纸页-->
-  <div class="widget" *ngIf="isWallpaperPage">
-    <h3 class="widget-title"><div><i class="icon icon-shuffle"></i><span>手气不错</span></div></h3>
-    <ul>
-      <li *ngFor="let wallpaper of randomWallpapers">
-        <a title="{{wallpaper.wallpaperCopyright}}"
-           [routerLink]="['/wallpaper/' + wallpaper.wallpaperId]"
-           [queryParams]="getWallpaperLangParams(wallpaper.isCn)">{{wallpaper.wallpaperCopyright}}</a>
-      </li>
-    </ul>
-  </div>
-  <div class="widget" *ngIf="friendLinks.length > 0">
-    <h3 class="widget-title"><div><i class="icon icon-link-45deg"></i><span>友情链接</span></div></h3>
-    <ul>
-      <li *ngFor="let link of friendLinks">
-        <a title="{{link.linkDescription}}" href="{{link.linkUrl}}" target="{{link.linkTarget}}">{{link.linkName}}</a>
-      </li>
-    </ul>
-  </div>
-</div>
+</aside>

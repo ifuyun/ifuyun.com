@@ -1,10 +1,8 @@
 export enum ApiUrl {
-  API_URL_PREFIX = '/api',
-  // common
-  CAPTCHA = '/captcha',
   // search
   SEARCH = '/search',
   // option
+  OPTION = '/options/option',
   OPTION_FRONTEND = '/options/frontend',
   OPTION_CAROUSELS = '/options/carousels',
   // util
@@ -14,6 +12,7 @@ export enum ApiUrl {
   POST = '/posts/post',
   POST_HOT = '/posts/hot',
   POST_RANDOM = '/posts/random',
+  POST_RELATED = '/posts/related',
   POST_PREV_AND_NEXT = '/posts/prev-and-next',
   POST_ARCHIVES = '/posts/archives',
   // taxonomy
@@ -24,9 +23,9 @@ export enum ApiUrl {
   LINK_FAVORITE = '/links/favorites',
   // comment
   COMMENT_LIST = '/comments',
-  COMMENT_FREE = '/comments/free-comment',
+  COMMENT = '/comments/comment',
   // vote
-  VOTE = '/votes/public-vote',
+  VOTE = '/votes/vote',
   // user
   USER_LOGIN = '/users/login',
   USER_LOGOUT = '/users/logout',
@@ -39,17 +38,19 @@ export enum ApiUrl {
   // favorite
   FAVORITE = '/favorites/favorite',
   // log
-  ACCESS_LOG_LIST = '/logs/access',
+  ACCESS_LOG = '/logs/access',
   LEAVE_LOG = '/logs/leave',
-  ACTION_LOG_LIST = '/logs/action',
+  ACTION_LOG = '/logs/action',
   // wallpaper
   WALLPAPER_LIST = '/wallpapers',
   WALLPAPER_RANDOM = '/wallpapers/random',
   WALLPAPER_HOT = '/wallpapers/hot',
+  WALLPAPER_RELATED = '/wallpapers/related',
   WALLPAPER_PREV_AND_NEXT = '/wallpapers/prev-and-next',
   WALLPAPER = '/wallpapers/wallpaper',
   WALLPAPER_ARCHIVES = '/wallpapers/archives',
   WALLPAPER_DOWNLOAD = '/wallpapers/download',
+  WALLPAPER_DOWNLOAD_URL = '/wallpapers/download-url',
   // jd
   JD_SELLING_PROMOTION = '/union/jd/selling-promotion',
   JD_PROMOTION_COMMON = '/union/jd/promotion-common',
@@ -58,5 +59,7 @@ export enum ApiUrl {
   // tool
   TOOL_BASE64 = '/tool/base64',
   // app
-  TENANT_APP = '/apps/app'
+  TENANT_APP = '/apps/app',
+  // IP
+  IP_SEARCH = '/ips/search'
 }

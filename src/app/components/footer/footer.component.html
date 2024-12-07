@@ -1,18 +1,46 @@
-<footer *ngIf="!isMobile && showFooter || isMobile && showMobileFooter"
-        class="footer" [class.footer-desktop]="!isMobile" [class.footer-mobile]="isMobile">
-  <ul class="footer-link">
-    <li *ngFor="let link of footerLinks">
-      <a [routerLink]="link.linkUrl" title="{{link.linkDescription}}" target="{{link.linkTarget}}">{{link.linkName}}</a>
-    </li>
-  </ul>
-  <ul>
-    <li [innerHTML]="options['copyright_notice'] + '-' + curYear"></li>
-  </ul>
-  <ul class="footer-record" [ngClass]="{'footer-record-desktop': !isMobile, 'footer-record-mobile': isMobile}">
-    <li><a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">{{options['icp_code']}}</a></li>
-    <li>
-      <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode={{options['record_code']}}"
-         target="_blank" rel="nofollow">{{options['record_prefix']}}{{options['record_code']}}号</a>
-    </li>
-  </ul>
+<footer class="footer-wrap" [class.m-footer-wrap]="isMobile" [class.p-footer-wrap]="!isMobile">
+  <div class="footer">
+    <div class="footer-content">
+      <ul class="footer-link">
+        <li *ngFor="let link of footerLinks">
+          @if (link.isExternal) {
+            <a [href]="link.linkUrl"
+               [target]="link.linkTarget"
+               [title]="link.linkDescription">{{ link.linkName }}</a>
+          } @else {
+            <a [routerLink]="link.linkUrl"
+               [target]="link.linkTarget"
+               [title]="link.linkDescription">{{ link.linkName }}</a>
+          }
+        </li>
+      </ul>
+      <div class="friend-link" *ngIf="!isMobile">
+        <div class="footer-label">友情链接：</div>
+        <ul>
+          <li *ngFor="let link of friendLinks">
+            <a [href]="link.linkUrl"
+               [target]="link.linkTarget"
+               [title]="link.linkDescription">{{ link.linkName }}</a>
+          </li>
+        </ul>
+      </div>
+      <div>{{ copyright }}</div>
+      <div>&copy; Powered by <a href="https://www.ireadpay.com">抚云科技</a></div>
+      @if (!isMobile) {
+        <ul class="beian-link">
+          <li><a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">{{ options['icp_code'] }}</a></li>
+          <li><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode={{ recordCode }}"
+                 target="_blank" rel="nofollow">{{ options['record_code'] }}</a></li>
+        </ul>
+      } @else {
+        <div><a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">{{ options['icp_code'] }}</a></div>
+      }
+    </div>
+    <div class="footer-qrcode" *ngIf="!isMobile">
+      <img class="img-preview lazyload"
+           src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+           [attr.data-src]="'/assets/images/wechat-qrcode.jpg'"
+           alt="黑匣子思维"/>
+    </div>
+  </div>
 </footer>

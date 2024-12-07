@@ -1,134 +1,112 @@
-import { DOCUMENT } from '@angular/common';
-import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { filter } from 'rxjs';
-import { environment as env } from '../environments/environment';
-import { CLASS_BLOCK_SCROLL, COOKIE_KEY_UV_ID, MEDIA_QUERY_THEME_DARK } from './config/common.constant';
-import { Theme } from './config/common.enum';
-import { ResponseCode } from './config/response-code.enum';
-import { CommonService } from './core/common.service';
-import { PlatformService } from './core/platform.service';
-import { UrlService } from './core/url.service';
-import { UserAgentService } from './core/user-agent.service';
-import { generateUid } from './helpers/helper';
-import { TaxonomyNode } from './interfaces/taxonomy.interface';
-import { UserService } from './pages/user/user.service';
-import { LogService } from './services/log.service';
+import { filter, tap } from 'rxjs/operators';
+import { environment } from '../environments/environment';
+import { generateUid } from '../utils/helper';
+import { FooterComponent } from './components/footer/footer.component';
+import { HeaderComponent } from './components/header/header.component';
+import { COOKIE_KEY_UV_ID, MEDIA_QUERY_THEME_DARK } from './config/common.constant';
+import { Theme } from './enums/common';
+import { ErrorState } from './interfaces/common';
+import { TaxonomyNode } from './interfaces/taxonomy';
+import { ForbiddenComponent } from './pages/error/forbidden/forbidden.component';
+import { NotFoundComponent } from './pages/error/not-found/not-found.component';
+import { ServerErrorComponent } from './pages/error/server-error/server-error.component';
+import { CommonService } from './services/common.service';
+import { ErrorService } from './services/error.service';
 import { OptionService } from './services/option.service';
+import { PlatformService } from './services/platform.service';
 import { TaxonomyService } from './services/taxonomy.service';
 import { TenantAppService } from './services/tenant-app.service';
+import { UrlService } from './services/url.service';
+import { UserAgentService } from './services/user-agent.service';
 
 @Component({
   selector: 'app-root',
+  imports: [
+    RouterOutlet,
+    CommonModule,
+    HeaderComponent,
+    FooterComponent,
+    NotFoundComponent,
+    ForbiddenComponent,
+    ServerErrorComponent
+  ],
+  providers: [],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.less']
+  styleUrl: './app.component.less'
 })
-export class AppComponent implements OnInit, AfterViewInit {
-  isMobile = false;
+export class AppComponent implements OnInit {
+  isMobile: boolean = false;
   postTaxonomies: TaxonomyNode[] = [];
-  siderOpen = false;
+  errorState?: ErrorState;
+  errorPage = false;
 
   private currentUrl = '';
-  private initialized = false;
-  private accessLogId = '';
 
   constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private router: Router,
-    private platform: PlatformService,
-    private userAgentService: UserAgentService,
-    private cookieService: CookieService,
-    private commonService: CommonService,
-    private urlService: UrlService,
-    private tenantAppService: TenantAppService,
-    private optionService: OptionService,
-    private userService: UserService,
-    private taxonomyService: TaxonomyService,
-    private logService: LogService
+    private readonly router: Router,
+    private readonly platform: PlatformService,
+    private readonly userAgentService: UserAgentService,
+    private readonly cookieService: CookieService,
+    private readonly commonService: CommonService,
+    private readonly urlService: UrlService,
+    private readonly optionService: OptionService,
+    private readonly errorService: ErrorService,
+    private readonly tenantAppService: TenantAppService,
+    private readonly taxonomyService: TaxonomyService
   ) {
-    this.isMobile = this.userAgentService.isMobile();
+    this.isMobile = this.userAgentService.isMobile;
   }
 
   ngOnInit(): void {
-    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
-      const previous = this.currentUrl.split('#')[0];
-      const current = (event as NavigationEnd).url.split('#')[0];
-      const userAgent = this.userAgentService.getUserAgentString();
+    this.router.events
+      .pipe(
+        tap((re) => {
+          if (re instanceof NavigationStart) {
+            this.errorPage = re.url.startsWith('/error/');
+            if (!this.errorPage) {
+              this.errorService.hideError();
+            }
+          }
+        }),
+        filter((re) => re instanceof NavigationEnd)
+      )
+      .subscribe((event) => {
+        const previous = this.currentUrl.split('#')[0];
+        const current = (event as NavigationEnd).url.split('#')[0];
 
-      let faId = this.cookieService.get(COOKIE_KEY_UV_ID);
-      let isNew = false;
-      if (!faId) {
-        isNew = true;
-        faId = generateUid(userAgent);
-        this.cookieService.set(COOKIE_KEY_UV_ID, faId, {
-          path: '/',
-          domain: env.cookie.domain,
-          expires: 400
-        });
-      }
-      if (previous !== current) {
-        this.urlService.updateUrlHistory({
-          previous: this.currentUrl,
-          current: (event as NavigationEnd).url
-        });
-        if (this.platform.isBrowser) {
-          this.logService
-            .logAccess(this.logService.parseAccessLog(this.initialized, this.currentUrl, isNew, this.accessLogId))
-            .subscribe((res) => {
-              if (res.code === ResponseCode.SUCCESS) {
-                this.accessLogId = res.data.logId || '';
-              }
-            });
+        let faId = this.cookieService.get(COOKIE_KEY_UV_ID);
+        let isNew = false;
+        if (!faId) {
+          isNew = true;
+          faId = generateUid(this.userAgentService.uaString);
+          this.cookieService.set(COOKIE_KEY_UV_ID, faId, {
+            path: '/',
+            domain: environment.cookie.domain,
+            expires: 400
+          });
         }
-        this.currentUrl = (event as NavigationEnd).url;
-      }
-
-      this.initialized = true;
-      this.siderOpen = false;
-      this.onSiderOpenChange(false);
-    });
+        if (previous !== current) {
+          this.urlService.updateUrlHistory({
+            previous: this.currentUrl,
+            current: (event as NavigationEnd).url
+          });
+          // todo: log
+          this.currentUrl = (event as NavigationEnd).url;
+        }
+      });
 
     this.initTheme();
     this.initThemeListener();
     this.optionService.getOptions().subscribe();
     this.tenantAppService.getAppInfo().subscribe();
     this.taxonomyService.getTaxonomies().subscribe((taxonomies) => (this.postTaxonomies = taxonomies));
-    if (this.platform.isBrowser) {
-      this.userService.getLoginUser().subscribe();
-    }
-  }
-
-  ngAfterViewInit() {
-    if (this.platform.isBrowser) {
-      window.addEventListener('beforeunload', () => {
-        this.saveLeaveLog();
-      });
-    }
-  }
-
-  toggleSiderOpen() {
-    this.siderOpen = !this.siderOpen;
-    this.onSiderOpenChange(this.siderOpen);
-  }
-
-  onSiderOpenChange(open: boolean) {
-    const htmlNode = this.document.getElementsByTagName('html')[0];
-    if (open) {
-      htmlNode.classList.add(CLASS_BLOCK_SCROLL);
-    } else {
-      htmlNode.classList.remove(CLASS_BLOCK_SCROLL);
-    }
-  }
-
-  private saveLeaveLog() {
-    if (this.accessLogId) {
-      this.logService
-        .logLeave({
-          logId: this.accessLogId
-        })
-        .subscribe();
-    }
+    this.errorService.errorState$.subscribe((state) => {
+      this.errorState = state;
+    });
   }
 
   private initTheme() {

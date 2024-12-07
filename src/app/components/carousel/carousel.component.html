@@ -1,59 +1,59 @@
-<div class="carousel-container"
-     [class.carousel-desktop]="!isMobile"
-     [class.carousel-mobile]="isMobile"
-     (mouseover)="stop()"
-     (mouseout)="start()">
+<div class="carousel-wrap"
+     [class.m-carousel-wrap]="isMobile"
+     [class.p-carousel-wrap]="!isMobile" (mouseover)="pause()" (mouseout)="resume()">
   <div class="carousel"
-       [style.width]="(100 * carousels.length) + '%'"
+       #carouselBody
+       [ngStyle]="{'width': (100 * (carousels.length)) + '%'}"
        [style.transform]="'translateX(-' + (100 / carousels.length) * activeIndex + '%)'">
-    <div class="carousel-slide"
-         *ngFor="let carousel of carousels; let i = index"
-         [ngStyle]="{'width': (100 / carousels.length) + '%'}">
-      <ng-container *ngIf="i < 2">
-        <div class="carousel-img"
-             *ngIf="!carousel.link"
+    <div *ngFor="let carousel of carousels; let i = index"
+         class="carousel-slide"
+         [ngStyle]="{'width': (100 / (carousels.length)) + '%'}">
+      @if (i < 2) {
+        @if (!carousel.link) {
+          <div class="carousel-img"
+               [style.background-image]="'url(' + carousel.fullUrl + ')'"
+               [title]="carousel.caption"></div>
+        } @else {
+          <a class="carousel-link"
+             [href]="carousel.link"
              [title]="carousel.caption"
-             [style.background-image]="'url(' + carousel.fullUrl + ')'"></div>
-        <a class="carousel-link"
-           *ngIf="carousel.link"
-           [href]="carousel.link"
-           [title]="carousel.caption"
-           (click)="logClick(carousel)"
-           [target]="carousel.target">
-          <div class="carousel-img" [style.background-image]="'url(' + carousel.fullUrl + ')'"></div>
-        </a>
-      </ng-container>
-      <ng-container *ngIf="i > 1">
-        <div class="carousel-img lazyload"
-             *ngIf="!carousel.link"
+             [target]="carousel.target">
+            <div class="carousel-img" [style.background-image]="'url(' + carousel.fullUrl + ')'"></div>
+          </a>
+        }
+      }
+      @if (i > 1) {
+        @if (!carousel.link) {
+          <div class="carousel-img lazyload"
+               [title]="carousel.caption"
+               [attr.data-bg]="carousel.fullUrl"></div>
+        } @else {
+          <a class="carousel-link"
+             [href]="carousel.link"
              [title]="carousel.caption"
-             [attr.data-bg]="carousel.fullUrl"></div>
-        <a class="carousel-link" *ngIf="carousel.link"
-           [href]="carousel.link"
-           [title]="carousel.caption"
-           (click)="logClick(carousel)"
-           [target]="carousel.target">
-          <div class="carousel-img lazyload" [attr.data-bg]="carousel.fullUrl"></div>
-        </a>
-      </ng-container>
+             [target]="carousel.target">
+            <div class="carousel-img lazyload" [attr.data-bg]="carousel.fullUrl"></div>
+          </a>
+        }
+      }
     </div>
   </div>
   <div class="indicator">
     <div class="caption">
-      <span *ngIf="!carousels[activeIndex]?.link"
-            [title]="carousels[activeIndex]?.title">{{carousels[activeIndex]?.title}}</span>
-      <a *ngIf="carousels[activeIndex]?.link"
-         [href]="carousels[activeIndex]?.link"
-         (click)="logClick(carousels[activeIndex])"
-         [title]="carousels[activeIndex]?.title">{{carousels[activeIndex]?.title}}</a>
+      <a *ngIf="carousels[activeIndex]"
+         [href]="carousels[activeIndex].link"
+         [title]="carousels[activeIndex].title"
+         (click)="logClick(carousels[activeIndex])">{{ carousels[activeIndex].title }}</a>
     </div>
     <ul class="dots">
-      <li *ngFor="let carousel of carousels; let i = index"
-          [ngClass]="{'active': activeIndex === i, 'revert': isRevert && activeIndex === i}"
-          (click)="switchBanner(i)">
-        <div class="before"></div>
-        <div class="after"></div>
-      </li>
+      @for (i of carousels.length - 1 | range; track i) {
+        <li [class.active]="activeIndex === i || i === 0 && activeIndex === carousels.length - 1"
+            [class.revert]="isRevert && activeIndex === i"
+            (click)="switchCarousel(i)">
+          <div class="before"></div>
+          <div class="after"></div>
+        </li>
+      }
     </ul>
   </div>
 </div>

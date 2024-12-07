@@ -1,0 +1,36 @@
+import { HttpStatusCode } from '@angular/common/http';
+import { Component, Input, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { Message } from '../../../config/message.enum';
+import { ErrorState } from '../../../interfaces/common';
+import { CommonService } from '../../../services/common.service';
+
+@Component({
+  selector: 'app-not-found',
+  imports: [RouterLink],
+  templateUrl: './not-found.component.html',
+  styleUrl: '../error.component.less'
+})
+export class NotFoundComponent implements OnInit {
+  @Input() errorState?: ErrorState;
+
+  protected activePage = 'error-404';
+
+  constructor(private commonService: CommonService) {}
+
+  ngOnInit(): void {
+    this.updateActivePage();
+
+    if (!this.errorState) {
+      this.errorState = {
+        visible: true,
+        code: HttpStatusCode.NotFound,
+        message: Message.ERROR_404
+      };
+    }
+  }
+
+  protected updateActivePage(): void {
+    this.commonService.updateActivePage(this.activePage);
+  }
+}

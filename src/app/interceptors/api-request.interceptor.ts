@@ -1,65 +1,36 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
-import { Inject, Injectable, makeStateKey, Optional, StateKey } from '@angular/core';
-import { TransferState } from '@angular/platform-browser';
-import { REQUEST } from '@nestjs/ng-universal/dist/tokens';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Inject, Injectable, Optional, REQUEST } from '@angular/core';
 import { Request } from 'express';
-import { Observable, of, tap } from 'rxjs';
-import { environment as env } from '../../environments/environment';
-import { PlatformService } from '../core/platform.service';
+import { catchError, Observable, throwError } from 'rxjs';
+import { ApiService } from '../services/api.service';
+import { ErrorService } from '../services/error.service';
+import { PlatformService } from '../services/platform.service';
 
 @Injectable()
 export class ApiRequestInterceptor implements HttpInterceptor {
   constructor(
     private platform: PlatformService,
-    private state: TransferState,
-    @Optional() @Inject(REQUEST) private request: Request
+    @Optional() @Inject(REQUEST) private request: Request,
+    private readonly apiService: ApiService,
+    private readonly errorService: ErrorService
   ) {}
 
-  intercept(httpRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const isApiRequest = httpRequest.url.startsWith('/api');
-    const token = this.platform.isBrowser ? localStorage.getItem('token') : '';
-    if (isApiRequest) {
-      if (token) {
-        httpRequest = httpRequest.clone({
-          setHeaders: {
-            Authorization: 'Bearer ' + token
-          }
-        });
-      }
-      httpRequest = httpRequest.clone({
-        url: env.api.host + httpRequest.url
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const token = this.apiService.getToken();
+    if (token) {
+      req = req.clone({
+        setHeaders: {
+          Authorization: 'Bearer ' + token
+        }
       });
-      if (this.request && this.request.headers.cookie) {
-        httpRequest = httpRequest.clone({
-          setHeaders: {
-            Cookie: this.request.headers.cookie
-          }
-        });
-      }
     }
-    if (httpRequest.method !== 'GET') {
-      return next.handle(httpRequest);
+    if (this.request && this.request.headers.cookie) {
+      req = req.clone({
+        setHeaders: {
+          Cookie: this.request.headers.cookie
+        }
+      });
     }
-
-    const url = httpRequest.url.replace(/^https?:\/\/[^\/]+/i, '');
-    const urlParam = httpRequest.params.toString();
-    const key: StateKey<any> = makeStateKey<any>(`${url}${urlParam ? '?' + urlParam : ''}`);
-
-    if (this.platform.isServer) {
-      return next.handle(httpRequest).pipe(
-        tap((event) => {
-          this.state.set<any>(key, (<HttpResponse<any>>event).body);
-        })
-      );
-    }
-
-    const storedResponse = this.state.get<any>(key, null);
-    if (storedResponse) {
-      const response = new HttpResponse({ body: storedResponse, status: 200 });
-      this.state.remove(key);
-
-      return of(response);
-    }
-    return next.handle(httpRequest);
+    return next.handle(req).pipe(catchError((err) => throwError(() => err)));
   }
 }

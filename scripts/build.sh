@@ -6,5 +6,5 @@ cd $SHELL_PATH
 cd ..
 
 echo "\033[95m[build]\033[0m building..."
-npm run build:prod
+npm run build
 echo "\033[95m[build]\033[0m done."

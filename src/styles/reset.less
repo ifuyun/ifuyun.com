@@ -7,6 +7,10 @@
   outline: 0;
 }
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 html {
   font-size: @base-font-size;
   -webkit-text-size-adjust: 100%;
@@ -26,8 +30,7 @@ body {
 
 html, body {
   position: relative;
-  height: 100%;
-  min-height: 667px;
+  width: 100%;
 }
 
 h1, h2, h3, h4, h5, h6, ul, ol {
@@ -35,7 +38,7 @@ h1, h2, h3, h4, h5, h6, ul, ol {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 img {
@@ -59,8 +62,16 @@ textarea, input {
 
 ul, ol {
   list-style: none;
+  padding-left: 0;
 }
 
 a {
+  color: var(--primary-color);
   transition: none;
+  text-decoration: none;
+}
+
+hr {
+  margin: 0;
+  opacity: 1;
 }

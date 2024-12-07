@@ -1,50 +1,43 @@
 /* variables */
-@base-font-family: SpecialSymbol, DINRegular, -apple-system, BlinkMacSystemFont, PingFang SC, Helvetica Neue, Hiragino Sans GB, Segoe UI, Microsoft YaHei, \5fae\8f6f\96c5\9ed1, sans-serif;
+@base-font-family: PingFangSC-Regular, system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', Arial, sans-serif;
 @code-family: Söhne Mono, Monaco, Andale Mono, Ubuntu Mono, monospace;
-@body-width: 1048px;
-@header-height: 52px;
-@header-bg-height: 4px;
+
+@blue: #1890ff;
+@base-font-size: 16px;
+@header-font-size: 16px;
+@title-font-size: 15px;
+@primary-font-size: 14px;
+@minor-font-size: 13px;
+@meta-font-size: 12px;
+
+@body-width: 1200px;
+@header-height: 64px;
+@header-line-height: 32px;
+@search-height: 32px;
 @sider-width: 300px;
 @primary-margin: 16px;
 @primary-padding: 24px;
 @content-margin: 24px;
 @content-padding: 16px;
+@min-body-width: @body-width + @primary-margin * 2;
+@non-body-height: @header-height + @content-margin * 2 + @primary-padding + 121;
 @content-header-margin: 28px;
 @primary-border-radius: 4px;
 @box-shadow-width: 2px;
 @post-line-height: 24px;
 @tag-row-span: 2px;
-@post-list-padding: 24px;
-@content-h2-padding-left: 12px;
-@content-h2-border-width: @primary-margin - @content-h2-padding-left;
-@content-list-padding-left: 2.2em;
-@header-font-weight: 500;
-@auth-form-width: 280px;
-
-@base-font-size: 10px;
-@primary-font-size: 14px;
-@minor-font-size: 13px;
-@meta-font-size: 12px;
-@header-font-size: 15px;
+@header-font-weight: 600;
+@auth-form-width: 304px;
+@post-more-height: 150px;
 
 @overlay-transition: opacity .3s ease-in-out;
 
-@input-line-height: 1.57142857;
-
-@base-color: #333;
-@primary-color: #1890ff;
-@wechat-color: #2aae67;
-@qq-color: #23a0f0;
-@alipay-color: #226bf3;
-@weibo-color: #d52c2b;
-@mini-app-color: #6467ef;
-
-@m-primary-margin: 1.2rem;
-@m-primary-padding: 2.4rem;
-@m-content-margin: 1.2rem;
-@m-content-padding: 1.6rem;
-@m-content-header-margin: 2.8rem;
-@m-footer-margin: 2.4rem;
-@m-header-height: 5.2rem;
-@m-header-search-height: 4rem;
-@m-sider-width: 66%;
+@m-header-font-size: 15px;
+@m-primary-margin: 0.75rem;
+@m-primary-padding: 1.5rem;
+@m-content-margin: 1rem;
+@m-content-padding: 1rem;
+@m-minor-margin: 0.75rem;
+@m-minor-padding: 0.75rem;
+@m-header-height: 3.25rem;
+@m-sider-width: 15.625rem;

@@ -1,12 +1,14 @@
 @import "variables";
 
 .timeline {
-  @time-width: 120px;
+  @time-width: 60px;
   @time-line-width: 2px;
   @time-line-padding: 16px;
   @time-node-size: 10px;
   @time-node-size-hover: 14px;
   @time-node-padding: 12px;
+  @time-node-line-height: 24px;
+  @time-label-half-width: 30px;
 
   h3, p {
     margin: 0 !important;
@@ -23,7 +25,7 @@
       padding-top: 0;
 
       .time-node-line {
-        top: ((@post-line-height - @time-node-size) / 2 + 1);
+        top: ((@post-line-height - @time-node-size) / 2) + 1;
 
         > div {
           margin-top: -1px;
@@ -36,7 +38,7 @@
         width: @time-node-size-hover;
         height: @time-node-size-hover;
         margin-top: (@time-node-padding + (@post-line-height - @time-node-size-hover) / 2);
-        margin-left: -((@time-node-size-hover + @time-line-width) / 2);
+        margin-left: (-((@time-node-size-hover + @time-line-width) / 2));
       }
 
       &:first-child {
@@ -51,6 +53,9 @@
     flex-basis: @time-width;
     flex-shrink: 0;
     text-align: right;
+    font-size: 13px !important;
+    line-height: @time-node-line-height !important;
+    color: var(--minor-meta-color);
   }
 
   .time-node-line {
@@ -64,7 +69,7 @@
       width: @time-node-size;
       height: @time-node-size;
       margin-top: (@time-node-padding + (@post-line-height - @time-node-size) / 2);
-      margin-left: -((@time-node-size + @time-line-width) / 2);
+      margin-left: (-((@time-node-size + @time-line-width) / 2));
       border-radius: 50%;
       background: var(--primary-color);
       transition: all .3s;
@@ -74,6 +79,20 @@
   .time-node-desc {
     margin-left: @time-line-padding * 2 + @time-line-width;
     text-align: left;
+    line-height: @time-node-line-height;
     overflow: hidden;
+  }
+
+  .time-label {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    width: @time-label-half-width * 2;
+    margin-left: @time-width + @time-line-padding + (@time-line-width / 2) - @time-label-half-width;
+    border: 1px solid var(--primary-color);
+    border-radius: 15px;
+    line-height: 28px;
+    background: var(--primary-color);
+    color: #fff;
   }
 }

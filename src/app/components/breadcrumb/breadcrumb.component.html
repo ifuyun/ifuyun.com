@@ -1,21 +1,25 @@
-<div class="breadcrumb" [ngClass]="{'breadcrumb-desktop': !isMobile, 'breadcrumb-mobile': isMobile}">
-  <span>当前位置：</span>
-  <ng-container *ngFor="let breadcrumb of breadcrumbs; let i = index">
-    <span class="separator" *ngIf="i > 0">/</span>
-    <ng-container *ngIf="breadcrumb.url !== ''">
-      <a *ngIf="!breadcrumb.isHeader"
-         [routerLink]="[breadcrumb.url]"
-         [queryParams]="breadcrumb.param"
-         title="{{breadcrumb.tooltip}}">{{breadcrumb.label}}</a>
-      <h3 *ngIf="breadcrumb.isHeader">
-        <a title="{{breadcrumb.tooltip}}"
-           [routerLink]="[breadcrumb.url]"
-           [queryParams]="breadcrumb.param">{{breadcrumb.label}}</a>
-      </h3>
-    </ng-container>
-    <ng-container *ngIf="breadcrumb.url === ''">
-      <span *ngIf="!breadcrumb.isHeader" title="{{breadcrumb.tooltip}}">{{breadcrumb.label}}</span>
-      <h3 *ngIf="breadcrumb.isHeader" title="{{breadcrumb.tooltip}}">{{breadcrumb.label}}</h3>
-    </ng-container>
+<div class="breadcrumb"
+     *ngIf="breadcrumbs && breadcrumbs.length > 0"
+     [class.m-breadcrumb]="isMobile"
+     [class.p-breadcrumb]="!isMobile">
+  <span nz-icon nzType="environment"></span>
+  <ng-container *ngFor="let breadcrumb of breadcrumbs">
+    @if (breadcrumb.url !== '') {
+      @if (!breadcrumb.isHeader) {
+        <a [routerLink]="breadcrumb.url"
+           [queryParams]="breadcrumb.param"
+           [title]="breadcrumb.tooltip">{{ breadcrumb.label }}</a>
+      } @else {
+        <h3><a [routerLink]="breadcrumb.url"
+               [queryParams]="breadcrumb.param"
+               [title]="breadcrumb.tooltip">{{ breadcrumb.label }}</a></h3>
+      }
+    } @else {
+      @if (!breadcrumb.isHeader) {
+        <span [title]="breadcrumb.tooltip">{{ breadcrumb.label }}</span>
+      } @else {
+        <h3 [title]="breadcrumb.tooltip">{{ breadcrumb.label }}</h3>
+      }
+    }
   </ng-container>
 </div>

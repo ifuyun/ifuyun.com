@@ -1,53 +1,78 @@
 @import "../../../styles/variables";
 
+.footer-wrap {
+  width: 100%;
+  padding: @primary-padding 0;
+  background-color: var(--footer-bg-color);
+  border-top: 1px solid var(--footer-border-color);
+}
+
 .footer {
-  border-top: var(--footer-border);
-  line-height: 28px;
-  text-align: center;
-  font-size: @minor-font-size;
-  background: var(--footer-bg-color);
+  display: flex;
+  margin: 0 auto;
   color: var(--footer-color);
+  font-size: @meta-font-size;
 
-  &-desktop {
-    padding: 16px 0;
-  }
+  .footer-content {
+    line-height: 24px;
 
-  &-mobile {
-    padding: @m-content-padding 0;
-  }
+    .footer-link {
+      display: flex;
 
-  &.bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
+      > li {
+        &:not(:last-child) {
+          &:after {
+            content: '/';
+            margin: 0 8px;
+          }
+        }
+      }
+    }
 
-  .footer-record {
-    display: flex;
-    justify-content: center;
+    .friend-link {
+      display: flex;
+      justify-content: flex-start;
 
-    &-mobile {
-      flex-direction: column;
+      .footer-label {
+        flex-shrink: 0;
+        margin-right: 4px;
+      }
+
+      > ul {
+        display: flex;
+        flex-wrap: wrap;
+
+        > li:not(:last-child) {
+          margin-right: 8px;
+        }
+      }
+    }
+
+    .beian-link {
+      display: flex;
+
+      > li {
+        display: flex;
+        align-items: center;
+
+        &:not(:last-child) {
+          &:after {
+            content: ' ';
+            margin: 0 8px;
+            height: @meta-font-size;
+            border-right: 1px solid;
+          }
+        }
+      }
     }
   }
 
-  .footer-link, .footer-record-desktop {
-    li:not(:last-child)::after {
-      margin: 0 12px;
+  .footer-qrcode {
+    img {
+      width: 120px;
+      height: 120px;
+      border-radius: @primary-border-radius;
     }
-  }
-
-  .footer-link li:not(:last-child)::after {
-    content: '/';
-  }
-
-  .footer-record-desktop li:not(:last-child)::after {
-    content: '|';
-  }
-
-  ul li {
-    display: inline-block;
   }
 
   a {
@@ -56,5 +81,28 @@
     &:hover {
       color: var(--primary-color);
     }
+  }
+}
+
+.p-footer-wrap {
+  min-width: @min-body-width;
+  margin: @content-margin auto 0;
+
+  .footer {
+    width: @body-width;
+    justify-content: space-between;
+
+    .footer-content {
+      margin-right: @primary-margin;
+    }
+  }
+}
+
+.m-footer-wrap {
+  margin-top: (@m-content-margin / 2);
+
+  .footer {
+    justify-content: center;
+    text-align: center;
   }
 }

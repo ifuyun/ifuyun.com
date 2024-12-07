@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ApiUrl } from '../config/api-url';
-import { ApiService } from '../core/api.service';
-import { ResultList, SearchParam, SearchResponse } from '../core/common.interface';
+import { APP_ID } from '../config/common.constant';
+import { ResultList } from '../interfaces/common';
+import { SearchParam, SearchResponse } from '../interfaces/search';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +14,11 @@ export class SearchService {
   constructor(private apiService: ApiService) {}
 
   search(param: SearchParam): Observable<ResultList<SearchResponse>> {
-    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.SEARCH), param).pipe(map((res) => res?.data || {}));
+    return this.apiService
+      .httpGet(ApiUrl.SEARCH, {
+        ...param,
+        appId: APP_ID
+      })
+      .pipe(map((res) => res?.data || {}));
   }
 }

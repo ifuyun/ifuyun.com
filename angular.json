@@ -5,44 +5,52 @@
   "projects": {
     "ifuyun": {
       "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "less",
+          "skipTests": true
+        },
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:interceptor": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:resolver": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/browser",
+            "outputPath": "dist/ifuyun",
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": ["zone.js"],
-            "tsConfig": "tsconfig.app.json",
-            "aot": true,
-            "inlineStyleLanguage": "less",
-            "allowedCommonJsDependencies": [
-              "lodash",
-              "moment",
-              "qrcode",
-              "ua-parser-js",
-              "murmurhash",
-              "file-saver",
-              "@nestjs/ng-universal/dist/tokens"
+            "browser": "src/main.ts",
+            "polyfills": [
+              "zone.js"
             ],
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "less",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/favicon/",
-                "output": "/"
-              },
-              {
-                "glob": "**/*",
-                "input": "src/webmaster/",
-                "output": "/"
-              },
-              {
-                "glob": "**/*",
-                "input": "src/assets/",
-                "output": "/assets/"
+                "input": "public"
               },
               {
                 "glob": "**/*",
@@ -56,46 +64,39 @@
             "scripts": [
               "node_modules/lazysizes/lazysizes.min.js",
               "node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.min.js"
-            ]
+            ],
+            "server": "src/main.server.ts",
+            "outputMode": "server",
+            "ssr": {
+              "entry": "src/server.ts"
+            }
           },
           "configurations": {
             "production": {
-              "baseHref": "https://cdn.ifuyun.com/",
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "3mb",
-                  "maximumError": "8mb"
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "128kb",
-                  "maximumError": "512kb"
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
                 }
               ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "with": "src/environments/environment.development.ts"
                 }
-              ],
-              "buildOptimizer": true,
-              "optimization": true,
-              "vendorChunk": false,
-              "extractLicenses": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "aot": true
-            },
-            "development": {
-              "baseHref": "/",
-              "buildOptimizer": false,
-              "optimization": false,
-              "vendorChunk": true,
-              "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -103,137 +104,43 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "port": 2008,
-            "proxyConfig": "proxy.conf.js"
+            "port": 2009
           },
           "configurations": {
             "production": {
-              "browserTarget": "ifuyun:build:production"
+              "buildTarget": "ifuyun:build:production"
             },
             "development": {
-              "browserTarget": "ifuyun:build:development"
+              "buildTarget": "ifuyun:build:development"
             }
           },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "ifuyun:build"
-          }
+          "builder": "@angular-devkit/build-angular:extract-i18n"
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "less",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/favicon/",
-                "output": "/"
-              },
-              {
-                "glob": "**/*",
-                "input": "src/webmaster/",
-                "output": "/"
-              },
-              {
-                "glob": "**/*",
-                "input": "src/assets/",
-                "output": "/assets/"
-              },
-              {
-                "glob": "**/*",
-                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
-                "output": "/assets/"
+                "input": "public"
               }
             ],
             "styles": [
               "src/styles.less"
             ],
-            "scripts": [
-              "node_modules/lazysizes/lazysizes.min.js",
-              "node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.min.js"
-            ]
+            "scripts": []
           }
-        },
-        "server": {
-          "builder": "@angular-devkit/build-angular:server",
-          "options": {
-            "outputPath": "dist/server",
-            "main": "server.ts",
-            "tsConfig": "tsconfig.server.json",
-            "inlineStyleLanguage": "less",
-            "externalDependencies": [
-              "@nestjs/microservices",
-              "@nestjs/microservices/microservices-module",
-              "@nestjs/websockets",
-              "@nestjs/websockets/socket-module",
-              "cache-manager",
-              "log4js"
-            ]
-          },
-          "configurations": {
-            "production": {
-              "outputHashing": "media",
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ]
-            },
-            "development": {
-              "optimization": false,
-              "sourceMap": true,
-              "extractLicenses": false
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "serve-ssr": {
-          "builder": "@nguniversal/builders:ssr-dev-server",
-          "options": {
-            "port": 2008,
-            "proxyConfig": "proxy.conf.js"
-          },
-          "configurations": {
-            "development": {
-              "browserTarget": "ifuyun:build:development",
-              "serverTarget": "ifuyun:server:development"
-            },
-            "production": {
-              "browserTarget": "ifuyun:build:production",
-              "serverTarget": "ifuyun:server:production"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "prerender": {
-          "builder": "@nguniversal/builders:prerender",
-          "options": {
-            "routes": [
-              "/"
-            ]
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "ifuyun:build:production",
-              "serverTarget": "ifuyun:server:production"
-            },
-            "development": {
-              "browserTarget": "ifuyun:build:development",
-              "serverTarget": "ifuyun:server:development"
-            }
-          },
-          "defaultConfiguration": "production"
         }
       }
     }
-  },
-  "cli": {
-    "analytics": false
   }
 }

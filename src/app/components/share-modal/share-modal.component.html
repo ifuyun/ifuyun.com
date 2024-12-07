@@ -1,0 +1,20 @@
+<nz-modal
+  nzDraggable
+  nzCentered
+  [nzVisible]="true"
+  [nzWidth]="392"
+  [nzFooter]="null"
+  (nzOnCancel)="handleClose()"
+  (nzOnOk)="handleClose()"
+>
+  <ng-container *nzModalContent>
+    <nz-qrcode *ngIf="shareUrl"
+               [nzSize]="320"
+               [nzPadding]="0"
+               [nzBordered]="false"
+               [nzValue]="shareUrl"
+               nzIcon="/favicon.png"
+               [nzIconSize]="80"
+               nzLevel="Q"></nz-qrcode>
+  </ng-container>
+</nz-modal>

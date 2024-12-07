@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
-import { APP_ID } from '../config/common.constant';
-import { ApiService } from '../core/api.service';
 import { ApiUrl } from '../config/api-url';
-import { CarouselVo, OptionEntity } from '../interfaces/option.interface';
+import { APP_ID } from '../config/common.constant';
+import { CarouselVo, OptionEntity, OptionModel } from '../interfaces/option';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class OptionService {
 
   getOptions(): Observable<OptionEntity> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.OPTION_FRONTEND), {
+      .httpGet(ApiUrl.OPTION_FRONTEND, {
         appId: APP_ID
       })
       .pipe(
@@ -27,9 +27,18 @@ export class OptionService {
       );
   }
 
+  getOptionByKey(key: string): Observable<OptionModel> {
+    return this.apiService
+      .httpGet(ApiUrl.OPTION, {
+        key,
+        appId: APP_ID
+      })
+      .pipe(map((res) => res?.data || {}));
+  }
+
   getCarousels(): Observable<CarouselVo[]> {
     return this.apiService
-      .httpGet(this.apiService.getApiUrl(ApiUrl.OPTION_CAROUSELS), {
+      .httpGet(ApiUrl.OPTION_CAROUSELS, {
         appId: APP_ID
       })
       .pipe(map((res) => res?.data || []));

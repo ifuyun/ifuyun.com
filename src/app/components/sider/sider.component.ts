@@ -1,245 +1,174 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Params, Router, RouterLink } from '@angular/router';
-import { isEmpty } from 'lodash';
+import { NgFor, NgIf } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Params, RouterLink } from '@angular/router';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { skipWhile, takeUntil } from 'rxjs';
-import { environment as env } from '../../../environments/environment';
-import { ArchiveData } from '../../core/common.interface';
-import { CommonService } from '../../core/common.service';
-import { DestroyService } from '../../core/destroy.service';
-import { MessageService } from '../../core/message.service';
-import { PlatformService } from '../../core/platform.service';
-import { UrlService } from '../../core/url.service';
-import { LinkEntity } from '../../interfaces/link.interface';
-import { ActionObjectType, ActionType } from '../../interfaces/log.enum';
-import { OptionEntity } from '../../interfaces/option.interface';
-import { NgZorroAntdModule } from '../../modules/antd/ng-zorro-antd.module';
-import { PostEntity } from '../../pages/post/post.interface';
-import { PostService } from '../../pages/post/post.service';
-import { HotWallpaper, Wallpaper, WallpaperLang } from '../../pages/wallpaper/wallpaper.interface';
-import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
-import { LinkService } from '../../services/link.service';
-import { LogService } from '../../services/log.service';
-import { OptionService } from '../../services/option.service';
-import { AdsenseComponent } from '../adsense/adsense.component';
-import { JdUnionGoodsComponent } from '../jd-union-goods/jd-union-goods.component';
+import { WallpaperLang } from '../../enums/wallpaper';
+import { ArchiveData } from '../../interfaces/common';
+import { PostEntity } from '../../interfaces/post';
+import { HotWallpaper, Wallpaper } from '../../interfaces/wallpaper';
+import { CommonService } from '../../services/common.service';
+import { DestroyService } from '../../services/destroy.service';
+import { PlatformService } from '../../services/platform.service';
+import { PostService } from '../../services/post.service';
+import { UserAgentService } from '../../services/user-agent.service';
+import { WallpaperService } from '../../services/wallpaper.service';
 
 @Component({
   selector: 'app-sider',
+  imports: [RouterLink, NgIf, NgFor, NzIconModule],
+  providers: [DestroyService],
   templateUrl: './sider.component.html',
-  styleUrls: ['./sider.component.less'],
-  standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, NgZorroAntdModule, AdsenseComponent, JdUnionGoodsComponent],
-  providers: [DestroyService]
+  styleUrl: './sider.component.less'
 })
 export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('redPacket') redPacketEle!: ElementRef;
+  @ViewChild('siderEle') siderEle!: ElementRef;
 
   isMobile = false;
-  pageIndex = '';
-  isHomePage = false;
-  isPostPage = false;
-  isWallpaperPage = false;
+  activePage = '';
   hotPosts: PostEntity[] = [];
   randomPosts: PostEntity[] = [];
   postArchives: ArchiveData[] = [];
   hotWallpapers: HotWallpaper[] = [];
   randomWallpapers: Wallpaper[] = [];
   wallpaperArchives: ArchiveData[] = [];
-  friendLinks: LinkEntity[] = [];
-  keyword = '';
-  adsFlag = false;
-  jdUnionVisible = false;
 
-  private options: OptionEntity = {};
+  get isPostPage() {
+    return ['post', 'post-archive'].includes(this.activePage);
+  }
+
+  get isWallpaperPage() {
+    return ['wallpaper', 'wallpaper-archive'].includes(this.activePage);
+  }
+
+  get isHomePage() {
+    return !this.isPostPage && !this.isWallpaperPage;
+  }
 
   constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private destroy$: DestroyService,
-    private platform: PlatformService,
-    private router: Router,
-    private urlService: UrlService,
-    private message: MessageService,
-    private commonService: CommonService,
-    private optionService: OptionService,
-    private postService: PostService,
-    private linkService: LinkService,
-    private wallpaperService: WallpaperService,
-    private logService: LogService
-  ) {}
+    private readonly destroy$: DestroyService,
+    private readonly platform: PlatformService,
+    private readonly userAgentService: UserAgentService,
+    private readonly commonService: CommonService,
+    private readonly postService: PostService,
+    private readonly wallpaperService: WallpaperService
+  ) {
+    this.isMobile = this.userAgentService.isMobile;
+  }
 
   ngOnInit(): void {
-    this.optionService.options$
-      .pipe(
-        skipWhile((options) => isEmpty(options)),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((options) => {
-        this.options = options;
-        const adsFlag = this.options['ads_flag'] || '';
-        this.adsFlag =
-          (env.production && ['1', '0'].includes(adsFlag)) || (!env.production && ['2', '0'].includes(adsFlag));
-      });
-    this.urlService.urlInfo$.pipe(takeUntil(this.destroy$)).subscribe((url) => {
-      const isHome = url.current.split('?')[0] === '/';
-      this.linkService
-        .getFriendLinks(isHome)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => (this.friendLinks = res));
-    });
-    this.commonService.adsFlag$.pipe(takeUntil(this.destroy$)).subscribe((flag) => {
-      this.jdUnionVisible = flag;
-    });
-    this.commonService.pageIndex$
+    this.commonService.activePage$
       .pipe(
         skipWhile((page) => !page),
         takeUntil(this.destroy$)
       )
       .subscribe((page) => {
-        if (this.pageIndex !== page) {
-          this.pageIndex = page;
-          this.updatePageIndex();
-          if (this.isHomePage || this.isPostPage) {
-            this.fetchHotPosts();
-            this.fetchRandomPosts();
-            this.fetchPostArchives();
-          }
-          if (this.isHomePage || this.isWallpaperPage) {
-            this.fetchHotWallpapers();
-            this.fetchRandomWallpapers();
-            this.fetchWallpaperArchives();
+        if (this.activePage !== page) {
+          this.activePage = page;
+
+          if (!this.isMobile) {
+            if (this.isPostPage || this.isHomePage) {
+              this.getHotPosts();
+              this.getRandomPosts();
+              this.getPostArchives();
+            }
+            if (this.isWallpaperPage || this.isHomePage) {
+              this.getHotWallpapers();
+              this.getRandomWallpapers();
+              this.getWallpaperArchives();
+            }
           }
         }
       });
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     if (this.platform.isBrowser) {
-      window.addEventListener('scroll', this.scrollHandler);
-      window.addEventListener('resize', this.scrollHandler);
+      window.addEventListener('scroll', this.scrollHandler.bind(this));
+      window.addEventListener('resize', this.scrollHandler.bind(this));
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this.platform.isBrowser) {
       window.removeEventListener('scroll', this.scrollHandler);
       window.removeEventListener('resize', this.scrollHandler);
     }
   }
 
-  search() {
-    this.keyword = this.keyword.trim();
-    if (!this.keyword) {
-      this.message.error('请输入搜索关键词');
-      return false;
-    }
-    this.logService
-      .logAction({
-        action: ActionType.SEARCH,
-        objectType: ActionObjectType.SEARCH,
-        keyword: this.keyword
-      })
-      .subscribe();
-    this.router.navigate(['/'], {
-      queryParams: {
-        keyword: this.keyword
-      }
-    });
-
-    return false;
-  }
-
   getWallpaperLangParams(isCn: boolean): Params {
     return isCn ? {} : { lang: WallpaperLang.EN };
   }
 
-  private fetchHotPosts() {
+  private getHotPosts() {
     this.postService
       .getHotPosts()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => (this.hotPosts = res));
-  }
-
-  private fetchRandomPosts() {
-    this.postService
-      .getRandomPosts()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => (this.randomPosts = res));
-  }
-
-  private fetchPostArchives() {
-    this.postService
-      .getPostArchives({
-        showCount: true
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => (this.postArchives = res));
-  }
-
-  private fetchHotWallpapers() {
-    this.wallpaperService
-      .getHotWallpapers()
-      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.hotWallpapers = res.map((item) => {
-          return {
-            ...item,
-            wallpaperTitle: item.wallpaperTitleCn || item.wallpaperTitleEn,
-            wallpaperCopyright: item.wallpaperCopyrightCn || item.wallpaperCopyrightEn,
-            isCn: !!item.wallpaperCopyrightCn,
-            isEn: !!item.wallpaperCopyrightEn
-          };
-        });
+        this.hotPosts = res;
       });
   }
 
-  private fetchRandomWallpapers() {
-    this.wallpaperService
-      .getRandomWallpapers({
-        size: 10,
-        simple: true
-      })
+  private getRandomPosts() {
+    this.postService
+      .getRandomPosts(10, false)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.randomWallpapers = res.map((item) => {
-          return {
-            ...item,
-            wallpaperTitle: item.wallpaperTitle || item.wallpaperTitleEn,
-            wallpaperCopyright: item.wallpaperCopyright || item.wallpaperCopyrightEn,
-            isCn: !!item.wallpaperCopyright,
-            isEn: !!item.wallpaperCopyrightEn
-          };
-        });
+        this.randomPosts = res;
       });
   }
 
-  private fetchWallpaperArchives() {
-    this.wallpaperService
-      .getWallpaperArchives({
-        showCount: true
-      })
+  private getPostArchives() {
+    this.postService
+      .getPostArchives(true, 10)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => (this.wallpaperArchives = res));
+      .subscribe((res) => {
+        this.postArchives = res;
+      });
+  }
+
+  private getHotWallpapers() {
+    this.wallpaperService
+      .getHotWallpapers(10)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.hotWallpapers = res;
+      });
+  }
+
+  private getRandomWallpapers() {
+    this.wallpaperService
+      .getRandomWallpapers(10, true)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.randomWallpapers = res;
+      });
+  }
+
+  private getWallpaperArchives() {
+    this.wallpaperService
+      .getWallpaperArchives(true, 10)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.wallpaperArchives = res;
+      });
   }
 
   private scrollHandler() {
-    const documentEle = this.document.documentElement;
-    const siderEle = this.document.getElementById('sider') as HTMLElement;
-    if (siderEle) {
-      if (documentEle.scrollTop > 0 && documentEle.scrollTop > siderEle.scrollHeight - documentEle.clientHeight) {
-        siderEle.style.position = 'sticky';
-        siderEle.style.top = documentEle.clientHeight - siderEle.scrollHeight - 16 + 'px';
+    const docEle = document.documentElement;
+    if (this.siderEle) {
+      if (docEle.scrollTop > 0 && docEle.scrollTop > this.siderEle.nativeElement.scrollHeight - docEle.clientHeight) {
+        this.siderEle.nativeElement.style.position = 'sticky';
+        if (this.siderEle.nativeElement.scrollHeight < docEle.clientHeight) {
+          this.siderEle.nativeElement.style.top = 0;
+        } else {
+          this.siderEle.nativeElement.style.top =
+            docEle.clientHeight - this.siderEle.nativeElement.scrollHeight - 16 + 'px';
+        }
       } else {
-        siderEle.style.position = 'relative';
-        siderEle.style.top = '';
+        this.siderEle.nativeElement.style.position = 'relative';
+        this.siderEle.nativeElement.style.top = '';
       }
     }
-  }
-
-  private updatePageIndex() {
-    this.isPostPage = ['post', 'postArchive'].includes(this.pageIndex);
-    this.isWallpaperPage = ['wallpaper', 'wallpaperArchive'].includes(this.pageIndex);
-    this.isHomePage = !this.isPostPage && !this.isWallpaperPage;
   }
 }

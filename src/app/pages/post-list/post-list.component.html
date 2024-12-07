@@ -1,0 +1,9 @@
+<app-breadcrumb></app-breadcrumb>
+@if (total > 0) {
+  <div [class.post-list]="!isMobile" [class.m-post-list]="isMobile">
+    <app-post-item *ngFor="let post of posts; let i = index" [post]="post" [index]="i"></app-post-item>
+  </div>
+} @else {
+
+}
+<app-pagination></app-pagination>

@@ -1,15 +1,10 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
 export const environment = {
   production: false,
+  port: 4000,
   appId: 'xxxxxxxxxxxxxxxx',
-  host: '/',
+  apiBase: 'https://api.ireadpay.com',
   cookie: {
     domain: 'localhost',
-    expires: 7
-  },
-  api: {
-    host: 'http://localhost:2016'
+    expires: 3
   }
 };

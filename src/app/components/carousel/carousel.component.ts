@@ -1,64 +1,59 @@
-import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { NgFor, NgIf, NgStyle } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { isEmpty } from 'lodash';
-import { combineLatest, skipWhile, takeUntil } from 'rxjs';
-import { APP_ID } from '../../config/common.constant';
-import { LinkTarget } from '../../config/common.enum';
-import { DestroyService } from '../../core/destroy.service';
-import { PlatformService } from '../../core/platform.service';
-import { UserAgentService } from '../../core/user-agent.service';
-import { ActionObjectType, ActionType } from '../../interfaces/log.enum';
-import { CarouselOptions, CarouselVo } from '../../interfaces/option.interface';
-import { TenantAppModel } from '../../interfaces/tenant-app.interface';
-import { WallpaperLang } from '../../pages/wallpaper/wallpaper.interface';
-import { WallpaperService } from '../../pages/wallpaper/wallpaper.service';
-import { LogService } from '../../services/log.service';
+import { skipWhile, takeUntil } from 'rxjs';
+import { LinkTarget } from '../../enums/link';
+import { WallpaperLang } from '../../enums/wallpaper';
+import { CarouselOptions, CarouselVo } from '../../interfaces/option';
+import { HotWallpaper, Wallpaper } from '../../interfaces/wallpaper';
+import { RangePipe } from '../../pipes/range.pipe';
+import { DestroyService } from '../../services/destroy.service';
 import { OptionService } from '../../services/option.service';
-import { TenantAppService } from '../../services/tenant-app.service';
+import { PlatformService } from '../../services/platform.service';
+import { UserAgentService } from '../../services/user-agent.service';
+import { WallpaperService } from '../../services/wallpaper.service';
 
 @Component({
-  selector: 'i-carousel',
+  selector: 'app-carousel',
+  imports: [NgFor, NgIf, NgStyle, RangePipe],
   templateUrl: './carousel.component.html',
-  styleUrls: ['./carousel.component.less'],
-  standalone: true,
-  imports: [NgClass, NgFor, NgIf, NgStyle],
-  providers: [DestroyService]
+  styleUrl: './carousel.component.less'
 })
 export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('carouselBody') carouselBody!: ElementRef;
+
   isMobile = false;
   carousels: CarouselVo[] = [];
   activeIndex = 0;
   isRevert = false;
   timer!: number;
 
-  private appInfo!: TenantAppModel;
   private carouselOptions!: CarouselOptions;
+  private interval = 3000;
+  private isPaused = false;
 
   constructor(
-    private destroy$: DestroyService,
-    private platform: PlatformService,
-    private userAgentService: UserAgentService,
-    private tenantAppService: TenantAppService,
-    private optionService: OptionService,
-    private wallpaperService: WallpaperService,
-    private logService: LogService
+    private readonly destroy$: DestroyService,
+    private readonly platform: PlatformService,
+    private readonly userAgentService: UserAgentService,
+    private readonly optionService: OptionService,
+    private readonly wallpaperService: WallpaperService
   ) {
-    this.isMobile = this.userAgentService.isMobile();
+    this.isMobile = this.userAgentService.isMobile;
   }
 
   ngOnInit(): void {
-    combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
+    this.optionService.options$
       .pipe(
-        skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
+        skipWhile((options) => isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe(([appInfo, options]) => {
-        this.appInfo = appInfo;
-
+      .subscribe((options) => {
         try {
           this.carouselOptions = JSON.parse(options['carousel_config']);
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
-          this.carouselOptions = { type: 'album' };
+          this.carouselOptions = { type: 'wallpaper', orderBy: 'newest' };
         }
 
         if (this.carouselOptions.type === 'album') {
@@ -66,6 +61,8 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
           if (this.carouselOptions.orderBy === 'random') {
             this.fetchRandomWallpapers();
+          } else if (this.carouselOptions.orderBy === 'hottest') {
+            this.fetchHotWallpapers();
           } else {
             this.fetchWallpapers();
           }
@@ -73,41 +70,79 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  ngOnDestroy() {
-    this.stop();
-  }
-
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.start();
+    if (this.platform.isBrowser) {
+      document.addEventListener('visibilitychange', this.onVisibilityChange.bind(this));
+    }
   }
 
-  switchBanner(index: number) {
-    this.isRevert = index < this.activeIndex;
-    this.activeIndex = index;
-  }
-
-  stop() {
-    this.timer && clearInterval(this.timer);
+  ngOnDestroy(): void {
+    this.pause();
+    if (this.platform.isBrowser) {
+      document.removeEventListener('visibilitychange', this.onVisibilityChange);
+    }
   }
 
   start() {
     if (this.platform.isBrowser) {
-      this.timer = window.setInterval(() => {
-        this.isRevert = false;
-        this.activeIndex = this.activeIndex + 1 >= this.carousels.length ? 0 : this.activeIndex + 1;
-      }, 3000);
+      this.timer = window.setTimeout(() => {
+        this.show();
+      }, this.interval);
     }
   }
 
-  logClick(carousel: CarouselVo) {
-    this.logService
-      .logAction({
-        action: ActionType.CLICK_CAROUSEL,
-        objectType: ActionObjectType.CAROUSEL,
-        carouselTitle: carousel.title,
-        carouselURL: carousel.link
-      })
-      .subscribe();
+  show() {
+    if (!this.isPaused) {
+      this.isRevert = false;
+      this.activeIndex = (this.activeIndex + 1) % this.carousels.length;
+      this.update();
+
+      requestAnimationFrame(this.start.bind(this));
+    }
+  }
+
+  update(): void {
+    this.carouselBody.nativeElement.style.transitionDuration = '';
+
+    if (this.activeIndex === this.carousels.length - 1) {
+      window.setTimeout(() => {
+        this.activeIndex = 0;
+        this.carouselBody.nativeElement.style.transitionDuration = '0s';
+        this.carouselBody.nativeElement.style.transform = 'translateX(0%)';
+      }, 300);
+    }
+  }
+
+  pause() {
+    if (this.platform.isBrowser) {
+      this.isPaused = true;
+      window.clearTimeout(this.timer);
+    }
+  }
+
+  resume() {
+    this.isPaused = false;
+    this.start();
+  }
+
+  switchCarousel(index: number) {
+    if (index === this.activeIndex) {
+      return;
+    }
+    this.isRevert = index < this.activeIndex;
+    this.activeIndex = index;
+    this.update();
+  }
+
+  logClick(carousel: CarouselVo) {}
+
+  private onVisibilityChange() {
+    if (document.visibilityState === 'visible') {
+      this.resume();
+    } else {
+      this.pause();
+    }
   }
 
   private fetchCarousels() {
@@ -115,33 +150,31 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       .getCarousels()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.carousels = res;
-        this.carousels.forEach((item) => {
-          item.fullUrl = item.url;
-        });
+        this.carousels = (res || []).map((item) => ({
+          ...item,
+          fullUrl: item.url
+        }));
+        this.initCarousels();
       });
   }
 
   private fetchRandomWallpapers() {
     this.wallpaperService
-      .getRandomWallpapers({
-        size: this.carouselOptions.size || 4,
-        resolution: this.carouselOptions.resolution || '1280x720'
-      })
+      .getRandomWallpapers(this.carouselOptions.size || 4)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.carousels = res.map((wallpaper, index) => {
-          return {
-            id: wallpaper.wallpaperId,
-            title: wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn,
-            caption: wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn,
-            url: wallpaper.wallpaperUrl,
-            fullUrl: wallpaper.wallpaperUrl,
-            link: this.getWallpaperLink(wallpaper.wallpaperId, !wallpaper.wallpaperTitle),
-            target: LinkTarget.SELF,
-            order: index + 1
-          };
-        });
+        this.carousels = this.transformToCarousels(res);
+        this.initCarousels();
+      });
+  }
+
+  private fetchHotWallpapers() {
+    this.wallpaperService
+      .getHotWallpapers(this.carouselOptions.size || 4)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.carousels = this.transformToCarousels(res);
+        this.initCarousels();
       });
   }
 
@@ -151,31 +184,33 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
         page: 1,
         pageSize: this.carouselOptions.size || 4,
         lang: [WallpaperLang.CN, WallpaperLang.EN],
-        resolution: this.carouselOptions.resolution || '1280x720',
-        orderBy: this.carouselOptions.orderBy === 'oldest' ? [['wallpaperDate', 'asc']] : [['wallpaperDate', 'desc']],
-        appId: APP_ID
+        orderBy: this.carouselOptions.orderBy === 'oldest' ? [['wallpaperDate', 'asc']] : [['wallpaperDate', 'desc']]
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.carousels = (res.list || []).map((wallpaper, index) => {
-          return {
-            id: wallpaper.wallpaperId,
-            title: wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn,
-            caption: wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn,
-            url: wallpaper.wallpaperUrl,
-            fullUrl: wallpaper.wallpaperUrl,
-            link: this.getWallpaperLink(wallpaper.wallpaperId, !wallpaper.wallpaperTitle),
-            target: LinkTarget.SELF,
-            order: index + 1
-          };
-        });
+        this.carousels = this.transformToCarousels(res.list || []);
+        this.initCarousels();
       });
   }
 
-  private getWallpaperLink(wallpaperId: string, isEn: boolean) {
-    const url = `${this.appInfo.appUrl}/wallpaper/${wallpaperId}`;
-    const langParam = isEn ? '?lang=en' : '';
+  private initCarousels() {
+    if (this.carousels.length > 0) {
+      this.carousels.push(this.carousels[0]);
+    }
+  }
 
-    return url + langParam;
+  private transformToCarousels(wallpapers: Wallpaper[] | HotWallpaper[]): CarouselVo[] {
+    return wallpapers.map((item, index) => {
+      return {
+        id: item.wallpaperId,
+        title: item.wallpaperTitle || item.wallpaperTitleEn,
+        caption: item.wallpaperCopyright || item.wallpaperCopyrightEn,
+        url: item.wallpaperUrl,
+        fullUrl: item.wallpaperUrl,
+        link: this.wallpaperService.getWallpaperLink(item.wallpaperId, !item.isCn && item.isEn),
+        target: LinkTarget.SELF,
+        order: index + 1
+      };
+    });
   }
 }

@@ -1,30 +1,37 @@
 @import "variables";
 
-.content-box {
-  &-desktop {
-    .archive-content {
-      margin-top: @content-margin;
-    }
+.archive-wrap {
+  padding: @primary-padding;
+  border: 1px solid var(--primary-border-color);
+  border-radius: @primary-border-radius;
 
-    .archive-content-list {
-      li {
-        width: 33.3333%;
-      }
-    }
-  }
+  a {
+    color: var(--base-font-color);
 
-  &-mobile {
-    .archive-content-list {
-      li {
-        width: 50%;
-      }
+    &:hover {
+      color: var(--primary-color);
     }
   }
 
-  .archive-content {
-    line-height: 1.71428571em;
-    word-wrap: break-word;
-    text-align: justify;
+  header {
+    margin-bottom: @content-margin;
+    text-align: center;
+
+    h1 {
+      line-height: 32px;
+      font-size: 20px;
+      font-weight: normal;
+    }
+  }
+
+  .archive-body {
+    h2 {
+      margin: @primary-margin 0 (@primary-margin / 2);
+      padding-left: 12px;
+      border-left: 4px solid var(--primary-color);
+      line-height: 24px;
+      font-size: @title-font-size;
+    }
 
     > :first-child {
       margin-top: 0;
@@ -33,37 +40,43 @@
     > :last-child {
       margin-bottom: 0;
     }
+  }
 
-    h2 {
-      a:hover {
-        text-decoration: underline;
+  .archive-list {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 12px @primary-margin;
+    border-top: 1px dashed var(--primary-border-color);
+
+    li {
+      height: 32px;
+      line-height: 32px;
+
+      > a {
+        display: inline-block;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
     }
+  }
+}
 
-    .archive-content-list {
-      display: flex;
-      flex-wrap: wrap;
-      flex-direction: row;
-      justify-content: flex-start;
-      padding: 0 @primary-margin;
+.p-archive-wrap {
+  .archive-list {
+    li {
+      width: (100% / 3);
+    }
+  }
+}
 
-      > li {
-        height: 32px;
-        line-height: 32px;
-        border-bottom: 1px dashed var(--minor-border-color);
-
-        > a {
-          display: inline-block;
-          width: 100%;
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-      }
+.m-archive-wrap {
+  .archive-list {
+    li {
+      width: 50%;
     }
   }
 }

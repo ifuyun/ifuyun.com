@@ -1,0 +1,100 @@
+@import "variables";
+
+.post-more {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  .post-more-prev, .post-more-next {
+    box-sizing: border-box;
+    position: relative;
+
+    &:hover {
+      .post-more-photo-content {
+        transform: scale(1.08);
+      }
+
+      .post-more-photo-overlay {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .post-more-next {
+    .post-more-content {
+      align-items: flex-end;
+    }
+
+    .post-more-content-title {
+      text-align: right;
+    }
+  }
+
+  .post-more-photo {
+    height: @post-more-height;
+    overflow: hidden;
+
+    &, .post-more-photo-content, .post-more-photo-overlay {
+      border-radius: @primary-border-radius * 2;
+    }
+
+    .post-more-photo-content {
+      height: 100%;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      transition: transform .5s;
+    }
+
+    .post-more-photo-overlay {
+      position: absolute;
+      inset: 0;
+      margin: (@primary-margin / 2);
+      background-color: var(--overlay-bg-color);
+      opacity: 0;
+      transition: @overlay-transition;
+    }
+  }
+
+  .post-more-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: absolute;
+    inset: 0;
+    padding: ((@content-margin / 2) + (@primary-margin / 2)) @content-margin;
+    color: var(--post-more-color);
+    text-shadow: var(--content-text-shadow);
+
+    .post-more-content-title {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .post-more-link {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+}
+
+.p-post-more {
+  margin: @content-margin (@content-margin - (@primary-margin / 2)) (@content-margin - (@primary-margin / 2));
+
+  .post-more-prev, .post-more-next {
+    width: 50%;
+    padding: (@primary-margin / 2);
+  }
+}
+
+.m-post-more {
+  margin: @m-primary-margin (@m-content-padding / 2) (@m-primary-margin / 2);
+
+  .post-more-prev, .post-more-next {
+    width: 100%;
+    padding: (@m-content-padding / 2);
+  }
+}

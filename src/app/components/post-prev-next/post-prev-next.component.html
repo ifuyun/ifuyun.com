@@ -1,0 +1,40 @@
+<div class="post-more" [class.p-post-more]="!isMobile" [class.m-post-more]="isMobile">
+  @if(prevPost) {
+    <div class="post-more-prev">
+      <div class="post-more-photo">
+        @if (!isChanged) {
+          <div class="post-more-photo-content lazyload" [attr.data-bg]="prevPost.postCover"></div>
+        } @else {
+          <div class="post-more-photo-content" [style.background-image]="'url(' + prevPost.postCover + ')'"></div>
+        }
+        <div class="post-more-photo-overlay"></div>
+      </div>
+      <div class="post-more-content">
+        <div class="post-more-content-title">{{ prevPost.postTitle }}</div>
+        <div>上一篇</div>
+      </div>
+      <a class="post-more-link" [routerLink]="prevPost.postGuid" [title]="prevPost.postTitle"></a>
+    </div>
+  } @else {
+    <div></div>
+  }
+  @if(nextPost) {
+    <div class="post-more-next">
+      <div class="post-more-photo">
+        @if (!isChanged) {
+          <div class="post-more-photo-content lazyload" [attr.data-bg]="nextPost.postCover"></div>
+        } @else {
+          <div class="post-more-photo-content" [style.background-image]="'url(' + nextPost.postCover + ')'"></div>
+        }
+        <div class="post-more-photo-overlay"></div>
+      </div>
+      <div class="post-more-content">
+        <div class="post-more-content-title">{{ nextPost.postTitle }}</div>
+        <div>下一篇</div>
+      </div>
+      <a class="post-more-link" [routerLink]="nextPost.postGuid" [title]="nextPost.postTitle"></a>
+    </div>
+  } @else {
+    <div></div>
+  }
+</div>

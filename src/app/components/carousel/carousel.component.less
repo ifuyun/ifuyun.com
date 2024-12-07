@@ -1,35 +1,38 @@
 @import "../../../styles/variables";
 
-.carousel-container {
+.carousel-wrap {
   position: relative;
-  overflow: hidden;
   border-radius: @primary-border-radius;
+  z-index: 1;
+  overflow: hidden;
+}
 
-  &.carousel-desktop {
-    .carousel {
-      height: 280px;
-    }
+.p-carousel-wrap {
+  width: 720px;
 
-    .indicator {
-      padding: @primary-margin @post-list-padding;
-    }
+  .carousel {
+    height: 360px;
   }
 
-  &.carousel-mobile {
-    .carousel {
-      height: 210px;
-    }
+  .indicator {
+    padding: @primary-margin @content-margin;
+  }
+}
 
-    .indicator {
-      padding: @m-content-padding;
-    }
+.m-carousel-wrap {
+  .carousel {
+    height: 210px;
+  }
+
+  .indicator {
+    padding: @m-content-padding;
   }
 }
 
 .carousel {
   display: flex;
   overflow: hidden;
-  transition: transform 300ms ease 0s;
+  transition: transform .3s ease 0s;
 
   .carousel-slide {
     transition: all .3s;
@@ -58,6 +61,7 @@
   width: 100%;
   bottom: 0;
   background: rgba(51, 51, 51, .6);
+  z-index: 1;
 
   .caption {
     margin-right: 16px;

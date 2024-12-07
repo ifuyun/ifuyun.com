@@ -1,0 +1,128 @@
+<app-breadcrumb *ngIf="isArticle"></app-breadcrumb>
+@if (post) {
+  <div class="post" [class.p-post]="!isMobile" [class.m-post]="isMobile">
+    <div class="original-sign" *ngIf="isArticle && post.postOriginal === 1">原创</div>
+    <header class="post-header">
+      <h1 class="post-title">
+        <a [routerLink]="post.postGuid" [title]="post.postTitle" rel="bookmark">{{ post.postTitle }}</a>
+      </h1>
+      <div class="post-meta post-meta-top">
+        <span title="写于: {{ post.postDate | date:'yyyy-MM-dd' }}">
+          <span class="fi fi-calendar-date"></span><span>{{ post.postDate | date:'yyyy-MM-dd' }}</span>
+        </span>
+        <span title="作者：{{ post.postAuthor || post.owner.userNickname }}">
+          <span nz-icon nzType="user"></span><span>{{ post.postAuthor || post.owner.userNickname }}</span>
+        </span>
+        <span title="阅读：<%= number.format(post.postViews, 'K') %>">
+          <span nz-icon nzType="eye"></span><span>{{ post.postViews | numberView: 'K' }}</span>
+        </span>
+      </div>
+    </header>
+    <div class="divider"></div>
+    <div #postEle>
+      <article class="post-content"
+               [class.no-auth]="!isSignIn"
+               [ngStyle]="{'user-select': post.postPayFlag || post.postLoginFlag && !isSignIn ? 'none' : ''}"
+               [innerHTML]="post.postContent | safeHtml"></article>
+      @if (showPayMask) {
+        <div class="pay-mask"></div>
+        <div class="pay-body">
+          <div class="pay-separator">
+            <div class="line"></div>
+            <div class="text-wrap">
+              <div class="text">还有 {{ 100 - (post.postFreePercent || 0) }}% 的精彩内容</div>
+            </div>
+          </div>
+          <div class="pay-icon"><i class="fi fi-lock"></i></div>
+          <div class="pay-tip">
+            <!--post.postPayFlag-->
+            <div *ngIf="post.postLoginFlag">本文仅限注册用户阅读，请先<a href="javascript:" title="登录">登录</a>。</div>
+          </div>
+        </div>
+      }
+    </div>
+    <footer class="post-footer">
+      <div>
+        <div class="post-meta" *ngIf="isArticle && postCategories.length > 0">
+          <div class="post-meta-icon"><span nz-icon nzType="folder"></span></div>
+          <ul class="post-meta-info">
+            <li *ngFor="let cat of postCategories">
+              <a [routerLink]="'/post/category/' + cat.taxonomySlug"
+                 title="{{ cat.taxonomyName }}"
+                 rel="category">{{ cat.taxonomyName }}</a>
+            </li>
+          </ul>
+        </div>
+        <div class="post-meta" *ngIf="postTags.length > 0">
+          <div class="post-meta-icon"><span nz-icon nzType="tag"></span></div>
+          <ul class="post-meta-info">
+            <li *ngFor="let tag of postTags">
+              <a [routerLink]="'/post/tag/' + tag.tagName"
+                 title="{{ tag.tagName }}"
+                 rel="category">{{ tag.tagName }}</a>
+            </li>
+          </ul>
+        </div>
+        <div class="post-meta" *ngIf="isArticle">
+          <div class="post-meta-icon"><span nz-icon nzType="book"></span></div>
+          <div class="post-meta-info">
+            @if(post.postOriginal === 1) {
+              <span class="post-meta-info-text"
+                    title="来源: {{ post.owner.userNickname }}原创">来源：{{ post.owner.userNickname }}原创</span>
+            } @else {
+              <span class="post-meta-info-text"
+                    title="来源: {{ post.postSource }}">来源：{{ post.postSource }}</span>
+            }
+          </div>
+        </div>
+        <div class="post-meta" *ngIf="isArticle && post.postOriginal === 1">
+          <div class="post-meta-icon"><span nz-icon nzType="copyright"></span></div>
+          <div class="post-meta-info">
+            @if (['private', 'commercial'].includes(post.postCopyType)) {
+              <span class="post-meta-info-text"
+                    title="许可协议：{{ post.postCopyType | copyType }}">许可：{{ post.postCopyType | copyType }}</span>
+            } @else {
+              <span class="post-meta-info-text" title="许可协议：{{ post.postCopyType | copyType }}">
+                <a [href]="post.postCopyType | copyLink"
+                   target="_blank"
+                   rel="license">许可：{{ post.postCopyType | copyType }}</a>
+              </span>
+            }
+          </div>
+        </div>
+        <div class="post-meta">
+          <div class="post-meta-icon"><span nz-icon nzType="clock-circle"></span></div>
+          <div class="post-meta-info">
+            <span class="post-meta-info-text"
+                  title="更新于: {{ post.postModified | date:'yyyy-MM-dd HH:mm' }}">
+              最后更新：{{ post.postModified | date:'yyyy-MM-dd HH:mm' }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="post-actions">
+        <div>
+          <button class="button-like" [class.liked]="isVoted">
+            <i class="fi fi-like-fill"></i>
+            <span class="text">真棒！{{ post.postLikes > 0 ? post.postLikes : '' }}</span>
+            <span class="parkinson-mask"><span nz-icon nzType="like"></span></span>
+          </button>
+          <button title="打赏"><span nz-icon nzType="heart"></span></button>
+          @if (isArticle) {
+            <button [class.liked]="isFavorite" [title]="isFavorite ? '已收藏' : '收藏'">
+              <span nz-icon nzType="star"></span>
+            </button>
+          }
+          <button *ngIf="!isMobile" title="分享"><span nz-icon nzType="share-alt"></span></button>
+        </div>
+      </div>
+    </footer>
+    @if (isArticle) {
+      <app-post-prev-next></app-post-prev-next>
+    }
+  </div>
+  @if (isArticle) {
+    <app-post-related></app-post-related>
+  }
+  <!--comment-list-->
+}

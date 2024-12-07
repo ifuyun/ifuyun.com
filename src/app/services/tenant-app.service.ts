@@ -3,8 +3,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ApiUrl } from '../config/api-url';
 import { APP_ID } from '../config/common.constant';
-import { ApiService } from '../core/api.service';
-import { TenantAppModel } from '../interfaces/tenant-app.interface';
+import { TenantAppModel } from '../interfaces/tenant-app';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class TenantAppService {
   constructor(private apiService: ApiService) {}
 
   getAppInfo(): Observable<TenantAppModel> {
-    return this.apiService.httpGet(this.apiService.getApiUrl(ApiUrl.TENANT_APP), { appId: APP_ID }).pipe(
+    return this.apiService.httpGet(ApiUrl.TENANT_APP, { appId: APP_ID }).pipe(
       map((res) => <TenantAppModel>(res?.data || {})),
       map((app): TenantAppModel => {
         return {

@@ -1,0 +1,48 @@
+@import "../../../styles/variables";
+
+.pagination {
+  margin-top: @primary-margin;
+
+  > ul {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    > li {
+      box-sizing: border-box;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      height: 24px;
+      padding: 0 6px;
+
+      &:not(:last-child) {
+        margin-right: 12px;
+      }
+
+      &.active {
+        border: 1px solid var(--primary-color);
+        border-radius: 2px;
+        color: var(--primary-color);
+      }
+
+      a {
+        color: var(--base-font-color);
+
+        &:hover {
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
+}
+
+.m-pagination {
+  display: flex;
+  justify-content: space-between;
+
+  a > :first-child {
+    margin-right: 0.375rem;
+  }
+}
