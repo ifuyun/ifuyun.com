@@ -1,7 +1,7 @@
 <br/>
 <p align="center">
   <a href="https://www.ifuyun.com" title="心之所向，素履以往" target="_blank">
-    <img src="/public/favicon.png" height="90" alt="Logo of ifuyun.com" />
+    <img src="./public/favicon.png" height="90" alt="Logo of ifuyun.com" />
   </a>
 </p>
 

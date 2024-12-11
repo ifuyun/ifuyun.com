@@ -1,10 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
 import { filter, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
-import { generateUid } from '../utils/helper';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { COOKIE_KEY_UV_ID, MEDIA_QUERY_THEME_DARK } from './config/common.constant';
@@ -18,10 +16,12 @@ import { CommonService } from './services/common.service';
 import { ErrorService } from './services/error.service';
 import { OptionService } from './services/option.service';
 import { PlatformService } from './services/platform.service';
+import { SsrCookieService } from './services/ssr-cookie.service';
 import { TaxonomyService } from './services/taxonomy.service';
 import { TenantAppService } from './services/tenant-app.service';
 import { UrlService } from './services/url.service';
 import { UserAgentService } from './services/user-agent.service';
+import { generateUid } from './utils/helper';
 
 @Component({
   selector: 'app-root',
@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
     private readonly router: Router,
     private readonly platform: PlatformService,
     private readonly userAgentService: UserAgentService,
-    private readonly cookieService: CookieService,
+    private readonly cookieService: SsrCookieService,
     private readonly commonService: CommonService,
     private readonly urlService: UrlService,
     private readonly optionService: OptionService,

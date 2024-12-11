@@ -2,12 +2,12 @@ import { DOCUMENT } from '@angular/common';
 import { ElementRef, Inject, Injectable, Optional, REQUEST, RESPONSE_INIT } from '@angular/core';
 import { Router } from '@angular/router';
 import { Request, Response } from 'express';
-import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { COOKIE_KEY_THEME, MEDIA_QUERY_THEME_DARK, MEDIA_QUERY_THEME_LIGHT } from '../config/common.constant';
 import { Theme } from '../enums/common';
 import { PlatformService } from './platform.service';
+import { SsrCookieService } from './ssr-cookie.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +21,11 @@ export class CommonService {
 
   constructor(
     @Inject(DOCUMENT) private readonly document: Document,
-    @Optional() @Inject(REQUEST) private request: Request,
+    @Optional() @Inject(REQUEST) private readonly request: Request,
     @Optional() @Inject(RESPONSE_INIT) private readonly response: Response,
     private readonly router: Router,
     private readonly platform: PlatformService,
-    private readonly cookieService: CookieService
+    private readonly cookieService: SsrCookieService
   ) {}
 
   updateActivePage(activePage: string) {

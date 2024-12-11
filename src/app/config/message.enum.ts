@@ -9,7 +9,7 @@
 export enum Message {
   // todo: internationalize
   UNKNOWN_ERROR = 'Unknown error',
-  ADD_FAVORITE_MUST_LOGIN = '收藏文章请先登录',
+  ADD_FAVORITE_MUST_LOGIN = '收藏文章或壁纸请先登录',
   ADD_FAVORITE_SUCCESS = '收藏成功',
   LOGIN_ERROR = '登录失败',
   ERROR_403 = 'Sorry, you are not authorized to access this page.',

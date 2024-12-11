@@ -4,12 +4,17 @@ import { ForbiddenComponent } from './pages/error/forbidden/forbidden.component'
 import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { ServerErrorComponent } from './pages/error/server-error/server-error.component';
 import { HomeComponent } from './pages/home/home.component';
+import { AuthLayoutComponent } from './pages/layout/auth-layout/auth-layout.component';
 import { ContentLayoutComponent } from './pages/layout/content-layout/content-layout.component';
+import { LoginCallbackComponent } from './pages/login-callback/login-callback.component';
+import { LoginComponent } from './pages/login/login.component';
 import { PageComponent } from './pages/page/page.component';
 import { PostArchiveComponent } from './pages/post-archive/post-archive.component';
 import { PostListComponent } from './pages/post-list/post-list.component';
 import { PostComponent } from './pages/post/post.component';
 import { SearchComponent } from './pages/search/search.component';
+import { SignupConfirmComponent } from './pages/signup-confirm/signup-confirm.component';
+import { SignupComponent } from './pages/signup/signup.component';
 import { WallpaperArchiveComponent } from './pages/wallpaper-archive/wallpaper-archive.component';
 import { WallpaperListComponent } from './pages/wallpaper-list/wallpaper-list.component';
 import { WallpaperComponent } from './pages/wallpaper/wallpaper.component';
@@ -66,6 +71,16 @@ export const routes: Routes = [
     path: 'search',
     component: ContentLayoutComponent,
     children: [{ path: '', pathMatch: 'full', component: SearchComponent }]
+  },
+  {
+    path: 'user',
+    component: AuthLayoutComponent,
+    children: [
+      { path: 'login', component: LoginComponent },
+      { path: 'login/callback', component: LoginCallbackComponent },
+      { path: 'signup', component: SignupComponent },
+      { path: 'confirm', component: SignupConfirmComponent }
+    ]
   },
   {
     path: 'error',

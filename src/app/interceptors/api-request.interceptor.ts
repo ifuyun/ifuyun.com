@@ -2,21 +2,17 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/c
 import { Inject, Injectable, Optional, REQUEST } from '@angular/core';
 import { Request } from 'express';
 import { catchError, Observable, throwError } from 'rxjs';
-import { ApiService } from '../services/api.service';
-import { ErrorService } from '../services/error.service';
-import { PlatformService } from '../services/platform.service';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class ApiRequestInterceptor implements HttpInterceptor {
   constructor(
-    private platform: PlatformService,
-    @Optional() @Inject(REQUEST) private request: Request,
-    private readonly apiService: ApiService,
-    private readonly errorService: ErrorService
+    @Optional() @Inject(REQUEST) private readonly request: Request,
+    private readonly authService: AuthService
   ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.apiService.getToken();
+    const token = this.authService.getToken();
     if (token) {
       req = req.clone({
         setHeaders: {

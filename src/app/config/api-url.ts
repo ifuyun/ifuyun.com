@@ -29,12 +29,12 @@ export enum ApiUrl {
   // user
   USER_LOGIN = '/users/login',
   USER_LOGOUT = '/users/logout',
-  USER_REGISTER = '/users/register',
+  USER_SIGNUP = '/users/signup',
   USER_VERIFY = '/users/verify',
   USER_RESEND_CODE = '/users/resend',
   USER_THIRD_LOGIN = '/users/third-login',
   USER_LOGIN_INFO = '/users/login-user',
-  USER_REGISTER_INFO = '/users/register-user',
+  USER_SIGNUP_INFO = '/users/signup-user',
   // favorite
   FAVORITE = '/favorites/favorite',
   // log

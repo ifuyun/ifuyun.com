@@ -4,8 +4,8 @@
   [nzVisible]="true"
   [nzWidth]="392"
   [nzFooter]="null"
-  (nzOnCancel)="handleClose()"
-  (nzOnOk)="handleClose()"
+  (nzOnCancel)="onClose()"
+  (nzOnOk)="onClose()"
 >
   <ng-container *nzModalContent>
     <nz-qrcode *ngIf="shareUrl"

@@ -12,6 +12,7 @@ export interface TenantAppModel {
   appKeywords: string;
   keywords: string[];
   appLoginUrl: string;
+  appCallbackUrl: string;
   appAdminUrl: string;
   adminUserId: string;
   appAdminEmail: string;

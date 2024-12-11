@@ -5,14 +5,17 @@ import { isEmpty } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageService } from 'ng-zorro-antd/image';
-import { CookieService } from 'ngx-cookie-service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
-import { filterHtmlTag, truncateString } from '../../../utils/helper';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
+import { LoginModalComponent } from '../../components/login-modal/login-modal.component';
 import { ShareModalComponent } from '../../components/share-modal/share-modal.component';
 import { WallpaperPrevNextComponent } from '../../components/wallpaper-prev-next/wallpaper-prev-next.component';
 import { WallpaperRelatedComponent } from '../../components/wallpaper-related/wallpaper-related.component';
 import { COOKIE_KEY_USER_ID } from '../../config/common.constant';
+import { Message } from '../../config/message.enum';
+import { ResponseCode } from '../../config/response-code.enum';
+import { FavoriteType } from '../../enums/favorite';
 import { WallpaperLang } from '../../enums/wallpaper';
 import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
 import { OptionEntity } from '../../interfaces/option';
@@ -23,13 +26,17 @@ import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { CommonService } from '../../services/common.service';
 import { DestroyService } from '../../services/destroy.service';
+import { FavoriteService } from '../../services/favorite.service';
 import { MetaService } from '../../services/meta.service';
 import { OptionService } from '../../services/option.service';
 import { PlatformService } from '../../services/platform.service';
+import { SsrCookieService } from '../../services/ssr-cookie.service';
 import { TenantAppService } from '../../services/tenant-app.service';
 import { UserAgentService } from '../../services/user-agent.service';
 import { UserService } from '../../services/user.service';
+import { VoteService } from '../../services/vote.service';
 import { WallpaperService } from '../../services/wallpaper.service';
+import { filterHtmlTag, truncateString } from '../../utils/helper';
 
 @Component({
   selector: 'app-wallpaper',
@@ -44,7 +51,8 @@ import { WallpaperService } from '../../services/wallpaper.service';
     BreadcrumbComponent,
     WallpaperPrevNextComponent,
     WallpaperRelatedComponent,
-    ShareModalComponent
+    ShareModalComponent,
+    LoginModalComponent
   ],
   providers: [DestroyService, NzImageService],
   templateUrl: './wallpaper.component.html',
@@ -55,11 +63,14 @@ export class WallpaperComponent implements OnInit {
   isSignIn = false;
   wallpaperId = '';
   wallpaper!: Wallpaper;
-  isFavorite = false;
   isVoted = false;
+  isFavorite = false;
   lang = WallpaperLang.CN;
+  voteLoading = false;
+  favoriteLoading = false;
   shareVisible = false;
   shareUrl = '';
+  loginVisible = false;
 
   get langParams() {
     return this.lang === WallpaperLang.CN ? {} : { lang: this.lang };
@@ -80,16 +91,19 @@ export class WallpaperComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly destroy$: DestroyService,
     private readonly imageService: NzImageService,
+    private readonly message: NzMessageService,
     private readonly platform: PlatformService,
     private readonly userAgentService: UserAgentService,
-    private readonly cookieService: CookieService,
+    private readonly cookieService: SsrCookieService,
     private readonly commonService: CommonService,
     private readonly metaService: MetaService,
     private readonly breadcrumbService: BreadcrumbService,
     private readonly tenantAppService: TenantAppService,
     private readonly optionService: OptionService,
     private readonly userService: UserService,
-    private readonly wallpaperService: WallpaperService
+    private readonly wallpaperService: WallpaperService,
+    private readonly voteService: VoteService,
+    private readonly favoriteService: FavoriteService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -157,12 +171,42 @@ export class WallpaperComponent implements OnInit {
     this.commonService.paddingPreview(previewRef.previewInstance.imagePreviewWrapper);
   }
 
+  addFavorite() {
+    if (this.favoriteLoading || this.isFavorite) {
+      return;
+    }
+    if (!this.isSignIn) {
+      this.showLoginModal();
+      return;
+    }
+    this.favoriteLoading = true;
+    this.favoriteService
+      .addFavorite(this.wallpaperId, FavoriteType.WALLPAPER)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.favoriteLoading = false;
+
+        if (res.code === ResponseCode.SUCCESS || res.code === ResponseCode.FAVORITE_IS_EXIST) {
+          this.isFavorite = true;
+          this.message.success(Message.ADD_FAVORITE_SUCCESS);
+        }
+      });
+  }
+
   showShareQrcode() {
     this.shareVisible = true;
   }
 
   closeShareQrcode() {
     this.shareVisible = false;
+  }
+
+  showLoginModal() {
+    this.loginVisible = true;
+  }
+
+  closeLoginModal() {
+    this.loginVisible = false;
   }
 
   protected updateActivePage(): void {

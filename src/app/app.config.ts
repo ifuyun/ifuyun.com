@@ -7,7 +7,9 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideNzI18n, zh_CN } from 'ng-zorro-antd/i18n';
+import { provideNzIcons } from 'ng-zorro-antd/icon';
 import { routes } from './app.routes';
+import { icons } from './config/icons.constant';
 import { GlobalErrorHandler } from './global-error-handler';
 import { ApiRequestInterceptor } from './interceptors/api-request.interceptor';
 
@@ -28,6 +30,7 @@ export const appConfig: ApplicationConfig = {
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     provideNzI18n(zh_CN),
     importProvidersFrom(FormsModule),
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    provideNzIcons(icons)
   ]
 };

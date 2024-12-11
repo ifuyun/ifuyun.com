@@ -104,7 +104,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "port": 2009
+            "port": 2010
           },
           "configurations": {
             "production": {

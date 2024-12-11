@@ -8,19 +8,18 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { skipWhile, takeUntil } from 'rxjs';
-import { format } from '../../../utils/helper';
 import { ADMIN_URL_PARAM, APP_ID } from '../../config/common.constant';
 import { TaxonomyNode } from '../../interfaces/taxonomy';
 import { TenantAppModel } from '../../interfaces/tenant-app';
 import { UserModel } from '../../interfaces/user';
 import { TOOL_LINKS } from '../../pages/tool/tool.constant';
-import { ApiService } from '../../services/api.service';
+import { AuthService } from '../../services/auth.service';
 import { CommonService } from '../../services/common.service';
 import { DestroyService } from '../../services/destroy.service';
 import { PlatformService } from '../../services/platform.service';
 import { TenantAppService } from '../../services/tenant-app.service';
-import { UserAgentService } from '../../services/user-agent.service';
 import { UserService } from '../../services/user.service';
+import { format } from '../../utils/helper';
 
 @Component({
   selector: 'app-header',
@@ -60,7 +59,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     private readonly message: NzMessageService,
     private readonly commonService: CommonService,
     private readonly tenantAppService: TenantAppService,
-    private readonly apiService: ApiService,
+    private readonly authService: AuthService,
     private readonly userService: UserService
   ) {}
 
@@ -74,7 +73,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         this.appInfo = appInfo;
 
         if (this.platform.isBrowser) {
-          this.adminUrl = this.appInfo.appAdminUrl + format(ADMIN_URL_PARAM, this.apiService.getToken(), APP_ID);
+          this.adminUrl = this.appInfo.appAdminUrl + format(ADMIN_URL_PARAM, this.authService.getToken(), APP_ID);
         }
       });
     this.commonService.activePage$.pipe(takeUntil(this.destroy$)).subscribe((page) => (this.activePage = page));

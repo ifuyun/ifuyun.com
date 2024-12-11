@@ -35,9 +35,9 @@ export class UserService {
       );
   }
 
-  getRegisterUser(userId: string): Observable<UserModel> {
+  getSignupUser(userId: string): Observable<UserModel> {
     return this.apiService
-      .httpGet(ApiUrl.USER_REGISTER_INFO, {
+      .httpGet(ApiUrl.USER_SIGNUP_INFO, {
         userId,
         appId: APP_ID
       })

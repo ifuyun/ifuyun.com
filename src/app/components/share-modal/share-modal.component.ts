@@ -13,7 +13,7 @@ export class ShareModalComponent {
   @Input() shareUrl = '';
   @Output() closeModal = new EventEmitter();
 
-  handleClose() {
+  onClose() {
     this.closeModal.emit();
   }
 }
