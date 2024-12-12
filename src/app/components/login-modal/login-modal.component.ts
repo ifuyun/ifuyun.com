@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { LoginFormComponent } from '../login-form/login-form.component';
 
@@ -9,6 +9,7 @@ import { LoginFormComponent } from '../login-form/login-form.component';
   styleUrl: './login-modal.component.less'
 })
 export class LoginModalComponent {
+  @Input() visible = true;
   @Output() closeModal = new EventEmitter();
 
   onClose() {

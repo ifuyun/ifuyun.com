@@ -5,10 +5,12 @@ import { Router, RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzImageService } from 'ng-zorro-antd/image';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM, APP_ID } from '../../config/common.constant';
+import { ResponseCode } from '../../config/response-code.enum';
 import { TaxonomyNode } from '../../interfaces/taxonomy';
 import { TenantAppModel } from '../../interfaces/tenant-app';
 import { UserModel } from '../../interfaces/user';
@@ -20,11 +22,22 @@ import { PlatformService } from '../../services/platform.service';
 import { TenantAppService } from '../../services/tenant-app.service';
 import { UserService } from '../../services/user.service';
 import { format } from '../../utils/helper';
+import { LoginModalComponent } from '../login-modal/login-modal.component';
+import { WallpaperModalComponent } from '../wallpaper-modal/wallpaper-modal.component';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, CommonModule, FormsModule, NzInputModule, NzIconModule, NzButtonModule],
-  providers: [DestroyService],
+  imports: [
+    RouterLink,
+    CommonModule,
+    FormsModule,
+    NzInputModule,
+    NzIconModule,
+    NzButtonModule,
+    LoginModalComponent,
+    WallpaperModalComponent
+  ],
+  providers: [DestroyService, NzImageService],
   templateUrl: './header.component.html',
   styleUrl: './header.component.less'
 })
@@ -39,8 +52,11 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   activePage = '';
   user!: UserModel;
   adminUrl = '';
+  botsUrl = '';
   toolLinks = TOOL_LINKS;
   keyword = '';
+  loginModalVisible = false;
+  wallpaperModalVisible = false;
 
   get isPostPage() {
     return ['post', 'post-archive'].includes(this.activePage);
@@ -57,6 +73,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     private readonly destroy$: DestroyService,
     private readonly platform: PlatformService,
     private readonly message: NzMessageService,
+    private readonly imageService: NzImageService,
     private readonly commonService: CommonService,
     private readonly tenantAppService: TenantAppService,
     private readonly authService: AuthService,
@@ -74,6 +91,10 @@ export class HeaderComponent implements OnInit, AfterViewInit {
 
         if (this.platform.isBrowser) {
           this.adminUrl = this.appInfo.appAdminUrl + format(ADMIN_URL_PARAM, this.authService.getToken(), APP_ID);
+          this.botsUrl =
+            this.appInfo.appAdminUrl.replace(/\/$/i, '') +
+            '/bots' +
+            format(ADMIN_URL_PARAM, this.authService.getToken(), APP_ID);
         }
       });
     this.commonService.activePage$.pipe(takeUntil(this.destroy$)).subscribe((page) => (this.activePage = page));
@@ -111,5 +132,61 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         keyword: this.keyword
       }
     });
+  }
+
+  gotoBots() {
+    if (!this.isSignIn) {
+      this.showLoginModal();
+      return;
+    }
+    window.open(this.botsUrl);
+  }
+
+  showLoginModal() {
+    this.loginModalVisible = true;
+  }
+
+  closeLoginModal() {
+    this.loginModalVisible = false;
+  }
+
+  showWallpaperModal() {
+    this.wallpaperModalVisible = true;
+  }
+
+  closeWallpaperModal() {
+    this.wallpaperModalVisible = false;
+  }
+
+  showRedPacket() {
+    const previewRef = this.imageService.preview([
+      {
+        src: '/assets/images/red-packet.png'
+      }
+    ]);
+    this.commonService.paddingPreview(previewRef.previewInstance.imagePreviewWrapper);
+  }
+
+  showWechatCard() {
+    this.imageService.preview([
+      {
+        src: '/assets/images/wechat-card.png'
+      }
+    ]);
+  }
+
+  gotoAdmin() {
+    window.open(this.adminUrl);
+  }
+
+  logout() {
+    this.authService
+      .logout()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res.code === ResponseCode.SUCCESS) {
+          location.reload();
+        }
+      });
   }
 }

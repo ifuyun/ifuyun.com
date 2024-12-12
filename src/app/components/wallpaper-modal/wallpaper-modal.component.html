@@ -1,0 +1,47 @@
+<nz-modal
+  nzCentered
+  [nzVisible]="visible"
+  nzWidth="88vw"
+  [nzStyle]="{ height: '88vh', 'max-width': '1280px', 'max-height': '720px' }"
+  [nzBodyStyle]="{ display: 'flex', padding: '8px', height: '100%' }"
+  nzClassName="wallpaper-modal"
+  [nzFooter]="null"
+  [nzClosable]="false"
+  [nzMaskClosable]="true"
+  (nzOnCancel)="onClose()"
+  (nzOnOk)="onClose()"
+>
+  <ng-container *nzModalContent>
+    <div class="w-modal">
+      @if (loading || !wallpapers.length) {
+        <div><span nz-icon nzType="loading"></span></div>
+      } @else {
+        <div class="w-photo" [style.background-image]="'url(' + (activeWallpaper.wallpaperUrl || '') + ')'"></div>
+        <div class="w-close">
+          <span nz-icon nzType="close" (click)="onClose()"></span>
+        </div>
+        <div class="w-content">
+          <div>
+            <h2 class="w-image-title">{{ activeWallpaper.wallpaperTitle }}</h2>
+            <div class="w-image-desc">{{ activeWallpaper.wallpaperDescription }}</div>
+          </div>
+          <div class="w-actions">
+            <span nz-icon nzType="info" (click)="gotoDetail()" title="壁纸详情"></span>
+            <span nz-icon nzType="search" (click)="gotoSearch()" title="搜索壁纸"></span>
+            <span nz-icon
+                  nzType="left"
+                  [class.disabled]="activeIndex === 0"
+                  (click)="prevWallpaper()"
+                  title="上一张"></span>
+            <span nz-icon
+                  nzType="right"
+                  [class.disabled]="activeIndex === wallpapers.length - 1"
+                  (click)="nextWallpaper()"
+                  title="下一张"></span>
+            <span nz-icon nzType="double-right" (click)="gotoWallpaper()" title="高清壁纸"></span>
+          </div>
+        </div>
+      }
+    </div>
+  </ng-container>
+</nz-modal>

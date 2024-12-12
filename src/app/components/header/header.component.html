@@ -52,7 +52,7 @@
         </div>
       </li>
       <li>
-        <a title="AI">AI</a>
+        <a title="AI" (click)="gotoBots()">AI</a>
       </li>
     </ul>
     <div class="actions">
@@ -80,12 +80,12 @@
             <div class="sub-nav-list">
               <ul>
                 <li>
-                  <a class="sub-nav-link">
+                  <a class="sub-nav-link" (click)="gotoAdmin()">
                     <span nz-icon nzType="home"></span><span>个人中心</span>
                   </a>
                 </li>
                 <li>
-                  <a class="sub-nav-link">
+                  <a class="sub-nav-link" (click)="logout()">
                     <span nz-icon nzType="logout"></span><span>退出登录</span>
                   </a>
                 </li>
@@ -102,27 +102,27 @@
           <div class="sub-nav-list">
             <ul>
               <li>
-                <a class="sub-nav-link">
+                <a class="sub-nav-link" (click)="showRedPacket()">
                   <span nz-icon nzType="red-envelope"></span><span>每日红包</span>
                 </a>
               </li>
               <li>
-                <a class="sub-nav-link">
+                <a class="sub-nav-link" (click)="showWallpaperModal()">
                   <span nz-icon nzType="picture"></span><span>手气不错？</span>
                 </a>
               </li>
               <li>
-                <a class="sub-nav-link">
+                <a class="sub-nav-link" [href]="appInfo?.appUrl + '/rss.xml'">
                   <span nz-icon nzType="wifi"></span><span>文章RSS订阅</span>
                 </a>
               </li>
               <li>
-                <a class="sub-nav-link">
+                <a class="sub-nav-link" [href]="appInfo?.appUrl + '/wallpaper-rss.xml'">
                   <span nz-icon nzType="wifi"></span><span>壁纸RSS订阅</span>
                 </a>
               </li>
               <li>
-                <a class="sub-nav-link">
+                <a class="sub-nav-link" (click)="showWechatCard()">
                   <span nz-icon nzType="wechat"></span><span>微信公众号</span>
                 </a>
               </li>
@@ -133,3 +133,5 @@
     </div>
   </div>
 </header>
+<app-login-modal *ngIf="loginModalVisible" (closeModal)="closeLoginModal()"></app-login-modal>
+<app-wallpaper-modal [visible]="wallpaperModalVisible" (closeModal)="closeWallpaperModal()"></app-wallpaper-modal>

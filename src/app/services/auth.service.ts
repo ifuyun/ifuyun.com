@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { ApiUrl } from '../config/api-url';
 import { THIRD_LOGIN_API } from '../config/auth.constant';
 import { COOKIE_KEY_USER_ID, COOKIE_KEY_USER_NAME, COOKIE_KEY_USER_TOKEN } from '../config/common.constant';
+import { ResponseCode } from '../config/response-code.enum';
 import { LoginEntity, LoginResponse, SignupEntity } from '../interfaces/auth';
 import { HttpResponseEntity } from '../interfaces/http-response';
 import { OptionEntity } from '../interfaces/option';
@@ -169,5 +170,23 @@ export class AuthService {
     };
 
     return btoa(JSON.stringify(stateData));
+  }
+
+  logout(): Observable<HttpResponseEntity> {
+    return this.apiService
+      .httpPost(
+        ApiUrl.USER_LOGOUT,
+        {
+          referer: location.href
+        },
+        false
+      )
+      .pipe(
+        tap((res) => {
+          if (res.code === ResponseCode.SUCCESS) {
+            this.clearAuth();
+          }
+        })
+      );
   }
 }

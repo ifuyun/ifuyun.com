@@ -12,7 +12,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BaseComponent } from '../../base.component';
 import { USER_EMAIL_LENGTH, USER_PASSWORD_MAX_LENGTH } from '../../config/auth.constant';
-import { ADMIN_URL_PARAM, APP_ID, COOKIE_KEY_USER_NAME } from '../../config/common.constant';
+import { ADMIN_URL_PARAM, APP_ID } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
 import { LoginResponse } from '../../interfaces/auth';
 import { OptionEntity } from '../../interfaces/option';
@@ -20,7 +20,6 @@ import { TenantAppModel } from '../../interfaces/tenant-app';
 import { AuthService } from '../../services/auth.service';
 import { DestroyService } from '../../services/destroy.service';
 import { OptionService } from '../../services/option.service';
-import { SsrCookieService } from '../../services/ssr-cookie.service';
 import { TenantAppService } from '../../services/tenant-app.service';
 import { UserAgentService } from '../../services/user-agent.service';
 import { format } from '../../utils/helper';
@@ -86,7 +85,6 @@ export class LoginFormComponent extends BaseComponent implements OnInit {
     private readonly fb: FormBuilder,
     private readonly message: NzMessageService,
     private readonly userAgentService: UserAgentService,
-    private readonly cookieService: SsrCookieService,
     private readonly tenantAppService: TenantAppService,
     private readonly optionService: OptionService,
     private readonly authService: AuthService
@@ -94,10 +92,7 @@ export class LoginFormComponent extends BaseComponent implements OnInit {
     super();
     this.isMobile = this.userAgentService.isMobile;
     this.loginForm = this.fb.group({
-      username: [
-        this.cookieService.get(COOKIE_KEY_USER_NAME) || '',
-        [Validators.required, Validators.maxLength(this.maxLoginLength)]
-      ],
+      username: ['', [Validators.required, Validators.maxLength(this.maxLoginLength)]],
       password: [null, [Validators.required, Validators.maxLength(this.maxPasswordLength)]]
     });
   }

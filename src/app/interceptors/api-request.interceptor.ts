@@ -27,6 +27,9 @@ export class ApiRequestInterceptor implements HttpInterceptor {
         }
       });
     }
+    req = req.clone({
+      withCredentials: true
+    });
     return next.handle(req).pipe(catchError((err) => throwError(() => err)));
   }
 }

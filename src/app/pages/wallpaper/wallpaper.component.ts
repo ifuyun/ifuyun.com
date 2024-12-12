@@ -90,8 +90,8 @@ export class WallpaperComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly destroy$: DestroyService,
-    private readonly imageService: NzImageService,
     private readonly message: NzMessageService,
+    private readonly imageService: NzImageService,
     private readonly platform: PlatformService,
     private readonly userAgentService: UserAgentService,
     private readonly cookieService: SsrCookieService,

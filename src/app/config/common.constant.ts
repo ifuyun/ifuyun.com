@@ -7,7 +7,7 @@ export const REGEXP_PAGE_NAME = /^[a-zA-Z0-9]+(?:[~@$%&*\-_=+;:,]+[a-zA-Z0-9]+)*
 
 export const PAGE_PREFIX_BLACKLIST = Object.freeze(['post', 'wallpaper', 'user', 'tool']);
 
-export const ADMIN_URL_PARAM = 'token=$0&appId=$1';
+export const ADMIN_URL_PARAM = '?token=$0&appId=$1';
 
 export const COOKIE_KEY_THEME = 'theme';
 export const COOKIE_KEY_UV_ID = 'faid';

@@ -21,6 +21,7 @@ import { TaxonomyService } from './services/taxonomy.service';
 import { TenantAppService } from './services/tenant-app.service';
 import { UrlService } from './services/url.service';
 import { UserAgentService } from './services/user-agent.service';
+import { UserService } from './services/user.service';
 import { generateUid } from './utils/helper';
 
 @Component({
@@ -55,6 +56,7 @@ export class AppComponent implements OnInit {
     private readonly urlService: UrlService,
     private readonly optionService: OptionService,
     private readonly errorService: ErrorService,
+    private readonly userService: UserService,
     private readonly tenantAppService: TenantAppService,
     private readonly taxonomyService: TaxonomyService
   ) {
@@ -104,6 +106,7 @@ export class AppComponent implements OnInit {
     this.optionService.getOptions().subscribe();
     this.tenantAppService.getAppInfo().subscribe();
     this.taxonomyService.getTaxonomies().subscribe((taxonomies) => (this.postTaxonomies = taxonomies));
+    this.userService.getLoginUser().subscribe();
     this.errorService.errorState$.subscribe((state) => {
       this.errorState = state;
     });
