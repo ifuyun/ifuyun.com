@@ -1,5 +1,6 @@
 import { IconDefinition } from '@ant-design/icons-angular';
 import {
+  AlipayOutline,
   AppstoreOutline,
   BarsOutline,
   BookOutline,
@@ -38,6 +39,7 @@ import {
 } from '@ant-design/icons-angular/icons';
 
 export const icons: IconDefinition[] = [
+  AlipayOutline,
   AppstoreOutline,
   BarsOutline,
   BookOutline,

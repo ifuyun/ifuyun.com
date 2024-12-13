@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { filter, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { FooterComponent } from './components/footer/footer.component';
@@ -44,11 +44,13 @@ export class AppComponent implements OnInit {
   postTaxonomies: TaxonomyNode[] = [];
   errorState?: ErrorState;
   errorPage = false;
+  isBodyCentered = false;
 
   private currentUrl = '';
 
   constructor(
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private readonly platform: PlatformService,
     private readonly userAgentService: UserAgentService,
     private readonly cookieService: SsrCookieService,
@@ -77,8 +79,7 @@ export class AppComponent implements OnInit {
         filter((re) => re instanceof NavigationEnd)
       )
       .subscribe((event) => {
-        const previous = this.currentUrl.split('#')[0];
-        const current = (event as NavigationEnd).url.split('#')[0];
+        this.isBodyCentered = !!this.route.firstChild?.snapshot.data['centered'];
 
         let faId = this.cookieService.get(COOKIE_KEY_UV_ID);
         let isNew = false;
@@ -91,6 +92,9 @@ export class AppComponent implements OnInit {
             expires: 400
           });
         }
+
+        const previous = this.currentUrl.split('#')[0];
+        const current = (event as NavigationEnd).url.split('#')[0];
         if (previous !== current) {
           this.urlService.updateUrlHistory({
             previous: this.currentUrl,

@@ -12,6 +12,7 @@ import { Post, PostEntity } from '../../interfaces/post';
 import { TenantAppModel } from '../../interfaces/tenant-app';
 import { Wallpaper } from '../../interfaces/wallpaper';
 import { NumberViewPipe } from '../../pipes/number-view.pipe';
+import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { CommonService } from '../../services/common.service';
 import { DestroyService } from '../../services/destroy.service';
 import { MetaService } from '../../services/meta.service';
@@ -44,6 +45,7 @@ export class HomeComponent implements OnInit {
     private readonly userAgentService: UserAgentService,
     private readonly commonService: CommonService,
     private readonly metaService: MetaService,
+    private readonly breadcrumbService: BreadcrumbService,
     private readonly tenantAppService: TenantAppService,
     private readonly optionService: OptionService,
     private readonly postService: PostService,
@@ -54,6 +56,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateActivePage();
+    this.updateBreadcrumb();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
       .pipe(
@@ -127,5 +130,9 @@ export class HomeComponent implements OnInit {
       keywords: uniq(keywords).join(','),
       author: this.options['site_author']
     });
+  }
+
+  private updateBreadcrumb() {
+    this.breadcrumbService.updateBreadcrumbs([]);
   }
 }

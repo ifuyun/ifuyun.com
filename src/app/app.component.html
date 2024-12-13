@@ -3,7 +3,7 @@
     @if (!isMobile) {
       <app-header [postTaxonomies]="postTaxonomies"></app-header>
       <div class="body-wrap">
-        <div class="body">
+        <div class="body" [class.body-center]="isBodyCentered">
           <router-outlet/>
         </div>
       </div>

@@ -1,7 +1,10 @@
 @import "../../../styles/variables";
 
 .header-wrap {
+  height: @header-height;
   min-width: @min-body-width;
+  border-bottom: 2px solid var(--primary-color);
+  background-color: var(--header-bg-color);
 }
 
 .header {
@@ -12,9 +15,6 @@
   align-items: center;
   width: @body-width;
   margin: 0 auto;
-  height: @header-height;
-  border-bottom: 2px solid var(--primary-color);
-  background-color: var(--header-bg-color);
 
   &.auth-header {
     width: auto;
@@ -112,128 +112,7 @@
           background-color: transparent;
           cursor: pointer;
         }
-
-        > .sub-nav-link, > .child-nav-link {
-          color: #fff;
-          background-color: var(--primary-color);
-        }
-
-        .nav-arrow {
-          &:before, &:after {
-            background-color: var(--primary-color);
-          }
-        }
       }
-    }
-  }
-
-  .actions {
-    position: relative;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-
-    > :not(:last-child) {
-      margin-right: @primary-margin;
-    }
-  }
-
-  .search {
-    @search-line-height: 20px;
-
-    width: 280px;
-    height: @search-height;
-
-    input {
-      padding: 5px 11px;
-      border: 1px solid var(--primary-color);
-      border-top-left-radius: @primary-border-radius;
-      border-bottom-left-radius: @primary-border-radius;
-      line-height: @search-line-height;
-      font-size: 14px;
-
-      &:focus {
-        box-shadow: var(--primary-box-shadow);
-      }
-
-      &:hover {
-        border-color: var(--active-color);
-      }
-
-      &::placeholder {
-        color: var(--input-placeholder-color);
-      }
-    }
-
-    .input-group-text {
-      display: flex;
-      justify-content: center;
-      box-sizing: border-box;
-      width: @search-height;
-      height: @search-height;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      font-size: 18px;
-      line-height: @search-line-height;
-      background: var(--primary-color);
-      color: #fff;
-      border-color: var(--primary-color);
-      border-top-right-radius: @primary-border-radius;
-      border-bottom-right-radius: @primary-border-radius;
-      cursor: pointer;
-
-      &:hover {
-        background-color: var(--active-color);
-        border-color: var(--active-color);
-      }
-    }
-  }
-
-  .more-action-group {
-    position: relative;
-
-    &:hover {
-      color: var(--primary-color);
-      cursor: pointer;
-
-      .nav-arrow {
-        &:before, &:after {
-          background-color: var(--primary-color);
-        }
-      }
-
-      .more-action-list {
-        display: block;
-      }
-    }
-
-    .more-action-nav {
-      display: inline-flex;
-      align-items: center;
-      height: @header-height;
-      line-height: @header-height;
-
-      [nz-icon] {
-        margin-right: 4px;
-      }
-    }
-
-    .more-action-list {
-      right: 0;
-
-      .sub-nav-list {
-        &:before {
-          right: 24px;
-        }
-      }
-
-      [nz-icon] {
-        margin-right: 8px;
-      }
-    }
-
-    .more-action-icon {
-      font-size: 24px;
     }
   }
 
@@ -316,6 +195,10 @@
           background-color: #fff;
         }
       }
+
+      [nz-icon] {
+        color: #fff !important;
+      }
     }
   }
 
@@ -364,6 +247,85 @@
 
     &:after {
       transform: rotate(-45deg) translateY(2.5px);
+    }
+  }
+
+  .actions {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    > :not(:last-child) {
+      margin-right: @primary-margin;
+    }
+  }
+
+  .search {
+    width: 280px;
+  }
+
+  .more-action-group {
+    position: relative;
+
+    &:hover {
+      color: var(--primary-color);
+      cursor: pointer;
+
+      .nav-arrow {
+        &:before, &:after {
+          background-color: var(--primary-color);
+        }
+      }
+
+      .more-action-list {
+        display: block;
+      }
+    }
+
+    .more-action-nav {
+      display: inline-flex;
+      align-items: center;
+      height: @header-height;
+      line-height: @header-height;
+
+      [nz-icon] {
+        margin-right: 4px;
+      }
+    }
+
+    .more-action-list {
+      right: 0;
+
+      .sub-nav-list {
+        &:before {
+          right: 24px;
+        }
+      }
+
+      [nz-icon] {
+        margin-right: 8px;
+
+        &.icon-red-packet {
+          color: var(--red-packet-color);
+        }
+
+        &.icon-wallpaper {
+          color: var(--primary-color);
+        }
+
+        &.icon-rss {
+          color: var(--rss-color);
+        }
+
+        &.icon-wechat {
+          color: var(--wechat-color);
+        }
+      }
+    }
+
+    .more-action-icon {
+      font-size: 24px;
     }
   }
 }

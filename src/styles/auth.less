@@ -1,26 +1,10 @@
 @import "variables";
 
-@content-margin: 24px;
-@auth-form-width: 264px;
-
-.user-box {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  min-width: @auth-form-width + @content-margin * 2;
-  line-height: 24px;
-
-  .user-box-body {
-    border-radius: 4px;
-    background-color: #fff;
-  }
-}
-
 .auth-form {
+  @content-margin: 24px;
+  @auth-form-width: 256px;
+
+  box-sizing: content-box;
   width: @auth-form-width + @content-margin * 2;
 
   nz-form-item:last-of-type {

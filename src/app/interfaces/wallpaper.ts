@@ -19,6 +19,7 @@ export interface Wallpaper {
   wallpaperDescription?: string;
   wallpaperCaption?: string;
   wallpaperUrl: string;
+  wallpaperUrl2: string;
   wallpaperThumbUrl: string;
   wallpaperUrlBase: string;
   wallpaperImageFormat: string;

@@ -43,6 +43,7 @@ import md5 from '../../utils/md5';
 })
 export class LoginFormComponent extends BaseComponent implements OnInit {
   @Input() isModal = true;
+  @Input() padding = '0';
   @Output() closeForm = new EventEmitter();
 
   readonly maxLoginLength = USER_EMAIL_LENGTH;

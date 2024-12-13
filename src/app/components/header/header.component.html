@@ -9,7 +9,7 @@
       </li>
       <li [class.active]="isPostPage">
         <a routerLink="/post" title="文章">
-          <span>文章</span><i class="nav-arrow" *ngIf="postTaxonomies.length > 0"></i>
+          <span>文章</span><span class="nav-arrow" *ngIf="postTaxonomies.length > 0"></span>
         </a>
         <div class="sub-nav-wrap" *ngIf="postTaxonomies.length > 0">
           <div class="sub-nav-list">
@@ -18,7 +18,7 @@
                 <a class="sub-nav-link"
                    [routerLink]="['/post/category/'+taxonomy.taxonomySlug]"
                    title="{{taxonomy.taxonomyDescription}}">
-                  <span>{{taxonomy.taxonomyName}}</span><i *ngIf="!taxonomy.isLeaf" class="sub-nav-arrow"></i>
+                  <span>{{taxonomy.taxonomyName}}</span><span *ngIf="!taxonomy.isLeaf" class="sub-nav-arrow"></span>
                 </a>
                 <div class="child-nav-wrap" *ngIf="!taxonomy.isLeaf">
                   <div class="child-nav-list">
@@ -40,7 +40,7 @@
         <a routerLink="/wallpaper" title="高清壁纸">壁纸</a>
       </li>
       <li [class.active]="activePage === 'tool'">
-        <a routerLink="/tool" title="实用工具"><span>实用工具</span><i class="nav-arrow"></i></a>
+        <a routerLink="/tool" title="实用工具"><span>实用工具</span><span class="nav-arrow"></span></a>
         <div class="sub-nav-wrap">
           <div class="sub-nav-list">
             <ul>
@@ -102,28 +102,28 @@
           <div class="sub-nav-list">
             <ul>
               <li>
-                <a class="sub-nav-link" (click)="showRedPacket()">
-                  <span nz-icon nzType="red-envelope"></span><span>每日红包</span>
+                <a class="sub-nav-link" (click)="showRedPacket()" title="支付宝扫码领红包">
+                  <span nz-icon class="icon-red-packet" nzType="red-envelope"></span><span>每日红包</span>
                 </a>
               </li>
               <li>
-                <a class="sub-nav-link" (click)="showWallpaperModal()">
-                  <span nz-icon nzType="picture"></span><span>手气不错？</span>
+                <a class="sub-nav-link" (click)="showWallpaperModal()" title="精美壁纸">
+                  <span nz-icon class="icon-wallpaper" nzType="picture"></span><span>手气不错？</span>
                 </a>
               </li>
               <li>
-                <a class="sub-nav-link" [href]="appInfo?.appUrl + '/rss.xml'">
-                  <span nz-icon nzType="wifi"></span><span>文章RSS订阅</span>
+                <a class="sub-nav-link" [href]="appInfo?.appUrl + '/rss.xml'" title="文章 RSS 订阅">
+                  <span nz-icon class="icon-rss" nzType="wifi"></span><span>文章 RSS 订阅</span>
                 </a>
               </li>
               <li>
-                <a class="sub-nav-link" [href]="appInfo?.appUrl + '/wallpaper-rss.xml'">
-                  <span nz-icon nzType="wifi"></span><span>壁纸RSS订阅</span>
+                <a class="sub-nav-link" [href]="appInfo?.appUrl + '/wallpaper-rss.xml'" title="壁纸 RSS 订阅">
+                  <span nz-icon class="icon-rss" nzType="wifi"></span><span>壁纸 RSS 订阅</span>
                 </a>
               </li>
               <li>
-                <a class="sub-nav-link" (click)="showWechatCard()">
-                  <span nz-icon nzType="wechat"></span><span>微信公众号</span>
+                <a class="sub-nav-link" (click)="showWechatCard()" title="微信公众号">
+                  <span nz-icon class="icon-wechat" nzType="wechat"></span><span>微信公众号</span>
                 </a>
               </li>
             </ul>
