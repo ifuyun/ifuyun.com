@@ -1,6 +1,4 @@
-import { AppParam } from './common';
-
-export interface LoginEntity extends AppParam {
+export interface LoginEntity {
   username: string;
   password: string;
 }
@@ -14,10 +12,9 @@ export interface LoginResponse {
     accessToken: string;
     expiresAt?: number;
   };
-  appId: string;
 }
 
-export interface SignupEntity extends AppParam {
+export interface SignupEntity {
   userNickname: string;
   userEmail: string;
   userPassword: string;

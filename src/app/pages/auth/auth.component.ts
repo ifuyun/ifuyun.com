@@ -1,9 +1,12 @@
+import { BaseComponent } from '../../base.component';
 import { Wallpaper } from '../../interfaces/wallpaper';
 
-export abstract class AuthComponent {
+export abstract class AuthComponent extends BaseComponent {
   abstract wallpaper: Wallpaper | null;
 
-  constructor(protected document: Document) {}
+  constructor(protected document: Document) {
+    super();
+  }
 
   protected initStyles() {
     this.document.body.classList.add('bg-image');

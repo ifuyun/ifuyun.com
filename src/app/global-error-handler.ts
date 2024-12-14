@@ -19,14 +19,17 @@ export class GlobalErrorHandler implements ErrorHandler {
 
     let defaultMessage = '';
     switch (status) {
+      case 400:
+        defaultMessage = Message.ERROR_400;
+        break;
       case 403:
         defaultMessage = Message.ERROR_403;
         break;
-      case 500:
-        defaultMessage = Message.ERROR_500;
+      case 404:
+        defaultMessage = Message.ERROR_404;
         break;
       default:
-        defaultMessage = Message.ERROR_404;
+        defaultMessage = Message.ERROR_500;
         break;
     }
 

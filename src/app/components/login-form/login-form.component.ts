@@ -43,7 +43,7 @@ import md5 from '../../utils/md5';
 })
 export class LoginFormComponent extends BaseComponent implements OnInit {
   @Input() isModal = true;
-  @Input() padding = '0';
+  @Input() padding = false;
   @Output() closeForm = new EventEmitter();
 
   readonly maxLoginLength = USER_EMAIL_LENGTH;
@@ -133,7 +133,6 @@ export class LoginFormComponent extends BaseComponent implements OnInit {
     this.loginLoading = true;
     this.authService
       .login({
-        appId: APP_ID,
         username,
         password: md5(password)
       })
@@ -183,7 +182,6 @@ export class LoginFormComponent extends BaseComponent implements OnInit {
     const url = this.authService.getThirdLoginURL({
       type,
       options: this.options,
-      appId: APP_ID,
       callbackUrl: this.appInfo.appCallbackUrl,
       ref: '',
       isMobile: this.isMobile

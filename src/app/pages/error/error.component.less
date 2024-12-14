@@ -8,28 +8,11 @@
   height: 100%;
   min-height: 100vh;
 
-  .error-icon {
-    margin-bottom: 24px;
-  }
+  nz-result {
+    padding: 0;
 
-  .error-title {
-    color: rgba(0, 0, 0, .85);
-    font-size: 24px;
-    line-height: 1.8;
-    text-align: center;
-  }
-
-  .error-message {
-    color: rgba(0, 0, 0, .45);
-    font-size: 14px;
-    line-height: 1.6;
-  }
-
-  .error-actions {
-    margin-top: 24px;
-
-    .btn:not(:first-child) {
-      margin-left: 16px;
+    [nz-result-extra] > [nz-button]:not(:last-child) {
+      margin-right: 16px;
     }
   }
 }

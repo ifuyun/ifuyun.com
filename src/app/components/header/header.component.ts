@@ -90,11 +90,9 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         this.appInfo = appInfo;
 
         if (this.platform.isBrowser) {
-          this.adminUrl = this.appInfo.appAdminUrl + format(ADMIN_URL_PARAM, this.authService.getToken(), APP_ID);
-          this.botsUrl =
-            this.appInfo.appAdminUrl.replace(/\/$/i, '') +
-            '/bots' +
-            format(ADMIN_URL_PARAM, this.authService.getToken(), APP_ID);
+          const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), APP_ID);
+          this.adminUrl = this.appInfo.appAdminUrl + urlParam;
+          this.botsUrl = this.appInfo.appAdminUrl.replace(/\/$/i, '') + '/bots' + urlParam;
         }
       });
     this.commonService.activePage$.pipe(takeUntil(this.destroy$)).subscribe((page) => (this.activePage = page));

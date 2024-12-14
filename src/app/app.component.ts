@@ -42,7 +42,7 @@ import { generateUid } from './utils/helper';
 export class AppComponent implements OnInit {
   isMobile: boolean = false;
   postTaxonomies: TaxonomyNode[] = [];
-  errorState?: ErrorState;
+  errorState!: ErrorState;
   errorPage = false;
   isBodyCentered = false;
 

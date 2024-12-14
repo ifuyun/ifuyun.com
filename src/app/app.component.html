@@ -1,5 +1,5 @@
 @if (!errorPage) {
-  @if (!errorState?.visible) {
+  @if (!errorState || !errorState.visible) {
     @if (!isMobile) {
       <app-header [postTaxonomies]="postTaxonomies"></app-header>
       <div class="body-wrap">
@@ -22,10 +22,10 @@
     }
   } @else {
     <!--global errors-->
-    <ng-container [ngSwitch]="errorState?.code">
+    <ng-container [ngSwitch]="errorState.code">
       <app-forbidden *ngSwitchCase="403" [errorState]="errorState"></app-forbidden>
-      <app-server-error *ngSwitchCase="500" [errorState]="errorState"></app-server-error>
-      <app-not-found *ngSwitchDefault [errorState]="errorState"></app-not-found>
+      <app-not-found *ngSwitchCase="404" [errorState]="errorState"></app-not-found>
+      <app-server-error *ngSwitchDefault [errorState]="errorState"></app-server-error>
     </ng-container>
   }
 } @else {

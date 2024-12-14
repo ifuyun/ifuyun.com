@@ -1,4 +1,4 @@
-<form nz-form nzLayout="vertical" class="auth-form" [style.padding]="padding" [formGroup]="loginForm">
+<form nz-form nzLayout="vertical" class="auth-form" [class.auth-form-padding]="padding" [formGroup]="loginForm">
   <nz-form-item>
     <nz-form-label>用户名或邮箱</nz-form-label>
     <nz-form-control [nzErrorTip]="nameErrorTpl">
@@ -41,9 +41,7 @@
            [routerLink]="['../signup']"
            title="立即注册"><span nz-icon nzType="user-add"></span>立即注册</a>
       </div>
-      <div>
-        <button nz-button nzType="primary" (click)="login()" [nzLoading]="loginLoading">登录</button>
-      </div>
+      <button nz-button nzType="primary" (click)="login()" [nzLoading]="loginLoading">登录</button>
     </div>
   </nz-form-item>
   <ng-container *ngIf="enableThirdLogin">

@@ -4,7 +4,7 @@ import { map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { ApiUrl } from '../config/api-url';
 import { THIRD_LOGIN_API } from '../config/auth.constant';
-import { COOKIE_KEY_USER_ID, COOKIE_KEY_USER_NAME, COOKIE_KEY_USER_TOKEN } from '../config/common.constant';
+import { APP_ID, COOKIE_KEY_USER_ID, COOKIE_KEY_USER_NAME, COOKIE_KEY_USER_TOKEN } from '../config/common.constant';
 import { ResponseCode } from '../config/response-code.enum';
 import { LoginEntity, LoginResponse, SignupEntity } from '../interfaces/auth';
 import { HttpResponseEntity } from '../interfaces/http-response';
@@ -24,49 +24,80 @@ export class AuthService {
   ) {}
 
   login(payload: LoginEntity): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(ApiUrl.USER_LOGIN, payload, true).pipe(
-      map((res) => res || {}),
-      tap((res) => {
-        if (res.data?.token?.accessToken) {
-          this.setAuth({
-            ...res.data,
-            appId: payload.appId
-          });
-        }
-      })
-    );
+    return this.apiService
+      .httpPost(
+        ApiUrl.USER_LOGIN,
+        {
+          ...payload,
+          appId: APP_ID
+        },
+        true
+      )
+      .pipe(
+        map((res) => res || {}),
+        tap((res) => {
+          if (res.data?.token?.accessToken) {
+            this.setAuth(res.data);
+          }
+        })
+      );
   }
 
   signup(payload: SignupEntity): Observable<UserModel> {
-    return this.apiService.httpPost(ApiUrl.USER_SIGNUP, payload, true).pipe(map((res) => <any>(res?.data || {})));
+    return this.apiService
+      .httpPost(
+        ApiUrl.USER_SIGNUP,
+        {
+          ...payload,
+          appId: APP_ID
+        },
+        true
+      )
+      .pipe(map((res) => <any>(res?.data || {})));
   }
 
-  verify(payload: { userId: string; code: string; appId: string }): Observable<LoginResponse> {
-    return this.apiService.httpPost(ApiUrl.USER_VERIFY, payload, true).pipe(
-      map((res) => <any>(res?.data || {})),
-      tap((res) => {
-        if (res.token?.accessToken) {
-          this.setAuth({
-            ...res,
-            appId: payload.appId
-          });
-        }
-      })
-    );
+  verify(userId: string, code: string): Observable<LoginResponse> {
+    return this.apiService
+      .httpPost(
+        ApiUrl.USER_VERIFY,
+        {
+          userId,
+          code,
+          appId: APP_ID
+        },
+        true
+      )
+      .pipe(
+        map((res) => <any>(res?.data || {})),
+        tap((res) => {
+          if (res.token?.accessToken) {
+            this.setAuth(res);
+          }
+        })
+      );
   }
 
-  resend(payload: { userId: string; appId: string }): Observable<UserModel> {
-    return this.apiService.httpPost(ApiUrl.USER_RESEND_CODE, payload, true).pipe(map((res) => <any>(res?.data || {})));
+  resend(userId: string): Observable<UserModel> {
+    return this.apiService
+      .httpPost(
+        ApiUrl.USER_RESEND_CODE,
+        {
+          userId,
+          appId: APP_ID
+        },
+        true
+      )
+      .pipe(map((res) => <any>(res?.data || {})));
   }
 
-  thirdLogin(authCode: string, source: string, appId: string): Observable<HttpResponseEntity> {
+  thirdLogin(authCode: string, source: string): Observable<HttpResponseEntity> {
     return this.apiService
       .httpPost(
         ApiUrl.USER_THIRD_LOGIN,
         {
           authCode,
           source,
-          appId
+          appId: APP_ID
         },
         false
       )
@@ -74,10 +105,7 @@ export class AuthService {
         map((res) => res || {}),
         tap((res) => {
           if (res.data?.token?.accessToken) {
-            this.setAuth({
-              ...res.data,
-              appId
-            });
+            this.setAuth(res.data);
           }
         })
       );
@@ -108,11 +136,10 @@ export class AuthService {
     type: string;
     ref: string;
     options: OptionEntity;
-    appId: string;
     callbackUrl: string;
     isMobile: boolean;
   }) {
-    const { type, ref, options, appId, callbackUrl, isMobile } = param;
+    const { type, ref, options, callbackUrl, isMobile } = param;
     let url = '';
 
     switch (type) {
@@ -122,7 +149,7 @@ export class AuthService {
             THIRD_LOGIN_API[type],
             options['open_alipay_app_id'],
             encodeURIComponent(this.getThirdLoginCallbackURL('m_alipay', ref, callbackUrl)),
-            this.generateState(ref, appId)
+            this.generateState(ref)
           );
           url = `alipays://platformapi/startapp?appId=20000067&url=${encodeURIComponent(authUrl)}`;
         } else {
@@ -130,7 +157,7 @@ export class AuthService {
             THIRD_LOGIN_API[type],
             options['open_alipay_app_id'],
             encodeURIComponent(this.getThirdLoginCallbackURL('alipay', ref, callbackUrl)),
-            this.generateState(ref, appId)
+            this.generateState(ref)
           );
         }
         break;
@@ -139,7 +166,7 @@ export class AuthService {
           THIRD_LOGIN_API[type],
           options['open_weibo_app_key'],
           encodeURIComponent(this.getThirdLoginCallbackURL('weibo', ref, callbackUrl)),
-          this.generateState(ref, appId)
+          this.generateState(ref)
         );
         break;
       case 'github':
@@ -147,7 +174,7 @@ export class AuthService {
           THIRD_LOGIN_API[type],
           options['open_github_client_id'],
           encodeURIComponent(this.getThirdLoginCallbackURL('github', ref, callbackUrl)),
-          this.generateState(ref, appId)
+          this.generateState(ref)
         );
     }
 
@@ -162,10 +189,10 @@ export class AuthService {
     return callbackUrl.replace('{ref}', encodeURIComponent(ref));
   }
 
-  generateState(ref: string, appId: string) {
+  generateState(ref: string) {
     const stateData = {
       ref: ref ? encodeURIComponent(ref) : '',
-      appId,
+      appId: APP_ID,
       stateId: generateId()
     };
 
