@@ -192,7 +192,6 @@ export class AuthService {
   generateState(ref: string) {
     const stateData = {
       ref: ref ? encodeURIComponent(ref) : '',
-      appId: APP_ID,
       stateId: generateId()
     };
 

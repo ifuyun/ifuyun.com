@@ -92,9 +92,11 @@ export class SignupConfirmComponent extends AuthComponent implements OnInit, OnD
           throw new CustomError(Message.USER_NOT_FOUND, HttpStatusCode.BadRequest);
         }
 
-        this.updatePageInfo();
-        this.getWallpaper();
-        this.getSignupUser();
+        if (this.platform.isServer) {
+          this.updatePageInfo();
+          this.getWallpaper();
+          this.getSignupUser();
+        }
         if (this.platform.isBrowser) {
           this.startCountdown();
         }

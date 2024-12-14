@@ -11,6 +11,7 @@ import { CommonService } from '../../../services/common.service';
 import { DestroyService } from '../../../services/destroy.service';
 import { MetaService } from '../../../services/meta.service';
 import { OptionService } from '../../../services/option.service';
+import { PlatformService } from '../../../services/platform.service';
 import { TenantAppService } from '../../../services/tenant-app.service';
 import { WallpaperService } from '../../../services/wallpaper.service';
 import { AuthComponent } from '../auth.component';
@@ -33,6 +34,7 @@ export class LoginComponent extends AuthComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(DOCUMENT) protected override document: Document,
     private readonly destroy$: DestroyService,
+    private readonly platform: PlatformService,
     private readonly commonService: CommonService,
     private readonly metaService: MetaService,
     private readonly breadcrumbService: BreadcrumbService,
@@ -56,8 +58,10 @@ export class LoginComponent extends AuthComponent implements OnInit, OnDestroy {
         this.appInfo = appInfo;
         this.options = options;
 
-        this.updatePageInfo();
-        this.getWallpaper();
+        if (this.platform.isServer) {
+          this.updatePageInfo();
+          this.getWallpaper();
+        }
       });
   }
 

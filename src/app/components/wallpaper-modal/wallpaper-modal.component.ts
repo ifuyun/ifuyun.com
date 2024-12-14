@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule } from 'ng-zorro-antd/modal';
@@ -14,8 +14,8 @@ import { WallpaperService } from '../../services/wallpaper.service';
   templateUrl: './wallpaper-modal.component.html',
   styleUrl: './wallpaper-modal.component.less'
 })
-export class WallpaperModalComponent implements OnInit {
-  @Input() visible = true;
+export class WallpaperModalComponent implements OnChanges {
+  @Input() visible = false;
   @Output() closeModal = new EventEmitter();
 
   loading = false;
@@ -32,8 +32,10 @@ export class WallpaperModalComponent implements OnInit {
     private readonly wallpaperService: WallpaperService
   ) {}
 
-  ngOnInit(): void {
-    this.getWallpapers();
+  ngOnChanges(): void {
+    if (this.visible && this.wallpapers.length < 1) {
+      this.getWallpapers();
+    }
   }
 
   prevWallpaper() {

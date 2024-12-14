@@ -47,9 +47,16 @@
       border-radius: 50%;
       font-size: 24px;
       color: #fff;
+      cursor: pointer;
+      transition: transform .3s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+      &:hover {
+        transform: scale(1.08);
+      }
 
       &.disabled {
         opacity: 0.5;
+        cursor: not-allowed;
       }
     }
 
