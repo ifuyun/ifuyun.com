@@ -1,0 +1,60 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="tool-wrap" [class.p-tool-wrap]="!isMobile" [class.m-tool-wrap]="isMobile">
+  <form class="tool-form">
+    <h2 class="tool-header">MD5 加密</h2>
+    <div>
+      <nz-textarea-count [nzMaxCharacterCount]="maxContentLength">
+        <textarea nz-input
+                  rows="12"
+                  name="encryptContent"
+                  [(ngModel)]="encryptContent"
+                  (ngModelChange)="onContentChange($event)"
+                  [maxlength]="maxContentLength"
+                  placeholder="待加密内容"></textarea>
+      </nz-textarea-count>
+    </div>
+    <div class="tool-actions">
+      @if (!isMobile) {
+        <button nz-button
+                nzType="primary"
+                [disabled]="!encryptContent"
+                (click)="encrypt()">MD5加密（小写）</button>
+        <button nz-button
+                nzType="primary"
+                [disabled]="!encryptContent"
+                (click)="encrypt(true)">MD5加密（大写）</button>
+      } @else {
+        <button nz-button
+                nzType="primary"
+                [disabled]="!encryptContent"
+                (click)="encrypt()">MD5加密</button>
+      }
+      <button nz-button
+              nzType="primary"
+              ngxClipboard
+              [cbContent]="encryptResult"
+              [disabled]="!encryptResult"
+              (click)="onCopied()">复制结果</button>
+      <button nz-button
+              nzType="primary"
+              [disabled]="!encryptContent"
+              (click)="reset()">清空</button>
+    </div>
+    <div>
+      <textarea nz-input
+                rows="4"
+                name="encryptResult"
+                [(ngModel)]="encryptResult"
+                readonly="readonly"
+                placeholder="MD5 Result"></textarea>
+    </div>
+    <h2 class="tool-header">MD5 加密说明</h2>
+    <div class="tool-description">
+      <ol>
+        <li>MD5 加密常用于判断内容是否被篡改，或比较两份文本是否相同。</li>
+        <li>MD5 待加密内容最大输入长度为 8000 字符。</li>
+        <li>本工具 MD5 加密方式为客户端（浏览器）离线加密，不经过任何服务端，不会记录任何信息。</li>
+      </ol>
+    </div>
+  </form>
+</div>

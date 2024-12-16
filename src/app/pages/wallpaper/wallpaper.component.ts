@@ -80,7 +80,7 @@ export class WallpaperComponent implements OnInit {
     return this.lang === WallpaperLang.CN ? { lang: WallpaperLang.EN } : {};
   }
 
-  protected activePage = 'wallpaper';
+  protected pageIndex = 'wallpaper';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
@@ -109,7 +109,7 @@ export class WallpaperComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.updateActivePage();
+    this.updatePageIndex();
 
     combineLatest([
       this.tenantAppService.appInfo$,
@@ -209,8 +209,8 @@ export class WallpaperComponent implements OnInit {
     this.loginVisible = false;
   }
 
-  protected updateActivePage(): void {
-    this.commonService.updateActivePage(this.activePage);
+  protected updatePageIndex(): void {
+    this.commonService.updatePageIndex(this.pageIndex);
   }
 
   private getWallpaper(): void {

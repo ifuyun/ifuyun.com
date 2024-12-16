@@ -1,0 +1,24 @@
+@import "../../../../styles/variables";
+
+.tool-form-label {
+  display: inline-block;
+  padding-bottom: 8px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.ip-result {
+  padding: @content-padding;
+  border: 1px solid var(--primary-border-color);
+  border-radius: 4px;
+
+  .ip-result-item {
+    display: flex;
+    line-height: 24px;
+
+    > :first-child {
+      flex-basis: 100px;
+      font-weight: 600;
+    }
+  }
+}

@@ -11,6 +11,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM, APP_ID } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
+import { PageIndexInfo } from '../../interfaces/common';
 import { TaxonomyNode } from '../../interfaces/taxonomy';
 import { TenantAppModel } from '../../interfaces/tenant-app';
 import { UserModel } from '../../interfaces/user';
@@ -46,10 +47,10 @@ export class HeaderComponent implements OnInit, AfterViewInit {
 
   @ViewChild('searchInput') searchInput!: ElementRef;
 
-  appInfo?: TenantAppModel;
   isMobile = false;
   isSignIn = false;
-  activePage = '';
+  indexInfo?: PageIndexInfo;
+  appInfo?: TenantAppModel;
   user!: UserModel;
   adminUrl = '';
   botsUrl = '';
@@ -57,14 +58,6 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   keyword = '';
   loginModalVisible = false;
   wallpaperModalVisible = false;
-
-  get isPostPage() {
-    return ['post', 'post-archive'].includes(this.activePage);
-  }
-
-  get isWallpaperPage() {
-    return ['wallpaper', 'wallpaper-archive'].includes(this.activePage);
-  }
 
   private inputFlag = false;
 
@@ -95,7 +88,9 @@ export class HeaderComponent implements OnInit, AfterViewInit {
           this.botsUrl = this.appInfo.appAdminUrl.replace(/\/$/i, '') + '/bots' + urlParam;
         }
       });
-    this.commonService.activePage$.pipe(takeUntil(this.destroy$)).subscribe((page) => (this.activePage = page));
+    this.commonService.pageIndex$.pipe(takeUntil(this.destroy$)).subscribe((page) => {
+      this.indexInfo = this.commonService.getPageIndexInfo(page);
+    });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.user = user;
       this.isSignIn = !!user.userId;

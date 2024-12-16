@@ -53,7 +53,7 @@ export class SignupComponent extends AuthComponent implements OnInit, OnDestroy 
   passwordVisible = false;
   signupLoading = false;
 
-  protected activePage = 'signup';
+  protected pageIndex = 'auth-signup';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
@@ -102,7 +102,7 @@ export class SignupComponent extends AuthComponent implements OnInit, OnDestroy 
   }
 
   ngOnInit(): void {
-    this.updateActivePage();
+    this.updatePageIndex();
     this.updateBreadcrumb();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
@@ -151,8 +151,8 @@ export class SignupComponent extends AuthComponent implements OnInit, OnDestroy 
       });
   }
 
-  protected updateActivePage(): void {
-    this.commonService.updateActivePage(this.activePage);
+  protected updatePageIndex(): void {
+    this.commonService.updatePageIndex(this.pageIndex);
   }
 
   private getWallpaper() {

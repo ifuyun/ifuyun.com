@@ -4,7 +4,7 @@ import { Params, RouterLink } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { skipWhile, takeUntil } from 'rxjs';
 import { WallpaperLang } from '../../enums/wallpaper';
-import { ArchiveData } from '../../interfaces/common';
+import { ArchiveData, PageIndexInfo } from '../../interfaces/common';
 import { PostEntity } from '../../interfaces/post';
 import { HotWallpaper, Wallpaper } from '../../interfaces/wallpaper';
 import { CommonService } from '../../services/common.service';
@@ -25,7 +25,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('siderEle') siderEle!: ElementRef;
 
   isMobile = false;
-  activePage = '';
+  indexInfo!: PageIndexInfo;
   hotPosts: PostEntity[] = [];
   randomPosts: PostEntity[] = [];
   postArchives: ArchiveData[] = [];
@@ -33,17 +33,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   randomWallpapers: Wallpaper[] = [];
   wallpaperArchives: ArchiveData[] = [];
 
-  get isPostPage() {
-    return ['post', 'post-archive'].includes(this.activePage);
-  }
-
-  get isWallpaperPage() {
-    return ['wallpaper', 'wallpaper-archive'].includes(this.activePage);
-  }
-
-  get isHomePage() {
-    return !this.isPostPage && !this.isWallpaperPage;
-  }
+  private pageIndex = '';
 
   constructor(
     private readonly destroy$: DestroyService,
@@ -57,22 +47,23 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.commonService.activePage$
+    this.commonService.pageIndex$
       .pipe(
         skipWhile((page) => !page),
         takeUntil(this.destroy$)
       )
       .subscribe((page) => {
-        if (this.activePage !== page) {
-          this.activePage = page;
+        if (this.pageIndex !== page) {
+          this.pageIndex = page;
+          this.indexInfo = this.commonService.getPageIndexInfo(page);
 
           if (!this.isMobile) {
-            if (this.isPostPage || this.isHomePage) {
+            if (this.indexInfo.isPost || this.indexInfo.isTool || this.indexInfo.isHome) {
               this.getHotPosts();
               this.getRandomPosts();
               this.getPostArchives();
             }
-            if (this.isWallpaperPage || this.isHomePage) {
+            if (this.indexInfo.isWallpaper || this.indexInfo.isTool || this.indexInfo.isHome) {
               this.getHotWallpapers();
               this.getRandomWallpapers();
               this.getWallpaperArchives();

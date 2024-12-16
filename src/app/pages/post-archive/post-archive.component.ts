@@ -29,7 +29,7 @@ export class PostArchiveComponent implements OnInit {
   dateList!: ArchiveDataMap;
   yearList: string[] = [];
 
-  protected activePage = 'post-archive';
+  protected pageIndex = 'post-archive';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
@@ -48,7 +48,7 @@ export class PostArchiveComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.updateActivePage();
+    this.updatePageIndex();
     this.updateBreadcrumb();
     this.getPostArchives();
 
@@ -65,8 +65,8 @@ export class PostArchiveComponent implements OnInit {
       });
   }
 
-  protected updateActivePage(): void {
-    this.commonService.updateActivePage(this.activePage);
+  protected updatePageIndex(): void {
+    this.commonService.updatePageIndex(this.pageIndex);
   }
 
   private getPostArchives() {

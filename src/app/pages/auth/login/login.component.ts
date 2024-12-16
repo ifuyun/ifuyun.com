@@ -26,7 +26,7 @@ import { AuthComponent } from '../auth.component';
 export class LoginComponent extends AuthComponent implements OnInit, OnDestroy {
   wallpaper: Wallpaper | null = null;
 
-  protected activePage = 'login';
+  protected pageIndex = 'auth-login';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
@@ -46,7 +46,7 @@ export class LoginComponent extends AuthComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.updateActivePage();
+    this.updatePageIndex();
     this.updateBreadcrumb();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
@@ -69,8 +69,8 @@ export class LoginComponent extends AuthComponent implements OnInit, OnDestroy {
     this.clearStyles();
   }
 
-  protected updateActivePage(): void {
-    this.commonService.updateActivePage(this.activePage);
+  protected updatePageIndex(): void {
+    this.commonService.updatePageIndex(this.pageIndex);
   }
 
   private getWallpaper() {

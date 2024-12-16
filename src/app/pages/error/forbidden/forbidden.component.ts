@@ -16,12 +16,12 @@ import { CommonService } from '../../../services/common.service';
 export class ForbiddenComponent implements OnInit {
   @Input() errorState!: ErrorState;
 
-  protected activePage = 'error-403';
+  protected pageIndex = 'error-403';
 
   constructor(private commonService: CommonService) {}
 
   ngOnInit(): void {
-    this.updateActivePage();
+    this.updatePageIndex();
 
     if (!this.errorState) {
       this.errorState = {
@@ -32,7 +32,7 @@ export class ForbiddenComponent implements OnInit {
     }
   }
 
-  protected updateActivePage(): void {
-    this.commonService.updateActivePage(this.activePage);
+  protected updatePageIndex(): void {
+    this.commonService.updatePageIndex(this.pageIndex);
   }
 }

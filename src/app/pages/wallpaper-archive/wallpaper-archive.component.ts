@@ -29,7 +29,7 @@ export class WallpaperArchiveComponent implements OnInit {
   dateList!: ArchiveDataMap;
   yearList: string[] = [];
 
-  protected activePage = 'wallpaper-archive';
+  protected pageIndex = 'wallpaper-archive';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
@@ -48,7 +48,7 @@ export class WallpaperArchiveComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.updateActivePage();
+    this.updatePageIndex();
     this.updateBreadcrumb();
     this.getWallpaperArchives();
 
@@ -65,8 +65,8 @@ export class WallpaperArchiveComponent implements OnInit {
       });
   }
 
-  protected updateActivePage(): void {
-    this.commonService.updateActivePage(this.activePage);
+  protected updatePageIndex(): void {
+    this.commonService.updatePageIndex(this.pageIndex);
   }
 
   private getWallpaperArchives() {

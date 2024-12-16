@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { COOKIE_KEY_THEME, MEDIA_QUERY_THEME_DARK, MEDIA_QUERY_THEME_LIGHT } from '../config/common.constant';
 import { Theme } from '../enums/common';
+import { PageIndexInfo } from '../interfaces/common';
 import { PlatformService } from './platform.service';
 import { SsrCookieService } from './ssr-cookie.service';
 
@@ -13,8 +14,8 @@ import { SsrCookieService } from './ssr-cookie.service';
   providedIn: 'root'
 })
 export class CommonService {
-  private activePage: Subject<string> = new Subject<string>();
-  public activePage$: Observable<string> = this.activePage.asObservable();
+  private pageIndex: Subject<string> = new Subject<string>();
+  public pageIndex$: Observable<string> = this.pageIndex.asObservable();
 
   private darkMode: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public darkMode$: Observable<boolean> = this.darkMode.asObservable();
@@ -28,8 +29,20 @@ export class CommonService {
     private readonly cookieService: SsrCookieService
   ) {}
 
-  updateActivePage(activePage: string) {
-    this.activePage.next(activePage);
+  updatePageIndex(pageIndex: string) {
+    this.pageIndex.next(pageIndex);
+  }
+
+  getPageIndexInfo(pageIndex: string): PageIndexInfo {
+    const topPage = pageIndex.split('-')[0];
+    return {
+      isHome: pageIndex === 'index',
+      isPost: topPage === 'post',
+      isWallpaper: topPage === 'wallpaper',
+      isTool: topPage === 'tool',
+      isAuth: topPage === 'auth',
+      isPage: !['index', 'post', 'wallpaper', 'tool', 'auth'].includes(topPage)
+    };
   }
 
   getReferrer() {

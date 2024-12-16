@@ -28,7 +28,7 @@ import { format } from '../../../utils/helper';
   styleUrl: './login-callback.component.less'
 })
 export class LoginCallbackComponent implements OnInit {
-  protected activePage = 'login';
+  protected pageIndex = 'auth-login';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
@@ -53,7 +53,7 @@ export class LoginCallbackComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.updateActivePage();
+    this.updatePageIndex();
     this.updateBreadcrumb();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.queryParamMap])
@@ -96,8 +96,8 @@ export class LoginCallbackComponent implements OnInit {
       });
   }
 
-  protected updateActivePage(): void {
-    this.commonService.updateActivePage(this.activePage);
+  protected updatePageIndex(): void {
+    this.commonService.updatePageIndex(this.pageIndex);
   }
 
   private login() {

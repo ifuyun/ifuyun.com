@@ -4,10 +4,10 @@
       <img src="/favicon.png" alt="{{appInfo?.appName}}"/><span>{{appInfo?.appName}}</span>
     </a>
     <ul class="nav">
-      <li [class.active]="activePage === 'index'">
+      <li [class.active]="indexInfo?.isHome">
         <a routerLink="/" title="{{appInfo?.appName}}首页">首页</a>
       </li>
-      <li [class.active]="isPostPage">
+      <li [class.active]="indexInfo?.isPost">
         <a routerLink="/post" title="文章">
           <span>文章</span><span class="nav-arrow" *ngIf="postTaxonomies.length > 0"></span>
         </a>
@@ -36,10 +36,10 @@
           </div>
         </div>
       </li>
-      <li [class.active]="isWallpaperPage">
+      <li [class.active]="indexInfo?.isWallpaper">
         <a routerLink="/wallpaper" title="高清壁纸">壁纸</a>
       </li>
-      <li [class.active]="activePage === 'tool'">
+      <li [class.active]="indexInfo?.isTool">
         <a routerLink="/tool" title="实用工具"><span>实用工具</span><span class="nav-arrow"></span></a>
         <div class="sub-nav-wrap">
           <div class="sub-nav-list">

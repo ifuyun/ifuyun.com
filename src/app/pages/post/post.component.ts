@@ -70,7 +70,7 @@ export class PostComponent implements OnInit {
     );
   }
 
-  protected activePage = 'post';
+  protected pageIndex = 'post';
 
   private readonly copyHTML = '<span class="fi fi-copy"></span>Copy code';
   private readonly copiedHTML = '<span class="fi fi-check-lg"></span>Copied!';
@@ -138,8 +138,8 @@ export class PostComponent implements OnInit {
     });
   }
 
-  protected updateActivePage(): void {
-    this.commonService.updateActivePage(this.activePage);
+  protected updatePageIndex(): void {
+    this.commonService.updatePageIndex(this.pageIndex);
   }
 
   private getPost(): void {
@@ -172,7 +172,7 @@ export class PostComponent implements OnInit {
       this.isVoted = post.isVoted;
 
       if (this.isArticle) {
-        this.activePage = 'post';
+        this.pageIndex = 'post';
         this.breadcrumbs = (post.breadcrumbs || []).map((item) => ({
           ...item,
           url: `/post/category/${item.slug}`
@@ -184,13 +184,13 @@ export class PostComponent implements OnInit {
           isHeader: false
         });
       } else {
-        this.activePage = this.post.postName;
+        this.pageIndex = this.post.postName;
         this.breadcrumbs = [];
       }
 
       this.postService.updateActivePostId(post.post.postId);
       this.breadcrumbService.updateBreadcrumbs(this.breadcrumbs);
-      this.updateActivePage();
+      this.updatePageIndex();
       this.updatePageInfo();
     }
   }

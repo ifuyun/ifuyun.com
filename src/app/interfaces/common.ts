@@ -1,4 +1,11 @@
-export type Layout = 'home' | 'content' | 'auth' | 'error';
+export interface PageIndexInfo {
+  isHome: boolean;
+  isPost: boolean;
+  isWallpaper: boolean;
+  isTool: boolean;
+  isAuth: boolean;
+  isPage: boolean;
+}
 
 export interface UserAgentInfo {
   os: string;

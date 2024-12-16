@@ -1,0 +1,80 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="tool-wrap" [class.p-tool-wrap]="!isMobile" [class.m-tool-wrap]="isMobile">
+  <form nz-form nzLayout="vertical" class="tool-form">
+    <h2 class="tool-header">IP 地址查询</h2>
+    <nz-form-item>
+      <nz-form-label class="tool-form-label" nzFor="ip">请输入 IPv4 地址：</nz-form-label>
+      <nz-form-control>
+        <input nz-input
+               name="ip"
+               id="ip"
+               [(ngModel)]="ip"
+               (ngModelChange)="onContentChange($event)"
+               [maxLength]="15"
+               placeholder="请输入 IPv4 地址，支持整数或字符串格式"
+               autocomplete="off"/>
+      </nz-form-control>
+    </nz-form-item>
+    <div class="tool-actions">
+      <button nz-button
+              type="submit"
+              nzType="primary"
+              [disabled]="!ip"
+              (click)="query()">查询</button>
+      <button nz-button
+              nzType="primary"
+              [disabled]="!ipResult"
+              (click)="reset()">清空</button>
+    </div>
+    <div>
+      <label class="tool-form-label">查询结果：</label>
+      <div class="ip-result">
+        @if (ipResult) {
+          <div class="ip-result-item">
+            <div>IP：</div>
+            <div>{{ ipResult.IPStr }}</div>
+          </div>
+          <div class="ip-result-item">
+            <div>网段范围：</div>
+            <div>{{ ipResult.startIPStr }} ~ {{ ipResult.endIPStr }}</div>
+          </div>
+          <div class="ip-result-item">
+            <div>国家：</div>
+            <div>{{ ipResult.country }}</div>
+          </div>
+          <div class="ip-result-item">
+            <div>省：</div>
+            <div>{{ ipResult.province }}</div>
+          </div>
+          <div class="ip-result-item">
+            <div>市：</div>
+            <div>{{ ipResult.city }}</div>
+          </div>
+          <div class="ip-result-item">
+            <div>区：</div>
+            <div>{{ ipResult.district }}</div>
+          </div>
+          <div class="ip-result-item">
+            <div>ISP：</div>
+            <div>{{ ipResult.isp }}</div>
+          </div>
+          <div class="ip-result-item">
+            <div>数据库版本：</div>
+            <div>{{ ipVersion }}</div>
+          </div>
+        } @else {
+          <nz-empty nzNotFoundImage="simple"></nz-empty>
+        }
+      </div>
+    </div>
+    <h2 class="tool-header">IP 地址查询说明</h2>
+    <div class="tool-description">
+      <ol>
+        <li>IP 地址查询可查询 IP 归属地信息、ISP 信息等。</li>
+        <li>本工具支持整数形式的 IP 地址，范围为：[0, 4294967295]。</li>
+        <li>本工具仅支持查询 IPv4 地址。</li>
+        <li>本工具所用 IP 数据库来源于社区，IP 数据库版本见查询结果，不保证数据的准确性、及时性。</li>
+      </ol>
+    </div>
+  </form>
+</div>

@@ -54,7 +54,7 @@ export class WallpaperListComponent implements OnInit {
   protected readonly WallpaperLang = WallpaperLang;
   protected readonly WallpaperListMode = WallpaperListMode;
 
-  protected activePage = 'wallpaper';
+  protected pageIndex = 'wallpaper';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
@@ -126,12 +126,12 @@ export class WallpaperListComponent implements OnInit {
         this.month = p.get('month')?.trim() || '';
 
         if (this.year) {
-          this.activePage = 'wallpaperArchive';
+          this.pageIndex = 'wallpaper-archive';
         } else {
-          this.activePage = 'wallpaper';
+          this.pageIndex = 'wallpaper';
         }
 
-        this.updateActivePage();
+        this.updatePageIndex();
         this.getWallpapers();
       });
   }
@@ -151,8 +151,8 @@ export class WallpaperListComponent implements OnInit {
     return params;
   }
 
-  protected updateActivePage(): void {
-    this.commonService.updateActivePage(this.activePage);
+  protected updatePageIndex(): void {
+    this.commonService.updatePageIndex(this.pageIndex);
   }
 
   private getWallpapers() {

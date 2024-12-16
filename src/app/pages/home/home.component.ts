@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
   hotPosts: PostEntity[] = [];
   latestWallpapers: Wallpaper[] = [];
 
-  protected activePage = 'index';
+  protected pageIndex = 'index';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
@@ -55,7 +55,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.updateActivePage();
+    this.updatePageIndex();
     this.updateBreadcrumb();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
@@ -80,8 +80,8 @@ export class HomeComponent implements OnInit {
     return isCn ? {} : { lang: WallpaperLang.EN };
   }
 
-  protected updateActivePage(): void {
-    this.commonService.updateActivePage(this.activePage);
+  protected updatePageIndex(): void {
+    this.commonService.updatePageIndex(this.pageIndex);
   }
 
   private fetchPosts() {

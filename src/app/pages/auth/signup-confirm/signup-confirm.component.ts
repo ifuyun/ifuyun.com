@@ -44,7 +44,7 @@ export class SignupConfirmComponent extends AuthComponent implements OnInit, OnD
   user?: UserModel;
   countdown = 60; // 60s
 
-  protected activePage = 'signup';
+  protected pageIndex = 'auth-signup';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
@@ -75,7 +75,7 @@ export class SignupConfirmComponent extends AuthComponent implements OnInit, OnD
   }
 
   ngOnInit(): void {
-    this.updateActivePage();
+    this.updatePageIndex();
     this.updateBreadcrumb();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.queryParamMap])
@@ -140,8 +140,8 @@ export class SignupConfirmComponent extends AuthComponent implements OnInit, OnD
       });
   }
 
-  protected updateActivePage(): void {
-    this.commonService.updateActivePage(this.activePage);
+  protected updatePageIndex(): void {
+    this.commonService.updatePageIndex(this.pageIndex);
   }
 
   private getSignupUser() {

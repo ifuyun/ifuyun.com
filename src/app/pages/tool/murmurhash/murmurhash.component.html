@@ -1,0 +1,62 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="tool-wrap" [class.p-tool-wrap]="!isMobile" [class.m-tool-wrap]="isMobile">
+  <form class="tool-form">
+    <h2 class="tool-header">MurmurHash</h2>
+    <div>
+      <nz-textarea-count [nzMaxCharacterCount]="maxHashKeyLength">
+        <textarea nz-input
+                  rows="12"
+                  name="hashKey"
+                  [(ngModel)]="hashKey"
+                  (ngModelChange)="onContentChange($event)"
+                  [maxlength]="maxHashKeyLength"
+                  placeholder="MurmurHash Key"></textarea>
+      </nz-textarea-count>
+    </div>
+    <div>
+      <!--不能用nz-input-number，无法允许为空-->
+      <input nz-input
+             name="hashSeed"
+             [(ngModel)]="hashSeed"
+             (ngModelChange)="onContentChange($event)"
+             [maxLength]="maxHashSeedLength"
+             placeholder="MurmurHash Seed (optional)"
+             autocomplete="off"/>
+    </div>
+    <div class="tool-actions">
+      <button nz-button
+              type="submit"
+              nzType="primary"
+              [disabled]="!hashKey"
+              (click)="hash()">MurmurHash</button>
+      <button nz-button
+              nzType="primary"
+              ngxClipboard
+              [cbContent]="hashResult"
+              [disabled]="!hashResult"
+              (click)="onCopied()">复制结果</button>
+      <button nz-button
+              nzType="primary"
+              [disabled]="!hashKey"
+              (click)="reset()">清空</button>
+    </div>
+    <div>
+      <textarea nz-input
+                rows="4"
+                name="hashResult"
+                [(ngModel)]="hashResult"
+                readonly="readonly"
+                placeholder="MurmurHash Result"></textarea>
+    </div>
+    <h2 class="tool-header">MurmurHash 说明</h2>
+    <div class="tool-description">
+      <ol>
+        <li>MurmurHash 是一种非加密型哈希函数，适用于一般的哈希检索操作。</li>
+        <li>本工具采用的是 MurmurHash3 (r136) (as of May 20, 2011)。</li>
+        <li>MurmurHash Key 最大输入长度为 2000 字符。</li>
+        <li>MurmurHash Seed 为正整数，可选。</li>
+        <li>本工具 MurmurHash 计算方式为客户端（浏览器）离线计算，不经过任何服务端，不会记录任何信息。</li>
+      </ol>
+    </div>
+  </form>
+</div>

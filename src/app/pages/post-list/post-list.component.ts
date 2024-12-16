@@ -37,7 +37,7 @@ export class PostListComponent implements OnInit {
   tag = '';
   posts: Post[] = [];
 
-  protected activePage = 'post';
+  protected pageIndex = 'post';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
@@ -106,18 +106,18 @@ export class PostListComponent implements OnInit {
         this.month = p.get('month')?.trim() || '';
 
         if (this.year) {
-          this.activePage = 'postArchive';
+          this.pageIndex = 'post-archive';
         } else {
-          this.activePage = 'post';
+          this.pageIndex = 'post';
         }
 
-        this.updateActivePage();
+        this.updatePageIndex();
         this.getPosts();
       });
   }
 
-  protected updateActivePage(): void {
-    this.commonService.updateActivePage(this.activePage);
+  protected updatePageIndex(): void {
+    this.commonService.updatePageIndex(this.pageIndex);
   }
 
   private getPosts() {

@@ -42,7 +42,7 @@ export class SearchComponent implements OnInit {
 
   protected readonly WallpaperListMode = WallpaperListMode;
 
-  protected activePage = 'search';
+  protected pageIndex = 'search';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
@@ -63,7 +63,7 @@ export class SearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.updateActivePage();
+    this.updatePageIndex();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.queryParamMap])
       .pipe(
@@ -88,8 +88,8 @@ export class SearchComponent implements OnInit {
       });
   }
 
-  protected updateActivePage(): void {
-    this.commonService.updateActivePage(this.activePage);
+  protected updatePageIndex(): void {
+    this.commonService.updatePageIndex(this.pageIndex);
   }
 
   private getSearchResults() {
