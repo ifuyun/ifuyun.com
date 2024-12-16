@@ -253,7 +253,7 @@ export class WallpaperComponent implements OnInit {
           };
 
           this.updatePageInfo();
-          this.updateBreadcrumb();
+          this.updateBreadcrumbs();
         }
       });
   }
@@ -280,7 +280,7 @@ export class WallpaperComponent implements OnInit {
     });
   }
 
-  private updateBreadcrumb() {
+  private updateBreadcrumbs() {
     const breadcrumbs: BreadcrumbEntity[] = [
       {
         label: '壁纸',

@@ -57,7 +57,7 @@ export class MurmurhashComponent implements OnInit {
 
   ngOnInit(): void {
     this.updatePageIndex();
-    this.updateBreadcrumb();
+    this.updateBreadcrumbs();
     this.initInput();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
@@ -135,7 +135,7 @@ export class MurmurhashComponent implements OnInit {
     this.metaService.updateHTMLMeta(metaData);
   }
 
-  private updateBreadcrumb(): void {
+  private updateBreadcrumbs(): void {
     const breadcrumbs = [
       {
         label: '实用工具',

@@ -49,7 +49,7 @@ export class WallpaperArchiveComponent implements OnInit {
 
   ngOnInit(): void {
     this.updatePageIndex();
-    this.updateBreadcrumb();
+    this.updateBreadcrumbs();
     this.getWallpaperArchives();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
@@ -91,7 +91,7 @@ export class WallpaperArchiveComponent implements OnInit {
     this.metaService.updateHTMLMeta(metaData);
   }
 
-  private updateBreadcrumb(): void {
+  private updateBreadcrumbs(): void {
     const breadcrumbs = [
       {
         label: `壁纸`,

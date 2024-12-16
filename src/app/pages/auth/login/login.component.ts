@@ -47,7 +47,7 @@ export class LoginComponent extends AuthComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.updatePageIndex();
-    this.updateBreadcrumb();
+    this.updateBreadcrumbs();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
       .pipe(
@@ -94,7 +94,7 @@ export class LoginComponent extends AuthComponent implements OnInit, OnDestroy {
     });
   }
 
-  private updateBreadcrumb() {
+  private updateBreadcrumbs() {
     this.breadcrumbService.updateBreadcrumbs([]);
   }
 }

@@ -37,6 +37,8 @@ export const TOOL_LINKS = Object.freeze([
   }
 ]);
 
+export const REGEXP_JD_PRODUCT_DETAIL_URL = /^https?:\/\/([a-zA-Z0-9\-_]+\.)*jd\.com\/(product\/)?\d+\.html$/i;
+
 export const MD5_PAGE_DESCRIPTION = 'MD5 在线加密工具，在线实现 MD5 加密算法，轻松校验、复制 MD5 加密结果。';
 export const MD5_PAGE_KEYWORDS = Object.freeze([
   'MD5',

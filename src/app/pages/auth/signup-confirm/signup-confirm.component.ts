@@ -76,7 +76,7 @@ export class SignupConfirmComponent extends AuthComponent implements OnInit, OnD
 
   ngOnInit(): void {
     this.updatePageIndex();
-    this.updateBreadcrumb();
+    this.updateBreadcrumbs();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.queryParamMap])
       .pipe(
@@ -191,7 +191,7 @@ export class SignupConfirmComponent extends AuthComponent implements OnInit, OnD
     });
   }
 
-  private updateBreadcrumb() {
+  private updateBreadcrumbs() {
     this.breadcrumbService.updateBreadcrumbs([]);
   }
 }

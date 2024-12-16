@@ -162,7 +162,7 @@ export class PostListComponent implements OnInit {
           url: `/post/category/${item.slug}`
         }));
         this.updatePageInfo(res.breadcrumbs);
-        this.updateBreadcrumb(res.breadcrumbs);
+        this.updateBreadcrumbs(res.breadcrumbs);
       });
   }
 
@@ -217,7 +217,7 @@ export class PostListComponent implements OnInit {
     });
   }
 
-  private updateBreadcrumb(postBreadcrumbs: BreadcrumbEntity[]) {
+  private updateBreadcrumbs(postBreadcrumbs: BreadcrumbEntity[]) {
     let breadcrumbs: BreadcrumbEntity[] = [
       {
         label: '文章',

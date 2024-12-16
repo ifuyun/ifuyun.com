@@ -49,7 +49,7 @@ export class PostArchiveComponent implements OnInit {
 
   ngOnInit(): void {
     this.updatePageIndex();
-    this.updateBreadcrumb();
+    this.updateBreadcrumbs();
     this.getPostArchives();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
@@ -91,7 +91,7 @@ export class PostArchiveComponent implements OnInit {
     this.metaService.updateHTMLMeta(metaData);
   }
 
-  private updateBreadcrumb(): void {
+  private updateBreadcrumbs(): void {
     const breadcrumbs = [
       {
         label: '文章',

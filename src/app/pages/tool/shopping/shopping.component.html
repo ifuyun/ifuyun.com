@@ -1,0 +1,60 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="tool-wrap" [class.p-tool-wrap]="!isMobile" [class.m-tool-wrap]="isMobile">
+  <form nz-form nzLayout="vertical" class="tool-form">
+    <h2 class="tool-header">京东转链</h2>
+    <nz-form-item>
+      <nz-form-label class="tool-form-label" nzFor="keyword">请输入京东商品详情页地址或商品ID：</nz-form-label>
+      <nz-form-control>
+        <input nz-input
+               name="keyword"
+               id="keyword"
+               [(ngModel)]="keyword"
+               (ngModelChange)="onContentChange($event)"
+               placeholder="京东商品详情页地址或商品ID"
+               autocomplete="off"/>
+      </nz-form-control>
+    </nz-form-item>
+    <div class="tool-actions">
+      <button nz-button
+              type="submit"
+              nzType="primary"
+              [disabled]="!keyword"
+              (click)="query()">查询</button>
+      <button nz-button
+              nzType="primary"
+              [disabled]="!keyword"
+              (click)="reset()">清空</button>
+    </div>
+    <div>
+      <label class="tool-form-label">查询结果：</label>
+      <div class="jd-result">
+        @if (jdResult) {
+          <div class="jd-result-item">
+            <div>长链：</div>
+            <div>{{ jdResult.clickURL }}</div>
+          </div>
+          <div class="jd-result-item">
+            <div>短链：</div>
+            <div>{{ jdResult.shortURL }}</div>
+          </div>
+          <div class="jd-result-item">
+            <div>二维码：</div>
+            <div>
+              @if (jdResult.shortURL || jdResult.clickURL) {
+                <nz-qrcode [nzSize]="240"
+                           [nzIconSize]="60"
+                           [nzPadding]="0"
+                           [nzBordered]="false"
+                           [nzValue]="jdResult.shortURL || jdResult.clickURL || ''"
+                           nzIcon="/favicon.png"
+                           nzLevel="H"></nz-qrcode>
+              }
+            </div>
+          </div>
+        } @else {
+          <nz-empty nzNotFoundImage="simple"></nz-empty>
+        }
+      </div>
+    </div>
+  </form>
+</div>

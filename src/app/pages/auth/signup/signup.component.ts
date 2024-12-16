@@ -15,12 +15,6 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
-import {
-  USER_EMAIL_LENGTH,
-  USER_PASSWORD_MAX_LENGTH,
-  USER_PASSWORD_MIN_LENGTH,
-  USER_PASSWORD_PATTERN
-} from '../../../config/auth.constant';
 import { OptionEntity } from '../../../interfaces/option';
 import { TenantAppModel } from '../../../interfaces/tenant-app';
 import { Wallpaper } from '../../../interfaces/wallpaper';
@@ -35,6 +29,12 @@ import { TenantAppService } from '../../../services/tenant-app.service';
 import { WallpaperService } from '../../../services/wallpaper.service';
 import md5 from '../../../utils/md5';
 import { AuthComponent } from '../auth.component';
+import {
+  USER_EMAIL_LENGTH,
+  USER_PASSWORD_MAX_LENGTH,
+  USER_PASSWORD_MIN_LENGTH,
+  USER_PASSWORD_PATTERN
+} from '../auth.constant';
 
 @Component({
   selector: 'app-signup',
@@ -103,7 +103,7 @@ export class SignupComponent extends AuthComponent implements OnInit, OnDestroy 
 
   ngOnInit(): void {
     this.updatePageIndex();
-    this.updateBreadcrumb();
+    this.updateBreadcrumbs();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
       .pipe(
@@ -176,7 +176,7 @@ export class SignupComponent extends AuthComponent implements OnInit, OnDestroy 
     });
   }
 
-  private updateBreadcrumb() {
+  private updateBreadcrumbs() {
     this.breadcrumbService.updateBreadcrumbs([]);
   }
 }

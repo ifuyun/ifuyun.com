@@ -79,7 +79,7 @@ export class SearchComponent implements OnInit {
         this.keyword = qp.get('keyword')?.trim() || '';
 
         this.updatePageInfo();
-        this.updateBreadcrumb();
+        this.updateBreadcrumbs();
 
         if (!this.keyword) {
           throw new CustomError(Message.SEARCH_KEYWORD_IS_NULL, HttpStatusCode.BadRequest);
@@ -139,7 +139,7 @@ export class SearchComponent implements OnInit {
     });
   }
 
-  private updateBreadcrumb() {
+  private updateBreadcrumbs() {
     if (!this.keyword) {
       this.breadcrumbService.updateBreadcrumbs([]);
       return;

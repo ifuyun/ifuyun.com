@@ -1,0 +1,35 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="tool-wrap" [class.p-tool-wrap]="!isMobile" [class.m-tool-wrap]="isMobile">
+  <header>
+    <h1>
+      <a routerLink="/tool" title="百宝箱" rel="bookmark">百宝箱</a>
+    </h1>
+  </header>
+  <div class="tool-list">
+    <h2 class="tool-header">省钱计划</h2>
+    <ul>
+      <li><a (click)="showRedPacket()" title="支付宝扫码领红包">支付宝红包</a></li>
+      <li><a routerLink="/tool/shopping" title="电商工具">电商工具</a></li>
+    </ul>
+    <h2 class="tool-header">常用工具</h2>
+    <ul>
+      <li><a routerLink="/tool/md5" title="MD5 加密工具">MD5 加密</a></li>
+      <li><a routerLink="/tool/base64" title="Base64 编解码">Base64 编解码</a></li>
+      <li><a routerLink="/tool/murmurhash" title="MurmurHash">MurmurHash</a></li>
+      <li><a routerLink="/tool/ip" title="IP 地址查询">IP 地址查询</a></li>
+    </ul>
+    <h2 class="tool-header">常用链接</h2>
+    @for (data of favoriteLinks; track data) {
+      @if (data.links.length > 0) {
+        <h3>{{ data.taxonomyName }}</h3>
+        <ul>
+          @for (link of data.links; track link) {
+            <li>
+              <a [href]="link.linkUrl" [target]="link.linkTarget" [title]="link.linkDescription">{{ link.linkName }}</a>
+            </li>
+          }
+        </ul>
+      }
+    }
+  </div>
+</div>

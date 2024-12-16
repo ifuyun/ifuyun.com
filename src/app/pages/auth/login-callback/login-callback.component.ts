@@ -54,7 +54,7 @@ export class LoginCallbackComponent implements OnInit {
 
   ngOnInit(): void {
     this.updatePageIndex();
-    this.updateBreadcrumb();
+    this.updateBreadcrumbs();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.queryParamMap])
       .pipe(
@@ -157,7 +157,7 @@ export class LoginCallbackComponent implements OnInit {
     });
   }
 
-  private updateBreadcrumb() {
+  private updateBreadcrumbs() {
     this.breadcrumbService.updateBreadcrumbs([]);
   }
 }

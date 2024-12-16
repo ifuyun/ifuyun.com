@@ -1,54 +1,48 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { isEmpty, uniq } from 'lodash';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { ClipboardModule } from 'ngx-clipboard';
-import { BehaviorSubject, combineLatest, debounceTime, skipWhile, takeUntil } from 'rxjs';
+import { RouterLink } from '@angular/router';
+import { isEmpty } from 'lodash';
+import { NzImageService } from 'ng-zorro-antd/image';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
+import { FavoriteLink } from '../../../interfaces/link';
 import { HTMLMetaData } from '../../../interfaces/meta';
 import { OptionEntity } from '../../../interfaces/option';
 import { TenantAppModel } from '../../../interfaces/tenant-app';
 import { BreadcrumbService } from '../../../services/breadcrumb.service';
 import { CommonService } from '../../../services/common.service';
 import { DestroyService } from '../../../services/destroy.service';
-import { MessageService } from '../../../services/message.service';
+import { LinkService } from '../../../services/link.service';
 import { MetaService } from '../../../services/meta.service';
 import { OptionService } from '../../../services/option.service';
 import { TenantAppService } from '../../../services/tenant-app.service';
 import { UserAgentService } from '../../../services/user-agent.service';
-import md5 from '../../../utils/md5';
-import { MD5_PAGE_DESCRIPTION, MD5_PAGE_KEYWORDS } from '../tool.constant';
 
 @Component({
-  selector: 'app-md5',
-  imports: [FormsModule, NzInputModule, NzButtonModule, ClipboardModule, BreadcrumbComponent],
-  providers: [DestroyService],
-  templateUrl: './md5.component.html',
-  styleUrl: '../tool.less'
+  selector: 'app-tool-list',
+  imports: [RouterLink, BreadcrumbComponent],
+  providers: [DestroyService, NzImageService],
+  templateUrl: './tool-list.component.html',
+  styleUrls: ['../tool.less', './tool-list.component.less']
 })
-export class Md5Component implements OnInit {
-  readonly maxContentLength = 8000;
-
+export class ToolListComponent implements OnInit {
   isMobile = false;
-  encryptContent = '';
-  encryptResult = '';
+  favoriteLinks: FavoriteLink[] = [];
 
-  protected pageIndex = 'tool-md5';
+  protected pageIndex = 'tool';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
-  private contentChange$ = new BehaviorSubject('');
 
   constructor(
     private readonly destroy$: DestroyService,
     private readonly userAgentService: UserAgentService,
     private readonly commonService: CommonService,
     private readonly metaService: MetaService,
-    private readonly message: MessageService,
+    private readonly imageService: NzImageService,
     private readonly breadcrumbService: BreadcrumbService,
     private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService
+    private readonly optionService: OptionService,
+    private readonly linkService: LinkService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -56,7 +50,7 @@ export class Md5Component implements OnInit {
   ngOnInit(): void {
     this.updatePageIndex();
     this.updateBreadcrumbs();
-    this.initInput();
+    this.getFavoriteLinks();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
       .pipe(
@@ -71,54 +65,35 @@ export class Md5Component implements OnInit {
       });
   }
 
-  encrypt(isUpper = false) {
-    if (!this.encryptContent) {
-      return;
-    }
-    if (this.encryptContent.length > this.maxContentLength) {
-      this.message.error(
-        `待加密内容最大长度为 ${this.maxContentLength} 字符，当前为 ${this.encryptContent.length} 字符`
-      );
-      return;
-    }
-    const result = md5(this.encryptContent);
-    this.encryptResult = isUpper ? result.toUpperCase() : result;
-  }
-
-  reset() {
-    this.encryptContent = '';
-    this.encryptResult = '';
-  }
-
-  onContentChange(content: string) {
-    this.contentChange$.next(content);
-  }
-
-  onCopied() {
-    this.message.success('已复制');
+  showRedPacket() {
+    const previewRef = this.imageService.preview([
+      {
+        src: '/assets/images/red-packet.png'
+      }
+    ]);
+    this.commonService.paddingPreview(previewRef.previewInstance.imagePreviewWrapper);
   }
 
   protected updatePageIndex(): void {
     this.commonService.updatePageIndex(this.pageIndex);
   }
 
-  private initInput() {
-    this.contentChange$
-      .asObservable()
-      .pipe(debounceTime(500), takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.encryptResult = '';
+  private getFavoriteLinks() {
+    this.linkService
+      .getFavoriteLinks()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.favoriteLinks = res || [];
       });
   }
 
   private updatePageInfo() {
-    const titles = ['MD5 加密', '实用工具', this.appInfo.appName];
-    const description = `${this.appInfo.appName} ${MD5_PAGE_DESCRIPTION}`;
-    const keywords: string[] = MD5_PAGE_KEYWORDS.concat(this.appInfo.keywords);
+    const titles = ['实用工具', this.appInfo.appName];
+    const description = `${this.appInfo.appName}${this.options['tool_description']}`;
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,
-      keywords: uniq(keywords).join(','),
+      keywords: this.options['tool_keywords'],
       author: this.options['site_author']
     };
     this.metaService.updateHTMLMeta(metaData);
@@ -130,12 +105,6 @@ export class Md5Component implements OnInit {
         label: '实用工具',
         tooltip: '实用工具',
         url: '/tool',
-        isHeader: false
-      },
-      {
-        label: 'MD5 加密',
-        tooltip: 'MD5 加密',
-        url: '/tool/md5',
         isHeader: true
       }
     ];

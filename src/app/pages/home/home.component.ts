@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.updatePageIndex();
-    this.updateBreadcrumb();
+    this.updateBreadcrumbs();
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
       .pipe(
@@ -132,7 +132,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  private updateBreadcrumb() {
+  private updateBreadcrumbs() {
     this.breadcrumbService.updateBreadcrumbs([]);
   }
 }

@@ -1,41 +1,49 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { isEmpty, uniq } from 'lodash';
+import { isEmpty } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { ClipboardModule } from 'ngx-clipboard';
+import { NzQRCodeModule } from 'ng-zorro-antd/qr-code';
 import { BehaviorSubject, combineLatest, debounceTime, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
-import { ResponseCode } from '../../../config/response-code.enum';
+import { JdUnionPromotionResponseBody } from '../../../interfaces/jd-union';
 import { HTMLMetaData } from '../../../interfaces/meta';
 import { OptionEntity } from '../../../interfaces/option';
 import { TenantAppModel } from '../../../interfaces/tenant-app';
-import { Base64Service } from '../../../services/base64.service';
 import { BreadcrumbService } from '../../../services/breadcrumb.service';
 import { CommonService } from '../../../services/common.service';
 import { DestroyService } from '../../../services/destroy.service';
 import { MessageService } from '../../../services/message.service';
 import { MetaService } from '../../../services/meta.service';
 import { OptionService } from '../../../services/option.service';
+import { ShoppingService } from '../../../services/shopping.service';
 import { TenantAppService } from '../../../services/tenant-app.service';
 import { UserAgentService } from '../../../services/user-agent.service';
-import { BASE64_PAGE_DESCRIPTION, BASE64_PAGE_KEYWORDS } from '../tool.constant';
+import { REGEXP_JD_PRODUCT_DETAIL_URL } from '../tool.constant';
 
 @Component({
-  selector: 'app-base64',
-  imports: [FormsModule, NzInputModule, NzButtonModule, ClipboardModule, BreadcrumbComponent],
+  selector: 'app-shopping',
+  imports: [
+    FormsModule,
+    NzFormModule,
+    NzInputModule,
+    NzButtonModule,
+    NzQRCodeModule,
+    NzEmptyModule,
+    BreadcrumbComponent
+  ],
   providers: [DestroyService],
-  templateUrl: './base64.component.html',
-  styleUrl: '../tool.less'
+  templateUrl: './shopping.component.html',
+  styleUrls: ['../tool.less', './shopping.component.less']
 })
-export class Base64Component implements OnInit {
-  readonly maxContentLength = 2000;
-
+export class ShoppingComponent implements OnInit {
   isMobile = false;
-  encryptContent = '';
-  encryptResult = '';
+  keyword = '';
+  jdResult: JdUnionPromotionResponseBody | null = null;
 
-  protected pageIndex = 'tool-base64';
+  protected pageIndex = 'tool-shopping';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
@@ -50,7 +58,7 @@ export class Base64Component implements OnInit {
     private readonly breadcrumbService: BreadcrumbService,
     private readonly tenantAppService: TenantAppService,
     private readonly optionService: OptionService,
-    private readonly base64Service: Base64Service
+    private readonly shoppingService: ShoppingService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -73,41 +81,44 @@ export class Base64Component implements OnInit {
       });
   }
 
-  transform(action: 'encode' | 'decode') {
-    if (!this.encryptContent) {
+  query() {
+    if (!this.keyword.trim()) {
       return;
     }
-    if (this.encryptContent.length > this.maxContentLength) {
-      this.message.error(
-        `待编解码内容最大长度为 ${this.maxContentLength} 字符，当前为 ${this.encryptContent.length} 字符`
-      );
+    if (!this.checkKeyword()) {
+      this.message.error('输入内容有误，请输入有效的京东商品详情页地址或商品ID');
       return;
     }
-    this.base64Service
-      .transform(this.encryptContent, action)
+    this.shoppingService
+      .getPromotionCommon(this.keyword)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        if (res.code === ResponseCode.SUCCESS) {
-          this.encryptResult = res.data || '';
+        const code = Number(res.code);
+        if (code !== 0 && code !== 200) {
+          this.message.error(res.message);
+        } else {
+          this.jdResult = res.data || { clickURL: '' };
         }
       });
   }
 
   reset() {
-    this.encryptContent = '';
-    this.encryptResult = '';
+    this.keyword = '';
+    this.jdResult = null;
   }
 
   onContentChange(content: string) {
     this.contentChange$.next(content);
   }
 
-  onCopied() {
-    this.message.success('已复制');
-  }
-
   protected updatePageIndex(): void {
     this.commonService.updatePageIndex(this.pageIndex);
+  }
+
+  private checkKeyword(): boolean {
+    this.keyword = this.keyword.trim().split('?')[0].split('#')[0];
+
+    return REGEXP_JD_PRODUCT_DETAIL_URL.test(this.keyword) || /^\d+$/i.test(this.keyword);
   }
 
   private initInput() {
@@ -115,18 +126,17 @@ export class Base64Component implements OnInit {
       .asObservable()
       .pipe(debounceTime(500), takeUntil(this.destroy$))
       .subscribe(() => {
-        this.encryptResult = '';
+        this.jdResult = null;
       });
   }
 
   private updatePageInfo() {
-    const titles = ['Base64 编解码', '实用工具', this.appInfo.appName];
-    const description = `${this.appInfo.appName} ${BASE64_PAGE_DESCRIPTION}`;
-    const keywords: string[] = BASE64_PAGE_KEYWORDS.concat(this.appInfo.keywords);
+    const titles = ['电商工具', '实用工具', this.appInfo.appName];
+    const description = `${this.appInfo.appName}${this.options['shopping_description']}`;
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,
-      keywords: uniq(keywords).join(','),
+      keywords: this.options['shopping_keywords'],
       author: this.options['site_author']
     };
     this.metaService.updateHTMLMeta(metaData);
@@ -141,9 +151,9 @@ export class Base64Component implements OnInit {
         isHeader: false
       },
       {
-        label: 'Base64 编解码',
-        tooltip: 'Base64 编解码',
-        url: '/tool/base64',
+        label: '电商工具',
+        tooltip: '电商工具',
+        url: '/tool/shopping',
         isHeader: true
       }
     ];
