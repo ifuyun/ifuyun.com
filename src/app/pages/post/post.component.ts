@@ -3,14 +3,22 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzImageService } from 'ng-zorro-antd/image';
+import { ClipboardService } from 'ngx-clipboard';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
 import { CommentComponent } from '../../components/comment/comment.component';
+import { LoginModalComponent } from '../../components/login-modal/login-modal.component';
 import { PostPrevNextComponent } from '../../components/post-prev-next/post-prev-next.component';
 import { PostRelatedComponent } from '../../components/post-related/post-related.component';
-import { REGEXP_ID } from '../../config/common.constant';
+import { ShareModalComponent } from '../../components/share-modal/share-modal.component';
+import { COOKIE_KEY_USER_ID, REGEXP_ID } from '../../config/common.constant';
+import { Message } from '../../config/message.enum';
+import { ResponseCode } from '../../config/response-code.enum';
 import { CommentObjectType } from '../../enums/comment';
+import { FavoriteType } from '../../enums/favorite';
 import { PostType } from '../../enums/post';
+import { VoteType, VoteValue } from '../../enums/vote';
 import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
 import { OptionEntity } from '../../interfaces/option';
 import { Post, PostModel } from '../../interfaces/post';
@@ -25,12 +33,18 @@ import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { CommentService } from '../../services/comment.service';
 import { CommonService } from '../../services/common.service';
 import { DestroyService } from '../../services/destroy.service';
+import { FavoriteService } from '../../services/favorite.service';
+import { MessageService } from '../../services/message.service';
 import { MetaService } from '../../services/meta.service';
 import { OptionService } from '../../services/option.service';
+import { PlatformService } from '../../services/platform.service';
 import { PostService } from '../../services/post.service';
+import { SsrCookieService } from '../../services/ssr-cookie.service';
 import { TenantAppService } from '../../services/tenant-app.service';
 import { UserAgentService } from '../../services/user-agent.service';
 import { UserService } from '../../services/user.service';
+import { VoteService } from '../../services/vote.service';
+import { decodeEntities } from '../../utils/entities';
 
 @Component({
   selector: 'app-post',
@@ -48,9 +62,11 @@ import { UserService } from '../../services/user.service';
     BreadcrumbComponent,
     PostPrevNextComponent,
     PostRelatedComponent,
+    ShareModalComponent,
+    LoginModalComponent,
     CommentComponent
   ],
-  providers: [DestroyService],
+  providers: [DestroyService, NzImageService],
   templateUrl: './post.component.html',
   styleUrl: './post.component.less'
 })
@@ -68,6 +84,11 @@ export class PostComponent implements OnInit {
   postTags: TagEntity[] = [];
   isFavorite = false;
   isVoted = false;
+  voteLoading = false;
+  favoriteLoading = false;
+  shareVisible = false;
+  shareUrl = '';
+  loginVisible = false;
 
   get showPayMask() {
     return (
@@ -84,18 +105,19 @@ export class PostComponent implements OnInit {
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
   private user!: UserModel;
-  private postName = '';
   private postId = '';
   private postSlug = '';
   private referrer = '';
   private breadcrumbs: BreadcrumbEntity[] = [];
-  private isChanged = false;
-  private isLoaded = false;
 
   constructor(
-    private readonly route: ActivatedRoute,
     private readonly destroy$: DestroyService,
+    private readonly route: ActivatedRoute,
+    private readonly platform: PlatformService,
     private readonly userAgentService: UserAgentService,
+    private readonly message: MessageService,
+    private readonly imageService: NzImageService,
+    private readonly cookieService: SsrCookieService,
     private readonly commonService: CommonService,
     private readonly metaService: MetaService,
     private readonly breadcrumbService: BreadcrumbService,
@@ -103,7 +125,10 @@ export class PostComponent implements OnInit {
     private readonly optionService: OptionService,
     private readonly userService: UserService,
     private readonly postService: PostService,
-    private readonly commentService: CommentService
+    private readonly voteService: VoteService,
+    private readonly favoriteService: FavoriteService,
+    private readonly commentService: CommentService,
+    private readonly clipboardService: ClipboardService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -126,24 +151,125 @@ export class PostComponent implements OnInit {
           this.commonService.redirectToNotFound();
           return;
         }
-        this.isChanged = this.postName !== postName;
-        this.postName = postName;
-        if (!this.isLoaded || this.isChanged) {
-          if (REGEXP_ID.test(postName)) {
-            this.postId = postName;
-            this.getPost();
-            this.commentService.updateObjectId(this.postId);
-          } else {
-            this.postSlug = postName;
-            this.getPage();
-          }
-          this.isLoaded = true;
+        if (REGEXP_ID.test(postName)) {
+          this.postId = postName;
+          this.getPost();
+          this.commentService.updateObjectId(this.postId);
+        } else {
+          this.postSlug = postName;
+          this.getPage();
         }
       });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.user = user;
       this.isSignIn = !!user.userId;
+
+      if (this.platform.isBrowser) {
+        const userId = user.userId || this.cookieService.get(COOKIE_KEY_USER_ID);
+        const shareUrl = location.href.split('#')[0];
+        const param = (shareUrl.includes('?') ? '&' : '?') + 'ref=qrcode' + (userId ? '&uid=' + userId : '');
+        this.shareUrl = shareUrl + param;
+      }
     });
+  }
+
+  onPostClick(e: MouseEvent) {
+    const $target = e.target as HTMLElement;
+    if ($target.classList.contains('i-code-copy')) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!this.isSignIn) {
+        this.showLoginModal();
+        return;
+      }
+      const $parent = $target.parentNode?.parentNode;
+      if ($parent) {
+        const $code = $parent.querySelector('.i-code-text');
+        const codeText = $code?.innerHTML;
+        if (codeText) {
+          this.clipboardService.copy(decodeEntities(codeText));
+          $target.innerHTML = this.copiedHTML;
+
+          window.setTimeout(() => {
+            $target.innerHTML = this.copyHTML;
+          }, 2000);
+        }
+      }
+    }
+  }
+
+  vote() {
+    if (this.voteLoading || this.isVoted) {
+      return;
+    }
+    if (!this.isSignIn) {
+      this.showLoginModal();
+      return;
+    }
+    this.voteService
+      .saveVote({
+        objectId: this.postId,
+        value: VoteValue.LIKE,
+        type: this.postType === PostType.PAGE ? VoteType.PAGE : VoteType.POST
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.voteLoading = false;
+
+        if (res.code === ResponseCode.SUCCESS) {
+          this.message.success(Message.VOTE_SUCCESS);
+          this.isVoted = true;
+          this.post.postLikes = res.data.likes;
+        }
+      });
+  }
+
+  showReward() {
+    const previewRef = this.imageService.preview([
+      {
+        src: '/assets/images/reward.jpg'
+      }
+    ]);
+    this.commonService.paddingPreview(previewRef.previewInstance.imagePreviewWrapper);
+  }
+
+  addFavorite() {
+    if (this.favoriteLoading || this.isFavorite) {
+      return;
+    }
+    if (!this.isSignIn) {
+      this.showLoginModal();
+      return;
+    }
+    this.favoriteLoading = true;
+    this.favoriteService
+      .addFavorite(this.postId, FavoriteType.POST)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.favoriteLoading = false;
+
+        if (res.code === ResponseCode.SUCCESS || res.code === ResponseCode.FAVORITE_IS_EXIST) {
+          this.message.success(Message.ADD_FAVORITE_SUCCESS);
+          this.isFavorite = true;
+        }
+      });
+  }
+
+  showShareQrcode() {
+    this.shareVisible = true;
+  }
+
+  closeShareQrcode() {
+    this.shareVisible = false;
+  }
+
+  showLoginModal() {
+    this.loginVisible = true;
+  }
+
+  closeLoginModal() {
+    this.loginVisible = false;
   }
 
   protected updatePageIndex(): void {

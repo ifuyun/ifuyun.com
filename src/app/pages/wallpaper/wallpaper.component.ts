@@ -5,7 +5,6 @@ import { isEmpty } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageService } from 'ng-zorro-antd/image';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
 import { CommentComponent } from '../../components/comment/comment.component';
@@ -18,6 +17,7 @@ import { Message } from '../../config/message.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommentObjectType } from '../../enums/comment';
 import { FavoriteType } from '../../enums/favorite';
+import { VoteType, VoteValue } from '../../enums/vote';
 import { WallpaperLang } from '../../enums/wallpaper';
 import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
 import { OptionEntity } from '../../interfaces/option';
@@ -30,6 +30,7 @@ import { CommentService } from '../../services/comment.service';
 import { CommonService } from '../../services/common.service';
 import { DestroyService } from '../../services/destroy.service';
 import { FavoriteService } from '../../services/favorite.service';
+import { MessageService } from '../../services/message.service';
 import { MetaService } from '../../services/meta.service';
 import { OptionService } from '../../services/option.service';
 import { PlatformService } from '../../services/platform.service';
@@ -69,8 +70,6 @@ export class WallpaperComponent implements OnInit {
   isSignIn = false;
   wallpaperId = '';
   wallpaper!: Wallpaper;
-  isVoted = false;
-  isFavorite = false;
   lang = WallpaperLang.CN;
   voteLoading = false;
   favoriteLoading = false;
@@ -94,12 +93,12 @@ export class WallpaperComponent implements OnInit {
   private isLoaded = false;
 
   constructor(
-    private readonly route: ActivatedRoute,
     private readonly destroy$: DestroyService,
-    private readonly message: NzMessageService,
-    private readonly imageService: NzImageService,
+    private readonly route: ActivatedRoute,
     private readonly platform: PlatformService,
     private readonly userAgentService: UserAgentService,
+    private readonly message: MessageService,
+    private readonly imageService: NzImageService,
     private readonly cookieService: SsrCookieService,
     private readonly commonService: CommonService,
     private readonly metaService: MetaService,
@@ -170,6 +169,32 @@ export class WallpaperComponent implements OnInit {
     }
   }
 
+  vote() {
+    if (this.voteLoading || this.wallpaper.isVoted) {
+      return;
+    }
+    if (!this.isSignIn) {
+      this.showLoginModal();
+      return;
+    }
+    this.voteService
+      .saveVote({
+        objectId: this.wallpaperId,
+        value: VoteValue.LIKE,
+        type: VoteType.WALLPAPER
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.voteLoading = false;
+
+        if (res.code === ResponseCode.SUCCESS) {
+          this.message.success(Message.VOTE_SUCCESS);
+          this.wallpaper.isVoted = true;
+          this.wallpaper.wallpaperLikes = res.data.likes;
+        }
+      });
+  }
+
   showReward() {
     const previewRef = this.imageService.preview([
       {
@@ -180,7 +205,7 @@ export class WallpaperComponent implements OnInit {
   }
 
   addFavorite() {
-    if (this.favoriteLoading || this.isFavorite) {
+    if (this.favoriteLoading || this.wallpaper.isFavorite) {
       return;
     }
     if (!this.isSignIn) {
@@ -195,8 +220,8 @@ export class WallpaperComponent implements OnInit {
         this.favoriteLoading = false;
 
         if (res.code === ResponseCode.SUCCESS || res.code === ResponseCode.FAVORITE_IS_EXIST) {
-          this.isFavorite = true;
           this.message.success(Message.ADD_FAVORITE_SUCCESS);
+          this.wallpaper.isFavorite = true;
         }
       });
   }
@@ -227,9 +252,6 @@ export class WallpaperComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((wallpaper) => {
         if (wallpaper) {
-          this.isFavorite = wallpaper.isFavorite;
-          this.isVoted = wallpaper.isVoted;
-
           const wallpaperPartial: Partial<Wallpaper> = {};
           let wallpaperLocation = '';
           let hasTranslation: boolean;

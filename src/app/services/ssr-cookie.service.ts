@@ -18,7 +18,7 @@ export class SsrCookieService {
    * @returns property RegExp
    */
   static getCookieRegExp(name: string): RegExp {
-    const escapedName: string = name.replace(/([\[\]\{\}\(\)\|\=\;\+\?\,\.\*\^\$])/gi, '\\$1');
+    const escapedName: string = name.replace(/([\[\]{}()|=;+?,.*^$])/gi, '\\$1');
 
     return new RegExp('(?:^' + escapedName + '|;\\s*' + escapedName + ')=(.*?)(?:;|$)', 'g');
   }
@@ -39,6 +39,10 @@ export class SsrCookieService {
     }
   }
 
+  getHeaderCookie() {
+    return this.request ? (this.request.headers as any).get('cookie') : '';
+  }
+
   /**
    * Return `true` if {@link Document} is accessible, otherwise return `false`
    *
@@ -48,7 +52,7 @@ export class SsrCookieService {
   check(name: string): boolean {
     name = encodeURIComponent(name);
     const regExp: RegExp = SsrCookieService.getCookieRegExp(name);
-    return regExp.test((this.documentIsAccessible ? this.document.cookie : this.request?.headers.cookie) || '');
+    return regExp.test((this.documentIsAccessible ? this.document.cookie : this.getHeaderCookie()) || '');
   }
 
   /**
@@ -63,7 +67,7 @@ export class SsrCookieService {
 
       const regExp: RegExp = SsrCookieService.getCookieRegExp(name);
       const result: RegExpExecArray | null = regExp.exec(
-        (this.documentIsAccessible ? this.document.cookie : this.request?.headers.cookie) || ''
+        (this.documentIsAccessible ? this.document.cookie : this.getHeaderCookie()) || ''
       );
 
       return result && result[1] ? SsrCookieService.safeDecodeURIComponent(result[1]) : '';
@@ -204,7 +208,7 @@ export class SsrCookieService {
     if (options.secure === false && options.sameSite === 'None') {
       options.secure = true;
       console.warn(
-        `[ngx-cookie-service] Cookie ${name} was forced with secure flag because sameSite=None.` +
+        `Cookie ${name} was forced with secure flag because sameSite=None.` +
           `More details : https://github.com/stevermeister/ngx-cookie-service/issues/86#issuecomment-597720130`
       );
     }

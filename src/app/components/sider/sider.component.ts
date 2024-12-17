@@ -147,8 +147,8 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private scrollHandler() {
     const docEle = document.documentElement;
-    if (this.siderEle) {
-      if (docEle.scrollTop > 0 && docEle.scrollTop > this.siderEle.nativeElement.scrollHeight - docEle.clientHeight) {
+    if (this.siderEle && docEle.scrollTop > 0) {
+      if (docEle.scrollTop > this.siderEle.nativeElement.scrollHeight - docEle.clientHeight) {
         this.siderEle.nativeElement.style.position = 'sticky';
         if (this.siderEle.nativeElement.scrollHeight < docEle.clientHeight) {
           this.siderEle.nativeElement.style.top = 0;

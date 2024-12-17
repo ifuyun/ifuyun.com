@@ -10,6 +10,7 @@ import { NzQRCodeModule } from 'ng-zorro-antd/qr-code';
   styleUrl: './share-modal.component.less'
 })
 export class ShareModalComponent {
+  @Input() visible = true;
   @Input() shareUrl = '';
   @Output() closeModal = new EventEmitter();
 

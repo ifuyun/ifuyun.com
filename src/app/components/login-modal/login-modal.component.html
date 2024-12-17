@@ -9,6 +9,6 @@
   (nzOnOk)="onClose()"
 >
   <ng-container *nzModalContent>
-    <app-login-form (closeForm)="onClose()"></app-login-form>
+    <app-login-form [isModal]="true" (closeForm)="onClose()"></app-login-form>
   </ng-container>
 </nz-modal>
