@@ -8,6 +8,7 @@ import { NzImageService } from 'ng-zorro-antd/image';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
+import { CommentComponent } from '../../components/comment/comment.component';
 import { LoginModalComponent } from '../../components/login-modal/login-modal.component';
 import { ShareModalComponent } from '../../components/share-modal/share-modal.component';
 import { WallpaperPrevNextComponent } from '../../components/wallpaper-prev-next/wallpaper-prev-next.component';
@@ -15,6 +16,7 @@ import { WallpaperRelatedComponent } from '../../components/wallpaper-related/wa
 import { COOKIE_KEY_USER_ID } from '../../config/common.constant';
 import { Message } from '../../config/message.enum';
 import { ResponseCode } from '../../config/response-code.enum';
+import { CommentObjectType } from '../../enums/comment';
 import { FavoriteType } from '../../enums/favorite';
 import { WallpaperLang } from '../../enums/wallpaper';
 import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
@@ -24,6 +26,7 @@ import { Wallpaper } from '../../interfaces/wallpaper';
 import { NumberViewPipe } from '../../pipes/number-view.pipe';
 import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
+import { CommentService } from '../../services/comment.service';
 import { CommonService } from '../../services/common.service';
 import { DestroyService } from '../../services/destroy.service';
 import { FavoriteService } from '../../services/favorite.service';
@@ -52,13 +55,16 @@ import { filterHtmlTag, truncateString } from '../../utils/helper';
     WallpaperPrevNextComponent,
     WallpaperRelatedComponent,
     ShareModalComponent,
-    LoginModalComponent
+    LoginModalComponent,
+    CommentComponent
   ],
   providers: [DestroyService, NzImageService],
   templateUrl: './wallpaper.component.html',
   styleUrl: './wallpaper.component.less'
 })
 export class WallpaperComponent implements OnInit {
+  readonly commentType = CommentObjectType.WALLPAPER;
+
   isMobile = false;
   isSignIn = false;
   wallpaperId = '';
@@ -103,7 +109,8 @@ export class WallpaperComponent implements OnInit {
     private readonly userService: UserService,
     private readonly wallpaperService: WallpaperService,
     private readonly voteService: VoteService,
-    private readonly favoriteService: FavoriteService
+    private readonly favoriteService: FavoriteService,
+    private readonly commentService: CommentService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -136,6 +143,7 @@ export class WallpaperComponent implements OnInit {
 
         if (!this.isLoaded || this.isChanged) {
           this.wallpaperService.updateActiveWallpaperId(this.wallpaperId);
+          this.commentService.updateObjectId(this.wallpaperId);
           this.getWallpaper();
           this.isLoaded = true;
         }

@@ -124,5 +124,5 @@
   @if (isArticle) {
     <app-post-related></app-post-related>
   }
-  <!--comment-list-->
+  <app-comment [objectType]="commentType" [enableAI]="!post.postPayFlag && !post.postLoginFlag"></app-comment>
 }

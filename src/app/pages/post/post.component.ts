@@ -5,9 +5,11 @@ import { isEmpty, uniq } from 'lodash';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
+import { CommentComponent } from '../../components/comment/comment.component';
 import { PostPrevNextComponent } from '../../components/post-prev-next/post-prev-next.component';
 import { PostRelatedComponent } from '../../components/post-related/post-related.component';
 import { REGEXP_ID } from '../../config/common.constant';
+import { CommentObjectType } from '../../enums/comment';
 import { PostType } from '../../enums/post';
 import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
 import { OptionEntity } from '../../interfaces/option';
@@ -20,6 +22,7 @@ import { CopyTypePipe } from '../../pipes/copy-type.pipe';
 import { NumberViewPipe } from '../../pipes/number-view.pipe';
 import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
+import { CommentService } from '../../services/comment.service';
 import { CommonService } from '../../services/common.service';
 import { DestroyService } from '../../services/destroy.service';
 import { MetaService } from '../../services/meta.service';
@@ -44,7 +47,8 @@ import { UserService } from '../../services/user.service';
     CopyLinkPipe,
     BreadcrumbComponent,
     PostPrevNextComponent,
-    PostRelatedComponent
+    PostRelatedComponent,
+    CommentComponent
   ],
   providers: [DestroyService],
   templateUrl: './post.component.html',
@@ -52,6 +56,8 @@ import { UserService } from '../../services/user.service';
 })
 export class PostComponent implements OnInit {
   @Input() postType: PostType = PostType.POST;
+
+  readonly commentType = CommentObjectType.POST;
 
   isMobile = false;
   isSignIn = false;
@@ -96,7 +102,8 @@ export class PostComponent implements OnInit {
     private readonly tenantAppService: TenantAppService,
     private readonly optionService: OptionService,
     private readonly userService: UserService,
-    private readonly postService: PostService
+    private readonly postService: PostService,
+    private readonly commentService: CommentService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -125,6 +132,7 @@ export class PostComponent implements OnInit {
           if (REGEXP_ID.test(postName)) {
             this.postId = postName;
             this.getPost();
+            this.commentService.updateObjectId(this.postId);
           } else {
             this.postSlug = postName;
             this.getPage();
@@ -157,6 +165,7 @@ export class PostComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((post) => {
         this.initData(post);
+        this.commentService.updateObjectId(post.post.postId);
       });
   }
 

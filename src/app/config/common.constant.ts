@@ -9,6 +9,7 @@ export const REGEXP_IP = /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\
 export const PAGE_PREFIX_BLACKLIST = Object.freeze(['post', 'wallpaper', 'user', 'tool']);
 
 export const ADMIN_URL_PARAM = '?token=$0&appId=$1';
+export const URL_AVATAR_API = 'https://cravatar.cn/avatar/$0.png?d=$1';
 
 export const COOKIE_KEY_THEME = 'theme';
 export const COOKIE_KEY_UV_ID = 'faid';

@@ -81,9 +81,9 @@ export class LoginFormComponent extends BaseComponent implements OnInit {
 
   constructor(
     private readonly destroy$: DestroyService,
+    private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly fb: FormBuilder,
     private readonly message: NzMessageService,
     private readonly userAgentService: UserAgentService,
     private readonly tenantAppService: TenantAppService,

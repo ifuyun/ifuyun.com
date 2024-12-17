@@ -1,16 +1,13 @@
 import { CommentObjectType } from '../enums/comment';
-import { AppParam, IPInfo, MetaData } from './common';
+import { IPInfo, MetaData } from './common';
 import { UserModel } from './user';
 
-export interface CommentEntity extends AppParam {
+export interface CommentEntity {
   objectId: string;
   objectType: CommentObjectType;
   commentParent?: string;
   commentTop?: string;
-  authorName: string;
-  authorEmail: string;
   commentContent: string;
-  captchaCode?: string;
   userId?: string;
 }
 
@@ -19,6 +16,8 @@ export interface CommentModel extends CommentEntity {
   commentHash: string;
   commentCreated: number;
   commentAuthor: string;
+  authorName: string;
+  authorEmail?: string;
   authorEmailHash: string;
   authorAvatar?: string;
   authorLink?: string;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ApiUrl } from '../config/api-url';
 import { APP_ID } from '../config/common.constant';
-import { IPResult } from '../interfaces/ip';
+import { IPInfo, IPResult } from '../interfaces/ip';
 import { ApiService } from './api.service';
 
 @Injectable({
@@ -19,5 +19,18 @@ export class IpService {
         appId: APP_ID
       })
       .pipe(map((res) => res?.data || {}));
+  }
+
+  getIPLocation(ipInfo?: IPInfo) {
+    if (!ipInfo) {
+      return '未知地区';
+    }
+    if (ipInfo.city) {
+      return ipInfo.province + ' · ' + ipInfo.city;
+    }
+    if (ipInfo.province) {
+      return ipInfo.country + ' · ' + ipInfo.province;
+    }
+    return ipInfo.country;
   }
 }
