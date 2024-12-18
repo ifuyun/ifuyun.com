@@ -13,7 +13,7 @@
         <span title="作者：{{ post.postAuthor || post.owner.userNickname }}">
           <span nz-icon nzType="user"></span><span>{{ post.postAuthor || post.owner.userNickname }}</span>
         </span>
-        <span title="阅读：<%= number.format(post.postViews, 'K') %>">
+        <span title="阅读：{{ post.postViews | numberView: 'K' }}">
           <span nz-icon nzType="eye"></span><span>{{ post.postViews | numberView: 'K' }}</span>
         </span>
       </div>

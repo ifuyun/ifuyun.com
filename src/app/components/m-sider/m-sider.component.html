@@ -1,0 +1,59 @@
+<div class="m-sider" [class.open]="siderVisible">
+  <aside class="m-sider-body">
+    <div class="m-sider-info">
+      <div class="m-sider-info-logo">
+        <img src="/favicon.png" [alt]="appInfo?.appName" />
+      </div>
+      <div class="m-sider-info-profile">
+        <h2 class="m-sider-info-profile-name">{{ appInfo?.appName }}</h2>
+        <div *ngIf="appInfo?.appSlogan" class="m-sider-info-profile-slogan">{{ appInfo?.appSlogan }}</div>
+      </div>
+    </div>
+    <div class="m-sider-tool">
+      <div title="深色模式: 关闭">
+        <span nz-icon nzType="sun" theme="fill"></span>
+      </div>
+    </div>
+    <nav class="m-sider-nav">
+      <ul class="m-sider-nav-list">
+        <li [class.active]="indexInfo?.isHome">
+          <a routerLink=""><span nz-icon nzType="home"></span><span>首页</span></a>
+        </li>
+        <li [class.active]="indexInfo?.isPost && indexInfo?.subPage !== 'archive'">
+          <a routerLink="/post" title="文章"><span nz-icon nzType="form"></span><span>文章</span></a>
+        </li>
+        <li [class.active]="indexInfo?.isWallpaper && indexInfo?.subPage !== 'archive'">
+          <a routerLink="/wallpaper" title="高清壁纸"><span nz-icon nzType="picture"></span><span>壁纸</span></a>
+        </li>
+        <li [class.active]="indexInfo?.isTool">
+          <a routerLink="/tool" title="实用工具"><span nz-icon nzType="tool"></span><span>实用工具</span></a>
+        </li>
+        <li [class.active]="indexInfo?.fullPage === 'post-archive'">
+          <a routerLink="/post/archive" title="文章归档"><span class="fi fi-calendar-date"></span><span>文章归档</span></a>
+        </li>
+        <li [class.active]="indexInfo?.fullPage === 'wallpaper-archive'">
+          <a routerLink="/wallpaper/archive"
+             title="壁纸归档"><span class="fi fi-calendar-date"></span><span>壁纸归档</span></a>
+        </li>
+        <div class="m-separator"></div>
+        <li [class.active]="indexInfo?.subPage === 'aboutme'">
+          <a routerLink="/aboutme"><span nz-icon nzType="info-circle"></span><span>关于</span></a>
+        </li>
+        <li>
+          <a (click)="showWechatCard()"><span nz-icon nzType="heart"></span><span>公众号</span></a>
+        </li>
+        <li>
+          <a routerLink="https://github.com/ifuyun"
+             title="Follow us on GitHub" target="_blank"><span nz-icon nzType="github"></span><span>GitHub</span></a>
+        </li>
+        <div class="m-separator"></div>
+        @if (isSignIn) {
+          <li><a (click)="gotoAdmin()"><span nz-icon nzType="dashboard"></span><span>个人中心</span></a></li>
+          <li><a (click)="logout()"><span nz-icon nzType="logout"></span><span>退出登录</span></a></li>
+        } @else {
+          <li><a routerLink="/user/login" title="登录"><span nz-icon nzType="login"></span><span>登录</span></a></li>
+        }
+      </ul>
+    </nav>
+  </aside>
+</div>

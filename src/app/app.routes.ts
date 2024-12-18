@@ -95,7 +95,7 @@ export const routes: Routes = [
     component: AuthLayoutComponent,
     children: [
       { path: 'login', component: LoginComponent },
-      { path: 'login/callback', component: LoginCallbackComponent },
+      { path: 'login/callback', component: LoginCallbackComponent, data: { bg: false } },
       { path: 'signup', component: SignupComponent },
       { path: 'confirm', component: SignupConfirmComponent }
     ],

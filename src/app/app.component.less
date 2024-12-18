@@ -40,6 +40,23 @@
 }
 
 .m-main {
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
-  padding: (@m-primary-margin + (@m-content-margin / 2)) @m-primary-margin;
+  margin-top: @m-header-height;
+  padding: @m-primary-margin;
+}
+
+.m-main-center {
+  align-items: center;
+  justify-content: center;
+}
+
+.m-mask-sider {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
 }

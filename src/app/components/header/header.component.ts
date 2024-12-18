@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
@@ -19,8 +19,8 @@ import { TOOL_LINKS } from '../../pages/tool/tool.constant';
 import { AuthService } from '../../services/auth.service';
 import { CommonService } from '../../services/common.service';
 import { DestroyService } from '../../services/destroy.service';
-import { PlatformService } from '../../services/platform.service';
 import { TenantAppService } from '../../services/tenant-app.service';
+import { UserAgentService } from '../../services/user-agent.service';
 import { UserService } from '../../services/user.service';
 import { format } from '../../utils/helper';
 import { LoginModalComponent } from '../login-modal/login-modal.component';
@@ -42,36 +42,39 @@ import { WallpaperModalComponent } from '../wallpaper-modal/wallpaper-modal.comp
   templateUrl: './header.component.html',
   styleUrl: './header.component.less'
 })
-export class HeaderComponent implements OnInit, AfterViewInit {
+export class HeaderComponent implements OnInit, AfterViewChecked {
   @Input() postTaxonomies: TaxonomyNode[] = [];
 
-  @ViewChild('searchInput') searchInput!: ElementRef;
+  @ViewChild('mSearchInput') mSearchInput!: ElementRef;
 
   isMobile = false;
   isSignIn = false;
   indexInfo?: PageIndexInfo;
   appInfo?: TenantAppModel;
   user!: UserModel;
-  adminUrl = '';
-  botsUrl = '';
   toolLinks = TOOL_LINKS;
   keyword = '';
   loginModalVisible = false;
   wallpaperModalVisible = false;
+  searchVisible = false;
+  isFocused = false;
 
-  private inputFlag = false;
+  private adminUrl = '';
+  private botsUrl = '';
 
   constructor(
-    private readonly router: Router,
     private readonly destroy$: DestroyService,
-    private readonly platform: PlatformService,
+    private readonly router: Router,
+    private readonly userAgentService: UserAgentService,
     private readonly message: NzMessageService,
     private readonly imageService: NzImageService,
     private readonly commonService: CommonService,
     private readonly tenantAppService: TenantAppService,
     private readonly authService: AuthService,
     private readonly userService: UserService
-  ) {}
+  ) {
+    this.isMobile = this.userAgentService.isMobile;
+  }
 
   ngOnInit(): void {
     this.tenantAppService.appInfo$
@@ -82,11 +85,9 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       .subscribe((appInfo) => {
         this.appInfo = appInfo;
 
-        if (this.platform.isBrowser) {
-          const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), APP_ID);
-          this.adminUrl = this.appInfo.appAdminUrl + urlParam;
-          this.botsUrl = this.appInfo.appAdminUrl.replace(/\/$/i, '') + '/bots' + urlParam;
-        }
+        const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), APP_ID);
+        this.adminUrl = this.appInfo.appAdminUrl + urlParam;
+        this.botsUrl = this.appInfo.appAdminUrl.replace(/\/$/i, '') + '/bots' + urlParam;
       });
     this.commonService.pageIndex$.pipe(takeUntil(this.destroy$)).subscribe((page) => {
       this.indexInfo = this.commonService.getPageIndexInfo(page);
@@ -97,20 +98,10 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
-    const $searchInput = <HTMLInputElement>this.searchInput?.nativeElement;
-    if ($searchInput) {
-      $searchInput.addEventListener('compositionstart', () => (this.inputFlag = true), false);
-      $searchInput.addEventListener('compositionend', () => (this.inputFlag = false), false);
-    }
-  }
-
-  onKeyDown(e: KeyboardEvent) {
-    const key = e.key.toLowerCase();
-    const isCtrlPressed = e.altKey || e.ctrlKey || e.metaKey || e.shiftKey;
-
-    if (key === 'enter' && !isCtrlPressed && !this.inputFlag) {
-      this.search();
+  ngAfterViewChecked(): void {
+    if (!this.isFocused && this.mSearchInput) {
+      this.mSearchInput.nativeElement.focus();
+      this.isFocused = true;
     }
   }
 
@@ -118,6 +109,9 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     this.keyword = this.keyword.trim();
     if (!this.keyword) {
       this.message.error('请输入搜索关键词');
+      if (this.isMobile) {
+        this.mSearchInput.nativeElement.focus();
+      }
       return;
     }
     this.router.navigate(['/search'], {
@@ -125,6 +119,15 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         keyword: this.keyword
       }
     });
+  }
+
+  showSearch() {
+    this.searchVisible = true;
+  }
+
+  hideSearch() {
+    this.searchVisible = false;
+    this.isFocused = false;
   }
 
   gotoBots() {
@@ -181,5 +184,9 @@ export class HeaderComponent implements OnInit, AfterViewInit {
           location.reload();
         }
       });
+  }
+
+  showSider() {
+    this.commonService.updateSiderVisible(true);
   }
 }

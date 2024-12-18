@@ -9,16 +9,17 @@
       </div>
       <app-footer></app-footer>
     } @else {
-      <div class="m-body-wrap">
+      <div class="m-body-wrap" [class.open]="siderVisible">
         <app-header [postTaxonomies]="postTaxonomies"></app-header>
         <div class="m-body">
-          <main class="m-main">
+          <main class="m-main" [class.m-main-center]="isBodyCentered">
             <router-outlet/>
           </main>
           <app-footer></app-footer>
         </div>
-        <!--sider-->
+        <div *ngIf="siderVisible" class="m-mask m-mask-sider" (click)="closeSider()"></div>
       </div>
+      <app-m-sider></app-m-sider>
     }
   } @else {
     <!--global errors-->

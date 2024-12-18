@@ -3,3 +3,8 @@
     <router-outlet />
   </div>
 </div>
+@if (bgWallpaper) {
+  <div class="auth-bg"
+       [class.p-auth-bg]="!isMobile"
+       [style.background-image]="'url(' + bgWallpaper.wallpaperUrl2 + ')'"></div>
+}

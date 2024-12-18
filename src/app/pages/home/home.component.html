@@ -1,107 +1,130 @@
-<div class="banner">
-  <app-carousel></app-carousel>
-  <div class="banner-post">
-    <div class="column-header">热门文章</div>
-    <ul class="banner-post-list">
-      <li class="banner-post-item" *ngFor="let post of hotPosts; let i = index">
-        <span class="hot-num">{{ i + 1 }}</span>
-        <a [routerLink]="post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</a>
-        <span class="date">{{ post.postDate | date:'yyyy-MM-dd' }}</span>
-      </li>
-    </ul>
+@if (!isMobile) {
+  <div class="banner">
+    <app-carousel></app-carousel>
+    <div class="banner-post">
+      <div class="column-header">热门文章</div>
+      <ul class="banner-post-list">
+        <li class="banner-post-item" *ngFor="let post of hotPosts; let i = index">
+          <span class="hot-num">{{ i + 1 }}</span>
+          <a [routerLink]="post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</a>
+          <span class="date">{{ post.postDate | date:'yyyy-MM-dd' }}</span>
+        </li>
+      </ul>
+    </div>
   </div>
-</div>
-<div class="main-content">
-  <div class="column-header">最新文章</div>
-  <div class="post-card-list post-card-list-4">
-    <article *ngFor="let post of latestPosts" class="post-card-item post-card-item-wrap">
-      <div class="post-card-item-body">
-        <div class="post-cover">
-          <a class="post-cover-link"
-             [routerLink]="post.post.postGuid"
-             [title]="post.post.postTitle">
-            <img class="lazyload"
-                 src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                 [attr.data-src]="post.post.cover"
-                 [alt]="post.post.postTitle"/>
-            <div class="overlay"></div>
-          </a>
-        </div>
-        <div class="post-content">
-          <h2><a [routerLink]="post.post.postGuid"
-                 [title]="post.post.postTitle"
-                 rel="bookmark">{{ post.post.postTitle }}</a></h2>
-          <div class="post-meta-wrap">
-            <div class="post-meta">
-              <div class="date" [title]="post.post.postDate | date:'yyyy-MM-dd'">
-                <span class="fi fi-calendar-date"></span><span>{{ post.post.postDate | date:'yyyy-MM-dd' }}</span>
-              </div>
-              <div class="actions">
-                <div class="action-item" title="浏览: {{ post.post.postViews | numberView: 'K' }}">
-                  <span nz-icon nzType="eye"></span><span>{{ post.post.postViews | numberView: 'K' }}</span>
+  <div class="main-content">
+    <div class="column-header">最新文章</div>
+    <div class="post-card-list post-card-list-4">
+      <article *ngFor="let post of latestPosts" class="post-card-item post-card-item-wrap">
+        <div class="post-card-item-body">
+          <div class="post-cover">
+            <a class="post-cover-link"
+               [routerLink]="post.post.postGuid"
+               [title]="post.post.postTitle">
+              <img class="lazyload"
+                   src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                   [attr.data-src]="post.post.cover"
+                   [alt]="post.post.postTitle" />
+              <div class="overlay"></div>
+            </a>
+          </div>
+          <div class="post-content">
+            <h2><a [routerLink]="post.post.postGuid"
+                   [title]="post.post.postTitle"
+                   rel="bookmark">{{ post.post.postTitle }}</a></h2>
+            <div class="post-meta-wrap">
+              <div class="post-meta">
+                <div class="date" [title]="post.post.postDate | date:'yyyy-MM-dd'">
+                  <span class="fi fi-calendar-date"></span><span>{{ post.post.postDate | date:'yyyy-MM-dd' }}</span>
                 </div>
-                @if (post.post.commentFlag !== 'closed') {
-                  <div class="action-item" title="评论: {{ post.post.postComments | numberView: 'K' }}">
-                    @if (post.post.postComments > 0) {
-                      <span class="fi fi-chat-square-dots"></span><span>{{ post.post.postComments | numberView: 'K' }}</span>
-                    } @else {
-                      <span class="fi fi-chat-square"></span><span>0</span>
-                    }
+                <div class="actions">
+                  <div class="action-item" title="浏览: {{ post.post.postViews | numberView: 'K' }}">
+                    <span nz-icon nzType="eye"></span><span>{{ post.post.postViews | numberView: 'K' }}</span>
                   </div>
-                }
+                  @if (post.post.commentFlag !== 'closed') {
+                    <div class="action-item" title="评论: {{ post.post.postComments | numberView: 'K' }}">
+                      @if (post.post.postComments > 0) {
+                        <span class="fi fi-chat-square-dots"></span>
+                        <span>{{ post.post.postComments | numberView: 'K' }}</span>
+                      } @else {
+                        <span class="fi fi-chat-square"></span><span>0</span>
+                      }
+                    </div>
+                  }
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </article>
+      </article>
+    </div>
+    <div class="post-more">
+      <a nz-button nzType="primary" routerLink="/post"><span>更多</span><span nz-icon nzType="double-right"></span></a>
+    </div>
+  </div>
+  <div class="main-content">
+    <div class="column-header">最新壁纸</div>
+    <div class="post-card-list post-card-list-4">
+      <article *ngFor="let wallpaper of latestWallpapers" class="post-card-item post-card-item-wrap">
+        <div class="post-card-item-body">
+          <div class="post-cover">
+            <a class="post-cover-link"
+               [routerLink]="'/wallpaper/' + wallpaper.wallpaperId"
+               [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
+               [title]="wallpaper.wallpaperCopyright">
+              <img class="lazyload"
+                   src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                   [attr.data-src]="wallpaper.wallpaperThumbUrl"
+                   [alt]="wallpaper.wallpaperCopyright" />
+              <div class="overlay"></div>
+            </a>
+          </div>
+          <div class="post-content">
+            <h2><a [routerLink]="'/wallpaper/' + wallpaper.wallpaperId"
+                   [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
+                   [title]="wallpaper.wallpaperCopyright"
+                   rel="bookmark">{{ wallpaper.wallpaperCopyright }}</a></h2>
+            <div class="post-meta-wrap">
+              <div class="post-meta">
+                <div class="date" [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
+                  <span
+                    class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
+                </div>
+                <div class="actions">
+                  <div class="action-item" title="浏览: {{ wallpaper.wallpaperViews | numberView: 'K' }}">
+                    <span nz-icon nzType="eye"></span><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
+                  </div>
+                  <div class="action-item" title="点赞: {{ wallpaper.wallpaperLikes | numberView: 'K' }}">
+                    <span nz-icon nzType="like"></span><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+    <div class="post-more">
+      <a nz-button nzType="primary" routerLink="/wallpaper"><span>更多</span><span nz-icon nzType="double-right"></span></a>
+    </div>
+  </div>
+} @else {
+  <app-carousel></app-carousel>
+  <div class="column-header m-column-header">最新文章</div>
+  <div class="m-post-list">
+    <app-post-item *ngFor="let post of latestPosts; let i = index" [post]="post" [index]="i"></app-post-item>
   </div>
   <div class="post-more">
     <a nz-button nzType="primary" routerLink="/post"><span>更多</span><span nz-icon nzType="double-right"></span></a>
   </div>
-</div>
-<div class="main-content">
-  <div class="column-header">最新壁纸</div>
-  <div class="post-card-list post-card-list-4">
-    <article *ngFor="let wallpaper of latestWallpapers" class="post-card-item post-card-item-wrap">
-      <div class="post-card-item-body">
-        <div class="post-cover">
-          <a class="post-cover-link"
-             [routerLink]="'/wallpaper/' + wallpaper.wallpaperId"
-             [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
-             [title]="wallpaper.wallpaperCopyright">
-            <img class="lazyload"
-                 src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                 [attr.data-src]="wallpaper.wallpaperThumbUrl"
-                 [alt]="wallpaper.wallpaperCopyright"/>
-            <div class="overlay"></div>
-          </a>
-        </div>
-        <div class="post-content">
-          <h2><a [routerLink]="'/wallpaper/' + wallpaper.wallpaperId"
-                 [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
-                 [title]="wallpaper.wallpaperCopyright"
-                 rel="bookmark">{{ wallpaper.wallpaperCopyright }}</a></h2>
-          <div class="post-meta-wrap">
-            <div class="post-meta">
-              <div class="date" [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
-                <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
-              </div>
-              <div class="actions">
-                <div class="action-item" title="浏览: {{ wallpaper.wallpaperViews | numberView: 'K' }}">
-                  <span nz-icon nzType="eye"></span><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
-                </div>
-                <div class="action-item" title="点赞: {{ wallpaper.wallpaperLikes | numberView: 'K' }}">
-                  <span nz-icon nzType="like"></span><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </article>
+  <div class="column-header m-column-header">最新壁纸</div>
+  <div class="m-post-list">
+    <app-wallpaper-item *ngFor="let wallpaper of latestWallpapers; let i = index"
+                        [wallpaper]="wallpaper"
+                        [mode]="wallpaperListMode"
+                        [index]="i"></app-wallpaper-item>
   </div>
   <div class="post-more">
     <a nz-button nzType="primary" routerLink="/wallpaper"><span>更多</span><span nz-icon nzType="double-right"></span></a>
   </div>
-</div>
+}

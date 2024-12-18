@@ -1,6 +1,6 @@
-import { DOCUMENT, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
@@ -9,6 +9,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
+import { BaseComponent } from '../../../base.component';
 import { ADMIN_URL_PARAM, APP_ID } from '../../../config/common.constant';
 import { Message } from '../../../config/message.enum';
 import { UserStatus } from '../../../enums/user';
@@ -16,7 +17,6 @@ import { CustomError } from '../../../interfaces/custom-error';
 import { OptionEntity } from '../../../interfaces/option';
 import { TenantAppModel } from '../../../interfaces/tenant-app';
 import { UserModel } from '../../../interfaces/user';
-import { Wallpaper } from '../../../interfaces/wallpaper';
 import { AuthService } from '../../../services/auth.service';
 import { BreadcrumbService } from '../../../services/breadcrumb.service';
 import { CommonService } from '../../../services/common.service';
@@ -26,9 +26,7 @@ import { OptionService } from '../../../services/option.service';
 import { PlatformService } from '../../../services/platform.service';
 import { TenantAppService } from '../../../services/tenant-app.service';
 import { UserService } from '../../../services/user.service';
-import { WallpaperService } from '../../../services/wallpaper.service';
 import { format } from '../../../utils/helper';
-import { AuthComponent } from '../auth.component';
 
 @Component({
   selector: 'app-signup-confirm',
@@ -37,8 +35,7 @@ import { AuthComponent } from '../auth.component';
   templateUrl: './signup-confirm.component.html',
   styleUrl: './signup-confirm.component.less'
 })
-export class SignupConfirmComponent extends AuthComponent implements OnInit, OnDestroy {
-  wallpaper: Wallpaper | null = null;
+export class SignupConfirmComponent extends BaseComponent implements OnInit, OnDestroy {
   confirmForm!: FormGroup;
   confirmLoading = false;
   user?: UserModel;
@@ -52,7 +49,6 @@ export class SignupConfirmComponent extends AuthComponent implements OnInit, OnD
   private sendTimer!: number;
 
   constructor(
-    @Inject(DOCUMENT) protected override document: Document,
     private readonly destroy$: DestroyService,
     private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
@@ -65,10 +61,9 @@ export class SignupConfirmComponent extends AuthComponent implements OnInit, OnD
     private readonly tenantAppService: TenantAppService,
     private readonly optionService: OptionService,
     private readonly authService: AuthService,
-    private readonly userService: UserService,
-    private readonly wallpaperService: WallpaperService
+    private readonly userService: UserService
   ) {
-    super(document);
+    super();
     this.confirmForm = this.fb.group({
       code: ['', [Validators.required, Validators.pattern(/^\s*\d{4}\s*$/i)]]
     });
@@ -92,11 +87,8 @@ export class SignupConfirmComponent extends AuthComponent implements OnInit, OnD
           throw new CustomError(Message.USER_NOT_FOUND, HttpStatusCode.BadRequest);
         }
 
-        if (this.platform.isServer) {
-          this.updatePageInfo();
-          this.getWallpaper();
-          this.getSignupUser();
-        }
+        this.updatePageInfo();
+        this.getSignupUser();
         if (this.platform.isBrowser) {
           this.startCountdown();
         }
@@ -104,8 +96,6 @@ export class SignupConfirmComponent extends AuthComponent implements OnInit, OnD
   }
 
   ngOnDestroy() {
-    this.clearStyles();
-
     if (this.sendTimer) {
       window.clearInterval(this.sendTimer);
     }
@@ -118,14 +108,17 @@ export class SignupConfirmComponent extends AuthComponent implements OnInit, OnD
     }
     const { code } = value;
     this.confirmLoading = true;
-    this.authService.verify(this.userId, code).subscribe((res) => {
-      this.confirmLoading = false;
+    this.authService
+      .verify(this.userId, code)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.confirmLoading = false;
 
-      if (res.token?.accessToken) {
-        const urlParam = format(ADMIN_URL_PARAM, res.token.accessToken, APP_ID);
-        window.location.href = this.appInfo.appAdminUrl + urlParam;
-      }
-    });
+        if (res.token?.accessToken) {
+          const urlParam = format(ADMIN_URL_PARAM, res.token.accessToken, APP_ID);
+          window.location.href = this.appInfo.appAdminUrl + urlParam;
+        }
+      });
   }
 
   resendCode() {
@@ -168,18 +161,6 @@ export class SignupConfirmComponent extends AuthComponent implements OnInit, OnD
         window.clearInterval(this.sendTimer);
       }
     }, 1000);
-  }
-
-  private getWallpaper() {
-    this.wallpaperService
-      .getRandomWallpapers(1, true)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.wallpaper = res[0] || null;
-        if (this.wallpaper) {
-          this.initStyles();
-        }
-      });
   }
 
   private updatePageInfo() {

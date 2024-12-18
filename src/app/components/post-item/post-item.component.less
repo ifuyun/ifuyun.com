@@ -141,13 +141,11 @@
 .m-post-item {
   @m-post-header-height: 2rem;
 
+  margin-top: @m-primary-margin;
+  margin-bottom: @m-primary-margin;
   padding: @m-content-padding;
   border-radius: @primary-border-radius;
   border: 1px solid var(--primary-border-color);
-
-  &:not(:last-child) {
-    margin-bottom: @m-primary-margin;
-  }
 
   > header {
     position: relative;
@@ -196,6 +194,11 @@
     display: flex;
     flex-shrink: 0;
     line-height: @m-post-header-height;
+
+    > span, > a {
+      display: inline-flex;
+      align-items: center;
+    }
 
     > :not(:last-child) {
       margin-right: 0.5rem;

@@ -4,6 +4,8 @@
     <app-post-item *ngFor="let post of posts; let i = index" [post]="post" [index]="i"></app-post-item>
   </div>
 } @else {
-
+  <div class="empty" [class.p-empty]="!isMobile" [class.m-empty]="isMobile">
+    <nz-empty nzNotFoundImage="simple"></nz-empty>
+  </div>
 }
 <app-pagination></app-pagination>

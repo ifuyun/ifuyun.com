@@ -2,6 +2,7 @@ import { NgForOf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
@@ -22,7 +23,7 @@ import { UserAgentService } from '../../services/user-agent.service';
 
 @Component({
   selector: 'app-post-list',
-  imports: [NgForOf, BreadcrumbComponent, PaginationComponent, PostItemComponent],
+  imports: [NgForOf, NzEmptyModule, BreadcrumbComponent, PaginationComponent, PostItemComponent],
   providers: [DestroyService],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.less'

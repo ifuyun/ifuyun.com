@@ -5,6 +5,8 @@ export interface PageIndexInfo {
   isTool: boolean;
   isAuth: boolean;
   isPage: boolean;
+  fullPage: string;
+  subPage: string;
 }
 
 export interface UserAgentInfo {

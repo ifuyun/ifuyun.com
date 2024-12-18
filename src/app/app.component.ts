@@ -5,6 +5,7 @@ import { filter, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
+import { MSiderComponent } from './components/m-sider/m-sider.component';
 import { COOKIE_KEY_UV_ID, MEDIA_QUERY_THEME_DARK } from './config/common.constant';
 import { Theme } from './enums/common';
 import { ErrorState } from './interfaces/common';
@@ -33,7 +34,8 @@ import { generateUid } from './utils/helper';
     FooterComponent,
     NotFoundComponent,
     ForbiddenComponent,
-    ServerErrorComponent
+    ServerErrorComponent,
+    MSiderComponent
   ],
   providers: [],
   templateUrl: './app.component.html',
@@ -45,6 +47,7 @@ export class AppComponent implements OnInit {
   errorState!: ErrorState;
   errorPage = false;
   isBodyCentered = false;
+  siderVisible = false;
 
   private currentUrl = '';
 
@@ -114,6 +117,14 @@ export class AppComponent implements OnInit {
     this.errorService.errorState$.subscribe((state) => {
       this.errorState = state;
     });
+    this.commonService.siderVisible$.subscribe((visible) => {
+      this.siderVisible = visible;
+    });
+  }
+
+  closeSider() {
+    this.siderVisible = false;
+    this.commonService.updateSiderVisible(false);
   }
 
   private initTheme() {

@@ -272,13 +272,14 @@
 
     .post-meta {
       display: flex;
-      align-items: center;
 
       &:not(:last-child) {
         margin-bottom: 4px;
       }
 
       .post-meta-icon {
+        display: flex;
+        height: @post-line-height + @tag-row-span * 2;
         margin-right: 8px;
       }
 

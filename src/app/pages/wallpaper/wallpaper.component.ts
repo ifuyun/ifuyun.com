@@ -251,40 +251,42 @@ export class WallpaperComponent implements OnInit {
       .getWallpaperById(this.wallpaperId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((wallpaper) => {
-        if (wallpaper) {
-          const wallpaperPartial: Partial<Wallpaper> = {};
-          let wallpaperLocation = '';
-          let hasTranslation: boolean;
-          let unknownLocation = '';
-          if (this.lang === WallpaperLang.EN) {
-            wallpaperLocation = wallpaper.wallpaperLocationEn || wallpaper.wallpaperLocation;
-            unknownLocation = 'Unknown';
-            hasTranslation = !!wallpaper.wallpaperStory;
-            wallpaperPartial.wallpaperTitle = wallpaper.wallpaperTitleEn || wallpaper.wallpaperTitle;
-            wallpaperPartial.wallpaperCopyright = wallpaper.wallpaperCopyrightEn || wallpaper.wallpaperCopyright;
-            wallpaperPartial.wallpaperStoryTitle = wallpaper.wallpaperStoryTitleEn || wallpaper.wallpaperStoryTitle;
-            wallpaperPartial.wallpaperStory = wallpaper.wallpaperStoryEn || wallpaper.wallpaperStory;
-          } else {
-            wallpaperLocation = wallpaper.wallpaperLocation || wallpaper.wallpaperLocationEn;
-            unknownLocation = '未知';
-            hasTranslation = !!wallpaper.wallpaperStoryEn;
-            wallpaperPartial.wallpaperTitle = wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn;
-            wallpaperPartial.wallpaperCopyright = wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn;
-            wallpaperPartial.wallpaperStoryTitle = wallpaper.wallpaperStoryTitle || wallpaper.wallpaperStoryTitleEn;
-            wallpaperPartial.wallpaperStory = wallpaper.wallpaperStory || wallpaper.wallpaperStoryEn;
-          }
-          wallpaperPartial.wallpaperLocation = wallpaperLocation || unknownLocation;
-          wallpaperPartial.hasTranslation = hasTranslation;
-
-          this.wallpaper = {
-            ...wallpaper,
-            ...wallpaperPartial,
-            wallpaperCopyrightAuthor: wallpaper.wallpaperCopyrightAuthor.replace(/^©\s*/i, '')
-          };
-
-          this.updatePageInfo();
-          this.updateBreadcrumbs();
+        if (!wallpaper) {
+          this.commonService.redirectToNotFound();
+          return;
         }
+        const wallpaperPartial: Partial<Wallpaper> = {};
+        let wallpaperLocation = '';
+        let hasTranslation: boolean;
+        let unknownLocation = '';
+        if (this.lang === WallpaperLang.EN) {
+          wallpaperLocation = wallpaper.wallpaperLocationEn || wallpaper.wallpaperLocation;
+          unknownLocation = 'Unknown';
+          hasTranslation = !!wallpaper.wallpaperStory;
+          wallpaperPartial.wallpaperTitle = wallpaper.wallpaperTitleEn || wallpaper.wallpaperTitle;
+          wallpaperPartial.wallpaperCopyright = wallpaper.wallpaperCopyrightEn || wallpaper.wallpaperCopyright;
+          wallpaperPartial.wallpaperStoryTitle = wallpaper.wallpaperStoryTitleEn || wallpaper.wallpaperStoryTitle;
+          wallpaperPartial.wallpaperStory = wallpaper.wallpaperStoryEn || wallpaper.wallpaperStory;
+        } else {
+          wallpaperLocation = wallpaper.wallpaperLocation || wallpaper.wallpaperLocationEn;
+          unknownLocation = '未知';
+          hasTranslation = !!wallpaper.wallpaperStoryEn;
+          wallpaperPartial.wallpaperTitle = wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn;
+          wallpaperPartial.wallpaperCopyright = wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn;
+          wallpaperPartial.wallpaperStoryTitle = wallpaper.wallpaperStoryTitle || wallpaper.wallpaperStoryTitleEn;
+          wallpaperPartial.wallpaperStory = wallpaper.wallpaperStory || wallpaper.wallpaperStoryEn;
+        }
+        wallpaperPartial.wallpaperLocation = wallpaperLocation || unknownLocation;
+        wallpaperPartial.hasTranslation = hasTranslation;
+
+        this.wallpaper = {
+          ...wallpaper,
+          ...wallpaperPartial,
+          wallpaperCopyrightAuthor: wallpaper.wallpaperCopyrightAuthor.replace(/^©\s*/i, '')
+        };
+
+        this.updatePageInfo();
+        this.updateBreadcrumbs();
       });
   }
 

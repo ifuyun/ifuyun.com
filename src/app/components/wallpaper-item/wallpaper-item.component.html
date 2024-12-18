@@ -13,8 +13,8 @@
             <div [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
               <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
             </div>
-            <div class="auto-fit" title="<%= wallpaper.wallpaperLocation %>">
-              <span nz-icon nzType="environment"></span><span>{{ wallpaper.wallpaperLocation }}</span>
+            <div class="auto-fit" [title]="wallpaperLocation">
+              <span nz-icon nzType="environment"></span><span>{{ wallpaperLocation }}</span>
             </div>
             <div>
               <span nz-icon nzType="eye"></span><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
@@ -57,11 +57,11 @@
         </div>
       </header>
       <div class="m-post-item-meta">
-        <span title="<%= date.toDate(wallpaper.wallpaperDate) %>">
+        <span [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
           <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
         </span>
-        <span class="auto-fit" title="<%= wallpaper.wallpaperLocation %>">
-          <span nz-icon nzType="environment"></span><span>{{ wallpaper.wallpaperLocation }}</span>
+        <span class="auto-fit" [title]="wallpaperLocation">
+          <span nz-icon nzType="environment"></span><span>{{ wallpaperLocation }}</span>
         </span>
       </div>
       <div class="m-post-item-cover">
@@ -107,12 +107,12 @@
                rel="bookmark">{{ wallpaper.wallpaperCopyright }}</a></h2>
         <div class="post-meta-wrap">
           <div class="post-meta" *ngIf="!isMobile">
-            <div class="location" [title]="wallpaper.wallpaperLocation">
-              <span nz-icon nzType="environment"></span><span>{{ wallpaper.wallpaperLocation }}</span>
+            <div class="location" [title]="wallpaperLocation">
+              <span nz-icon nzType="environment"></span><span>{{ wallpaperLocation }}</span>
             </div>
           </div>
           <div class="post-meta">
-            <div class="date" title="<%= wallpaper.wallpaperDate %>">
+            <div class="date" [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
               <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
             </div>
             <div class="actions">

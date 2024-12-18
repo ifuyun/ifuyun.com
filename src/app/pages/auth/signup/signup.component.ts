@@ -1,5 +1,5 @@
-import { DOCUMENT, NgIf } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -15,20 +15,17 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
+import { BaseComponent } from '../../../base.component';
 import { OptionEntity } from '../../../interfaces/option';
 import { TenantAppModel } from '../../../interfaces/tenant-app';
-import { Wallpaper } from '../../../interfaces/wallpaper';
 import { AuthService } from '../../../services/auth.service';
 import { BreadcrumbService } from '../../../services/breadcrumb.service';
 import { CommonService } from '../../../services/common.service';
 import { DestroyService } from '../../../services/destroy.service';
 import { MetaService } from '../../../services/meta.service';
 import { OptionService } from '../../../services/option.service';
-import { PlatformService } from '../../../services/platform.service';
 import { TenantAppService } from '../../../services/tenant-app.service';
-import { WallpaperService } from '../../../services/wallpaper.service';
 import md5 from '../../../utils/md5';
-import { AuthComponent } from '../auth.component';
 import {
   USER_EMAIL_LENGTH,
   USER_PASSWORD_MAX_LENGTH,
@@ -43,12 +40,11 @@ import {
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.less'
 })
-export class SignupComponent extends AuthComponent implements OnInit, OnDestroy {
+export class SignupComponent extends BaseComponent implements OnInit {
   readonly maxEmailLength = USER_EMAIL_LENGTH;
   readonly minPasswordLength = USER_PASSWORD_MIN_LENGTH;
   readonly maxPasswordLength = USER_PASSWORD_MAX_LENGTH;
 
-  wallpaper: Wallpaper | null = null;
   signupForm!: FormGroup;
   passwordVisible = false;
   signupLoading = false;
@@ -59,21 +55,18 @@ export class SignupComponent extends AuthComponent implements OnInit, OnDestroy 
   private options: OptionEntity = {};
 
   constructor(
-    @Inject(DOCUMENT) protected override document: Document,
     private readonly destroy$: DestroyService,
     private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly platform: PlatformService,
     private readonly commonService: CommonService,
     private readonly metaService: MetaService,
     private readonly breadcrumbService: BreadcrumbService,
     private readonly tenantAppService: TenantAppService,
     private readonly optionService: OptionService,
-    private readonly authService: AuthService,
-    private readonly wallpaperService: WallpaperService
+    private readonly authService: AuthService
   ) {
-    super(document);
+    super();
     this.signupForm = this.fb.group({
       email: ['', [Validators.required, Validators.email, Validators.maxLength(this.maxEmailLength)]],
       password: [
@@ -114,15 +107,8 @@ export class SignupComponent extends AuthComponent implements OnInit, OnDestroy 
         this.appInfo = appInfo;
         this.options = options;
 
-        if (this.platform.isServer) {
-          this.updatePageInfo();
-          this.getWallpaper();
-        }
+        this.updatePageInfo();
       });
-  }
-
-  ngOnDestroy() {
-    this.clearStyles();
   }
 
   signup() {
@@ -138,6 +124,7 @@ export class SignupComponent extends AuthComponent implements OnInit, OnDestroy 
         userPassword: md5(password),
         userNickname: email.split('@')[0]
       })
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.signupLoading = false;
         if (res.userId) {
@@ -153,18 +140,6 @@ export class SignupComponent extends AuthComponent implements OnInit, OnDestroy 
 
   protected updatePageIndex(): void {
     this.commonService.updatePageIndex(this.pageIndex);
-  }
-
-  private getWallpaper() {
-    this.wallpaperService
-      .getRandomWallpapers(1, true)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.wallpaper = res[0] || null;
-        if (this.wallpaper) {
-          this.initStyles();
-        }
-      });
   }
 
   private updatePageInfo() {

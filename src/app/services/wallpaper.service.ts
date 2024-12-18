@@ -111,7 +111,7 @@ export class WallpaperService {
         wallpaperId,
         appId: APP_ID
       })
-      .pipe(map((res) => res?.data || {}));
+      .pipe(map((res) => res?.data));
   }
 
   getWallpapersOfPrevAndNext(wallpaperId: string): Observable<PrevAndNextWallpapers> {

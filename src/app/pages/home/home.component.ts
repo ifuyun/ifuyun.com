@@ -6,7 +6,9 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { CarouselComponent } from '../../components/carousel/carousel.component';
-import { WallpaperLang } from '../../enums/wallpaper';
+import { PostItemComponent } from '../../components/post-item/post-item.component';
+import { WallpaperItemComponent } from '../../components/wallpaper-item/wallpaper-item.component';
+import { WallpaperLang, WallpaperListMode } from '../../enums/wallpaper';
 import { OptionEntity } from '../../interfaces/option';
 import { Post, PostEntity } from '../../interfaces/post';
 import { TenantAppModel } from '../../interfaces/tenant-app';
@@ -24,12 +26,24 @@ import { WallpaperService } from '../../services/wallpaper.service';
 
 @Component({
   selector: 'app-home',
-  imports: [NgFor, RouterLink, DatePipe, NzButtonModule, NzIconModule, CarouselComponent, NumberViewPipe],
+  imports: [
+    NgFor,
+    RouterLink,
+    DatePipe,
+    NzButtonModule,
+    NzIconModule,
+    CarouselComponent,
+    NumberViewPipe,
+    PostItemComponent,
+    WallpaperItemComponent
+  ],
   providers: [DestroyService],
   templateUrl: './home.component.html',
   styleUrl: './home.component.less'
 })
 export class HomeComponent implements OnInit {
+  readonly wallpaperListMode = WallpaperListMode.LIST;
+
   isMobile = false;
   latestPosts: Post[] = [];
   hotPosts: PostEntity[] = [];

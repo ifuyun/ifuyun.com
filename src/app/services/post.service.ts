@@ -73,7 +73,7 @@ export class PostService {
     if (ref?.trim()) {
       payload['ref'] = ref;
     }
-    return this.apiService.httpGet(ApiUrl.POST, payload).pipe(map((res) => res?.data || {}));
+    return this.apiService.httpGet(ApiUrl.POST, payload).pipe(map((res) => res?.data));
   }
 
   getPostBySlug(slug: string, postType: PostType, ref?: string): Observable<Post> {
@@ -85,7 +85,7 @@ export class PostService {
     if (ref?.trim()) {
       payload['ref'] = ref;
     }
-    return this.apiService.httpGet(ApiUrl.POST, payload).pipe(map((res) => res?.data || {}));
+    return this.apiService.httpGet(ApiUrl.POST, payload).pipe(map((res) => res?.data));
   }
 
   getPostsOfPrevAndNext(param: {

@@ -1,137 +1,173 @@
-<header class="header-wrap">
-  <div class="header">
-    <a class="logo" routerLink="/" [title]="appInfo?.appName">
-      <img src="/favicon.png" alt="{{appInfo?.appName}}"/><span>{{appInfo?.appName}}</span>
-    </a>
-    <ul class="nav">
-      <li [class.active]="indexInfo?.isHome">
-        <a routerLink="/" title="{{appInfo?.appName}}首页">首页</a>
-      </li>
-      <li [class.active]="indexInfo?.isPost">
-        <a routerLink="/post" title="文章">
-          <span>文章</span><span class="nav-arrow" *ngIf="postTaxonomies.length > 0"></span>
-        </a>
-        <div class="sub-nav-wrap" *ngIf="postTaxonomies.length > 0">
-          <div class="sub-nav-list">
-            <ul>
-              <li *ngFor="let taxonomy of postTaxonomies">
-                <a class="sub-nav-link"
-                   [routerLink]="['/post/category/'+taxonomy.taxonomySlug]"
-                   title="{{taxonomy.taxonomyDescription}}">
-                  <span>{{taxonomy.taxonomyName}}</span><span *ngIf="!taxonomy.isLeaf" class="sub-nav-arrow"></span>
-                </a>
-                <div class="child-nav-wrap" *ngIf="!taxonomy.isLeaf">
-                  <div class="child-nav-list">
-                    <ul>
-                      <li *ngFor="let subTaxonomy of taxonomy.children">
-                        <a class="child-nav-link"
-                           [routerLink]="['/post/category/'+subTaxonomy.taxonomySlug]"
-                           title="{{subTaxonomy.taxonomyDescription}}">{{subTaxonomy.taxonomyName}}</a>
-                      </li>
-                    </ul>
+@if (!isMobile) {
+  <header class="header-wrap">
+    <div class="header">
+      <a class="logo" routerLink="/" [title]="appInfo?.appName">
+        <img src="/favicon.png" [alt]="appInfo?.appName" /><span>{{ appInfo?.appName }}</span>
+      </a>
+      <ul class="nav">
+        <li [class.active]="indexInfo?.isHome">
+          <a routerLink="/" title="{{appInfo?.appName}}首页">首页</a>
+        </li>
+        <li [class.active]="indexInfo?.isPost">
+          <a routerLink="/post" title="文章">
+            <span>文章</span><span class="nav-arrow" *ngIf="postTaxonomies.length > 0"></span>
+          </a>
+          <div class="sub-nav-wrap" *ngIf="postTaxonomies.length > 0">
+            <div class="sub-nav-list">
+              <ul>
+                <li *ngFor="let taxonomy of postTaxonomies">
+                  <a class="sub-nav-link"
+                     [routerLink]="['/post/category/'+taxonomy.taxonomySlug]"
+                     title="{{taxonomy.taxonomyDescription}}">
+                    <span>{{ taxonomy.taxonomyName }}</span><span *ngIf="!taxonomy.isLeaf" class="sub-nav-arrow"></span>
+                  </a>
+                  <div class="child-nav-wrap" *ngIf="!taxonomy.isLeaf">
+                    <div class="child-nav-list">
+                      <ul>
+                        <li *ngFor="let subTaxonomy of taxonomy.children">
+                          <a class="child-nav-link"
+                             [routerLink]="['/post/category/'+subTaxonomy.taxonomySlug]"
+                             title="{{subTaxonomy.taxonomyDescription}}">{{ subTaxonomy.taxonomyName }}</a>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
-                </div>
-              </li>
-            </ul>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </li>
-      <li [class.active]="indexInfo?.isWallpaper">
-        <a routerLink="/wallpaper" title="高清壁纸">壁纸</a>
-      </li>
-      <li [class.active]="indexInfo?.isTool">
-        <a routerLink="/tool" title="实用工具"><span>实用工具</span><span class="nav-arrow"></span></a>
-        <div class="sub-nav-wrap">
-          <div class="sub-nav-list">
-            <ul>
-              <li *ngFor="let link of toolLinks">
-                <a class="sub-nav-link" [routerLink]="[link.url]" [title]="link.title">{{link.label}}</a>
-              </li>
-            </ul>
+        </li>
+        <li [class.active]="indexInfo?.isWallpaper">
+          <a routerLink="/wallpaper" title="高清壁纸">壁纸</a>
+        </li>
+        <li [class.active]="indexInfo?.isTool">
+          <a routerLink="/tool" title="实用工具"><span>实用工具</span><span class="nav-arrow"></span></a>
+          <div class="sub-nav-wrap">
+            <div class="sub-nav-list">
+              <ul>
+                <li *ngFor="let link of toolLinks">
+                  <a class="sub-nav-link" [routerLink]="[link.url]" [title]="link.title">{{ link.label }}</a>
+                </li>
+              </ul>
+            </div>
           </div>
+        </li>
+        <li>
+          <a title="AI" (click)="gotoBots()">AI</a>
+        </li>
+      </ul>
+      <div class="actions">
+        <div class="search">
+          <form method="get" action="/search" (ngSubmit)="search()">
+            <nz-input-group nzSearch [nzAddOnAfter]="searchBtnTpl">
+              <input nz-input
+                     type="text"
+                     name="keyword"
+                     [(ngModel)]="keyword"
+                     autocomplete="off"
+                     placeholder="搜索全站（支持全文搜索）" />
+            </nz-input-group>
+            <ng-template #searchBtnTpl>
+              <button nz-button nzSearch type="submit" nzType="primary"><span nz-icon nzType="search"></span></button>
+            </ng-template>
+          </form>
         </div>
-      </li>
-      <li>
-        <a title="AI" (click)="gotoBots()">AI</a>
-      </li>
-    </ul>
-    <div class="actions">
-      <div class="search">
-        <nz-input-group nzSearch [nzAddOnAfter]="searchBtnTpl">
-          <input #searchInput
-                 nz-input
-                 type="text"
-                 [(ngModel)]="keyword"
-                 (keydown)="onKeyDown($event)"
-                 placeholder="搜索全站（支持全文搜索）" />
-        </nz-input-group>
-        <ng-template #searchBtnTpl>
-          <button nz-button nzSearch nzType="primary" (click)="search()"><span nz-icon nzType="search"></span></button>
-        </ng-template>
-      </div>
-      @if (!isSignIn) {
-        <a nz-button nzType="primary" routerLink="/user/login">登录</a>
-      } @else {
+        @if (!isSignIn) {
+          <a nz-button nzType="primary" routerLink="/user/login">登录</a>
+        } @else {
+          <div class="more-action-group">
+            <div class="more-action-nav">
+              <span nz-icon nzType="user"></span><span>{{ user.userNickname }}</span><i class="nav-arrow"></i>
+            </div>
+            <div class="more-action-list">
+              <div class="sub-nav-list">
+                <ul>
+                  <li>
+                    <a class="sub-nav-link" (click)="gotoAdmin()">
+                      <span nz-icon nzType="dashboard"></span><span>个人中心</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="sub-nav-link" (click)="logout()">
+                      <span nz-icon nzType="logout"></span><span>退出登录</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        }
         <div class="more-action-group">
           <div class="more-action-nav">
-            <span nz-icon nzType="user"></span><span>{{ user.userNickname }}</span><i class="nav-arrow"></i>
+            <span nz-icon nzType="ellipsis" class="more-action-icon"></span>
           </div>
           <div class="more-action-list">
             <div class="sub-nav-list">
               <ul>
                 <li>
-                  <a class="sub-nav-link" (click)="gotoAdmin()">
-                    <span nz-icon nzType="home"></span><span>个人中心</span>
+                  <a class="sub-nav-link" (click)="showRedPacket()" title="支付宝扫码领红包">
+                    <span nz-icon class="icon-red-packet" nzType="red-envelope"></span><span>每日红包</span>
                   </a>
                 </li>
                 <li>
-                  <a class="sub-nav-link" (click)="logout()">
-                    <span nz-icon nzType="logout"></span><span>退出登录</span>
+                  <a class="sub-nav-link" (click)="showWallpaperModal()" title="精美壁纸">
+                    <span nz-icon class="icon-wallpaper" nzType="picture"></span><span>手气不错？</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="sub-nav-link" [href]="appInfo?.appUrl + '/rss.xml'" title="文章 RSS 订阅">
+                    <span nz-icon class="icon-rss" nzType="wifi"></span><span>文章 RSS 订阅</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="sub-nav-link" [href]="appInfo?.appUrl + '/wallpaper-rss.xml'" title="壁纸 RSS 订阅">
+                    <span nz-icon class="icon-rss" nzType="wifi"></span><span>壁纸 RSS 订阅</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="sub-nav-link" (click)="showWechatCard()" title="微信公众号">
+                    <span nz-icon class="icon-wechat" nzType="wechat"></span><span>微信公众号</span>
                   </a>
                 </li>
               </ul>
             </div>
           </div>
         </div>
-      }
-      <div class="more-action-group">
-        <div class="more-action-nav">
-          <span nz-icon nzType="ellipsis" class="more-action-icon"></span>
-        </div>
-        <div class="more-action-list">
-          <div class="sub-nav-list">
-            <ul>
-              <li>
-                <a class="sub-nav-link" (click)="showRedPacket()" title="支付宝扫码领红包">
-                  <span nz-icon class="icon-red-packet" nzType="red-envelope"></span><span>每日红包</span>
-                </a>
-              </li>
-              <li>
-                <a class="sub-nav-link" (click)="showWallpaperModal()" title="精美壁纸">
-                  <span nz-icon class="icon-wallpaper" nzType="picture"></span><span>手气不错？</span>
-                </a>
-              </li>
-              <li>
-                <a class="sub-nav-link" [href]="appInfo?.appUrl + '/rss.xml'" title="文章 RSS 订阅">
-                  <span nz-icon class="icon-rss" nzType="wifi"></span><span>文章 RSS 订阅</span>
-                </a>
-              </li>
-              <li>
-                <a class="sub-nav-link" [href]="appInfo?.appUrl + '/wallpaper-rss.xml'" title="壁纸 RSS 订阅">
-                  <span nz-icon class="icon-rss" nzType="wifi"></span><span>壁纸 RSS 订阅</span>
-                </a>
-              </li>
-              <li>
-                <a class="sub-nav-link" (click)="showWechatCard()" title="微信公众号">
-                  <span nz-icon class="icon-wechat" nzType="wechat"></span><span>微信公众号</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
       </div>
     </div>
-  </div>
-</header>
-<app-login-modal *ngIf="loginModalVisible" (closeModal)="closeLoginModal()"></app-login-modal>
-<app-wallpaper-modal [visible]="wallpaperModalVisible" (closeModal)="closeWallpaperModal()"></app-wallpaper-modal>
+  </header>
+  <app-login-modal *ngIf="loginModalVisible" (closeModal)="closeLoginModal()"></app-login-modal>
+  <app-wallpaper-modal [visible]="wallpaperModalVisible" (closeModal)="closeWallpaperModal()"></app-wallpaper-modal>
+} @else {
+  <header class="m-header-wrap">
+    <div class="m-header">
+      @if (!searchVisible) {
+        <div class="m-header-body">
+          <span nz-icon nzType="menu" (click)="showSider()"></span>
+          <a class="m-logo" routerLink="/" [title]="appInfo?.appName">
+            <img src="/favicon.png" [alt]="appInfo?.appName" /><span>{{ appInfo?.appName }}</span>
+          </a>
+          <span nz-icon nzType="search" (click)="showSearch()"></span>
+        </div>
+      } @else {
+        <div class="m-header-search">
+          <form class="m-search-form" method="get" action="/search" (ngSubmit)="search()">
+            <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchBtnTpl">
+              <input nz-input
+                     #mSearchInput
+                     type="text"
+                     name="keyword"
+                     [(ngModel)]="keyword"
+                     autocomplete="off"
+                     placeholder="搜索全站（支持全文搜索）" />
+            </nz-input-group>
+            <ng-template #searchBtnTpl>
+              <button nz-button nzSearch type="submit" nzType="primary"><span nz-icon nzType="search"></span></button>
+            </ng-template>
+          </form>
+          <div class="m-mask m-mask-search" (click)="hideSearch()"></div>
+        </div>
+      }
+    </div>
+  </header>
+}

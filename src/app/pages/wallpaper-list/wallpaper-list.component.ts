@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
@@ -31,6 +32,7 @@ import { WallpaperLang, WallpaperListMode } from '../../enums/wallpaper';
     FormsModule,
     NzIconModule,
     NzRadioModule,
+    NzEmptyModule,
     BreadcrumbComponent,
     PaginationComponent,
     WallpaperItemComponent

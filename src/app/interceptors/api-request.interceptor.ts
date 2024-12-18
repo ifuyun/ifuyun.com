@@ -3,12 +3,14 @@ import { Inject, Injectable, Optional, REQUEST } from '@angular/core';
 import { Request } from 'express';
 import { catchError, Observable, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { SsrCookieService } from '../services/ssr-cookie.service';
 
 @Injectable()
 export class ApiRequestInterceptor implements HttpInterceptor {
   constructor(
     @Optional() @Inject(REQUEST) private readonly request: Request,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly cookieService: SsrCookieService
   ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -20,10 +22,11 @@ export class ApiRequestInterceptor implements HttpInterceptor {
         }
       });
     }
-    if (this.request && this.request.headers.cookie) {
+    const cookie = this.cookieService.getHeaderCookie();
+    if (cookie) {
       req = req.clone({
         setHeaders: {
-          Cookie: this.request.headers.cookie
+          Cookie: cookie
         }
       });
     }

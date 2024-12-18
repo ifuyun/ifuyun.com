@@ -1,20 +1,16 @@
-import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
+import { BaseComponent } from '../../../base.component';
 import { LoginFormComponent } from '../../../components/login-form/login-form.component';
 import { OptionEntity } from '../../../interfaces/option';
 import { TenantAppModel } from '../../../interfaces/tenant-app';
-import { Wallpaper } from '../../../interfaces/wallpaper';
 import { BreadcrumbService } from '../../../services/breadcrumb.service';
 import { CommonService } from '../../../services/common.service';
 import { DestroyService } from '../../../services/destroy.service';
 import { MetaService } from '../../../services/meta.service';
 import { OptionService } from '../../../services/option.service';
-import { PlatformService } from '../../../services/platform.service';
 import { TenantAppService } from '../../../services/tenant-app.service';
-import { WallpaperService } from '../../../services/wallpaper.service';
-import { AuthComponent } from '../auth.component';
 
 @Component({
   selector: 'app-login',
@@ -23,26 +19,21 @@ import { AuthComponent } from '../auth.component';
   templateUrl: './login.component.html',
   styleUrl: './login.component.less'
 })
-export class LoginComponent extends AuthComponent implements OnInit, OnDestroy {
-  wallpaper: Wallpaper | null = null;
-
+export class LoginComponent extends BaseComponent implements OnInit {
   protected pageIndex = 'auth-login';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
 
   constructor(
-    @Inject(DOCUMENT) protected override document: Document,
     private readonly destroy$: DestroyService,
-    private readonly platform: PlatformService,
     private readonly commonService: CommonService,
     private readonly metaService: MetaService,
     private readonly breadcrumbService: BreadcrumbService,
     private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService,
-    private readonly wallpaperService: WallpaperService
+    private readonly optionService: OptionService
   ) {
-    super(document);
+    super();
   }
 
   ngOnInit(): void {
@@ -58,31 +49,12 @@ export class LoginComponent extends AuthComponent implements OnInit, OnDestroy {
         this.appInfo = appInfo;
         this.options = options;
 
-        if (this.platform.isServer) {
-          this.updatePageInfo();
-          this.getWallpaper();
-        }
+        this.updatePageInfo();
       });
-  }
-
-  ngOnDestroy(): void {
-    this.clearStyles();
   }
 
   protected updatePageIndex(): void {
     this.commonService.updatePageIndex(this.pageIndex);
-  }
-
-  private getWallpaper() {
-    this.wallpaperService
-      .getRandomWallpapers(1, true)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.wallpaper = res[0] || null;
-        if (this.wallpaper) {
-          this.initStyles();
-        }
-      });
   }
 
   private updatePageInfo() {

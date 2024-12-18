@@ -22,18 +22,6 @@
   }
 }
 
-[nz-button] {
-  .fi + span {
-    margin-left: 8px;
-  }
-}
-
-.bg-image {
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
 .preview-padding {
   img {
     padding: 16px;
@@ -42,8 +30,39 @@
   }
 }
 
+.empty {
+  border: 1px solid var(--primary-border-color);
+  border-radius: 4px;
+}
+
+.p-empty {
+  padding: @content-padding @primary-padding;
+}
+
+.m-empty {
+  padding: .75rem 1rem;
+}
+
+[nz-button] {
+  .fi + span {
+    margin-left: 8px;
+  }
+}
+
 .wallpaper-modal {
   .ant-modal-content {
     height: 100%;
   }
+}
+
+.m-mask {
+  background: var(--mask-bg-color);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  touch-action: none;
+}
+
+.ant-image-preview-mask {
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }

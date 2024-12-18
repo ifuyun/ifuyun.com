@@ -40,6 +40,8 @@
                         [index]="i"></app-wallpaper-item>
   </div>
 } @else {
-
+  <div class="empty" [class.p-empty]="!isMobile" [class.m-empty]="isMobile">
+    <nz-empty nzNotFoundImage="simple"></nz-empty>
+  </div>
 }
 <app-pagination></app-pagination>

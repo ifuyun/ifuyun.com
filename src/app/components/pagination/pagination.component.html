@@ -82,7 +82,7 @@
           <li>
             <a [routerLink]="linkUrl"
                [queryParams]="getLinkParams(pagination.pages)"
-               title="第<%= pagination.pages %>页"><%= pagination.pages %></a>
+               title="第{{ pagination.pages }}页">{{ pagination.pages }}</a>
           </li>
         }
         <li *ngIf="pagination.page < pagination.end">

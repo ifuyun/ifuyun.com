@@ -281,6 +281,10 @@ export class PostComponent implements OnInit {
       .getPostById(this.postId, this.postType, this.referrer)
       .pipe(takeUntil(this.destroy$))
       .subscribe((post) => {
+        if (!post) {
+          this.commonService.redirectToNotFound();
+          return;
+        }
         this.initData(post);
       });
   }
@@ -290,44 +294,46 @@ export class PostComponent implements OnInit {
       .getPostBySlug(this.postSlug, this.postType, this.referrer)
       .pipe(takeUntil(this.destroy$))
       .subscribe((post) => {
+        if (!post) {
+          this.commonService.redirectToNotFound();
+          return;
+        }
         this.initData(post);
         this.commentService.updateObjectId(post.post.postId);
       });
   }
 
-  private initData(post?: Post) {
-    if (post) {
-      this.post = post.post;
-      this.post.postContent = this.postService.parseHTML(this.post.postContent, this.copyHTML);
-      this.post.postSource = this.postService.getPostSource(post);
-      this.postMeta = post.meta;
-      this.postCategories = post.categories;
-      this.postTags = post.tags;
-      this.isFavorite = post.isFavorite;
-      this.isVoted = post.isVoted;
+  private initData(post: Post) {
+    this.post = post.post;
+    this.post.postContent = this.postService.parseHTML(this.post.postContent, this.copyHTML);
+    this.post.postSource = this.postService.getPostSource(post);
+    this.postMeta = post.meta;
+    this.postCategories = post.categories;
+    this.postTags = post.tags;
+    this.isFavorite = post.isFavorite;
+    this.isVoted = post.isVoted;
 
-      if (this.isArticle) {
-        this.pageIndex = 'post';
-        this.breadcrumbs = (post.breadcrumbs || []).map((item) => ({
-          ...item,
-          url: `/post/category/${item.slug}`
-        }));
-        this.breadcrumbs.unshift({
-          label: '文章',
-          tooltip: '文章列表',
-          url: '/post',
-          isHeader: false
-        });
-      } else {
-        this.pageIndex = this.post.postName;
-        this.breadcrumbs = [];
-      }
-
-      this.postService.updateActivePostId(post.post.postId);
-      this.breadcrumbService.updateBreadcrumbs(this.breadcrumbs);
-      this.updatePageIndex();
-      this.updatePageInfo();
+    if (this.isArticle) {
+      this.pageIndex = 'post';
+      this.breadcrumbs = (post.breadcrumbs || []).map((item) => ({
+        ...item,
+        url: `/post/category/${item.slug}`
+      }));
+      this.breadcrumbs.unshift({
+        label: '文章',
+        tooltip: '文章列表',
+        url: '/post',
+        isHeader: false
+      });
+    } else {
+      this.pageIndex = this.post.postName;
+      this.breadcrumbs = [];
     }
+
+    this.postService.updateActivePostId(post.post.postId);
+    this.breadcrumbService.updateBreadcrumbs(this.breadcrumbs);
+    this.updatePageIndex();
+    this.updatePageInfo();
   }
 
   private updatePageInfo() {

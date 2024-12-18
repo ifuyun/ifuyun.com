@@ -21,6 +21,10 @@ export class WallpaperItemComponent {
 
   isMobile = false;
 
+  get wallpaperLocation() {
+    return this.wallpaper.isCn ? this.wallpaper.wallpaperLocation : this.wallpaper.wallpaperLocationEn;
+  }
+
   constructor(private readonly userAgentService: UserAgentService) {
     this.isMobile = this.userAgentService.isMobile;
   }

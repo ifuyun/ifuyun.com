@@ -1,12 +1,15 @@
 import { DOCUMENT } from '@angular/common';
+import { HttpStatusCode } from '@angular/common/http';
 import { ElementRef, Inject, Injectable, Optional, REQUEST, RESPONSE_INIT } from '@angular/core';
 import { Router } from '@angular/router';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { COOKIE_KEY_THEME, MEDIA_QUERY_THEME_DARK, MEDIA_QUERY_THEME_LIGHT } from '../config/common.constant';
+import { Message } from '../config/message.enum';
 import { Theme } from '../enums/common';
 import { PageIndexInfo } from '../interfaces/common';
+import { CustomError } from '../interfaces/custom-error';
 import { PlatformService } from './platform.service';
 import { SsrCookieService } from './ssr-cookie.service';
 
@@ -17,13 +20,16 @@ export class CommonService {
   private pageIndex: Subject<string> = new Subject<string>();
   public pageIndex$: Observable<string> = this.pageIndex.asObservable();
 
+  private siderVisible: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public siderVisible$: Observable<boolean> = this.siderVisible.asObservable();
+
   private darkMode: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public darkMode$: Observable<boolean> = this.darkMode.asObservable();
 
   constructor(
     @Inject(DOCUMENT) private readonly document: Document,
     @Optional() @Inject(REQUEST) private readonly request: Request,
-    @Optional() @Inject(RESPONSE_INIT) private readonly response: Response,
+    @Optional() @Inject(RESPONSE_INIT) private readonly response: any,
     private readonly router: Router,
     private readonly platform: PlatformService,
     private readonly cookieService: SsrCookieService
@@ -35,14 +41,22 @@ export class CommonService {
 
   getPageIndexInfo(pageIndex: string): PageIndexInfo {
     const topPage = pageIndex.split('-')[0];
+    const subPage = pageIndex.split('-')[1];
+
     return {
       isHome: pageIndex === 'index',
       isPost: topPage === 'post',
       isWallpaper: topPage === 'wallpaper',
       isTool: topPage === 'tool',
       isAuth: topPage === 'auth',
-      isPage: !['index', 'post', 'wallpaper', 'tool', 'auth'].includes(topPage)
+      isPage: !['index', 'post', 'wallpaper', 'tool', 'auth'].includes(topPage),
+      fullPage: pageIndex,
+      subPage
     };
+  }
+
+  updateSiderVisible(visible: boolean) {
+    this.siderVisible.next(visible);
   }
 
   getReferrer() {
@@ -104,10 +118,9 @@ export class CommonService {
   }
 
   redirectToNotFound() {
-    if (this.platform.isBrowser) {
-      this.router.navigateByUrl('/error/404');
-    } else {
-      this.response.redirect('/error/404');
+    if (this.platform.isServer) {
+      this.response.status = HttpStatusCode.NotFound;
     }
+    throw new CustomError(Message.ERROR_404, HttpStatusCode.NotFound);
   }
 }
