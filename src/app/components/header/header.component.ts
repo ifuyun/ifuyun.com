@@ -11,6 +11,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM, APP_ID } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
+import { ActionObjectType, ActionType } from '../../enums/log';
 import { PageIndexInfo } from '../../interfaces/common';
 import { TaxonomyNode } from '../../interfaces/taxonomy';
 import { TenantAppModel } from '../../interfaces/tenant-app';
@@ -19,6 +20,7 @@ import { TOOL_LINKS } from '../../pages/tool/tool.constant';
 import { AuthService } from '../../services/auth.service';
 import { CommonService } from '../../services/common.service';
 import { DestroyService } from '../../services/destroy.service';
+import { LogService } from '../../services/log.service';
 import { TenantAppService } from '../../services/tenant-app.service';
 import { UserAgentService } from '../../services/user-agent.service';
 import { UserService } from '../../services/user.service';
@@ -71,7 +73,8 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
     private readonly commonService: CommonService,
     private readonly tenantAppService: TenantAppService,
     private readonly authService: AuthService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly logService: LogService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -148,6 +151,14 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
 
   showWallpaperModal() {
     this.wallpaperModalVisible = true;
+
+    this.logService
+      .logAction({
+        action: ActionType.SHOW_WALLPAPER_MODAL,
+        objectType: ActionObjectType.HEADER
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
   }
 
   closeWallpaperModal() {
@@ -161,6 +172,14 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
       }
     ]);
     this.commonService.paddingPreview(previewRef.previewInstance.imagePreviewWrapper);
+
+    this.logService
+      .logAction({
+        action: ActionType.SHOW_RED_PACKET,
+        objectType: ActionObjectType.HEADER
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
   }
 
   showWechatCard() {
@@ -169,6 +188,14 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
         src: '/assets/images/wechat-card.png'
       }
     ]);
+
+    this.logService
+      .logAction({
+        action: ActionType.SHOW_WECHAT_CARD,
+        objectType: ActionObjectType.HEADER
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
   }
 
   gotoAdmin() {
@@ -188,5 +215,15 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
 
   showSider() {
     this.commonService.updateSiderVisible(true);
+  }
+
+  logRSS(isWallpaper = false) {
+    this.logService
+      .logAction({
+        action: isWallpaper ? ActionType.OPEN_WALLPAPER_RSS : ActionType.OPEN_POST_RSS,
+        objectType: ActionObjectType.HEADER
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
   }
 }

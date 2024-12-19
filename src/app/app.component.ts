@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { filter, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
@@ -7,6 +7,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { MSiderComponent } from './components/m-sider/m-sider.component';
 import { COOKIE_KEY_UV_ID, MEDIA_QUERY_THEME_DARK } from './config/common.constant';
+import { ResponseCode } from './config/response-code.enum';
 import { Theme } from './enums/common';
 import { ErrorState } from './interfaces/common';
 import { TaxonomyNode } from './interfaces/taxonomy';
@@ -15,6 +16,7 @@ import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { ServerErrorComponent } from './pages/error/server-error/server-error.component';
 import { CommonService } from './services/common.service';
 import { ErrorService } from './services/error.service';
+import { LogService } from './services/log.service';
 import { OptionService } from './services/option.service';
 import { PlatformService } from './services/platform.service';
 import { SsrCookieService } from './services/ssr-cookie.service';
@@ -41,7 +43,7 @@ import { generateUid } from './utils/helper';
   templateUrl: './app.component.html',
   styleUrl: './app.component.less'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   isMobile: boolean = false;
   postTaxonomies: TaxonomyNode[] = [];
   errorState!: ErrorState;
@@ -50,6 +52,9 @@ export class AppComponent implements OnInit {
   siderVisible = false;
 
   private currentUrl = '';
+  private initialized = false;
+  private accessLogId = '';
+  private bodyOffset = 0;
 
   constructor(
     private readonly router: Router,
@@ -63,7 +68,8 @@ export class AppComponent implements OnInit {
     private readonly errorService: ErrorService,
     private readonly userService: UserService,
     private readonly tenantAppService: TenantAppService,
-    private readonly taxonomyService: TaxonomyService
+    private readonly taxonomyService: TaxonomyService,
+    private readonly logService: LogService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -103,9 +109,18 @@ export class AppComponent implements OnInit {
             previous: this.currentUrl,
             current: (event as NavigationEnd).url
           });
-          // todo: log
+          if (this.platform.isBrowser) {
+            this.logService
+              .logAccess(this.logService.parseAccessLog(this.initialized, this.currentUrl, isNew, this.accessLogId))
+              .subscribe((res) => {
+                if (res.code === ResponseCode.SUCCESS) {
+                  this.accessLogId = res.data.logId || '';
+                }
+              });
+          }
           this.currentUrl = (event as NavigationEnd).url;
         }
+        this.initialized = true;
       });
 
     this.initTheme();
@@ -118,8 +133,39 @@ export class AppComponent implements OnInit {
       this.errorState = state;
     });
     this.commonService.siderVisible$.subscribe((visible) => {
+      if (this.platform.isBrowser) {
+        if (visible) {
+          this.bodyOffset = document.documentElement.scrollTop;
+          document.documentElement.style.position = 'fixed';
+          document.documentElement.style.top = `-${this.bodyOffset}px`;
+        } else {
+          document.documentElement.style.position = '';
+          document.documentElement.style.top = '';
+          window.scrollTo({
+            top: this.bodyOffset,
+            behavior: 'instant'
+          });
+        }
+      }
       this.siderVisible = visible;
     });
+  }
+
+  ngAfterViewInit(): void {
+    if (this.platform.isBrowser) {
+      window.addEventListener('pagehide', () => {
+        this.logService.logLeave({
+          logId: this.accessLogId
+        });
+      });
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+          this.logService.logLeave({
+            logId: this.accessLogId
+          });
+        }
+      });
+    }
   }
 
   closeSider() {

@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash';
 import { NzImageService } from 'ng-zorro-antd/image';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
+import { ActionObjectType, ActionType } from '../../../enums/log';
 import { FavoriteLink } from '../../../interfaces/link';
 import { HTMLMetaData } from '../../../interfaces/meta';
 import { OptionEntity } from '../../../interfaces/option';
@@ -12,6 +13,7 @@ import { BreadcrumbService } from '../../../services/breadcrumb.service';
 import { CommonService } from '../../../services/common.service';
 import { DestroyService } from '../../../services/destroy.service';
 import { LinkService } from '../../../services/link.service';
+import { LogService } from '../../../services/log.service';
 import { MetaService } from '../../../services/meta.service';
 import { OptionService } from '../../../services/option.service';
 import { TenantAppService } from '../../../services/tenant-app.service';
@@ -42,7 +44,8 @@ export class ToolListComponent implements OnInit {
     private readonly breadcrumbService: BreadcrumbService,
     private readonly tenantAppService: TenantAppService,
     private readonly optionService: OptionService,
-    private readonly linkService: LinkService
+    private readonly linkService: LinkService,
+    private readonly logService: LogService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -72,6 +75,14 @@ export class ToolListComponent implements OnInit {
       }
     ]);
     this.commonService.paddingPreview(previewRef.previewInstance.imagePreviewWrapper);
+
+    this.logService
+      .logAction({
+        action: ActionType.SHOW_RED_PACKET,
+        objectType: ActionObjectType.TOOL_LIST
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
   }
 
   protected updatePageIndex(): void {

@@ -17,6 +17,7 @@ import { Message } from '../../config/message.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommentObjectType } from '../../enums/comment';
 import { FavoriteType } from '../../enums/favorite';
+import { ActionObjectType, ActionType } from '../../enums/log';
 import { PostType } from '../../enums/post';
 import { VoteType, VoteValue } from '../../enums/vote';
 import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
@@ -34,6 +35,7 @@ import { CommentService } from '../../services/comment.service';
 import { CommonService } from '../../services/common.service';
 import { DestroyService } from '../../services/destroy.service';
 import { FavoriteService } from '../../services/favorite.service';
+import { LogService } from '../../services/log.service';
 import { MessageService } from '../../services/message.service';
 import { MetaService } from '../../services/meta.service';
 import { OptionService } from '../../services/option.service';
@@ -128,7 +130,8 @@ export class PostComponent implements OnInit {
     private readonly voteService: VoteService,
     private readonly favoriteService: FavoriteService,
     private readonly commentService: CommentService,
-    private readonly clipboardService: ClipboardService
+    private readonly clipboardService: ClipboardService,
+    private readonly logService: LogService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -194,6 +197,15 @@ export class PostComponent implements OnInit {
           window.setTimeout(() => {
             $target.innerHTML = this.copyHTML;
           }, 2000);
+
+          this.logService
+            .logAction({
+              action: ActionType.COPY_CODE,
+              objectType: ActionObjectType.POST,
+              objectId: this.post.postId
+            })
+            .pipe(takeUntil(this.destroy$))
+            .subscribe();
         }
       }
     }

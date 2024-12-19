@@ -3,11 +3,13 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } fr
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
 import { LinkTarget } from '../../enums/link';
+import { ActionObjectType, ActionType } from '../../enums/log';
 import { WallpaperLang } from '../../enums/wallpaper';
 import { CarouselOptions, CarouselVo } from '../../interfaces/option';
 import { HotWallpaper, Wallpaper } from '../../interfaces/wallpaper';
 import { RangePipe } from '../../pipes/range.pipe';
 import { DestroyService } from '../../services/destroy.service';
+import { LogService } from '../../services/log.service';
 import { OptionService } from '../../services/option.service';
 import { PlatformService } from '../../services/platform.service';
 import { UserAgentService } from '../../services/user-agent.service';
@@ -37,7 +39,8 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly platform: PlatformService,
     private readonly userAgentService: UserAgentService,
     private readonly optionService: OptionService,
-    private readonly wallpaperService: WallpaperService
+    private readonly wallpaperService: WallpaperService,
+    private readonly logService: LogService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -135,7 +138,17 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
     this.update();
   }
 
-  logClick(carousel: CarouselVo) {}
+  logClick(carousel: CarouselVo) {
+    this.logService
+      .logAction({
+        action: ActionType.CLICK_CAROUSEL,
+        objectType: ActionObjectType.CAROUSEL,
+        carouselTitle: carousel.title,
+        carouselURL: carousel.link
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
+  }
 
   private onVisibilityChange() {
     if (document.visibilityState === 'visible') {

@@ -17,6 +17,7 @@
           <a class="carousel-link"
              [href]="carousel.link"
              [title]="carousel.caption"
+             (click)="logClick(carousel)"
              [target]="carousel.target">
             <div class="carousel-img" [style.background-image]="'url(' + carousel.fullUrl + ')'"></div>
           </a>
@@ -31,6 +32,7 @@
           <a class="carousel-link"
              [href]="carousel.link"
              [title]="carousel.caption"
+             (click)="logClick(carousel)"
              [target]="carousel.target">
             <div class="carousel-img lazyload" [attr.data-bg]="carousel.fullUrl"></div>
           </a>

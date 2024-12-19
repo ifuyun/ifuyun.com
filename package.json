@@ -34,7 +34,9 @@
     "test": "ng test",
     "serve:ssr:ifuyun": "node dist/ifuyun/server/server.mjs",
     "lint": "eslint \"src/**/*.{ts,html}\" --fix",
-    "deploy": "bash ./scripts/deploy.sh"
+    "format": "prettier --write \"src/**/*.ts\"",
+    "deploy": "bash ./scripts/deploy.sh",
+    "cloc": "cloc --exclude-dir=.git,.idea,.vscode,node_modules,dist,test,package-lock.json,.angular,.github,.nx ."
   },
   "dependencies": {
     "@angular/animations": "^19.0.4",

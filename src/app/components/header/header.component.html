@@ -115,12 +115,15 @@
                   </a>
                 </li>
                 <li>
-                  <a class="sub-nav-link" [href]="appInfo?.appUrl + '/rss.xml'" title="文章 RSS 订阅">
+                  <a class="sub-nav-link" [href]="appInfo?.appUrl + '/rss.xml'" (click)="logRSS()" title="文章 RSS 订阅">
                     <span nz-icon class="icon-rss" nzType="wifi"></span><span>文章 RSS 订阅</span>
                   </a>
                 </li>
                 <li>
-                  <a class="sub-nav-link" [href]="appInfo?.appUrl + '/wallpaper-rss.xml'" title="壁纸 RSS 订阅">
+                  <a class="sub-nav-link"
+                     [href]="appInfo?.appUrl + '/wallpaper-rss.xml'"
+                     (click)="logRSS(true)"
+                     title="壁纸 RSS 订阅">
                     <span nz-icon class="icon-rss" nzType="wifi"></span><span>壁纸 RSS 订阅</span>
                   </a>
                 </li>

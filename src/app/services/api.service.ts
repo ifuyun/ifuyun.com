@@ -12,7 +12,7 @@ import { MessageService } from './message.service';
 export class ApiService {
   constructor(
     private readonly http: HttpClient,
-    private readonly message: MessageService,
+    private readonly message: MessageService
   ) {}
 
   getApiUrl(path: string): string {

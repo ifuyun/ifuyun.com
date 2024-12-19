@@ -7,12 +7,14 @@ import { NzImageService } from 'ng-zorro-antd/image';
 import { skipWhile, takeUntil } from 'rxjs';
 import { ADMIN_URL_PARAM, APP_ID } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
+import { ActionObjectType, ActionType } from '../../enums/log';
 import { PageIndexInfo } from '../../interfaces/common';
 import { TenantAppModel } from '../../interfaces/tenant-app';
 import { UserModel } from '../../interfaces/user';
 import { AuthService } from '../../services/auth.service';
 import { CommonService } from '../../services/common.service';
 import { DestroyService } from '../../services/destroy.service';
+import { LogService } from '../../services/log.service';
 import { TenantAppService } from '../../services/tenant-app.service';
 import { UserService } from '../../services/user.service';
 import { format } from '../../utils/helper';
@@ -39,7 +41,8 @@ export class MSiderComponent implements OnInit {
     private readonly commonService: CommonService,
     private readonly tenantAppService: TenantAppService,
     private readonly authService: AuthService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly logService: LogService
   ) {}
 
   ngOnInit(): void {
@@ -74,6 +77,14 @@ export class MSiderComponent implements OnInit {
         src: '/assets/images/wechat-card.png'
       }
     ]);
+
+    this.logService
+      .logAction({
+        action: ActionType.SHOW_WECHAT_CARD,
+        objectType: ActionObjectType.SIDER
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
   }
 
   gotoAdmin() {
