@@ -9,6 +9,7 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
 import { CommentComponent } from '../../components/comment/comment.component';
 import { LoginModalComponent } from '../../components/login-modal/login-modal.component';
+import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
 import { PostPrevNextComponent } from '../../components/post-prev-next/post-prev-next.component';
 import { PostRelatedComponent } from '../../components/post-related/post-related.component';
 import { ShareModalComponent } from '../../components/share-modal/share-modal.component';
@@ -66,7 +67,8 @@ import { decodeEntities } from '../../utils/entities';
     PostRelatedComponent,
     ShareModalComponent,
     LoginModalComponent,
-    CommentComponent
+    CommentComponent,
+    MakeMoneyComponent
   ],
   providers: [DestroyService, NzImageService],
   templateUrl: './post.component.html',

@@ -7,6 +7,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { BehaviorSubject, combineLatest, debounceTime, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
+import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { MAX_IP_VALUE, REGEXP_IP } from '../../../config/common.constant';
 import { IPInfo } from '../../../interfaces/ip';
 import { HTMLMetaData } from '../../../interfaces/meta';
@@ -25,7 +26,15 @@ import { IP_PAGE_DESCRIPTION, IP_PAGE_KEYWORDS } from '../tool.constant';
 
 @Component({
   selector: 'app-ip',
-  imports: [FormsModule, NzFormModule, NzInputModule, NzButtonModule, NzEmptyModule, BreadcrumbComponent],
+  imports: [
+    FormsModule,
+    NzFormModule,
+    NzInputModule,
+    NzButtonModule,
+    NzEmptyModule,
+    BreadcrumbComponent,
+    MakeMoneyComponent
+  ],
   providers: [DestroyService],
   templateUrl: './ip.component.html',
   styleUrls: ['../tool.less', './ip.component.less']

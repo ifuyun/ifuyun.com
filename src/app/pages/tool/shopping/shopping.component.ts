@@ -8,6 +8,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzQRCodeModule } from 'ng-zorro-antd/qr-code';
 import { BehaviorSubject, combineLatest, debounceTime, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
+import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { JdUnionPromotionResponseBody } from '../../../interfaces/jd-union';
 import { HTMLMetaData } from '../../../interfaces/meta';
 import { OptionEntity } from '../../../interfaces/option';
@@ -32,7 +33,8 @@ import { REGEXP_JD_PRODUCT_DETAIL_URL } from '../tool.constant';
     NzButtonModule,
     NzQRCodeModule,
     NzEmptyModule,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    MakeMoneyComponent
   ],
   providers: [DestroyService],
   templateUrl: './shopping.component.html',

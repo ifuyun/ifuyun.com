@@ -3,8 +3,10 @@ import { HttpStatusCode } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
+import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { PostItemComponent } from '../../components/post-item/post-item.component';
 import { WallpaperItemComponent } from '../../components/wallpaper-item/wallpaper-item.component';
@@ -27,7 +29,15 @@ import { UserAgentService } from '../../services/user-agent.service';
 
 @Component({
   selector: 'app-search',
-  imports: [NgForOf, BreadcrumbComponent, PaginationComponent, PostItemComponent, WallpaperItemComponent],
+  imports: [
+    NgForOf,
+    NzEmptyModule,
+    BreadcrumbComponent,
+    PaginationComponent,
+    PostItemComponent,
+    WallpaperItemComponent,
+    MakeMoneyComponent
+  ],
   providers: [DestroyService],
   templateUrl: './search.component.html',
   styleUrl: './search.component.less'

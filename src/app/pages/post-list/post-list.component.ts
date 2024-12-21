@@ -5,6 +5,7 @@ import { isEmpty, uniq } from 'lodash';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
+import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { PostItemComponent } from '../../components/post-item/post-item.component';
 import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
@@ -23,7 +24,7 @@ import { UserAgentService } from '../../services/user-agent.service';
 
 @Component({
   selector: 'app-post-list',
-  imports: [NgForOf, NzEmptyModule, BreadcrumbComponent, PaginationComponent, PostItemComponent],
+  imports: [NgForOf, NzEmptyModule, BreadcrumbComponent, PaginationComponent, PostItemComponent, MakeMoneyComponent],
   providers: [DestroyService],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.less'

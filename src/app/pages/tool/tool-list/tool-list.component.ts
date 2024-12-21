@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash';
 import { NzImageService } from 'ng-zorro-antd/image';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
+import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { ActionObjectType, ActionType } from '../../../enums/log';
 import { FavoriteLink } from '../../../interfaces/link';
 import { HTMLMetaData } from '../../../interfaces/meta';
@@ -21,7 +22,7 @@ import { UserAgentService } from '../../../services/user-agent.service';
 
 @Component({
   selector: 'app-tool-list',
-  imports: [RouterLink, BreadcrumbComponent],
+  imports: [RouterLink, BreadcrumbComponent, MakeMoneyComponent],
   providers: [DestroyService, NzImageService],
   templateUrl: './tool-list.component.html',
   styleUrls: ['../tool.less', './tool-list.component.less']

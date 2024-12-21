@@ -1,28 +1,35 @@
 import { NgFor, NgIf } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
+import { isEmpty } from 'lodash';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { skipWhile, takeUntil } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { WallpaperLang } from '../../enums/wallpaper';
 import { ArchiveData, PageIndexInfo } from '../../interfaces/common';
+import { OptionEntity } from '../../interfaces/option';
 import { PostEntity } from '../../interfaces/post';
 import { HotWallpaper, Wallpaper } from '../../interfaces/wallpaper';
 import { CommonService } from '../../services/common.service';
 import { DestroyService } from '../../services/destroy.service';
+import { OptionService } from '../../services/option.service';
 import { PlatformService } from '../../services/platform.service';
 import { PostService } from '../../services/post.service';
 import { UserAgentService } from '../../services/user-agent.service';
 import { WallpaperService } from '../../services/wallpaper.service';
+import { AdsenseComponent } from '../adsense/adsense.component';
 
 @Component({
   selector: 'app-sider',
-  imports: [RouterLink, NgIf, NgFor, NzIconModule],
+  imports: [RouterLink, NgIf, NgFor, NzIconModule, AdsenseComponent],
   providers: [DestroyService],
   templateUrl: './sider.component.html',
   styleUrl: './sider.component.less'
 })
 export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('siderEle') siderEle!: ElementRef;
+
+  readonly adsPlaceholder = true;
 
   isMobile = false;
   indexInfo!: PageIndexInfo;
@@ -33,6 +40,14 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   randomWallpapers: Wallpaper[] = [];
   wallpaperArchives: ArchiveData[] = [];
 
+  get adsVisible() {
+    return (
+      (environment.production && ['1', '0'].includes(this.options['ads_flag'])) ||
+      (!environment.production && ['2', '0'].includes(this.options['ads_flag']))
+    );
+  }
+
+  private options: OptionEntity = {};
   private pageIndex = '';
 
   constructor(
@@ -40,6 +55,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly platform: PlatformService,
     private readonly userAgentService: UserAgentService,
     private readonly commonService: CommonService,
+    private readonly optionService: OptionService,
     private readonly postService: PostService,
     private readonly wallpaperService: WallpaperService
   ) {
@@ -47,6 +63,14 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.optionService.options$
+      .pipe(
+        skipWhile((options) => isEmpty(options)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((options) => {
+        this.options = options;
+      });
     this.commonService.pageIndex$
       .pipe(
         skipWhile((page) => !page),

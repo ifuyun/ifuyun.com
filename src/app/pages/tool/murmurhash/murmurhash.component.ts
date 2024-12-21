@@ -7,6 +7,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { ClipboardModule } from 'ngx-clipboard';
 import { BehaviorSubject, combineLatest, debounceTime, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
+import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { HTMLMetaData } from '../../../interfaces/meta';
 import { OptionEntity } from '../../../interfaces/option';
 import { TenantAppModel } from '../../../interfaces/tenant-app';
@@ -22,7 +23,7 @@ import { MURMURHASH_PAGE_DESCRIPTION, MURMURHASH_PAGE_KEYWORDS } from '../tool.c
 
 @Component({
   selector: 'app-murmurhash',
-  imports: [FormsModule, NzInputModule, NzButtonModule, ClipboardModule, BreadcrumbComponent],
+  imports: [FormsModule, NzInputModule, NzButtonModule, ClipboardModule, BreadcrumbComponent, MakeMoneyComponent],
   providers: [DestroyService],
   templateUrl: './murmurhash.component.html',
   styleUrl: '../tool.less'

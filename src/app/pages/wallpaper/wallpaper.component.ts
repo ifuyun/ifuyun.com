@@ -9,6 +9,7 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
 import { CommentComponent } from '../../components/comment/comment.component';
 import { LoginModalComponent } from '../../components/login-modal/login-modal.component';
+import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
 import { ShareModalComponent } from '../../components/share-modal/share-modal.component';
 import { WallpaperPrevNextComponent } from '../../components/wallpaper-prev-next/wallpaper-prev-next.component';
 import { WallpaperRelatedComponent } from '../../components/wallpaper-related/wallpaper-related.component';
@@ -57,7 +58,8 @@ import { filterHtmlTag, truncateString } from '../../utils/helper';
     WallpaperRelatedComponent,
     ShareModalComponent,
     LoginModalComponent,
-    CommentComponent
+    CommentComponent,
+    MakeMoneyComponent
   ],
   providers: [DestroyService, NzImageService],
   templateUrl: './wallpaper.component.html',

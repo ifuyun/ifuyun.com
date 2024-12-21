@@ -6,6 +6,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { ClipboardModule } from 'ngx-clipboard';
 import { BehaviorSubject, combineLatest, debounceTime, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
+import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { ResponseCode } from '../../../config/response-code.enum';
 import { HTMLMetaData } from '../../../interfaces/meta';
 import { OptionEntity } from '../../../interfaces/option';
@@ -23,7 +24,7 @@ import { BASE64_PAGE_DESCRIPTION, BASE64_PAGE_KEYWORDS } from '../tool.constant'
 
 @Component({
   selector: 'app-base64',
-  imports: [FormsModule, NzInputModule, NzButtonModule, ClipboardModule, BreadcrumbComponent],
+  imports: [FormsModule, NzInputModule, NzButtonModule, ClipboardModule, BreadcrumbComponent, MakeMoneyComponent],
   providers: [DestroyService],
   templateUrl: './base64.component.html',
   styleUrl: '../tool.less'

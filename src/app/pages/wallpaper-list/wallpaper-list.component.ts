@@ -8,8 +8,10 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
+import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { WallpaperItemComponent } from '../../components/wallpaper-item/wallpaper-item.component';
+import { WallpaperLang, WallpaperListMode } from '../../enums/wallpaper';
 import { OptionEntity } from '../../interfaces/option';
 import { TenantAppModel } from '../../interfaces/tenant-app';
 import { Wallpaper, WallpaperQueryParam } from '../../interfaces/wallpaper';
@@ -22,7 +24,6 @@ import { PaginationService } from '../../services/pagination.service';
 import { TenantAppService } from '../../services/tenant-app.service';
 import { UserAgentService } from '../../services/user-agent.service';
 import { WallpaperService } from '../../services/wallpaper.service';
-import { WallpaperLang, WallpaperListMode } from '../../enums/wallpaper';
 
 @Component({
   selector: 'app-wallpaper-list',
@@ -35,7 +36,8 @@ import { WallpaperLang, WallpaperListMode } from '../../enums/wallpaper';
     NzEmptyModule,
     BreadcrumbComponent,
     PaginationComponent,
-    WallpaperItemComponent
+    WallpaperItemComponent,
+    MakeMoneyComponent
   ],
   providers: [DestroyService],
   templateUrl: './wallpaper-list.component.html',

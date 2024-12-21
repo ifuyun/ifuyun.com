@@ -124,6 +124,7 @@
     <app-post-prev-next *ngIf="isArticle"></app-post-prev-next>
   </div>
   <app-post-related *ngIf="isArticle"></app-post-related>
+  <app-make-money></app-make-money>
   <app-comment [objectType]="commentType" [enableAI]="!post.postPayFlag && !post.postLoginFlag"></app-comment>
   <app-share-modal *ngIf="shareVisible" [shareUrl]="shareUrl" (closeModal)="closeShareQrcode()"></app-share-modal>
   <app-login-modal *ngIf="loginVisible" (closeModal)="closeLoginModal()"></app-login-modal>

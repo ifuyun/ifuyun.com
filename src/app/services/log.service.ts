@@ -43,7 +43,7 @@ export class LogService {
   logLeave(log: Omit<LeaveLog, 'appId'>): void {
     if (log.logId) {
       navigator.sendBeacon(
-        ApiUrl.LEAVE_LOG,
+        this.apiService.getApiUrl(ApiUrl.LEAVE_LOG),
         JSON.stringify({
           ...log,
           appId: APP_ID

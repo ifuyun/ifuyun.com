@@ -20,6 +20,13 @@
         </li>
       </ul>
     </div>
+    <div class="widget-ads" *ngIf="adsVisible">
+      <app-adsense [class.ads-sider-wrap]="adsPlaceholder"
+                   wrapClass="ads-sider"
+                   optionKey="adsense_config_sider"
+                   [placeholder]="adsPlaceholder"
+                   text="虚位以待"></app-adsense>
+    </div>
     <div class="widget" *ngIf="postArchives && postArchives.length > 0">
       <h3 class="widget-title">
         <span><span class="fi fi-calendar-date"></span><span>文章归档</span></span>

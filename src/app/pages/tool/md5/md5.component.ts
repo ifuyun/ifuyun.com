@@ -6,6 +6,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { ClipboardModule } from 'ngx-clipboard';
 import { BehaviorSubject, combineLatest, debounceTime, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
+import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
 import { HTMLMetaData } from '../../../interfaces/meta';
 import { OptionEntity } from '../../../interfaces/option';
 import { TenantAppModel } from '../../../interfaces/tenant-app';
@@ -22,7 +23,7 @@ import { MD5_PAGE_DESCRIPTION, MD5_PAGE_KEYWORDS } from '../tool.constant';
 
 @Component({
   selector: 'app-md5',
-  imports: [FormsModule, NzInputModule, NzButtonModule, ClipboardModule, BreadcrumbComponent],
+  imports: [FormsModule, NzInputModule, NzButtonModule, ClipboardModule, BreadcrumbComponent, MakeMoneyComponent],
   providers: [DestroyService],
   templateUrl: './md5.component.html',
   styleUrl: '../tool.less'
