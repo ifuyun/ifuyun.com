@@ -6,6 +6,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageService } from 'ng-zorro-antd/image';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
 import { CommentComponent } from '../../components/comment/comment.component';
 import { LoginModalComponent } from '../../components/login-modal/login-modal.component';
@@ -73,6 +74,7 @@ export class WallpaperComponent implements OnInit {
   wallpaperId = '';
   wallpaper!: Wallpaper;
   lang = WallpaperLang.CN;
+  downloading = false;
   voteLoading = false;
   favoriteLoading = false;
   shareVisible = false;
@@ -169,6 +171,23 @@ export class WallpaperComponent implements OnInit {
         }
       ]);
     }
+  }
+
+  download(isUhd = false) {
+    if (!this.isSignIn && isUhd) {
+      this.showLoginModal();
+      return;
+    }
+    this.downloading = true;
+    this.wallpaperService
+      .getWallpaperDownloadUrl(this.wallpaperId, isUhd ? 1 : 0)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.downloading = false;
+        if (res) {
+          window.open(environment.apiBase + res);
+        }
+      });
   }
 
   vote() {

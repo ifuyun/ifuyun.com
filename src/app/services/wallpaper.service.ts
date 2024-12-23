@@ -8,7 +8,6 @@ import {
   HotWallpaper,
   PrevAndNextWallpapers,
   Wallpaper,
-  WallpaperDownloadResponse,
   WallpaperQueryParam,
   WallpaperRelatedParam,
   WallpaperSearchItem
@@ -127,15 +126,17 @@ export class WallpaperService {
     this.activeWallpaperId.next(wallpaperId);
   }
 
-  getWallpaperDownloadUrl(param: { wallpaperId: string; uhd: 0 | 1 }): Observable<WallpaperDownloadResponse> {
-    const { wallpaperId, uhd } = param;
-
+  getWallpaperDownloadUrl(wallpaperId: string, uhd: 0 | 1): Observable<string> {
     return this.apiService
-      .httpGet(ApiUrl.WALLPAPER_DOWNLOAD_URL, {
-        wallpaperId,
-        uhd
-      })
-      .pipe(map((res) => res?.data || {}));
+      .httpGet(
+        ApiUrl.WALLPAPER_DOWNLOAD_URL,
+        {
+          wallpaperId,
+          uhd
+        },
+        true
+      )
+      .pipe(map((res) => res?.data || ''));
   }
 
   transformWallpaper(wallpaper: Wallpaper): Wallpaper {

@@ -67,12 +67,6 @@ export interface PrevAndNextWallpapers {
   nextWallpaper: Wallpaper;
 }
 
-export interface WallpaperDownloadResponse {
-  wallpaperUrl: string;
-  fileName: string;
-  mimeType: string;
-}
-
 export interface WallpaperSearchItem {
   wallpaperId: string;
   wallpaperDate: number;
