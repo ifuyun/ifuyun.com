@@ -24,8 +24,10 @@ $ npm i
 # Develop
 $ npm run start
 $ npm run build
+$ npm run build:gulp
+$ npm run build:prod
 $ npm run watch
-$ npm run serve:ssr:ifuyun
+$ npm run serve:ssr
 
 # Code scaffolding
 $ ng g component|directive|pipe|service|class|guard|interface|enum|module name

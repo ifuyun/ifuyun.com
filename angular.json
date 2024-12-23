@@ -39,7 +39,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/ifuyun",
+            "outputPath": "dist",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -47,6 +47,7 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "less",
+            "allowedCommonJsDependencies": ["lodash", "murmurhash"],
             "assets": [
               {
                 "glob": "**/*",
@@ -73,16 +74,17 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "https://cdn.ifuyun.com/",
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "4MB",
+                  "maximumError": "8MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "10kB",
+                  "maximumError": "20kB"
                 }
               ],
               "outputHashing": "all"

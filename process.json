@@ -2,7 +2,7 @@
   "apps": [
     {
       "name": "ifuyun.com",
-      "script": "./dist/ifuyun/server/server.mjs",
+      "script": "./dist/server/server.mjs",
       "out_file": "/dev/null",
       "watch": false,
       "env": {
