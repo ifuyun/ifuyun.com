@@ -316,8 +316,10 @@ app.use('/**', (req, res, next) => {
 /**
  * Start the server if this module is the main entry point.
  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
+ *
+ * pm2 环境下 isMainModule(import.meta.url) 始终为 false，因此需要额外判断路径
  */
-if (isMainModule(import.meta.url)) {
+if (isMainModule(import.meta.url) || !import.meta.url.includes('/.angular/')) {
   const port = environment.port || 4000;
   app.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);
