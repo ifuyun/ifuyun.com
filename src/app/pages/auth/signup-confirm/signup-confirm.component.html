@@ -13,7 +13,7 @@
              formControlName="code"
              [maxlength]="4"
              [autofocus]="true"
-             placeholder="请输入验证码"/>
+             placeholder="请输入验证码" />
       <ng-template #codeErrorTpl let-control>
         <ng-container *ngIf="control.hasError('required')">请输入验证码</ng-container>
         <ng-container *ngIf="control.hasError('pattern')">验证码为4位数字</ng-container>

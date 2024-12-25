@@ -6,7 +6,7 @@
              type="text"
              formControlName="email"
              [maxlength]="maxEmailLength"
-             placeholder="邮箱地址"/>
+             placeholder="邮箱地址" />
       <ng-template #nameErrorTpl let-control>
         <ng-container *ngIf="control.hasError('required')">请输入邮箱</ng-container>
         <ng-container *ngIf="control.hasError('email')">请输入有效的邮箱</ng-container>
@@ -22,12 +22,11 @@
                [type]="passwordVisible ? 'text' : 'password'"
                formControlName="password"
                [maxlength]="maxPasswordLength"
-               placeholder="{{minPasswordLength}}-{{maxPasswordLength}}位密码，字母、数字、符号组合"/>
+               placeholder="{{minPasswordLength}}-{{maxPasswordLength}}位密码，字母、数字、符号组合" />
       </nz-input-group>
       <ng-template #pwdSuffix>
-        <span nz-icon
-              [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
-              (click)="passwordVisible = !passwordVisible"></span>
+        <nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                 (click)="passwordVisible = !passwordVisible" />
       </ng-template>
       <ng-template #pwdErrorTpl let-control>
         <ng-container *ngIf="control.hasError('required')">请输入密码</ng-container>

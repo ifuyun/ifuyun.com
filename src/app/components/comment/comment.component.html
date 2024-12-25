@@ -39,9 +39,9 @@
                    [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
                    (click)="vote(comment, true)">
                   @if (commentVoteLoading[comment.commentId]) {
-                    <nz-icon nzType="loading"/>
+                    <nz-icon nzType="loading" />
                   } @else {
-                    <span nz-icon nzType="like" [nzTheme]="comment.liked ? 'fill' : 'outline'"></span>
+                    <nz-icon nzType="like" [nzTheme]="comment.liked ? 'fill' : 'outline'" />
                   }
                   <span>{{ comment.commentLikes }}</span>
                 </a>
@@ -49,9 +49,9 @@
                    [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
                    (click)="vote(comment, false)">
                   @if (commentVoteLoading[comment.commentId]) {
-                    <nz-icon nzType="loading"/>
+                    <nz-icon nzType="loading" />
                   } @else {
-                    <span nz-icon nzType="dislike" [nzTheme]="comment.disliked ? 'fill' : 'outline'"></span>
+                    <nz-icon nzType="dislike" [nzTheme]="comment.disliked ? 'fill' : 'outline'" />
                   }
                   <span>{{ comment.commentDislikes }}</span>
                 </a>
@@ -59,7 +59,7 @@
                   <span class="fi fi-chat-square"></span><span>回复</span>
                 </a>
                 <a *ngIf="replyVisibleMap[comment.commentId]" (click)="cancelReply()">
-                  <nz-icon nzType="close"/><span>取消</span>
+                  <nz-icon nzType="close" /><span>取消</span>
                 </a>
               </div>
             </div>
@@ -92,9 +92,9 @@
                        [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
                        (click)="vote(comment, true)">
                       @if (commentVoteLoading[comment.commentId]) {
-                        <nz-icon nzType="loading"/>
+                        <nz-icon nzType="loading" />
                       } @else {
-                        <span nz-icon nzType="like" [nzTheme]="comment.liked ? 'fill' : 'outline'"></span>
+                        <nz-icon nzType="like" [nzTheme]="comment.liked ? 'fill' : 'outline'" />
                       }
                       <span>{{ comment.commentLikes }}</span>
                     </a>
@@ -102,9 +102,9 @@
                        [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
                        (click)="vote(comment, false)">
                       @if (commentVoteLoading[comment.commentId]) {
-                        <nz-icon nzType="loading"/>
+                        <nz-icon nzType="loading" />
                       } @else {
-                        <span nz-icon nzType="dislike" [nzTheme]="comment.disliked ? 'fill' : 'outline'"></span>
+                        <nz-icon nzType="dislike" [nzTheme]="comment.disliked ? 'fill' : 'outline'" />
                       }
                       <span>{{ comment.commentDislikes }}</span>
                     </a>
@@ -112,7 +112,7 @@
                       <span class="fi fi-chat-square"></span>
                     </a>
                     <a *ngIf="replyVisibleMap[comment.commentId]" (click)="cancelReply()">
-                      <nz-icon nzType="close"/>
+                      <nz-icon nzType="close" />
                     </a>
                   </div>
                 </div>

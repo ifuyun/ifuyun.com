@@ -68,7 +68,7 @@
                      placeholder="搜索全站（支持全文搜索）" />
             </nz-input-group>
             <ng-template #searchBtnTpl>
-              <button nz-button nzSearch type="submit" nzType="primary"><nz-icon nzType="search"/></button>
+              <button nz-button nzSearch type="submit" nzType="primary"><nz-icon nzType="search" /></button>
             </ng-template>
           </form>
         </div>
@@ -77,19 +77,19 @@
         } @else {
           <div class="more-action-group">
             <div class="more-action-nav">
-              <nz-icon nzType="user"/><span>{{ user.userNickname }}</span><i class="nav-arrow"></i>
+              <nz-icon nzType="user" /><span>{{ user.userNickname }}</span><i class="nav-arrow"></i>
             </div>
             <div class="more-action-list">
               <div class="sub-nav-list">
                 <ul>
                   <li>
                     <a class="sub-nav-link" (click)="gotoAdmin()">
-                      <nz-icon nzType="dashboard"/><span>个人中心</span>
+                      <nz-icon nzType="dashboard" /><span>个人中心</span>
                     </a>
                   </li>
                   <li>
                     <a class="sub-nav-link" (click)="logout()">
-                      <nz-icon nzType="logout"/><span>退出登录</span>
+                      <nz-icon nzType="logout" /><span>退出登录</span>
                     </a>
                   </li>
                 </ul>
@@ -99,24 +99,24 @@
         }
         <div class="more-action-group">
           <div class="more-action-nav">
-            <span nz-icon nzType="ellipsis" class="more-action-icon"></span>
+            <nz-icon nzType="ellipsis" class="more-action-icon" />
           </div>
           <div class="more-action-list">
             <div class="sub-nav-list">
               <ul>
                 <li>
                   <a class="sub-nav-link" (click)="showRedPacket()" title="支付宝扫码领红包">
-                    <span nz-icon class="icon-red-packet" nzType="red-envelope"></span><span>每日红包</span>
+                    <nz-icon class="icon-red-packet" nzType="red-envelope" /><span>每日红包</span>
                   </a>
                 </li>
                 <li>
                   <a class="sub-nav-link" (click)="showWallpaperModal()" title="精美壁纸">
-                    <span nz-icon class="icon-wallpaper" nzType="picture"></span><span>手气不错？</span>
+                    <nz-icon class="icon-wallpaper" nzType="picture" /><span>手气不错？</span>
                   </a>
                 </li>
                 <li>
                   <a class="sub-nav-link" [href]="appInfo?.appUrl + '/rss.xml'" (click)="logRSS()" title="文章 RSS 订阅">
-                    <span nz-icon class="icon-rss" nzType="wifi"></span><span>文章 RSS 订阅</span>
+                    <nz-icon class="icon-rss" nzType="wifi" /><span>文章 RSS 订阅</span>
                   </a>
                 </li>
                 <li>
@@ -124,12 +124,12 @@
                      [href]="appInfo?.appUrl + '/wallpaper-rss.xml'"
                      (click)="logRSS(true)"
                      title="壁纸 RSS 订阅">
-                    <span nz-icon class="icon-rss" nzType="wifi"></span><span>壁纸 RSS 订阅</span>
+                    <nz-icon class="icon-rss" nzType="wifi" /><span>壁纸 RSS 订阅</span>
                   </a>
                 </li>
                 <li>
                   <a class="sub-nav-link" (click)="showWechatCard()" title="微信公众号">
-                    <span nz-icon class="icon-wechat" nzType="wechat"></span><span>微信公众号</span>
+                    <nz-icon class="icon-wechat" nzType="wechat" /><span>微信公众号</span>
                   </a>
                 </li>
               </ul>
@@ -146,11 +146,11 @@
     <div class="m-header">
       @if (!searchVisible) {
         <div class="m-header-body">
-          <span nz-icon nzType="menu" (click)="showSider()"></span>
+          <nz-icon nzType="menu" (click)="showSider()" />
           <a class="m-logo" routerLink="/" [title]="appInfo?.appName">
             <img src="/favicon.png" [alt]="appInfo?.appName" /><span>{{ appInfo?.appName }}</span>
           </a>
-          <span nz-icon nzType="search" (click)="showSearch()"></span>
+          <nz-icon nzType="search" (click)="showSearch()" />
         </div>
       } @else {
         <div class="m-header-search">
@@ -165,7 +165,7 @@
                      placeholder="搜索全站（支持全文搜索）" />
             </nz-input-group>
             <ng-template #searchBtnTpl>
-              <button nz-button nzSearch type="submit" nzType="primary"><nz-icon nzType="search"/></button>
+              <button nz-button nzSearch type="submit" nzType="primary"><nz-icon nzType="search" /></button>
             </ng-template>
           </form>
           <div class="m-mask m-mask-search" (click)="hideSearch()"></div>

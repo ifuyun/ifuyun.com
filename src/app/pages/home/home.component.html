@@ -39,7 +39,7 @@
                 </div>
                 <div class="actions">
                   <div class="action-item" title="浏览: {{ post.post.postViews | numberView: 'K' }}">
-                    <nz-icon nzType="eye"/><span>{{ post.post.postViews | numberView: 'K' }}</span>
+                    <nz-icon nzType="eye" /><span>{{ post.post.postViews | numberView: 'K' }}</span>
                   </div>
                   @if (post.post.commentFlag !== 'closed') {
                     <div class="action-item" title="评论: {{ post.post.postComments | numberView: 'K' }}">
@@ -59,7 +59,7 @@
       </article>
     </div>
     <div class="post-more">
-      <a nz-button nzType="primary" routerLink="/post"><span>更多</span><nz-icon nzType="double-right"/></a>
+      <a nz-button nzType="primary" routerLink="/post"><span>更多</span><nz-icon nzType="double-right" /></a>
     </div>
   </div>
   <div class="main-content">
@@ -92,10 +92,10 @@
                 </div>
                 <div class="actions">
                   <div class="action-item" title="浏览: {{ wallpaper.wallpaperViews | numberView: 'K' }}">
-                    <nz-icon nzType="eye"/><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
+                    <nz-icon nzType="eye" /><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
                   </div>
                   <div class="action-item" title="点赞: {{ wallpaper.wallpaperLikes | numberView: 'K' }}">
-                    <nz-icon nzType="like"/><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
+                    <nz-icon nzType="like" /><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
                   </div>
                 </div>
               </div>
@@ -105,7 +105,7 @@
       </article>
     </div>
     <div class="post-more">
-      <a nz-button nzType="primary" routerLink="/wallpaper"><span>更多</span><nz-icon nzType="double-right"/></a>
+      <a nz-button nzType="primary" routerLink="/wallpaper"><span>更多</span><nz-icon nzType="double-right" /></a>
     </div>
   </div>
 } @else {
@@ -115,7 +115,7 @@
     <app-post-item *ngFor="let post of latestPosts; let i = index" [post]="post" [index]="i"></app-post-item>
   </div>
   <div class="post-more">
-    <a nz-button nzType="primary" routerLink="/post"><span>更多</span><nz-icon nzType="double-right"/></a>
+    <a nz-button nzType="primary" routerLink="/post"><span>更多</span><nz-icon nzType="double-right" /></a>
   </div>
   <div class="column-header m-column-header">最新壁纸</div>
   <div class="m-post-list">
@@ -125,6 +125,6 @@
                         [index]="i"></app-wallpaper-item>
   </div>
   <div class="post-more">
-    <a nz-button nzType="primary" routerLink="/wallpaper"><span>更多</span><nz-icon nzType="double-right"/></a>
+    <a nz-button nzType="primary" routerLink="/wallpaper"><span>更多</span><nz-icon nzType="double-right" /></a>
   </div>
 }

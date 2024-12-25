@@ -2,7 +2,7 @@
      *ngIf="breadcrumbs && breadcrumbs.length > 0"
      [class.m-breadcrumb]="isMobile"
      [class.p-breadcrumb]="!isMobile">
-  <nz-icon nzType="environment"/>
+  <nz-icon nzType="environment" />
   <ng-container *ngFor="let breadcrumb of breadcrumbs">
     @if (breadcrumb.url !== '') {
       @if (!breadcrumb.isHeader) {

@@ -24,6 +24,12 @@
   .related-item {
     flex-shrink: 0;
     flex-grow: 0;
+
+    &:hover {
+      .related-item-img > div {
+        transform: scale(1.08);
+      }
+    }
   }
 
   .related-item-img {
@@ -32,6 +38,7 @@
       background-position: center;
       background-repeat: no-repeat;
       border-radius: @primary-border-radius;
+      transition: transform .5s;
     }
   }
 

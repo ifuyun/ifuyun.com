@@ -6,7 +6,7 @@
              type="text"
              formControlName="username"
              [maxlength]="maxLoginLength"
-             placeholder="用户名或邮箱地址"/>
+             placeholder="用户名或邮箱地址" />
       <ng-template #nameErrorTpl let-control>
         <ng-container *ngIf="control.hasError('required')">请输入用户名或邮箱</ng-container>
         <ng-container *ngIf="control.hasError('maxlength')">用户名或邮箱最大长度为{{maxLoginLength}}位</ng-container>
@@ -21,11 +21,10 @@
                [type]="passwordVisible ? 'text' : 'password'"
                formControlName="password"
                [maxlength]="maxPasswordLength"
-               placeholder="用户密码"/>
+               placeholder="用户密码" />
       </nz-input-group>
       <ng-template #confirmPwdSuffix>
-        <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
-              (click)="passwordVisible = !passwordVisible"></span>
+        <nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible" />
       </ng-template>
       <ng-template #confirmErrorTpl let-control>
         <ng-container *ngIf="control.hasError('required')">请输入密码</ng-container>
@@ -39,7 +38,7 @@
         <a *ngIf="enableSignup"
            class="signup-link"
            [routerLink]="['../signup']"
-           title="立即注册"><nz-icon nzType="user-add"/>立即注册</a>
+           title="立即注册"><nz-icon nzType="user-add" />立即注册</a>
       </div>
       <button nz-button nzType="primary" (click)="login()" [nzLoading]="loginLoading">登录</button>
     </div>
@@ -47,31 +46,26 @@
   <ng-container *ngIf="enableThirdLogin">
     <nz-divider class="separator" nzText="其他登录方式"></nz-divider>
     <div class="auth-type">
-      <span nz-icon
-            nzType="wechat"
-            class="auth-type-wechat"
-            [class.disabled]="!thirdLogin['wechat']"
-            (click)="gotoThirdLogin('wechat')"></span>
-      <span nz-icon
-            nzType="qq"
-            class="auth-type-qq"
-            [class.disabled]="!thirdLogin['qq']"
-            (click)="gotoThirdLogin('qq')"></span>
-      <span nz-icon
-            nzType="alipay"
-            class="auth-type-alipay"
-            [class.disabled]="!thirdLogin['alipay']"
-            (click)="gotoThirdLogin('alipay')"></span>
-      <span nz-icon
-            nzType="weibo"
-            class="auth-type-weibo"
-            [class.disabled]="!thirdLogin['weibo']"
-            (click)="gotoThirdLogin('weibo')"></span>
-      <span nz-icon
-            nzType="github"
-            class="auth-type-github"
-            [class.disabled]="!thirdLogin['github']"
-            (click)="gotoThirdLogin('github')"></span>
+      <nz-icon nzType="wechat"
+               class="auth-type-wechat"
+               [class.disabled]="!thirdLogin['wechat']"
+               (click)="gotoThirdLogin('wechat')" />
+      <nz-icon nzType="qq"
+               class="auth-type-qq"
+               [class.disabled]="!thirdLogin['qq']"
+               (click)="gotoThirdLogin('qq')" />
+      <nz-icon nzType="alipay"
+               class="auth-type-alipay"
+               [class.disabled]="!thirdLogin['alipay']"
+               (click)="gotoThirdLogin('alipay')" />
+      <nz-icon nzType="weibo"
+               class="auth-type-weibo"
+               [class.disabled]="!thirdLogin['weibo']"
+               (click)="gotoThirdLogin('weibo')" />
+      <nz-icon nzType="github"
+               class="auth-type-github"
+               [class.disabled]="!thirdLogin['github']"
+               (click)="gotoThirdLogin('github')" />
     </div>
   </ng-container>
 </form>

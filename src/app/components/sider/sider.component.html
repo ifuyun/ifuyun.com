@@ -1,7 +1,7 @@
 <aside class="sider" #siderEle>
   <div>
     <div class="widget" *ngIf="hotPosts && hotPosts.length > 0">
-      <h3 class="widget-title"><span><nz-icon nzType="fire"/><span>热门文章</span></span></h3>
+      <h3 class="widget-title"><span><nz-icon nzType="fire" /><span>热门文章</span></span></h3>
       <ul class="hot-list">
         <li *ngFor="let post of hotPosts; let i = index">
           <span class="hot-num">{{ i + 1 }}</span>
@@ -10,7 +10,7 @@
       </ul>
     </div>
     <div class="widget" *ngIf="hotWallpapers && hotWallpapers.length > 0">
-      <h3 class="widget-title"><span><nz-icon nzType="fire"/><span>热门壁纸</span></span></h3>
+      <h3 class="widget-title"><span><nz-icon nzType="fire" /><span>热门壁纸</span></span></h3>
       <ul class="hot-list">
         <li *ngFor="let wallpaper of hotWallpapers; let i = index">
           <span class="hot-num">{{ i + 1 }}</span>
@@ -32,7 +32,7 @@
         <span><span class="fi fi-calendar-date"></span><span>文章归档</span></span>
         <span class="more">
           <a routerLink="/post/archive"
-             title="文章归档"><span>更多</span><nz-icon nzType="double-right"/></a>
+             title="文章归档"><span>更多</span><nz-icon nzType="double-right" /></a>
         </span>
       </h3>
       <ul>
@@ -47,7 +47,7 @@
         <span><span class="fi fi-calendar-date"></span><span>壁纸归档</span></span>
         <span class="more">
           <a routerLink="/wallpaper/archive"
-             title="壁纸归档"><span>更多</span><nz-icon nzType="double-right"/></a>
+             title="壁纸归档"><span>更多</span><nz-icon nzType="double-right" /></a>
         </span>
       </h3>
       <ul>
@@ -59,7 +59,7 @@
     </div>
     <!--非壁纸页-->
     <div class="widget" *ngIf="randomPosts && randomPosts.length > 0">
-      <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
+      <h3 class="widget-title"><span><nz-icon nzType="gift" /><span>手气不错</span></span></h3>
       <ul>
         <li *ngFor="let post of randomPosts">
           <a [routerLink]="post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</a>
@@ -68,7 +68,7 @@
     </div>
     <!--壁纸页-->
     <div class="widget" *ngIf="randomWallpapers && randomWallpapers.length > 0">
-      <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
+      <h3 class="widget-title"><span><nz-icon nzType="gift" /><span>手气不错</span></span></h3>
       <ul>
         <li *ngFor="let wallpaper of randomWallpapers">
           <a [routerLink]="'/wallpaper/' + wallpaper.wallpaperId"

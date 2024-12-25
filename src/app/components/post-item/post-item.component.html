@@ -16,10 +16,10 @@
             <span class="fi fi-calendar-date"></span><span>{{ post.post.postDate | date:'yyyy-MM-dd' }}</span>
           </div>
           <div class="auto-fit" title="作者: {{ post.post.postAuthor || post.post.owner.userNickname }}">
-            <nz-icon nzType="user"/><span>{{ post.post.postAuthor || post.post.owner.userNickname }}</span>
+            <nz-icon nzType="user" /><span>{{ post.post.postAuthor || post.post.owner.userNickname }}</span>
           </div>
           <div>
-            <nz-icon nzType="eye"/><span>{{ post.post.postViews | numberView: 'K' }}</span>
+            <nz-icon nzType="eye" /><span>{{ post.post.postViews | numberView: 'K' }}</span>
           </div>
           <a *ngIf="post.post.commentFlag !== 'closed'"
              [routerLink]="post.post.postGuid"
@@ -42,9 +42,9 @@
             <img class="lazyload"
                  src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                  [attr.data-src]="post.post.cover"
-                 [alt]="post.post.postTitle"/>
+                 [alt]="post.post.postTitle" />
           } @else {
-            <img [src]="post.post.cover" [alt]="post.post.postTitle"/>
+            <img [src]="post.post.cover" [alt]="post.post.postTitle" />
           }
           <div class="overlay"></div>
         </a>
@@ -52,7 +52,7 @@
     </div>
     <div *ngIf="post.tags.length > 0" class="post-item-tag">
       <div>
-        <div class="post-item-tag-icon"><nz-icon nzType="tag"/></div>
+        <div class="post-item-tag-icon"><nz-icon nzType="tag" /></div>
         <ul>
           <li *ngFor="let tag of post.tags">
             <a [routerLink]="'/post/tag/' + tag.tagName"
@@ -67,15 +67,15 @@
   <article class="m-post-item">
     <header>
       <h2>
-        <span *ngIf="post.post.postSticky" class="m-meta-tag meta-tag-sticky"><nz-icon nzType="vertical-align-top"/></span>
-        <span *ngIf="post.post.postPayFlag" class="m-meta-tag meta-tag-pay"><nz-icon nzType="lock"/></span>
-        <span *ngIf="post.post.postLoginFlag" class="m-meta-tag meta-tag-vip"><nz-icon nzType="user-add"/></span>
+        <span *ngIf="post.post.postSticky" class="m-meta-tag meta-tag-sticky"><nz-icon nzType="vertical-align-top" /></span>
+        <span *ngIf="post.post.postPayFlag" class="m-meta-tag meta-tag-pay"><nz-icon nzType="lock" /></span>
+        <span *ngIf="post.post.postLoginFlag" class="m-meta-tag meta-tag-vip"><nz-icon nzType="user-add" /></span>
         <a [routerLink]="post.post.postGuid"
            [title]="post.post.postTitle"
            rel="bookmark">{{ post.post.postTitle }}</a>
       </h2>
       <div class="m-post-item-stat">
-        <span><nz-icon nzType="eye"/><span>{{ post.post.postViews | numberView: 'K' }}</span></span>
+        <span><nz-icon nzType="eye" /><span>{{ post.post.postViews | numberView: 'K' }}</span></span>
         <a *ngIf="post.post.commentFlag !== 'closed'"
            [routerLink]="post.post.postGuid"
            fragment="comments"
@@ -93,7 +93,7 @@
       <span class="fi fi-calendar-date"></span><span>{{ post.post.postDate | date:'yyyy-MM-dd' }}</span>
     </span>
       <span title="作者: {{ post.post.postAuthor || post.post.owner.userNickname }}">
-      <nz-icon nzType="user"/><span>{{ post.post.postAuthor || post.post.owner.userNickname }}</span>
+      <nz-icon nzType="user" /><span>{{ post.post.postAuthor || post.post.owner.userNickname }}</span>
     </span>
       <span *ngIf="post.post.postOriginal === 1" title="{{ post.post.owner.userNickname }}原创">
       <span class="fi fi-pencil"></span><span>原创</span>
@@ -106,7 +106,7 @@
         <img class="lazyload"
              src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
              [attr.data-src]="post.post.cover"
-             [alt]="post.post.postTitle"/>
+             [alt]="post.post.postTitle" />
         <div class="overlay"></div>
       </a>
     </div>
@@ -115,7 +115,7 @@
     </div>
     <div *ngIf="post.tags.length > 0" class="post-item-tag m-post-item-tag">
       <div>
-        <div class="post-item-tag-icon m-post-item-tag-icon"><nz-icon nzType="tag"/></div>
+        <div class="post-item-tag-icon m-post-item-tag-icon"><nz-icon nzType="tag" /></div>
         <ul>
           <li *ngFor="let tag of post.tags">
             <a [routerLink]="'/post/tag/' + tag.tagName"
