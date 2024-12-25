@@ -49,9 +49,9 @@ export interface ActionLog extends AppParam {
   theme?: Theme;
   carouselTitle?: string;
   carouselURL?: string;
+  index?: number;
   adsPosition?: string;
   goodsURL?: string;
   goodsName?: string;
-  extraData?: Record<string, any>;
   ip?: string;
 }

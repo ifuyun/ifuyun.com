@@ -113,6 +113,7 @@ export class PostComponent implements OnInit {
   private postSlug = '';
   private referrer = '';
   private breadcrumbs: BreadcrumbEntity[] = [];
+  private codeList: string[] = [];
 
   constructor(
     private readonly destroy$: DestroyService,
@@ -188,27 +189,25 @@ export class PostComponent implements OnInit {
         this.showLoginModal();
         return;
       }
-      const $parent = $target.parentNode?.parentNode;
-      if ($parent) {
-        const $code = $parent.querySelector('.i-code-text');
-        const codeText = $code?.innerHTML;
-        if (codeText) {
-          this.clipboardService.copy(decodeEntities(codeText));
-          $target.innerHTML = this.copiedHTML;
+      const index = Number($target.dataset['i']);
+      const codeText = this.codeList[index];
+      if (codeText) {
+        this.clipboardService.copy(decodeEntities(codeText));
+        $target.innerHTML = this.copiedHTML;
 
-          window.setTimeout(() => {
-            $target.innerHTML = this.copyHTML;
-          }, 2000);
+        window.setTimeout(() => {
+          $target.innerHTML = this.copyHTML;
+        }, 2000);
 
-          this.logService
-            .logAction({
-              action: ActionType.COPY_CODE,
-              objectType: ActionObjectType.POST,
-              objectId: this.post.postId
-            })
-            .pipe(takeUntil(this.destroy$))
-            .subscribe();
-        }
+        this.logService
+          .logAction({
+            action: ActionType.COPY_CODE,
+            objectType: ActionObjectType.POST,
+            objectId: this.post.postId,
+            index: index + 1
+          })
+          .pipe(takeUntil(this.destroy$))
+          .subscribe();
       }
     }
   }
@@ -318,8 +317,11 @@ export class PostComponent implements OnInit {
   }
 
   private initData(post: Post) {
+    const result = this.postService.parseHTML(post.post.postContent, this.copyHTML);
+
     this.post = post.post;
-    this.post.postContent = this.postService.parseHTML(this.post.postContent, this.copyHTML);
+    this.post.postContent = result.content;
+    this.codeList = result.codeList;
     this.post.postSource = this.postService.getPostSource(post);
     this.postMeta = post.meta;
     this.postCategories = post.categories;

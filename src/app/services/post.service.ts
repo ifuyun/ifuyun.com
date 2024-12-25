@@ -119,7 +119,9 @@ export class PostService {
   }
 
   parseHTML(content: string, copyHTML: string) {
-    return content.replace(
+    let count = 0;
+    const codeList: string[] = [];
+    const result = content.replace(
       /<pre(?:\s+[^>]*)*>\s*<code(?:\s+[^>]*)?>([\s\S]*?)<\/code>\s*<\/pre>/gi,
       (preStr, codeStr: string) => {
         const langReg = /^<pre(?:\s+[^>]*)*\s+class="([^"]+)"(?:\s+[^>]*)*>/gi;
@@ -138,33 +140,39 @@ export class PostService {
           }
         }
         // unescape: ><&…, etc.
-        codeStr = codeStr
+        const codeDecoded = codeStr
           .replace(/&lt;/gi, '<')
           .replace(/&gt;/gi, '>')
           .replace(/&amp;/gi, '&')
           .replace(/&hellip;/gi, '…');
-        const lines = codeStr
+        const lines = codeDecoded
           .split(/\r\n|\r|\n/i)
           .map((str, i) => `<li>${i + 1}</li>`)
           .join('');
         const codes = language
-          ? highlight.highlight(codeStr, { language }).value
-          : highlight.highlightAuto(codeStr).value;
+          ? highlight.highlight(codeDecoded, { language }).value
+          : highlight.highlightAuto(codeDecoded).value;
+
+        codeList.push(codeStr);
 
         return (
           `<pre class="i-code"${langStr ? ' data-lang="' + langStr + '"' : ''}>` +
           `<div class="i-code-info">` +
-          `<span>${langStr}</span><span class="i-code-copy">${copyHTML}</span>` +
+          `<span>${langStr}</span><span class="i-code-copy" data-i="${count++}">${copyHTML}</span>` +
           `</div>` +
           `<div class="i-code-body">` +
           `<ul class="i-code-lines">${lines}</ul>` +
           `<code class="i-code-html">${codes}</code>` +
-          `<div class="i-code-text">${codeStr}</div>` +
           `</div>` +
           `</pre>`
         );
       }
     );
+
+    return {
+      content: result,
+      codeList
+    };
   }
 
   transformArchives(archiveData: ArchiveData[]): ArchiveList {
