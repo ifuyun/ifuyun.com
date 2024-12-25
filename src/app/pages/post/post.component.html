@@ -11,10 +11,10 @@
           <span class="fi fi-calendar-date"></span><span>{{ post.postDate | date:'yyyy-MM-dd' }}</span>
         </span>
         <span title="作者：{{ post.postAuthor || post.owner.userNickname }}">
-          <span nz-icon nzType="user"></span><span>{{ post.postAuthor || post.owner.userNickname }}</span>
+          <nz-icon nzType="user"/><span>{{ post.postAuthor || post.owner.userNickname }}</span>
         </span>
         <span title="阅读：{{ post.postViews | numberView: 'K' }}">
-          <span nz-icon nzType="eye"></span><span>{{ post.postViews | numberView: 'K' }}</span>
+          <nz-icon nzType="eye"/><span>{{ post.postViews | numberView: 'K' }}</span>
         </span>
       </div>
     </header>
@@ -45,7 +45,7 @@
     <footer class="post-footer">
       <div>
         <div class="post-meta" *ngIf="isArticle && postCategories.length > 0">
-          <div class="post-meta-icon"><span nz-icon nzType="folder"></span></div>
+          <div class="post-meta-icon"><nz-icon nzType="folder"/></div>
           <ul class="post-meta-info">
             <li *ngFor="let cat of postCategories">
               <a [routerLink]="'/post/category/' + cat.taxonomySlug"
@@ -55,7 +55,7 @@
           </ul>
         </div>
         <div class="post-meta" *ngIf="postTags.length > 0">
-          <div class="post-meta-icon"><span nz-icon nzType="tag"></span></div>
+          <div class="post-meta-icon"><nz-icon nzType="tag"/></div>
           <ul class="post-meta-info">
             <li *ngFor="let tag of postTags">
               <a [routerLink]="'/post/tag/' + tag.tagName"
@@ -65,7 +65,7 @@
           </ul>
         </div>
         <div class="post-meta" *ngIf="isArticle">
-          <div class="post-meta-icon"><span nz-icon nzType="book"></span></div>
+          <div class="post-meta-icon"><nz-icon nzType="book"/></div>
           <div class="post-meta-info">
             @if(post.postOriginal === 1) {
               <span class="post-meta-info-text"
@@ -77,7 +77,7 @@
           </div>
         </div>
         <div class="post-meta" *ngIf="isArticle && post.postOriginal === 1">
-          <div class="post-meta-icon"><span nz-icon nzType="copyright"></span></div>
+          <div class="post-meta-icon"><nz-icon nzType="copyright"/></div>
           <div class="post-meta-info">
             @if (['private', 'commercial'].includes(post.postCopyType)) {
               <span class="post-meta-info-text"
@@ -92,7 +92,7 @@
           </div>
         </div>
         <div class="post-meta">
-          <div class="post-meta-icon"><span nz-icon nzType="clock-circle"></span></div>
+          <div class="post-meta-icon"><nz-icon nzType="clock-circle"/></div>
           <div class="post-meta-info">
             <span class="post-meta-info-text"
                   title="更新于: {{ post.postModified | date:'yyyy-MM-dd HH:mm' }}">
@@ -126,6 +126,6 @@
   <app-post-related *ngIf="isArticle"></app-post-related>
   <app-make-money></app-make-money>
   <app-comment [objectType]="commentType" [enableAI]="!post.postPayFlag && !post.postLoginFlag"></app-comment>
-  <app-share-modal *ngIf="shareVisible" [shareUrl]="shareUrl" (closeModal)="closeShareQrcode()"></app-share-modal>
-  <app-login-modal *ngIf="loginVisible" (closeModal)="closeLoginModal()"></app-login-modal>
+  <app-share-modal *ngIf="shareVisible" [shareUrl]="shareUrl" (close)="closeShareQrcode()"></app-share-modal>
+  <app-login-modal *ngIf="loginVisible" (close)="closeLoginModal()"></app-login-modal>
 }

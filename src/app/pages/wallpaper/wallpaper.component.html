@@ -13,7 +13,7 @@
           <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date: 'yyyy-MM-dd' }}</span>
         </span>
         <span title="访问：{{ wallpaper.wallpaperViews | numberView: 'K' }}">
-          <span nz-icon nzType="eye"></span><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
+          <nz-icon nzType="eye"/><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
         </span>
       </div>
     </header>
@@ -46,7 +46,7 @@
     <footer class="post-footer">
       <div>
         <div class="post-meta">
-          <div class="post-meta-icon"><span nz-icon nzType="environment"></span></div>
+          <div class="post-meta-icon"><nz-icon nzType="environment"/></div>
           <div class="post-meta-info">
             <span class="post-meta-info-text"
                   title="地点: {{ wallpaper.wallpaperLocation }}">{{ wallpaper.wallpaperLocation }}</span>
@@ -54,7 +54,7 @@
         </div>
       </div>
       <div class="post-meta">
-        <div class="post-meta-icon"><span nz-icon nzType="copyright"></span></div>
+        <div class="post-meta-icon"><nz-icon nzType="copyright"/></div>
         <div class="post-meta-info">
           <span class="post-meta-info-text"
                 title="版权: {{ wallpaper.wallpaperCopyrightAuthor }}">{{ wallpaper.wallpaperCopyrightAuthor }}</span>
@@ -84,6 +84,6 @@
   <app-wallpaper-related [lang]="lang"></app-wallpaper-related>
   <app-make-money></app-make-money>
   <app-comment [objectType]="commentType" [enableAI]="true"></app-comment>
-  <app-share-modal *ngIf="shareVisible" [shareUrl]="shareUrl" (closeModal)="closeShareQrcode()"></app-share-modal>
-  <app-login-modal *ngIf="loginVisible" (closeModal)="closeLoginModal()"></app-login-modal>
+  <app-share-modal *ngIf="shareVisible" [shareUrl]="shareUrl" (close)="closeShareQrcode()"></app-share-modal>
+  <app-login-modal *ngIf="loginVisible" (close)="closeLoginModal()"></app-login-modal>
 }

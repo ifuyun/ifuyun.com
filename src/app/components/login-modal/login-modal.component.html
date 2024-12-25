@@ -5,10 +5,10 @@
   [nzWidth]="352"
   nzTitle="登录"
   [nzFooter]="null"
-  (nzOnCancel)="onClose()"
-  (nzOnOk)="onClose()"
+  (nzOnCancel)="closeModal()"
+  (nzOnOk)="closeModal()"
 >
   <ng-container *nzModalContent>
-    <app-login-form [isModal]="true" (closeForm)="onClose()"></app-login-form>
+    <app-login-form [isModal]="true" (closeForm)="closeModal()"></app-login-form>
   </ng-container>
 </nz-modal>

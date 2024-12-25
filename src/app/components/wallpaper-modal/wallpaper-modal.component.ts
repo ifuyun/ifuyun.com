@@ -16,7 +16,7 @@ import { WallpaperService } from '../../services/wallpaper.service';
 })
 export class WallpaperModalComponent implements OnChanges {
   @Input() visible = false;
-  @Output() closeModal = new EventEmitter();
+  @Output() close = new EventEmitter();
 
   loading = false;
   wallpapers: Wallpaper[] = [];
@@ -49,7 +49,7 @@ export class WallpaperModalComponent implements OnChanges {
   }
 
   gotoDetail() {
-    this.onClose();
+    this.closeModal();
     this.router.navigate(['/wallpaper/' + this.activeWallpaper.wallpaperId], {
       queryParams: {
         lang: this.activeWallpaper.isCn ? null : 'en',
@@ -63,12 +63,12 @@ export class WallpaperModalComponent implements OnChanges {
   }
 
   gotoWallpaper() {
-    this.onClose();
+    this.closeModal();
     this.router.navigate(['/wallpaper'], { queryParams: { ref: 'toolbox' } });
   }
 
-  onClose() {
-    this.closeModal.emit();
+  closeModal() {
+    this.close.emit();
   }
 
   private getWallpapers() {

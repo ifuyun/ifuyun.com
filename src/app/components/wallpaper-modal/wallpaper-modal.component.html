@@ -8,17 +8,17 @@
   [nzFooter]="null"
   [nzClosable]="false"
   [nzMaskClosable]="true"
-  (nzOnCancel)="onClose()"
-  (nzOnOk)="onClose()"
+  (nzOnCancel)="closeModal()"
+  (nzOnOk)="closeModal()"
 >
   <ng-container *nzModalContent>
     <div class="w-modal">
       @if (loading || !wallpapers.length) {
-        <div><span nz-icon nzType="loading"></span></div>
+        <div><nz-icon nzType="loading"/></div>
       } @else {
         <div class="w-photo" [style.background-image]="'url(' + (activeWallpaper.wallpaperUrl || '') + ')'"></div>
         <div class="w-close">
-          <span nz-icon nzType="close" (click)="onClose()"></span>
+          <span nz-icon nzType="close" (click)="closeModal()"></span>
         </div>
         <div class="w-content">
           <div>

@@ -14,13 +14,13 @@
               <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
             </div>
             <div class="auto-fit" [title]="wallpaperLocation">
-              <span nz-icon nzType="environment"></span><span>{{ wallpaperLocation }}</span>
+              <nz-icon nzType="environment"/><span>{{ wallpaperLocation }}</span>
             </div>
             <div>
-              <span nz-icon nzType="eye"></span><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
+              <nz-icon nzType="eye"/><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
             </div>
             <div>
-              <span nz-icon nzType="like"></span><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
+              <nz-icon nzType="like"/><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
             </div>
           </div>
           <div class="post-item-excerpt">
@@ -52,8 +52,8 @@
                [title]="wallpaper.wallpaperCopyright"
                rel="bookmark">{{ wallpaper.wallpaperCopyright }}</a></h2>
         <div class="m-post-item-stat">
-          <span><span nz-icon nzType="eye"></span><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span></span>
-          <span><span nz-icon nzType="like"></span><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span></span>
+          <span><nz-icon nzType="eye"/><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span></span>
+          <span><nz-icon nzType="like"/><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span></span>
         </div>
       </header>
       <div class="m-post-item-meta">
@@ -61,7 +61,7 @@
           <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
         </span>
         <span class="auto-fit" [title]="wallpaperLocation">
-          <span nz-icon nzType="environment"></span><span>{{ wallpaperLocation }}</span>
+          <nz-icon nzType="environment"/><span>{{ wallpaperLocation }}</span>
         </span>
       </div>
       <div class="m-post-item-cover">
@@ -108,7 +108,7 @@
         <div class="post-meta-wrap">
           <div class="post-meta" *ngIf="!isMobile">
             <div class="location" [title]="wallpaperLocation">
-              <span nz-icon nzType="environment"></span><span>{{ wallpaperLocation }}</span>
+              <nz-icon nzType="environment"/><span>{{ wallpaperLocation }}</span>
             </div>
           </div>
           <div class="post-meta">
@@ -117,10 +117,10 @@
             </div>
             <div class="actions">
               <div class="action-item" title="浏览: {{ wallpaper.wallpaperViews | numberView: 'K' }}">
-                <span nz-icon nzType="eye"></span><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
+                <nz-icon nzType="eye"/><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
               </div>
               <div class="action-item" title="喜欢: {{ wallpaper.wallpaperLikes | numberView: 'K' }}">
-                <span nz-icon nzType="like"></span><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
+                <nz-icon nzType="like"/><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
               </div>
             </div>
           </div>

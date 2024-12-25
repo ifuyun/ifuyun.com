@@ -5,8 +5,8 @@
   [nzWidth]="392"
   [nzBodyStyle]="{ display: 'flex' }"
   [nzFooter]="null"
-  (nzOnCancel)="onClose()"
-  (nzOnOk)="onClose()"
+  (nzOnCancel)="closeModal()"
+  (nzOnOk)="closeModal()"
 >
   <ng-container *nzModalContent>
     <nz-qrcode *ngIf="shareUrl"

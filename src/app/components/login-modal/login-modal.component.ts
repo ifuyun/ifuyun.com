@@ -10,9 +10,9 @@ import { LoginFormComponent } from '../login-form/login-form.component';
 })
 export class LoginModalComponent {
   @Input() visible = true;
-  @Output() closeModal = new EventEmitter();
+  @Output() close = new EventEmitter();
 
-  onClose() {
-    this.closeModal.emit();
+  closeModal() {
+    this.close.emit();
   }
 }

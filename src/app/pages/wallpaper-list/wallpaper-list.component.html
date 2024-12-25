@@ -20,12 +20,12 @@
          nzValue="card"
          [routerLink]="paginationUrl"
          [queryParams]="getListParam(lang, WallpaperListMode.CARD, page)"
-         title="卡片模式"><span nz-icon nzType="appstore"></span></a>
+         title="卡片模式"><nz-icon nzType="appstore"/></a>
       <a nz-radio-button
          nzValue="list"
          [routerLink]="paginationUrl"
          [queryParams]="getListParam(lang, WallpaperListMode.LIST, page)"
-         title="列表模式"><span nz-icon nzType="bars"></span></a>
+         title="列表模式"><nz-icon nzType="bars"/></a>
     </nz-radio-group>
   </div>
   <div [class.post-list]="mode === 'list' && !isMobile"
