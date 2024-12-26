@@ -116,7 +116,7 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
 
         if (res.token?.accessToken) {
           const urlParam = format(ADMIN_URL_PARAM, res.token.accessToken, APP_ID);
-          window.location.href = this.appInfo.appAdminUrl + urlParam;
+          window.location.href = this.appInfo.appAdminUrl + '?' + urlParam;
         }
       });
   }

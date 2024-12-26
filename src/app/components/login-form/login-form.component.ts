@@ -146,15 +146,16 @@ export class LoginFormComponent extends BaseComponent implements OnInit {
           let redirectUrl: string;
           if (!this.isModal) {
             if (this.referrer && this.referrer !== 'logout') {
+              const separator = this.referrer.indexOf('?') >= 0 ? '&' : '?';
               if (/^https?:\/\//i.test(this.referrer)) {
                 // 绝对路径
-                redirectUrl = this.referrer;
+                redirectUrl = this.referrer + separator + urlParam;
               } else {
-                // 相对路径
+                // 相对路径，不需要带上token
                 redirectUrl = this.appInfo.appUrl + '/' + this.referrer.replace(/^\//i, '');
               }
             } else {
-              redirectUrl = this.appInfo.appAdminUrl + urlParam;
+              redirectUrl = this.appInfo.appAdminUrl + '?' + urlParam;
             }
             location.href = redirectUrl;
           } else {

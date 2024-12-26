@@ -130,7 +130,7 @@ export class LoginCallbackComponent implements OnInit {
         if (authInfo.token?.accessToken) {
           // 不能用 router.navigate 跳转，否则会出现状态问题，并且会重复执行 login() 两次
           const urlParam = format(ADMIN_URL_PARAM, authInfo.token.accessToken, APP_ID);
-          location.replace(this.appInfo.appAdminUrl + urlParam);
+          location.replace(this.appInfo.appAdminUrl + '?' + urlParam);
         } else if (res.code === ResponseCode.USER_UNVERIFIED) {
           const user = authInfo.user;
           if (user?.userId) {

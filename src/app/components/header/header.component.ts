@@ -89,8 +89,8 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
         this.appInfo = appInfo;
 
         const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), APP_ID);
-        this.adminUrl = this.appInfo.appAdminUrl + urlParam;
-        this.botsUrl = this.appInfo.appAdminUrl.replace(/\/$/i, '') + '/bots' + urlParam;
+        this.adminUrl = this.appInfo.appAdminUrl + '?' + urlParam;
+        this.botsUrl = this.appInfo.appAdminUrl.replace(/\/$/i, '') + '/bots' + '?' + urlParam;
       });
     this.commonService.pageIndex$.pipe(takeUntil(this.destroy$)).subscribe((page) => {
       this.indexInfo = this.commonService.getPageIndexInfo(page);
