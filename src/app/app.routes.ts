@@ -1,5 +1,4 @@
-import { Routes, UrlMatchResult, UrlSegment } from '@angular/router';
-import { PAGE_PREFIX_BLACKLIST, REGEXP_PAGE_NAME } from './config/common.constant';
+import { Routes } from '@angular/router';
 import { LoginCallbackComponent } from './pages/auth/login-callback/login-callback.component';
 import { LoginComponent } from './pages/auth/login/login.component';
 import { SignupConfirmComponent } from './pages/auth/signup-confirm/signup-confirm.component';
@@ -24,28 +23,6 @@ import { ToolListComponent } from './pages/tool/tool-list/tool-list.component';
 import { WallpaperArchiveComponent } from './pages/wallpaper-archive/wallpaper-archive.component';
 import { WallpaperListComponent } from './pages/wallpaper-list/wallpaper-list.component';
 import { WallpaperComponent } from './pages/wallpaper/wallpaper.component';
-
-export function pageUrlMatcher(url: UrlSegment[]): UrlMatchResult | null {
-  // /a/b, /a/b/c, /a/b/c/d, etc.
-  if (url.length !== 1) {
-    return null;
-  }
-  // exists
-  if (PAGE_PREFIX_BLACKLIST.includes(url[0].path)) {
-    return null;
-  }
-  // not a valid slug(/xxx)
-  if (!REGEXP_PAGE_NAME.test(url[0].path)) {
-    return null;
-  }
-
-  return {
-    consumed: url,
-    posParams: {
-      postName: url[0]
-    }
-  };
-}
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', component: HomeComponent },
@@ -104,17 +81,17 @@ export const routes: Routes = [
     }
   },
   {
+    path: ':postName',
+    component: ContentLayoutComponent,
+    children: [{ path: '', pathMatch: 'full', component: PageComponent }]
+  },
+  {
     path: 'error',
     children: [
       { path: '403', component: ForbiddenComponent },
       { path: '404', component: NotFoundComponent },
       { path: '500', component: ServerErrorComponent }
     ]
-  },
-  {
-    matcher: pageUrlMatcher,
-    component: ContentLayoutComponent,
-    children: [{ path: '', pathMatch: 'full', component: PageComponent }]
   },
   { path: '**', redirectTo: '/error/404' }
 ];
