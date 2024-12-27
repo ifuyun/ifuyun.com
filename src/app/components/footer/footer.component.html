@@ -25,12 +25,13 @@
         </ul>
       </div>
       <div>{{ copyright }}</div>
-      <div>&copy; Powered by <a href="https://www.ireadpay.com">抚云科技</a></div>
+      <div>&copy; Powered by <a href="https://www.ireadpay.com" target="_blank">抚云科技</a></div>
       @if (!isMobile) {
         <ul class="beian-link">
           <li><a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">{{ options['icp_code'] }}</a></li>
           <li><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode={{ recordCode }}"
-                 target="_blank" rel="nofollow">{{ options['record_code'] }}</a></li>
+                 target="_blank"
+                 rel="nofollow">{{ options['record_code'] }}</a></li>
         </ul>
       } @else {
         <div><a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">{{ options['icp_code'] }}</a></div>

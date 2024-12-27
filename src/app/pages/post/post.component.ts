@@ -222,7 +222,7 @@ export class PostComponent implements OnInit {
     }
     this.voteService
       .saveVote({
-        objectId: this.postId,
+        objectId: this.post.postId,
         value: VoteValue.LIKE,
         type: this.postType === PostType.PAGE ? VoteType.PAGE : VoteType.POST
       })
@@ -342,7 +342,7 @@ export class PostComponent implements OnInit {
         isHeader: false
       });
     } else {
-      this.pageIndex = this.post.postName;
+      this.pageIndex = 'page-' + this.post.postName;
       this.breadcrumbs = [];
     }
 

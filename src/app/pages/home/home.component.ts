@@ -82,10 +82,10 @@ export class HomeComponent implements OnInit {
         this.options = options;
 
         this.updatePageInfo();
-        this.fetchPosts();
-        this.fetchWallpapers();
+        this.getPosts();
+        this.getWallpapers();
         if (!this.isMobile) {
-          this.fetchHotPosts();
+          this.getHotPosts();
         }
       });
   }
@@ -98,7 +98,7 @@ export class HomeComponent implements OnInit {
     this.commonService.updatePageIndex(this.pageIndex);
   }
 
-  private fetchPosts() {
+  private getPosts() {
     this.postService
       .getPosts({
         page: 1,
@@ -111,7 +111,7 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  private fetchWallpapers() {
+  private getWallpapers() {
     this.wallpaperService
       .getWallpapers({
         page: 1,
@@ -124,7 +124,7 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  private fetchHotPosts() {
+  private getHotPosts() {
     this.postService
       .getHotPosts()
       .pipe(takeUntil(this.destroy$))

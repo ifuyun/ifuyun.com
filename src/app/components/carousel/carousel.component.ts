@@ -60,14 +60,14 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         if (this.carouselOptions.type === 'album') {
-          this.fetchCarousels();
+          this.getCarousels();
         } else {
           if (this.carouselOptions.orderBy === 'random') {
-            this.fetchRandomWallpapers();
+            this.getRandomWallpapers();
           } else if (this.carouselOptions.orderBy === 'hottest') {
-            this.fetchHotWallpapers();
+            this.getHotWallpapers();
           } else {
-            this.fetchWallpapers();
+            this.getWallpapers();
           }
         }
       });
@@ -158,7 +158,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private fetchCarousels() {
+  private getCarousels() {
     this.optionService
       .getCarousels()
       .pipe(takeUntil(this.destroy$))
@@ -171,7 +171,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  private fetchRandomWallpapers() {
+  private getRandomWallpapers() {
     this.wallpaperService
       .getRandomWallpapers(this.carouselOptions.size || 4)
       .pipe(takeUntil(this.destroy$))
@@ -181,7 +181,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  private fetchHotWallpapers() {
+  private getHotWallpapers() {
     this.wallpaperService
       .getHotWallpapers(this.carouselOptions.size || 4)
       .pipe(takeUntil(this.destroy$))
@@ -191,7 +191,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  private fetchWallpapers() {
+  private getWallpapers() {
     this.wallpaperService
       .getWallpapers({
         page: 1,

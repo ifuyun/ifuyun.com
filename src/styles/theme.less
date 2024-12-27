@@ -1,10 +1,12 @@
+@import "variables";
+
 :root {
   &[data-theme='light'] {
     --base-color: #241915;
     --base-font-color: var(--base-color);
     --base-bg-color: #fff;
     --primary-bg-color: #fff;
-    --primary-color: #1890ff;
+    --primary-color: @primary-color;
     --active-color: #40a9ff;
     --meta-color: #999;
     --minor-meta-color: rgba(0, 0, 0, .38);
@@ -113,7 +115,7 @@
     --base-font-color: var(--base-color);
     --base-bg-color: #fff;
     --primary-bg-color: #fff;
-    --primary-color: #1890ff;
+    --primary-color: @primary-color;
     --active-color: #40a9ff;
     --meta-color: #999;
     --minor-meta-color: rgba(0, 0, 0, .38);
