@@ -56,6 +56,10 @@ export class WallpaperRelatedComponent implements OnInit {
     return !wallpaper.isEn ? {} : { lang: WallpaperLang.EN };
   }
 
+  getWallpaperCopyright(wallpaper: WallpaperSearchItem) {
+    return this.lang === WallpaperLang.EN ? wallpaper.wallpaperCopyrightEn : wallpaper.wallpaperCopyrightCn;
+  }
+
   private getRelatedWallpapers(): void {
     this.wallpaperService
       .getRelatedWallpapers({
@@ -66,15 +70,12 @@ export class WallpaperRelatedComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.relatedWallpapers = (res || []).map((item) => {
-          const titleCn = item.wallpaperTitleCn || item.wallpaperTitleEn;
-          const titleEn = item.wallpaperTitleEn || item.wallpaperTitleCn;
-          const copyrightCn = item.wallpaperCopyrightCn || item.wallpaperCopyrightEn;
-          const copyrightEn = item.wallpaperCopyrightEn || item.wallpaperCopyrightCn;
-
           return {
             ...item,
-            wallpaperTitle: this.lang === WallpaperLang.EN ? titleEn : titleCn,
-            wallpaperCopyright: this.lang === WallpaperLang.EN ? copyrightEn : copyrightCn,
+            wallpaperTitleCn: item.wallpaperTitleCn || item.wallpaperTitleEn,
+            wallpaperTitleEn: item.wallpaperTitleEn || item.wallpaperTitleCn,
+            wallpaperCopyrightCn: item.wallpaperCopyrightCn || item.wallpaperCopyrightEn,
+            wallpaperCopyrightEn: item.wallpaperCopyrightEn || item.wallpaperCopyrightCn,
             isCn: !!item.wallpaperCopyrightCn,
             isEn: !!item.wallpaperCopyrightEn
           };

@@ -94,7 +94,6 @@ export class WallpaperComponent implements OnInit {
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
   private isChanged = false;
-  private isLoaded = false;
 
   constructor(
     private readonly destroy$: DestroyService,
@@ -144,11 +143,11 @@ export class WallpaperComponent implements OnInit {
         this.wallpaperId = wid;
         this.lang = <WallpaperLang>qp.get('lang')?.trim() || WallpaperLang.CN;
 
-        if (!this.isLoaded || this.isChanged) {
+        this.getWallpaper();
+
+        if (this.isChanged) {
           this.wallpaperService.updateActiveWallpaperId(this.wallpaperId);
           this.commentService.updateObjectId(this.wallpaperId);
-          this.getWallpaper();
-          this.isLoaded = true;
         }
       });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {

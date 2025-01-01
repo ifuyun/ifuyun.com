@@ -6,13 +6,13 @@
         <a class="related-item-img"
            [routerLink]="['../' + wallpaper.wallpaperId]"
            [queryParams]="getLangParams(wallpaper)"
-           [title]="wallpaper.wallpaperCopyright">
+           [title]="getWallpaperCopyright(wallpaper)">
           <div class="lazyload" [attr.data-bg]="wallpaper.wallpaperUrl"></div>
         </a>
         <div class="related-item-title">
           <a [routerLink]="['../' + wallpaper.wallpaperId]"
              [queryParams]="getLangParams(wallpaper)"
-             [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</a>
+             [title]="getWallpaperCopyright(wallpaper)">{{ getWallpaperCopyright(wallpaper) }}</a>
         </div>
       </div>
     </div>
