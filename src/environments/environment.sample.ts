@@ -6,5 +6,6 @@ export const environment = {
   cookie: {
     domain: 'localhost',
     expires: 3
-  }
+  },
+  magazineUrl: 'https://www.struggleant.com'
 };

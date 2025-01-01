@@ -23,6 +23,9 @@
         <li [class.active]="indexInfo?.isWallpaper && indexInfo?.subPage !== 'archive'">
           <a routerLink="/wallpaper" title="高清壁纸"><nz-icon nzType="picture" /><span>壁纸</span></a>
         </li>
+        <li>
+          <a [href]="magazineUrl" target="_blank" title="过刊阅读平台"><nz-icon nzType="book" /><span>杂志</span></a>
+        </li>
         <li [class.active]="indexInfo?.isTool">
           <a routerLink="/tool" title="实用工具"><nz-icon nzType="tool" /><span>实用工具</span></a>
         </li>

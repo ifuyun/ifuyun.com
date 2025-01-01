@@ -5,6 +5,7 @@ import { isEmpty } from 'lodash';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageService } from 'ng-zorro-antd/image';
 import { skipWhile, takeUntil } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { ADMIN_URL_PARAM, APP_ID } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
 import { ActionObjectType, ActionType } from '../../enums/log';
@@ -27,6 +28,8 @@ import { format } from '../../utils/helper';
   styleUrl: './m-sider.component.less'
 })
 export class MSiderComponent implements OnInit {
+  readonly magazineUrl = environment.magazineUrl;
+
   siderVisible = false;
   isSignIn = false;
   indexInfo?: PageIndexInfo;

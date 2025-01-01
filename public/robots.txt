@@ -1,4 +1,5 @@
 User-agent: *
+Allow: /
 Sitemap: https://www.ifuyun.com/sitemap.xml
 
 User-agent: MJ12bot

@@ -9,6 +9,7 @@ import { NzImageService } from 'ng-zorro-antd/image';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { skipWhile, takeUntil } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { ADMIN_URL_PARAM, APP_ID } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
 import { ActionObjectType, ActionType } from '../../enums/log';
@@ -48,6 +49,8 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   @Input() postTaxonomies: TaxonomyNode[] = [];
 
   @ViewChild('mSearchInput') mSearchInput!: ElementRef;
+
+  readonly magazineUrl = environment.magazineUrl;
 
   isMobile = false;
   isSignIn = false;

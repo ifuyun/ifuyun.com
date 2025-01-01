@@ -12,7 +12,7 @@ Website of [ifuyun.com](https://www.ifuyun.com), implementation of Wutong CMS.
 ## Related projects
 
 - **RESTful API service for Wutong CMS:** [`Wutong CMS API`](https://www.ireadpay.com), powered by [`Nest.js`](https://nestjs.com).
-- **Wutong CMS admin app:** [`Wutong CMS Admin`](https://admin.ireadpay.com), powered by [`Angular`](https://angular.io) and [`NG-ZORRO`](https://github.com/NG-ZORRO/ng-zorro-antd).
+- **Wutong CMS admin app:** [`Wutong CMS Admin`](https://admin.ireadpay.com), powered by [`Angular`](https://angular.dev) and [`NG-ZORRO`](https://github.com/NG-ZORRO/ng-zorro-antd).
 - **Wutong CMS rich text editor:**[`Wutong Editor`](https://bitbucket.org/ifuyun/tinymce), powered by [`TinyMCE`](https://www.tiny.cloud).
 
 ## Development setup
