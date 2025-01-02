@@ -39,14 +39,11 @@
       <div class="post-item-cover">
         <a [routerLink]="post.post.postGuid" [title]="post.post.postTitle">
           @if (index > 3) {
-            <img class="lazyload"
-                 src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                 [attr.data-src]="post.post.cover"
-                 [alt]="post.post.postTitle" />
+            <span class="post-item-cover-img lazyload" [attr.data-bg]="post.post.cover"></span>
           } @else {
-            <img [src]="post.post.cover" [alt]="post.post.postTitle" />
+            <span class="post-item-cover-img" [style.background-image]="'url(' + post.post.cover + ')'"></span>
           }
-          <div class="overlay"></div>
+          <span class="overlay"></span>
         </a>
       </div>
     </div>
@@ -99,15 +96,14 @@
       <span class="fi fi-pencil"></span><span>原创</span>
     </span>
     </div>
-    <div *ngIf="post.post.cover" class="m-post-item-cover">
-      <a class="m-post-item-cover-link"
-         [routerLink]="post.post.postGuid"
-         [title]="post.post.postTitle">
-        <img class="lazyload"
-             src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-             [attr.data-src]="post.post.cover"
-             [alt]="post.post.postTitle" />
-        <div class="overlay"></div>
+    <div class="m-post-item-cover" *ngIf="post.post.cover">
+      <a [routerLink]="post.post.postGuid" [title]="post.post.postTitle">
+        @if (index > 3) {
+          <span class="m-post-item-cover-img lazyload" [attr.data-bg]="post.post.cover"></span>
+        } @else {
+          <span class="m-post-item-cover-img" [style.background-image]="'url(' + post.post.cover + ')'"></span>
+        }
+        <span class="overlay"></span>
       </a>
     </div>
     <div class="m-post-item-excerpt">

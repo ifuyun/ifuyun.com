@@ -32,14 +32,11 @@
              [queryParams]="getLangParams(wallpaper.isCn)"
              [title]="wallpaper.wallpaperCopyright">
             @if (index > 3) {
-              <img class="lazyload"
-                   src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                   [attr.data-src]="wallpaper.wallpaperThumbUrl"
-                   [alt]="wallpaper.wallpaperCopyright" />
+              <span class="post-item-cover-img lazyload" [attr.data-bg]="wallpaper.wallpaperThumbUrl"></span>
             } @else {
-              <img [src]="wallpaper.wallpaperThumbUrl" [alt]="wallpaper.wallpaperCopyright" />
+              <span class="post-item-cover-img" [style.background-image]="'url(' + wallpaper.wallpaperThumbUrl + ')'"></span>
             }
-            <div class="overlay"></div>
+            <span class="overlay"></span>
           </a>
         </div>
       </div>
@@ -65,15 +62,15 @@
         </span>
       </div>
       <div class="m-post-item-cover">
-        <a class="m-post-item-cover-link"
-           [routerLink]="'/wallpaper/' + wallpaper.wallpaperId"
+        <a [routerLink]="'/wallpaper/' + wallpaper.wallpaperId"
            [queryParams]="getLangParams(wallpaper.isCn)"
            [title]="wallpaper.wallpaperCopyright">
-          <img class="lazyload"
-               src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-               [attr.data-src]="wallpaper.wallpaperThumbUrl"
-               [alt]="wallpaper.wallpaperCopyright" />
-          <div class="overlay"></div>
+          @if (index > 3) {
+            <span class="m-post-item-cover-img lazyload" [attr.data-bg]="wallpaper.wallpaperThumbUrl"></span>
+          } @else {
+            <span class="m-post-item-cover-img" [style.background-image]="'url(' + wallpaper.wallpaperThumbUrl + ')'"></span>
+          }
+          <span class="overlay"></span>
         </a>
       </div>
       <div class="m-post-item-excerpt">
@@ -84,20 +81,16 @@
 } @else {
   <article class="post-card-item">
     <div class="post-card-item-body">
-      <div class="post-cover">
-        <a class="post-cover-link"
-           [routerLink]="'/wallpaper/' + wallpaper.wallpaperId"
+      <div class="post-card-cover" [class.m-post-card-cover]="isMobile">
+        <a [routerLink]="'/wallpaper/' + wallpaper.wallpaperId"
            [queryParams]="getLangParams(wallpaper.isCn)"
            [title]="wallpaper.wallpaperCopyright">
           @if (index > 3) {
-            <img class="lazyload"
-                 src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                 [attr.data-src]="wallpaper.wallpaperThumbUrl"
-                 [alt]="wallpaper.wallpaperCopyright" />
+            <span class="post-item-cover-img lazyload" [attr.data-bg]="wallpaper.wallpaperThumbUrl"></span>
           } @else {
-            <img [src]="wallpaper.wallpaperThumbUrl" [alt]="wallpaper.wallpaperCopyright" />
+            <span class="post-item-cover-img" [style.background-image]="'url(' + wallpaper.wallpaperThumbUrl + ')'"></span>
           }
-          <div class="overlay"></div>
+          <span class="overlay"></span>
         </a>
       </div>
       <div class="post-content">

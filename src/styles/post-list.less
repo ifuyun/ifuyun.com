@@ -26,17 +26,17 @@
     border: 1px solid var(--primary-border-color);
 
     &:hover {
-      .post-cover-link {
+      .post-card-cover > a {
         transform: scale(1.08);
       }
     }
   }
 
-  .post-cover {
+  .post-card-cover {
     border-bottom: 1px solid var(--primary-border-color);
     overflow: hidden;
 
-    &, .post-cover-link {
+    &, > a {
       border-top-left-radius: @primary-border-radius;
       border-top-right-radius: @primary-border-radius;
     }
@@ -45,17 +45,25 @@
       opacity: 0.5;
     }
 
-    img {
-      width: 100%;
-    }
-
-    .post-cover-link {
+    > a {
       position: relative;
-      display: block;
+      display: flex;
+      width: 100%;
+      height: 100%;
       transition: transform .5s;
     }
 
+    .post-item-cover-img {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
     .overlay {
+      display: inline-block;
       position: absolute;
       inset: 0;
       background-color: var(--overlay-bg-color);
@@ -147,7 +155,7 @@
     @cover-width: ((@body-width - @sider-width - @primary-margin * @row-size - @border-width * @row-size) / @row-size);
     @cover-height: (@cover-width * 9 / 16);
 
-    .post-cover {
+    .post-card-cover {
       height: @cover-height;
     }
   }
@@ -157,7 +165,7 @@
     @cover-width: ((@body-width - @sider-width - @primary-margin * @row-size - @border-width * @row-size) / @row-size);
     @cover-height: (@cover-width * 9 / 16);
 
-    .post-cover {
+    .post-card-cover {
       height: @cover-height;
     }
   }
@@ -167,7 +175,7 @@
     @cover-width: ((@body-width - @sider-width - @primary-margin * @row-size - @border-width * @row-size) / @row-size);
     @cover-height: (@cover-width * 9 / 16);
 
-    .post-cover {
+    .post-card-cover {
       height: @cover-height;
     }
   }
@@ -181,7 +189,7 @@
     @cover-width: ((@body-width - @primary-margin * (@row-size - 1) - @border-width * @row-size) / @row-size);
     @cover-height: (@cover-width * 9 / 16);
 
-    .post-cover {
+    .post-card-cover {
       height: @cover-height;
     }
   }
@@ -191,7 +199,7 @@
     @cover-width: ((@body-width - @primary-margin * (@row-size - 1) - @border-width * @row-size) / @row-size);
     @cover-height: (@cover-width * 9 / 16);
 
-    .post-cover {
+    .post-card-cover {
       height: @cover-height;
     }
   }
@@ -201,7 +209,7 @@
     @cover-width: ((@body-width - @primary-margin * (@row-size - 1) - @border-width * @row-size) / @row-size);
     @cover-height: (@cover-width * 9 / 16);
 
-    .post-cover {
+    .post-card-cover {
       height: @cover-height;
     }
   }
