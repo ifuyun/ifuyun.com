@@ -29,9 +29,11 @@
       @if (!isMobile) {
         <ul class="beian-link">
           <li><a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">{{ options['icp_code'] }}</a></li>
-          <li><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode={{ recordCode }}"
-                 target="_blank"
-                 rel="nofollow">{{ options['record_code'] }}</a></li>
+          @if (options['record_code']) {
+            <li><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode={{ recordCode }}"
+                   target="_blank"
+                   rel="nofollow">{{ options['record_code'] }}</a></li>
+          }
         </ul>
       } @else {
         <div><a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">{{ options['icp_code'] }}</a></div>

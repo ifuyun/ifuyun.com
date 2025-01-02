@@ -35,7 +35,6 @@ export class MSiderComponent implements OnInit {
   indexInfo?: PageIndexInfo;
   appInfo?: TenantAppModel;
 
-  private user!: UserModel;
   private adminUrl = '';
 
   constructor(
@@ -67,7 +66,6 @@ export class MSiderComponent implements OnInit {
       this.indexInfo = this.commonService.getPageIndexInfo(page);
     });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      this.user = user;
       this.isSignIn = !!user.userId;
     });
   }

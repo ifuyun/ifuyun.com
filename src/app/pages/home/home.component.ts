@@ -45,8 +45,8 @@ export class HomeComponent implements OnInit {
   readonly wallpaperListMode = WallpaperListMode.LIST;
 
   isMobile = false;
-  latestPosts: Post[] = [];
   hotPosts: PostEntity[] = [];
+  latestPosts: Post[] = [];
   latestWallpapers: Wallpaper[] = [];
 
   protected pageIndex = 'index';
@@ -82,8 +82,8 @@ export class HomeComponent implements OnInit {
         this.options = options;
 
         this.updatePageInfo();
-        this.getPosts();
-        this.getWallpapers();
+        this.getLatestPosts();
+        this.getLatestWallpapers();
         if (!this.isMobile) {
           this.getHotPosts();
         }
@@ -98,7 +98,7 @@ export class HomeComponent implements OnInit {
     this.commonService.updatePageIndex(this.pageIndex);
   }
 
-  private getPosts() {
+  private getLatestPosts() {
     this.postService
       .getPosts({
         page: 1,
@@ -111,7 +111,7 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  private getWallpapers() {
+  private getLatestWallpapers() {
     this.wallpaperService
       .getWallpapers({
         page: 1,

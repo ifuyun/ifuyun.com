@@ -274,7 +274,7 @@ export class PostListComponent implements OnInit {
     if (this.keyword) {
       breadcrumbs.push(
         {
-          label: `文章搜索`,
+          label: `搜索`,
           tooltip: `文章搜索`,
           url: '',
           isHeader: false
