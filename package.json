@@ -32,12 +32,15 @@
     "build": "ng build",
     "build:gulp": "gulp build",
     "build:prod": "npm run build && npm run build:gulp",
+    "build:zip": "bash ./scripts/zip.sh",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr": "node dist/server/server.mjs",
     "lint": "eslint \"src/**/*.{ts,html}\" --fix",
     "format": "prettier --write \"src/**/*.ts\"",
     "deploy": "bash ./scripts/deploy.sh",
+    "deploy:local": "bash ./scripts/deploy-local.sh",
+    "deploy:manual": "bash ./scripts/deploy-manual.sh",
     "cloc": "cloc --exclude-dir=.git,.idea,.vscode,node_modules,dist,test,package-lock.json,.angular,.github,.nx ."
   },
   "dependencies": {

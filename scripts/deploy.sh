@@ -1,24 +1,40 @@
 #!/bin/bash
-
-PM2_APP_NAME=ifuyun.com
-
-SHELL_PATH=$(dirname $0)
+set -e
 
 echo -e "\033[95m[deploy]\033[0m starting deployment..."
 
-sh ${SHELL_PATH}/fetch.sh
-sh ${SHELL_PATH}/install.sh
+PM2_APP_NAME=ifuyun.com
+SHELL_PATH=$(dirname $0)
 
-echo -e "\033[95m[deploy]\033[0m stopping server..."
-# -s –silent: hide all messages
-# https://pm2.io/docs/runtime/reference/pm2-cli/
+cd $SHELL_PATH
+cd ..
+# stop server
+echo -e "\033[95m[server]\033[0m stopping server..."
 pm2 stop $PM2_APP_NAME -s
-echo -e "\033[95m[deploy]\033[0m server: \033[36m${PM2_APP_NAME}\033[0m is stopped."
-
-sh ${SHELL_PATH}/build.sh
-
-echo -e "\033[95m[deploy]\033[0m restarting server..."
+echo -e "\033[95m[server]\033[0m server: \033[36m${PM2_APP_NAME}\033[0m is stopped."
+# pull master
+echo -e "\033[95m[git]\033[0m pulling master..."
+echo -e "\033[95m[git]\033[0m path: \033[36m"$(pwd)"\033[0m"
+git fetch origin master && git reset --hard origin/master && git pull origin master
+git checkout master
+echo -e "\033[95m[git]\033[0m pulled master."
+# pull release
+if [ -d "./dist/.git" ]; then
+  echo -e "\033[95m[git]\033[0m pulling release..."
+  cd ./dist
+  git fetch origin release
+  git reset --hard origin/release
+  git pull origin release --depth 1
+else
+  echo -e "\033[95m[git]\033[0m cloning release..."
+  rm -rf ./dist
+  mkdir -p dist
+  git clone --depth 1 -b release git@github.com:ifuyun/ifuyun.com.git ./dist
+fi
+echo -e "\033[95m[git]\033[0m pulled release."
+# restart server
+echo -e "\033[95m[server]\033[0m restarting server..."
 pm2 restart $PM2_APP_NAME
-echo -e "\033[95m[deploy]\033[0m server: \033[36m${PM2_APP_NAME}\033[0m is online."
+echo -e "\033[95m[server]\033[0m server: \033[36m${PM2_APP_NAME}\033[0m is online."
 
 echo -e "\033[95m[deploy]\033[0m \033[32mAll done. ^_-\033[0m"

@@ -1,7 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
 import { ElementRef, Inject, Injectable, Optional, REQUEST, RESPONSE_INIT } from '@angular/core';
-import { Router } from '@angular/router';
 import { Request } from 'express';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -30,7 +29,6 @@ export class CommonService {
     @Inject(DOCUMENT) private readonly document: Document,
     @Optional() @Inject(REQUEST) private readonly request: Request,
     @Optional() @Inject(RESPONSE_INIT) private readonly response: any,
-    private readonly router: Router,
     private readonly platform: PlatformService,
     private readonly cookieService: SsrCookieService
   ) {}
@@ -60,14 +58,15 @@ export class CommonService {
   }
 
   getReferrer() {
-    let referer = '';
     if (this.platform.isServer) {
-      referer = this.request.headers.referer || <string>this.request.headers['referrer'] || '';
-    } else {
-      referer = this.document.referrer;
+      const headers: any = this.request?.headers;
+      if (headers) {
+        const referrer: string = headers.get('referer') || headers.get('referrer') || '';
+        return referrer.replace(/^https?:\/\/[^/]+/i, '');
+      }
+      return '';
     }
-
-    return referer;
+    return this.document.referrer.replace(/^https?:\/\/[^/]+/i, '');
   }
 
   getTheme(): Theme {

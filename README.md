@@ -26,6 +26,7 @@ $ npm run start
 $ npm run build
 $ npm run build:gulp
 $ npm run build:prod
+$ npm run build:zip
 $ npm run watch
 $ npm run serve:ssr
 
@@ -41,6 +42,8 @@ $ ng e2e
 
 # Deploy
 $ npm run deploy
+$ npm run deploy:local
+$ npm run deploy:manual
 ```
 
 ## Further help
