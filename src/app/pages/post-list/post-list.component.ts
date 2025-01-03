@@ -13,6 +13,7 @@ import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
 import { OptionEntity } from '../../interfaces/option';
 import { Post, PostList, PostQueryParam } from '../../interfaces/post';
 import { TenantAppModel } from '../../interfaces/tenant-app';
+import { BookService } from '../../services/book.service';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { CommonService } from '../../services/common.service';
 import { DestroyService } from '../../services/destroy.service';
@@ -47,7 +48,7 @@ export class PostListComponent implements OnInit {
   private year = '';
   private month = '';
   private bookId = '';
-  private book?: BookEntity;
+  private postBook?: BookEntity;
 
   get paginationUrl() {
     if (this.category) {
@@ -64,11 +65,19 @@ export class PostListComponent implements OnInit {
   }
 
   get paginationParam(): Params {
+    const param: Params = {};
     if (this.keyword) {
-      return { keyword: this.keyword };
+      param['keyword'] = this.keyword;
+    }
+    if (this.bookId) {
+      param['bookId'] = this.bookId;
     }
 
-    return {};
+    return param;
+  }
+
+  private get postBookName() {
+    return this.bookService.getBookName(this.postBook, false);
   }
 
   constructor(
@@ -81,7 +90,8 @@ export class PostListComponent implements OnInit {
     private readonly paginationService: PaginationService,
     private readonly tenantAppService: TenantAppService,
     private readonly optionService: OptionService,
-    private readonly postService: PostService
+    private readonly postService: PostService,
+    private readonly bookService: BookService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -158,7 +168,7 @@ export class PostListComponent implements OnInit {
         this.posts = res.posts?.list || [];
         this.page = res.posts?.page || 1;
         this.total = res.posts?.total || 0;
-        this.book = undefined;
+        this.postBook = undefined;
 
         this.initData(
           (res.breadcrumbs || []).map((item) => ({
@@ -179,10 +189,10 @@ export class PostListComponent implements OnInit {
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.posts = res.posts.list || [];
-        this.page = res.posts.page || 1;
-        this.total = res.posts.total || 0;
-        this.book = res.book;
+        this.posts = res.posts?.list || [];
+        this.page = res.posts?.page || 1;
+        this.total = res.posts?.total || 0;
+        this.postBook = res.book;
 
         this.initData([]);
       });
@@ -222,6 +232,14 @@ export class PostListComponent implements OnInit {
       const label = `${this.year}年${this.month ? this.month + '月' : ''}`;
       titles.unshift(label);
       description += label;
+    }
+    if (this.postBook) {
+      titles.unshift(this.postBook.bookName);
+      if (this.postBook.bookIssueNumber) {
+        titles.unshift(this.postBook.bookIssueNumber);
+      }
+      description += this.postBookName.fullName;
+      keywords.unshift(this.postBook.bookName);
     }
     if (this.keyword) {
       titles.unshift(this.keyword, '搜索');
@@ -303,6 +321,17 @@ export class PostListComponent implements OnInit {
     if (postBreadcrumbs.length > 0) {
       breadcrumbs = breadcrumbs.concat(postBreadcrumbs);
     }
+    if (this.postBook) {
+      breadcrumbs.push({
+        label: this.postBookName.fullName,
+        tooltip: this.postBookName.fullName,
+        url: '/post',
+        param: {
+          bookId: this.bookId
+        },
+        isHeader: true
+      });
+    }
     if (this.keyword) {
       breadcrumbs.push(
         {
@@ -321,17 +350,6 @@ export class PostListComponent implements OnInit {
           isHeader: true
         }
       );
-    }
-    if (this.book) {
-      breadcrumbs.push({
-        label: `${this.book.bookName}（${this.book.bookIssueNumber}）`,
-        tooltip: `${this.book.bookName}（${this.book.bookIssueNumber}）`,
-        url: '/post',
-        param: {
-          bookId: this.bookId
-        },
-        isHeader: true
-      });
     }
     if (this.page > 1) {
       breadcrumbs.push({

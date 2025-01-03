@@ -62,7 +62,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
       title: ['登录', this.appInfo.appName].join(' - '),
       description: this.appInfo.appDescription,
       author: this.options['site_author'],
-      keywords: uniq(this.appInfo.keywords).join(',')
+      keywords: this.appInfo.appKeywords
     });
   }
 

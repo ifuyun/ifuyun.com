@@ -21,6 +21,7 @@ import { FavoriteType } from '../../enums/favorite';
 import { ActionObjectType, ActionType } from '../../enums/log';
 import { PostType } from '../../enums/post';
 import { VoteType, VoteValue } from '../../enums/vote';
+import { BookEntity } from '../../interfaces/book';
 import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
 import { OptionEntity } from '../../interfaces/option';
 import { Post, PostModel } from '../../interfaces/post';
@@ -31,6 +32,7 @@ import { CopyLinkPipe } from '../../pipes/copy-link.pipe';
 import { CopyTypePipe } from '../../pipes/copy-type.pipe';
 import { NumberViewPipe } from '../../pipes/number-view.pipe';
 import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
+import { BookService } from '../../services/book.service';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { CommentService } from '../../services/comment.service';
 import { CommonService } from '../../services/common.service';
@@ -101,6 +103,10 @@ export class PostComponent implements OnInit {
     );
   }
 
+  private get postBookName() {
+    return this.bookService.getBookName(this.postBook, false);
+  }
+
   protected pageIndex = 'post-article';
 
   private readonly copyHTML = '<span class="fi fi-copy"></span>Copy code';
@@ -112,6 +118,7 @@ export class PostComponent implements OnInit {
   private postId = '';
   private postSlug = '';
   private referrer = '';
+  private postBook?: BookEntity;
   private breadcrumbs: BreadcrumbEntity[] = [];
   private codeList: string[] = [];
 
@@ -134,7 +141,8 @@ export class PostComponent implements OnInit {
     private readonly favoriteService: FavoriteService,
     private readonly commentService: CommentService,
     private readonly clipboardService: ClipboardService,
-    private readonly logService: LogService
+    private readonly logService: LogService,
+    private readonly bookService: BookService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -331,6 +339,7 @@ export class PostComponent implements OnInit {
 
     this.post = post.post;
     this.post.postContent = result.content;
+    this.postBook = post.book;
     this.codeList = result.codeList;
     this.post.postSource = this.postService.getPostSource(post);
     this.postMeta = post.meta;
@@ -351,6 +360,18 @@ export class PostComponent implements OnInit {
         url: '/post',
         isHeader: false
       });
+      if (this.postBook) {
+        this.breadcrumbs[this.breadcrumbs.length - 1].isHeader = false;
+        this.breadcrumbs.push({
+          label: this.postBookName.fullName,
+          tooltip: this.postBookName.fullName,
+          url: '/post',
+          param: {
+            bookId: this.postBook.bookId
+          },
+          isHeader: true
+        });
+      }
     } else {
       this.pageIndex = 'page-' + this.post.postName;
       this.breadcrumbs = [];
@@ -364,12 +385,22 @@ export class PostComponent implements OnInit {
   }
 
   private updatePageInfo() {
+    const titles: string[] = [this.appInfo.appName];
     const keywords: string[] = this.postTags
       .map((item) => item.tagName)
       .concat((this.options['post_keywords'] || '').split(','));
 
+    if (this.postBook) {
+      titles.unshift(this.postBook.bookName);
+      if (this.postBook.bookIssueNumber) {
+        titles.unshift(this.postBook.bookIssueNumber);
+      }
+      keywords.unshift(this.postBook.bookName);
+    }
+    titles.unshift(this.post.postTitle);
+
     this.metaService.updateHTMLMeta({
-      title: `${this.post.postTitle} - ${this.appInfo.appName}`,
+      title: titles.join(' - '),
       description: this.post.postExcerpt,
       keywords: uniq(keywords).join(','),
       author: this.options['site_author']

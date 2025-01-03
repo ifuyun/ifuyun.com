@@ -136,7 +136,7 @@ export class HomeComponent implements OnInit {
   private updatePageInfo() {
     const titles = [this.appInfo.appSlogan || '首页', this.appInfo.appName];
     const description = this.appInfo.appDescription;
-    const keywords: string[] = this.appInfo.keywords;
+    const keywords: string[] = [...this.appInfo.keywords];
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),

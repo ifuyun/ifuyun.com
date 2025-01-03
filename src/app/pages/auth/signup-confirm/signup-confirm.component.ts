@@ -168,7 +168,7 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
       title: ['注册验证', this.appInfo.appName].join(' - '),
       description: this.appInfo.appDescription,
       author: this.options['site_author'],
-      keywords: uniq(this.appInfo.keywords).join(',')
+      keywords: this.appInfo.appKeywords
     });
   }
 
