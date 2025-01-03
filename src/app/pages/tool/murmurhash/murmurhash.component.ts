@@ -124,7 +124,7 @@ export class MurmurhashComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = ['MurmurHash', '实用工具', this.appInfo.appName];
+    const titles = ['MurmurHash', '工具', this.appInfo.appName];
     const description = `${this.appInfo.appName} ${MURMURHASH_PAGE_DESCRIPTION}`;
     const keywords: string[] = MURMURHASH_PAGE_KEYWORDS.concat(this.appInfo.keywords);
     const metaData: HTMLMetaData = {
@@ -139,8 +139,8 @@ export class MurmurhashComponent implements OnInit {
   private updateBreadcrumbs(): void {
     const breadcrumbs = [
       {
-        label: '实用工具',
-        tooltip: '实用工具',
+        label: '工具',
+        tooltip: '工具',
         url: '/tool',
         isHeader: false
       },

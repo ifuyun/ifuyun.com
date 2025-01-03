@@ -133,7 +133,7 @@ export class ShoppingComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = ['电商工具', '实用工具', this.appInfo.appName];
+    const titles = ['电商工具', '工具', this.appInfo.appName];
     const description = `${this.appInfo.appName}${this.options['shopping_description']}`;
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
@@ -147,8 +147,8 @@ export class ShoppingComponent implements OnInit {
   private updateBreadcrumbs(): void {
     const breadcrumbs = [
       {
-        label: '实用工具',
-        tooltip: '实用工具',
+        label: '工具',
+        tooltip: '工具',
         url: '/tool',
         isHeader: false
       },

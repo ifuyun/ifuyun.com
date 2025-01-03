@@ -129,7 +129,7 @@ export class IpComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = ['IP 地址查询', '实用工具', this.appInfo.appName];
+    const titles = ['IP 地址查询', '工具', this.appInfo.appName];
     const description = `${this.appInfo.appName} ${IP_PAGE_DESCRIPTION}`;
     const keywords: string[] = IP_PAGE_KEYWORDS.concat(this.appInfo.keywords);
     const metaData: HTMLMetaData = {
@@ -144,8 +144,8 @@ export class IpComponent implements OnInit {
   private updateBreadcrumbs(): void {
     const breadcrumbs = [
       {
-        label: '实用工具',
-        tooltip: '实用工具',
+        label: '工具',
+        tooltip: '工具',
         url: '/tool',
         isHeader: false
       },

@@ -113,7 +113,7 @@ export class Md5Component implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = ['MD5 加密', '实用工具', this.appInfo.appName];
+    const titles = ['MD5 加密', '工具', this.appInfo.appName];
     const description = `${this.appInfo.appName} ${MD5_PAGE_DESCRIPTION}`;
     const keywords: string[] = MD5_PAGE_KEYWORDS.concat(this.appInfo.keywords);
     const metaData: HTMLMetaData = {
@@ -128,8 +128,8 @@ export class Md5Component implements OnInit {
   private updateBreadcrumbs(): void {
     const breadcrumbs = [
       {
-        label: '实用工具',
-        tooltip: '实用工具',
+        label: '工具',
+        tooltip: '工具',
         url: '/tool',
         isHeader: false
       },

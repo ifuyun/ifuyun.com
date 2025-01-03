@@ -107,7 +107,7 @@ export class HomeComponent implements OnInit {
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.latestPosts = res.postList?.list || [];
+        this.latestPosts = res.posts?.list || [];
       });
   }
 

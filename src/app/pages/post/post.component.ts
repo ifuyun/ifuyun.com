@@ -101,7 +101,7 @@ export class PostComponent implements OnInit {
     );
   }
 
-  protected pageIndex = 'post';
+  protected pageIndex = 'post-article';
 
   private readonly copyHTML = '<span class="fi fi-copy"></span>Copy code';
   private readonly copiedHTML = '<span class="fi fi-check-lg"></span>Copied!';
@@ -340,7 +340,7 @@ export class PostComponent implements OnInit {
     this.isVoted = post.isVoted;
 
     if (this.isArticle) {
-      this.pageIndex = 'post';
+      this.pageIndex = 'post-article';
       this.breadcrumbs = (post.breadcrumbs || []).map((item) => ({
         ...item,
         url: `/post/category/${item.slug}`
@@ -357,6 +357,7 @@ export class PostComponent implements OnInit {
     }
 
     this.postService.updateActivePostId(post.post.postId);
+    this.postService.updateActiveBook(post.book);
     this.breadcrumbService.updateBreadcrumbs(this.breadcrumbs);
     this.updatePageIndex();
     this.updatePageInfo();

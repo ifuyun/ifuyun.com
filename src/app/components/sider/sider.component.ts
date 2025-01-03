@@ -5,7 +5,9 @@ import { isEmpty } from 'lodash';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { skipWhile, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { BookType } from '../../enums/book';
 import { WallpaperLang } from '../../enums/wallpaper';
+import { BookEntity } from '../../interfaces/book';
 import { ArchiveData, PageIndexInfo } from '../../interfaces/common';
 import { OptionEntity } from '../../interfaces/option';
 import { PostEntity } from '../../interfaces/post';
@@ -39,6 +41,18 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   hotWallpapers: HotWallpaper[] = [];
   randomWallpapers: Wallpaper[] = [];
   wallpaperArchives: ArchiveData[] = [];
+  bookPosts: PostEntity[] = [];
+  activeBook?: BookEntity;
+
+  get bookName() {
+    if (!this.activeBook) {
+      return '';
+    }
+    if ([BookType.BOOK, BookType.OTHER].includes(this.activeBook.bookType)) {
+      return `《${this.activeBook.bookName}》`;
+    }
+    return `《${this.activeBook.bookName}》（${this.activeBook.bookIssueNumber}）`;
+  }
 
   get adsVisible() {
     return (
@@ -97,6 +111,12 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
       });
+    this.postService.activeBook$.pipe(takeUntil(this.destroy$)).subscribe((book) => {
+      this.activeBook = book;
+      if (book) {
+        this.getPostsByBookId();
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -115,6 +135,20 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getWallpaperLangParams(isCn: boolean): Params {
     return isCn ? {} : { lang: WallpaperLang.EN };
+  }
+
+  private getPostsByBookId() {
+    this.postService
+      .getPostsByBookId<{ posts: PostEntity[] }>({
+        page: 1,
+        pageSize: 10,
+        bookId: this.activeBook?.bookId,
+        simple: 1
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.bookPosts = res.posts || [];
+      });
   }
 
   private getHotPosts() {

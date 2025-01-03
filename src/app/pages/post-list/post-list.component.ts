@@ -8,9 +8,10 @@ import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.comp
 import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { PostItemComponent } from '../../components/post-item/post-item.component';
+import { BookEntity } from '../../interfaces/book';
 import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
 import { OptionEntity } from '../../interfaces/option';
-import { Post, PostQueryParam } from '../../interfaces/post';
+import { Post, PostList, PostQueryParam } from '../../interfaces/post';
 import { TenantAppModel } from '../../interfaces/tenant-app';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { CommonService } from '../../services/common.service';
@@ -39,12 +40,14 @@ export class PostListComponent implements OnInit {
   tag = '';
   posts: Post[] = [];
 
-  protected pageIndex = 'post';
+  protected pageIndex = 'post-list';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
   private year = '';
   private month = '';
+  private bookId = '';
+  private book?: BookEntity;
 
   get paginationUrl() {
     if (this.category) {
@@ -101,6 +104,7 @@ export class PostListComponent implements OnInit {
         this.pageSize = Number(this.options['post_page_size']) || 10;
         this.page = Number(qp.get('page')) || 1;
         this.keyword = qp.get('keyword')?.trim() || '';
+        this.bookId = qp.get('bookId')?.trim() || '';
 
         this.category = p.get('category')?.trim() || '';
         this.tag = p.get('tag')?.trim() || '';
@@ -110,11 +114,15 @@ export class PostListComponent implements OnInit {
         if (this.year) {
           this.pageIndex = 'post-archive';
         } else {
-          this.pageIndex = 'post';
+          this.pageIndex = 'post-list';
         }
 
         this.updatePageIndex();
-        this.getPosts();
+        if (this.bookId) {
+          this.getPostsByBookId();
+        } else {
+          this.getPosts();
+        }
       });
   }
 
@@ -147,25 +155,49 @@ export class PostListComponent implements OnInit {
       .getPosts(param)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.posts = res.postList?.list || [];
-        this.page = res.postList?.page || 1;
-        this.total = res.postList?.total || 0;
+        this.posts = res.posts?.list || [];
+        this.page = res.posts?.page || 1;
+        this.total = res.posts?.total || 0;
+        this.book = undefined;
 
-        this.paginationService.updatePagination({
-          page: this.page,
-          total: this.total,
-          pageSize: this.pageSize,
-          url: this.paginationUrl,
-          param: this.paginationParam
-        });
-
-        res.breadcrumbs = (res.breadcrumbs || []).map((item) => ({
-          ...item,
-          url: `/post/category/${item.slug}`
-        }));
-        this.updatePageInfo(res.breadcrumbs);
-        this.updateBreadcrumbs(res.breadcrumbs);
+        this.initData(
+          (res.breadcrumbs || []).map((item) => ({
+            ...item,
+            url: `/post/category/${item.slug}`
+          }))
+        );
       });
+  }
+
+  private getPostsByBookId() {
+    this.postService
+      .getPostsByBookId<PostList>({
+        page: this.page,
+        pageSize: this.pageSize,
+        bookId: this.bookId,
+        simple: 0
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.posts = res.posts.list || [];
+        this.page = res.posts.page || 1;
+        this.total = res.posts.total || 0;
+        this.book = res.book;
+
+        this.initData([]);
+      });
+  }
+
+  private initData(breadcrumbs: BreadcrumbEntity[]) {
+    this.paginationService.updatePagination({
+      page: this.page,
+      total: this.total,
+      pageSize: this.pageSize,
+      url: this.paginationUrl,
+      param: this.paginationParam
+    });
+    this.updatePageInfo(breadcrumbs);
+    this.updateBreadcrumbs(breadcrumbs);
   }
 
   private updatePageInfo(postBreadcrumbs: BreadcrumbEntity[]) {
@@ -282,10 +314,24 @@ export class PostListComponent implements OnInit {
         {
           label: this.keyword,
           tooltip: this.keyword,
-          url: '',
-          isHeader: false
+          url: '/post',
+          param: {
+            keyword: this.keyword
+          },
+          isHeader: true
         }
       );
+    }
+    if (this.book) {
+      breadcrumbs.push({
+        label: `${this.book.bookName}（${this.book.bookIssueNumber}）`,
+        tooltip: `${this.book.bookName}（${this.book.bookIssueNumber}）`,
+        url: '/post',
+        param: {
+          bookId: this.bookId
+        },
+        isHeader: true
+      });
     }
     if (this.page > 1) {
       breadcrumbs.push({

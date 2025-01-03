@@ -47,6 +47,7 @@ export class CommonService {
       isWallpaper: topPage === 'wallpaper',
       isTool: topPage === 'tool',
       isAuth: topPage === 'auth',
+      isArticle: pageIndex === 'post-article',
       isPage: !['index', 'post', 'wallpaper', 'tool', 'auth'].includes(topPage),
       fullPage: pageIndex,
       subPage

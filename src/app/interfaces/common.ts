@@ -2,9 +2,10 @@ export interface PageIndexInfo {
   isHome: boolean;
   isPost: boolean;
   isWallpaper: boolean;
+  isArticle: boolean;
+  isPage: boolean;
   isTool: boolean;
   isAuth: boolean;
-  isPage: boolean;
   fullPage: string;
   subPage: string;
 }
