@@ -28,7 +28,10 @@
 
   > :not(:last-child) {
     flex-shrink: 0;
-    color: var(--breadcrumb-minor-color);
+
+    &, > a {
+      color: var(--breadcrumb-minor-color);
+    }
 
     &:not(:first-child):after {
       content: '/';
@@ -43,7 +46,7 @@
   }
 
   a:hover {
-    color: var(--primary-color);
+    color: var(--primary-color) !important;
   }
 
   h3 {

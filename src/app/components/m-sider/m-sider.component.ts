@@ -11,7 +11,6 @@ import { ResponseCode } from '../../config/response-code.enum';
 import { ActionObjectType, ActionType } from '../../enums/log';
 import { PageIndexInfo } from '../../interfaces/common';
 import { TenantAppModel } from '../../interfaces/tenant-app';
-import { UserModel } from '../../interfaces/user';
 import { AuthService } from '../../services/auth.service';
 import { CommonService } from '../../services/common.service';
 import { DestroyService } from '../../services/destroy.service';
@@ -68,6 +67,11 @@ export class MSiderComponent implements OnInit {
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.isSignIn = !!user.userId;
     });
+  }
+
+  closeSider() {
+    this.siderVisible = false;
+    this.commonService.updateSiderVisible(false);
   }
 
   showWechatCard() {
