@@ -52,7 +52,7 @@
         }
 
         .nav-arrow {
-          &:before, &:after {
+          &::before, &::after {
             background-color: var(--primary-color);
           }
         }
@@ -74,7 +74,7 @@
     }
 
     .sub-nav-list {
-      &:before {
+      &::before {
         left: 24px;
       }
 
@@ -121,11 +121,11 @@
       .nav-arrow {
         transform: translateY(-2px);
 
-        &:before {
+        &::before {
           transform: rotate(45deg) translateX(2.5px);
         }
 
-        &:after {
+        &::after {
           transform: rotate(-45deg) translateX(-2.5px);
         }
       }
@@ -144,7 +144,7 @@
     border-radius: @primary-border-radius;
     font-size: @primary-font-size;
 
-    &:before {
+    &::before {
       content: '';
       position: absolute;
       display: block;
@@ -191,7 +191,7 @@
       background-color: var(--primary-color);
 
       .sub-nav-arrow {
-        &:before, &:after {
+        &::before, &::after {
           background-color: #fff;
         }
       }
@@ -205,7 +205,7 @@
   .nav-arrow, .sub-nav-arrow {
     display: block;
 
-    &:before, &:after {
+    &::before, &::after {
       box-sizing: border-box;
       position: absolute;
       display: block;
@@ -221,15 +221,15 @@
     width: 10px;
     margin-left: 8px;
 
-    &:before, &:after {
+    &::before, &::after {
       transition: transform .3s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
 
-    &:before {
+    &::before {
       transform: rotate(-45deg) translateX(2.5px);
     }
 
-    &:after {
+    &::after {
       transform: rotate(45deg) translateX(-2.5px);
     }
   }
@@ -241,11 +241,11 @@
     width: 10px;
     transform: translateY(-0.5px);
 
-    &:before {
+    &::before {
       transform: rotate(45deg) translateY(-2.5px);
     }
 
-    &:after {
+    &::after {
       transform: rotate(-45deg) translateY(2.5px);
     }
   }
@@ -273,7 +273,7 @@
       cursor: pointer;
 
       .nav-arrow {
-        &:before, &:after {
+        &::before, &::after {
           background-color: var(--primary-color);
         }
       }
@@ -298,7 +298,7 @@
       right: 0;
 
       .sub-nav-list {
-        &:before {
+        &::before {
           right: 24px;
         }
       }

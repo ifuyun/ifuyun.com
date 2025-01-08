@@ -21,7 +21,7 @@
 
       > li {
         &:not(:last-child) {
-          &:after {
+          &::after {
             content: '/';
             margin: 0 8px;
           }
@@ -56,7 +56,7 @@
         align-items: center;
 
         &:not(:last-child) {
-          &:after {
+          &::after {
             content: ' ';
             margin: 0 8px;
             height: @meta-font-size;

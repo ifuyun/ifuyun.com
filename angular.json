@@ -47,7 +47,10 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "less",
-            "allowedCommonJsDependencies": ["lodash", "murmurhash"],
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "murmurhash"
+            ],
             "assets": [
               {
                 "glob": "**/*",

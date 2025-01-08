@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { isEmpty, uniq } from 'lodash';
+import { isEmpty } from 'lodash';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BaseComponent } from '../../../base.component';
 import { LoginFormComponent } from '../../../components/login-form/login-form.component';
