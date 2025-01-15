@@ -93,7 +93,9 @@ export class WallpaperComponent implements OnInit {
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
+  private wallpaperData!: Wallpaper;
   private isChanged = false;
+  private isLangChanged = false;
 
   constructor(
     private readonly destroy$: DestroyService,
@@ -141,13 +143,16 @@ export class WallpaperComponent implements OnInit {
         }
         this.isChanged = this.wallpaperId !== wid;
         this.wallpaperId = wid;
-        this.lang = <WallpaperLang>qp.get('lang')?.trim() || WallpaperLang.CN;
-
-        this.getWallpaper();
+        const lang = <WallpaperLang>qp.get('lang')?.trim() || WallpaperLang.CN;
+        this.isLangChanged = this.lang !== lang;
+        this.lang = lang;
 
         if (this.isChanged) {
+          this.getWallpaper();
           this.wallpaperService.updateActiveWallpaperId(this.wallpaperId);
           this.commentService.updateObjectId(this.wallpaperId);
+        } else if (this.isLangChanged) {
+          this.updateWallpaper(this.wallpaperData);
         }
       });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
@@ -275,39 +280,44 @@ export class WallpaperComponent implements OnInit {
           this.commonService.redirectToNotFound();
           return;
         }
-        const wallpaperPartial: Partial<Wallpaper> = {};
-        let wallpaperLocation = '';
-        let hasTranslation: boolean;
-        let unknownLocation = '';
-        if (this.lang === WallpaperLang.EN) {
-          wallpaperLocation = wallpaper.wallpaperLocationEn || wallpaper.wallpaperLocation;
-          unknownLocation = 'Unknown';
-          hasTranslation = !!wallpaper.wallpaperStory;
-          wallpaperPartial.wallpaperTitle = wallpaper.wallpaperTitleEn || wallpaper.wallpaperTitle;
-          wallpaperPartial.wallpaperCopyright = wallpaper.wallpaperCopyrightEn || wallpaper.wallpaperCopyright;
-          wallpaperPartial.wallpaperStoryTitle = wallpaper.wallpaperStoryTitleEn || wallpaper.wallpaperStoryTitle;
-          wallpaperPartial.wallpaperStory = wallpaper.wallpaperStoryEn || wallpaper.wallpaperStory;
-        } else {
-          wallpaperLocation = wallpaper.wallpaperLocation || wallpaper.wallpaperLocationEn;
-          unknownLocation = '未知';
-          hasTranslation = !!wallpaper.wallpaperStoryEn;
-          wallpaperPartial.wallpaperTitle = wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn;
-          wallpaperPartial.wallpaperCopyright = wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn;
-          wallpaperPartial.wallpaperStoryTitle = wallpaper.wallpaperStoryTitle || wallpaper.wallpaperStoryTitleEn;
-          wallpaperPartial.wallpaperStory = wallpaper.wallpaperStory || wallpaper.wallpaperStoryEn;
-        }
-        wallpaperPartial.wallpaperLocation = wallpaperLocation || unknownLocation;
-        wallpaperPartial.hasTranslation = hasTranslation;
-
-        this.wallpaper = {
-          ...wallpaper,
-          ...wallpaperPartial,
-          wallpaperCopyrightAuthor: wallpaper.wallpaperCopyrightAuthor.replace(/^©\s*/i, '')
-        };
-
-        this.updatePageInfo();
-        this.updateBreadcrumbs();
+        this.wallpaperData = wallpaper;
+        this.updateWallpaper(wallpaper);
       });
+  }
+
+  private updateWallpaper(wallpaper: Wallpaper): void {
+    const wallpaperPartial: Partial<Wallpaper> = {};
+    let wallpaperLocation = '';
+    let hasTranslation: boolean;
+    let unknownLocation = '';
+    if (this.lang === WallpaperLang.EN) {
+      wallpaperLocation = wallpaper.wallpaperLocationEn || wallpaper.wallpaperLocation;
+      unknownLocation = 'Unknown';
+      hasTranslation = !!wallpaper.wallpaperStory;
+      wallpaperPartial.wallpaperTitle = wallpaper.wallpaperTitleEn || wallpaper.wallpaperTitle;
+      wallpaperPartial.wallpaperCopyright = wallpaper.wallpaperCopyrightEn || wallpaper.wallpaperCopyright;
+      wallpaperPartial.wallpaperStoryTitle = wallpaper.wallpaperStoryTitleEn || wallpaper.wallpaperStoryTitle;
+      wallpaperPartial.wallpaperStory = wallpaper.wallpaperStoryEn || wallpaper.wallpaperStory;
+    } else {
+      wallpaperLocation = wallpaper.wallpaperLocation || wallpaper.wallpaperLocationEn;
+      unknownLocation = '未知';
+      hasTranslation = !!wallpaper.wallpaperStoryEn;
+      wallpaperPartial.wallpaperTitle = wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn;
+      wallpaperPartial.wallpaperCopyright = wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn;
+      wallpaperPartial.wallpaperStoryTitle = wallpaper.wallpaperStoryTitle || wallpaper.wallpaperStoryTitleEn;
+      wallpaperPartial.wallpaperStory = wallpaper.wallpaperStory || wallpaper.wallpaperStoryEn;
+    }
+    wallpaperPartial.wallpaperLocation = wallpaperLocation || unknownLocation;
+    wallpaperPartial.hasTranslation = hasTranslation;
+
+    this.wallpaper = {
+      ...wallpaper,
+      ...wallpaperPartial,
+      wallpaperCopyrightAuthor: wallpaper.wallpaperCopyrightAuthor.replace(/^©\s*/i, '')
+    };
+
+    this.updatePageInfo();
+    this.updateBreadcrumbs();
   }
 
   private updatePageInfo() {

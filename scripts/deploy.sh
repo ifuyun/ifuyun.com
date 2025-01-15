@@ -13,7 +13,7 @@ echo -e "\033[95m[server]\033[0m stopping server..."
 pm2 stop $PM2_APP_NAME -s
 echo -e "\033[95m[server]\033[0m server: \033[36m${PM2_APP_NAME}\033[0m is stopped."
 # pull master
-echo -e "\033[95m[git]\033[0m pulling master..."
+echo -e "\033[95m[git]\033[0m pulling from GitHub..."
 echo -e "\033[95m[git]\033[0m path: \033[36m"$(pwd)"\033[0m"
 git fetch origin master && git reset --hard origin/master && git pull origin master
 git checkout master

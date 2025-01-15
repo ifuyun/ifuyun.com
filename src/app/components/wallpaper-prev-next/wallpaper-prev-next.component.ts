@@ -71,6 +71,8 @@ export class WallpaperPrevNextComponent implements OnInit {
             isCn: !!res.prevWallpaper.wallpaperCopyright,
             isEn: !!res.prevWallpaper.wallpaperCopyrightEn
           };
+        } else {
+          this.prevWallpaper = undefined;
         }
         if (res.nextWallpaper) {
           this.nextWallpaper = {
@@ -82,6 +84,8 @@ export class WallpaperPrevNextComponent implements OnInit {
             isCn: !!res.nextWallpaper.wallpaperCopyright,
             isEn: !!res.nextWallpaper.wallpaperCopyrightEn
           };
+        } else {
+          this.nextWallpaper = undefined;
         }
       });
   }

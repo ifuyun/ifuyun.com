@@ -38,7 +38,9 @@ export class FooterComponent implements OnInit {
     return '';
   }
 
+  private isLoaded = false;
   private isHome = false;
+  private isHomeChanged = false;
 
   constructor(
     private readonly destroy$: DestroyService,
@@ -59,11 +61,17 @@ export class FooterComponent implements OnInit {
       .subscribe((options) => (this.options = options));
     this.getFooterLinks();
     this.urlService.urlInfo$.pipe(takeUntil(this.destroy$)).subscribe((url) => {
-      this.isHome = url.current.split('?')[0] === '/';
+      const isHome = url.current.split('?')[0] === '/';
 
-      if (!this.isMobile) {
-        this.getFriendLinks();
+      this.isHomeChanged = isHome !== this.isHome;
+      if (!this.isLoaded || this.isHomeChanged) {
+        this.isHome = isHome;
+
+        if (!this.isMobile) {
+          this.getFriendLinks();
+        }
       }
+      this.isLoaded = true;
     });
   }
 

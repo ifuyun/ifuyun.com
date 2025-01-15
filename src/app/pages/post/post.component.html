@@ -64,6 +64,12 @@
             </li>
           </ul>
         </div>
+        <div class="post-meta" *ngIf="post.postTranslator">
+          <div class="post-meta-icon"><nz-icon nzType="translation" /></div>
+          <div class="post-meta-info">
+            <span class="post-meta-info-text" title="译者：{{ post.postTranslator }}">译者：{{ post.postTranslator }}</span>
+          </div>
+        </div>
         <div class="post-meta" *ngIf="isArticle">
           <div class="post-meta-icon"><nz-icon nzType="book" /></div>
           <div class="post-meta-info">

@@ -19,6 +19,7 @@ export interface PostEntity {
   cover: string;
   postOriginal: number;
   postAuthor?: string;
+  postTranslator?: string;
   postSource?: string;
   postSourceLink?: string;
   postLoginFlag: number;

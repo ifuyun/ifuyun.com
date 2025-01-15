@@ -18,7 +18,7 @@
                 <li *ngFor="let taxonomy of postTaxonomies">
                   <a class="sub-nav-link"
                      [routerLink]="['/post/category/'+taxonomy.taxonomySlug]"
-                     title="{{taxonomy.taxonomyDescription}}">
+                     [title]="taxonomy.taxonomyDescription">
                     <span>{{ taxonomy.taxonomyName }}</span><span *ngIf="!taxonomy.isLeaf" class="sub-nav-arrow"></span>
                   </a>
                   <div class="child-nav-wrap" *ngIf="!taxonomy.isLeaf">
@@ -27,7 +27,7 @@
                         <li *ngFor="let subTaxonomy of taxonomy.children">
                           <a class="child-nav-link"
                              [routerLink]="['/post/category/'+subTaxonomy.taxonomySlug]"
-                             title="{{subTaxonomy.taxonomyDescription}}">{{ subTaxonomy.taxonomyName }}</a>
+                             [title]="subTaxonomy.taxonomyDescription">{{ subTaxonomy.taxonomyName }}</a>
                         </li>
                       </ul>
                     </div>
