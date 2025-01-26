@@ -9,7 +9,7 @@ import { ApiService } from './api.service';
   providedIn: 'root'
 })
 export class IpService {
-  constructor(private apiService: ApiService) {}
+  constructor(private readonly apiService: ApiService) {}
 
   searchIP(ip: string): Observable<IPResult> {
     return this.apiService

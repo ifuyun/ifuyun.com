@@ -17,7 +17,6 @@ export interface UserAgentData {
 
 export interface AccessLog extends UserAgentData, AppParam {
   logId: string;
-  faId: string;
   accessUrl: string;
   accessTime?: Date;
   site: 'web' | 'admin';
@@ -36,7 +35,6 @@ export interface LeaveLog {
 }
 
 export interface ActionLog extends AppParam {
-  faId: string;
   action: ActionType;
   objectType: ActionObjectType;
   objectId?: string;

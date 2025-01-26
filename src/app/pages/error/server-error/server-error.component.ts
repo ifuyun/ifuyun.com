@@ -18,7 +18,7 @@ export class ServerErrorComponent implements OnInit {
 
   protected pageIndex = 'error-500';
 
-  constructor(private commonService: CommonService) {}
+  constructor(private readonly commonService: CommonService) {}
 
   ngOnInit(): void {
     this.updatePageIndex();

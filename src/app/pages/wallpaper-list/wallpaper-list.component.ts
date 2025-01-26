@@ -1,4 +1,4 @@
-import { NgForOf } from '@angular/common';
+import { NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
@@ -11,7 +11,8 @@ import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.comp
 import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { WallpaperItemComponent } from '../../components/wallpaper-item/wallpaper-item.component';
-import { WallpaperLang, WallpaperListMode } from '../../enums/wallpaper';
+import { ListMode } from '../../enums/common';
+import { WallpaperLang } from '../../enums/wallpaper';
 import { OptionEntity } from '../../interfaces/option';
 import { TenantAppModel } from '../../interfaces/tenant-app';
 import { Wallpaper, WallpaperQueryParam } from '../../interfaces/wallpaper';
@@ -28,7 +29,7 @@ import { WallpaperService } from '../../services/wallpaper.service';
 @Component({
   selector: 'app-wallpaper-list',
   imports: [
-    NgForOf,
+    NgFor,
     RouterLink,
     FormsModule,
     NzIconModule,
@@ -49,19 +50,19 @@ export class WallpaperListComponent implements OnInit {
   pageSize = 10;
   total = 0;
   lang!: WallpaperLang;
-  mode!: WallpaperListMode;
+  mode!: ListMode;
   langValue!: WallpaperLang | 'all';
-  modeValue!: WallpaperListMode;
-  keyword = '';
+  modeValue!: ListMode;
   wallpapers: Wallpaper[] = [];
 
   protected readonly WallpaperLang = WallpaperLang;
-  protected readonly WallpaperListMode = WallpaperListMode;
+  protected readonly ListMode = ListMode;
 
   protected pageIndex = 'wallpaper';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
+  private lastParam = '';
   private year = '';
   private month = '';
 
@@ -80,9 +81,6 @@ export class WallpaperListComponent implements OnInit {
     }
     if (this.mode) {
       params['mode'] = this.mode;
-    }
-    if (this.keyword) {
-      params['keyword'] = this.keyword;
     }
 
     return params;
@@ -114,20 +112,33 @@ export class WallpaperListComponent implements OnInit {
         skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe(([appInfo, options, p, qp]) => {
+      .subscribe(([appInfo, options]) => {
+        const { queryParamMap: qp, paramMap: p } = this.route.snapshot;
+
         this.appInfo = appInfo;
         this.options = options;
 
         this.pageSize = Number(this.options['wallpaper_page_size']) || 10;
         this.page = Number(qp.get('page')) || 1;
-        this.keyword = qp.get('keyword')?.trim() || '';
         this.lang = <WallpaperLang>qp.get('lang')?.trim();
-        this.mode = <WallpaperListMode>qp.get('mode')?.trim();
+        this.mode = <ListMode>qp.get('mode')?.trim();
         this.langValue = this.lang || 'all';
-        this.modeValue = this.mode || WallpaperListMode.CARD;
+        this.modeValue = this.mode || ListMode.CARD;
 
         this.year = p.get('year')?.trim() || '';
         this.month = p.get('month')?.trim() || '';
+
+        const latestParam = JSON.stringify({
+          page: this.page,
+          lang: this.lang,
+          mode: this.mode,
+          year: this.year,
+          month: this.month
+        });
+        if (latestParam === this.lastParam) {
+          return;
+        }
+        this.lastParam = latestParam;
 
         if (this.year) {
           this.pageIndex = 'wallpaper-archive';
@@ -140,7 +151,7 @@ export class WallpaperListComponent implements OnInit {
       });
   }
 
-  getListParam(lang: WallpaperLang | null, mode: WallpaperListMode, page?: number) {
+  getListParam(lang: WallpaperLang | null, mode: ListMode, page?: number) {
     const params: Params = {};
     if (lang) {
       params['lang'] = lang;
@@ -166,9 +177,6 @@ export class WallpaperListComponent implements OnInit {
     };
     if (this.lang) {
       param.lang = this.lang;
-    }
-    if (this.keyword) {
-      param.keyword = this.keyword;
     }
     if (this.year) {
       param.year = this.year;
@@ -218,14 +226,8 @@ export class WallpaperListComponent implements OnInit {
       titles.unshift(label);
       description += label;
     }
-    if (this.keyword) {
-      titles.unshift(this.keyword, '搜索');
-      description += `「${this.keyword}」高清壁纸搜索结果`;
-      keywords.unshift(this.keyword);
-    } else {
-      if (description) {
-        description += '高清壁纸';
-      }
+    if (description) {
+      description += '高清壁纸';
     }
     if (this.page > 1) {
       titles.unshift(`第${this.page}页`);
@@ -241,7 +243,9 @@ export class WallpaperListComponent implements OnInit {
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
       description,
-      keywords: uniq(keywords).join(','),
+      keywords: uniq(keywords)
+        .filter((item) => !!item)
+        .join(','),
       author: this.options['site_author']
     });
   }

@@ -1,4 +1,4 @@
-import { TagStatus, TaxonomyStatus, TaxonomyType } from '../enums/taxonomy';
+import { TaxonomyStatus, TaxonomyType } from '../enums/taxonomy';
 
 export interface TaxonomyEntity {
   taxonomyId: string;
@@ -15,11 +15,4 @@ export interface TaxonomyEntity {
 export interface TaxonomyNode extends TaxonomyEntity {
   children?: TaxonomyNode[];
   isLeaf?: boolean;
-}
-
-export interface TagEntity {
-  tagId: string;
-  tagName: string;
-  tagStatus: TagStatus;
-  objectCount?: number;
 }

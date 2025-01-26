@@ -1,6 +1,8 @@
 export enum ApiUrl {
   // search
-  SEARCH = '/search',
+  SEARCH_POSTS = '/search/posts',
+  SEARCH_WALLPAPERS = '/search/wallpapers',
+  SEARCH_GAMES = '/search/games',
   // option
   OPTION = '/options/option',
   OPTION_FRONTEND = '/options/frontend',
@@ -8,7 +10,7 @@ export enum ApiUrl {
   // util
   SITEMAP = '/util/sitemap',
   // post
-  POST_LIST = '/posts',
+  POSTS = '/posts',
   POST = '/posts/post',
   POST_HOT = '/posts/hot',
   POST_RANDOM = '/posts/random',
@@ -24,7 +26,7 @@ export enum ApiUrl {
   LINK_FRIEND = '/links/friend',
   LINK_FAVORITE = '/links/favorites',
   // comment
-  COMMENT_LIST = '/comments',
+  COMMENTS = '/comments',
   COMMENT = '/comments/comment',
   // vote
   VOTE = '/votes/vote',
@@ -44,15 +46,24 @@ export enum ApiUrl {
   LEAVE_LOG = '/logs/leave',
   ACTION_LOG = '/logs/action',
   // wallpaper
-  WALLPAPER_LIST = '/wallpapers',
-  WALLPAPER_RANDOM = '/wallpapers/random',
+  WALLPAPERS = '/wallpapers',
   WALLPAPER_HOT = '/wallpapers/hot',
+  WALLPAPER_RANDOM = '/wallpapers/random',
   WALLPAPER_RELATED = '/wallpapers/related',
   WALLPAPER_PREV_AND_NEXT = '/wallpapers/prev-and-next',
   WALLPAPER = '/wallpapers/wallpaper',
   WALLPAPER_ARCHIVES = '/wallpapers/archives',
   WALLPAPER_DOWNLOAD = '/wallpapers/download',
   WALLPAPER_DOWNLOAD_URL = '/wallpapers/download-url',
+  // nes
+  GAMES = '/games',
+  GAME = '/games/game',
+  GAME_ROM = '/games/rom',
+  GAME_HOT = '/games/hot',
+  GAME_RANDOM = '/games/random',
+  GAME_RELATED = '/games/related',
+  GAME_PREV_AND_NEXT = '/games/prev-and-next',
+  GAME_LOG = '/games/log',
   // jd
   JD_SELLING_PROMOTION = '/union/jd/selling-promotion',
   JD_PROMOTION_COMMON = '/union/jd/promotion-common',

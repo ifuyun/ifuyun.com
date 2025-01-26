@@ -19,11 +19,11 @@ export class PostService {
   private activeBook: Subject<BookEntity | undefined> = new Subject<BookEntity | undefined>();
   public activeBook$: Observable<BookEntity | undefined> = this.activeBook.asObservable();
 
-  constructor(private apiService: ApiService) {}
+  constructor(private readonly apiService: ApiService) {}
 
   getPosts(param: PostQueryParam): Observable<PostList> {
     return this.apiService
-      .httpGet(ApiUrl.POST_LIST, {
+      .httpGet(ApiUrl.POSTS, {
         ...param,
         appId: APP_ID
       })

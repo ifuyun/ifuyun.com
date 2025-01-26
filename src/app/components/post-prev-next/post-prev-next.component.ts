@@ -11,8 +11,7 @@ import { UserAgentService } from '../../services/user-agent.service';
   selector: 'app-post-prev-next',
   imports: [RouterLink],
   providers: [DestroyService],
-  templateUrl: './post-prev-next.component.html',
-  styleUrl: './post-prev-next.component.less'
+  templateUrl: './post-prev-next.component.html'
 })
 export class PostPrevNextComponent implements OnInit {
   isMobile = false;

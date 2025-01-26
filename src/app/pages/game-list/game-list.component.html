@@ -1,0 +1,16 @@
+<app-breadcrumb></app-breadcrumb>
+@if (total > 0) {
+  <div class="post-card-list" [class.post-card-list-2]="!isMobile">
+    <app-game-item class="post-card-item-wrap"
+                   *ngFor="let game of games; let i = index"
+                   [game]="game"
+                   [mode]="ListMode.CARD"
+                   [index]="i"></app-game-item>
+  </div>
+} @else {
+  <div class="empty" [class.p-empty]="!isMobile" [class.m-empty]="isMobile">
+    <nz-empty nzNotFoundImage="simple"></nz-empty>
+  </div>
+}
+<app-make-money></app-make-money>
+<app-pagination></app-pagination>

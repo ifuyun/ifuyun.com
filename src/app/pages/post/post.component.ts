@@ -13,7 +13,7 @@ import { MakeMoneyComponent } from '../../components/make-money/make-money.compo
 import { PostPrevNextComponent } from '../../components/post-prev-next/post-prev-next.component';
 import { PostRelatedComponent } from '../../components/post-related/post-related.component';
 import { ShareModalComponent } from '../../components/share-modal/share-modal.component';
-import { COOKIE_KEY_USER_ID, REGEXP_ID } from '../../config/common.constant';
+import { REGEXP_ID } from '../../config/common.constant';
 import { Message } from '../../config/message.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommentObjectType } from '../../enums/comment';
@@ -25,7 +25,8 @@ import { BookEntity } from '../../interfaces/book';
 import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
 import { OptionEntity } from '../../interfaces/option';
 import { Post, PostModel } from '../../interfaces/post';
-import { TagEntity, TaxonomyEntity } from '../../interfaces/taxonomy';
+import { TagEntity } from '../../interfaces/tag';
+import { TaxonomyEntity } from '../../interfaces/taxonomy';
 import { TenantAppModel } from '../../interfaces/tenant-app';
 import { UserModel } from '../../interfaces/user';
 import { CopyLinkPipe } from '../../pipes/copy-link.pipe';
@@ -44,7 +45,6 @@ import { MetaService } from '../../services/meta.service';
 import { OptionService } from '../../services/option.service';
 import { PlatformService } from '../../services/platform.service';
 import { PostService } from '../../services/post.service';
-import { SsrCookieService } from '../../services/ssr-cookie.service';
 import { TenantAppService } from '../../services/tenant-app.service';
 import { UserAgentService } from '../../services/user-agent.service';
 import { UserService } from '../../services/user.service';
@@ -67,9 +67,9 @@ import { decodeEntities } from '../../utils/entities';
     BreadcrumbComponent,
     PostPrevNextComponent,
     PostRelatedComponent,
+    CommentComponent,
     ShareModalComponent,
     LoginModalComponent,
-    CommentComponent,
     MakeMoneyComponent
   ],
   providers: [DestroyService, NzImageService],
@@ -119,7 +119,6 @@ export class PostComponent implements OnInit {
   private postSlug = '';
   private referrer = '';
   private postBook?: BookEntity;
-  private breadcrumbs: BreadcrumbEntity[] = [];
   private codeList: string[] = [];
 
   constructor(
@@ -129,7 +128,6 @@ export class PostComponent implements OnInit {
     private readonly userAgentService: UserAgentService,
     private readonly message: MessageService,
     private readonly imageService: NzImageService,
-    private readonly cookieService: SsrCookieService,
     private readonly commonService: CommonService,
     private readonly metaService: MetaService,
     private readonly breadcrumbService: BreadcrumbService,
@@ -160,17 +158,17 @@ export class PostComponent implements OnInit {
         this.options = options;
         this.referrer = this.commonService.getReferrer();
 
-        const postName = p.get('postName')?.trim() || '';
-        if (!postName) {
+        const slug = p.get('slug')?.trim() || '';
+        if (!slug) {
           this.commonService.redirectToNotFound();
           return;
         }
-        if (REGEXP_ID.test(postName)) {
-          this.postId = postName;
+        if (REGEXP_ID.test(slug)) {
+          this.postId = slug;
           this.getPost();
           this.commentService.updateObjectId(this.postId);
         } else {
-          this.postSlug = postName;
+          this.postSlug = slug;
           this.getPage();
         }
       });
@@ -179,10 +177,7 @@ export class PostComponent implements OnInit {
       this.isSignIn = !!user.userId;
 
       if (this.platform.isBrowser) {
-        const userId = user.userId || this.cookieService.get(COOKIE_KEY_USER_ID);
-        const shareUrl = location.href.split('#')[0];
-        const param = (shareUrl.includes('?') ? '&' : '?') + 'ref=qrcode' + (userId ? '&uid=' + userId : '');
-        this.shareUrl = shareUrl + param;
+        this.shareUrl = this.commonService.getShareURL(user.userId);
       }
     });
   }
@@ -350,38 +345,42 @@ export class PostComponent implements OnInit {
 
     if (this.isArticle) {
       this.pageIndex = 'post-article';
-      this.breadcrumbs = (post.breadcrumbs || []).map((item) => ({
-        ...item,
-        url: `/post/category/${item.slug}`
-      }));
-      this.breadcrumbs.unshift({
-        label: '文章',
-        tooltip: '文章列表',
-        url: '/post',
-        isHeader: false
-      });
-      if (this.postBook) {
-        this.breadcrumbs[this.breadcrumbs.length - 1].isHeader = false;
-        this.breadcrumbs.push({
-          label: this.postBookName.fullName,
-          tooltip: this.postBookName.fullName,
-          url: '/post',
-          param: {
-            bookId: this.postBook.bookId
-          },
-          isHeader: true
-        });
-      }
     } else {
       this.pageIndex = 'page-' + this.post.postName;
-      this.breadcrumbs = [];
     }
 
     this.postService.updateActivePostId(post.post.postId);
     this.postService.updateActiveBook(post.book);
-    this.breadcrumbService.updateBreadcrumbs(this.breadcrumbs);
+    this.updateBreadcrumbs(this.isArticle ? post.breadcrumbs : []);
     this.updatePageIndex();
     this.updatePageInfo();
+  }
+
+  private updateBreadcrumbs(breadcrumbData?: BreadcrumbEntity[]) {
+    const breadcrumbs = (breadcrumbData || []).map((item) => ({
+      ...item,
+      url: `/post/category/${item.slug}`
+    }));
+    breadcrumbs.unshift({
+      label: '文章',
+      tooltip: '文章列表',
+      url: '/post',
+      isHeader: false
+    });
+    if (this.postBook) {
+      breadcrumbs[breadcrumbs.length - 1].isHeader = false;
+      breadcrumbs.push({
+        label: this.postBookName.fullName,
+        tooltip: this.postBookName.fullName,
+        url: '/post',
+        param: {
+          bookId: this.postBook.bookId
+        },
+        isHeader: true
+      });
+    }
+
+    this.breadcrumbService.updateBreadcrumbs(breadcrumbs);
   }
 
   private updatePageInfo() {
@@ -390,6 +389,9 @@ export class PostComponent implements OnInit {
       .map((item) => item.tagName)
       .concat((this.options['post_keywords'] || '').split(','));
 
+    if (this.isArticle) {
+      titles.unshift('文章');
+    }
     if (this.postBook) {
       titles.unshift(this.postBook.bookName);
       if (this.postBook.bookIssueNumber) {
@@ -402,7 +404,9 @@ export class PostComponent implements OnInit {
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
       description: this.post.postExcerpt,
-      keywords: uniq(keywords).join(','),
+      keywords: uniq(keywords)
+        .filter((item) => !!item)
+        .join(','),
       author: this.options['site_author']
     });
   }

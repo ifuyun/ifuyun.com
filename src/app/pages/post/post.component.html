@@ -19,29 +19,27 @@
       </div>
     </header>
     <div class="divider"></div>
-    <div>
-      <article class="post-content"
-               [class.no-auth]="!isSignIn"
-               [ngStyle]="{'user-select': post.postPayFlag || post.postLoginFlag && !isSignIn ? 'none' : ''}"
-               [innerHTML]="post.postContent | safeHtml"
-               (click)="onPostClick($event)"></article>
-      @if (showPayMask) {
-        <div class="pay-mask"></div>
-        <div class="pay-body">
-          <div class="pay-separator">
-            <div class="line"></div>
-            <div class="text-wrap">
-              <div class="text">还有 {{ 100 - (post.postFreePercent || 0) }}% 的精彩内容</div>
-            </div>
-          </div>
-          <div class="pay-icon"><i class="fi fi-lock"></i></div>
-          <div class="pay-tip">
-            <!--post.postPayFlag-->
-            <div *ngIf="post.postLoginFlag">本文仅限注册用户阅读，请先<a (click)="showLoginModal()" title="登录">登录</a>。</div>
+    <article class="post-content"
+             [class.no-auth]="!isSignIn"
+             [ngStyle]="{'user-select': post.postPayFlag || post.postLoginFlag && !isSignIn ? 'none' : ''}"
+             [innerHTML]="post.postContent | safeHtml"
+             (click)="onPostClick($event)"></article>
+    @if (showPayMask) {
+      <div class="pay-mask"></div>
+      <div class="pay-body">
+        <div class="pay-separator">
+          <div class="line"></div>
+          <div class="text-wrap">
+            <div class="text">还有 {{ 100 - (post.postFreePercent || 0) }}% 的精彩内容</div>
           </div>
         </div>
-      }
-    </div>
+        <div class="pay-icon"><i class="fi fi-lock"></i></div>
+        <div class="pay-tip">
+          <!--post.postPayFlag-->
+          <div *ngIf="post.postLoginFlag">本文仅限注册用户阅读，请先<a (click)="showLoginModal()" title="登录">登录</a>。</div>
+        </div>
+      </div>
+    }
     <footer class="post-footer">
       <div>
         <div class="post-meta" *ngIf="isArticle && postCategories.length > 0">

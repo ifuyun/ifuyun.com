@@ -1,0 +1,30 @@
+@import "../../../styles/variables";
+
+.full-img {
+  background-size: contain !important;
+}
+
+.m-post-card-cover {
+  .post-item-cover-img {
+    height: 200px;
+  }
+}
+
+.post-meta {
+  .tags {
+    display: flex;
+  }
+
+  .game-tag > a {
+    display: inline-block;
+    padding: 0 6px;
+    border-radius: 2px;
+    color: var(--tag-color);
+    background-color: var(--tag-bg-color);
+
+    &:hover {
+      color: var(--tag-active-color);
+      background-color: var(--primary-color);
+    }
+  }
+}

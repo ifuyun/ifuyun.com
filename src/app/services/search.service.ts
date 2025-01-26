@@ -4,18 +4,36 @@ import { map } from 'rxjs/operators';
 import { ApiUrl } from '../config/api-url';
 import { APP_ID } from '../config/common.constant';
 import { ResultList } from '../interfaces/common';
-import { SearchParam, SearchResponse } from '../interfaces/search';
+import { GameSearchResponse, PostSearchResponse, SearchParam, WallpaperSearchResponse } from '../interfaces/search';
 import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SearchService {
-  constructor(private apiService: ApiService) {}
+  constructor(private readonly apiService: ApiService) {}
 
-  search(param: SearchParam): Observable<ResultList<SearchResponse>> {
+  searchPosts(param: SearchParam): Observable<ResultList<PostSearchResponse>> {
     return this.apiService
-      .httpGet(ApiUrl.SEARCH, {
+      .httpGet(ApiUrl.SEARCH_POSTS, {
+        ...param,
+        appId: APP_ID
+      })
+      .pipe(map((res) => res?.data || {}));
+  }
+
+  searchWallpapers(param: SearchParam): Observable<ResultList<WallpaperSearchResponse>> {
+    return this.apiService
+      .httpGet(ApiUrl.SEARCH_WALLPAPERS, {
+        ...param,
+        appId: APP_ID
+      })
+      .pipe(map((res) => res?.data || {}));
+  }
+
+  searchGames(param: SearchParam): Observable<ResultList<GameSearchResponse>> {
+    return this.apiService
+      .httpGet(ApiUrl.SEARCH_GAMES, {
         ...param,
         appId: APP_ID
       })

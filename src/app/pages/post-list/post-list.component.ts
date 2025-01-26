@@ -1,4 +1,4 @@
-import { NgForOf } from '@angular/common';
+import { NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
@@ -26,7 +26,7 @@ import { UserAgentService } from '../../services/user-agent.service';
 
 @Component({
   selector: 'app-post-list',
-  imports: [NgForOf, NzEmptyModule, BreadcrumbComponent, PaginationComponent, PostItemComponent, MakeMoneyComponent],
+  imports: [NgFor, NzEmptyModule, BreadcrumbComponent, PaginationComponent, MakeMoneyComponent, PostItemComponent],
   providers: [DestroyService],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.less'
@@ -36,15 +36,15 @@ export class PostListComponent implements OnInit {
   page = 1;
   pageSize = 10;
   total = 0;
-  keyword = '';
-  category = '';
-  tag = '';
   posts: Post[] = [];
 
   protected pageIndex = 'post-list';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
+  private lastParam = '';
+  private category = '';
+  private tag = '';
   private year = '';
   private month = '';
   private bookId = '';
@@ -66,9 +66,6 @@ export class PostListComponent implements OnInit {
 
   get paginationParam(): Params {
     const param: Params = {};
-    if (this.keyword) {
-      param['keyword'] = this.keyword;
-    }
     if (this.bookId) {
       param['bookId'] = this.bookId;
     }
@@ -107,19 +104,33 @@ export class PostListComponent implements OnInit {
         skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe(([appInfo, options, p, qp]) => {
+      .subscribe(([appInfo, options]) => {
+        const { queryParamMap: qp, paramMap: p } = this.route.snapshot;
+
         this.appInfo = appInfo;
         this.options = options;
 
         this.pageSize = Number(this.options['post_page_size']) || 10;
         this.page = Number(qp.get('page')) || 1;
-        this.keyword = qp.get('keyword')?.trim() || '';
         this.bookId = qp.get('bookId')?.trim() || '';
 
         this.category = p.get('category')?.trim() || '';
         this.tag = p.get('tag')?.trim() || '';
         this.year = p.get('year')?.trim() || '';
         this.month = p.get('month')?.trim() || '';
+
+        const latestParam = JSON.stringify({
+          page: this.page,
+          bookId: this.bookId,
+          category: this.category,
+          tag: this.tag,
+          year: this.year,
+          month: this.month
+        });
+        if (latestParam === this.lastParam) {
+          return;
+        }
+        this.lastParam = latestParam;
 
         if (this.year) {
           this.pageIndex = 'post-archive';
@@ -145,9 +156,6 @@ export class PostListComponent implements OnInit {
       page: this.page,
       pageSize: this.pageSize
     };
-    if (this.keyword) {
-      param.keyword = this.keyword;
-    }
     if (this.category) {
       param.category = this.category;
     }
@@ -170,12 +178,11 @@ export class PostListComponent implements OnInit {
         this.total = res.posts?.total || 0;
         this.postBook = undefined;
 
-        this.initData(
-          (res.breadcrumbs || []).map((item) => ({
-            ...item,
-            url: `/post/category/${item.slug}`
-          }))
-        );
+        const breadcrumbs = (res.breadcrumbs || []).map((item) => ({
+          ...item,
+          url: `/post/category/${item.slug}`
+        }));
+        this.initData(breadcrumbs);
       });
   }
 
@@ -210,14 +217,14 @@ export class PostListComponent implements OnInit {
     this.updateBreadcrumbs(breadcrumbs);
   }
 
-  private updatePageInfo(postBreadcrumbs: BreadcrumbEntity[]) {
+  private updatePageInfo(breadcrumbData: BreadcrumbEntity[]) {
     const titles: string[] = ['文章', this.appInfo.appName];
     const categories: string[] = [];
     const keywords: string[] = (this.options['post_keywords'] || '').split(',');
     let description = '';
 
-    if (this.category && postBreadcrumbs.length > 0) {
-      const label = postBreadcrumbs[postBreadcrumbs.length - 1].label;
+    if (this.category && breadcrumbData.length > 0) {
+      const label = breadcrumbData[breadcrumbData.length - 1].label;
       titles.unshift(label);
       categories.push(label);
       keywords.unshift(label);
@@ -241,14 +248,8 @@ export class PostListComponent implements OnInit {
       description += this.postBookName.fullName;
       keywords.unshift(this.postBook.bookName);
     }
-    if (this.keyword) {
-      titles.unshift(this.keyword, '搜索');
-      description += `「${this.keyword}」文章搜索结果`;
-      keywords.unshift(this.keyword);
-    } else {
-      if (description) {
-        description += '文章列表';
-      }
+    if (description) {
+      description += '文章列表';
     }
     if (this.page > 1) {
       titles.unshift(`第${this.page}页`);
@@ -264,12 +265,14 @@ export class PostListComponent implements OnInit {
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
       description,
-      keywords: uniq(keywords).join(','),
+      keywords: uniq(keywords)
+        .filter((item) => !!item)
+        .join(','),
       author: this.options['site_author']
     });
   }
 
-  private updateBreadcrumbs(postBreadcrumbs: BreadcrumbEntity[]) {
+  private updateBreadcrumbs(breadcrumbData: BreadcrumbEntity[]) {
     let breadcrumbs: BreadcrumbEntity[] = [
       {
         label: '文章',
@@ -318,8 +321,8 @@ export class PostListComponent implements OnInit {
         });
       }
     }
-    if (postBreadcrumbs.length > 0) {
-      breadcrumbs = breadcrumbs.concat(postBreadcrumbs);
+    if (breadcrumbData.length > 0) {
+      breadcrumbs = breadcrumbs.concat(breadcrumbData);
     }
     if (this.postBook) {
       breadcrumbs.push({
@@ -331,25 +334,6 @@ export class PostListComponent implements OnInit {
         },
         isHeader: true
       });
-    }
-    if (this.keyword) {
-      breadcrumbs.push(
-        {
-          label: `搜索`,
-          tooltip: `文章搜索`,
-          url: '',
-          isHeader: false
-        },
-        {
-          label: this.keyword,
-          tooltip: this.keyword,
-          url: '/post',
-          param: {
-            keyword: this.keyword
-          },
-          isHeader: true
-        }
-      );
     }
     if (this.page > 1) {
       breadcrumbs.push({

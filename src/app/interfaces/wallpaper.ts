@@ -37,8 +37,10 @@ export interface Wallpaper {
   wallpaperLocation: string;
   wallpaperLocationEn: string;
   wallpaperViews: number;
-  wallpaperLikes: number;
   wallpaperDownloads: number;
+  wallpaperLikes: number;
+  wallpaperComments: number;
+  wallpaperFavorites: number;
   wallpaperModified: number;
   hasTranslation: boolean;
   isCn: boolean;

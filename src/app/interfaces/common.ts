@@ -4,6 +4,7 @@ export interface PageIndexInfo {
   isWallpaper: boolean;
   isArticle: boolean;
   isPage: boolean;
+  isGame: boolean;
   isTool: boolean;
   isAuth: boolean;
   fullPage: string;

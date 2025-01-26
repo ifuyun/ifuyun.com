@@ -1,4 +1,4 @@
-import { NgForOf } from '@angular/common';
+import { NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
@@ -19,7 +19,7 @@ import { WallpaperService } from '../../services/wallpaper.service';
 
 @Component({
   selector: 'app-wallpaper-archive',
-  imports: [NgForOf, RouterLink, BreadcrumbComponent],
+  imports: [NgFor, RouterLink, BreadcrumbComponent],
   providers: [DestroyService],
   templateUrl: './wallpaper-archive.component.html',
   styleUrl: './wallpaper-archive.component.less'

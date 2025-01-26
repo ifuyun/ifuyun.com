@@ -1,4 +1,4 @@
-import { SearchType } from '../enums/search';
+import { Game } from './game';
 import { Post } from './post';
 import { Wallpaper } from './wallpaper';
 
@@ -8,8 +8,14 @@ export interface SearchParam {
   size?: number;
 }
 
-export interface SearchResponse {
-  type: SearchType;
-  data: Post | Wallpaper;
+export interface PostSearchResponse extends Post {
+  score: number;
+}
+
+export interface WallpaperSearchResponse extends Wallpaper {
+  score: number;
+}
+
+export interface GameSearchResponse extends Game {
   score: number;
 }

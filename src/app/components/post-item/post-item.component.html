@@ -47,16 +47,30 @@
         </a>
       </div>
     </div>
-    <div *ngIf="post.tags.length > 0" class="post-item-tag">
-      <div>
-        <div class="post-item-tag-icon"><nz-icon nzType="tag" /></div>
-        <ul>
-          <li *ngFor="let tag of post.tags">
-            <a [routerLink]="'/post/tag/' + tag.tagName"
-               [title]="tag.tagName"
-               rel="category">{{ tag.tagName }}</a>
-          </li>
-        </ul>
+    <div class="post-item-tag-wrap" *ngIf="post.categories.length > 0 || post.tags.length > 0">
+      <div *ngIf="post.categories.length > 0" class="post-item-tag">
+        <div>
+          <div class="post-item-tag-icon"><nz-icon nzType="folder" /></div>
+          <ul>
+            <li *ngFor="let category of post.categories">
+              <a [routerLink]="'/post/category/' + category.taxonomySlug"
+                 title="{{ category.taxonomyName }}"
+                 rel="category">{{ category.taxonomyName }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div *ngIf="post.tags.length > 0" class="post-item-tag">
+        <div>
+          <div class="post-item-tag-icon"><nz-icon nzType="tag" /></div>
+          <ul>
+            <li *ngFor="let tag of post.tags">
+              <a [routerLink]="'/post/tag/' + tag.tagName"
+                 [title]="tag.tagName"
+                 rel="category">{{ tag.tagName }}</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </article>

@@ -8,12 +8,14 @@ import { environment } from '../../../environments/environment';
 import { WallpaperLang } from '../../enums/wallpaper';
 import { BookEntity } from '../../interfaces/book';
 import { ArchiveData, PageIndexInfo } from '../../interfaces/common';
+import { GameEntity } from '../../interfaces/game';
 import { OptionEntity } from '../../interfaces/option';
 import { PostEntity } from '../../interfaces/post';
 import { HotWallpaper, Wallpaper } from '../../interfaces/wallpaper';
 import { BookService } from '../../services/book.service';
 import { CommonService } from '../../services/common.service';
 import { DestroyService } from '../../services/destroy.service';
+import { GameService } from '../../services/game.service';
 import { OptionService } from '../../services/option.service';
 import { PlatformService } from '../../services/platform.service';
 import { PostService } from '../../services/post.service';
@@ -41,6 +43,8 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   hotWallpapers: HotWallpaper[] = [];
   randomWallpapers: Wallpaper[] = [];
   wallpaperArchives: ArchiveData[] = [];
+  hotGames: GameEntity[] = [];
+  randomGames: GameEntity[] = [];
   bookPosts: PostEntity[] = [];
   activeBook?: BookEntity;
 
@@ -66,6 +70,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly optionService: OptionService,
     private readonly postService: PostService,
     private readonly wallpaperService: WallpaperService,
+    private readonly gameService: GameService,
     private readonly bookService: BookService
   ) {
     this.isMobile = this.userAgentService.isMobile;
@@ -91,17 +96,41 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
           this.indexInfo = this.commonService.getPageIndexInfo(page);
 
           if (!this.isMobile) {
-            if (!this.indexInfo.isWallpaper) {
+            const { isPost, isWallpaper, isGame, isTool, isPage } = this.indexInfo;
+
+            if (isPost || isPage || isTool) {
               this.getHotPosts();
+            } else {
+              this.hotPosts = [];
+            }
+            if (isWallpaper || isPage || isTool) {
+              this.getHotWallpapers();
+            } else {
+              this.hotWallpapers = [];
+            }
+            if (isGame || isPage || isTool) {
+              this.getHotGames();
+            } else {
+              this.hotGames = [];
+            }
+            if (isPost) {
               this.getPostArchives();
               this.getRandomPosts();
+            } else {
+              this.postArchives = [];
+              this.randomPosts = [];
             }
-            if (!this.indexInfo.isPost && !this.indexInfo.isPage) {
-              this.getHotWallpapers();
+            if (isWallpaper) {
               this.getWallpaperArchives();
-            }
-            if (this.indexInfo.isWallpaper) {
               this.getRandomWallpapers();
+            } else {
+              this.wallpaperArchives = [];
+              this.randomWallpapers = [];
+            }
+            if (isGame) {
+              this.getRandomGames();
+            } else {
+              this.randomGames = [];
             }
           }
         }
@@ -197,6 +226,24 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.wallpaperArchives = res;
+      });
+  }
+
+  private getHotGames() {
+    this.gameService
+      .getHotGames()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.hotGames = res;
+      });
+  }
+
+  private getRandomGames() {
+    this.gameService
+      .getRandomGames(10)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.randomGames = res;
       });
   }
 

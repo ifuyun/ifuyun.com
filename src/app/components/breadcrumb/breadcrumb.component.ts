@@ -25,10 +25,10 @@ export class BreadcrumbComponent implements OnInit {
   private appInfo!: TenantAppModel;
 
   constructor(
-    private destroy$: DestroyService,
-    private breadcrumbService: BreadcrumbService,
-    private tenantAppService: TenantAppService,
-    private userAgentService: UserAgentService
+    private readonly destroy$: DestroyService,
+    private readonly breadcrumbService: BreadcrumbService,
+    private readonly tenantAppService: TenantAppService,
+    private readonly userAgentService: UserAgentService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }

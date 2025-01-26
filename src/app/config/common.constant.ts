@@ -14,6 +14,8 @@ export const COOKIE_KEY_USER_ID = 'uid';
 export const COOKIE_KEY_USER_NAME = 'user';
 export const COOKIE_KEY_USER_TOKEN = 'token';
 
+export const GAME_EMPTY_COVER = '/assets/images/game.svg';
+
 export const MEDIA_QUERY_THEME_DARK = '(prefers-color-scheme: dark)';
 export const MEDIA_QUERY_THEME_LIGHT = '(prefers-color-scheme: light)';
 

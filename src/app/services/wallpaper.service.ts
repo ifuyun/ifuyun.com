@@ -21,11 +21,11 @@ export class WallpaperService {
   private activeWallpaperId: BehaviorSubject<string> = new BehaviorSubject<string>('');
   public activeWallpaperId$: Observable<string> = this.activeWallpaperId.asObservable();
 
-  constructor(private apiService: ApiService) {}
+  constructor(private readonly apiService: ApiService) {}
 
   getWallpapers(param: WallpaperQueryParam): Observable<ResultList<Wallpaper>> {
     return this.apiService
-      .httpGet(ApiUrl.WALLPAPER_LIST, {
+      .httpGet(ApiUrl.WALLPAPERS, {
         ...param,
         appId: APP_ID
       })

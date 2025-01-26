@@ -7,8 +7,8 @@ import { PlatformService } from './platform.service';
 })
 export class MessageService {
   constructor(
-    private platform: PlatformService,
-    private message: NzMessageService
+    private readonly platform: PlatformService,
+    private readonly message: NzMessageService
   ) {}
 
   success(content: string | TemplateRef<void>, options?: NzMessageDataOptions): NzMessageRef | void {

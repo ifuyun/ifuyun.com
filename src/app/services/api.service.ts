@@ -55,4 +55,16 @@ export class ApiService {
       return of(err.error as T);
     };
   }
+
+  httpGetFile(url: string, param: Record<string, any> = {}, showMessage = false): Observable<Blob> {
+    return this.http
+      .get(this.getApiUrl(url), {
+        params: new HttpParams({
+          fromObject: param
+        }),
+        responseType: 'blob',
+        observe: 'body'
+      })
+      .pipe(catchError(this.handleError<Blob>(showMessage)));
+  }
 }

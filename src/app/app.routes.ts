@@ -6,9 +6,11 @@ import { SignupComponent } from './pages/auth/signup/signup.component';
 import { ForbiddenComponent } from './pages/error/forbidden/forbidden.component';
 import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { ServerErrorComponent } from './pages/error/server-error/server-error.component';
+import { GameListComponent } from './pages/game-list/game-list.component';
 import { HomeComponent } from './pages/home/home.component';
 import { AuthLayoutComponent } from './pages/layout/auth-layout/auth-layout.component';
 import { ContentLayoutComponent } from './pages/layout/content-layout/content-layout.component';
+import { GameComponent } from './pages/game/game.component';
 import { PageComponent } from './pages/page/page.component';
 import { PostArchiveComponent } from './pages/post-archive/post-archive.component';
 import { PostListComponent } from './pages/post-list/post-list.component';
@@ -36,7 +38,7 @@ export const routes: Routes = [
       { path: 'archive/:year', component: PostListComponent },
       { path: 'archive/:year/:month', component: PostListComponent },
       { path: 'archive', component: PostArchiveComponent },
-      { path: ':postName', component: PostComponent }
+      { path: ':slug', component: PostComponent }
     ]
   },
   {
@@ -54,6 +56,16 @@ export const routes: Routes = [
     path: 'search',
     component: ContentLayoutComponent,
     children: [{ path: '', pathMatch: 'full', component: SearchComponent }]
+  },
+  {
+    path: 'game',
+    component: ContentLayoutComponent,
+    children: [
+      { path: '', pathMatch: 'full', component: GameListComponent },
+      { path: 'category/:category', component: GameListComponent },
+      { path: 'tag/:tag', component: GameListComponent },
+      { path: ':gid', component: GameComponent }
+    ]
   },
   {
     path: 'tool',
@@ -81,7 +93,7 @@ export const routes: Routes = [
     }
   },
   {
-    path: ':postName',
+    path: ':slug',
     component: ContentLayoutComponent,
     children: [{ path: '', pathMatch: 'full', component: PageComponent }]
   },

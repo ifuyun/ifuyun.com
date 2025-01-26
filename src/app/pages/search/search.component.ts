@@ -1,4 +1,4 @@
-import { NgForOf } from '@angular/common';
+import { NgFor } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -6,16 +6,18 @@ import { isEmpty, uniq } from 'lodash';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
+import { GameItemComponent } from '../../components/game-item/game-item.component';
 import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { PostItemComponent } from '../../components/post-item/post-item.component';
 import { WallpaperItemComponent } from '../../components/wallpaper-item/wallpaper-item.component';
 import { Message } from '../../config/message.enum';
-import { WallpaperListMode } from '../../enums/wallpaper';
+import { ListMode } from '../../enums/common';
+import { SearchType } from '../../enums/search';
 import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
 import { CustomError } from '../../interfaces/custom-error';
 import { OptionEntity } from '../../interfaces/option';
-import { SearchResponse } from '../../interfaces/search';
+import { GameSearchResponse, PostSearchResponse, WallpaperSearchResponse } from '../../interfaces/search';
 import { TenantAppModel } from '../../interfaces/tenant-app';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { CommonService } from '../../services/common.service';
@@ -30,12 +32,13 @@ import { UserAgentService } from '../../services/user-agent.service';
 @Component({
   selector: 'app-search',
   imports: [
-    NgForOf,
+    NgFor,
     NzEmptyModule,
     BreadcrumbComponent,
     PaginationComponent,
     PostItemComponent,
     WallpaperItemComponent,
+    GameItemComponent,
     MakeMoneyComponent
   ],
   providers: [DestroyService],
@@ -47,15 +50,27 @@ export class SearchComponent implements OnInit {
   page = 1;
   pageSize = 10;
   total = 0;
-  keyword = '';
-  searchResult: SearchResponse[] = [];
+  searchType = SearchType.POST;
+  postResult: PostSearchResponse[] = [];
+  wallpaperResult: WallpaperSearchResponse[] = [];
+  gameResult: GameSearchResponse[] = [];
 
-  protected readonly WallpaperListMode = WallpaperListMode;
+  protected readonly ListMode = ListMode;
 
-  protected pageIndex = 'search';
+  protected pageIndex = 'post-search';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
+  private keyword = '';
+
+  private get searchTypeDesc() {
+    const typeMap = {
+      [SearchType.POST]: '文章',
+      [SearchType.WALLPAPER]: '壁纸',
+      [SearchType.GAME]: '游戏'
+    };
+    return typeMap[this.searchType];
+  }
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -73,8 +88,6 @@ export class SearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.updatePageIndex();
-
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.queryParamMap])
       .pipe(
         skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
@@ -87,14 +100,18 @@ export class SearchComponent implements OnInit {
         this.pageSize = Number(this.options['post_page_size']) || 10;
         this.page = Number(qp.get('page')) || 1;
         this.keyword = qp.get('keyword')?.trim() || '';
+        this.searchType = <SearchType>qp.get('type')?.trim() || SearchType.POST;
 
+        this.pageIndex = `${this.searchType}-search`;
+
+        this.updatePageIndex();
         this.updatePageInfo();
         this.updateBreadcrumbs();
 
         if (!this.keyword) {
           throw new CustomError(Message.SEARCH_KEYWORD_IS_NULL, HttpStatusCode.BadRequest);
         }
-        this.getSearchResults();
+        this.search();
       });
   }
 
@@ -102,34 +119,58 @@ export class SearchComponent implements OnInit {
     this.commonService.updatePageIndex(this.pageIndex);
   }
 
-  private getSearchResults() {
-    this.searchService
-      .search({
-        keyword: this.keyword,
-        page: this.page
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.searchResult = res.list;
-        this.page = res.page || 1;
-        this.total = res.total || 0;
-
-        this.paginationService.updatePagination({
-          page: this.page,
-          total: this.total,
-          pageSize: this.pageSize,
-          url: '/search',
-          param: {
-            keyword: this.keyword
-          }
+  private search() {
+    const param = {
+      keyword: this.keyword,
+      page: this.page
+    };
+    if (this.searchType === SearchType.WALLPAPER) {
+      this.searchService
+        .searchWallpapers(param)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          this.wallpaperResult = res.list;
+          this.initData(res.page, res.total);
         });
-      });
+    } else if (this.searchType === SearchType.GAME) {
+      this.searchService
+        .searchGames(param)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          this.gameResult = res.list;
+          this.initData(res.page, res.total);
+        });
+    } else {
+      this.searchService
+        .searchPosts(param)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          this.postResult = res.list;
+          this.initData(res.page, res.total);
+        });
+    }
+  }
+
+  private initData(page: number, total: number): void {
+    this.page = page || 1;
+    this.total = total || 0;
+
+    this.paginationService.updatePagination({
+      page: this.page,
+      total: this.total,
+      pageSize: this.pageSize,
+      url: '/search',
+      param: {
+        type: this.searchType,
+        keyword: this.keyword
+      }
+    });
   }
 
   private updatePageInfo() {
-    const titles: string[] = ['搜索', this.appInfo.appName];
+    const titles: string[] = [`${this.searchTypeDesc}搜索`, this.appInfo.appName];
     const keywords: string[] = [...this.appInfo.keywords];
-    let description = `「${this.keyword}」搜索结果`;
+    let description = `「${this.keyword}」${this.searchTypeDesc}搜索结果`;
     keywords.unshift(...this.keyword.split(/\s+/i));
 
     if (this.page > 1) {
@@ -144,7 +185,9 @@ export class SearchComponent implements OnInit {
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
       description,
-      keywords: uniq(keywords).join(','),
+      keywords: uniq(keywords)
+        .filter((item) => !!item)
+        .join(','),
       author: this.options['site_author']
     });
   }
@@ -156,8 +199,8 @@ export class SearchComponent implements OnInit {
     }
     const breadcrumbs: BreadcrumbEntity[] = [
       {
-        label: '搜索',
-        tooltip: '搜索',
+        label: `${this.searchTypeDesc}搜索`,
+        tooltip: `${this.searchTypeDesc}搜索`,
         url: '',
         isHeader: false
       },
@@ -166,6 +209,7 @@ export class SearchComponent implements OnInit {
         tooltip: this.keyword,
         url: '/search',
         param: {
+          type: this.searchType,
           keyword: this.keyword
         },
         isHeader: true

@@ -7,5 +7,6 @@ export enum VoteType {
   POST = 'post',
   PAGE = 'page',
   COMMENT = 'comment',
-  WALLPAPER = 'wallpaper'
+  WALLPAPER = 'wallpaper',
+  GAME = 'game'
 }

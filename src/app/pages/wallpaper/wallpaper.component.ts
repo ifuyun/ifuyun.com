@@ -14,7 +14,6 @@ import { MakeMoneyComponent } from '../../components/make-money/make-money.compo
 import { ShareModalComponent } from '../../components/share-modal/share-modal.component';
 import { WallpaperPrevNextComponent } from '../../components/wallpaper-prev-next/wallpaper-prev-next.component';
 import { WallpaperRelatedComponent } from '../../components/wallpaper-related/wallpaper-related.component';
-import { COOKIE_KEY_USER_ID } from '../../config/common.constant';
 import { Message } from '../../config/message.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommentObjectType } from '../../enums/comment';
@@ -36,7 +35,6 @@ import { MessageService } from '../../services/message.service';
 import { MetaService } from '../../services/meta.service';
 import { OptionService } from '../../services/option.service';
 import { PlatformService } from '../../services/platform.service';
-import { SsrCookieService } from '../../services/ssr-cookie.service';
 import { TenantAppService } from '../../services/tenant-app.service';
 import { UserAgentService } from '../../services/user-agent.service';
 import { UserService } from '../../services/user.service';
@@ -104,7 +102,6 @@ export class WallpaperComponent implements OnInit {
     private readonly userAgentService: UserAgentService,
     private readonly message: MessageService,
     private readonly imageService: NzImageService,
-    private readonly cookieService: SsrCookieService,
     private readonly commonService: CommonService,
     private readonly metaService: MetaService,
     private readonly breadcrumbService: BreadcrumbService,
@@ -132,7 +129,9 @@ export class WallpaperComponent implements OnInit {
         skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe(([appInfo, options, p, qp]) => {
+      .subscribe(([appInfo, options]) => {
+        const { queryParamMap: qp, paramMap: p } = this.route.snapshot;
+
         this.appInfo = appInfo;
         this.options = options;
 
@@ -143,6 +142,7 @@ export class WallpaperComponent implements OnInit {
         }
         this.isChanged = this.wallpaperId !== wid;
         this.wallpaperId = wid;
+
         const lang = <WallpaperLang>qp.get('lang')?.trim() || WallpaperLang.CN;
         this.isLangChanged = this.lang !== lang;
         this.lang = lang;
@@ -159,10 +159,7 @@ export class WallpaperComponent implements OnInit {
       this.isSignIn = !!user.userId;
 
       if (this.platform.isBrowser) {
-        const userId = user.userId || this.cookieService.get(COOKIE_KEY_USER_ID);
-        const shareUrl = location.href.split('#')[0];
-        const param = (shareUrl.includes('?') ? '&' : '?') + 'ref=qrcode' + (userId ? '&uid=' + userId : '');
-        this.shareUrl = shareUrl + param;
+        this.shareUrl = this.commonService.getShareURL(user.userId);
       }
     });
   }

@@ -1,7 +1,7 @@
 @if (!errorPage) {
   @if (!errorState || !errorState.visible) {
     @if (!isMobile) {
-      <app-header [postTaxonomies]="postTaxonomies"></app-header>
+      <app-header [postTaxonomies]="postTaxonomies" [gameTaxonomies]="gameTaxonomies"></app-header>
       <div class="body-wrap">
         <div class="body" [class.body-center]="isBodyCentered">
           <router-outlet/>
@@ -10,7 +10,7 @@
       <app-footer></app-footer>
     } @else {
       <div class="m-body-wrap" [class.open]="siderVisible">
-        <app-header [postTaxonomies]="postTaxonomies"></app-header>
+        <app-header [postTaxonomies]="postTaxonomies" [gameTaxonomies]="gameTaxonomies"></app-header>
         <div class="m-body">
           <main class="m-main" [class.m-main-center]="isBodyCentered">
             <router-outlet/>

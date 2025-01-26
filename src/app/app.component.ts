@@ -9,6 +9,7 @@ import { MSiderComponent } from './components/m-sider/m-sider.component';
 import { COOKIE_KEY_UV_ID, MEDIA_QUERY_THEME_DARK } from './config/common.constant';
 import { ResponseCode } from './config/response-code.enum';
 import { Theme } from './enums/common';
+import { TaxonomyType } from './enums/taxonomy';
 import { ErrorState } from './interfaces/common';
 import { TaxonomyNode } from './interfaces/taxonomy';
 import { ForbiddenComponent } from './pages/error/forbidden/forbidden.component';
@@ -16,6 +17,7 @@ import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { ServerErrorComponent } from './pages/error/server-error/server-error.component';
 import { CommonService } from './services/common.service';
 import { ErrorService } from './services/error.service';
+import { GameService } from './services/game.service';
 import { LogService } from './services/log.service';
 import { OptionService } from './services/option.service';
 import { PlatformService } from './services/platform.service';
@@ -46,6 +48,7 @@ import { generateUid } from './utils/helper';
 export class AppComponent implements OnInit, AfterViewInit {
   isMobile: boolean = false;
   postTaxonomies: TaxonomyNode[] = [];
+  gameTaxonomies: TaxonomyNode[] = [];
   errorState!: ErrorState;
   errorPage = false;
   isBodyCentered = false;
@@ -55,6 +58,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   private initialized = false;
   private accessLogId = '';
   private bodyOffset = 0;
+  private romURL = '';
 
   constructor(
     private readonly router: Router,
@@ -69,7 +73,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     private readonly userService: UserService,
     private readonly tenantAppService: TenantAppService,
     private readonly taxonomyService: TaxonomyService,
-    private readonly logService: LogService
+    private readonly logService: LogService,
+    private readonly gameService: GameService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -82,6 +87,11 @@ export class AppComponent implements OnInit, AfterViewInit {
             this.errorPage = re.url.startsWith('/error/');
             if (!this.errorPage) {
               this.errorService.hideError();
+            }
+            // 不需要判断 isBrowser，romURL 是在客户端中设置的
+            if (this.romURL) {
+              this.gameService.clean(this.romURL);
+              this.gameService.updateActiveRomURL('');
             }
           }
         }),
@@ -128,6 +138,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.optionService.getOptions().subscribe();
     this.tenantAppService.getAppInfo().subscribe();
     this.taxonomyService.getTaxonomies().subscribe((taxonomies) => (this.postTaxonomies = taxonomies));
+    this.taxonomyService.getTaxonomies(TaxonomyType.GAME).subscribe((taxonomies) => (this.gameTaxonomies = taxonomies));
     this.userService.getLoginUser().subscribe();
     this.errorService.errorState$.subscribe((state) => {
       this.errorState = state;
@@ -149,6 +160,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
       this.siderVisible = visible;
     });
+    this.gameService.activeRomURL$.subscribe((romURL) => (this.romURL = romURL));
   }
 
   ngAfterViewInit(): void {

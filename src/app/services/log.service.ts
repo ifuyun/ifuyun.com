@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiUrl } from '../config/api-url';
-import { APP_ID, COOKIE_KEY_UV_ID } from '../config/common.constant';
+import { APP_ID } from '../config/common.constant';
 import { HttpResponseEntity } from '../interfaces/http-response';
 import { AccessLog, ActionLog, LeaveLog } from '../interfaces/log';
 import { ApiService } from './api.service';
-import { SsrCookieService } from './ssr-cookie.service';
 import { UserAgentService } from './user-agent.service';
 
 @Injectable({
@@ -13,9 +12,8 @@ import { UserAgentService } from './user-agent.service';
 })
 export class LogService {
   constructor(
-    private apiService: ApiService,
-    private userAgentService: UserAgentService,
-    private cookieService: SsrCookieService
+    private readonly apiService: ApiService,
+    private readonly userAgentService: UserAgentService
   ) {}
 
   parseAccessLog(initialized: boolean, referrer: string, isNew: boolean, logId: string): AccessLog {
@@ -24,7 +22,6 @@ export class LogService {
       isMobile: this.userAgentService.uaInfo.isMobile ? 1 : 0,
       isCrawler: this.userAgentService.uaInfo.isCrawler ? 1 : 0,
       logId,
-      faId: this.cookieService.get(COOKIE_KEY_UV_ID),
       isNew: isNew ? 1 : 0,
       accessUrl: location.href,
       referrer: initialized ? referrer : document.referrer,
@@ -58,7 +55,6 @@ export class LogService {
       {
         ...log,
         ref: location.href,
-        faId: this.cookieService.get(COOKIE_KEY_UV_ID),
         site: 'web',
         appId: APP_ID
       },

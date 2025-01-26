@@ -1,0 +1,160 @@
+@if (mode === 'list') {
+  @if (!isMobile) {
+    <article class="post-item">
+      <div class="post-item-body">
+        <div class="post-item-content">
+          <header>
+            <h2><a [routerLink]="'/game/' + game.game.gameId"
+                   [title]="game.game.gameTitle"
+                   rel="bookmark">{{ game.game.gameTitle }}</a></h2>
+          </header>
+          <div class="post-item-meta">
+            <div [title]="game.game.gameCreated | date:'yyyy-MM-dd'">
+              <span class="fi fi-calendar-date"></span><span>{{ game.game.gameCreated | date:'yyyy-MM-dd' }}</span>
+            </div>
+            <div>
+              <nz-icon nzType="eye" /><span>{{ game.game.gameViews | numberView: 'K' }}</span>
+            </div>
+            <div>
+              <nz-icon nzType="like" /><span>{{ game.game.gameLikes | numberView: 'K' }}</span>
+            </div>
+          </div>
+          <div class="post-item-excerpt">
+            <span [innerHTML]="gameExcerpt"></span>
+          </div>
+        </div>
+        <div class="post-item-cover">
+          <a [routerLink]="'/game/' + game.game.gameId" [title]="game.game.gameTitle">
+            @if (index > 3) {
+              <span class="post-item-cover-img lazyload"
+                    [class.full-img]="!game.game.gameCover"
+                    [attr.data-bg]="gameCover"></span>
+            } @else {
+              <span class="post-item-cover-img"
+                    [class.full-img]="!game.game.gameCover"
+                    [style.background-image]="'url(' + gameCover + ')'"></span>
+            }
+            <span class="overlay"></span>
+          </a>
+        </div>
+      </div>
+      <div class="post-item-tag-wrap" *ngIf="game.categories.length > 0 || game.tags.length > 0">
+        <div *ngIf="game.categories.length > 0" class="post-item-tag">
+          <div>
+            <div class="post-item-tag-icon"><nz-icon nzType="folder" /></div>
+            <ul>
+              <li *ngFor="let category of game.categories">
+                <a [routerLink]="'/game/category/' + category.taxonomySlug"
+                   title="{{ category.taxonomyName }}"
+                   rel="category">{{ category.taxonomyName }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div *ngIf="game.tags.length > 0" class="post-item-tag">
+          <div>
+            <div class="post-item-tag-icon"><nz-icon nzType="tag" /></div>
+            <ul>
+              <li *ngFor="let tag of game.tags">
+                <a [routerLink]="'/game/tag/' + tag.tagName"
+                   [title]="tag.tagName"
+                   rel="category">{{ tag.tagName }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+  } @else {
+    <article class="m-post-item">
+      <header>
+        <h2><a [routerLink]="'/game/' + game.game.gameId"
+               [title]="game.game.gameTitle"
+               rel="bookmark">{{ game.game.gameTitle }}</a></h2>
+        <div class="m-post-item-stat">
+          <span><nz-icon nzType="eye" /><span>{{ game.game.gameViews | numberView: 'K' }}</span></span>
+          <span><nz-icon nzType="like" /><span>{{ game.game.gameLikes | numberView: 'K' }}</span></span>
+        </div>
+      </header>
+      <div class="m-post-item-meta">
+        <span [title]="game.game.gameCreated | date:'yyyy-MM-dd'">
+          <span class="fi fi-calendar-date"></span><span>{{ game.game.gameCreated | date:'yyyy-MM-dd' }}</span>
+        </span>
+      </div>
+      <div class="m-post-item-cover">
+        <a [routerLink]="'/game/' + game.game.gameId" [title]="game.game.gameTitle">
+          @if (index > 3) {
+            <span class="m-post-item-cover-img lazyload"
+                  [class.full-img]="!game.game.gameCover"
+                  [attr.data-bg]="gameCover"></span>
+          } @else {
+            <span class="m-post-item-cover-img"
+                  [class.full-img]="!game.game.gameCover"
+                  [style.background-image]="'url(' + gameCover + ')'"></span>
+          }
+          <span class="overlay"></span>
+        </a>
+      </div>
+      <div class="m-post-item-excerpt">
+        <span [innerHTML]="gameExcerpt"></span>
+      </div>
+    </article>
+  }
+} @else {
+  <article class="post-card-item">
+    <div class="post-card-item-body">
+      <div class="post-card-cover" [class.m-post-card-cover]="isMobile">
+        <a [routerLink]="'/game/' + game.game.gameId" [title]="game.game.gameTitle">
+          @if (index > 3) {
+            <span class="post-item-cover-img lazyload"
+                  [class.full-img]="!game.game.gameCover"
+                  [attr.data-bg]="gameCover"></span>
+          } @else {
+            <span class="post-item-cover-img"
+                  [class.full-img]="!game.game.gameCover"
+                  [style.background-image]="'url(' + gameCover + ')'"></span>
+          }
+          <span class="overlay"></span>
+        </a>
+      </div>
+      <div class="post-content">
+        <h2><a [routerLink]="'/game/' + game.game.gameId"
+               [title]="game.game.gameTitle"
+               rel="bookmark">{{ game.game.gameTitle }}</a></h2>
+        <div class="post-meta-wrap">
+          <div class="post-meta">
+            <div class="tags">
+              <nz-icon nzType="folder" />
+              <div class="game-tag">
+                <a *ngFor="let category of game.categories"
+                   [routerLink]="'/game/category/' + category.taxonomySlug"
+                   title="{{ category.taxonomyName }}"
+                   rel="category">{{ category.taxonomyName }}</a>
+              </div>
+            </div>
+          </div>
+          <div class="post-meta">
+            <div class="date" [title]="game.game.gameCreated | date:'yyyy-MM-dd'">
+              <span class="fi fi-calendar-date"></span><span>{{ game.game.gameCreated | date:'yyyy-MM-dd' }}</span>
+            </div>
+            <div class="actions">
+              <div title="浏览: {{ game.game.gameViews | numberView: 'K' }}">
+                <nz-icon nzType="eye" /><span>{{ game.game.gameViews | numberView: 'K' }}</span>
+              </div>
+              <div title="喜欢: {{ game.game.gameLikes | numberView: 'K' }}">
+                <nz-icon nzType="like" /><span>{{ game.game.gameLikes | numberView: 'K' }}</span>
+              </div>
+              <div title="评论: {{ game.game.gameComments | numberView: 'K' }}">
+                @if (game.game.gameComments > 0) {
+                  <span class="fi fi-chat-square-dots"></span><span>{{ game.game.gameComments | numberView: 'K' }}</span>
+                } @else {
+                  <span class="fi fi-chat-square"></span><span>0</span>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+}

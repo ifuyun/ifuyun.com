@@ -10,7 +10,7 @@ import { ApiService } from './api.service';
   providedIn: 'root'
 })
 export class FavoriteService {
-  constructor(private apiService: ApiService) {}
+  constructor(private readonly apiService: ApiService) {}
 
   addFavorite(objectId: string, objectType = FavoriteType.POST): Observable<HttpResponseEntity> {
     return this.apiService

@@ -7,34 +7,29 @@ import { HTMLMetaData } from '../interfaces/meta';
 })
 export class MetaService {
   constructor(
-    private meta: Meta,
-    private title: Title
+    private readonly meta: Meta,
+    private readonly title: Title
   ) {}
 
   updateHTMLMeta(meta: HTMLMetaData) {
-    if (meta.title) {
-      this.title.setTitle(meta.title);
-    }
-    if (meta.description) {
-      const descTag = this.meta.getTag('name="description"');
-      this.meta[descTag ? 'updateTag' : 'addTag']({
-        name: 'description',
-        content: meta.description
-      });
-    }
-    if (meta.author) {
-      const authorTag = this.meta.getTag('name="author"');
-      this.meta[authorTag ? 'updateTag' : 'addTag']({
-        name: 'author',
-        content: meta.author
-      });
-    }
-    if (meta.keywords) {
-      const keywordsTag = this.meta.getTag('name="keywords"');
-      this.meta[keywordsTag ? 'updateTag' : 'addTag']({
-        name: 'keywords',
-        content: meta.keywords
-      });
-    }
+    this.title.setTitle(meta.title);
+
+    const descTag = this.meta.getTag('name="description"');
+    this.meta[descTag ? 'updateTag' : 'addTag']({
+      name: 'description',
+      content: meta.description
+    });
+
+    const authorTag = this.meta.getTag('name="author"');
+    this.meta[authorTag ? 'updateTag' : 'addTag']({
+      name: 'author',
+      content: meta.author || ''
+    });
+
+    const keywordsTag = this.meta.getTag('name="keywords"');
+    this.meta[keywordsTag ? 'updateTag' : 'addTag']({
+      name: 'keywords',
+      content: meta.keywords || ''
+    });
   }
 }

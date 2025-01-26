@@ -18,7 +18,7 @@ export class ForbiddenComponent implements OnInit {
 
   protected pageIndex = 'error-403';
 
-  constructor(private commonService: CommonService) {}
+  constructor(private readonly commonService: CommonService) {}
 
   ngOnInit(): void {
     this.updatePageIndex();

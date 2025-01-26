@@ -103,7 +103,7 @@ app.get('/wallpaper-rss.xml', async (req: Request, res: Response) => {
     const { page, size, lang } = req.query;
     const { data: appInfo } = await request(ApiUrl.TENANT_APP);
     const { data: options } = await request(ApiUrl.OPTION_FRONTEND);
-    const { data: wallpaperList } = await request(ApiUrl.WALLPAPER_LIST, {
+    const { data: wallpaperList } = await request(ApiUrl.WALLPAPERS, {
       page: Number(page) || 1,
       pageSize: Math.min(Number(size) || 10, 100)
     });

@@ -12,7 +12,7 @@ export class OptionService {
   private options: BehaviorSubject<OptionEntity> = new BehaviorSubject<OptionEntity>({});
   public options$: Observable<OptionEntity> = this.options.asObservable();
 
-  constructor(private apiService: ApiService) {}
+  constructor(private readonly apiService: ApiService) {}
 
   getOptions(): Observable<OptionEntity> {
     return this.apiService

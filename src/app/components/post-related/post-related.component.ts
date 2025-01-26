@@ -11,8 +11,7 @@ import { UserAgentService } from '../../services/user-agent.service';
   selector: 'app-post-related',
   imports: [NgFor, RouterLink],
   providers: [DestroyService],
-  templateUrl: './post-related.component.html',
-  styleUrl: './post-related.component.less'
+  templateUrl: './post-related.component.html'
 })
 export class PostRelatedComponent implements OnInit {
   isMobile = false;

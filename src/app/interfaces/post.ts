@@ -4,7 +4,8 @@ import { PostFormat, PostScope, PostStatus, PostType } from '../enums/post';
 import { BookEntity } from './book';
 import { BreadcrumbEntity } from './breadcrumb';
 import { QueryParam, ResultList } from './common';
-import { TagEntity, TaxonomyEntity } from './taxonomy';
+import { TagEntity } from './tag';
+import { TaxonomyEntity } from './taxonomy';
 import { UserEntity } from './user';
 
 export interface PostEntity {

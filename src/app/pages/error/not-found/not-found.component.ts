@@ -18,7 +18,7 @@ export class NotFoundComponent implements OnInit {
 
   protected pageIndex = 'error-404';
 
-  constructor(private commonService: CommonService) {}
+  constructor(private readonly commonService: CommonService) {}
 
   ngOnInit(): void {
     this.updatePageIndex();

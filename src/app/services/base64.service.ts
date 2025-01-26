@@ -8,7 +8,7 @@ import { ApiService } from './api.service';
   providedIn: 'root'
 })
 export class Base64Service {
-  constructor(private apiService: ApiService) {}
+  constructor(private readonly apiService: ApiService) {}
 
   transform(text: string, action: 'encode' | 'decode'): Observable<HttpResponseEntity> {
     return this.apiService

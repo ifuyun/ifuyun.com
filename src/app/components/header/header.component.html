@@ -40,6 +40,35 @@
         <li [class.active]="indexInfo?.isWallpaper">
           <a routerLink="/wallpaper" title="高清壁纸">壁纸</a>
         </li>
+        <li [class.active]="indexInfo?.isGame">
+          <a routerLink="/game" title="游戏">
+            <span>游戏</span><span class="nav-arrow" *ngIf="gameTaxonomies.length > 0"></span>
+          </a>
+          <div class="sub-nav-wrap" *ngIf="gameTaxonomies.length > 0">
+            <div class="sub-nav-list">
+              <ul>
+                <li *ngFor="let taxonomy of gameTaxonomies">
+                  <a class="sub-nav-link"
+                     [routerLink]="['/game/category/'+taxonomy.taxonomySlug]"
+                     [title]="taxonomy.taxonomyDescription">
+                    <span>{{ taxonomy.taxonomyName }}</span><span *ngIf="!taxonomy.isLeaf" class="sub-nav-arrow"></span>
+                  </a>
+                  <div class="child-nav-wrap" *ngIf="!taxonomy.isLeaf">
+                    <div class="child-nav-list">
+                      <ul>
+                        <li *ngFor="let subTaxonomy of taxonomy.children">
+                          <a class="child-nav-link"
+                             [routerLink]="['/game/category/'+subTaxonomy.taxonomySlug]"
+                             [title]="subTaxonomy.taxonomyDescription">{{ subTaxonomy.taxonomyName }}</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </li>
         <li>
           <a [href]="magazineUrl" target="_blank" title="过刊阅读平台">杂志</a>
         </li>
@@ -62,7 +91,7 @@
       <div class="actions">
         <div class="search">
           <form method="get" action="/search" (ngSubmit)="search()">
-            <nz-input-group nzSearch [nzAddOnAfter]="searchBtnTpl">
+            <nz-input-group nzSearch [nzAddOnBefore]="searchTypeTpl" [nzAddOnAfter]="searchBtnTpl">
               <input nz-input
                      type="text"
                      name="keyword"
@@ -70,6 +99,13 @@
                      autocomplete="off"
                      placeholder="搜索全站（支持全文搜索）" />
             </nz-input-group>
+            <ng-template #searchTypeTpl>
+              <nz-select name="searchType" [(ngModel)]="searchType">
+                <nz-option nzLabel="文章" nzValue="post"></nz-option>
+                <nz-option nzLabel="壁纸" nzValue="wallpaper"></nz-option>
+                <nz-option nzLabel="游戏" nzValue="game"></nz-option>
+              </nz-select>
+            </ng-template>
             <ng-template #searchBtnTpl>
               <button nz-button nzSearch type="submit" nzType="primary"><nz-icon nzType="search" /></button>
             </ng-template>
@@ -158,7 +194,7 @@
       } @else {
         <div class="m-header-search">
           <form class="m-search-form" method="get" action="/search" (ngSubmit)="search()">
-            <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchBtnTpl">
+            <nz-input-group nzSearch nzSize="large" [nzAddOnBefore]="searchTypeTpl" [nzAddOnAfter]="searchBtnTpl">
               <input nz-input
                      #mSearchInput
                      type="text"
@@ -167,6 +203,13 @@
                      autocomplete="off"
                      placeholder="搜索全站（支持全文搜索）" />
             </nz-input-group>
+            <ng-template #searchTypeTpl>
+              <nz-select name="searchType" [(ngModel)]="searchType">
+                <nz-option nzLabel="文章" nzValue="post"></nz-option>
+                <nz-option nzLabel="壁纸" nzValue="wallpaper"></nz-option>
+                <nz-option nzLabel="游戏" nzValue="game"></nz-option>
+              </nz-select>
+            </ng-template>
             <ng-template #searchBtnTpl>
               <button nz-button nzSearch type="submit" nzType="primary"><nz-icon nzType="search" /></button>
             </ng-template>

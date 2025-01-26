@@ -8,7 +8,8 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { CarouselComponent } from '../../components/carousel/carousel.component';
 import { PostItemComponent } from '../../components/post-item/post-item.component';
 import { WallpaperItemComponent } from '../../components/wallpaper-item/wallpaper-item.component';
-import { WallpaperLang, WallpaperListMode } from '../../enums/wallpaper';
+import { ListMode } from '../../enums/common';
+import { WallpaperLang } from '../../enums/wallpaper';
 import { OptionEntity } from '../../interfaces/option';
 import { Post, PostEntity } from '../../interfaces/post';
 import { TenantAppModel } from '../../interfaces/tenant-app';
@@ -42,7 +43,7 @@ import { WallpaperService } from '../../services/wallpaper.service';
   styleUrl: './home.component.less'
 })
 export class HomeComponent implements OnInit {
-  readonly wallpaperListMode = WallpaperListMode.LIST;
+  readonly wallpaperListMode = ListMode.LIST;
 
   isMobile = false;
   hotPosts: PostEntity[] = [];
@@ -141,7 +142,9 @@ export class HomeComponent implements OnInit {
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
       description,
-      keywords: uniq(keywords).join(','),
+      keywords: uniq(keywords)
+        .filter((item) => !!item)
+        .join(','),
       author: this.options['site_author']
     });
   }

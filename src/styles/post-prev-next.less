@@ -15,7 +15,7 @@
       }
 
       .post-more-photo-overlay {
-        opacity: 0.5;
+        background-color: var(--overlay-bg-hover);
       }
     }
   }
@@ -44,6 +44,10 @@
       background-size: cover;
       background-repeat: no-repeat;
       transition: transform .5s;
+
+      &.full-img {
+        background-size: contain;
+      }
     }
 
     .post-more-photo-overlay {
@@ -51,7 +55,6 @@
       inset: 0;
       margin: (@primary-margin / 2);
       background-color: var(--overlay-bg-color);
-      opacity: 0;
       transition: @overlay-transition;
     }
   }

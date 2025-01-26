@@ -11,8 +11,8 @@ export class UserAgentService {
   private readonly _uaString: string;
 
   constructor(
-    private platform: PlatformService,
-    @Optional() @Inject(REQUEST) private request: Request
+    private readonly platform: PlatformService,
+    @Optional() @Inject(REQUEST) private readonly request: Request
   ) {
     this._uaString = this.platform.isBrowser ? navigator.userAgent : this.request?.headers.get('user-agent') || '';
     this._uaResult = UAParser(this._uaString);

@@ -100,7 +100,7 @@
                rel="bookmark">{{ wallpaper.wallpaperCopyright }}</a></h2>
         <div class="post-meta-wrap">
           <div class="post-meta" *ngIf="!isMobile">
-            <div class="location" [title]="wallpaperLocation">
+            <div class="auto-fit" [title]="wallpaperLocation">
               <nz-icon nzType="environment" /><span>{{ wallpaperLocation }}</span>
             </div>
           </div>
@@ -109,11 +109,18 @@
               <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
             </div>
             <div class="actions">
-              <div class="action-item" title="浏览: {{ wallpaper.wallpaperViews | numberView: 'K' }}">
+              <div title="浏览: {{ wallpaper.wallpaperViews | numberView: 'K' }}">
                 <nz-icon nzType="eye" /><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
               </div>
-              <div class="action-item" title="喜欢: {{ wallpaper.wallpaperLikes | numberView: 'K' }}">
+              <div title="喜欢: {{ wallpaper.wallpaperLikes | numberView: 'K' }}">
                 <nz-icon nzType="like" /><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
+              </div>
+              <div title="评论: {{ wallpaper.wallpaperComments | numberView: 'K' }}">
+                @if (wallpaper.wallpaperComments > 0) {
+                  <span class="fi fi-chat-square-dots"></span><span>{{ wallpaper.wallpaperComments | numberView: 'K' }}</span>
+                } @else {
+                  <span class="fi fi-chat-square"></span><span>0</span>
+                }
               </div>
             </div>
           </div>

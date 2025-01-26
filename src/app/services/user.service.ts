@@ -6,7 +6,6 @@ import { APP_ID } from '../config/common.constant';
 import { HttpResponseEntity } from '../interfaces/http-response';
 import { UserModel } from '../interfaces/user';
 import { ApiService } from './api.service';
-import { CommonService } from './common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,10 +18,7 @@ export class UserService {
   });
   user$: Observable<UserModel> = this.user.asObservable();
 
-  constructor(
-    private apiService: ApiService,
-    private commonService: CommonService
-  ) {}
+  constructor(private readonly apiService: ApiService) {}
 
   getLoginUser(): Observable<UserModel> {
     return this.apiService

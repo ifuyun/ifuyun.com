@@ -43,6 +43,10 @@ export class SsrCookieService {
     return this.request ? (this.request.headers as any).get('cookie') : '';
   }
 
+  getCookie() {
+    return (this.documentIsAccessible ? this.document.cookie : this.getHeaderCookie()) || '';
+  }
+
   /**
    * Return `true` if {@link Document} is accessible, otherwise return `false`
    *
@@ -52,7 +56,7 @@ export class SsrCookieService {
   check(name: string): boolean {
     name = encodeURIComponent(name);
     const regExp: RegExp = SsrCookieService.getCookieRegExp(name);
-    return regExp.test((this.documentIsAccessible ? this.document.cookie : this.getHeaderCookie()) || '');
+    return regExp.test(this.getCookie());
   }
 
   /**
@@ -66,9 +70,7 @@ export class SsrCookieService {
       name = encodeURIComponent(name);
 
       const regExp: RegExp = SsrCookieService.getCookieRegExp(name);
-      const result: RegExpExecArray | null = regExp.exec(
-        (this.documentIsAccessible ? this.document.cookie : this.getHeaderCookie()) || ''
-      );
+      const result: RegExpExecArray | null = regExp.exec(this.getCookie());
 
       return result && result[1] ? SsrCookieService.safeDecodeURIComponent(result[1]) : '';
     } else {

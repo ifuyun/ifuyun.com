@@ -119,7 +119,9 @@ export class Md5Component implements OnInit {
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,
-      keywords: uniq(keywords).join(','),
+      keywords: uniq(keywords)
+        .filter((item) => !!item)
+        .join(','),
       author: this.options['site_author']
     };
     this.metaService.updateHTMLMeta(metaData);

@@ -4,7 +4,12 @@ import { ElementRef, Inject, Injectable, Optional, REQUEST, RESPONSE_INIT } from
 import { Request } from 'express';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { COOKIE_KEY_THEME, MEDIA_QUERY_THEME_DARK, MEDIA_QUERY_THEME_LIGHT } from '../config/common.constant';
+import {
+  COOKIE_KEY_THEME,
+  COOKIE_KEY_USER_ID,
+  MEDIA_QUERY_THEME_DARK,
+  MEDIA_QUERY_THEME_LIGHT
+} from '../config/common.constant';
 import { Message } from '../config/message.enum';
 import { Theme } from '../enums/common';
 import { PageIndexInfo } from '../interfaces/common';
@@ -45,10 +50,11 @@ export class CommonService {
       isHome: pageIndex === 'index',
       isPost: topPage === 'post',
       isWallpaper: topPage === 'wallpaper',
+      isGame: topPage === 'game',
       isTool: topPage === 'tool',
       isAuth: topPage === 'auth',
       isArticle: pageIndex === 'post-article',
-      isPage: !['index', 'post', 'wallpaper', 'tool', 'auth'].includes(topPage),
+      isPage: topPage === 'page',
       fullPage: pageIndex,
       subPage
     };
@@ -68,6 +74,15 @@ export class CommonService {
       return '';
     }
     return this.document.referrer.replace(/^https?:\/\/[^/]+/i, '');
+  }
+
+  getShareURL(userId?: string) {
+    userId = userId || this.cookieService.get(COOKIE_KEY_USER_ID);
+
+    const shareUrl = location.href.split('#')[0];
+    const param = (shareUrl.includes('?') ? '&' : '?') + 'ref=qrcode' + (userId ? '&uid=' + userId : '');
+
+    return shareUrl + param;
   }
 
   getTheme(): Theme {

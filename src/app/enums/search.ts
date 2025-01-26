@@ -1,4 +1,5 @@
 export enum SearchType {
   POST = 'post',
-  WALLPAPER = 'wallpaper'
+  WALLPAPER = 'wallpaper',
+  GAME = 'game'
 }

@@ -29,7 +29,7 @@ export class CommentService {
 
   getCommentsByPostId(postId: string): Observable<ResultList<Comment>> {
     return this.apiService
-      .httpGet(ApiUrl.COMMENT_LIST, {
+      .httpGet(ApiUrl.COMMENTS, {
         objectId: postId,
         objectType: CommentObjectType.POST,
         appId: APP_ID
@@ -39,9 +39,19 @@ export class CommentService {
 
   getCommentsByWallpaperId(wallpaperId: string): Observable<ResultList<Comment>> {
     return this.apiService
-      .httpGet(ApiUrl.COMMENT_LIST, {
+      .httpGet(ApiUrl.COMMENTS, {
         objectId: wallpaperId,
         objectType: CommentObjectType.WALLPAPER,
+        appId: APP_ID
+      })
+      .pipe(map((res) => res?.data || {}));
+  }
+
+  getCommentsByGameId(gameId: string): Observable<ResultList<Comment>> {
+    return this.apiService
+      .httpGet(ApiUrl.COMMENTS, {
+        objectId: gameId,
+        objectType: CommentObjectType.GAME,
         appId: APP_ID
       })
       .pipe(map((res) => res?.data || {}));
@@ -50,6 +60,8 @@ export class CommentService {
   getCommentsByObjectId(objectId: string, objectType: CommentObjectType): Observable<ResultList<Comment>> {
     if (objectType === CommentObjectType.POST) {
       return this.getCommentsByPostId(objectId);
+    } else if (objectType === CommentObjectType.GAME) {
+      return this.getCommentsByGameId(objectId);
     }
     return this.getCommentsByWallpaperId(objectId);
   }

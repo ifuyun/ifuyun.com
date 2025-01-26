@@ -37,6 +37,15 @@
         </li>
       </ul>
     </div>
+    <div class="widget" *ngIf="hotGames && hotGames.length > 0">
+      <h3 class="widget-title"><span><nz-icon nzType="fire" /><span>热门游戏</span></span></h3>
+      <ul class="hot-list">
+        <li *ngFor="let game of hotGames; let i = index">
+          <span class="hot-num">{{ i + 1 }}</span>
+          <a [routerLink]="'/game/' + game.gameId" [title]="game.gameTitle">{{ game.gameTitle }}</a>
+        </li>
+      </ul>
+    </div>
     <div class="widget-ads" *ngIf="adsVisible">
       <app-adsense [class.ads-sider-wrap]="adsPlaceholder"
                    wrapClass="ads-sider"
@@ -91,6 +100,14 @@
           <a [routerLink]="'/wallpaper/' + wallpaper.wallpaperId"
              [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
              [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</a>
+        </li>
+      </ul>
+    </div>
+    <div class="widget" *ngIf="randomGames && randomGames.length > 0">
+      <h3 class="widget-title"><span><nz-icon nzType="gift" /><span>手气不错</span></span></h3>
+      <ul>
+        <li *ngFor="let game of randomGames">
+          <a [routerLink]="'/game/' + game.gameId" [title]="game.gameTitle">{{ game.gameTitle }}</a>
         </li>
       </ul>
     </div>

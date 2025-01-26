@@ -13,7 +13,7 @@ export class TenantAppService {
   private appInfo: BehaviorSubject<TenantAppModel> = new BehaviorSubject<TenantAppModel>(<TenantAppModel>{});
   public appInfo$: Observable<TenantAppModel> = this.appInfo.asObservable();
 
-  constructor(private apiService: ApiService) {}
+  constructor(private readonly apiService: ApiService) {}
 
   getAppInfo(): Observable<TenantAppModel> {
     return this.apiService.httpGet(ApiUrl.TENANT_APP, { appId: APP_ID }).pipe(

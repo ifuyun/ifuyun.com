@@ -3,6 +3,7 @@
 @cover-width: 240px;
 @cover-height: (@cover-width * 9 / 16);
 @m-cover-height: 180px;
+@post-tag-line-height: 24px;
 
 .post-item {
   margin-top: @primary-margin;
@@ -283,15 +284,15 @@
   }
 }
 
-.post-item-tag {
-  @post-tag-line-height: 24px;
-
+.post-item-tag-wrap {
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px dashed var(--primary-border-color);
   font-size: @meta-font-size;
   line-height: @post-tag-line-height;
+}
 
+.post-item-tag {
   > div {
     display: flex;
   }

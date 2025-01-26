@@ -15,7 +15,7 @@ import { ApiService } from './api.service';
   providedIn: 'root'
 })
 export class ShoppingService {
-  constructor(private apiService: ApiService) {}
+  constructor(private readonly apiService: ApiService) {}
 
   getSellingPromotion(keyword: string): Observable<JdUnionPromotionResponse> {
     return this.apiService

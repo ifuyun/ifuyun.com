@@ -1,0 +1,48 @@
+<div class="post-more" [class.p-post-more]="!isMobile" [class.m-post-more]="isMobile">
+  @if(prevGame) {
+    <div class="post-more-prev">
+      <div class="post-more-photo">
+        @if (!isChanged) {
+          <div class="post-more-photo-content lazyload"
+               [class.full-img]="!prevGame.gameCover"
+               [attr.data-bg]="prevGame.gameCover || emptyCover"></div>
+        } @else {
+          <div class="post-more-photo-content"
+               [class.full-img]="!prevGame.gameCover"
+               [style.background-image]="'url(' + (prevGame.gameCover || emptyCover) + ')'"></div>
+        }
+        <div class="post-more-photo-overlay"></div>
+      </div>
+      <div class="post-more-content">
+        <div class="post-more-content-title">{{ prevGame.gameTitle }}</div>
+        <div>上一篇</div>
+      </div>
+      <a class="post-more-link" [routerLink]="'/game/' + prevGame.gameId" [title]="prevGame.gameTitle"></a>
+    </div>
+  } @else {
+    <div></div>
+  }
+  @if(nextGame) {
+    <div class="post-more-next">
+      <div class="post-more-photo">
+        @if (!isChanged) {
+          <div class="post-more-photo-content lazyload"
+               [class.full-img]="!nextGame.gameCover"
+               [attr.data-bg]="nextGame.gameCover || emptyCover"></div>
+        } @else {
+          <div class="post-more-photo-content"
+               [class.full-img]="!nextGame.gameCover"
+               [style.background-image]="'url(' + (nextGame.gameCover || emptyCover) + ')'"></div>
+        }
+        <div class="post-more-photo-overlay"></div>
+      </div>
+      <div class="post-more-content">
+        <div class="post-more-content-title">{{ nextGame.gameTitle }}</div>
+        <div>下一篇</div>
+      </div>
+      <a class="post-more-link" [routerLink]="'/game/' + nextGame.gameId" [title]="nextGame.gameTitle"></a>
+    </div>
+  } @else {
+    <div></div>
+  }
+</div>

@@ -10,7 +10,7 @@ import { ApiService } from './api.service';
   providedIn: 'root'
 })
 export class LinkService {
-  constructor(private apiService: ApiService) {}
+  constructor(private readonly apiService: ApiService) {}
 
   getFriendLinks(isHome: boolean): Observable<LinkEntity[]> {
     return this.apiService

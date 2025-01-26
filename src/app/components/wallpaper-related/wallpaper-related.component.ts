@@ -12,8 +12,7 @@ import { WallpaperService } from '../../services/wallpaper.service';
   selector: 'app-wallpaper-related',
   imports: [NgFor, RouterLink],
   providers: [DestroyService],
-  templateUrl: './wallpaper-related.component.html',
-  styleUrl: './wallpaper-related.component.less'
+  templateUrl: './wallpaper-related.component.html'
 })
 export class WallpaperRelatedComponent implements OnInit {
   @Input() lang: WallpaperLang = WallpaperLang.CN;

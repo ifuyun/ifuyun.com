@@ -11,8 +11,7 @@ import { WallpaperService } from '../../services/wallpaper.service';
   selector: 'app-wallpaper-prev-next',
   imports: [RouterLink],
   providers: [DestroyService],
-  templateUrl: './wallpaper-prev-next.component.html',
-  styleUrl: './wallpaper-prev-next.component.less'
+  templateUrl: './wallpaper-prev-next.component.html'
 })
 export class WallpaperPrevNextComponent implements OnInit {
   @Input() lang: WallpaperLang = WallpaperLang.CN;

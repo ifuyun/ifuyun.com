@@ -8,6 +8,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageService } from 'ng-zorro-antd/image';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { skipWhile, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ADMIN_URL_PARAM, APP_ID } from '../../config/common.constant';
@@ -38,6 +39,7 @@ import { WallpaperModalComponent } from '../wallpaper-modal/wallpaper-modal.comp
     NzInputModule,
     NzIconModule,
     NzButtonModule,
+    NzSelectModule,
     LoginModalComponent,
     WallpaperModalComponent
   ],
@@ -47,6 +49,7 @@ import { WallpaperModalComponent } from '../wallpaper-modal/wallpaper-modal.comp
 })
 export class HeaderComponent implements OnInit, AfterViewChecked {
   @Input() postTaxonomies: TaxonomyNode[] = [];
+  @Input() gameTaxonomies: TaxonomyNode[] = [];
 
   @ViewChild('mSearchInput') mSearchInput!: ElementRef;
 
@@ -59,6 +62,7 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   user!: UserModel;
   toolLinks = TOOL_LINKS;
   keyword = '';
+  searchType = 'post';
   loginModalVisible = false;
   wallpaperModalVisible = false;
   searchVisible = false;
@@ -122,6 +126,7 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
     }
     this.router.navigate(['/search'], {
       queryParams: {
+        type: this.searchType,
         keyword: this.keyword
       }
     });
