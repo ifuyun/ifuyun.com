@@ -37,23 +37,13 @@ export class ApiService {
   httpPost<T extends HttpResponseEntity>(
     url: string,
     body: Record<string, any> | FormData = {},
-    showMessage = false
+    showMessage = true
   ): Observable<T> {
     return this.http
       .post<T>(this.getApiUrl(url), body, {
         observe: 'body'
       })
       .pipe(catchError(this.handleError<T>(showMessage)));
-  }
-
-  private handleError<T>(showMessage = false) {
-    return (err: HttpErrorResponse): Observable<T> => {
-      if (showMessage) {
-        this.message.error(err.error?.message || err.message || Message.UNKNOWN_ERROR);
-      }
-      // Let the app keep running by returning an empty result.
-      return of(err.error as T);
-    };
   }
 
   httpGetFile(url: string, param: Record<string, any> = {}, showMessage = false): Observable<Blob> {
@@ -66,5 +56,15 @@ export class ApiService {
         observe: 'body'
       })
       .pipe(catchError(this.handleError<Blob>(showMessage)));
+  }
+
+  private handleError<T>(showMessage = false) {
+    return (err: HttpErrorResponse): Observable<T> => {
+      if (showMessage) {
+        this.message.error(err.error?.message || err.message || Message.UNKNOWN_ERROR);
+      }
+      // Let the app keep running by returning an empty result.
+      return of(err.error as T);
+    };
   }
 }

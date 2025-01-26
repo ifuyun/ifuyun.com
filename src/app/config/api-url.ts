@@ -53,7 +53,6 @@ export enum ApiUrl {
   WALLPAPER_PREV_AND_NEXT = '/wallpapers/prev-and-next',
   WALLPAPER = '/wallpapers/wallpaper',
   WALLPAPER_ARCHIVES = '/wallpapers/archives',
-  WALLPAPER_DOWNLOAD = '/wallpapers/download',
   WALLPAPER_DOWNLOAD_URL = '/wallpapers/download-url',
   // nes
   GAMES = '/games',
@@ -64,6 +63,8 @@ export enum ApiUrl {
   GAME_RELATED = '/games/related',
   GAME_PREV_AND_NEXT = '/games/prev-and-next',
   GAME_LOG = '/games/log',
+  GAME_CHECK_PLAY = '/games/check-play',
+  GAME_DOWNLOAD_URL = '/games/download-url',
   // jd
   JD_SELLING_PROMOTION = '/union/jd/selling-promotion',
   JD_PROMOTION_COMMON = '/union/jd/promotion-common',

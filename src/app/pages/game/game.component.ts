@@ -6,6 +6,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageService } from 'ng-zorro-antd/image';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
 import { CommentComponent } from '../../components/comment/comment.component';
 import { GameModalComponent } from '../../components/game-modal/game-modal.component';
@@ -85,6 +86,7 @@ export class GameComponent implements OnInit {
   shareUrl = '';
   loginVisible = false;
   gameModalVisible = false;
+  downloading = false;
 
   protected pageIndex = 'game-detail';
 
@@ -231,13 +233,20 @@ export class GameComponent implements OnInit {
       return;
     }
     this.gameService
-      .saveGameLog({
-        gameLogType: GameLogType.PLAY,
-        gameId: this.game.gameId
-      })
+      .checkPlay()
       .pipe(takeUntil(this.destroy$))
-      .subscribe();
-    this.showGameModal();
+      .subscribe((res) => {
+        if (res.code === ResponseCode.SUCCESS) {
+          this.gameService
+            .saveGameLog({
+              gameLogType: GameLogType.PLAY,
+              gameId: this.game.gameId
+            })
+            .pipe(takeUntil(this.destroy$))
+            .subscribe();
+          this.showGameModal();
+        }
+      });
   }
 
   download() {
@@ -245,6 +254,16 @@ export class GameComponent implements OnInit {
       this.showLoginModal();
       return;
     }
+    this.downloading = true;
+    this.gameService
+      .getGameDownloadUrl(this.gameId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.downloading = false;
+        if (res) {
+          window.open(environment.apiBase + res);
+        }
+      });
   }
 
   showLoginModal() {

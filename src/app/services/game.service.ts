@@ -63,10 +63,14 @@ export class GameService {
   }
 
   getGameROM(gameId: string): Observable<Blob> {
-    return this.apiService.httpGetFile(ApiUrl.GAME_ROM, {
-      gameId,
-      appId: APP_ID
-    });
+    return this.apiService.httpGetFile(
+      ApiUrl.GAME_ROM,
+      {
+        gameId,
+        appId: APP_ID
+      },
+      true
+    );
   }
 
   getGamesOfPrevAndNext(gameId: string): Observable<{ prevGame: GameEntity; nextGame: GameEntity }> {
@@ -75,6 +79,22 @@ export class GameService {
         gameId
       })
       .pipe(map((res) => res?.data || {}));
+  }
+
+  checkPlay(): Observable<HttpResponseEntity> {
+    return this.apiService.httpGet(ApiUrl.GAME_CHECK_PLAY, {}, true).pipe(map((res) => res || {}));
+  }
+
+  getGameDownloadUrl(gameId: string): Observable<string> {
+    return this.apiService
+      .httpGet(
+        ApiUrl.GAME_DOWNLOAD_URL,
+        {
+          gameId
+        },
+        true
+      )
+      .pipe(map((res) => res?.data || ''));
   }
 
   updateActiveGameId(gameId: string) {

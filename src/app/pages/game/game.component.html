@@ -20,7 +20,7 @@
         <img [src]="game.gameCover || emptyCover" [alt]="game.gameTitle" />
         <div class="game-cover-action">
           <button nz-button nzType="primary" (click)="startPlay()">开始游戏</button>
-          <button nz-button nzType="primary" (click)="download()">下载游戏</button>
+          <button nz-button nzType="primary" [nzLoading]="downloading" (click)="download()">下载游戏</button>
         </div>
       </div>
       <div></div>
