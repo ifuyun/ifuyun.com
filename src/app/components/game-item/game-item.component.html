@@ -4,6 +4,7 @@
       <div class="post-item-body">
         <div class="post-item-content">
           <header>
+            <span *ngIf="game.game.gameSticky" class="meta-tag meta-tag-sticky">置顶</span>
             <h2><a [routerLink]="'/game/' + game.game.gameId"
                    [title]="game.game.gameTitle"
                    rel="bookmark">{{ game.game.gameTitle }}</a></h2>
@@ -68,9 +69,12 @@
   } @else {
     <article class="m-post-item">
       <header>
-        <h2><a [routerLink]="'/game/' + game.game.gameId"
+        <h2>
+          <span *ngIf="game.game.gameSticky" class="m-meta-tag meta-tag-sticky"><nz-icon nzType="vertical-align-top" /></span>
+          <a [routerLink]="'/game/' + game.game.gameId"
                [title]="game.game.gameTitle"
-               rel="bookmark">{{ game.game.gameTitle }}</a></h2>
+               rel="bookmark">{{ game.game.gameTitle }}</a>
+        </h2>
         <div class="m-post-item-stat">
           <span><nz-icon nzType="eye" /><span>{{ game.game.gameViews | numberView: 'K' }}</span></span>
           <span><nz-icon nzType="like" /><span>{{ game.game.gameLikes | numberView: 'K' }}</span></span>
@@ -118,9 +122,12 @@
         </a>
       </div>
       <div class="post-content">
-        <h2><a [routerLink]="'/game/' + game.game.gameId"
-               [title]="game.game.gameTitle"
-               rel="bookmark">{{ game.game.gameTitle }}</a></h2>
+        <header>
+          <span *ngIf="game.game.gameSticky" class="meta-tag meta-tag-sticky">置顶</span>
+          <h2><a [routerLink]="'/game/' + game.game.gameId"
+                 [title]="game.game.gameTitle"
+                 rel="bookmark">{{ game.game.gameTitle }}</a></h2>
+        </header>
         <div class="post-meta-wrap">
           <div class="post-meta">
             <div class="tags">

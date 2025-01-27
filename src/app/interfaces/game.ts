@@ -17,7 +17,11 @@ export interface GameEntity {
   gameFileType?: string;
   gameSize?: number;
   gameStatus?: GameStatus;
+  gameSticky?: 0 | 1;
+  gameStickyTime?: number;
   gameViews: number;
+  gamePlays: number;
+  gameDownloads: number;
   gameLikes: number;
   gameComments: number;
   gameFavorites: number;

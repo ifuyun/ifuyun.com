@@ -199,12 +199,13 @@
                      #mSearchInput
                      type="text"
                      name="keyword"
+                     nzSize="large"
                      [(ngModel)]="keyword"
                      autocomplete="off"
                      placeholder="搜索全站（支持全文搜索）" />
             </nz-input-group>
             <ng-template #searchTypeTpl>
-              <nz-select name="searchType" [(ngModel)]="searchType">
+              <nz-select name="searchType" nzSize="large" [(ngModel)]="searchType">
                 <nz-option nzLabel="文章" nzValue="post"></nz-option>
                 <nz-option nzLabel="壁纸" nzValue="wallpaper"></nz-option>
                 <nz-option nzLabel="游戏" nzValue="game"></nz-option>

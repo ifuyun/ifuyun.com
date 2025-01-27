@@ -75,9 +75,14 @@
   .post-content {
     padding: @content-padding;
 
+    > header {
+      display: flex;
+    }
+
     h2 {
       display: flex;
       font-size: @title-font-size;
+      overflow: hidden;
 
       > a {
         color: var(--primary-font-color);
