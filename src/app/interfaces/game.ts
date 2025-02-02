@@ -65,3 +65,9 @@ export interface GameLogEntity {
   gameLogType: GameLogType;
   gameId: string;
 }
+
+export interface GameCachedItem {
+  id: string;
+  name: string;
+  added: number;
+}

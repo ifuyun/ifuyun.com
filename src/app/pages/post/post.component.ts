@@ -163,6 +163,8 @@ export class PostComponent implements OnInit {
           this.commonService.redirectToNotFound();
           return;
         }
+        this.closeLoginModal();
+        this.closeShareQrcode();
         if (REGEXP_ID.test(slug)) {
           this.postId = slug;
           this.getPost();

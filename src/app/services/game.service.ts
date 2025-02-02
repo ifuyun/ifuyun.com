@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiUrl } from '../config/api-url';
-import { APP_ID } from '../config/common.constant';
+import { APP_ID, REGEXP_ID } from '../config/common.constant';
+import { STORAGE_KEY_GAME_PREFIX, STORAGE_KEY_GAMES } from '../config/game.constant';
 import {
   Game,
+  GameCachedItem,
   GameEntity,
   GameList,
   GameLogEntity,
@@ -103,6 +105,89 @@ export class GameService {
 
   updateActiveRomURL(romURL: string) {
     this.activeRomURL.next(romURL);
+  }
+
+  getCachedGames() {
+    const games: Array<{ [id: string]: string }> = [];
+
+    Object.keys(localStorage).forEach((key) => {
+      const keys = key.split(STORAGE_KEY_GAME_PREFIX);
+      if (keys[0] === '' && REGEXP_ID.test(keys[1])) {
+        games.push({
+          [keys[0]]: localStorage.getItem(key) || ''
+        });
+      }
+    });
+
+    return games;
+  }
+
+  getCachedGameCount(): number {
+    let count = 0;
+    Object.keys(localStorage).forEach((key) => {
+      const keys = key.split(STORAGE_KEY_GAME_PREFIX);
+      if (keys[0] === '' && REGEXP_ID.test(keys[1]) && localStorage.getItem(key)) {
+        count += 1;
+      }
+    });
+
+    return count;
+  }
+
+  cacheGame(gameId: string, game: Blob) {
+    const cachedGames = this.getCachedGameList().filter((game) => this.isGameCached(game.id));
+    if (cachedGames.length >= 5) {
+      localStorage.removeItem(STORAGE_KEY_GAME_PREFIX + cachedGames[0].id);
+    }
+    game
+      .arrayBuffer()
+      .then((gameBuffer) => {
+        const uint8Array = new Uint8Array(gameBuffer);
+        const gameStr = String.fromCharCode(...uint8Array);
+
+        localStorage.setItem(STORAGE_KEY_GAME_PREFIX + gameId, gameStr);
+      })
+      .catch(() => {});
+  }
+
+  getCachedGame(gameId: string) {
+    return localStorage.getItem(STORAGE_KEY_GAME_PREFIX + gameId);
+  }
+
+  isGameCached(gameId: string): boolean {
+    return !!this.getCachedGame(gameId);
+  }
+
+  getCachedGameList(): GameCachedItem[] {
+    try {
+      const games: GameCachedItem[] = JSON.parse(localStorage.getItem(STORAGE_KEY_GAMES) || '[]');
+
+      return games.sort((a, b) => (a.added < b.added ? -1 : 1));
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      return [];
+    }
+  }
+
+  cacheGameList(game: GameCachedItem) {
+    try {
+      const cachedGames = this.getCachedGameList();
+      const cachedGame = cachedGames.find((item) => item.id === game.id);
+      if (cachedGame) {
+        // 先删除
+        cachedGames.splice(cachedGames.indexOf(cachedGame), 1);
+        // 再重新缓存
+        cachedGames.push(game);
+        localStorage.setItem(STORAGE_KEY_GAMES, JSON.stringify(cachedGames));
+        return;
+      }
+      if (cachedGames.length >= 10) {
+        cachedGames.shift();
+      }
+      cachedGames.push(game);
+      localStorage.setItem(STORAGE_KEY_GAMES, JSON.stringify(cachedGames));
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {}
   }
 
   saveGameLog(log: GameLogEntity): Observable<HttpResponseEntity> {

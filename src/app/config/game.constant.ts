@@ -18,17 +18,20 @@ export const DEFAULT_CONTROLS = {
     '29': { value: 0 }
   },
   '1': {
-    '0': { value: 98 },
+    '0': { value: 97 },
     '2': { value: 99 },
     '3': { value: 13 },
     '4': { value: 38 },
     '5': { value: 40 },
     '6': { value: 37 },
     '7': { value: 39 },
-    '8': { value: 97 },
+    '8': { value: 98 },
     '10': { value: 103 },
     '11': { value: 104 }
   },
   '2': {},
   '3': {}
 };
+export const STORAGE_KEY_GAMES = 'games';
+export const STORAGE_KEY_GAME_PREFIX = 'game_';
+export const STORAGE_KEY_GAME_CONTROLS = 'game_controls';

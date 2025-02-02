@@ -143,6 +143,9 @@ export class WallpaperComponent implements OnInit {
         this.isChanged = this.wallpaperId !== wid;
         this.wallpaperId = wid;
 
+        this.closeLoginModal();
+        this.closeShareQrcode();
+
         const lang = <WallpaperLang>qp.get('lang')?.trim() || WallpaperLang.CN;
         this.isLangChanged = this.lang !== lang;
         this.lang = lang;

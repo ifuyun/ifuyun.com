@@ -20,7 +20,6 @@ import { Message } from '../../config/message.enum';
 import { ResponseCode } from '../../config/response-code.enum';
 import { CommentObjectType } from '../../enums/comment';
 import { FavoriteType } from '../../enums/favorite';
-import { GameLogType } from '../../enums/game';
 import { VoteType, VoteValue } from '../../enums/vote';
 import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
 import { Game, GameEntity } from '../../interfaces/game';
@@ -134,6 +133,9 @@ export class GameComponent implements OnInit {
         }
 
         this.closeGameModal();
+        this.closeLoginModal();
+        this.closeShareQrcode();
+
         this.getGame();
         this.commentService.updateObjectId(this.gameId);
         this.gameService.updateActiveGameId(this.gameId);
@@ -228,8 +230,8 @@ export class GameComponent implements OnInit {
   }
 
   startPlay() {
-    if (!this.isSignIn) {
-      this.showLoginModal();
+    if (this.gameService.isGameCached(this.gameId)) {
+      this.showGameModal();
       return;
     }
     this.gameService
@@ -237,14 +239,9 @@ export class GameComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res.code === ResponseCode.SUCCESS) {
-          this.gameService
-            .saveGameLog({
-              gameLogType: GameLogType.PLAY,
-              gameId: this.game.gameId
-            })
-            .pipe(takeUntil(this.destroy$))
-            .subscribe();
           this.showGameModal();
+        } else {
+          this.showLoginModal();
         }
       });
   }
