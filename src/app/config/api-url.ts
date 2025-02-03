@@ -60,6 +60,7 @@ export enum ApiUrl {
   GAME_ROM = '/games/rom',
   GAME_HOT = '/games/hot',
   GAME_RANDOM = '/games/random',
+  GAME_RECENT = '/games/recent',
   GAME_RELATED = '/games/related',
   GAME_PREV_AND_NEXT = '/games/prev-and-next',
   GAME_LOG = '/games/log',

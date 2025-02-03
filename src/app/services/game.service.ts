@@ -49,6 +49,14 @@ export class GameService {
       .pipe(map((res) => res?.data || []));
   }
 
+  getRecentGames(size: number): Observable<GameEntity[]> {
+    return this.apiService
+      .httpGet(ApiUrl.GAME_RECENT, {
+        size
+      })
+      .pipe(map((res) => res?.data || []));
+  }
+
   getRelatedGames(param: GameRelatedParam): Observable<GameSearchItem[]> {
     return this.apiService.httpGet(ApiUrl.GAME_RELATED, param).pipe(map((res) => res?.data || []));
   }
@@ -158,11 +166,11 @@ export class GameService {
     return !!this.getCachedGame(gameId);
   }
 
-  getCachedGameList(): GameCachedItem[] {
+  getCachedGameList(desc = false): GameCachedItem[] {
     try {
       const games: GameCachedItem[] = JSON.parse(localStorage.getItem(STORAGE_KEY_GAMES) || '[]');
 
-      return games.sort((a, b) => (a.added < b.added ? -1 : 1));
+      return games.sort((a, b) => (a.added < b.added ? (desc ? 1 : -1) : desc ? -1 : 1));
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       return [];

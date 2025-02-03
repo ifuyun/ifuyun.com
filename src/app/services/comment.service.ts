@@ -82,7 +82,8 @@ export class CommentService {
     let tree = copies.filter((father) => {
       father.children = copies.filter((child) => {
         if (father.commentId === child.commentParent) {
-          child.parent = father;
+          // 不能直接赋值，否则会循环引用
+          child.parent = { ...father };
           return true;
         }
         return false;

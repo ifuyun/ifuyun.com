@@ -37,6 +37,14 @@
         </li>
       </ul>
     </div>
+    <div class="widget" *ngIf="recentGames && recentGames.length > 0">
+      <h3 class="widget-title"><span><nz-icon nzType="history" /><span>最近游戏</span></span></h3>
+      <ul>
+        <li *ngFor="let game of recentGames">
+          <a [routerLink]="'/game/' + game.gameId" [title]="game.gameTitle">{{ game.gameTitle }}</a>
+        </li>
+      </ul>
+    </div>
     <div class="widget" *ngIf="hotGames && hotGames.length > 0">
       <h3 class="widget-title"><span><nz-icon nzType="fire" /><span>热门游戏</span></span></h3>
       <ul class="hot-list">

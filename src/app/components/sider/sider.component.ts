@@ -45,6 +45,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   wallpaperArchives: ArchiveData[] = [];
   hotGames: GameEntity[] = [];
   randomGames: GameEntity[] = [];
+  recentGames: GameEntity[] = [];
   bookPosts: PostEntity[] = [];
   activeBook?: BookEntity;
 
@@ -128,6 +129,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
               this.randomWallpapers = [];
             }
             if (isGame) {
+              this.getRecentGames();
               this.getRandomGames();
             } else {
               this.randomGames = [];
@@ -244,6 +246,15 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.randomGames = res;
+      });
+  }
+
+  private getRecentGames() {
+    this.gameService
+      .getRecentGames(10)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.recentGames = res;
       });
   }
 

@@ -3,17 +3,17 @@ import { RenderMode, ServerRoute } from '@angular/ssr';
 
 export const serverRoutes: ServerRoute[] = [
   {
-    path: '403',
+    path: 'error/403',
     renderMode: RenderMode.Server,
     status: HttpStatusCode.Forbidden
   },
   {
-    path: '404',
+    path: 'error/404',
     renderMode: RenderMode.Server,
     status: HttpStatusCode.NotFound
   },
   {
-    path: '500',
+    path: 'error/500',
     renderMode: RenderMode.Server,
     status: HttpStatusCode.InternalServerError
   },
