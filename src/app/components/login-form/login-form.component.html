@@ -37,7 +37,7 @@
       <div>
         <a *ngIf="enableSignup"
            class="signup-link"
-           [routerLink]="['../signup']"
+           [routerLink]="['/user/signup']"
            title="立即注册"><nz-icon nzType="user-add" />立即注册</a>
       </div>
       <button nz-button nzType="primary" (click)="login()" [nzLoading]="loginLoading">登录</button>
