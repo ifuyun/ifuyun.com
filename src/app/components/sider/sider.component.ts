@@ -97,19 +97,19 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
           this.indexInfo = this.commonService.getPageIndexInfo(page);
 
           if (!this.isMobile) {
-            const { isPost, isWallpaper, isGame, isTool, isPage } = this.indexInfo;
+            const { isPost, isWallpaper, isGame, isTool, isPage, isSearch } = this.indexInfo;
 
-            if (isPost || isPage || isTool) {
+            if (isPost || isPage || isTool || isSearch) {
               this.getHotPosts();
             } else {
               this.hotPosts = [];
             }
-            if (isWallpaper || isPage || isTool) {
+            if (isWallpaper || isPage || isTool || isSearch) {
               this.getHotWallpapers();
             } else {
               this.hotWallpapers = [];
             }
-            if (isGame || isPage || isTool) {
+            if (isGame || isPage || isTool || isSearch) {
               this.getHotGames();
             } else {
               this.hotGames = [];

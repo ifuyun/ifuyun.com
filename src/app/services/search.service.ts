@@ -4,7 +4,13 @@ import { map } from 'rxjs/operators';
 import { ApiUrl } from '../config/api-url';
 import { APP_ID } from '../config/common.constant';
 import { ResultList } from '../interfaces/common';
-import { GameSearchResponse, PostSearchResponse, SearchParam, WallpaperSearchResponse } from '../interfaces/search';
+import {
+  AllSearchResponse,
+  GameSearchResponse,
+  PostSearchResponse,
+  SearchParam,
+  WallpaperSearchResponse
+} from '../interfaces/search';
 import { ApiService } from './api.service';
 
 @Injectable({
@@ -12,6 +18,15 @@ import { ApiService } from './api.service';
 })
 export class SearchService {
   constructor(private readonly apiService: ApiService) {}
+
+  searchAll(param: SearchParam): Observable<ResultList<AllSearchResponse>> {
+    return this.apiService
+      .httpGet(ApiUrl.SEARCH_ALL, {
+        ...param,
+        appId: APP_ID
+      })
+      .pipe(map((res) => res?.data || {}));
+  }
 
   searchPosts(param: SearchParam): Observable<ResultList<PostSearchResponse>> {
     return this.apiService

@@ -97,10 +97,11 @@
                      name="keyword"
                      [(ngModel)]="keyword"
                      autocomplete="off"
-                     placeholder="搜索全站（支持全文搜索）" />
+                     placeholder="搜索{{searchTypeMap[this.searchType]}}（支持全文搜索）" />
             </nz-input-group>
             <ng-template #searchTypeTpl>
               <nz-select name="searchType" [(ngModel)]="searchType">
+                <nz-option nzLabel="全站" nzValue="all"></nz-option>
                 <nz-option nzLabel="文章" nzValue="post"></nz-option>
                 <nz-option nzLabel="壁纸" nzValue="wallpaper"></nz-option>
                 <nz-option nzLabel="游戏" nzValue="game"></nz-option>
@@ -145,7 +146,7 @@
               <ul>
                 <li>
                   <a class="sub-nav-link" (click)="showRedPacket()" title="支付宝扫码领红包">
-                    <nz-icon class="icon-red-packet" nzType="red-envelope" /><span>每日红包</span>
+                    <nz-icon class="icon-red-packet" nzType="red-envelope" /><span>支付宝每日红包</span>
                   </a>
                 </li>
                 <li>
@@ -202,10 +203,11 @@
                      nzSize="large"
                      [(ngModel)]="keyword"
                      autocomplete="off"
-                     placeholder="搜索全站（支持全文搜索）" />
+                     placeholder="搜索{{searchTypeMap[this.searchType]}}（支持全文搜索）" />
             </nz-input-group>
             <ng-template #searchTypeTpl>
               <nz-select name="searchType" nzSize="large" [(ngModel)]="searchType">
+                <nz-option nzLabel="全站" nzValue="all"></nz-option>
                 <nz-option nzLabel="文章" nzValue="post"></nz-option>
                 <nz-option nzLabel="壁纸" nzValue="wallpaper"></nz-option>
                 <nz-option nzLabel="游戏" nzValue="game"></nz-option>

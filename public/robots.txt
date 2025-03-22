@@ -31,3 +31,6 @@ Disallow: /
 
 User-agent: GrapeshotCrawler
 Disallow: /
+
+User-agent: DataForSeoBot
+Disallow: /

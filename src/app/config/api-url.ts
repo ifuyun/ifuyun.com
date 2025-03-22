@@ -1,5 +1,6 @@
 export enum ApiUrl {
   // search
+  SEARCH_ALL = '/search',
   SEARCH_POSTS = '/search/posts',
   SEARCH_WALLPAPERS = '/search/wallpapers',
   SEARCH_GAMES = '/search/games',

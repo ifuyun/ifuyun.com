@@ -19,6 +19,7 @@ export enum ActionType {
   SHOW_RED_PACKET = 'show_red_packet',
   SHOW_WALLPAPER_MODAL = 'show_wallpaper_modal',
   SHOW_WECHAT_CARD = 'show_wechat_card',
+  // rss
   OPEN_POST_RSS = 'open_post_rss',
   OPEN_WALLPAPER_RSS = 'open_wallpaper_rss',
   // setting

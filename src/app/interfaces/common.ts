@@ -6,6 +6,7 @@ export interface PageIndexInfo {
   isPage: boolean;
   isGame: boolean;
   isTool: boolean;
+  isSearch: boolean;
   isAuth: boolean;
   fullPage: string;
   subPage: string;

@@ -14,6 +14,7 @@ import { environment } from '../../../environments/environment';
 import { ADMIN_URL_PARAM, APP_ID } from '../../config/common.constant';
 import { ResponseCode } from '../../config/response-code.enum';
 import { ActionObjectType, ActionType } from '../../enums/log';
+import { SearchType } from '../../enums/search';
 import { PageIndexInfo } from '../../interfaces/common';
 import { TaxonomyNode } from '../../interfaces/taxonomy';
 import { TenantAppModel } from '../../interfaces/tenant-app';
@@ -54,6 +55,12 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   @ViewChild('mSearchInput') mSearchInput!: ElementRef;
 
   readonly magazineUrl = environment.magazineUrl;
+  readonly searchTypeMap: Record<string, string> = {
+    [SearchType.ALL]: '全站',
+    [SearchType.POST]: '文章',
+    [SearchType.WALLPAPER]: '壁纸',
+    [SearchType.GAME]: '游戏'
+  };
 
   isMobile = false;
   isSignIn = false;
@@ -62,7 +69,7 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   user!: UserModel;
   toolLinks = TOOL_LINKS;
   keyword = '';
-  searchType = 'post';
+  searchType = 'all';
   loginModalVisible = false;
   wallpaperModalVisible = false;
   searchVisible = false;
@@ -126,7 +133,7 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
     }
     this.router.navigate(['/search'], {
       queryParams: {
-        type: this.searchType,
+        type: this.searchType === 'all' ? undefined : this.searchType,
         keyword: this.keyword
       }
     });

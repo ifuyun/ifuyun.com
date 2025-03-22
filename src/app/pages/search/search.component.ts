@@ -17,7 +17,12 @@ import { SearchType } from '../../enums/search';
 import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
 import { CustomError } from '../../interfaces/custom-error';
 import { OptionEntity } from '../../interfaces/option';
-import { GameSearchResponse, PostSearchResponse, WallpaperSearchResponse } from '../../interfaces/search';
+import {
+  AllSearchResponse,
+  GameSearchResponse,
+  PostSearchResponse,
+  WallpaperSearchResponse
+} from '../../interfaces/search';
 import { TenantAppModel } from '../../interfaces/tenant-app';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { CommonService } from '../../services/common.service';
@@ -50,26 +55,27 @@ export class SearchComponent implements OnInit {
   page = 1;
   pageSize = 10;
   total = 0;
-  searchType = SearchType.POST;
+  searchType: Exclude<SearchType, SearchType.ALL> | '' = '';
+  searchResult: AllSearchResponse[] = [];
   postResult: PostSearchResponse[] = [];
   wallpaperResult: WallpaperSearchResponse[] = [];
   gameResult: GameSearchResponse[] = [];
 
   protected readonly ListMode = ListMode;
 
-  protected pageIndex = 'post-search';
+  protected pageIndex = 'search';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
   private keyword = '';
 
   private get searchTypeDesc() {
-    const typeMap = {
+    const typeMap: Record<string, string> = {
       [SearchType.POST]: '文章',
       [SearchType.WALLPAPER]: '壁纸',
       [SearchType.GAME]: '游戏'
     };
-    return typeMap[this.searchType];
+    return this.searchType ? typeMap[<string>this.searchType] : '全站';
   }
 
   constructor(
@@ -100,9 +106,11 @@ export class SearchComponent implements OnInit {
         this.pageSize = Number(this.options['post_page_size']) || 10;
         this.page = Number(qp.get('page')) || 1;
         this.keyword = qp.get('keyword')?.trim() || '';
-        this.searchType = <SearchType>qp.get('type')?.trim() || SearchType.POST;
-
-        this.pageIndex = `${this.searchType}-search`;
+        this.searchType = <Exclude<SearchType, SearchType.ALL>>qp.get('type')?.trim() || '';
+        this.searchType = [SearchType.POST, SearchType.WALLPAPER, SearchType.GAME].includes(<SearchType>this.searchType)
+          ? this.searchType
+          : '';
+        this.pageIndex = this.searchType ? `${this.searchType}-search` : 'search';
 
         this.updatePageIndex();
         this.updatePageInfo();
@@ -124,7 +132,15 @@ export class SearchComponent implements OnInit {
       keyword: this.keyword,
       page: this.page
     };
-    if (this.searchType === SearchType.WALLPAPER) {
+    if (this.searchType === SearchType.POST) {
+      this.searchService
+        .searchPosts(param)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          this.postResult = res.list;
+          this.initData(res.page, res.total);
+        });
+    } else if (this.searchType === SearchType.WALLPAPER) {
       this.searchService
         .searchWallpapers(param)
         .pipe(takeUntil(this.destroy$))
@@ -142,10 +158,10 @@ export class SearchComponent implements OnInit {
         });
     } else {
       this.searchService
-        .searchPosts(param)
+        .searchAll(param)
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
-          this.postResult = res.list;
+          this.searchResult = res.list;
           this.initData(res.page, res.total);
         });
     }
@@ -161,7 +177,7 @@ export class SearchComponent implements OnInit {
       pageSize: this.pageSize,
       url: '/search',
       param: {
-        type: this.searchType,
+        type: this.searchType || undefined,
         keyword: this.keyword
       }
     });
@@ -209,7 +225,7 @@ export class SearchComponent implements OnInit {
         tooltip: this.keyword,
         url: '/search',
         param: {
-          type: this.searchType,
+          type: this.searchType || undefined,
           keyword: this.keyword
         },
         isHeader: true

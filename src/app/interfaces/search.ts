@@ -1,3 +1,4 @@
+import { SearchType } from '../enums/search';
 import { Game } from './game';
 import { Post } from './post';
 import { Wallpaper } from './wallpaper';
@@ -17,5 +18,11 @@ export interface WallpaperSearchResponse extends Wallpaper {
 }
 
 export interface GameSearchResponse extends Game {
+  score: number;
+}
+
+export interface AllSearchResponse {
+  type: Exclude<SearchType, SearchType.ALL>;
+  data: Post | Wallpaper | Game;
   score: number;
 }

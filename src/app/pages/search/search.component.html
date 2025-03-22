@@ -1,7 +1,11 @@
 <app-breadcrumb></app-breadcrumb>
 @if (total > 0) {
   <div [class.post-list]="!isMobile" [class.m-post-list]="isMobile">
-    @if (searchType === 'wallpaper') {
+    @if (searchType === 'post') {
+      <ng-container *ngFor="let item of postResult; let i = index">
+        <app-post-item [post]="item" [index]="i"></app-post-item>
+      </ng-container>
+    } @else if (searchType === 'wallpaper') {
       <ng-container *ngFor="let item of wallpaperResult; let i = index">
         <app-wallpaper-item [wallpaper]="item" [mode]="ListMode.LIST" [index]="i"></app-wallpaper-item>
       </ng-container>
@@ -10,8 +14,14 @@
         <app-game-item [game]="item" [mode]="ListMode.LIST" [index]="i"></app-game-item>
       </ng-container>
     } @else {
-      <ng-container *ngFor="let item of postResult; let i = index">
-        <app-post-item [post]="item" [index]="i"></app-post-item>
+      <ng-container *ngFor="let item of searchResult; let i = index">
+        @if (item.type === 'post') {
+          <app-post-item [post]="$any(item.data)" [index]="i"></app-post-item>
+        } @else if (item.type === 'wallpaper') {
+          <app-wallpaper-item [wallpaper]="$any(item.data)" [mode]="ListMode.LIST" [index]="i"></app-wallpaper-item>
+        } @else {
+          <app-game-item [game]="$any(item.data)" [mode]="ListMode.LIST" [index]="i"></app-game-item>
+        }
       </ng-container>
     }
   </div>
