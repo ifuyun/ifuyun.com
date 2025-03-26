@@ -39,7 +39,7 @@ export interface PostEntity {
   postType: PostType;
   postFormat: PostFormat;
   postMimeType?: string;
-  postOwner: string;
+  postOwnerId: string;
   postGuid: string;
   postParent?: string;
   postViews: number;

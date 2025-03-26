@@ -132,6 +132,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
               this.getRecentGames();
               this.getRandomGames();
             } else {
+              this.recentGames = [];
               this.randomGames = [];
             }
           }
