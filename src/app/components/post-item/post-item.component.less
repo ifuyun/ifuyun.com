@@ -288,11 +288,12 @@
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px dashed var(--primary-border-color);
-  font-size: @meta-font-size;
-  line-height: @post-tag-line-height;
 }
 
 .post-item-tag {
+  font-size: @meta-font-size;
+  line-height: @post-tag-line-height;
+
   > div {
     display: flex;
   }
@@ -312,6 +313,8 @@
 
     li {
       display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: @tag-row-span 0;
 
       &:not(:last-child) {

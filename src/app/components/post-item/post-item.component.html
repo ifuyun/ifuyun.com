@@ -128,9 +128,7 @@
         <div class="post-item-tag-icon m-post-item-tag-icon"><nz-icon nzType="tag" /></div>
         <ul>
           <li *ngFor="let tag of post.tags">
-            <a [routerLink]="'/post/tag/' + tag.tagName"
-               [title]="tag.tagName"
-               rel="category">{{ tag.tagName }}</a>
+            <a [routerLink]="'/post/tag/' + tag.tagName" [title]="tag.tagName" rel="category">{{ tag.tagName }}</a>
           </li>
         </ul>
       </div>

@@ -184,9 +184,10 @@ export class SearchComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles: string[] = [`${this.searchTypeDesc}搜索`, this.appInfo.appName];
+    const titles: string[] = [this.keyword, `${this.searchTypeDesc}搜索`, this.appInfo.appName];
     const keywords: string[] = [...this.appInfo.keywords];
     let description = `「${this.keyword}」${this.searchTypeDesc}搜索结果`;
+
     keywords.unshift(...this.keyword.split(/\s+/i));
 
     if (this.page > 1) {
