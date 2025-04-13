@@ -21,6 +21,7 @@
                [type]="passwordVisible ? 'text' : 'password'"
                formControlName="password"
                [maxlength]="maxPasswordLength"
+               autocomplete="off"
                placeholder="用户密码" />
       </nz-input-group>
       <ng-template #confirmPwdSuffix>
