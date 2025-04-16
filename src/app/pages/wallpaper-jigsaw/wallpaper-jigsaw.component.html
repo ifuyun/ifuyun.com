@@ -1,0 +1,51 @@
+<app-breadcrumb></app-breadcrumb>
+@if (wallpaper) {
+  <div class="post" [class.p-post]="!isMobile" [class.m-post]="isMobile">
+    <header class="post-header">
+      <h1 class="post-title">
+        <a routerLink="."
+           [queryParams]="langParams"
+           [title]="wallpaper.wallpaperCopyright"
+           rel="bookmark">{{ wallpaper.wallpaperCopyright }}</a>
+      </h1>
+      <div class="post-meta post-meta-top">
+        <span title="日期: {{ wallpaper.wallpaperDate | date: 'yyyy-MM-dd' }}">
+          <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date: 'yyyy-MM-dd' }}</span>
+        </span>
+        <span title="拼图：{{ wallpaper.wallpaperPlays | numberView: 'K' }}">
+          <nz-icon nzType="product" /><span>{{ wallpaper.wallpaperPlays | numberView: 'K' }}</span>
+        </span>
+      </div>
+    </header>
+    <div class="divider"></div>
+    <div class="post-content">
+      <app-jigsaw></app-jigsaw>
+    </div>
+    <footer class="post-footer">
+      <div class="post-actions">
+        <div>
+          <button class="button-like" [class.liked]="wallpaper.isVoted" (click)="vote()">
+            <nz-icon nzType="like" nzTheme="fill" />
+            <span class="text">真棒！{{ wallpaper.wallpaperLikes > 0 ? wallpaper.wallpaperLikes : '' }}</span>
+            <span class="parkinson-mask"><nz-icon nzType="like" nzTheme="fill" /></span>
+          </button>
+          <button (click)="showReward()" title="打赏"><nz-icon nzType="heart" nzTheme="fill" /></button>
+          <button [class.liked]="wallpaper.isFavorite"
+                  (click)="addFavorite()"
+                  [title]="wallpaper.isFavorite ? '已收藏' : '收藏'">
+            <nz-icon nzType="star" nzTheme="fill" />
+          </button>
+          <button *ngIf="!isMobile"
+                  (click)="showShareQrcode()"
+                  title="分享"><span class="fi fi-share-fill"></span></button>
+        </div>
+      </div>
+    </footer>
+    <app-wallpaper-prev-next [jigsaw]="true" [lang]="lang"></app-wallpaper-prev-next>
+  </div>
+  <app-wallpaper-related [jigsaw]="true" [lang]="lang"></app-wallpaper-related>
+  <app-make-money></app-make-money>
+  <app-comment [objectType]="commentType" [enableAI]="true"></app-comment>
+  <app-share-modal *ngIf="shareVisible" [shareUrl]="shareUrl" (close)="closeShareQrcode()"></app-share-modal>
+  <app-login-modal *ngIf="loginVisible" (close)="closeLoginModal()"></app-login-modal>
+}

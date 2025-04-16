@@ -40,6 +40,9 @@
         <li [class.active]="indexInfo?.isWallpaper">
           <a routerLink="/wallpaper" title="高清壁纸">壁纸</a>
         </li>
+        <li [class.active]="indexInfo?.isJigsaw">
+          <a routerLink="/jigsaw" title="壁纸拼图">拼图</a>
+        </li>
         <li [class.active]="indexInfo?.isGame">
           <a routerLink="/game" title="游戏">
             <span>游戏</span><span class="nav-arrow" *ngIf="gameTaxonomies.length > 0"></span>

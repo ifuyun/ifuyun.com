@@ -36,7 +36,7 @@
         text-overflow: ellipsis;
 
         &:hover {
-          color: var(--primary-color);
+          color: @primary-color-hover;
         }
       }
     }
@@ -65,7 +65,7 @@
       }
 
       a:hover {
-        color: var(--primary-color);
+        color: @primary-color-hover;
       }
 
       nz-icon, .fi {
@@ -73,7 +73,7 @@
       }
 
       .auto-fit > span {
-        max-width: 300px;
+        max-width: 250px;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -189,7 +189,7 @@
       color: var(--meta-color);
 
       &:hover {
-        color: var(--primary-color);
+        color: @primary-color-hover;
       }
     }
 
@@ -331,7 +331,7 @@
 
     &:hover {
       color: var(--tag-active-color);
-      background-color: var(--primary-color);
+      background-color: @primary-color-hover;
     }
   }
 }

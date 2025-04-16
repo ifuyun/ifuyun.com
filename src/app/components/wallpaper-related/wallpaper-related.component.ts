@@ -16,6 +16,7 @@ import { WallpaperService } from '../../services/wallpaper.service';
 })
 export class WallpaperRelatedComponent implements OnInit {
   @Input() lang: WallpaperLang = WallpaperLang.CN;
+  @Input() jigsaw = false;
 
   isMobile = false;
   relatedWallpapers: WallpaperSearchItem[] = [];

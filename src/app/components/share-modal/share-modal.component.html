@@ -1,13 +1,11 @@
-<nz-modal
-  nzDraggable
-  nzCentered
-  [nzVisible]="visible"
-  [nzWidth]="392"
-  [nzBodyStyle]="{ display: 'flex' }"
-  [nzFooter]="null"
-  (nzOnCancel)="closeModal()"
-  (nzOnOk)="closeModal()"
->
+<nz-modal nzDraggable
+          nzCentered
+          [nzVisible]="visible"
+          [nzWidth]="392"
+          [nzBodyStyle]="{ display: 'flex' }"
+          [nzFooter]="null"
+          (nzOnCancel)="closeModal()"
+          (nzOnOk)="closeModal()">
   <ng-container *nzModalContent>
     <nz-qrcode *ngIf="shareUrl"
                [nzSize]="320"

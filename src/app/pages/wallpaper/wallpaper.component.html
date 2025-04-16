@@ -27,12 +27,23 @@
         <figcaption>{{ wallpaper.wallpaperTitle }}</figcaption>
       </figure>
       <div class="wallpaper-actions">
-        <button nz-button nzType="primary" (click)="download()" [nzLoading]="downloading" title="下载高清壁纸">
-          <span class="fi fi-download"></span><span>1920x1080</span>
+        <button nz-button
+                nzType="primary"
+                (click)="download()"
+                [nzLoading]="downloading"
+                title="下载《{{wallpaper.wallpaperCopyright}}》高清壁纸">
+          <span class="fi fi-download"></span><span>{{ isMobile ? '2K' : '1920x1080' }}</span>
         </button>
-        <button nz-button nzType="primary" (click)="download(true)" [nzLoading]="downloading" title="下载 4k 超高清壁纸">
-          <span class="fi fi-download"></span><span>4K 超高清</span>
+        <button nz-button
+                nzType="primary"
+                (click)="download(true)"
+                [nzLoading]="downloading"
+                title="下载《{{wallpaper.wallpaperCopyright}}》 4K 超高清壁纸">
+          <span class="fi fi-download"></span><span>{{ isMobile ? '4K' : '4K 超高清' }}</span>
         </button>
+        <a nz-button nzType="primary" [routerLink]="'/jigsaw/' + wallpaper.wallpaperId">
+          <nz-icon nzType="product" /><span>拼图</span>
+        </a>
       </div>
       <h2>{{ wallpaper.wallpaperStoryTitle }}</h2>
       <article [innerHTML]="wallpaper.wallpaperStory | safeHtml"></article>

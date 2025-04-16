@@ -20,8 +20,13 @@ export class WallpaperItemComponent implements OnInit {
   @Input() lang?: WallpaperLang;
   @Input() mode!: ListMode;
   @Input() index!: number;
+  @Input() jigsaw = false;
 
   isMobile = false;
+
+  get linkPrefix() {
+    return this.jigsaw ? '/jigsaw/' : '/wallpaper/';
+  }
 
   get wallpaperLocation() {
     return this.wallpaper.isCn ? this.wallpaper.wallpaperLocation : this.wallpaper.wallpaperLocationEn;
@@ -41,6 +46,9 @@ export class WallpaperItemComponent implements OnInit {
   }
 
   getLangParams(isCn: boolean): Params {
+    if (this.jigsaw) {
+      return {};
+    }
     if (!this.lang) {
       return isCn ? {} : { lang: WallpaperLang.EN };
     }

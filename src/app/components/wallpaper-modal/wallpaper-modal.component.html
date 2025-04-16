@@ -1,16 +1,14 @@
-<nz-modal
-  nzCentered
-  [nzVisible]="visible"
-  nzWidth="88vw"
-  [nzStyle]="{ height: '88vh', 'max-width': '1280px', 'max-height': '720px' }"
-  [nzBodyStyle]="{ display: 'flex', padding: '8px', height: '100%' }"
-  nzClassName="wallpaper-modal"
-  [nzFooter]="null"
-  [nzClosable]="false"
-  [nzMaskClosable]="true"
-  (nzOnCancel)="closeModal()"
-  (nzOnOk)="closeModal()"
->
+<nz-modal nzCentered
+          [nzVisible]="visible"
+          nzWidth="88vw"
+          [nzStyle]="{ height: '88vh', 'max-width': '1280px', 'max-height': '720px' }"
+          [nzBodyStyle]="{ display: 'flex', padding: '8px', height: '100%' }"
+          nzClassName="wallpaper-modal"
+          [nzFooter]="null"
+          [nzClosable]="false"
+          [nzMaskClosable]="true"
+          (nzOnCancel)="closeModal()"
+          (nzOnOk)="closeModal()">
   <ng-container *nzModalContent>
     <div class="w-modal">
       @if (loading || !wallpapers.length) {

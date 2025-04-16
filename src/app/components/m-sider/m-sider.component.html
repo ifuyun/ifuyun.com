@@ -23,6 +23,9 @@
         <li [class.active]="indexInfo?.isWallpaper && indexInfo?.subPage !== 'archive'">
           <a routerLink="/wallpaper" title="高清壁纸" (click)="closeSider()"><nz-icon nzType="picture" /><span>壁纸</span></a>
         </li>
+        <li [class.active]="indexInfo?.isJigsaw">
+          <a routerLink="/jigsaw" title="壁纸拼图" (click)="closeSider()"><nz-icon nzType="product" /><span>拼图</span></a>
+        </li>
         <li [class.active]="indexInfo?.isGame">
           <a routerLink="/game" title="游戏" (click)="closeSider()"><nz-icon nzType="desktop" /><span>游戏</span></a>
         </li>

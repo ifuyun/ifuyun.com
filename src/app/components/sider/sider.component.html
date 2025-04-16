@@ -101,16 +101,30 @@
       </ul>
     </div>
     <!--壁纸页-->
-    <div class="widget" *ngIf="randomWallpapers && randomWallpapers.length > 0">
-      <h3 class="widget-title"><span><nz-icon nzType="gift" /><span>手气不错</span></span></h3>
-      <ul>
-        <li *ngFor="let wallpaper of randomWallpapers">
-          <a [routerLink]="'/wallpaper/' + wallpaper.wallpaperId"
-             [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
-             [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</a>
-        </li>
-      </ul>
-    </div>
+    @if (randomWallpapers && randomWallpapers.length > 0) {
+      @if (indexInfo.isJigsaw) {
+        <div class="widget">
+          <h3 class="widget-title"><span><nz-icon nzType="gift" /><span>手气不错</span></span></h3>
+          <ul>
+            <li *ngFor="let wallpaper of randomWallpapers">
+              <a [routerLink]="'/jigsaw/' + wallpaper.wallpaperId"
+                 [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</a>
+            </li>
+          </ul>
+        </div>
+      } @else {
+        <div class="widget">
+          <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
+          <ul>
+            <li *ngFor="let wallpaper of randomWallpapers">
+              <a [routerLink]="'/wallpaper/' + wallpaper.wallpaperId"
+                 [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
+                 [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</a>
+            </li>
+          </ul>
+        </div>
+      }
+    }
     <div class="widget" *ngIf="randomGames && randomGames.length > 0">
       <h3 class="widget-title"><span><nz-icon nzType="gift" /><span>手气不错</span></span></h3>
       <ul>

@@ -97,14 +97,14 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
           this.indexInfo = this.commonService.getPageIndexInfo(page);
 
           if (!this.isMobile) {
-            const { isPost, isWallpaper, isGame, isTool, isPage, isSearch } = this.indexInfo;
+            const { isPost, isWallpaper, isJigsaw, isGame, isTool, isPage, isSearch } = this.indexInfo;
 
             if (isPost || isPage || isTool || isSearch) {
               this.getHotPosts();
             } else {
               this.hotPosts = [];
             }
-            if (isWallpaper || isPage || isTool || isSearch) {
+            if (isWallpaper || isJigsaw || isPage || isTool || isSearch) {
               this.getHotWallpapers();
             } else {
               this.hotWallpapers = [];
@@ -123,9 +123,12 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
             }
             if (isWallpaper) {
               this.getWallpaperArchives();
-              this.getRandomWallpapers();
             } else {
               this.wallpaperArchives = [];
+            }
+            if (isWallpaper || isJigsaw) {
+              this.getRandomWallpapers();
+            } else {
               this.randomWallpapers = [];
             }
             if (isGame) {

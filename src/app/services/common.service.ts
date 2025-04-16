@@ -50,6 +50,7 @@ export class CommonService {
       isHome: pageIndex === 'index',
       isPost: topPage === 'post',
       isWallpaper: topPage === 'wallpaper',
+      isJigsaw: topPage === 'jigsaw',
       isGame: topPage === 'game',
       isTool: topPage === 'tool',
       isSearch: topPage === 'search',

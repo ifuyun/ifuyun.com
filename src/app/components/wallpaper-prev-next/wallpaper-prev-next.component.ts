@@ -15,6 +15,7 @@ import { WallpaperService } from '../../services/wallpaper.service';
 })
 export class WallpaperPrevNextComponent implements OnInit {
   @Input() lang: WallpaperLang = WallpaperLang.CN;
+  @Input() jigsaw = false;
 
   isMobile = false;
   isChanged = false;

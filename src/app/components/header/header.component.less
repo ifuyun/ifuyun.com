@@ -48,12 +48,12 @@
     > li {
       &:hover, &.active {
         > a {
-          color: var(--primary-color);
+          color: @primary-color-hover;
         }
 
         .nav-arrow {
           &::before, &::after {
-            background-color: var(--primary-color);
+            background-color: @primary-color-hover;
           }
         }
       }
@@ -108,7 +108,7 @@
 
       li.active, li:hover {
         .nav-link {
-          color: var(--primary-color);
+          color: @primary-color-hover;
           background-color: transparent;
           cursor: pointer;
         }
@@ -188,7 +188,7 @@
 
     &:hover {
       color: #fff;
-      background-color: var(--primary-color);
+      background-color: @primary-color-hover;
 
       .sub-nav-arrow {
         &::before, &::after {
@@ -269,12 +269,12 @@
     position: relative;
 
     &:hover {
-      color: var(--primary-color);
+      color: @primary-color-hover;
       cursor: pointer;
 
       .nav-arrow {
         &::before, &::after {
-          background-color: var(--primary-color);
+          background-color: @primary-color-hover;
         }
       }
 

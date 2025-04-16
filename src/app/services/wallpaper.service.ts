@@ -104,10 +104,11 @@ export class WallpaperService {
       .pipe(map((res) => res?.data?.archives || []));
   }
 
-  getWallpaperById(wallpaperId: string): Observable<Wallpaper> {
+  getWallpaperById(wallpaperId: string, jigsaw = false): Observable<Wallpaper> {
     return this.apiService
       .httpGet(ApiUrl.WALLPAPER, {
         wallpaperId,
+        jigsaw: jigsaw ? 1 : 0,
         appId: APP_ID
       })
       .pipe(map((res) => res?.data));
@@ -142,6 +143,8 @@ export class WallpaperService {
   transformWallpaper(wallpaper: Wallpaper): Wallpaper {
     return {
       ...wallpaper,
+      wallpaperTitle: wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn,
+      wallpaperTitleEn: wallpaper.wallpaperTitleEn || wallpaper.wallpaperTitle,
       wallpaperCopyright: wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn,
       wallpaperCopyrightEn: wallpaper.wallpaperCopyrightEn || wallpaper.wallpaperCopyright,
       wallpaperLocation: wallpaper.wallpaperLocation || wallpaper.wallpaperLocationEn || '未知',

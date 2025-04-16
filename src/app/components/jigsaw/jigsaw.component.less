@@ -1,0 +1,89 @@
+.puzzle {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--primary-border-color);
+  z-index: 99;
+
+  .puzzle-board {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .puzzle-control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #202020;
+
+    > div {
+      display: flex;
+    }
+
+    &, a {
+      color: #fff;
+    }
+
+    a:hover {
+      text-decoration: none;
+    }
+
+    [disabled] {
+      opacity: 0.6;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      padding: 0 !important;
+      font-size: 16px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .puzzle-difficulty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 8px;
+
+      nz-icon {
+        margin-left: 4px;
+      }
+    }
+  }
+}
+
+.p-puzzle {
+  .puzzle-control {
+    > div {
+      &:first-child, &:last-child {
+        flex-basis: 40%;
+      }
+
+      &:last-child {
+        justify-content: flex-end;
+      }
+    }
+  }
+}
+
+.m-puzzle {
+  .puzzle-canvas {
+    max-width: 100%;
+  }
+
+  .puzzle-control {
+    > div {
+      justify-content: space-between;
+
+      &:last-child {
+        margin-right: 8px;
+      }
+    }
+  }
+}

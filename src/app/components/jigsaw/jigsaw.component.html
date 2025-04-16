@@ -1,0 +1,179 @@
+<main class="puzzle" [class.p-puzzle]="!isMobile" [class.m-puzzle]="isMobile" #puzzle>
+  <div class="puzzle-board">
+    <canvas class="puzzle-canvas" #puzzleCanvas [attr.width]="canvasWidth" [attr.height]="canvasHeight"></canvas>
+  </div>
+  @if (!isMobile) {
+    <div class="puzzle-control">
+      <div>
+        <a nz-dropdown
+           class="puzzle-difficulty"
+           [nzDropdownMenu]="difficulty"
+           nzPlacement="topLeft"
+           [nzDisabled]="gameStatus === 'playing' || gameStatus === 'paused'">
+          {{ difficultyLevels[activeDifficulty].label }}
+          <nz-icon nzType="down"/>
+        </a>
+        <a nz-button
+           nzType="link"
+           class="icon-btn"
+           title="开始"
+           *ngIf="gameStatus === 'ready' || gameStatus === 'completed'"
+           (click)="startGame()">
+          <span class="fi fi-play"></span>
+        </a>
+        <a nz-button nzType="link" title="暂停" *ngIf="gameStatus === 'playing'" (click)="pauseGame()">
+          <nz-icon nzType="pause"/>
+        </a>
+        <a nz-button nzType="link" class="icon-btn" title="继续" *ngIf="gameStatus === 'paused'" (click)="resumeGame()">
+          <span class="fi fi-play"></span>
+        </a>
+        <a nz-button
+           nzType="link"
+           class="icon-btn"
+           title="停止"
+           [disabled]="gameStatus !== 'playing' && gameStatus !== 'paused'"
+           (click)="stopGame()">
+          <span class="fi fi-stop"></span>
+        </a>
+        <a nz-button nzType="link" title="重新开始" [disabled]="gameStatus === 'ready'" (click)="restartGame()">
+          <nz-icon nzType="reload"/>
+        </a>
+        <a nz-button nzType="link" title="放大" [disabled]="gameStatus !== 'playing'" (click)="zoom()">
+          <nz-icon nzType="zoom-in"/>
+        </a>
+        <a nz-button nzType="link" title="缩小" [disabled]="gameStatus !== 'playing'" (click)="zoom(false)">
+          <nz-icon nzType="zoom-out"/>
+        </a>
+        <a nz-button nzType="link" [title]="isFullScreen ? '退出全屏' : '全屏'" (click)="fullscreen()">
+          <nz-icon [nzType]="isFullScreen ? 'fullscreen-exit' : 'fullscreen'"/>
+        </a>
+      </div>
+      <div>
+        <span>{{ gameTimeStr }} / {{ gamePercent }}%</span>
+      </div>
+      <div>
+        @if (scaledImage) {
+          <a nz-button
+             nz-popover
+             nzType="link"
+             title="预览"
+             [nzPopoverContent]="popoverTemplate"
+             nzPopoverPlacement="topRight">
+            <nz-icon nzType="picture"/>
+          </a>
+          <ng-template #popoverTemplate>
+            <img [style.width]="'300px'"
+                 [style.cursor]="'zoom-in'"
+                 [src]="scaledImage.src"
+                 (click)="showFullImage()"
+                 alt="预览"/>
+          </ng-template>
+        } @else {
+          <a nz-button disabled nzType="link" title="预览">
+            <nz-icon nzType="picture"/>
+          </a>
+        }
+        <a nz-button
+           nzType="link"
+           [routerLink]="'/wallpaper/' + wallpaper?.wallpaperId"
+           [queryParams]="langParams"
+           target="_blank"
+           title="《{{wallpaper?.wallpaperCopyright}}》壁纸详情">
+          <nz-icon nzType="info-circle"/>
+        </a>
+        @if (downloading) {
+          <a nz-button nzType="link" class="icon-btn" title="下载中...">
+            <nz-icon nzType="loading"/>
+          </a>
+        } @else {
+          <a nz-button
+             nzType="link"
+             class="icon-btn"
+             (click)="download()"
+             title="下载《{{wallpaper?.wallpaperCopyright}}》高清壁纸"><span class="fi fi-download"></span></a>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="puzzle-control">
+      <div>
+        <a nz-dropdown
+           class="puzzle-difficulty"
+           [nzDropdownMenu]="difficulty"
+           nzPlacement="topLeft"
+           [nzDisabled]="gameStatus === 'playing' || gameStatus === 'paused'">
+          {{ difficultyLevels[activeDifficulty].label }}
+          <nz-icon nzType="down"/>
+        </a>
+        <a nz-button
+           nzType="link"
+           class="icon-btn"
+           title="开始"
+           *ngIf="gameStatus === 'ready' || gameStatus === 'completed'"
+           (click)="startGame()">
+          <span class="fi fi-play"></span>
+        </a>
+        <a nz-button nzType="link" title="暂停" *ngIf="gameStatus === 'playing'" (click)="pauseGame()">
+          <nz-icon nzType="pause"/>
+        </a>
+        <a nz-button nzType="link" class="icon-btn" title="继续" *ngIf="gameStatus === 'paused'" (click)="resumeGame()">
+          <span class="fi fi-play"></span>
+        </a>
+        <a nz-button
+           nzType="link"
+           class="icon-btn"
+           title="停止"
+           [disabled]="gameStatus !== 'playing' && gameStatus !== 'paused'"
+           (click)="stopGame()">
+          <span class="fi fi-stop"></span>
+        </a>
+        <a nz-button nzType="link" [title]="isFullScreen ? '退出全屏' : '全屏'" (click)="fullscreen()">
+          <nz-icon [nzType]="isFullScreen ? 'fullscreen-exit' : 'fullscreen'"/>
+        </a>
+        @if (scaledImage) {
+          <a nz-button
+             nz-popover
+             nzType="link"
+             title="预览"
+             [nzPopoverContent]="popoverTemplate"
+             nzPopoverPlacement="topRight">
+            <nz-icon nzType="picture"/>
+          </a>
+          <ng-template #popoverTemplate>
+            <img [style.width]="'270px'"
+                 [style.cursor]="'zoom-in'"
+                 [src]="scaledImage.src"
+                 (click)="showFullImage()"
+                 alt="预览"/>
+          </ng-template>
+        } @else {
+          <a nz-button disabled nzType="link" title="预览">
+            <nz-icon nzType="picture"/>
+          </a>
+        }
+        <a nz-button
+           nzType="link"
+           [routerLink]="'/wallpaper/' + wallpaper?.wallpaperId"
+           [queryParams]="langParams"
+           target="_blank"
+           title="《{{wallpaper?.wallpaperCopyright}}》壁纸详情">
+          <nz-icon nzType="info-circle"/>
+        </a>
+      </div>
+      <div>
+        <span>{{ gameTimeStr }} / {{ gamePercent }}%</span>
+      </div>
+    </div>
+  }
+</main>
+<nz-dropdown-menu #difficulty="nzDropdownMenu">
+  <ul nz-menu nzSelectable>
+    @for (item of difficultyList; track item.name) {
+      <li nz-menu-item
+          [nzSelected]="activeDifficulty === item.name"
+          (click)="setDifficulty(item.name)">{{ item.label + '(' + item.rows + 'x' + item.cols + ')' }}
+      </li>
+    }
+  </ul>
+</nz-dropdown-menu>
+<app-login-modal *ngIf="loginVisible" (close)="closeLoginModal()"></app-login-modal>

@@ -41,6 +41,7 @@ export interface Wallpaper {
   wallpaperLikes: number;
   wallpaperComments: number;
   wallpaperFavorites: number;
+  wallpaperPlays: number;
   wallpaperModified: number;
   hasTranslation: boolean;
   isCn: boolean;

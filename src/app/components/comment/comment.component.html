@@ -1,6 +1,6 @@
-<div class="comment" [class.p-comment]="!isMobile" [class.m-comment]="isMobile">
+<div id="comments" class="comment" [class.p-comment]="!isMobile" [class.m-comment]="isMobile">
   @if (comments.length > 0) {
-    <div class="comment-list" id="comments">
+    <div class="comment-list">
       <ng-template #commentsTpl let-comments>
         @for (comment of comments; track comment) {
           @if (!isMobile) {

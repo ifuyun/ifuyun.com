@@ -8,6 +8,8 @@ import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { ServerErrorComponent } from './pages/error/server-error/server-error.component';
 import { GameListComponent } from './pages/game-list/game-list.component';
 import { HomeComponent } from './pages/home/home.component';
+import { WallpaperJigsawListComponent } from './pages/wallpaper-jigsaw-list/wallpaper-jigsaw-list.component';
+import { WallpaperJigsawComponent } from './pages/wallpaper-jigsaw/wallpaper-jigsaw.component';
 import { AuthLayoutComponent } from './pages/layout/auth-layout/auth-layout.component';
 import { ContentLayoutComponent } from './pages/layout/content-layout/content-layout.component';
 import { GameComponent } from './pages/game/game.component';
@@ -50,6 +52,14 @@ export const routes: Routes = [
       { path: 'archive/:year/:month', component: WallpaperListComponent },
       { path: 'archive', component: WallpaperArchiveComponent },
       { path: ':wid', component: WallpaperComponent }
+    ]
+  },
+  {
+    path: 'jigsaw',
+    component: ContentLayoutComponent,
+    children: [
+      { path: '', pathMatch: 'full', component: WallpaperJigsawListComponent },
+      { path: ':wid', component: WallpaperJigsawComponent }
     ]
   },
   {

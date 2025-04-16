@@ -3,6 +3,7 @@ export interface PageIndexInfo {
   isPost: boolean;
   isWallpaper: boolean;
   isArticle: boolean;
+  isJigsaw: boolean;
   isPage: boolean;
   isGame: boolean;
   isTool: boolean;

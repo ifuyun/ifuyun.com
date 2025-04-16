@@ -242,15 +242,20 @@ export class CommentComponent extends BaseComponent implements OnInit {
         this.comments = this.commentService.transformComments(res.list || [], this.threadDepth, this.avatarType);
 
         if (scroll) {
-          const offsetTop = this.document.getElementById('comments')?.offsetTop || 0;
-          if (offsetTop > 0) {
-            window.scrollTo({
-              top: offsetTop,
-              behavior: 'smooth'
-            });
-          }
+          this.scrollToComments();
         }
       });
+  }
+
+  private scrollToComments() {
+    const offsetTop = this.document.getElementById('comments')?.offsetTop || 0;
+
+    if (offsetTop > 0) {
+      window.scrollTo({
+        top: offsetTop,
+        behavior: 'smooth'
+      });
+    }
   }
 
   private resetCommentForm = (form: FormGroup) => {

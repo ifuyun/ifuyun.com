@@ -85,14 +85,14 @@
       overflow: hidden;
 
       > a {
-        color: var(--primary-font-color);
+        color: var(--base-font-color);
         font-weight: 400;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
 
         &:hover {
-          color: var(--primary-color);
+          color: @primary-color-hover;
         }
       }
     }
@@ -125,6 +125,14 @@
 
       > :not(:last-child) {
         margin-right: 8px;
+      }
+
+      a {
+        color: var(--meta-color);
+
+        &:hover {
+          color: @primary-color-hover;
+        }
       }
     }
 
