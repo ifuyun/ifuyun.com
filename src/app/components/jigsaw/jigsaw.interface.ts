@@ -1,11 +1,10 @@
-export type JigsawDifficulty = 'master' | 'expert' | 'hard' | 'medium' | 'easy';
 export type GameStatus = 'ready' | 'playing' | 'paused' | 'completed';
 
 export interface JigsawDifficultyItem {
   rows: number;
   cols: number;
-  label: string;
-  name?: JigsawDifficulty;
+  name: string;
+  width: number;
 }
 
 export interface JigsawPiecePath {

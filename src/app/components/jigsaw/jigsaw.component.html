@@ -10,7 +10,7 @@
            [nzDropdownMenu]="difficulty"
            nzPlacement="topLeft"
            [nzDisabled]="gameStatus === 'playing' || gameStatus === 'paused'">
-          {{ difficultyLevels[activeDifficulty].label }}
+          {{ activeDifficulty.name }}片
           <nz-icon nzType="down"/>
         </a>
         <a nz-button
@@ -38,10 +38,18 @@
         <a nz-button nzType="link" title="重新开始" [disabled]="gameStatus === 'ready'" (click)="restartGame()">
           <nz-icon nzType="reload"/>
         </a>
-        <a nz-button nzType="link" title="放大" [disabled]="gameStatus !== 'playing'" (click)="zoom()">
+        <a nz-button
+           nzType="link"
+           title="放大"
+           [disabled]="gameStatus !== 'playing' && gameStatus !== 'completed'"
+           (click)="zoom()">
           <nz-icon nzType="zoom-in"/>
         </a>
-        <a nz-button nzType="link" title="缩小" [disabled]="gameStatus !== 'playing'" (click)="zoom(false)">
+        <a nz-button
+           nzType="link"
+           title="缩小"
+           [disabled]="gameStatus !== 'playing' && gameStatus !== 'completed'"
+           (click)="zoom(false)">
           <nz-icon nzType="zoom-out"/>
         </a>
         <a nz-button nzType="link" [title]="isFullScreen ? '退出全屏' : '全屏'" (click)="fullscreen()">
@@ -102,7 +110,7 @@
            [nzDropdownMenu]="difficulty"
            nzPlacement="topLeft"
            [nzDisabled]="gameStatus === 'playing' || gameStatus === 'paused'">
-          {{ difficultyLevels[activeDifficulty].label }}
+          {{ activeDifficulty.name }}片
           <nz-icon nzType="down"/>
         </a>
         <a nz-button
@@ -170,8 +178,8 @@
   <ul nz-menu nzSelectable>
     @for (item of difficultyList; track item.name) {
       <li nz-menu-item
-          [nzSelected]="activeDifficulty === item.name"
-          (click)="setDifficulty(item.name)">{{ item.label + '(' + item.rows + 'x' + item.cols + ')' }}
+          [nzSelected]="activeDifficulty.name === item.name"
+          (click)="setDifficulty(item)">{{ item.name + '片(' + item.rows + 'x' + item.cols + ')' }}
       </li>
     }
   </ul>

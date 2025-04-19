@@ -20,7 +20,7 @@ import { UserService } from '../../services/user.service';
 import { WallpaperJigsawService } from '../../services/wallpaper-jigsaw.service';
 import { WallpaperService } from '../../services/wallpaper.service';
 import { LoginModalComponent } from '../login-modal/login-modal.component';
-import { GameStatus, JigsawDifficulty, JigsawDifficultyItem, JigsawPiece } from './jigsaw.interface';
+import { GameStatus, JigsawDifficultyItem, JigsawPiece } from './jigsaw.interface';
 import { JigsawService } from './jigsaw.service';
 
 @Component({
@@ -52,15 +52,18 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   // 裁剪、缩放后的原始图片
   scaledImage: HTMLImageElement | null = null;
   // 难度级别
-  difficultyLevels: Record<JigsawDifficulty, JigsawDifficultyItem> = {
-    easy: { rows: 6, cols: 9, label: '简单' },
-    medium: { rows: 8, cols: 12, label: '中等' },
-    hard: { rows: 12, cols: 18, label: '困难' },
-    expert: { rows: 16, cols: 24, label: '专家' },
-    master: { rows: 20, cols: 30, label: '大师' }
+  difficultyLevels: Record<number, JigsawDifficultyItem> = {
+    24: { name: '24', rows: 4, cols: 6, width: 1200 },
+    54: { name: '54', rows: 6, cols: 9, width: 1200 },
+    96: { name: '96', rows: 8, cols: 12, width: 1200 },
+    144: { name: '144', rows: 9, cols: 16, width: 1280 },
+    150: { name: '150', rows: 10, cols: 15, width: 1200 },
+    216: { name: '216', rows: 12, cols: 18, width: 1200 },
+    384: { name: '384', rows: 16, cols: 24, width: 1200 },
+    600: { name: '600', rows: 20, cols: 30, width: 1200 }
   };
   // 当前难度级别
-  activeDifficulty: JigsawDifficulty = 'medium';
+  activeDifficulty: JigsawDifficultyItem = this.difficultyLevels[96];
   // 游戏状态相关
   gameStatus: GameStatus = 'ready';
   gameTime = 0;
@@ -70,10 +73,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   downloading = false;
 
   get difficultyList(): JigsawDifficultyItem[] {
-    return Object.entries(this.difficultyLevels).map(([name, value]) => ({
-      ...value,
-      name: <JigsawDifficulty>name
-    }));
+    return Object.values(this.difficultyLevels);
   }
 
   get langParams() {
@@ -98,13 +98,13 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly wallpaperWidth = this.isDev ? 1920 : 1280;
   private readonly wallpaperHeight = this.isDev ? 1080 : 720;
   private readonly wallpaperRatio = this.wallpaperWidth / this.wallpaperHeight;
-  // 拼图尺寸
-  private readonly puzzleWidth = 900;
-  private readonly puzzleHeight = 600;
 
   private isSignIn = false;
   private isLoaded = false;
   private bodyOffset = 0;
+  // 拼图尺寸
+  private puzzleWidth = this.activeDifficulty.width;
+  private puzzleHeight = (this.activeDifficulty.width * this.activeDifficulty.rows) / this.activeDifficulty.cols;
   // 拼图块数组
   private puzzlePieces: JigsawPiece[] = [];
   // 原始图片
@@ -200,11 +200,15 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  setDifficulty(difficulty?: JigsawDifficulty) {
-    if (!difficulty || this.gameStatus === 'playing' || this.gameStatus === 'paused') {
+  setDifficulty(difficulty: JigsawDifficultyItem) {
+    if (this.gameStatus === 'playing' || this.gameStatus === 'paused') {
       return;
     }
     this.activeDifficulty = difficulty;
+    this.puzzleWidth = this.activeDifficulty.width;
+    this.puzzleHeight = (this.activeDifficulty.width * this.activeDifficulty.rows) / this.activeDifficulty.cols;
+
+    this.initCanvas();
   }
 
   startGame() {
@@ -261,7 +265,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   zoom(isZoomIn = true) {
-    if (this.gameStatus !== 'playing') {
+    if (this.gameStatus !== 'playing' && this.gameStatus !== 'completed') {
       return;
     }
     if ((isZoomIn && this.zoomScale >= this.maxZoom) || (!isZoomIn && this.zoomScale <= this.minZoom)) {
@@ -487,7 +491,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private createPuzzle(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
     // 获取当前难度级别的行列数
-    const { rows, cols } = this.difficultyLevels[this.activeDifficulty];
+    const { rows, cols } = this.activeDifficulty;
 
     // 设置锯齿参数
     this.jigsawService.setSeed(this.seed);
@@ -539,19 +543,17 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     ctx.scale(this.zoomScale, this.zoomScale);
     ctx.translate(-centerX, -centerY);
 
-    // 直接绘制每个拼图块
+    // 绘制每个拼图块
     this.puzzlePieces.forEach((piece) => {
-      // 保存当前绘图状态
-      ctx.save();
+      const path = new Path2D(piece.path);
 
+      ctx.save();
       // 移动到拼图块的显示位置
       ctx.translate(-piece.x, -piece.y);
       ctx.translate(piece.displayX, piece.displayY);
 
-      // 创建并应用裁剪路径
-      const path = new Path2D(piece.path);
+      // 应用裁剪路径
       ctx.clip(path);
-
       // 绘制缩放后的图像
       ctx.drawImage(
         this.scaledImage!,
@@ -564,17 +566,34 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
         this.puzzleWidth,
         this.puzzleHeight
       );
-
       // 恢复绘图状态
       ctx.restore();
 
-      // 绘制边框以便于识别拼图块
       ctx.save();
       ctx.translate(-piece.x, -piece.y);
       ctx.translate(piece.displayX, piece.displayY);
-      ctx.strokeStyle = 'rgba(0, 0, 0, 0.18)';
-      ctx.lineWidth = 1 / this.zoomScale;
+
+      // 添加浮雕效果 - 内阴影
+      ctx.save();
+      ctx.lineWidth = 2 / this.zoomScale;
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
       ctx.stroke(path);
+      ctx.restore();
+
+      // 添加浮雕效果 - 外高光
+      ctx.save();
+      ctx.lineWidth = 1 / this.zoomScale;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+      // 创建偏移的路径来模拟高光
+      ctx.translate(1 / this.zoomScale, 1 / this.zoomScale);
+      ctx.stroke(path);
+      ctx.restore();
+
+      // 标准边框
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.18)';
+      ctx.lineWidth = 0.5 / this.zoomScale;
+      ctx.stroke(path);
+
       ctx.restore();
     });
 
@@ -639,7 +658,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   // 处理鼠标按下事件
   private handleMouseDown = (e: MouseEvent) => {
     // 只有在游戏进行中才允许拖动拼图块或画布
-    if (this.gameStatus !== 'playing') {
+    if (this.gameStatus !== 'playing' && this.gameStatus !== 'completed') {
       return;
     }
 
@@ -699,7 +718,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     e.preventDefault();
 
     // 只有在游戏进行中才允许拖动拼图块或画布
-    if (this.gameStatus !== 'playing') {
+    if (this.gameStatus !== 'playing' && this.gameStatus !== 'completed') {
       return;
     }
 
@@ -763,7 +782,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   // 处理鼠标滚轮事件
   private handleWheel = (e: WheelEvent) => {
     // 只有在游戏进行中才允许缩放
-    if (this.gameStatus !== 'playing') {
+    if (this.gameStatus !== 'playing' && this.gameStatus !== 'completed') {
       return;
     }
 
@@ -894,7 +913,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // 获取当前难度级别的行列数
-    const { rows, cols } = this.difficultyLevels[this.activeDifficulty];
+    const { rows, cols } = this.activeDifficulty;
     const pieceWidth = this.puzzleWidth / cols;
     const pieceHeight = this.puzzleHeight / rows;
 
@@ -1006,7 +1025,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // 检查拼图是否完成
   private checkPuzzleCompletion() {
-    const { rows, cols } = this.difficultyLevels[this.activeDifficulty];
+    const { rows, cols } = this.activeDifficulty;
     const totalPieces = rows * cols;
 
     // 如果只有一个组且包含所有拼图块，则拼图完成
