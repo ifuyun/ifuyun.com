@@ -1,6 +1,6 @@
 export type GameStatus = 'ready' | 'playing' | 'paused' | 'completed';
 
-export interface JigsawDifficultyItem {
+export interface JigsawDifficulty {
   rows: number;
   cols: number;
   name: string;

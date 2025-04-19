@@ -131,11 +131,10 @@ export class IpComponent implements OnInit {
   private updatePageInfo() {
     const titles = ['IP 地址查询', '工具', this.appInfo.appName];
     const description = `${this.appInfo.appName} ${IP_PAGE_DESCRIPTION}`;
-    const keywords: string[] = IP_PAGE_KEYWORDS.concat(this.appInfo.keywords);
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,
-      keywords: uniq(keywords)
+      keywords: uniq(IP_PAGE_KEYWORDS)
         .filter((item) => !!item)
         .join(','),
       author: this.options['site_author']

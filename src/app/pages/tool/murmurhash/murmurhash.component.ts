@@ -126,11 +126,10 @@ export class MurmurhashComponent implements OnInit {
   private updatePageInfo() {
     const titles = ['MurmurHash', '工具', this.appInfo.appName];
     const description = `${this.appInfo.appName} ${MURMURHASH_PAGE_DESCRIPTION}`;
-    const keywords: string[] = MURMURHASH_PAGE_KEYWORDS.concat(this.appInfo.keywords);
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,
-      keywords: uniq(keywords)
+      keywords: uniq(MURMURHASH_PAGE_KEYWORDS)
         .filter((item) => !!item)
         .join(','),
       author: this.options['site_author']

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { shuffle } from 'lodash';
 import { JigsawPiece, JigsawPiecePath } from './jigsaw.interface';
 
 @Injectable({
@@ -314,8 +315,7 @@ export class JigsawService {
     this.generateVerticalEdges();
     this.generateBorderEdges();
 
-    const pieces: any[] = [];
-    let index = 0;
+    const pieces: Omit<JigsawPiece, 'id'>[] = [];
 
     // 生成拼图块
     for (let row = 0; row < rows; row++) {
@@ -334,15 +334,14 @@ export class JigsawService {
           height: this.ph,
           displayX: Math.random() * (canvasWidth - 1.6 * this.pw) + 0.3 * this.pw,
           displayY: Math.random() * (canvasHeight - 1.6 * this.ph) + 0.3 * this.ph,
-          path: this.getPiecePath(this.pieces[row][col]),
-          id: index,
-          groupId: index // 初始时每个拼图块自成一组
+          path: this.getPiecePath(this.pieces[row][col])
         });
-
-        index += 1;
       }
     }
 
-    return pieces;
+    return shuffle(pieces).map((item, index) => ({
+      ...item,
+      id: index
+    }));
   }
 }

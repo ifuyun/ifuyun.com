@@ -115,11 +115,10 @@ export class Md5Component implements OnInit {
   private updatePageInfo() {
     const titles = ['MD5 加密', '工具', this.appInfo.appName];
     const description = `${this.appInfo.appName} ${MD5_PAGE_DESCRIPTION}`;
-    const keywords: string[] = MD5_PAGE_KEYWORDS.concat(this.appInfo.keywords);
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,
-      keywords: uniq(keywords)
+      keywords: uniq(MD5_PAGE_KEYWORDS)
         .filter((item) => !!item)
         .join(','),
       author: this.options['site_author']

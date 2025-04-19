@@ -123,11 +123,10 @@ export class Base64Component implements OnInit {
   private updatePageInfo() {
     const titles = ['Base64 编解码', '工具', this.appInfo.appName];
     const description = `${this.appInfo.appName} ${BASE64_PAGE_DESCRIPTION}`;
-    const keywords: string[] = BASE64_PAGE_KEYWORDS.concat(this.appInfo.keywords);
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,
-      keywords: uniq(keywords)
+      keywords: uniq(BASE64_PAGE_KEYWORDS)
         .filter((item) => !!item)
         .join(','),
       author: this.options['site_author']

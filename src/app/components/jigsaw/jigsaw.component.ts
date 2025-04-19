@@ -1,7 +1,6 @@
 import { NgIf } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { shuffle } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -20,7 +19,7 @@ import { UserService } from '../../services/user.service';
 import { WallpaperJigsawService } from '../../services/wallpaper-jigsaw.service';
 import { WallpaperService } from '../../services/wallpaper.service';
 import { LoginModalComponent } from '../login-modal/login-modal.component';
-import { GameStatus, JigsawDifficultyItem, JigsawPiece } from './jigsaw.interface';
+import { GameStatus, JigsawDifficulty, JigsawPiece } from './jigsaw.interface';
 import { JigsawService } from './jigsaw.service';
 
 @Component({
@@ -52,7 +51,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   // 裁剪、缩放后的原始图片
   scaledImage: HTMLImageElement | null = null;
   // 难度级别
-  difficultyLevels: Record<number, JigsawDifficultyItem> = {
+  difficultyLevels: Record<number, JigsawDifficulty> = {
     24: { name: '24', rows: 4, cols: 6, width: 1200 },
     54: { name: '54', rows: 6, cols: 9, width: 1200 },
     96: { name: '96', rows: 8, cols: 12, width: 1200 },
@@ -63,7 +62,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     600: { name: '600', rows: 20, cols: 30, width: 1200 }
   };
   // 当前难度级别
-  activeDifficulty: JigsawDifficultyItem = this.difficultyLevels[96];
+  activeDifficulty: JigsawDifficulty = this.difficultyLevels[96];
   // 游戏状态相关
   gameStatus: GameStatus = 'ready';
   gameTime = 0;
@@ -72,7 +71,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   loginVisible = false;
   downloading = false;
 
-  get difficultyList(): JigsawDifficultyItem[] {
+  get difficultyList(): JigsawDifficulty[] {
     return Object.values(this.difficultyLevels);
   }
 
@@ -200,7 +199,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  setDifficulty(difficulty: JigsawDifficultyItem) {
+  setDifficulty(difficulty: JigsawDifficulty) {
     if (this.gameStatus === 'playing' || this.gameStatus === 'paused') {
       return;
     }
@@ -502,15 +501,13 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     this.zoomScale = 1;
 
     // 生成拼图块
-    this.puzzlePieces = shuffle(
-      this.jigsawService.generatePuzzlePieces(
-        this.canvasWidth,
-        this.canvasHeight,
-        this.puzzleWidth,
-        this.puzzleHeight,
-        rows,
-        cols
-      )
+    this.puzzlePieces = this.jigsawService.generatePuzzlePieces(
+      this.canvasWidth,
+      this.canvasHeight,
+      this.puzzleWidth,
+      this.puzzleHeight,
+      rows,
+      cols
     );
 
     // 重置连接组
