@@ -1,6 +1,19 @@
 import { Injectable } from '@angular/core';
 import { shuffle } from 'lodash';
-import { JigsawPiece, JigsawPiecePath } from './jigsaw.interface';
+import { map, Observable } from 'rxjs';
+import { ApiUrl } from '../../config/api-url';
+import { COOKIE_KEY_UV_ID } from '../../config/common.constant';
+import { HttpResponseEntity } from '../../interfaces/http-response';
+import { ApiService } from '../../services/api.service';
+import { CommonService } from '../../services/common.service';
+import { SsrCookieService } from '../../services/ssr-cookie.service';
+import {
+  JigsawCompleteEntity,
+  JigsawPiece,
+  JigsawPiecePath,
+  JigsawProgressEntity,
+  JigsawStartEntity
+} from './jigsaw.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +40,11 @@ export class JigsawService {
   private ph: number = 0;
   private pieces: JigsawPiecePath[][] = [];
 
-  constructor() {}
+  constructor(
+    private readonly apiService: ApiService,
+    private readonly commonService: CommonService,
+    private readonly cookieService: SsrCookieService
+  ) {}
 
   setSeed(newSeed: number): void {
     this.seed = newSeed;
@@ -343,5 +360,56 @@ export class JigsawService {
       ...item,
       id: index
     }));
+  }
+
+  async startJigsaw(payload: JigsawStartEntity): Promise<Observable<{ logId: string }>> {
+    const faId = this.cookieService.get(COOKIE_KEY_UV_ID);
+    const param = this.commonService.serializeParams(payload);
+    const sign = await this.commonService.generateHmacSignature(param, faId);
+
+    return this.apiService
+      .httpPost(
+        ApiUrl.JIGSAW_START,
+        {
+          ...payload,
+          sign
+        },
+        false
+      )
+      .pipe(map((res) => res.data || {}));
+  }
+
+  async completeJigsaw(payload: JigsawCompleteEntity): Promise<Observable<HttpResponseEntity>> {
+    const faId = this.cookieService.get(COOKIE_KEY_UV_ID);
+    const param = this.commonService.serializeParams(payload);
+    const sign = await this.commonService.generateHmacSignature(param, faId);
+
+    return this.apiService
+      .httpPost(
+        ApiUrl.JIGSAW_COMPLETE,
+        {
+          ...payload,
+          sign
+        },
+        false
+      )
+      .pipe(map((res) => res || {}));
+  }
+
+  async saveProgress(payload: JigsawProgressEntity): Promise<Observable<HttpResponseEntity>> {
+    const faId = this.cookieService.get(COOKIE_KEY_UV_ID);
+    const param = this.commonService.serializeParams(payload);
+    const sign = await this.commonService.generateHmacSignature(param, faId);
+
+    return this.apiService
+      .httpPost(
+        ApiUrl.JIGSAW_PROGRESS,
+        {
+          ...payload,
+          sign
+        },
+        false
+      )
+      .pipe(map((res) => res || {}));
   }
 }

@@ -30,7 +30,7 @@ export function generateUid(ua: string) {
     randomStr += ((Math.random() * 36) | 0).toString(36);
   }
 
-  return `WA1.${murmurhash(ua, 20160124)}.${(Date.now() / 1000) | 0}.${randomStr}`;
+  return `FA1.${murmurhash(ua, 20160124)}.${(Date.now() / 1000) | 0}.${randomStr}`;
 }
 
 /**

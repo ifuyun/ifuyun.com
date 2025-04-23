@@ -140,4 +140,27 @@ export class CommonService {
     }
     throw new CustomError(Message.ERROR_404, HttpStatusCode.NotFound);
   }
+
+  serializeParams(params: Record<string, any>): string {
+    return Object.keys(params)
+      .sort()
+      .map((key) => `${key}=${encodeURIComponent(params[key])}`)
+      .join('&');
+  }
+
+  async generateHmacSignature(message: string, secret: string): Promise<string> {
+    const enc = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      'raw',
+      enc.encode(secret),
+      { name: 'HMAC', hash: { name: 'SHA-256' } },
+      false,
+      ['sign']
+    );
+    const signature = await crypto.subtle.sign('HMAC', key, enc.encode(message));
+
+    return Array.from(new Uint8Array(signature))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
+  }
 }

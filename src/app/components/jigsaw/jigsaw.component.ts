@@ -101,6 +101,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   private isSignIn = false;
   private isLoaded = false;
   private bodyOffset = 0;
+  private logId = '';
   // 拼图尺寸
   private puzzleWidth = this.activeDifficulty.width;
   private puzzleHeight = (this.activeDifficulty.width * this.activeDifficulty.rows) / this.activeDifficulty.cols;
@@ -220,6 +221,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     // 重新生成拼图
     this.initPuzzle();
     this.startTimer();
+    this.saveStartLog();
   }
 
   pauseGame() {
@@ -1029,6 +1031,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.connectedGroups.length === 1 && this.connectedGroups[0].length === totalPieces) {
       // 停止计时器
       this.stopTimer();
+      this.saveCompleteLog();
       // 更新游戏状态
       this.gameStatus = 'completed';
       // 显示成功消息
@@ -1112,5 +1115,31 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.timerInterval = null;
     }
+  }
+
+  private saveStartLog() {
+    this.jigsawService
+      .startJigsaw({
+        wallpaperId: this.wallpaper?.wallpaperId,
+        pieces: this.activeDifficulty.rows * this.activeDifficulty.cols,
+        timestamp: Date.now()
+      })
+      .then((result) => {
+        result.pipe(takeUntil(this.destroy$)).subscribe((res) => {
+          this.logId = res.logId;
+        });
+      });
+  }
+
+  private saveCompleteLog() {
+    this.jigsawService
+      .completeJigsaw({
+        logId: this.logId,
+        gameTime: this.gameTime,
+        timestamp: Date.now()
+      })
+      .then((result) => {
+        result.pipe(takeUntil(this.destroy$)).subscribe(() => {});
+      });
   }
 }

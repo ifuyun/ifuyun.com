@@ -28,3 +28,23 @@ export interface JigsawPiece {
   displayY: number;
   path: string;
 }
+
+export interface JigsawLogBaseEntity {
+  wallpaperId?: string;
+  jigsawId?: string;
+  timestamp: number;
+}
+
+export interface JigsawStartEntity extends JigsawLogBaseEntity {
+  pieces: number;
+}
+
+export interface JigsawCompleteEntity extends JigsawLogBaseEntity {
+  logId: string;
+  gameTime: number;
+}
+
+export interface JigsawProgressEntity extends JigsawLogBaseEntity {
+  logId: string;
+  progress: number;
+}
