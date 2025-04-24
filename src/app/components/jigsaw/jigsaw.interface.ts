@@ -1,9 +1,12 @@
+import { DBSchema } from 'idb';
+
 export type GameStatus = 'ready' | 'playing' | 'paused' | 'completed';
 
 export interface JigsawDifficulty {
+  name: string;
   rows: number;
   cols: number;
-  name: string;
+  pieces: number;
   width: number;
 }
 
@@ -47,4 +50,50 @@ export interface JigsawCompleteEntity extends JigsawLogBaseEntity {
 export interface JigsawProgressEntity extends JigsawLogBaseEntity {
   logId: string;
   progress: number;
+}
+
+export interface JigsawCachePiece {
+  i: number;
+  r: number;
+  c: number;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  dx: number;
+  dy: number;
+  p: string;
+}
+
+export interface JigsawCacheData {
+  // log ID
+  i: string;
+  // timestamp
+  t: number;
+  // piece count
+  c: number;
+  // scale
+  z: number;
+  // progress/steps
+  s: number;
+  // game time/duration
+  d: number;
+  // canvas width
+  w: number;
+  // canvas height
+  h: number;
+  // pieces
+  p: JigsawCachePiece[];
+  // groups
+  g: JigsawCachePiece[][];
+}
+
+export interface JigsawCacheDB extends DBSchema {
+  progress: {
+    key: string;
+    value: {
+      data: string;
+      sign: string;
+    };
+  };
 }

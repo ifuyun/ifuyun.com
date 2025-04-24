@@ -104,3 +104,13 @@ export function filterHtmlTag(str: string, replaceLineBreak = true): string {
   }
   return result.replace(/\n/gi, '');
 }
+
+export function transformDuration(duration?: number): string {
+  if (!duration) {
+    return '00:00';
+  }
+  const minutes = Math.floor(duration / 60000);
+  const seconds = Math.floor(duration / 1000) % 60;
+
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}

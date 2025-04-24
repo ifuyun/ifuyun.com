@@ -57,7 +57,7 @@
         </a>
       </div>
       <div>
-        <span>{{ gameTimeStr }} / {{ gamePercent }}%</span>
+        <span>{{ gameTime | duration }} / {{ gamePercent }}%</span>
       </div>
       <div>
         @if (scaledImage) {
@@ -169,7 +169,7 @@
         </a>
       </div>
       <div>
-        <span>{{ gameTimeStr }} / {{ gamePercent }}%</span>
+        <span>{{ gameTime | duration }} / {{ gamePercent }}%</span>
       </div>
     </div>
   }
@@ -184,4 +184,17 @@
     }
   </ul>
 </nz-dropdown-menu>
-<app-login-modal *ngIf="loginVisible" (close)="closeLoginModal()"></app-login-modal>
+@if (isBrowser) {
+  <app-login-modal *ngIf="loginVisible" (close)="closeLoginModal()"></app-login-modal>
+  <ng-template #confirmModalContent>
+    <div class="confirm-progress">
+      @if (cachedJigsaw) {
+        <p><span>拼图：</span><span>{{ wallpaper?.wallpaperCopyright }}</span></p>
+        <p><span>时间：</span><span>{{ cachedJigsaw.t | date:'yyyy-MM-dd HH:mm:ss' }}</span></p>
+        <p><span>难度：</span><span>{{ cachedJigsaw.c }} 片</span></p>
+        <p><span>进度：</span><span>{{ (cachedJigsaw.s / (cachedJigsaw.c - 1) * 100).toFixed(1) }}%</span></p>
+        <p><span>用时：</span><span>{{ cachedJigsaw.d | duration }}</span></p>
+      }
+    </div>
+  </ng-template>
+}

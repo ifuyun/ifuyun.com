@@ -1,25 +1,29 @@
-import { NgIf } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DatePipe, NgIf } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageService } from 'ng-zorro-antd/image';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { skipWhile, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { WallpaperLang } from '../../enums/wallpaper';
 import { Wallpaper } from '../../interfaces/wallpaper';
+import { DurationPipe } from '../../pipes/duration.pipe';
 import { DestroyService } from '../../services/destroy.service';
 import { PlatformService } from '../../services/platform.service';
 import { UserAgentService } from '../../services/user-agent.service';
 import { UserService } from '../../services/user.service';
 import { WallpaperJigsawService } from '../../services/wallpaper-jigsaw.service';
 import { WallpaperService } from '../../services/wallpaper.service';
+import { transformDuration } from '../../utils/helper';
 import { LoginModalComponent } from '../login-modal/login-modal.component';
-import { GameStatus, JigsawDifficulty, JigsawPiece } from './jigsaw.interface';
+import { JigsawCacheService } from './jigsaw-cache.service';
+import { GameStatus, JigsawCacheData, JigsawDifficulty, JigsawPiece } from './jigsaw.interface';
 import { JigsawService } from './jigsaw.service';
 
 @Component({
@@ -27,6 +31,8 @@ import { JigsawService } from './jigsaw.service';
   imports: [
     NgIf,
     RouterLink,
+    DatePipe,
+    DurationPipe,
     NzSelectModule,
     NzButtonModule,
     NzIconModule,
@@ -34,7 +40,7 @@ import { JigsawService } from './jigsaw.service';
     NzPopoverModule,
     LoginModalComponent
   ],
-  providers: [DestroyService, NzImageService],
+  providers: [DestroyService, NzImageService, NzModalService],
   templateUrl: './jigsaw.component.html',
   styleUrl: './jigsaw.component.less'
 })
@@ -45,31 +51,34 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('puzzle') puzzleRef!: ElementRef<HTMLElement>;
   @ViewChild('puzzleCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('confirmModalContent') confirmModalContent!: TemplateRef<any>;
 
   isMobile = false;
+  isBrowser = false;
   wallpaper?: Wallpaper;
   // 裁剪、缩放后的原始图片
   scaledImage: HTMLImageElement | null = null;
   // 难度级别
   difficultyLevels: Record<number, JigsawDifficulty> = {
-    24: { name: '24', rows: 4, cols: 6, width: 1200 },
-    54: { name: '54', rows: 6, cols: 9, width: 1200 },
-    96: { name: '96', rows: 8, cols: 12, width: 1200 },
-    144: { name: '144', rows: 9, cols: 16, width: 1280 },
-    150: { name: '150', rows: 10, cols: 15, width: 1200 },
-    216: { name: '216', rows: 12, cols: 18, width: 1200 },
-    384: { name: '384', rows: 16, cols: 24, width: 1200 },
-    600: { name: '600', rows: 20, cols: 30, width: 1200 }
+    24: { name: '24', rows: 4, cols: 6, pieces: 24, width: 1200 },
+    54: { name: '54', rows: 6, cols: 9, pieces: 54, width: 1200 },
+    96: { name: '96', rows: 8, cols: 12, pieces: 96, width: 1200 },
+    144: { name: '144', rows: 9, cols: 16, pieces: 144, width: 1280 },
+    150: { name: '150', rows: 10, cols: 15, pieces: 150, width: 1200 },
+    216: { name: '216', rows: 12, cols: 18, pieces: 216, width: 1200 },
+    384: { name: '384', rows: 16, cols: 24, pieces: 384, width: 1200 },
+    600: { name: '600', rows: 20, cols: 30, pieces: 600, width: 1200 }
   };
   // 当前难度级别
   activeDifficulty: JigsawDifficulty = this.difficultyLevels[96];
   // 游戏状态相关
   gameStatus: GameStatus = 'ready';
   gameTime = 0;
-  gameSteps = 0;
   isFullScreen = false;
   loginVisible = false;
   downloading = false;
+
+  cachedJigsaw: JigsawCacheData | null = null;
 
   get difficultyList(): JigsawDifficulty[] {
     return Object.values(this.difficultyLevels);
@@ -79,15 +88,12 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.wallpaper?.isCn ? {} : { lang: WallpaperLang.EN };
   }
 
-  get gameTimeStr(): string {
-    const minutes = Math.floor(this.gameTime / 60000);
-    const seconds = Math.floor(this.gameTime / 1000) % 60;
-
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  get gamePercent() {
+    return ((this.gameSteps / (this.jigsawPieces.length - 1)) * 100).toFixed(this.isMobile ? 0 : 1);
   }
 
-  get gamePercent() {
-    return ((this.gameSteps / (this.puzzlePieces.length - 1)) * 100).toFixed(this.isMobile ? 0 : 1);
+  get cacheKey() {
+    return 'jigsaw-' + (this.wallpaper?.wallpaperId || '');
   }
 
   private readonly isDev = !environment.production;
@@ -103,10 +109,10 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   private bodyOffset = 0;
   private logId = '';
   // 拼图尺寸
-  private puzzleWidth = this.activeDifficulty.width;
-  private puzzleHeight = (this.activeDifficulty.width * this.activeDifficulty.rows) / this.activeDifficulty.cols;
+  private jigsawWidth = this.activeDifficulty.width;
+  private jigsawHeight = (this.activeDifficulty.width * this.activeDifficulty.rows) / this.activeDifficulty.cols;
   // 拼图块数组
-  private puzzlePieces: JigsawPiece[] = [];
+  private jigsawPieces: JigsawPiece[] = [];
   // 原始图片
   private originalImage: HTMLImageElement | null = null;
   private seed = Math.floor(Math.random() * 10000); // 随机种子
@@ -133,6 +139,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   private zoomStep = 0.1; // 每次缩放步长
   private minZoom = 0.5; // 最小缩放比例
   private maxZoom = 2; // 最大缩放比例
+  private gameSteps = 0;
 
   constructor(
     private readonly destroy$: DestroyService,
@@ -140,12 +147,15 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly userAgentService: UserAgentService,
     private readonly message: NzMessageService,
     private readonly imageService: NzImageService,
+    private readonly modal: NzModalService,
     private readonly jigsawService: JigsawService,
     private readonly userService: UserService,
     private readonly wallpaperService: WallpaperService,
-    private readonly wallpaperJigsawService: WallpaperJigsawService
+    private readonly wallpaperJigsawService: WallpaperJigsawService,
+    private readonly jigsawCacheService: JigsawCacheService
   ) {
     this.isMobile = this.userAgentService.isMobile;
+    this.isBrowser = this.platform.isBrowser;
   }
 
   ngOnInit() {
@@ -166,9 +176,10 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
         if (wallpaper) {
           this.wallpaper = wallpaper;
 
-          if (this.isLoaded && this.platform.isBrowser) {
+          if (this.isLoaded && this.isBrowser) {
             this.initCanvas();
             this.stopGame(true, false);
+            this.loadProgress();
           }
         }
       });
@@ -177,9 +188,10 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.isLoaded = true;
 
-    if (this.platform.isBrowser) {
+    if (this.isBrowser) {
       this.initCanvas();
       this.initCanvasEvents();
+      this.loadProgress();
 
       // 添加页面可见性变化监听
       document.addEventListener('visibilitychange', this.handleVisibilityChange);
@@ -189,7 +201,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.platform.isBrowser) {
+    if (this.isBrowser) {
       // 清除计时器
       this.stopTimer();
 
@@ -205,8 +217,8 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     this.activeDifficulty = difficulty;
-    this.puzzleWidth = this.activeDifficulty.width;
-    this.puzzleHeight = (this.activeDifficulty.width * this.activeDifficulty.rows) / this.activeDifficulty.cols;
+    this.jigsawWidth = this.activeDifficulty.width;
+    this.jigsawHeight = (this.activeDifficulty.width * this.activeDifficulty.rows) / this.activeDifficulty.cols;
 
     this.initCanvas();
   }
@@ -224,6 +236,42 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     this.saveStartLog();
   }
 
+  continueGame() {
+    if (this.cachedJigsaw) {
+      const lastWidth = this.cachedJigsaw.w || this.canvasWidth;
+      const lastHeight = this.cachedJigsaw.h || this.canvasHeight;
+      const deltaX = (this.canvasWidth - lastWidth) / 2;
+      const deltaY = (this.canvasHeight - lastHeight) / 2;
+
+      this.gameStatus = 'playing';
+      this.logId = this.cachedJigsaw.i;
+      this.activeDifficulty = this.difficultyLevels[this.cachedJigsaw.c];
+      this.zoomScale = this.cachedJigsaw.z;
+      this.gameTime = this.cachedJigsaw.d;
+      this.gameSteps = this.cachedJigsaw.s;
+      this.jigsawPieces = this.cachedJigsaw.p.map((item) => ({
+        id: item.i,
+        row: item.r,
+        col: item.c,
+        x: item.x,
+        y: item.y,
+        width: item.w,
+        height: item.h,
+        displayX: item.dx + deltaX,
+        displayY: item.dy + deltaY,
+        path: item.p
+      }));
+      this.connectedGroups = this.cachedJigsaw.g.map((group) => {
+        return group.map((item) => {
+          return this.jigsawPieces.find((p) => p.id === item.i)!;
+        });
+      });
+
+      this.startTimer();
+      this.renderPuzzle();
+    }
+  }
+
   pauseGame() {
     if (this.gameStatus === 'playing') {
       this.gameStatus = 'paused';
@@ -239,13 +287,13 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       this.gameStatus = 'playing';
 
       this.startTimer();
-      // 恢复显示拼图
       this.renderPuzzle();
     }
   }
 
   restartGame() {
     this.stopTimer();
+    this.clearProgress();
     this.startGame();
   }
 
@@ -258,6 +306,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       this.zoomScale = 1;
 
       this.stopTimer();
+      this.clearProgress();
       if (drawImage) {
         // 显示原始图片
         this.drawOriginalImage();
@@ -305,6 +354,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       $puzzle.style.width = width + 'px';
       $puzzle.style.height = height + 'px';
       $puzzle.style.borderWidth = '0';
+      $puzzle.style.zIndex = '99';
     } else {
       this.isFullScreen = false;
       this.canvasWidth = this.initCanvasWidth;
@@ -324,6 +374,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       $puzzle.style.width = '';
       $puzzle.style.height = '';
       $puzzle.style.borderWidth = '';
+      $puzzle.style.zIndex = '';
     }
     $canvas.width = this.canvasWidth;
     $canvas.height = this.canvasHeight;
@@ -331,13 +382,13 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     const deltaX = (this.canvasWidth - lastWidth) / 2;
     const deltaY = (this.canvasHeight - lastHeight) / 2;
 
-    this.puzzlePieces.forEach((piece) => {
+    this.jigsawPieces.forEach((piece) => {
       piece.displayX += deltaX;
       piece.displayY += deltaY;
     });
 
     if (this.gameStatus === 'ready' || this.gameStatus === 'paused') {
-      requestAnimationFrame(() => requestAnimationFrame(() => this.drawOriginalImage()));
+      requestAnimationFrame(() => requestAnimationFrame(() => this.drawOriginalImage(this.gameStatus === 'ready')));
     } else {
       requestAnimationFrame(() => requestAnimationFrame(() => this.renderPuzzle()));
     }
@@ -428,14 +479,14 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       const tempCtx = tempCanvas.getContext('2d');
 
       // 设置临时画布的尺寸为拼图尺寸
-      tempCanvas.width = this.puzzleWidth;
-      tempCanvas.height = this.puzzleHeight;
+      tempCanvas.width = this.jigsawWidth;
+      tempCanvas.height = this.jigsawHeight;
 
       const { sourceWidth, sourceHeight, sourceX, sourceY } = this.getClipSize(tempCanvas);
 
       if (tempCtx) {
         // 在临时画布上绘制缩放后的图片
-        tempCtx.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, this.puzzleWidth, this.puzzleHeight);
+        tempCtx.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, this.jigsawWidth, this.jigsawHeight);
 
         // 创建新图片对象并保存缩放后的图片
         const scaledImg = new Image();
@@ -503,11 +554,11 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     this.zoomScale = 1;
 
     // 生成拼图块
-    this.puzzlePieces = this.jigsawService.generatePuzzlePieces(
+    this.jigsawPieces = this.jigsawService.generatePuzzlePieces(
       this.canvasWidth,
       this.canvasHeight,
-      this.puzzleWidth,
-      this.puzzleHeight,
+      this.jigsawWidth,
+      this.jigsawHeight,
       rows,
       cols
     );
@@ -543,7 +594,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     ctx.translate(-centerX, -centerY);
 
     // 绘制每个拼图块
-    this.puzzlePieces.forEach((piece) => {
+    this.jigsawPieces.forEach((piece) => {
       const path = new Path2D(piece.path);
 
       ctx.save();
@@ -558,12 +609,12 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
         this.scaledImage!,
         0,
         0,
-        this.puzzleWidth,
-        this.puzzleHeight,
+        this.jigsawWidth,
+        this.jigsawHeight,
         0,
         0,
-        this.puzzleWidth,
-        this.puzzleHeight
+        this.jigsawWidth,
+        this.jigsawHeight
       );
       // 恢复绘图状态
       ctx.restore();
@@ -605,8 +656,8 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       this.scaledImage!,
       0,
       0,
-      this.puzzleWidth,
-      this.puzzleHeight,
+      this.jigsawWidth,
+      this.jigsawHeight,
       0,
       0,
       previewCanvas.width,
@@ -819,11 +870,11 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // 计算拖拽偏移量
-    const deltaX = x - this.lastDragX;
-    const deltaY = y - this.lastDragY;
+    const deltaX = (x - this.lastDragX) / this.zoomScale;
+    const deltaY = (y - this.lastDragY) / this.zoomScale;
 
     // 更新所有拼图块的位置
-    this.puzzlePieces.forEach((piece) => {
+    this.jigsawPieces.forEach((piece) => {
       piece.displayX += deltaX;
       piece.displayY += deltaY;
     });
@@ -838,10 +889,6 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // 拖动拼图块
   private dragPiece(x: number, y: number) {
-    if (!this.isDragging || !this.selectedPiece) {
-      return;
-    }
-
     const canvas = this.canvasRef.nativeElement;
     const ctx = canvas.getContext('2d');
     if (!ctx) {
@@ -854,41 +901,26 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     // 将鼠标坐标转换为缩放前的坐标系
     const scaledX = (x - centerX) / this.zoomScale + centerX;
     const scaledY = (y - centerY) / this.zoomScale + centerY;
-
     // 计算新位置，考虑缩放因素
-    let newX = scaledX - this.dragOffsetX / this.zoomScale;
-    let newY = scaledY - this.dragOffsetY / this.zoomScale;
-
-    // 边界检查，考虑缩放因素
-    // 在缩放后，边界检查需要考虑可视区域的变化
-    const visibleWidth = this.canvasWidth / this.zoomScale;
-    const visibleHeight = this.canvasHeight / this.zoomScale;
-    const minX = centerX - visibleWidth / 2;
-    const minY = centerY - visibleHeight / 2;
-    const maxX = centerX + visibleWidth / 2 - this.selectedPiece.width;
-    const maxY = centerY + visibleHeight / 2 - this.selectedPiece.height;
-
-    // 调整边界检查，确保拼图块在可视区域内
-    newX = Math.max(minX, Math.min(maxX, newX));
-    newY = Math.max(minY, Math.min(maxY, newY));
-
+    const newX = scaledX - this.dragOffsetX / this.zoomScale;
+    const newY = scaledY - this.dragOffsetY / this.zoomScale;
     // 计算移动的偏移量
-    const deltaX = newX - this.selectedPiece.displayX;
-    const deltaY = newY - this.selectedPiece.displayY;
+    const deltaX = (newX - this.selectedPiece!.displayX) * this.zoomScale;
+    const deltaY = (newY - this.selectedPiece!.displayY) * this.zoomScale;
 
     // 找出当前选中拼图块所在的组
-    const selectedGroup = this.findConnectedGroup(this.selectedPiece);
+    const group = this.findConnectedGroup(this.selectedPiece!);
 
     // 移动组内所有拼图块
-    if (selectedGroup) {
-      selectedGroup.forEach((piece) => {
+    if (group) {
+      group.forEach((piece) => {
         piece.displayX += deltaX;
         piece.displayY += deltaY;
       });
     } else {
       // 如果没有找到组，只移动当前拼图块
-      this.selectedPiece.displayX = newX;
-      this.selectedPiece.displayY = newY;
+      this.selectedPiece!.displayX = newX;
+      this.selectedPiece!.displayY = newY;
     }
 
     // 重绘拼图
@@ -896,25 +928,20 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // 查找拼图块所在的连接组
-  private findConnectedGroup(piece: any): any[] | null {
-    for (const group of this.connectedGroups) {
-      if (group.includes(piece)) {
-        return group;
-      }
-    }
-    return null;
+  private findConnectedGroup(piece: JigsawPiece): JigsawPiece[] | undefined {
+    return this.connectedGroups.find((g) => g.some((i) => i.id === piece.id));
   }
 
   // 检查是否可以与其他拼图块拼接
-  private checkForSnapping(movingPieces: any[]) {
+  private checkForSnapping(movingPieces: JigsawPiece[]) {
     if (!movingPieces.length) {
       return;
     }
 
     // 获取当前难度级别的行列数
     const { rows, cols } = this.activeDifficulty;
-    const pieceWidth = this.puzzleWidth / cols;
-    const pieceHeight = this.puzzleHeight / rows;
+    const pieceWidth = this.jigsawWidth / cols;
+    const pieceHeight = this.jigsawHeight / rows;
 
     // 根据缩放比例调整吸附阈值
     const adjustedSnapThreshold = this.snapThreshold / this.zoomScale;
@@ -923,7 +950,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     const movingIds = movingPieces.map((p) => p.id);
 
     for (const movingPiece of movingPieces) {
-      for (const piece of this.puzzlePieces) {
+      for (const piece of this.jigsawPieces) {
         // 跳过同一组的拼图块
         if (movingIds.includes(piece.id)) {
           continue;
@@ -991,7 +1018,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // 合并两个拼图组
-  private mergeGroups(movingPieces: any[], targetPiece: any) {
+  private mergeGroups(movingPieces: JigsawPiece[], targetPiece: JigsawPiece) {
     // 查找目标拼图块所在的组
     const targetGroup = this.findConnectedGroup(targetPiece);
     const movingGroup = this.findConnectedGroup(movingPieces[0]);
@@ -1016,7 +1043,11 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       // 如果两个组都不存在，创建新的组
       this.connectedGroups.push([...movingPieces, targetPiece]);
     }
+
     this.gameSteps += 1;
+    if (this.gameSteps < this.activeDifficulty.pieces - 1) {
+      this.saveProgress();
+    }
 
     // 检查是否完成拼图
     this.checkPuzzleCompletion();
@@ -1024,18 +1055,16 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // 检查拼图是否完成
   private checkPuzzleCompletion() {
-    const { rows, cols } = this.activeDifficulty;
-    const totalPieces = rows * cols;
-
     // 如果只有一个组且包含所有拼图块，则拼图完成
-    if (this.connectedGroups.length === 1 && this.connectedGroups[0].length === totalPieces) {
+    if (this.connectedGroups.length === 1 && this.connectedGroups[0].length === this.activeDifficulty.pieces) {
       // 停止计时器
       this.stopTimer();
       this.saveCompleteLog();
+      this.clearProgress();
       // 更新游戏状态
       this.gameStatus = 'completed';
       // 显示成功消息
-      this.message.success(`恭喜！拼图完成！用时：${this.gameTimeStr}`);
+      this.message.success(`恭喜！拼图完成！用时：${transformDuration(this.gameTime)}`);
     }
   }
 
@@ -1054,8 +1083,8 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     const scaledY = (y - centerY) / this.zoomScale + centerY;
 
     // 从后向前检查（后绘制的在上层）
-    for (let i = this.puzzlePieces.length - 1; i >= 0; i--) {
-      const piece = this.puzzlePieces[i];
+    for (let i = this.jigsawPieces.length - 1; i >= 0; i--) {
+      const piece = this.jigsawPieces[i];
       // 创建路径并检查点是否在路径内
       const path = new Path2D(piece.path);
 
@@ -1068,13 +1097,13 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
           // 如果是组的一部分，将整个组移到最上层
           const groupIds = group.map((p) => p.id);
           // 从数组中移除组内所有拼图块
-          this.puzzlePieces = this.puzzlePieces.filter((p) => !groupIds.includes(p.id));
+          this.jigsawPieces = this.jigsawPieces.filter((p) => !groupIds.includes(p.id));
           // 将组内所有拼图块添加到数组末尾
-          this.puzzlePieces.push(...group);
+          this.jigsawPieces.push(...group);
         } else {
           // 如果不是组的一部分，只移动当前拼图块
-          this.puzzlePieces.splice(i, 1);
-          this.puzzlePieces.push(piece);
+          this.jigsawPieces.splice(i, 1);
+          this.jigsawPieces.push(piece);
         }
 
         this.isDragging = true;
@@ -1105,6 +1134,8 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.gameTime += now - this.lastTimestamp;
       this.lastTimestamp = now;
+
+      this.saveProgress();
     }, 1000);
   }
 
@@ -1121,12 +1152,13 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     this.jigsawService
       .startJigsaw({
         wallpaperId: this.wallpaper?.wallpaperId,
-        pieces: this.activeDifficulty.rows * this.activeDifficulty.cols,
+        pieces: this.activeDifficulty.pieces,
         timestamp: Date.now()
       })
       .then((result) => {
         result.pipe(takeUntil(this.destroy$)).subscribe((res) => {
           this.logId = res.logId;
+          this.saveProgress();
         });
       });
   }
@@ -1141,5 +1173,79 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       .then((result) => {
         result.pipe(takeUntil(this.destroy$)).subscribe(() => {});
       });
+  }
+
+  private saveProgress() {
+    this.jigsawCacheService
+      .saveProgress(this.cacheKey, {
+        i: this.logId,
+        t: Date.now(),
+        c: this.activeDifficulty.pieces,
+        z: this.zoomScale,
+        s: this.gameSteps,
+        d: this.gameTime,
+        w: this.canvasWidth,
+        h: this.canvasHeight,
+        p: this.jigsawPieces.map((item) => ({
+          i: item.id,
+          r: item.row,
+          c: item.col,
+          x: item.x,
+          y: item.y,
+          w: item.width,
+          h: item.height,
+          dx: item.displayX,
+          dy: item.displayY,
+          p: item.path
+        })),
+        g: this.connectedGroups.map((group) => {
+          return group.map((item) => ({
+            i: item.id,
+            r: item.row,
+            c: item.col,
+            x: item.x,
+            y: item.y,
+            w: item.width,
+            h: item.height,
+            dx: item.displayX,
+            dy: item.displayY,
+            p: item.path
+          }));
+        })
+      })
+      .then(() => {});
+  }
+
+  private loadProgress() {
+    this.jigsawCacheService.loadProgress(this.cacheKey).then((data) => {
+      this.cachedJigsaw = data;
+
+      if (this.cachedJigsaw) {
+        this.modal.confirm({
+          nzWidth: 500,
+          nzTitle: '存在未完成的拼图',
+          nzContent: this.confirmModalContent,
+          nzOkText: '继续',
+          nzCancelText: '开始新游戏',
+          nzCentered: true,
+          nzDraggable: true,
+          nzOnOk: () =>
+            new Promise((resolve) => {
+              resolve(true);
+              this.continueGame();
+            }).catch(() => true),
+          nzOnCancel: () =>
+            new Promise((resolve) => {
+              this.jigsawCacheService.clearProgress(this.cacheKey).then(() => {
+                resolve(true);
+              });
+            }).catch(() => true)
+        });
+      }
+    });
+  }
+
+  private clearProgress() {
+    this.jigsawCacheService.clearProgress(this.cacheKey).then(() => {});
   }
 }
