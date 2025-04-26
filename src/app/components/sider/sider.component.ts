@@ -1,8 +1,10 @@
 import { NgFor, NgIf } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Params, RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { skipWhile, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { WallpaperLang } from '../../enums/wallpaper';
@@ -22,10 +24,11 @@ import { PostService } from '../../services/post.service';
 import { UserAgentService } from '../../services/user-agent.service';
 import { WallpaperService } from '../../services/wallpaper.service';
 import { AdsenseComponent } from '../adsense/adsense.component';
+import { JigsawService } from '../jigsaw/jigsaw.service';
 
 @Component({
   selector: 'app-sider',
-  imports: [RouterLink, NgIf, NgFor, NzIconModule, AdsenseComponent],
+  imports: [RouterLink, NgIf, NgFor, FormsModule, NzIconModule, NzRadioModule, AdsenseComponent],
   providers: [DestroyService],
   templateUrl: './sider.component.html',
   styleUrl: './sider.component.less'
@@ -48,6 +51,8 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   recentGames: GameEntity[] = [];
   bookPosts: PostEntity[] = [];
   activeBook?: BookEntity;
+  hotJigsaws: Wallpaper[] = [];
+  hotJigsawType = 'm';
 
   get bookName() {
     return this.bookService.getBookName(this.activeBook).fullName;
@@ -72,7 +77,8 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly postService: PostService,
     private readonly wallpaperService: WallpaperService,
     private readonly gameService: GameService,
-    private readonly bookService: BookService
+    private readonly bookService: BookService,
+    private readonly jigsawService: JigsawService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -104,7 +110,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
             } else {
               this.hotPosts = [];
             }
-            if (isWallpaper || isJigsaw || isPage || isTool || isSearch) {
+            if (isWallpaper || isPage || isTool || isSearch) {
               this.getHotWallpapers();
             } else {
               this.hotWallpapers = [];
@@ -138,6 +144,11 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
               this.recentGames = [];
               this.randomGames = [];
             }
+            if (isJigsaw) {
+              this.getHotJigsaws();
+            } else {
+              this.hotJigsaws = [];
+            }
           }
         }
       });
@@ -165,6 +176,15 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getWallpaperLangParams(isCn: boolean): Params {
     return isCn ? {} : { lang: WallpaperLang.EN };
+  }
+
+  getHotJigsaws() {
+    this.jigsawService
+      .getHotJigsaws(this.hotJigsawType)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.hotJigsaws = res;
+      });
   }
 
   private getPostsByBookId() {

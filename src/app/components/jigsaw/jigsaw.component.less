@@ -1,3 +1,5 @@
+@import "../../../styles/variables";
+
 .puzzle {
   position: relative;
   display: flex;
@@ -82,6 +84,52 @@
 
       &:last-child {
         margin-right: 8px;
+      }
+    }
+  }
+}
+
+.ranking {
+  h2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: @content-margin 0;
+    font-size: 18px;
+
+    .fi {
+      margin-right: 8px;
+      color: var(--action-color);
+    }
+  }
+
+  .ranking-table {
+    tr {
+      &.active {
+        font-weight: 600;
+      }
+
+      .hot-num {
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        font-size: 14px;
+      }
+
+      &:nth-child(-n+3) .hot-num {
+        color: #fff;
+      }
+
+      &:nth-child(1) .hot-num {
+        background-color: var(--hot-first-color);
+      }
+
+      &:nth-child(2) .hot-num {
+        background-color: var(--hot-second-color);
+      }
+
+      &:nth-child(3) .hot-num {
+        background-color: var(--hot-third-color);
       }
     }
   }

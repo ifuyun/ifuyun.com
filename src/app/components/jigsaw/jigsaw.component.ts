@@ -1,21 +1,25 @@
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageService } from 'ng-zorro-antd/image';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzTableModule } from 'ng-zorro-antd/table';
 import { skipWhile, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { COOKIE_KEY_UV_ID } from '../../config/common.constant';
 import { WallpaperLang } from '../../enums/wallpaper';
 import { Wallpaper } from '../../interfaces/wallpaper';
 import { DurationPipe } from '../../pipes/duration.pipe';
 import { DestroyService } from '../../services/destroy.service';
 import { PlatformService } from '../../services/platform.service';
+import { SsrCookieService } from '../../services/ssr-cookie.service';
 import { UserAgentService } from '../../services/user-agent.service';
 import { UserService } from '../../services/user.service';
 import { WallpaperJigsawService } from '../../services/wallpaper-jigsaw.service';
@@ -23,13 +27,14 @@ import { WallpaperService } from '../../services/wallpaper.service';
 import { transformDuration } from '../../utils/helper';
 import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { JigsawCacheService } from './jigsaw-cache.service';
-import { GameStatus, JigsawCacheData, JigsawDifficulty, JigsawPiece } from './jigsaw.interface';
+import { GameStatus, JigsawCacheData, JigsawDifficulty, JigsawLog, JigsawPiece } from './jigsaw.interface';
 import { JigsawService } from './jigsaw.service';
 
 @Component({
   selector: 'app-jigsaw',
   imports: [
     NgIf,
+    NgFor,
     RouterLink,
     DatePipe,
     DurationPipe,
@@ -38,6 +43,8 @@ import { JigsawService } from './jigsaw.service';
     NzIconModule,
     NzDropDownModule,
     NzPopoverModule,
+    NzTableModule,
+    NzEmptyModule,
     LoginModalComponent
   ],
   providers: [DestroyService, NzImageService, NzModalService],
@@ -55,6 +62,8 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isMobile = false;
   isBrowser = false;
+  userId = '';
+  faId = '';
   wallpaper?: Wallpaper;
   // 裁剪、缩放后的原始图片
   scaledImage: HTMLImageElement | null = null;
@@ -79,6 +88,8 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   downloading = false;
 
   cachedJigsaw: JigsawCacheData | null = null;
+  rankings: JigsawLog[] = [];
+  rankingLoading = false;
 
   get difficultyList(): JigsawDifficulty[] {
     return Object.values(this.difficultyLevels);
@@ -94,6 +105,10 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get cacheKey() {
     return 'jigsaw-' + (this.wallpaper?.wallpaperId || '');
+  }
+
+  get dateFormat() {
+    return this.isMobile ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm';
   }
 
   private readonly isDev = !environment.production;
@@ -145,6 +160,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly destroy$: DestroyService,
     private readonly platform: PlatformService,
     private readonly userAgentService: UserAgentService,
+    private readonly cookieService: SsrCookieService,
     private readonly message: NzMessageService,
     private readonly imageService: NzImageService,
     private readonly modal: NzModalService,
@@ -159,12 +175,14 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    // 初始化代码
+    this.faId = this.cookieService.get(COOKIE_KEY_UV_ID);
+
     this.jigsawService.setSeed(this.seed);
     this.jigsawService.setTabSize(this.tabSize);
     this.jigsawService.setJitter(this.jitter);
 
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+      this.userId = user.userId || '';
       this.isSignIn = !!user.userId;
     });
     this.wallpaperJigsawService.activeWallpaper$
@@ -175,10 +193,14 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((wallpaper) => {
         if (wallpaper) {
           this.wallpaper = wallpaper;
+          this.getRankings();
 
           if (this.isLoaded && this.isBrowser) {
             this.initCanvas();
             this.stopGame(true, false);
+            if (this.isFullScreen) {
+              this.fullscreen();
+            }
             this.loadProgress();
           }
         }
@@ -216,11 +238,15 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.gameStatus === 'playing' || this.gameStatus === 'paused') {
       return;
     }
+    if (difficulty.pieces === this.activeDifficulty.pieces) {
+      return;
+    }
     this.activeDifficulty = difficulty;
     this.jigsawWidth = this.activeDifficulty.width;
     this.jigsawHeight = (this.activeDifficulty.width * this.activeDifficulty.rows) / this.activeDifficulty.cols;
 
     this.initCanvas();
+    this.getRankings();
   }
 
   startGame() {
@@ -238,6 +264,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
 
   continueGame() {
     if (this.cachedJigsaw) {
+      const isChanged = this.cachedJigsaw.c !== this.activeDifficulty.pieces;
       const lastWidth = this.cachedJigsaw.w || this.canvasWidth;
       const lastHeight = this.cachedJigsaw.h || this.canvasHeight;
       const deltaX = (this.canvasWidth - lastWidth) / 2;
@@ -262,13 +289,14 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
         path: item.p
       }));
       this.connectedGroups = this.cachedJigsaw.g.map((group) => {
-        return group.map((item) => {
-          return this.jigsawPieces.find((p) => p.id === item.i)!;
-        });
+        return group.map((g) => this.jigsawPieces.find((p) => p.id === g)!);
       });
 
       this.startTimer();
       this.renderPuzzle();
+      if (isChanged) {
+        this.getRankings();
+      }
     }
   }
 
@@ -306,7 +334,9 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       this.zoomScale = 1;
 
       this.stopTimer();
-      this.clearProgress();
+      if (!force) {
+        this.clearProgress();
+      }
       if (drawImage) {
         // 显示原始图片
         this.drawOriginalImage();
@@ -1171,7 +1201,9 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
         timestamp: Date.now()
       })
       .then((result) => {
-        result.pipe(takeUntil(this.destroy$)).subscribe(() => {});
+        result.pipe(takeUntil(this.destroy$)).subscribe(() => {
+          this.getRankings();
+        });
       });
   }
 
@@ -1198,20 +1230,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
           dy: item.displayY,
           p: item.path
         })),
-        g: this.connectedGroups.map((group) => {
-          return group.map((item) => ({
-            i: item.id,
-            r: item.row,
-            c: item.col,
-            x: item.x,
-            y: item.y,
-            w: item.width,
-            h: item.height,
-            dx: item.displayX,
-            dy: item.displayY,
-            p: item.path
-          }));
-        })
+        g: this.connectedGroups.map((group) => group.map((item) => item.id))
       })
       .then(() => {});
   }
@@ -1236,7 +1255,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
             }).catch(() => true),
           nzOnCancel: () =>
             new Promise((resolve) => {
-              this.jigsawCacheService.clearProgress(this.cacheKey).then(() => {
+              this.clearProgress().then(() => {
                 resolve(true);
               });
             }).catch(() => true)
@@ -1246,6 +1265,20 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private clearProgress() {
-    this.jigsawCacheService.clearProgress(this.cacheKey).then(() => {});
+    return this.jigsawCacheService.clearProgress(this.cacheKey).then(() => {});
+  }
+
+  private getRankings() {
+    this.rankingLoading = true;
+    this.jigsawService
+      .getRankings({
+        id: this.wallpaper?.wallpaperId || '',
+        pieces: this.activeDifficulty.pieces
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.rankingLoading = false;
+        this.rankings = res;
+      });
   }
 }

@@ -4,14 +4,17 @@ import { map, Observable } from 'rxjs';
 import { ApiUrl } from '../../config/api-url';
 import { COOKIE_KEY_UV_ID } from '../../config/common.constant';
 import { HttpResponseEntity } from '../../interfaces/http-response';
+import { Wallpaper } from '../../interfaces/wallpaper';
 import { ApiService } from '../../services/api.service';
 import { CommonService } from '../../services/common.service';
 import { SsrCookieService } from '../../services/ssr-cookie.service';
 import {
   JigsawCompleteEntity,
+  JigsawLog,
   JigsawPiece,
   JigsawPiecePath,
   JigsawProgressEntity,
+  JigsawRankParam,
   JigsawStartEntity
 } from './jigsaw.interface';
 
@@ -411,5 +414,25 @@ export class JigsawService {
         false
       )
       .pipe(map((res) => res || {}));
+  }
+
+  getHotJigsaws(type?: string): Observable<Wallpaper[]> {
+    return this.apiService.httpGet(ApiUrl.JIGSAW_HOT, { type: type || '' }).pipe(
+      map((res) => {
+        return (res?.data || []).map((item: Wallpaper) => {
+          return {
+            ...item,
+            wallpaperTitle: item.wallpaperTitle || item.wallpaperTitleEn,
+            wallpaperCopyright: item.wallpaperCopyright || item.wallpaperCopyrightEn,
+            isCn: !!item.wallpaperCopyright,
+            isEn: !!item.wallpaperCopyrightEn
+          };
+        });
+      })
+    );
+  }
+
+  getRankings(param: JigsawRankParam): Observable<JigsawLog[]> {
+    return this.apiService.httpGet(ApiUrl.JIGSAW_RANKINGS, param).pipe(map((res) => res?.data || []));
   }
 }

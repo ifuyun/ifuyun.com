@@ -56,9 +56,11 @@ export enum ApiUrl {
   WALLPAPER_ARCHIVES = '/wallpapers/archives',
   WALLPAPER_DOWNLOAD_URL = '/wallpapers/download-url',
   // jigsaw
-  JIGSAW_START = '/jigsaw/start',
-  JIGSAW_COMPLETE = '/jigsaw/complete',
-  JIGSAW_PROGRESS = '/jigsaw/progress',
+  JIGSAW_START = '/jigsaws/start',
+  JIGSAW_COMPLETE = '/jigsaws/complete',
+  JIGSAW_PROGRESS = '/jigsaws/progress',
+  JIGSAW_HOT = '/jigsaws/hot',
+  JIGSAW_RANKINGS = '/jigsaws/rankings',
   // nes
   GAMES = '/games',
   GAME = '/games/game',

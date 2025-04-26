@@ -37,6 +37,23 @@
         </li>
       </ul>
     </div>
+    <div class="widget" *ngIf="hotJigsaws && hotJigsaws.length > 0">
+      <h3 class="widget-title">
+        <span><nz-icon nzType="fire" /><span>热门拼图</span></span>
+        <nz-radio-group nzSize="small" [(ngModel)]="hotJigsawType" (ngModelChange)="getHotJigsaws()">
+          <label nz-radio-button nzValue="w">周</label>
+          <label nz-radio-button nzValue="m">月</label>
+          <label nz-radio-button nzValue="y">年</label>
+        </nz-radio-group>
+      </h3>
+      <ul class="hot-list">
+        <li *ngFor="let jigsaw of hotJigsaws; let i = index">
+          <span class="hot-num">{{ i + 1 }}</span>
+          <a [routerLink]="'/jigsaw/' + jigsaw.wallpaperId"
+             [title]="jigsaw.wallpaperCopyright">{{ jigsaw.wallpaperCopyright }}</a>
+        </li>
+      </ul>
+    </div>
     <div class="widget" *ngIf="recentGames && recentGames.length > 0">
       <h3 class="widget-title"><span><nz-icon nzType="history" /><span>最近游戏</span></span></h3>
       <ul>

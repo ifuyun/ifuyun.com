@@ -1,4 +1,5 @@
 import { DBSchema } from 'idb';
+import { UserModel } from '../../interfaces/user';
 
 export type GameStatus = 'ready' | 'playing' | 'paused' | 'completed';
 
@@ -85,7 +86,7 @@ export interface JigsawCacheData {
   // pieces
   p: JigsawCachePiece[];
   // groups
-  g: JigsawCachePiece[][];
+  g: number[][];
 }
 
 export interface JigsawCacheDB extends DBSchema {
@@ -96,4 +97,25 @@ export interface JigsawCacheDB extends DBSchema {
       sign: string;
     };
   };
+}
+
+export interface JigsawRankParam {
+  id: string;
+  pieces: number;
+  page?: number;
+  size?: number;
+}
+
+export interface JigsawLog {
+  jigsawLogId: string;
+  jigsawLogStart: number;
+  jigsawLogEnd: number;
+  jigsawLogDuration: number;
+  wallpaperId?: string;
+  jigsawId?: string;
+  jigsawLogPieces: number;
+  jigsawLogProgress: number;
+  userId?: string;
+  user?: UserModel;
+  faId: string;
 }
