@@ -41,7 +41,11 @@
                 title="下载《{{wallpaper.wallpaperCopyright}}》 4K 超高清壁纸">
           <span class="fi fi-download"></span><span>{{ isMobile ? '4K' : '4K 超高清' }}</span>
         </button>
-        <a nz-button nzType="primary" [routerLink]="'/jigsaw/' + wallpaper.wallpaperId">
+        <a nz-button
+           nzType="primary"
+           class="badge-new"
+           [routerLink]="'/jigsaw/' + wallpaper.wallpaperId"
+           title="《{{wallpaper.wallpaperCopyright}}》拼图">
           <nz-icon nzType="product" /><span>拼图</span>
         </a>
       </div>

@@ -88,7 +88,7 @@ export class CommentComponent extends BaseComponent implements OnInit {
   }
 
   constructor(
-    @Inject(DOCUMENT) private document: Document,
+    @Inject(DOCUMENT) private readonly document: Document,
     private readonly destroy$: DestroyService,
     private readonly fb: FormBuilder,
     private readonly userAgentService: UserAgentService,

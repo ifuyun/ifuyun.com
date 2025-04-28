@@ -1,6 +1,8 @@
 @import "../../../styles/variables";
 
 .puzzle {
+  @control-height: 32px;
+
   position: relative;
   display: flex;
   flex-direction: column;
@@ -36,8 +38,8 @@
     }
 
     .icon-btn {
-      width: 32px;
-      height: 32px;
+      width: @control-height;
+      height: @control-height;
       padding: 0 !important;
       font-size: 16px;
       border-radius: 4px;
@@ -57,6 +59,31 @@
       }
     }
   }
+
+  .puzzle-mask {
+    position: absolute;
+    inset: 0 0 @control-height 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, .85);
+    background: rgba(0, 0, 0, .45);
+
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      &:hover {
+        color: rgba(255, 255, 255, 1);
+      }
+
+      .fi {
+        margin-right: 4px;
+      }
+    }
+  }
 }
 
 .p-puzzle {
@@ -68,6 +95,16 @@
 
       &:last-child {
         justify-content: flex-end;
+      }
+    }
+  }
+
+  .puzzle-mask {
+    font-size: 32px;
+
+    > div {
+      .fi {
+        font-size: 44px;
       }
     }
   }
@@ -84,6 +121,16 @@
 
       &:last-child {
         margin-right: 8px;
+      }
+    }
+  }
+
+  .puzzle-mask {
+    font-size: 1.5rem;
+
+    > div {
+      .fi {
+        font-size: 2rem;
       }
     }
   }

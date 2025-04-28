@@ -29,6 +29,7 @@
       width: 40px;
       height: 40px;
     }
+
     > span {
       margin-left: 8px;
       font-size: 24px;
@@ -46,6 +47,8 @@
     font-size: @header-font-size;
 
     > li {
+      position: relative;
+
       &:hover, &.active {
         > a {
           color: @primary-color-hover;
@@ -71,6 +74,11 @@
         color: var(--base-font-color);
         line-height: @header-height;
       }
+    }
+
+    .badge-new:after {
+      top: 10px;
+      right: 4px;
     }
 
     .sub-nav-list {

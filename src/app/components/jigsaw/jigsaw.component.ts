@@ -1,5 +1,15 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { DatePipe, DOCUMENT, NgFor, NgIf } from '@angular/common';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
@@ -157,6 +167,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   private gameSteps = 0;
 
   constructor(
+    @Inject(DOCUMENT) private readonly document: Document,
     private readonly destroy$: DestroyService,
     private readonly platform: PlatformService,
     private readonly userAgentService: UserAgentService,
@@ -223,6 +234,9 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.document.documentElement.style.position = '';
+    this.document.documentElement.style.top = '';
+
     if (this.isBrowser) {
       // 清除计时器
       this.stopTimer();
@@ -306,7 +320,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.stopTimer();
       // 在暂停状态下显示原始图片
-      this.drawOriginalImage(false);
+      this.drawOriginalImage();
     }
   }
 
@@ -418,7 +432,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     if (this.gameStatus === 'ready' || this.gameStatus === 'paused') {
-      requestAnimationFrame(() => requestAnimationFrame(() => this.drawOriginalImage(this.gameStatus === 'ready')));
+      requestAnimationFrame(() => requestAnimationFrame(() => this.drawOriginalImage()));
     } else {
       requestAnimationFrame(() => requestAnimationFrame(() => this.renderPuzzle()));
     }
@@ -696,7 +710,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // 在暂停状态下显示原始图片
-  private drawOriginalImage(isStopped = true) {
+  private drawOriginalImage() {
     const canvas = this.canvasRef.nativeElement;
     if (!canvas) {
       return;
@@ -723,16 +737,6 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       this.canvasWidth,
       this.canvasHeight
     );
-
-    // 添加半透明遮罩和文字提示
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 36px Arial';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(isStopped ? '游戏未开始' : '游戏已暂停', this.canvasWidth / 2, this.canvasHeight / 2);
   }
 
   // 处理鼠标按下事件
