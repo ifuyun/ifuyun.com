@@ -89,11 +89,12 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     600: { name: '600', rows: 20, cols: 30, pieces: 600, width: 1200 }
   };
   // 当前难度级别
-  activeDifficulty: JigsawDifficulty = this.difficultyLevels[96];
+  activeDifficulty: JigsawDifficulty = this.difficultyLevels[54];
   // 游戏状态相关
   gameStatus: GameStatus = 'ready';
   gameTime = 0;
   isFullScreen = false;
+  isArranged = false;
   loginVisible = false;
   downloading = false;
 
@@ -138,6 +139,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   private jigsawHeight = (this.activeDifficulty.width * this.activeDifficulty.rows) / this.activeDifficulty.cols;
   // 拼图块数组
   private jigsawPieces: JigsawPiece[] = [];
+  private cachedPieces: Record<number, Pick<JigsawPiece, 'displayX' | 'displayY'>> = {};
   // 原始图片
   private originalImage: HTMLImageElement | null = null;
   private seed = Math.floor(Math.random() * 10000); // 随机种子
@@ -191,6 +193,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     this.jigsawService.setSeed(this.seed);
     this.jigsawService.setTabSize(this.tabSize);
     this.jigsawService.setJitter(this.jitter);
+    this.initDifficulty();
 
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.userId = user.userId || '';
@@ -248,6 +251,12 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  initDifficulty() {
+    this.jigsawWidth = this.activeDifficulty.width;
+    this.jigsawHeight = (this.activeDifficulty.width * this.activeDifficulty.rows) / this.activeDifficulty.cols;
+    this.minZoom = (this.activeDifficulty.cols / this.activeDifficulty.width) * 40;
+  }
+
   setDifficulty(difficulty: JigsawDifficulty) {
     if (this.gameStatus === 'playing' || this.gameStatus === 'paused') {
       return;
@@ -256,15 +265,15 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     this.activeDifficulty = difficulty;
-    this.jigsawWidth = this.activeDifficulty.width;
-    this.jigsawHeight = (this.activeDifficulty.width * this.activeDifficulty.rows) / this.activeDifficulty.cols;
 
+    this.initDifficulty();
     this.initCanvas();
     this.getRankings();
   }
 
   startGame() {
     // 重置游戏状态
+    this.isArranged = false;
     this.gameStatus = 'playing';
     this.gameTime = 0;
     this.gameSteps = 0;
@@ -284,9 +293,11 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       const deltaX = (this.canvasWidth - lastWidth) / 2;
       const deltaY = (this.canvasHeight - lastHeight) / 2;
 
+      this.activeDifficulty = this.difficultyLevels[this.cachedJigsaw.c];
+      this.initDifficulty();
+
       this.gameStatus = 'playing';
       this.logId = this.cachedJigsaw.i;
-      this.activeDifficulty = this.difficultyLevels[this.cachedJigsaw.c];
       this.zoomScale = this.cachedJigsaw.z;
       this.gameTime = this.cachedJigsaw.d;
       this.gameSteps = this.cachedJigsaw.s;
@@ -435,6 +446,52 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       requestAnimationFrame(() => requestAnimationFrame(() => this.drawOriginalImage()));
     } else {
       requestAnimationFrame(() => requestAnimationFrame(() => this.renderPuzzle()));
+    }
+  }
+
+  arrange() {
+    if (!this.isArranged) {
+      this.zoomScale = Math.min(this.zoomScale, 0.5);
+
+      const jw = this.jigsawWidth * this.zoomScale;
+      const jh = this.jigsawHeight * this.zoomScale;
+
+      for (const piece of this.jigsawPieces) {
+        this.cachedPieces[piece.id] = { displayX: piece.displayX, displayY: piece.displayY };
+
+        const isConnected = !!this.findConnectedGroup(piece);
+        if (!isConnected) {
+          const pw = piece.width * this.zoomScale;
+          const ph = piece.height * this.zoomScale;
+          const cx = Math.floor((this.canvasWidth - jw) / 2) - pw;
+          const cy = Math.floor((this.canvasHeight - jh) / 2) - ph;
+          const cw = this.canvasWidth - pw;
+          const ch = this.canvasHeight - ph;
+          const { x, y } = this.jigsawService.getRandomPosition(cw, ch, jw + pw, jh + ph, cx, cy);
+          const { x: ox, y: oy } = this.jigsawService.getOriginalPosition(
+            x,
+            y,
+            this.canvasWidth,
+            this.canvasHeight,
+            this.zoomScale
+          );
+
+          piece.displayX = ox;
+          piece.displayY = oy;
+        }
+      }
+      this.renderPuzzle();
+      this.isArranged = true;
+    } else {
+      for (const piece of this.jigsawPieces) {
+        const isConnected = !!this.findConnectedGroup(piece);
+        if (!isConnected) {
+          piece.displayX = this.cachedPieces[piece.id].displayX;
+          piece.displayY = this.cachedPieces[piece.id].displayY;
+        }
+      }
+      this.renderPuzzle();
+      this.isArranged = false;
     }
   }
 

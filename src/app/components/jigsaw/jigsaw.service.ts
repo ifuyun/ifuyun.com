@@ -365,6 +365,86 @@ export class JigsawService {
     }));
   }
 
+  getRandomPosition(
+    canvasWidth: number,
+    canvasHeight: number,
+    jigsawWidth: number,
+    jigsawHeight: number,
+    cx: number,
+    cy: number
+  ): {
+    x: number;
+    y: number;
+  } {
+    const regions: Record<string, { area: number; total: number }> = {};
+    let regionArea = 0;
+    let totalArea = 0;
+
+    // Top region
+    if (cy > 0) {
+      regionArea = canvasWidth * cy;
+      totalArea += regionArea;
+      regions['top'] = { area: regionArea, total: totalArea };
+    }
+    // Bottom region
+    if (canvasHeight - cy - jigsawHeight > 0) {
+      regionArea = canvasWidth * (canvasHeight - (cy + jigsawHeight));
+      totalArea += regionArea;
+      regions['bottom'] = { area: regionArea, total: totalArea };
+    }
+    // Left region
+    if (cx > 0) {
+      regionArea = cx * jigsawHeight;
+      totalArea += regionArea;
+      regions['left'] = { area: regionArea, total: totalArea };
+    }
+    // Right region
+    if (canvasWidth - cx - jigsawWidth > 0) {
+      regionArea = (canvasWidth - cx - jigsawWidth) * jigsawHeight;
+      totalArea += regionArea;
+      regions['right'] = { area: regionArea, total: totalArea };
+    }
+
+    // Random number to choose region
+    const randomArea = Math.floor(Math.random() * totalArea);
+    if (regions['top'] && randomArea <= regions['top'].total) {
+      return { x: Math.floor(Math.random() * canvasWidth), y: Math.floor(Math.random() * cy) };
+    }
+    if (regions['bottom'] && randomArea <= regions['bottom'].total) {
+      return {
+        x: Math.floor(Math.random() * canvasWidth),
+        y: Math.floor(Math.random() * (canvasHeight - cy - jigsawHeight)) + cy + jigsawHeight
+      };
+    }
+    if (regions['left'] && randomArea <= regions['left'].total) {
+      return { x: Math.floor(Math.random() * cx), y: Math.floor(Math.random() * jigsawHeight) + cy };
+    }
+    return {
+      x: Math.floor(Math.random() * (canvasWidth - cx - jigsawWidth)) + cx + jigsawWidth,
+      y: Math.floor(Math.random() * jigsawHeight) + cy
+    };
+  }
+
+  getZoomedPosition(x: number, y: number, canvasWidth: number, canvasHeight: number, zoomScale: number) {
+    const cx = canvasWidth / 2;
+    const cy = canvasHeight / 2;
+
+    const zoomedX = cx + (x - cx) * zoomScale;
+    const zoomedY = cy + (y - cy) * zoomScale;
+
+    return { x: zoomedX, y: zoomedY };
+  }
+
+  getOriginalPosition(zoomedX: number, zoomedY: number, canvasWidth: number, canvasHeight: number, zoomScale: number) {
+    const cx = canvasWidth / 2;
+    const cy = canvasHeight / 2;
+
+    const x = cx + (zoomedX - cx) / zoomScale;
+    const y = cy + (zoomedY - cy) / zoomScale;
+
+    return { x, y };
+  }
+
   async startJigsaw(payload: JigsawStartEntity): Promise<Observable<{ logId: string }>> {
     const faId = this.cookieService.get(COOKIE_KEY_UV_ID);
     const param = this.commonService.serializeParams(payload);
