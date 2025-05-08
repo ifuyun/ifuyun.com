@@ -1,6 +1,8 @@
 <div class="carousel-wrap"
      [class.m-carousel-wrap]="isMobile"
-     [class.p-carousel-wrap]="!isMobile" (mouseover)="pause()" (mouseout)="resume()">
+     [class.p-carousel-wrap]="!isMobile"
+     (mouseover)="carouselMouseOver()"
+     (mouseout)="carouselMouseOut()">
   <div class="carousel"
        #carouselBody
        [ngStyle]="{'width': (100 * (carousels.length)) + '%'}"

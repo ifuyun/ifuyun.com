@@ -28,11 +28,12 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   carousels: CarouselVo[] = [];
   activeIndex = 0;
   isRevert = false;
-  timer!: number;
 
   private carouselOptions!: CarouselOptions;
   private interval = 3000;
   private isPaused = false;
+  private lastTimestamp = 0;
+  private rafId: number | null = null;
 
   constructor(
     private readonly destroy$: DestroyService,
@@ -74,57 +75,25 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.start();
     if (this.platform.isBrowser) {
-      document.addEventListener('visibilitychange', this.onVisibilityChange.bind(this));
+      this.start();
+      document.addEventListener('visibilitychange', this.onVisibilityChange);
     }
   }
 
   ngOnDestroy(): void {
-    this.pause();
     if (this.platform.isBrowser) {
+      this.pause();
       document.removeEventListener('visibilitychange', this.onVisibilityChange);
     }
   }
 
-  start() {
-    if (this.platform.isBrowser) {
-      this.timer = window.setTimeout(() => {
-        this.show();
-      }, this.interval);
-    }
+  carouselMouseOver() {
+    this.isPaused = true;
+    this.pause();
   }
 
-  show() {
-    if (!this.isPaused) {
-      this.isRevert = false;
-      this.activeIndex = (this.activeIndex + 1) % this.carousels.length;
-      this.update();
-
-      requestAnimationFrame(this.start.bind(this));
-    }
-  }
-
-  update(): void {
-    this.carouselBody.nativeElement.style.transitionDuration = '';
-
-    if (this.activeIndex === this.carousels.length - 1) {
-      window.setTimeout(() => {
-        this.activeIndex = 0;
-        this.carouselBody.nativeElement.style.transitionDuration = '0s';
-        this.carouselBody.nativeElement.style.transform = 'translateX(0%)';
-      }, 300);
-    }
-  }
-
-  pause() {
-    if (this.platform.isBrowser) {
-      this.isPaused = true;
-      window.clearTimeout(this.timer);
-    }
-  }
-
-  resume() {
+  carouselMouseOut() {
     this.isPaused = false;
     this.start();
   }
@@ -150,13 +119,58 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe();
   }
 
-  private onVisibilityChange() {
-    if (document.visibilityState === 'visible') {
-      this.resume();
-    } else {
-      this.pause();
+  private loop = (timestamp: number) => {
+    if (!this.lastTimestamp) {
+      this.lastTimestamp = timestamp;
+    }
+    if (timestamp - this.lastTimestamp >= this.interval) {
+      this.next();
+      this.lastTimestamp = timestamp;
+    }
+
+    this.rafId = requestAnimationFrame(this.loop);
+  };
+
+  private start() {
+    if (!this.rafId) {
+      this.lastTimestamp = 0;
+      this.rafId = requestAnimationFrame(this.loop);
     }
   }
+
+  private pause() {
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+
+      this.rafId = null;
+    }
+  }
+
+  private next() {
+    this.isRevert = false;
+    this.activeIndex = (this.activeIndex + 1) % this.carousels.length;
+    this.update();
+  }
+
+  private update(): void {
+    this.carouselBody.nativeElement.style.transitionDuration = '';
+
+    if (this.activeIndex === this.carousels.length - 1) {
+      window.setTimeout(() => {
+        this.activeIndex = 0;
+        this.carouselBody.nativeElement.style.transitionDuration = '0s';
+        this.carouselBody.nativeElement.style.transform = 'translateX(0%)';
+      }, 300);
+    }
+  }
+
+  private onVisibilityChange = () => {
+    if (document.visibilityState === 'hidden') {
+      this.pause();
+    } else if (!this.isPaused) {
+      this.start();
+    }
+  };
 
   private getCarousels() {
     this.optionService
