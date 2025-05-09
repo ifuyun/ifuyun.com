@@ -21,7 +21,6 @@ import { GameService } from '../../services/game.service';
 import { OptionService } from '../../services/option.service';
 import { PlatformService } from '../../services/platform.service';
 import { PostService } from '../../services/post.service';
-import { UserAgentService } from '../../services/user-agent.service';
 import { WallpaperService } from '../../services/wallpaper.service';
 import { AdsenseComponent } from '../adsense/adsense.component';
 import { JigsawService } from '../jigsaw/jigsaw.service';
@@ -38,7 +37,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readonly adsPlaceholder = true;
 
-  isMobile = false;
   indexInfo!: PageIndexInfo;
   hotPosts: PostEntity[] = [];
   randomPosts: PostEntity[] = [];
@@ -71,7 +69,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private readonly destroy$: DestroyService,
     private readonly platform: PlatformService,
-    private readonly userAgentService: UserAgentService,
     private readonly commonService: CommonService,
     private readonly optionService: OptionService,
     private readonly postService: PostService,
@@ -79,9 +76,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly gameService: GameService,
     private readonly bookService: BookService,
     private readonly jigsawService: JigsawService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  ) {}
 
   ngOnInit(): void {
     this.optionService.options$
@@ -102,53 +97,51 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
           this.pageIndex = page;
           this.indexInfo = this.commonService.getPageIndexInfo(page);
 
-          if (!this.isMobile) {
-            const { isPost, isWallpaper, isJigsaw, isGame, isTool, isPage, isSearch } = this.indexInfo;
+          const { isPost, isWallpaper, isJigsaw, isGame, isTool, isPage, isSearch } = this.indexInfo;
 
-            if (isPost || isPage || isTool || isSearch) {
-              this.getHotPosts();
-            } else {
-              this.hotPosts = [];
-            }
-            if (isWallpaper || isPage || isTool || isSearch) {
-              this.getHotWallpapers();
-            } else {
-              this.hotWallpapers = [];
-            }
-            if (isGame || isPage || isTool || isSearch) {
-              this.getHotGames();
-            } else {
-              this.hotGames = [];
-            }
-            if (isPost) {
-              this.getPostArchives();
-              this.getRandomPosts();
-            } else {
-              this.postArchives = [];
-              this.randomPosts = [];
-            }
-            if (isWallpaper) {
-              this.getWallpaperArchives();
-            } else {
-              this.wallpaperArchives = [];
-            }
-            if (isWallpaper || isJigsaw) {
-              this.getRandomWallpapers();
-            } else {
-              this.randomWallpapers = [];
-            }
-            if (isGame) {
-              this.getRecentGames();
-              this.getRandomGames();
-            } else {
-              this.recentGames = [];
-              this.randomGames = [];
-            }
-            if (isJigsaw) {
-              this.getHotJigsaws();
-            } else {
-              this.hotJigsaws = [];
-            }
+          if (isPost || isPage || isTool || isSearch) {
+            this.getHotPosts();
+          } else {
+            this.hotPosts = [];
+          }
+          if (isWallpaper || isPage || isTool || isSearch) {
+            this.getHotWallpapers();
+          } else {
+            this.hotWallpapers = [];
+          }
+          if (isGame || isPage || isTool || isSearch) {
+            this.getHotGames();
+          } else {
+            this.hotGames = [];
+          }
+          if (isPost) {
+            this.getPostArchives();
+            this.getRandomPosts();
+          } else {
+            this.postArchives = [];
+            this.randomPosts = [];
+          }
+          if (isWallpaper) {
+            this.getWallpaperArchives();
+          } else {
+            this.wallpaperArchives = [];
+          }
+          if (isWallpaper || isJigsaw) {
+            this.getRandomWallpapers();
+          } else {
+            this.randomWallpapers = [];
+          }
+          if (isGame) {
+            this.getRecentGames();
+            this.getRandomGames();
+          } else {
+            this.recentGames = [];
+            this.randomGames = [];
+          }
+          if (isJigsaw) {
+            this.getHotJigsaws();
+          } else {
+            this.hotJigsaws = [];
           }
         }
       });

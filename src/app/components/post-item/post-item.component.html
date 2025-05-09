@@ -48,7 +48,7 @@
       </div>
     </div>
     <div class="post-item-tag-wrap" *ngIf="post.categories.length > 0 || post.tags.length > 0">
-      <div *ngIf="post.categories.length > 0" class="post-item-tag">
+      <div class="post-item-tag" *ngIf="post.categories.length > 0">
         <div>
           <div class="post-item-tag-icon"><nz-icon nzType="folder" /></div>
           <ul>
@@ -60,7 +60,7 @@
           </ul>
         </div>
       </div>
-      <div *ngIf="post.tags.length > 0" class="post-item-tag">
+      <div class="post-item-tag" *ngIf="post.tags.length > 0">
         <div>
           <div class="post-item-tag-icon"><nz-icon nzType="tag" /></div>
           <ul>
