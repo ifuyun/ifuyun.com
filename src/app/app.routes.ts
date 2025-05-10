@@ -6,17 +6,17 @@ import { SignupComponent } from './pages/auth/signup/signup.component';
 import { ForbiddenComponent } from './pages/error/forbidden/forbidden.component';
 import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { ServerErrorComponent } from './pages/error/server-error/server-error.component';
-import { GameListComponent } from './pages/game-list/game-list.component';
+import { GameComponent } from './pages/game/game-detail/game.component';
+import { GameListComponent } from './pages/game/game-list/game-list.component';
 import { HomeComponent } from './pages/home/home.component';
-import { WallpaperJigsawListComponent } from './pages/wallpaper-jigsaw-list/wallpaper-jigsaw-list.component';
-import { WallpaperJigsawComponent } from './pages/wallpaper-jigsaw/wallpaper-jigsaw.component';
+import { WallpaperJigsawListComponent } from './pages/jigsaw/wallpaper-jigsaw-list/wallpaper-jigsaw-list.component';
+import { WallpaperJigsawComponent } from './pages/jigsaw/wallpaper-jigsaw/wallpaper-jigsaw.component';
 import { AuthLayoutComponent } from './pages/layout/auth-layout/auth-layout.component';
 import { ContentLayoutComponent } from './pages/layout/content-layout/content-layout.component';
-import { GameComponent } from './pages/game/game.component';
 import { PageComponent } from './pages/page/page.component';
-import { PostArchiveComponent } from './pages/post-archive/post-archive.component';
-import { PostListComponent } from './pages/post-list/post-list.component';
-import { PostComponent } from './pages/post/post.component';
+import { PostArchiveComponent } from './pages/post/post-archive/post-archive.component';
+import { PostComponent } from './pages/post/post-detail/post.component';
+import { PostListComponent } from './pages/post/post-list/post-list.component';
 import { SearchComponent } from './pages/search/search.component';
 import { Base64Component } from './pages/tool/base64/base64.component';
 import { IpComponent } from './pages/tool/ip/ip.component';
@@ -24,9 +24,9 @@ import { Md5Component } from './pages/tool/md5/md5.component';
 import { MurmurhashComponent } from './pages/tool/murmurhash/murmurhash.component';
 import { ShoppingComponent } from './pages/tool/shopping/shopping.component';
 import { ToolListComponent } from './pages/tool/tool-list/tool-list.component';
-import { WallpaperArchiveComponent } from './pages/wallpaper-archive/wallpaper-archive.component';
-import { WallpaperListComponent } from './pages/wallpaper-list/wallpaper-list.component';
-import { WallpaperComponent } from './pages/wallpaper/wallpaper.component';
+import { WallpaperArchiveComponent } from './pages/wallpaper/wallpaper-archive/wallpaper-archive.component';
+import { WallpaperComponent } from './pages/wallpaper/wallpaper-detail/wallpaper.component';
+import { WallpaperListComponent } from './pages/wallpaper/wallpaper-list/wallpaper-list.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', component: HomeComponent },

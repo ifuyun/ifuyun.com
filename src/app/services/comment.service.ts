@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { ApiUrl } from '../config/api-url';
-import { APP_ID, URL_AVATAR_API } from '../config/common.constant';
-import { CommentObjectType } from '../enums/comment';
-import { CommentEntity, Comment } from '../interfaces/comment';
-import { MetaData, ResultList } from '../interfaces/common';
-import { HttpResponseEntity } from '../interfaces/http-response';
-import { format } from '../utils/helper';
+import { ApiUrl } from 'src/app/config/api-url';
+import { APP_ID, URL_AVATAR_API } from 'src/app/config/common.constant';
+import { CommentObjectType } from 'src/app/enums/comment';
+import { Comment, CommentEntity } from 'src/app/interfaces/comment';
+import { MetaData, ResultList } from 'src/app/interfaces/common';
+import { HttpResponseEntity } from 'src/app/interfaces/http-response';
+import { format } from 'src/app/utils/helper';
 import { ApiService } from './api.service';
 import { IpService } from './ip.service';
 

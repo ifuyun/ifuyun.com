@@ -1,4 +1,4 @@
-import { SearchType } from '../enums/search';
+import { SearchType } from 'src/app/enums/search';
 import { Game } from './game';
 import { Post } from './post';
 import { Wallpaper } from './wallpaper';

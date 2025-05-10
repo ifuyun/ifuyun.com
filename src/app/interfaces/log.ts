@@ -1,5 +1,5 @@
-import { Theme } from '../enums/common';
-import { ActionObjectType, ActionType } from '../enums/log';
+import { Theme } from 'src/app/enums/common';
+import { ActionObjectType, ActionType } from 'src/app/enums/log';
 import { AppParam } from './common';
 
 export interface UserAgentData {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Wallpaper } from '../interfaces/wallpaper';
+import { Wallpaper } from 'src/app/interfaces/wallpaper';
 
 @Injectable({
   providedIn: 'root'

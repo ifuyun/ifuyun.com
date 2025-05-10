@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { shuffle } from 'lodash';
 import { map, Observable } from 'rxjs';
-import { ApiUrl } from '../../config/api-url';
-import { COOKIE_KEY_UV_ID } from '../../config/common.constant';
-import { HttpResponseEntity } from '../../interfaces/http-response';
-import { Wallpaper } from '../../interfaces/wallpaper';
-import { ApiService } from '../../services/api.service';
-import { CommonService } from '../../services/common.service';
-import { SsrCookieService } from '../../services/ssr-cookie.service';
+import { ApiUrl } from 'src/app/config/api-url';
+import { COOKIE_KEY_UV_ID } from 'src/app/config/common.constant';
+import { HttpResponseEntity } from 'src/app/interfaces/http-response';
+import { Wallpaper } from 'src/app/interfaces/wallpaper';
+import { ApiService } from 'src/app/services/api.service';
+import { CommonService } from 'src/app/services/common.service';
+import { SsrCookieService } from 'src/app/services/ssr-cookie.service';
 import {
   JigsawCompleteEntity,
   JigsawLog,

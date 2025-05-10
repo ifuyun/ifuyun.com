@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { BreadcrumbEntity } from '../interfaces/breadcrumb';
+import { BreadcrumbEntity } from 'src/app/interfaces/breadcrumb';
 
 @Injectable({
   providedIn: 'root'

@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { skipWhile, takeUntil } from 'rxjs';
-import { WallpaperLang } from '../../enums/wallpaper';
-import { Wallpaper } from '../../interfaces/wallpaper';
-import { DestroyService } from '../../services/destroy.service';
-import { UserAgentService } from '../../services/user-agent.service';
-import { WallpaperService } from '../../services/wallpaper.service';
+import { WallpaperLang } from 'src/app/enums/wallpaper';
+import { Wallpaper } from 'src/app/interfaces/wallpaper';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
+import { WallpaperService } from 'src/app/services/wallpaper.service';
 
 @Component({
   selector: 'app-wallpaper-prev-next',

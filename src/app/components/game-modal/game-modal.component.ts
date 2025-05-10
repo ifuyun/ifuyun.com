@@ -1,14 +1,14 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { takeUntil } from 'rxjs';
-import { DEFAULT_CONTROLS } from '../../config/game.constant';
-import { GameLogType } from '../../enums/game';
-import { GameEntity } from '../../interfaces/game';
-import { DestroyService } from '../../services/destroy.service';
-import { GameService } from '../../services/game.service';
-import { PlatformService } from '../../services/platform.service';
-import { ScriptLoaderService } from '../../services/script-loader.service';
-import { UserAgentService } from '../../services/user-agent.service';
+import { DEFAULT_CONTROLS } from 'src/app/config/game.constant';
+import { GameLogType } from 'src/app/enums/game';
+import { GameEntity } from 'src/app/interfaces/game';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { GameService } from 'src/app/services/game.service';
+import { PlatformService } from 'src/app/services/platform.service';
+import { ScriptLoaderService } from 'src/app/services/script-loader.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
 
 @Component({
   selector: 'app-game-modal',

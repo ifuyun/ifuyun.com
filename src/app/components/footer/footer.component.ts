@@ -3,13 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
-import { LinkEntity } from '../../interfaces/link';
-import { OptionEntity } from '../../interfaces/option';
-import { DestroyService } from '../../services/destroy.service';
-import { LinkService } from '../../services/link.service';
-import { OptionService } from '../../services/option.service';
-import { UrlService } from '../../services/url.service';
-import { UserAgentService } from '../../services/user-agent.service';
+import { LinkEntity } from 'src/app/interfaces/link';
+import { OptionEntity } from 'src/app/interfaces/option';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { LinkService } from 'src/app/services/link.service';
+import { OptionService } from 'src/app/services/option.service';
+import { UrlService } from 'src/app/services/url.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
 
 @Component({
   selector: 'app-footer',

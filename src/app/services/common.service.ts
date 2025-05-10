@@ -3,17 +3,17 @@ import { HttpStatusCode } from '@angular/common/http';
 import { ElementRef, Inject, Injectable, Optional, REQUEST, RESPONSE_INIT } from '@angular/core';
 import { Request } from 'express';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { environment } from '../../environments/environment';
 import {
   COOKIE_KEY_THEME,
   COOKIE_KEY_USER_ID,
   MEDIA_QUERY_THEME_DARK,
   MEDIA_QUERY_THEME_LIGHT
-} from '../config/common.constant';
-import { Message } from '../config/message.enum';
-import { Theme } from '../enums/common';
-import { PageIndexInfo } from '../interfaces/common';
-import { CustomError } from '../interfaces/custom-error';
+} from 'src/app/config/common.constant';
+import { Message } from 'src/app/config/message.enum';
+import { Theme } from 'src/app/enums/common';
+import { PageIndexInfo } from 'src/app/interfaces/common';
+import { CustomError } from 'src/app/interfaces/custom-error';
+import { environment } from 'src/environments/environment';
 import { PlatformService } from './platform.service';
 import { SsrCookieService } from './ssr-cookie.service';
 

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import highlight from 'highlight.js';
 import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
-import { ApiUrl } from '../config/api-url';
-import { APP_ID } from '../config/common.constant';
-import { BookType } from '../enums/book';
-import { PostType } from '../enums/post';
-import { BookEntity } from '../interfaces/book';
-import { ArchiveData, ArchiveDataMap, ArchiveList } from '../interfaces/common';
-import { Post, PostEntity, PostList, PostQueryParam, PostRelatedParam, PostSearchItem } from '../interfaces/post';
+import { ApiUrl } from 'src/app/config/api-url';
+import { APP_ID } from 'src/app/config/common.constant';
+import { BookType } from 'src/app/enums/book';
+import { PostType } from 'src/app/enums/post';
+import { BookEntity } from 'src/app/interfaces/book';
+import { ArchiveData, ArchiveDataMap, ArchiveList } from 'src/app/interfaces/common';
+import { Post, PostEntity, PostList, PostQueryParam, PostRelatedParam, PostSearchItem } from 'src/app/interfaces/post';
 import { ApiService } from './api.service';
 
 @Injectable({

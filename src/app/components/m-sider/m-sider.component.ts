@@ -5,19 +5,19 @@ import { isEmpty } from 'lodash';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageService } from 'ng-zorro-antd/image';
 import { skipWhile, takeUntil } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { ADMIN_URL_PARAM, APP_ID } from '../../config/common.constant';
-import { ResponseCode } from '../../config/response-code.enum';
-import { ActionObjectType, ActionType } from '../../enums/log';
-import { PageIndexInfo } from '../../interfaces/common';
-import { TenantAppModel } from '../../interfaces/tenant-app';
-import { AuthService } from '../../services/auth.service';
-import { CommonService } from '../../services/common.service';
-import { DestroyService } from '../../services/destroy.service';
-import { LogService } from '../../services/log.service';
-import { TenantAppService } from '../../services/tenant-app.service';
-import { UserService } from '../../services/user.service';
-import { format } from '../../utils/helper';
+import { ADMIN_URL_PARAM, APP_ID } from 'src/app/config/common.constant';
+import { ResponseCode } from 'src/app/config/response-code.enum';
+import { ActionObjectType, ActionType } from 'src/app/enums/log';
+import { PageIndexInfo } from 'src/app/interfaces/common';
+import { TenantAppModel } from 'src/app/interfaces/tenant-app';
+import { AuthService } from 'src/app/services/auth.service';
+import { CommonService } from 'src/app/services/common.service';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { LogService } from 'src/app/services/log.service';
+import { TenantAppService } from 'src/app/services/tenant-app.service';
+import { UserService } from 'src/app/services/user.service';
+import { format } from 'src/app/utils/helper';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-m-sider',

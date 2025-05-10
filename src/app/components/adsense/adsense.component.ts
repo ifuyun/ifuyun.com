@@ -1,14 +1,14 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { isEmpty, uniq } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { AdsenseOptions } from '../../interfaces/adsense';
-import { OptionEntity } from '../../interfaces/option';
-import { ConsoleService } from '../../services/console.service';
-import { DestroyService } from '../../services/destroy.service';
-import { OptionService } from '../../services/option.service';
-import { PlatformService } from '../../services/platform.service';
-import { UserAgentService } from '../../services/user-agent.service';
+import { AdsenseOptions } from 'src/app/interfaces/adsense';
+import { OptionEntity } from 'src/app/interfaces/option';
+import { ConsoleService } from 'src/app/services/console.service';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { OptionService } from 'src/app/services/option.service';
+import { PlatformService } from 'src/app/services/platform.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-adsense',

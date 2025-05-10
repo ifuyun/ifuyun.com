@@ -2,11 +2,11 @@ import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { GAME_EMPTY_COVER } from '../../config/common.constant';
-import { ListMode } from '../../enums/common';
-import { Game } from '../../interfaces/game';
-import { NumberViewPipe } from '../../pipes/number-view.pipe';
-import { UserAgentService } from '../../services/user-agent.service';
+import { GAME_EMPTY_COVER } from 'src/app/config/common.constant';
+import { ListMode } from 'src/app/enums/common';
+import { Game } from 'src/app/interfaces/game';
+import { NumberViewPipe } from 'src/app/pipes/number-view.pipe';
+import { UserAgentService } from 'src/app/services/user-agent.service';
 
 @Component({
   selector: 'app-game-item',

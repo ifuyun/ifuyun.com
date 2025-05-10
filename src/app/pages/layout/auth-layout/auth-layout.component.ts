@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { takeUntil } from 'rxjs';
-import { Wallpaper } from '../../../interfaces/wallpaper';
-import { DestroyService } from '../../../services/destroy.service';
-import { UserAgentService } from '../../../services/user-agent.service';
-import { WallpaperService } from '../../../services/wallpaper.service';
+import { Wallpaper } from 'src/app/interfaces/wallpaper';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
+import { WallpaperService } from 'src/app/services/wallpaper.service';
 
 @Component({
   selector: 'app-auth-layout',

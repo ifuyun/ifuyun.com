@@ -1,4 +1,4 @@
-import { TaxonomyStatus, TaxonomyType } from '../enums/taxonomy';
+import { TaxonomyStatus, TaxonomyType } from 'src/app/enums/taxonomy';
 
 export interface TaxonomyEntity {
   taxonomyId: string;

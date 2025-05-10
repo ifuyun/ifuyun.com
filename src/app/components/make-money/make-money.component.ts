@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { UserAgentService } from '../../services/user-agent.service';
-import { AdsenseComponent } from '../adsense/adsense.component';
+import { AdsenseComponent } from 'src/app/components/adsense/adsense.component';
+import { UserAgentService } from 'src/app/services/user-agent.service';
 
 @Component({
   selector: 'app-make-money',

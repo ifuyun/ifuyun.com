@@ -4,21 +4,21 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
-import { ADMIN_URL_PARAM, APP_ID } from '../../../config/common.constant';
-import { ResponseCode } from '../../../config/response-code.enum';
-import { LoginResponse } from '../../../interfaces/auth';
-import { CustomError } from '../../../interfaces/custom-error';
-import { OptionEntity } from '../../../interfaces/option';
-import { TenantAppModel } from '../../../interfaces/tenant-app';
-import { AuthService } from '../../../services/auth.service';
-import { BreadcrumbService } from '../../../services/breadcrumb.service';
-import { CommonService } from '../../../services/common.service';
-import { DestroyService } from '../../../services/destroy.service';
-import { MetaService } from '../../../services/meta.service';
-import { OptionService } from '../../../services/option.service';
-import { PlatformService } from '../../../services/platform.service';
-import { TenantAppService } from '../../../services/tenant-app.service';
-import { format } from '../../../utils/helper';
+import { ADMIN_URL_PARAM, APP_ID } from 'src/app/config/common.constant';
+import { ResponseCode } from 'src/app/config/response-code.enum';
+import { LoginResponse } from 'src/app/interfaces/auth';
+import { CustomError } from 'src/app/interfaces/custom-error';
+import { OptionEntity } from 'src/app/interfaces/option';
+import { TenantAppModel } from 'src/app/interfaces/tenant-app';
+import { AuthService } from 'src/app/services/auth.service';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { CommonService } from 'src/app/services/common.service';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { MetaService } from 'src/app/services/meta.service';
+import { OptionService } from 'src/app/services/option.service';
+import { PlatformService } from 'src/app/services/platform.service';
+import { TenantAppService } from 'src/app/services/tenant-app.service';
+import { format } from 'src/app/utils/helper';
 
 @Component({
   selector: 'app-login-callback',

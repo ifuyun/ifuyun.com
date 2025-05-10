@@ -3,22 +3,22 @@ import { RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { NzImageService } from 'ng-zorro-antd/image';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
-import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
-import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
-import { ActionObjectType, ActionType } from '../../../enums/log';
-import { FavoriteLink } from '../../../interfaces/link';
-import { HTMLMetaData } from '../../../interfaces/meta';
-import { OptionEntity } from '../../../interfaces/option';
-import { TenantAppModel } from '../../../interfaces/tenant-app';
-import { BreadcrumbService } from '../../../services/breadcrumb.service';
-import { CommonService } from '../../../services/common.service';
-import { DestroyService } from '../../../services/destroy.service';
-import { LinkService } from '../../../services/link.service';
-import { LogService } from '../../../services/log.service';
-import { MetaService } from '../../../services/meta.service';
-import { OptionService } from '../../../services/option.service';
-import { TenantAppService } from '../../../services/tenant-app.service';
-import { UserAgentService } from '../../../services/user-agent.service';
+import { BreadcrumbComponent } from 'src/app/components/breadcrumb/breadcrumb.component';
+import { MakeMoneyComponent } from 'src/app/components/make-money/make-money.component';
+import { ActionObjectType, ActionType } from 'src/app/enums/log';
+import { FavoriteLink } from 'src/app/interfaces/link';
+import { HTMLMetaData } from 'src/app/interfaces/meta';
+import { OptionEntity } from 'src/app/interfaces/option';
+import { TenantAppModel } from 'src/app/interfaces/tenant-app';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { CommonService } from 'src/app/services/common.service';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { LinkService } from 'src/app/services/link.service';
+import { LogService } from 'src/app/services/log.service';
+import { MetaService } from 'src/app/services/meta.service';
+import { OptionService } from 'src/app/services/option.service';
+import { TenantAppService } from 'src/app/services/tenant-app.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
 
 @Component({
   selector: 'app-tool-list',

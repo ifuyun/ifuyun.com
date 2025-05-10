@@ -2,18 +2,18 @@ import { NgFor, NgIf, NgStyle } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
-import { LinkTarget } from '../../enums/link';
-import { ActionObjectType, ActionType } from '../../enums/log';
-import { WallpaperLang } from '../../enums/wallpaper';
-import { CarouselOptions, CarouselVo } from '../../interfaces/option';
-import { HotWallpaper, Wallpaper } from '../../interfaces/wallpaper';
-import { RangePipe } from '../../pipes/range.pipe';
-import { DestroyService } from '../../services/destroy.service';
-import { LogService } from '../../services/log.service';
-import { OptionService } from '../../services/option.service';
-import { PlatformService } from '../../services/platform.service';
-import { UserAgentService } from '../../services/user-agent.service';
-import { WallpaperService } from '../../services/wallpaper.service';
+import { LinkTarget } from 'src/app/enums/link';
+import { ActionObjectType, ActionType } from 'src/app/enums/log';
+import { WallpaperLang } from 'src/app/enums/wallpaper';
+import { CarouselOptions, CarouselVo } from 'src/app/interfaces/option';
+import { HotWallpaper, Wallpaper } from 'src/app/interfaces/wallpaper';
+import { RangePipe } from 'src/app/pipes/range.pipe';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { LogService } from 'src/app/services/log.service';
+import { OptionService } from 'src/app/services/option.service';
+import { PlatformService } from 'src/app/services/platform.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
+import { WallpaperService } from 'src/app/services/wallpaper.service';
 
 @Component({
   selector: 'app-carousel',

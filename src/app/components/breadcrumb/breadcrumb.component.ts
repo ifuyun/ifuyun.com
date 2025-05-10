@@ -4,12 +4,12 @@ import { RouterLink } from '@angular/router';
 import { isEmpty } from 'lodash';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
-import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
-import { TenantAppModel } from '../../interfaces/tenant-app';
-import { BreadcrumbService } from '../../services/breadcrumb.service';
-import { DestroyService } from '../../services/destroy.service';
-import { TenantAppService } from '../../services/tenant-app.service';
-import { UserAgentService } from '../../services/user-agent.service';
+import { BreadcrumbEntity } from 'src/app/interfaces/breadcrumb';
+import { TenantAppModel } from 'src/app/interfaces/tenant-app';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { TenantAppService } from 'src/app/services/tenant-app.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
 
 @Component({
   selector: 'app-breadcrumb',

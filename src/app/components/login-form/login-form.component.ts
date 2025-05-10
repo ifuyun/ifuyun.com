@@ -10,20 +10,20 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
-import { BaseComponent } from '../../base.component';
-import { ADMIN_URL_PARAM, APP_ID } from '../../config/common.constant';
-import { ResponseCode } from '../../config/response-code.enum';
-import { LoginResponse } from '../../interfaces/auth';
-import { OptionEntity } from '../../interfaces/option';
-import { TenantAppModel } from '../../interfaces/tenant-app';
-import { USER_EMAIL_LENGTH, USER_PASSWORD_MAX_LENGTH } from '../../pages/auth/auth.constant';
-import { AuthService } from '../../services/auth.service';
-import { DestroyService } from '../../services/destroy.service';
-import { OptionService } from '../../services/option.service';
-import { TenantAppService } from '../../services/tenant-app.service';
-import { UserAgentService } from '../../services/user-agent.service';
-import { format } from '../../utils/helper';
-import md5 from '../../utils/md5';
+import { BaseComponent } from 'src/app/base.component';
+import { ADMIN_URL_PARAM, APP_ID } from 'src/app/config/common.constant';
+import { ResponseCode } from 'src/app/config/response-code.enum';
+import { LoginResponse } from 'src/app/interfaces/auth';
+import { OptionEntity } from 'src/app/interfaces/option';
+import { TenantAppModel } from 'src/app/interfaces/tenant-app';
+import { USER_EMAIL_LENGTH, USER_PASSWORD_MAX_LENGTH } from 'src/app/pages/auth/auth.constant';
+import { AuthService } from 'src/app/services/auth.service';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { OptionService } from 'src/app/services/option.service';
+import { TenantAppService } from 'src/app/services/tenant-app.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
+import { format } from 'src/app/utils/helper';
+import md5 from 'src/app/utils/md5';
 
 @Component({
   selector: 'app-login-form',

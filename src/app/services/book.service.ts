@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BookType } from '../enums/book';
-import { BookEntity } from '../interfaces/book';
+import { BookType } from 'src/app/enums/book';
+import { BookEntity } from 'src/app/interfaces/book';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +29,6 @@ export class BookService {
     return {
       shortName,
       fullName
-    }
+    };
   }
 }

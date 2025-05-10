@@ -1,4 +1,4 @@
-import { VoteType, VoteValue } from '../enums/vote';
+import { VoteType, VoteValue } from 'src/app/enums/vote';
 
 export interface VoteEntity {
   objectId: string;

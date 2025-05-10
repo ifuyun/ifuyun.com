@@ -1,7 +1,7 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { ErrorHandler, Inject, Injectable, Optional, RESPONSE_INIT } from '@angular/core';
 import { Response } from 'express';
-import { environment } from '../environments/environment';
+import { environment } from 'src/environments/environment';
 import { Message } from './config/message.enum';
 import { CustomError } from './interfaces/custom-error';
 import { ErrorService } from './services/error.service';

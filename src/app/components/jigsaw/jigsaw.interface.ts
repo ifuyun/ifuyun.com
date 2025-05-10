@@ -1,5 +1,5 @@
 import { DBSchema } from 'idb';
-import { UserModel } from '../../interfaces/user';
+import { UserModel } from 'src/app/interfaces/user';
 
 export type GameStatus = 'ready' | 'playing' | 'paused' | 'completed';
 

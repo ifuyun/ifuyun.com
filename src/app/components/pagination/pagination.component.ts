@@ -3,11 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { takeUntil } from 'rxjs';
-import { PaginationData, PaginationEntity } from '../../interfaces/pagination';
-import { RangePipe } from '../../pipes/range.pipe';
-import { DestroyService } from '../../services/destroy.service';
-import { PaginationService } from '../../services/pagination.service';
-import { UserAgentService } from '../../services/user-agent.service';
+import { PaginationData, PaginationEntity } from 'src/app/interfaces/pagination';
+import { RangePipe } from 'src/app/pipes/range.pipe';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { PaginationService } from 'src/app/services/pagination.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
 
 @Component({
   selector: 'app-pagination',

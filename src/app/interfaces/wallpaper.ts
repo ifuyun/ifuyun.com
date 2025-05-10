@@ -1,4 +1,4 @@
-import { WallpaperLang, WallpaperPlatform } from '../enums/wallpaper';
+import { WallpaperLang, WallpaperPlatform } from 'src/app/enums/wallpaper';
 import { QueryParam } from './common';
 
 export interface WallpaperQueryParam extends QueryParam {

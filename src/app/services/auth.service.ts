@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
-import { ApiUrl } from '../config/api-url';
-import { APP_ID, COOKIE_KEY_USER_ID, COOKIE_KEY_USER_NAME, COOKIE_KEY_USER_TOKEN } from '../config/common.constant';
-import { ResponseCode } from '../config/response-code.enum';
-import { LoginEntity, LoginResponse, SignupEntity } from '../interfaces/auth';
-import { HttpResponseEntity } from '../interfaces/http-response';
-import { OptionEntity } from '../interfaces/option';
-import { UserModel } from '../interfaces/user';
-import { THIRD_LOGIN_API } from '../pages/auth/auth.constant';
-import { format, generateId } from '../utils/helper';
+import { ApiUrl } from 'src/app/config/api-url';
+import {
+  APP_ID,
+  COOKIE_KEY_USER_ID,
+  COOKIE_KEY_USER_NAME,
+  COOKIE_KEY_USER_TOKEN
+} from 'src/app/config/common.constant';
+import { ResponseCode } from 'src/app/config/response-code.enum';
+import { LoginEntity, LoginResponse, SignupEntity } from 'src/app/interfaces/auth';
+import { HttpResponseEntity } from 'src/app/interfaces/http-response';
+import { OptionEntity } from 'src/app/interfaces/option';
+import { UserModel } from 'src/app/interfaces/user';
+import { THIRD_LOGIN_API } from 'src/app/pages/auth/auth.constant';
+import { format, generateId } from 'src/app/utils/helper';
+import { environment } from 'src/environments/environment';
 import { ApiService } from './api.service';
 import { SsrCookieService } from './ssr-cookie.service';
 

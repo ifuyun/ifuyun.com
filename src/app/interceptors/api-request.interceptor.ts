@@ -1,9 +1,9 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
-import { COOKIE_KEY_UV_ID } from '../config/common.constant';
-import { AuthService } from '../services/auth.service';
-import { SsrCookieService } from '../services/ssr-cookie.service';
+import { COOKIE_KEY_UV_ID } from 'src/app/config/common.constant';
+import { AuthService } from 'src/app/services/auth.service';
+import { SsrCookieService } from 'src/app/services/ssr-cookie.service';
 
 @Injectable()
 export class ApiRequestInterceptor implements HttpInterceptor {

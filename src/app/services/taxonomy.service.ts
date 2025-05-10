@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { APP_ID } from '../config/common.constant';
-import { ApiUrl } from '../config/api-url';
-import { TaxonomyType } from '../enums/taxonomy';
-import { TaxonomyNode } from '../interfaces/taxonomy';
+import { ApiUrl } from 'src/app/config/api-url';
+import { APP_ID } from 'src/app/config/common.constant';
+import { TaxonomyType } from 'src/app/enums/taxonomy';
+import { TaxonomyNode } from 'src/app/interfaces/taxonomy';
 import { ApiService } from './api.service';
 
 @Injectable({

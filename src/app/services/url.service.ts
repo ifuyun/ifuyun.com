@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { UrlHistory } from '../interfaces/url';
+import { UrlHistory } from 'src/app/interfaces/url';
 
 @Injectable({
   providedIn: 'root'

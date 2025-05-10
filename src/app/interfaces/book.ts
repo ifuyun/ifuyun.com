@@ -1,4 +1,4 @@
-import { BookStatus, BookType } from '../enums/book';
+import { BookStatus, BookType } from 'src/app/enums/book';
 
 export interface BookEntity {
   bookId: string;

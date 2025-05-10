@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ApiUrl } from '../config/api-url';
-import { APP_ID } from '../config/common.constant';
-import { ResultList } from '../interfaces/common';
+import { ApiUrl } from 'src/app/config/api-url';
+import { APP_ID } from 'src/app/config/common.constant';
+import { ResultList } from 'src/app/interfaces/common';
 import {
   AllSearchResponse,
   GameSearchResponse,
   PostSearchResponse,
   SearchParam,
   WallpaperSearchResponse
-} from '../interfaces/search';
+} from 'src/app/interfaces/search';
 import { ApiService } from './api.service';
 
 @Injectable({

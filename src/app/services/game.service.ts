@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ApiUrl } from '../config/api-url';
-import { APP_ID, REGEXP_ID } from '../config/common.constant';
-import { STORAGE_KEY_GAME_PREFIX, STORAGE_KEY_GAMES } from '../config/game.constant';
+import { ApiUrl } from 'src/app/config/api-url';
+import { APP_ID, REGEXP_ID } from 'src/app/config/common.constant';
+import { STORAGE_KEY_GAME_PREFIX, STORAGE_KEY_GAMES } from 'src/app/config/game.constant';
 import {
   Game,
   GameCachedItem,
@@ -13,8 +13,8 @@ import {
   GameQueryParam,
   GameRelatedParam,
   GameSearchItem
-} from '../interfaces/game';
-import { HttpResponseEntity } from '../interfaces/http-response';
+} from 'src/app/interfaces/game';
+import { HttpResponseEntity } from 'src/app/interfaces/http-response';
 import { ApiService } from './api.service';
 
 @Injectable({

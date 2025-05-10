@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SiderComponent } from '../../../components/sider/sider.component';
-import { UserAgentService } from '../../../services/user-agent.service';
+import { SiderComponent } from 'src/app/components/sider/sider.component';
+import { UserAgentService } from 'src/app/services/user-agent.service';
 
 @Component({
   selector: 'app-content-layout',

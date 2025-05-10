@@ -5,21 +5,21 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { ClipboardModule } from 'ngx-clipboard';
 import { BehaviorSubject, combineLatest, debounceTime, skipWhile, takeUntil } from 'rxjs';
-import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.component';
-import { MakeMoneyComponent } from '../../../components/make-money/make-money.component';
-import { HTMLMetaData } from '../../../interfaces/meta';
-import { OptionEntity } from '../../../interfaces/option';
-import { TenantAppModel } from '../../../interfaces/tenant-app';
-import { BreadcrumbService } from '../../../services/breadcrumb.service';
-import { CommonService } from '../../../services/common.service';
-import { DestroyService } from '../../../services/destroy.service';
-import { MessageService } from '../../../services/message.service';
-import { MetaService } from '../../../services/meta.service';
-import { OptionService } from '../../../services/option.service';
-import { TenantAppService } from '../../../services/tenant-app.service';
-import { UserAgentService } from '../../../services/user-agent.service';
-import md5 from '../../../utils/md5';
-import { MD5_PAGE_DESCRIPTION, MD5_PAGE_KEYWORDS } from '../tool.constant';
+import { BreadcrumbComponent } from 'src/app/components/breadcrumb/breadcrumb.component';
+import { MakeMoneyComponent } from 'src/app/components/make-money/make-money.component';
+import { HTMLMetaData } from 'src/app/interfaces/meta';
+import { OptionEntity } from 'src/app/interfaces/option';
+import { TenantAppModel } from 'src/app/interfaces/tenant-app';
+import { MD5_PAGE_DESCRIPTION, MD5_PAGE_KEYWORDS } from 'src/app/pages/tool/tool.constant';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { CommonService } from 'src/app/services/common.service';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { MessageService } from 'src/app/services/message.service';
+import { MetaService } from 'src/app/services/meta.service';
+import { OptionService } from 'src/app/services/option.service';
+import { TenantAppService } from 'src/app/services/tenant-app.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
+import md5 from 'src/app/utils/md5';
 
 @Component({
   selector: 'app-md5',

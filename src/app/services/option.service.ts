@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
-import { ApiUrl } from '../config/api-url';
-import { APP_ID } from '../config/common.constant';
-import { CarouselVo, OptionEntity, OptionModel } from '../interfaces/option';
+import { ApiUrl } from 'src/app/config/api-url';
+import { APP_ID } from 'src/app/config/common.constant';
+import { CarouselVo, OptionEntity, OptionModel } from 'src/app/interfaces/option';
 import { ApiService } from './api.service';
 
 @Injectable({

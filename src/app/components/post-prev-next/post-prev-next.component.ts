@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { skipWhile, takeUntil } from 'rxjs';
-import { PostType } from '../../enums/post';
-import { PostEntity } from '../../interfaces/post';
-import { DestroyService } from '../../services/destroy.service';
-import { PostService } from '../../services/post.service';
-import { UserAgentService } from '../../services/user-agent.service';
+import { PostType } from 'src/app/enums/post';
+import { PostEntity } from 'src/app/interfaces/post';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { PostService } from 'src/app/services/post.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
 
 @Component({
   selector: 'app-post-prev-next',

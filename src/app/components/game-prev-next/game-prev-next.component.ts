@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { skipWhile, takeUntil } from 'rxjs';
-import { GAME_EMPTY_COVER } from '../../config/common.constant';
-import { GameEntity } from '../../interfaces/game';
-import { DestroyService } from '../../services/destroy.service';
-import { GameService } from '../../services/game.service';
-import { UserAgentService } from '../../services/user-agent.service';
+import { GAME_EMPTY_COVER } from 'src/app/config/common.constant';
+import { GameEntity } from 'src/app/interfaces/game';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { GameService } from 'src/app/services/game.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
 
 @Component({
   selector: 'app-game-prev-next',

@@ -1,4 +1,4 @@
-import { TenantAppStatus, TenantAppType } from '../enums/tenant-app';
+import { TenantAppStatus, TenantAppType } from 'src/app/enums/tenant-app';
 
 export interface TenantAppModel {
   appId: string;

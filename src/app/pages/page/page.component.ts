@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { PostType } from '../../enums/post';
-import { PostComponent } from '../post/post.component';
+import { PostType } from 'src/app/enums/post';
+import { PostComponent } from 'src/app/pages/post/post-detail/post.component';
 
 @Component({
   selector: 'app-page',

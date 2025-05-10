@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { transformDuration } from '../utils/helper';
+import { transformDuration } from 'src/app/utils/helper';
 
 @Pipe({
   name: 'duration'

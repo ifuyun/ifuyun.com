@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NzModalModule } from 'ng-zorro-antd/modal';
-import { LoginFormComponent } from '../login-form/login-form.component';
+import { LoginFormComponent } from 'src/app/components/login-form/login-form.component';
 
 @Component({
   selector: 'app-login-modal',

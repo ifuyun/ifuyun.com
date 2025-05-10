@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { ApiUrl } from '../config/api-url';
-import { APP_ID } from '../config/common.constant';
-import { IPInfo, IPResult } from '../interfaces/ip';
+import { ApiUrl } from 'src/app/config/api-url';
+import { APP_ID } from 'src/app/config/common.constant';
+import { IPInfo, IPResult } from 'src/app/interfaces/ip';
 import { ApiService } from './api.service';
 
 @Injectable({

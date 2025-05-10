@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ApiUrl } from '../config/api-url';
-import { APP_ID } from '../config/common.constant';
-import { FavoriteLink, LinkEntity } from '../interfaces/link';
+import { ApiUrl } from 'src/app/config/api-url';
+import { APP_ID } from 'src/app/config/common.constant';
+import { FavoriteLink, LinkEntity } from 'src/app/interfaces/link';
 import { ApiService } from './api.service';
 
 @Injectable({

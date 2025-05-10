@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
-import { BaseComponent } from '../../../base.component';
-import { LoginFormComponent } from '../../../components/login-form/login-form.component';
-import { OptionEntity } from '../../../interfaces/option';
-import { TenantAppModel } from '../../../interfaces/tenant-app';
-import { BreadcrumbService } from '../../../services/breadcrumb.service';
-import { CommonService } from '../../../services/common.service';
-import { DestroyService } from '../../../services/destroy.service';
-import { MetaService } from '../../../services/meta.service';
-import { OptionService } from '../../../services/option.service';
-import { TenantAppService } from '../../../services/tenant-app.service';
+import { BaseComponent } from 'src/app/base.component';
+import { LoginFormComponent } from 'src/app/components/login-form/login-form.component';
+import { OptionEntity } from 'src/app/interfaces/option';
+import { TenantAppModel } from 'src/app/interfaces/tenant-app';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { CommonService } from 'src/app/services/common.service';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { MetaService } from 'src/app/services/meta.service';
+import { OptionService } from 'src/app/services/option.service';
+import { TenantAppService } from 'src/app/services/tenant-app.service';
 
 @Component({
   selector: 'app-login',

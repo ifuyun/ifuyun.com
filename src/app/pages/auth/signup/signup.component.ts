@@ -15,23 +15,23 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
-import { BaseComponent } from '../../../base.component';
-import { OptionEntity } from '../../../interfaces/option';
-import { TenantAppModel } from '../../../interfaces/tenant-app';
-import { AuthService } from '../../../services/auth.service';
-import { BreadcrumbService } from '../../../services/breadcrumb.service';
-import { CommonService } from '../../../services/common.service';
-import { DestroyService } from '../../../services/destroy.service';
-import { MetaService } from '../../../services/meta.service';
-import { OptionService } from '../../../services/option.service';
-import { TenantAppService } from '../../../services/tenant-app.service';
-import md5 from '../../../utils/md5';
+import { BaseComponent } from 'src/app/base.component';
+import { OptionEntity } from 'src/app/interfaces/option';
+import { TenantAppModel } from 'src/app/interfaces/tenant-app';
 import {
   USER_EMAIL_LENGTH,
   USER_PASSWORD_MAX_LENGTH,
   USER_PASSWORD_MIN_LENGTH,
   USER_PASSWORD_PATTERN
-} from '../auth.constant';
+} from 'src/app/pages/auth/auth.constant';
+import { AuthService } from 'src/app/services/auth.service';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { CommonService } from 'src/app/services/common.service';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { MetaService } from 'src/app/services/meta.service';
+import { OptionService } from 'src/app/services/option.service';
+import { TenantAppService } from 'src/app/services/tenant-app.service';
+import md5 from 'src/app/utils/md5';
 
 @Component({
   selector: 'app-signup',

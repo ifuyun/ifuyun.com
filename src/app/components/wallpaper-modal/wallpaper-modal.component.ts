@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { takeUntil } from 'rxjs';
-import { Wallpaper } from '../../interfaces/wallpaper';
-import { DestroyService } from '../../services/destroy.service';
-import { WallpaperService } from '../../services/wallpaper.service';
+import { Wallpaper } from 'src/app/interfaces/wallpaper';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { WallpaperService } from 'src/app/services/wallpaper.service';
 
 @Component({
   selector: 'app-wallpaper-modal',

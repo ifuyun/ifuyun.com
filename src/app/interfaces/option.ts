@@ -1,5 +1,5 @@
-import { LinkTarget } from '../enums/link';
-import { OptionScope, OptionStatus } from '../enums/option';
+import { LinkTarget } from 'src/app/enums/link';
+import { OptionScope, OptionStatus } from 'src/app/enums/option';
 
 export interface OptionEntity {
   [key: string]: string;

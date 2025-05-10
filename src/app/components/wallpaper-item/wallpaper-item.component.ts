@@ -2,12 +2,12 @@ import { DatePipe, NgIf } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { ListMode } from '../../enums/common';
-import { WallpaperLang } from '../../enums/wallpaper';
-import { Wallpaper } from '../../interfaces/wallpaper';
-import { NumberViewPipe } from '../../pipes/number-view.pipe';
-import { UserAgentService } from '../../services/user-agent.service';
-import { WallpaperService } from '../../services/wallpaper.service';
+import { ListMode } from 'src/app/enums/common';
+import { WallpaperLang } from 'src/app/enums/wallpaper';
+import { Wallpaper } from 'src/app/interfaces/wallpaper';
+import { NumberViewPipe } from 'src/app/pipes/number-view.pipe';
+import { UserAgentService } from 'src/app/services/user-agent.service';
+import { WallpaperService } from 'src/app/services/wallpaper.service';
 
 @Component({
   selector: 'app-wallpaper-item',

@@ -5,34 +5,34 @@ import { ActivatedRoute } from '@angular/router';
 import { isEmpty, uniq } from 'lodash';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
-import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
-import { GameItemComponent } from '../../components/game-item/game-item.component';
-import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
-import { PaginationComponent } from '../../components/pagination/pagination.component';
-import { PostItemComponent } from '../../components/post-item/post-item.component';
-import { WallpaperItemComponent } from '../../components/wallpaper-item/wallpaper-item.component';
-import { Message } from '../../config/message.enum';
-import { ListMode } from '../../enums/common';
-import { SearchType } from '../../enums/search';
-import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
-import { CustomError } from '../../interfaces/custom-error';
-import { OptionEntity } from '../../interfaces/option';
+import { BreadcrumbComponent } from 'src/app/components/breadcrumb/breadcrumb.component';
+import { GameItemComponent } from 'src/app/components/game-item/game-item.component';
+import { MakeMoneyComponent } from 'src/app/components/make-money/make-money.component';
+import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
+import { PostItemComponent } from 'src/app/components/post-item/post-item.component';
+import { WallpaperItemComponent } from 'src/app/components/wallpaper-item/wallpaper-item.component';
+import { Message } from 'src/app/config/message.enum';
+import { ListMode } from 'src/app/enums/common';
+import { SearchType } from 'src/app/enums/search';
+import { BreadcrumbEntity } from 'src/app/interfaces/breadcrumb';
+import { CustomError } from 'src/app/interfaces/custom-error';
+import { OptionEntity } from 'src/app/interfaces/option';
 import {
   AllSearchResponse,
   GameSearchResponse,
   PostSearchResponse,
   WallpaperSearchResponse
-} from '../../interfaces/search';
-import { TenantAppModel } from '../../interfaces/tenant-app';
-import { BreadcrumbService } from '../../services/breadcrumb.service';
-import { CommonService } from '../../services/common.service';
-import { DestroyService } from '../../services/destroy.service';
-import { MetaService } from '../../services/meta.service';
-import { OptionService } from '../../services/option.service';
-import { PaginationService } from '../../services/pagination.service';
-import { SearchService } from '../../services/search.service';
-import { TenantAppService } from '../../services/tenant-app.service';
-import { UserAgentService } from '../../services/user-agent.service';
+} from 'src/app/interfaces/search';
+import { TenantAppModel } from 'src/app/interfaces/tenant-app';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { CommonService } from 'src/app/services/common.service';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { MetaService } from 'src/app/services/meta.service';
+import { OptionService } from 'src/app/services/option.service';
+import { PaginationService } from 'src/app/services/pagination.service';
+import { SearchService } from 'src/app/services/search.service';
+import { TenantAppService } from 'src/app/services/tenant-app.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
 
 @Component({
   selector: 'app-search',

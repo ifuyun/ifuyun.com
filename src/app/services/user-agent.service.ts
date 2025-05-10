@@ -1,6 +1,6 @@
 import { Inject, Injectable, Optional, REQUEST } from '@angular/core';
+import { UserAgentInfo } from 'src/app/interfaces/common';
 import { IBrowser, ICPU, IDevice, IEngine, IOS, IResult, UAParser } from 'ua-parser-js';
-import { UserAgentInfo } from '../interfaces/common';
 import { PlatformService } from './platform.service';
 
 @Injectable({

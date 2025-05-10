@@ -1,6 +1,6 @@
-import { CommentFlag } from '../enums/comment';
-import { CopyType } from '../enums/copyright';
-import { PostFormat, PostScope, PostStatus, PostType } from '../enums/post';
+import { CommentFlag } from 'src/app/enums/comment';
+import { CopyType } from 'src/app/enums/copyright';
+import { PostFormat, PostScope, PostStatus, PostType } from 'src/app/enums/post';
 import { BookEntity } from './book';
 import { BreadcrumbEntity } from './breadcrumb';
 import { QueryParam, ResultList } from './common';

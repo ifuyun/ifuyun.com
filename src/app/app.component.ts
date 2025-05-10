@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { filter, tap } from 'rxjs/operators';
-import { environment } from '../environments/environment';
+import { environment } from 'src/environments/environment';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { MSiderComponent } from './components/m-sider/m-sider.component';

@@ -1,4 +1,4 @@
-import { GameLogType, GameScope, GameStatus } from '../enums/game';
+import { GameLogType, GameScope, GameStatus } from 'src/app/enums/game';
 import { BreadcrumbEntity } from './breadcrumb';
 import { QueryParam, ResultList } from './common';
 import { TagEntity } from './tag';

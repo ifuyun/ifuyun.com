@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { COPY_TYPE } from '../config/copyright.constant';
-import { CopyType } from '../enums/copyright';
+import { COPY_TYPE } from 'src/app/config/copyright.constant';
+import { CopyType } from 'src/app/enums/copyright';
 
 @Pipe({
   name: 'copyType'

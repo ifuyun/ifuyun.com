@@ -7,24 +7,24 @@ import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
-import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
-import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
-import { PaginationComponent } from '../../components/pagination/pagination.component';
-import { WallpaperItemComponent } from '../../components/wallpaper-item/wallpaper-item.component';
-import { ListMode } from '../../enums/common';
-import { WallpaperLang } from '../../enums/wallpaper';
-import { OptionEntity } from '../../interfaces/option';
-import { TenantAppModel } from '../../interfaces/tenant-app';
-import { Wallpaper, WallpaperQueryParam } from '../../interfaces/wallpaper';
-import { BreadcrumbService } from '../../services/breadcrumb.service';
-import { CommonService } from '../../services/common.service';
-import { DestroyService } from '../../services/destroy.service';
-import { MetaService } from '../../services/meta.service';
-import { OptionService } from '../../services/option.service';
-import { PaginationService } from '../../services/pagination.service';
-import { TenantAppService } from '../../services/tenant-app.service';
-import { UserAgentService } from '../../services/user-agent.service';
-import { WallpaperService } from '../../services/wallpaper.service';
+import { BreadcrumbComponent } from 'src/app/components/breadcrumb/breadcrumb.component';
+import { MakeMoneyComponent } from 'src/app/components/make-money/make-money.component';
+import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
+import { WallpaperItemComponent } from 'src/app/components/wallpaper-item/wallpaper-item.component';
+import { ListMode } from 'src/app/enums/common';
+import { WallpaperLang } from 'src/app/enums/wallpaper';
+import { OptionEntity } from 'src/app/interfaces/option';
+import { TenantAppModel } from 'src/app/interfaces/tenant-app';
+import { Wallpaper, WallpaperQueryParam } from 'src/app/interfaces/wallpaper';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { CommonService } from 'src/app/services/common.service';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { MetaService } from 'src/app/services/meta.service';
+import { OptionService } from 'src/app/services/option.service';
+import { PaginationService } from 'src/app/services/pagination.service';
+import { TenantAppService } from 'src/app/services/tenant-app.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
+import { WallpaperService } from 'src/app/services/wallpaper.service';
 
 @Component({
   selector: 'app-wallpaper-jigsaw-list',
@@ -41,7 +41,10 @@ import { WallpaperService } from '../../services/wallpaper.service';
   ],
   providers: [DestroyService],
   templateUrl: './wallpaper-jigsaw-list.component.html',
-  styleUrls: ['../wallpaper-list/wallpaper-list.component.less', '../post-list/post-list.component.less']
+  styleUrls: [
+    '../../wallpaper/wallpaper-list/wallpaper-list.component.less',
+    '../../post/post-list/post-list.component.less'
+  ]
 })
 export class WallpaperJigsawListComponent implements OnInit {
   isMobile = false;

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { IDBPDatabase, openDB } from 'idb';
-import { COOKIE_KEY_UV_ID } from '../../config/common.constant';
-import { CommonService } from '../../services/common.service';
-import { PlatformService } from '../../services/platform.service';
-import { SsrCookieService } from '../../services/ssr-cookie.service';
+import { COOKIE_KEY_UV_ID } from 'src/app/config/common.constant';
+import { CommonService } from 'src/app/services/common.service';
+import { PlatformService } from 'src/app/services/platform.service';
+import { SsrCookieService } from 'src/app/services/ssr-cookie.service';
 import { JigsawCacheData, JigsawCacheDB } from './jigsaw.interface';
 
 @Injectable({ providedIn: 'root' })

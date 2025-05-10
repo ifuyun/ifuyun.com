@@ -1,4 +1,4 @@
-import { CommentObjectType } from '../enums/comment';
+import { CommentObjectType } from 'src/app/enums/comment';
 import { IPInfo, MetaData } from './common';
 import { UserModel } from './user';
 

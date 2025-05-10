@@ -6,53 +6,54 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageService } from 'ng-zorro-antd/image';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
-import { CommentComponent } from '../../components/comment/comment.component';
-import { LoginModalComponent } from '../../components/login-modal/login-modal.component';
-import { MakeMoneyComponent } from '../../components/make-money/make-money.component';
-import { ShareModalComponent } from '../../components/share-modal/share-modal.component';
-import { WallpaperPrevNextComponent } from '../../components/wallpaper-prev-next/wallpaper-prev-next.component';
-import { WallpaperRelatedComponent } from '../../components/wallpaper-related/wallpaper-related.component';
-import { Message } from '../../config/message.enum';
-import { ResponseCode } from '../../config/response-code.enum';
-import { CommentObjectType } from '../../enums/comment';
-import { FavoriteType } from '../../enums/favorite';
-import { VoteType, VoteValue } from '../../enums/vote';
-import { WallpaperLang } from '../../enums/wallpaper';
-import { BreadcrumbEntity } from '../../interfaces/breadcrumb';
-import { OptionEntity } from '../../interfaces/option';
-import { TenantAppModel } from '../../interfaces/tenant-app';
-import { Wallpaper } from '../../interfaces/wallpaper';
-import { NumberViewPipe } from '../../pipes/number-view.pipe';
-import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
-import { BreadcrumbService } from '../../services/breadcrumb.service';
-import { CommentService } from '../../services/comment.service';
-import { CommonService } from '../../services/common.service';
-import { DestroyService } from '../../services/destroy.service';
-import { FavoriteService } from '../../services/favorite.service';
-import { MessageService } from '../../services/message.service';
-import { MetaService } from '../../services/meta.service';
-import { OptionService } from '../../services/option.service';
-import { PlatformService } from '../../services/platform.service';
-import { TenantAppService } from '../../services/tenant-app.service';
-import { UserAgentService } from '../../services/user-agent.service';
-import { UserService } from '../../services/user.service';
-import { VoteService } from '../../services/vote.service';
-import { WallpaperService } from '../../services/wallpaper.service';
-import { filterHtmlTag, truncateString } from '../../utils/helper';
+import { BreadcrumbComponent } from 'src/app/components/breadcrumb/breadcrumb.component';
+import { CommentComponent } from 'src/app/components/comment/comment.component';
+import { JigsawComponent } from 'src/app/components/jigsaw/jigsaw.component';
+import { LoginModalComponent } from 'src/app/components/login-modal/login-modal.component';
+import { MakeMoneyComponent } from 'src/app/components/make-money/make-money.component';
+import { ShareModalComponent } from 'src/app/components/share-modal/share-modal.component';
+import { WallpaperPrevNextComponent } from 'src/app/components/wallpaper-prev-next/wallpaper-prev-next.component';
+import { WallpaperRelatedComponent } from 'src/app/components/wallpaper-related/wallpaper-related.component';
+import { Message } from 'src/app/config/message.enum';
+import { ResponseCode } from 'src/app/config/response-code.enum';
+import { CommentObjectType } from 'src/app/enums/comment';
+import { FavoriteType } from 'src/app/enums/favorite';
+import { VoteType, VoteValue } from 'src/app/enums/vote';
+import { WallpaperLang } from 'src/app/enums/wallpaper';
+import { BreadcrumbEntity } from 'src/app/interfaces/breadcrumb';
+import { OptionEntity } from 'src/app/interfaces/option';
+import { TenantAppModel } from 'src/app/interfaces/tenant-app';
+import { Wallpaper } from 'src/app/interfaces/wallpaper';
+import { NumberViewPipe } from 'src/app/pipes/number-view.pipe';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { CommentService } from 'src/app/services/comment.service';
+import { CommonService } from 'src/app/services/common.service';
+import { DestroyService } from 'src/app/services/destroy.service';
+import { FavoriteService } from 'src/app/services/favorite.service';
+import { MessageService } from 'src/app/services/message.service';
+import { MetaService } from 'src/app/services/meta.service';
+import { OptionService } from 'src/app/services/option.service';
+import { PlatformService } from 'src/app/services/platform.service';
+import { TenantAppService } from 'src/app/services/tenant-app.service';
+import { UserAgentService } from 'src/app/services/user-agent.service';
+import { UserService } from 'src/app/services/user.service';
+import { VoteService } from 'src/app/services/vote.service';
+import { WallpaperJigsawService } from 'src/app/services/wallpaper-jigsaw.service';
+import { WallpaperService } from 'src/app/services/wallpaper.service';
+import { filterHtmlTag, truncateString } from 'src/app/utils/helper';
+import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-wallpaper',
+  selector: 'app-wallpaper-jigsaw',
   imports: [
     NgIf,
     RouterLink,
     NzIconModule,
     NzButtonModule,
     DatePipe,
-    SafeHtmlPipe,
     NumberViewPipe,
     BreadcrumbComponent,
+    JigsawComponent,
     WallpaperPrevNextComponent,
     WallpaperRelatedComponent,
     ShareModalComponent,
@@ -61,10 +62,10 @@ import { filterHtmlTag, truncateString } from '../../utils/helper';
     MakeMoneyComponent
   ],
   providers: [DestroyService, NzImageService],
-  templateUrl: './wallpaper.component.html',
-  styleUrl: './wallpaper.component.less'
+  templateUrl: './wallpaper-jigsaw.component.html',
+  styleUrl: './wallpaper-jigsaw.component.less'
 })
-export class WallpaperComponent implements OnInit {
+export class WallpaperJigsawComponent implements OnInit {
   readonly commentType = CommentObjectType.WALLPAPER;
 
   isMobile = false;
@@ -82,11 +83,7 @@ export class WallpaperComponent implements OnInit {
     return this.lang === WallpaperLang.CN ? {} : { lang: this.lang };
   }
 
-  get translateLangParams() {
-    return this.lang === WallpaperLang.CN ? { lang: WallpaperLang.EN } : {};
-  }
-
-  protected pageIndex = 'wallpaper';
+  protected pageIndex = 'jigsaw';
 
   private isSignIn = false;
   private appInfo!: TenantAppModel;
@@ -111,7 +108,8 @@ export class WallpaperComponent implements OnInit {
     private readonly wallpaperService: WallpaperService,
     private readonly voteService: VoteService,
     private readonly favoriteService: FavoriteService,
-    private readonly commentService: CommentService
+    private readonly commentService: CommentService,
+    private readonly wallpaperJigsawService: WallpaperJigsawService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -273,7 +271,7 @@ export class WallpaperComponent implements OnInit {
 
   private getWallpaper(): void {
     this.wallpaperService
-      .getWallpaperById(this.wallpaperId)
+      .getWallpaperById(this.wallpaperId, true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((wallpaper) => {
         if (!wallpaper) {
@@ -286,29 +284,20 @@ export class WallpaperComponent implements OnInit {
   }
 
   private updateWallpaper(wallpaper: Wallpaper): void {
-    let hasTranslation: boolean;
-
     this.wallpaper = this.wallpaperService.transformWallpaper(wallpaper);
     if (this.lang === WallpaperLang.EN) {
-      hasTranslation = this.wallpaper.isCn;
-
       this.wallpaper.wallpaperTitle = this.wallpaper.wallpaperTitleEn;
       this.wallpaper.wallpaperCopyright = this.wallpaper.wallpaperCopyrightEn;
-      this.wallpaper.wallpaperStoryTitle = this.wallpaper.wallpaperStoryTitleEn;
-      this.wallpaper.wallpaperStory = this.wallpaper.wallpaperStoryEn;
       this.wallpaper.wallpaperLocation = this.wallpaper.wallpaperLocationEn;
-    } else {
-      hasTranslation = this.wallpaper.isEn;
     }
-    this.wallpaper.hasTranslation = hasTranslation;
-    this.wallpaper.wallpaperCopyrightAuthor = wallpaper.wallpaperCopyrightAuthor.replace(/^©\s*/i, '');
 
+    this.wallpaperJigsawService.updateActiveWallpaper(this.wallpaper);
     this.updatePageInfo();
     this.updateBreadcrumbs();
   }
 
   private updatePageInfo() {
-    const titles: string[] = [this.wallpaper.wallpaperCopyright, '高清壁纸', this.appInfo.appName];
+    const titles: string[] = [this.wallpaper.wallpaperCopyright, '壁纸拼图', this.appInfo.appName];
     let description = '';
     const fullStop = this.lang === WallpaperLang.EN ? '.' : '。';
     const comma = this.lang === WallpaperLang.EN ? ', ' : '，';
@@ -324,7 +313,7 @@ export class WallpaperComponent implements OnInit {
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
       description: `${description}${wallpaperDesc}`,
-      keywords: this.options['wallpaper_keywords'],
+      keywords: this.options['jigsaw_keywords'],
       author: this.options['site_author']
     });
   }
@@ -332,17 +321,15 @@ export class WallpaperComponent implements OnInit {
   private updateBreadcrumbs() {
     const breadcrumbs: BreadcrumbEntity[] = [
       {
-        label: '壁纸',
-        tooltip: '高清壁纸',
-        url: '/wallpaper',
-        param: this.lang === WallpaperLang.EN ? { lang: WallpaperLang.EN } : {},
+        label: '壁纸拼图',
+        tooltip: '壁纸拼图',
+        url: '/jigsaw',
         isHeader: false
       },
       {
         label: this.wallpaper.wallpaperCopyright,
         tooltip: this.wallpaper.wallpaperCopyright,
         url: '.',
-        param: this.lang === WallpaperLang.EN ? { lang: WallpaperLang.EN } : {},
         isHeader: true
       }
     ];
