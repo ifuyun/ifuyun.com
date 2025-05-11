@@ -1,7 +1,8 @@
 import { DatePipe, NgIf } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { Params, RouterLink } from '@angular/router';
+import { Params } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { DomainLink } from 'src/app/directives/domain-link';
 import { ListMode } from 'src/app/enums/common';
 import { WallpaperLang } from 'src/app/enums/wallpaper';
 import { Wallpaper } from 'src/app/interfaces/wallpaper';
@@ -11,7 +12,7 @@ import { WallpaperService } from 'src/app/services/wallpaper.service';
 
 @Component({
   selector: 'app-wallpaper-item',
-  imports: [NgIf, RouterLink, NzIconModule, DatePipe, NumberViewPipe],
+  imports: [NgIf, NzIconModule, DatePipe, NumberViewPipe, DomainLink],
   templateUrl: './wallpaper-item.component.html',
   styleUrls: ['../post-item/post-item.component.less', './wallpaper-item.component.less']
 })

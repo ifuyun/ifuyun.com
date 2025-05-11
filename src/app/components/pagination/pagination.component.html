@@ -4,7 +4,7 @@
       <ul>
         @if (pagination.page > 1) {
           <li>
-            <a [routerLink]="linkUrl"
+            <a [domainLink]="linkUrl"
                [queryParams]="getLinkParams(pagination.prev)"
                title="上一页"><nz-icon nzType="left" /></a>
           </li>
@@ -16,7 +16,7 @@
             }
             @if (page + 1 !== pagination.page) {
               <li>
-                <a [routerLink]="linkUrl"
+                <a [domainLink]="linkUrl"
                    [queryParams]="getLinkParams(page + 1)"
                    title="第{{ page + 1 }}页">{{ page + 1 }}</a>
               </li>
@@ -30,7 +30,7 @@
             }
             @if (page + 1 !== pagination.page) {
               <li>
-                <a [routerLink]="linkUrl"
+                <a [domainLink]="linkUrl"
                    [queryParams]="getLinkParams(page + 1)"
                    title="第{{ page + 1 }}页">{{ page + 1 }}</a>
               </li>
@@ -38,13 +38,13 @@
           }
           <li class="ellipsis"><nz-icon nzType="ellipsis" /></li>
           <li>
-            <a [routerLink]="linkUrl"
+            <a [domainLink]="linkUrl"
                [queryParams]="getLinkParams(pagination.pages)"
                title="第{{ pagination.pages }}页">{{ pagination.pages }}</a>
           </li>
         }
         @if (pagination.pages >= 10 && pagination.page >= pagination.pages - 4) {
-          <li><a [routerLink]="linkUrl"
+          <li><a [domainLink]="linkUrl"
                  [queryParams]="getLinkParams(1)"
                  title="第1页">1</a></li>
           <li class="ellipsis"><nz-icon nzType="ellipsis" /></li>
@@ -54,7 +54,7 @@
             }
             @if (pagination.pages - 4 + page !== pagination.page) {
               <li>
-                <a [routerLink]="linkUrl"
+                <a [domainLink]="linkUrl"
                    [queryParams]="getLinkParams(pagination.pages - 4 + page)"
                    title="第{{ pagination.pages - 4 + page }}页">{{ pagination.pages - 4 + page }}</a>
               </li>
@@ -62,7 +62,7 @@
           }
         }
         @if (pagination.pages >= 10 && pagination.page > 5 && pagination.page < pagination.pages - 4) {
-          <li><a [routerLink]="linkUrl"
+          <li><a [domainLink]="linkUrl"
                  [queryParams]="getLinkParams(1)"
                  title="第1页">1</a></li>
           <li class="ellipsis"><nz-icon nzType="ellipsis" /></li>
@@ -72,7 +72,7 @@
             }
             @if (pagination.page - 2 + page !== pagination.page) {
               <li>
-                <a [routerLink]="linkUrl"
+                <a [domainLink]="linkUrl"
                    [queryParams]="getLinkParams(pagination.page - 2 + page)"
                    title="第{{ pagination.page - 2 + page }}页">{{ pagination.page - 2 + page }}</a>
               </li>
@@ -80,13 +80,13 @@
           }
           <li class="ellipsis"><nz-icon nzType="ellipsis" /></li>
           <li>
-            <a [routerLink]="linkUrl"
+            <a [domainLink]="linkUrl"
                [queryParams]="getLinkParams(pagination.pages)"
                title="第{{ pagination.pages }}页">{{ pagination.pages }}</a>
           </li>
         }
         <li *ngIf="pagination.page < pagination.end">
-          <a [routerLink]="linkUrl"
+          <a [domainLink]="linkUrl"
              [queryParams]="getLinkParams(pagination.next)"
              title="下一页"><nz-icon nzType="right" /></a>
         </li>
@@ -97,13 +97,13 @@
     <div class="pagination m-pagination">
       <div>
         <a *ngIf="pagination.page > 1"
-           [routerLink]="linkUrl"
+           [domainLink]="linkUrl"
            [queryParams]="getLinkParams(pagination.prev)"
            title="上一页"><nz-icon nzType="left" /><span>上一页</span></a>
       </div>
       <div>
         <a *ngIf="pagination.page < pagination.end"
-           [routerLink]="linkUrl"
+           [domainLink]="linkUrl"
            [queryParams]="getLinkParams(pagination.next)"
            title="下一页"><span>下一页</span><nz-icon nzType="right" /></a>
       </div>

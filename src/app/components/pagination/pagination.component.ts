@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { takeUntil } from 'rxjs';
+import { DomainLink } from 'src/app/directives/domain-link';
 import { PaginationData, PaginationEntity } from 'src/app/interfaces/pagination';
 import { RangePipe } from 'src/app/pipes/range.pipe';
 import { DestroyService } from 'src/app/services/destroy.service';
@@ -11,7 +12,7 @@ import { UserAgentService } from 'src/app/services/user-agent.service';
 
 @Component({
   selector: 'app-pagination',
-  imports: [NgIf, RouterLink, NzIconModule, RangePipe],
+  imports: [NgIf, NzIconModule, RangePipe, DomainLink],
   providers: [DestroyService],
   templateUrl: './pagination.component.html',
   styleUrl: './pagination.component.less'

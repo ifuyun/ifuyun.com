@@ -7,7 +7,7 @@
           <span *ngIf="post.post.postOriginal === 1" class="meta-tag meta-tag-original">原创</span>
           <span *ngIf="post.post.postPayFlag" class="meta-tag meta-tag-pay">付费</span>
           <span *ngIf="post.post.postLoginFlag" class="meta-tag meta-tag-vip">会员</span>
-          <h2><a [routerLink]="post.post.postGuid"
+          <h2><a [domainLink]="post.post.postGuid"
                  [title]="post.post.postTitle"
                  rel="bookmark">{{ post.post.postTitle }}</a></h2>
         </header>
@@ -22,7 +22,7 @@
             <nz-icon nzType="eye" /><span>{{ post.post.postViews | numberView: 'K' }}</span>
           </div>
           <a *ngIf="post.post.commentFlag !== 'closed'"
-             [routerLink]="post.post.postGuid"
+             [domainLink]="post.post.postGuid"
              fragment="comments"
              title="《{{ post.post.postTitle }}》评论">
             @if (post.post.postComments > 0) {
@@ -37,7 +37,7 @@
         </div>
       </div>
       <div class="post-item-cover">
-        <a [routerLink]="post.post.postGuid" [title]="post.post.postTitle">
+        <a [domainLink]="post.post.postGuid" [title]="post.post.postTitle">
           @if (index > 3) {
             <span class="post-item-cover-img lazyload" [attr.data-bg]="post.post.cover"></span>
           } @else {
@@ -53,7 +53,7 @@
           <div class="post-item-tag-icon"><nz-icon nzType="folder" /></div>
           <ul>
             <li *ngFor="let category of post.categories">
-              <a [routerLink]="'/post/category/' + category.taxonomySlug"
+              <a [domainLink]="'/post/category/' + category.taxonomySlug"
                  title="{{ category.taxonomyName }}"
                  rel="category">{{ category.taxonomyName }}</a>
             </li>
@@ -65,7 +65,7 @@
           <div class="post-item-tag-icon"><nz-icon nzType="tag" /></div>
           <ul>
             <li *ngFor="let tag of post.tags">
-              <a [routerLink]="'/post/tag/' + tag.tagName"
+              <a [domainLink]="'/post/tag/' + tag.tagName"
                  [title]="tag.tagName"
                  rel="category">{{ tag.tagName }}</a>
             </li>
@@ -81,14 +81,14 @@
         <span *ngIf="post.post.postSticky" class="m-meta-tag meta-tag-sticky"><nz-icon nzType="vertical-align-top" /></span>
         <span *ngIf="post.post.postPayFlag" class="m-meta-tag meta-tag-pay"><nz-icon nzType="lock" /></span>
         <span *ngIf="post.post.postLoginFlag" class="m-meta-tag meta-tag-vip"><nz-icon nzType="user-add" /></span>
-        <a [routerLink]="post.post.postGuid"
+        <a [domainLink]="post.post.postGuid"
            [title]="post.post.postTitle"
            rel="bookmark">{{ post.post.postTitle }}</a>
       </h2>
       <div class="m-post-item-stat">
         <span><nz-icon nzType="eye" /><span>{{ post.post.postViews | numberView: 'K' }}</span></span>
         <a *ngIf="post.post.commentFlag !== 'closed'"
-           [routerLink]="post.post.postGuid"
+           [domainLink]="post.post.postGuid"
            fragment="comments"
            title="《{{ post.post.postTitle }}》评论">
           @if (post.post.postComments > 0) {
@@ -111,7 +111,7 @@
     </span>
     </div>
     <div class="m-post-item-cover" *ngIf="post.post.cover">
-      <a [routerLink]="post.post.postGuid" [title]="post.post.postTitle">
+      <a [domainLink]="post.post.postGuid" [title]="post.post.postTitle">
         @if (index > 3) {
           <span class="m-post-item-cover-img lazyload" [attr.data-bg]="post.post.cover"></span>
         } @else {
@@ -128,7 +128,7 @@
         <div class="post-item-tag-icon m-post-item-tag-icon"><nz-icon nzType="tag" /></div>
         <ul>
           <li *ngFor="let tag of post.tags">
-            <a [routerLink]="'/post/tag/' + tag.tagName" [title]="tag.tagName" rel="category">{{ tag.tagName }}</a>
+            <a [domainLink]="'/post/tag/' + tag.tagName" [title]="tag.tagName" rel="category">{{ tag.tagName }}</a>
           </li>
         </ul>
       </div>

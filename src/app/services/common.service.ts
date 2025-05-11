@@ -78,6 +78,20 @@ export class CommonService {
     return this.document.referrer.replace(/^https?:\/\/[^/]+/i, '');
   }
 
+  getHost() {
+    if (this.platform.isServer) {
+      return new URL(this.request.url).host;
+    }
+    return window.location.host;
+  }
+
+  getHostname() {
+    if (this.platform.isServer) {
+      return new URL(this.request.url).hostname;
+    }
+    return window.location.hostname;
+  }
+
   getShareURL(userId?: string) {
     userId = userId || this.cookieService.get(COOKIE_KEY_USER_ID);
 
