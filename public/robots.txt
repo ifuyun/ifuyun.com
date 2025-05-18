@@ -1,6 +1,10 @@
 User-agent: *
 Allow: /
 Sitemap: https://www.ifuyun.com/sitemap.xml
+Sitemap: https://blod.ifuyun.com/sitemap.xml
+Sitemap: https://wallpaper.ifuyun.com/sitemap.xml
+Sitemap: https://jigsaw.ifuyun.com/sitemap.xml
+Sitemap: https://game.ifuyun.com/sitemap.xml
 
 User-agent: MJ12bot
 Disallow: /

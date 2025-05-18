@@ -1,0 +1,35 @@
+@if (!errorPage) {
+  @if (!errorState || !errorState.visible) {
+    @if (!isMobile) {
+      <lib-header></lib-header>
+      <div class="body-wrap">
+        <div class="body" [class.body-center]="isBodyCentered">
+          <router-outlet/>
+        </div>
+      </div>
+      <lib-footer></lib-footer>
+    } @else {
+      <div class="m-body-wrap" [class.open]="siderVisible">
+        <lib-header></lib-header>
+        <div class="m-body">
+          <main class="m-main" [class.m-main-center]="isBodyCentered">
+            <router-outlet/>
+          </main>
+          <lib-footer></lib-footer>
+        </div>
+        <div *ngIf="siderVisible" class="m-mask m-mask-sider" (click)="closeSider()"></div>
+      </div>
+      <lib-m-sider></lib-m-sider>
+    }
+  } @else {
+    <!--global errors-->
+    <ng-container [ngSwitch]="errorState.code">
+      <lib-forbidden *ngSwitchCase="403" [errorState]="errorState"></lib-forbidden>
+      <lib-not-found *ngSwitchCase="404" [errorState]="errorState"></lib-not-found>
+      <lib-server-error *ngSwitchDefault [errorState]="errorState"></lib-server-error>
+    </ng-container>
+  }
+} @else {
+  <!--error pages-->
+  <router-outlet/>
+}

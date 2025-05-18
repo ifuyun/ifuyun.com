@@ -1,0 +1,12 @@
+<nz-modal nzDraggable
+          nzCentered
+          [nzVisible]="visible"
+          [nzWidth]="352"
+          nzTitle="登录"
+          [nzFooter]="null"
+          (nzOnCancel)="closeModal()"
+          (nzOnOk)="closeModal()">
+  <ng-container *nzModalContent>
+    <lib-login-form [isModal]="true" (closeForm)="closeModal()"></lib-login-form>
+  </ng-container>
+</nz-modal>

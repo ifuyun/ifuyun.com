@@ -1,0 +1,34 @@
+<lib-breadcrumb></lib-breadcrumb>
+@if (total > 0) {
+  <div [class.post-list]="!isMobile" [class.m-post-list]="isMobile">
+    @if (searchType === 'post') {
+      <ng-container *ngFor="let item of postResult; let i = index">
+        <lib-post-item [post]="item" [index]="i"></lib-post-item>
+      </ng-container>
+    } @else if (searchType === 'wallpaper') {
+      <ng-container *ngFor="let item of wallpaperResult; let i = index">
+        <lib-wallpaper-item [wallpaper]="item" [mode]="ListMode.LIST" [index]="i"></lib-wallpaper-item>
+      </ng-container>
+    } @else if (searchType === 'game') {
+      <ng-container *ngFor="let item of gameResult; let i = index">
+        <lib-game-item [game]="item" [mode]="ListMode.LIST" [index]="i"></lib-game-item>
+      </ng-container>
+    } @else {
+      <ng-container *ngFor="let item of searchResult; let i = index">
+        @if (item.type === 'post') {
+          <lib-post-item [post]="$any(item.data)" [index]="i"></lib-post-item>
+        } @else if (item.type === 'wallpaper') {
+          <lib-wallpaper-item [wallpaper]="$any(item.data)" [mode]="ListMode.LIST" [index]="i"></lib-wallpaper-item>
+        } @else {
+          <lib-game-item [game]="$any(item.data)" [mode]="ListMode.LIST" [index]="i"></lib-game-item>
+        }
+      </ng-container>
+    }
+  </div>
+} @else {
+  <div class="empty" [class.p-empty]="!isMobile" [class.m-empty]="isMobile">
+    <nz-empty nzNotFoundImage="simple"></nz-empty>
+  </div>
+}
+<lib-make-money></lib-make-money>
+<lib-pagination></lib-pagination>

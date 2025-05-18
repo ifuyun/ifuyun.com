@@ -1,0 +1,34 @@
+@import "../style/variables";
+
+.auth-box {
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  line-height: 24px;
+  margin: @content-margin auto;
+
+  .auth-box-body {
+    border-radius: @primary-border-radius;
+    background-color: var(--login-bg-color);
+  }
+}
+
+.p-auth-box {
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-bg {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.p-auth-bg {
+  min-width: @min-body-width;
+}

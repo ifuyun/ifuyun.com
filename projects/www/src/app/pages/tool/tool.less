@@ -1,0 +1,83 @@
+@import "common/components/style/variables";
+
+.tool-wrap {
+  border: 1px solid var(--primary-border-color);
+  border-radius: @primary-border-radius;
+
+  .tool-header {
+    padding-left: 12px;
+    border-left: 4px solid var(--primary-color);
+    font-size: @header-font-size;
+    font-weight: 600;
+    line-height: 24px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.p-tool-wrap {
+  padding: @primary-padding;
+
+  .tool-header {
+    margin: @primary-margin 0;
+  }
+
+  .tool-actions {
+    button:not(:last-child) {
+      margin-right: 12px;
+    }
+  }
+}
+
+.m-tool-wrap {
+  padding: @m-content-padding;
+
+  .tool-header {
+    margin: @m-primary-margin 0;
+  }
+
+  .tool-actions {
+    button:not(:last-child) {
+      margin-right: 8px;
+    }
+  }
+}
+
+.tool-form {
+  display: flex;
+  flex-direction: column;
+
+  > :not(:last-child) {
+    margin-bottom: @content-margin;
+  }
+
+  .tool-form-label {
+    display: inline-block;
+    padding-bottom: 8px;
+    line-height: 24px;
+    font-weight: 600;
+  }
+
+  .tool-actions {
+    display: flex;
+    justify-content: center;
+
+    button {
+      flex-shrink: 0;
+    }
+  }
+
+  .tool-description {
+    ol {
+      padding-left: 2.2em;
+      list-style: decimal;
+      line-height: @post-line-height;
+    }
+  }
+}

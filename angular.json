@@ -3,7 +3,40 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ifuyun": {
+    "common": {
+      "projectType": "library",
+      "root": "projects/common",
+      "sourceRoot": "projects/common/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/common/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/common/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/common/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/common/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    },
+    "www": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -32,57 +65,59 @@
           "skipTests": true
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "projects/www",
+      "sourceRoot": "projects/www/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist",
-            "index": "src/index.html",
-            "browser": "src/main.ts",
+            "outputPath": "dist/www",
+            "index": "projects/www/src/index.html",
+            "browser": "projects/www/src/main.ts",
             "polyfills": [
               "zone.js"
             ],
-            "tsConfig": "tsconfig.app.json",
+            "tsConfig": "projects/www/tsconfig.app.json",
             "inlineStyleLanguage": "less",
             "allowedCommonJsDependencies": [
               "lodash",
               "murmurhash"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["dist", "node_modules"]
+            },
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "projects/www/public"
               },
               {
                 "glob": "**/*",
-                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
-                "output": "/assets/"
+                "input": "public"
               }
             ],
             "styles": [
-              "src/styles.less"
+              "projects/www/src/styles.less"
             ],
             "scripts": [
               "node_modules/lazysizes/lazysizes.min.js",
               "node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.min.js"
             ],
-            "server": "src/main.server.ts",
+            "server": "projects/www/src/main.server.ts",
             "outputMode": "server",
             "ssr": {
-              "entry": "src/server.ts"
+              "entry": "projects/www/src/server.ts"
             }
           },
           "configurations": {
             "production": {
-              "deployUrl": "https://cdn.ifuyun.com/",
+              "deployUrl": "https://cdn.ifuyun.com/www/",
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "4MB",
-                  "maximumError": "8MB"
+                  "maximumWarning": "3MB",
+                  "maximumError": "6MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -98,8 +133,8 @@
               "sourceMap": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
+                  "replace": "env/environment.ts",
+                  "with": "env/environment.development.ts"
                 }
               ]
             }
@@ -109,14 +144,14 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "port": 2010
+            "port": 2001
           },
           "configurations": {
             "production": {
-              "buildTarget": "ifuyun:build:production"
+              "buildTarget": "www:build:production"
             },
             "development": {
-              "buildTarget": "ifuyun:build:development"
+              "buildTarget": "www:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -131,16 +166,620 @@
               "zone.js",
               "zone.js/testing"
             ],
-            "tsConfig": "tsconfig.spec.json",
+            "tsConfig": "projects/www/tsconfig.spec.json",
             "inlineStyleLanguage": "less",
             "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/www/public"
+              },
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
             "styles": [
-              "src/styles.less"
+              "projects/www/src/styles.less"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    },
+    "blog": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "less",
+          "skipTests": true
+        },
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:interceptor": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:resolver": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
+      "root": "projects/blog",
+      "sourceRoot": "projects/blog/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/blog",
+            "index": "projects/blog/src/index.html",
+            "browser": "projects/blog/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "projects/blog/tsconfig.app.json",
+            "inlineStyleLanguage": "less",
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "murmurhash"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["dist", "node_modules"]
+            },
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/blog/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "projects/blog/src/styles.less"
+            ],
+            "scripts": [
+              "node_modules/lazysizes/lazysizes.min.js",
+              "node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.min.js"
+            ],
+            "server": "projects/blog/src/main.server.ts",
+            "outputMode": "server",
+            "ssr": {
+              "entry": "projects/blog/src/server.ts"
+            }
+          },
+          "configurations": {
+            "production": {
+              "deployUrl": "https://cdn.ifuyun.com/blog/",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3MB",
+                  "maximumError": "6MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "10kB",
+                  "maximumError": "20kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "env/environment.ts",
+                  "with": "env/environment.development.ts"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "port": 2002
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "blog:build:production"
+            },
+            "development": {
+              "buildTarget": "blog:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "projects/blog/tsconfig.spec.json",
+            "inlineStyleLanguage": "less",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/blog/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "projects/blog/src/styles.less"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    },
+    "wallpaper": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "less",
+          "skipTests": true
+        },
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:interceptor": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:resolver": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
+      "root": "projects/wallpaper",
+      "sourceRoot": "projects/wallpaper/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/wallpaper",
+            "index": "projects/wallpaper/src/index.html",
+            "browser": "projects/wallpaper/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "projects/wallpaper/tsconfig.app.json",
+            "inlineStyleLanguage": "less",
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "murmurhash"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["dist", "node_modules"]
+            },
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/wallpaper/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "projects/wallpaper/src/styles.less"
+            ],
+            "scripts": [
+              "node_modules/lazysizes/lazysizes.min.js",
+              "node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.min.js"
+            ],
+            "server": "projects/wallpaper/src/main.server.ts",
+            "outputMode": "server",
+            "ssr": {
+              "entry": "projects/wallpaper/src/server.ts"
+            }
+          },
+          "configurations": {
+            "production": {
+              "deployUrl": "https://cdn.ifuyun.com/wallpaper/",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3MB",
+                  "maximumError": "6MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "10kB",
+                  "maximumError": "20kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "env/environment.ts",
+                  "with": "env/environment.development.ts"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "port": 2003
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "wallpaper:build:production"
+            },
+            "development": {
+              "buildTarget": "wallpaper:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "projects/wallpaper/tsconfig.spec.json",
+            "inlineStyleLanguage": "less",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/wallpaper/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "projects/wallpaper/src/styles.less"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    },
+    "jigsaw": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "less",
+          "skipTests": true
+        },
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:interceptor": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:resolver": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
+      "root": "projects/jigsaw",
+      "sourceRoot": "projects/jigsaw/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/jigsaw",
+            "index": "projects/jigsaw/src/index.html",
+            "browser": "projects/jigsaw/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "projects/jigsaw/tsconfig.app.json",
+            "inlineStyleLanguage": "less",
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "murmurhash"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["dist", "node_modules", "projects"]
+            },
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/jigsaw/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "projects/jigsaw/src/styles.less"
+            ],
+            "scripts": [
+              "node_modules/lazysizes/lazysizes.min.js",
+              "node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.min.js"
+            ],
+            "server": "projects/jigsaw/src/main.server.ts",
+            "outputMode": "server",
+            "ssr": {
+              "entry": "projects/jigsaw/src/server.ts"
+            }
+          },
+          "configurations": {
+            "production": {
+              "deployUrl": "https://cdn.ifuyun.com/jigsaw/",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3MB",
+                  "maximumError": "6MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "10kB",
+                  "maximumError": "20kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "env/environment.ts",
+                  "with": "env/environment.development.ts"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "port": 2004
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "jigsaw:build:production"
+            },
+            "development": {
+              "buildTarget": "jigsaw:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "projects/jigsaw/tsconfig.spec.json",
+            "inlineStyleLanguage": "less",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/jigsaw/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "projects/jigsaw/src/styles.less"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    },
+    "game": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "less",
+          "skipTests": true
+        },
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:interceptor": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:resolver": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
+      "root": "projects/game",
+      "sourceRoot": "projects/game/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/game",
+            "index": "projects/game/src/index.html",
+            "browser": "projects/game/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "projects/game/tsconfig.app.json",
+            "inlineStyleLanguage": "less",
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "murmurhash"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["dist", "node_modules"]
+            },
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/game/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "projects/game/src/styles.less"
+            ],
+            "scripts": [
+              "node_modules/lazysizes/lazysizes.min.js",
+              "node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.min.js"
+            ],
+            "server": "projects/game/src/main.server.ts",
+            "outputMode": "server",
+            "ssr": {
+              "entry": "projects/game/src/server.ts"
+            }
+          },
+          "configurations": {
+            "production": {
+              "deployUrl": "https://cdn.ifuyun.com/game/",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3MB",
+                  "maximumError": "6MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "10kB",
+                  "maximumError": "20kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "env/environment.ts",
+                  "with": "env/environment.development.ts"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "port": 2005
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "game:build:production"
+            },
+            "development": {
+              "buildTarget": "game:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "projects/game/tsconfig.spec.json",
+            "inlineStyleLanguage": "less",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/game/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "projects/game/src/styles.less"
             ],
             "scripts": []
           }

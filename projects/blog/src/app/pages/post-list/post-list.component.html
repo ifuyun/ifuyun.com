@@ -1,0 +1,12 @@
+<lib-breadcrumb></lib-breadcrumb>
+@if (total > 0) {
+  <div [class.post-list]="!isMobile" [class.m-post-list]="isMobile">
+    <lib-post-item *ngFor="let post of posts; let i = index" [post]="post" [index]="i"></lib-post-item>
+  </div>
+} @else {
+  <div class="empty" [class.p-empty]="!isMobile" [class.m-empty]="isMobile">
+    <nz-empty nzNotFoundImage="simple"></nz-empty>
+  </div>
+}
+<lib-make-money></lib-make-money>
+<lib-pagination></lib-pagination>

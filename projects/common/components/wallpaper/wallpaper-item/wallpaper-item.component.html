@@ -1,0 +1,143 @@
+@if (mode === 'list') {
+  @if (!isMobile) {
+    <article class="post-item">
+      <div class="post-item-body">
+        <div class="post-item-content">
+          <header>
+            <h2><lib-a [href]="linkPrefix + wallpaper.wallpaperId"
+                       [queryParams]="getLangParams(wallpaper.isCn)"
+                       [title]="wallpaper.wallpaperCopyright"
+                       rel="bookmark">{{ wallpaper.wallpaperCopyright }}</lib-a></h2>
+          </header>
+          <div class="post-item-meta">
+            <div [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
+              <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
+            </div>
+            <div class="auto-fit" [title]="wallpaperLocation">
+              <nz-icon nzType="environment" /><span>{{ wallpaperLocation }}</span>
+            </div>
+            <div title="浏览: {{ wallpaper.wallpaperViews | numberView: 'K' }}">
+              <nz-icon nzType="eye" /><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
+            </div>
+            <a [routerLink]="domains['jigsaw'].url + wallpaper.wallpaperId"
+               title="拼图: {{ wallpaper.wallpaperPlays | numberView: 'K' }}">
+              <nz-icon nzType="product" /><span>{{ wallpaper.wallpaperPlays | numberView: 'K' }}</span>
+            </a>
+            <div title="喜欢: {{ wallpaper.wallpaperLikes | numberView: 'K' }}">
+              <nz-icon nzType="like" /><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
+            </div>
+          </div>
+          <div class="post-item-excerpt">
+            <span [innerHTML]="wallpaper.wallpaperStory"></span>
+          </div>
+        </div>
+        <div class="post-item-cover">
+          <lib-a [href]="linkPrefix + wallpaper.wallpaperId"
+                 [queryParams]="getLangParams(wallpaper.isCn)"
+                 [title]="wallpaper.wallpaperCopyright">
+            @if (index > 3) {
+              <span class="post-item-cover-img lazyload" [attr.data-bg]="wallpaper.wallpaperThumbUrl"></span>
+            } @else {
+              <span class="post-item-cover-img" [style.background-image]="'url(' + wallpaper.wallpaperThumbUrl + ')'"></span>
+            }
+            <span class="overlay"></span>
+          </lib-a>
+        </div>
+      </div>
+    </article>
+  } @else {
+    <article class="m-post-item">
+      <header>
+        <h2><lib-a [href]="linkPrefix + wallpaper.wallpaperId"
+                   [queryParams]="getLangParams(wallpaper.isCn)"
+                   [title]="wallpaper.wallpaperCopyright"
+                   rel="bookmark">{{ wallpaper.wallpaperCopyright }}</lib-a></h2>
+        <div class="m-post-item-stat">
+          <span><nz-icon nzType="eye" /><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span></span>
+          <span><nz-icon nzType="product" /><span>{{ wallpaper.wallpaperPlays | numberView: 'K' }}</span></span>
+          <span><nz-icon nzType="like" /><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span></span>
+        </div>
+      </header>
+      <div class="m-post-item-meta">
+        <span [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
+          <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
+        </span>
+        <span class="auto-fit" [title]="wallpaperLocation">
+          <nz-icon nzType="environment" /><span>{{ wallpaperLocation }}</span>
+        </span>
+      </div>
+      <div class="m-post-item-cover">
+        <lib-a [href]="linkPrefix + wallpaper.wallpaperId"
+               [queryParams]="getLangParams(wallpaper.isCn)"
+               [title]="wallpaper.wallpaperCopyright">
+          @if (index > 3) {
+            <span class="m-post-item-cover-img lazyload" [attr.data-bg]="wallpaper.wallpaperThumbUrl"></span>
+          } @else {
+            <span class="m-post-item-cover-img" [style.background-image]="'url(' + wallpaper.wallpaperThumbUrl + ')'"></span>
+          }
+          <span class="overlay"></span>
+        </lib-a>
+      </div>
+      <div class="m-post-item-excerpt">
+        <span [innerHTML]="wallpaper.wallpaperStory"></span>
+      </div>
+    </article>
+  }
+} @else {
+  <article class="post-card-item">
+    <div class="post-card-item-body">
+      <div class="post-card-cover" [class.m-post-card-cover]="isMobile">
+        <lib-a [href]="linkPrefix + wallpaper.wallpaperId"
+               [queryParams]="getLangParams(wallpaper.isCn)"
+               [title]="wallpaper.wallpaperCopyright">
+          @if (index > 3) {
+            <span class="post-item-cover-img lazyload" [attr.data-bg]="wallpaper.wallpaperThumbUrl"></span>
+          } @else {
+            <span class="post-item-cover-img" [style.background-image]="'url(' + wallpaper.wallpaperThumbUrl + ')'"></span>
+          }
+          <span class="overlay"></span>
+        </lib-a>
+      </div>
+      <div class="post-content">
+        <h2><lib-a [href]="linkPrefix + wallpaper.wallpaperId"
+                   [queryParams]="getLangParams(wallpaper.isCn)"
+                   [title]="wallpaper.wallpaperCopyright"
+                   rel="bookmark">{{ wallpaper.wallpaperCopyright }}</lib-a></h2>
+        <div class="post-meta-wrap">
+          <div class="post-meta" *ngIf="!isMobile">
+            <div class="auto-fit" [title]="wallpaperLocation">
+              <nz-icon nzType="environment" /><span>{{ wallpaperLocation }}</span>
+            </div>
+          </div>
+          <div class="post-meta">
+            <div class="date" [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
+              <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
+            </div>
+            <div class="actions">
+              <div title="浏览: {{ wallpaper.wallpaperViews | numberView: 'K' }}">
+                <nz-icon nzType="eye" /><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
+              </div>
+              <a [routerLink]="domains['jigsaw'].url + wallpaper.wallpaperId"
+                 title="拼图: {{ wallpaper.wallpaperPlays | numberView: 'K' }}">
+                <nz-icon nzType="product" /><span>{{ wallpaper.wallpaperPlays | numberView: 'K' }}</span>
+              </a>
+              <div title="喜欢: {{ wallpaper.wallpaperLikes | numberView: 'K' }}">
+                <nz-icon nzType="like" /><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
+              </div>
+              <lib-a [href]="linkPrefix + wallpaper.wallpaperId"
+                     [queryParams]="getLangParams(wallpaper.isCn)"
+                     fragment="comments"
+                     title="评论: {{ wallpaper.wallpaperComments | numberView: 'K' }}">
+                @if (wallpaper.wallpaperComments > 0) {
+                  <span class="fi fi-chat-square-dots"></span><span>{{ wallpaper.wallpaperComments | numberView: 'K' }}</span>
+                } @else {
+                  <span class="fi fi-chat-square"></span><span>0</span>
+                }
+              </lib-a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+}

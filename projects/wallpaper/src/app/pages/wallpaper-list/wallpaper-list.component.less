@@ -1,0 +1,31 @@
+@import "common/components/style/variables";
+
+.filter {
+  .icon-group {
+    [nz-radio-button] {
+      padding: 0 7px;
+    }
+
+    nz-icon {
+      font-size: 16px;
+    }
+  }
+}
+
+.p-filter {
+  margin: @primary-margin 0;
+
+  > nz-radio-group:not(:last-child) {
+    margin-right: 16px;
+  }
+}
+
+.m-filter {
+  display: flex;
+  justify-content: space-between;
+  margin: @m-primary-margin 0;
+}
+
+.m-post-list {
+  margin-top: @m-primary-margin;
+}

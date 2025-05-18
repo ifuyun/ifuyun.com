@@ -1,0 +1,104 @@
+<lib-breadcrumb></lib-breadcrumb>
+@if (wallpaper) {
+  <div class="post" [class.p-post]="!isMobile" [class.m-post]="isMobile">
+    <header class="post-header">
+      <h1 class="post-title">
+        <a routerLink="."
+           [queryParams]="langParams"
+           [title]="wallpaper.wallpaperCopyright"
+           rel="bookmark">{{ wallpaper.wallpaperCopyright }}</a>
+      </h1>
+      <div class="post-meta post-meta-top">
+        <span title="日期: {{ wallpaper.wallpaperDate | date: 'yyyy-MM-dd' }}">
+          <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date: 'yyyy-MM-dd' }}</span>
+        </span>
+        <span title="访问：{{ wallpaper.wallpaperViews | numberView: 'K' }}">
+          <nz-icon nzType="eye" /><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
+        </span>
+      </div>
+    </header>
+    <div class="divider"></div>
+    <div class="post-content wallpaper">
+      <figure>
+        <div class="wallpaper-preview" (click)="showWallpaper()">
+          <img [src]="wallpaper.wallpaperUrl" [alt]="wallpaper.wallpaperCopyright" />
+          <div class="wallpaper-overlay"></div>
+        </div>
+        <figcaption>{{ wallpaper.wallpaperTitle }}</figcaption>
+      </figure>
+      <div class="wallpaper-actions">
+        <button nz-button
+                nzType="primary"
+                (click)="download()"
+                [nzLoading]="downloading"
+                title="下载《{{wallpaper.wallpaperCopyright}}》高清壁纸">
+          <span class="fi fi-download"></span><span>{{ isMobile ? '2K' : '1920x1080' }}</span>
+        </button>
+        <button nz-button
+                nzType="primary"
+                (click)="download(true)"
+                [nzLoading]="downloading"
+                title="下载《{{wallpaper.wallpaperCopyright}}》 4K 超高清壁纸">
+          <span class="fi fi-download"></span><span>{{ isMobile ? '4K' : '4K 超高清' }}</span>
+        </button>
+        <a nz-button
+           nzType="primary"
+           class="badge-new"
+           [href]="domains['jigsaw'].url + '/detail/' + wallpaper.wallpaperId"
+           title="《{{wallpaper.wallpaperCopyright}}》拼图">
+          <nz-icon nzType="product" /><span>拼图</span>
+        </a>
+      </div>
+      <h2>{{ wallpaper.wallpaperStoryTitle }}</h2>
+      <article [innerHTML]="wallpaper.wallpaperStory | safeHtml"></article>
+      <p *ngIf="wallpaper.hasTranslation">
+        <a routerLink="."
+           [queryParams]="translateLangParams"
+           title="查看翻译"
+           rel="bookmark">查看翻译</a>
+      </p>
+    </div>
+    <footer class="post-footer">
+      <div>
+        <div class="post-meta">
+          <div class="post-meta-icon"><nz-icon nzType="environment" /></div>
+          <div class="post-meta-info">
+            <span class="post-meta-info-text"
+                  title="地点: {{ wallpaper.wallpaperLocation }}">{{ wallpaper.wallpaperLocation }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="post-meta">
+        <div class="post-meta-icon"><nz-icon nzType="copyright" /></div>
+        <div class="post-meta-info">
+          <span class="post-meta-info-text"
+                title="版权: {{ wallpaper.wallpaperCopyrightAuthor }}">{{ wallpaper.wallpaperCopyrightAuthor }}</span>
+        </div>
+      </div>
+      <div class="post-actions">
+        <div>
+          <button class="button-like" [class.liked]="wallpaper.isVoted" (click)="vote()">
+            <nz-icon nzType="like" nzTheme="fill" />
+            <span class="text">真棒！{{ wallpaper.wallpaperLikes > 0 ? wallpaper.wallpaperLikes : '' }}</span>
+            <span class="parkinson-mask"><nz-icon nzType="like" nzTheme="fill" /></span>
+          </button>
+          <button (click)="showReward()" title="打赏"><nz-icon nzType="heart" nzTheme="fill" /></button>
+          <button [class.liked]="wallpaper.isFavorite"
+                  (click)="addFavorite()"
+                  [title]="wallpaper.isFavorite ? '已收藏' : '收藏'">
+            <nz-icon nzType="star" nzTheme="fill" />
+          </button>
+          <button *ngIf="!isMobile"
+                  (click)="showShareQrcode()"
+                  title="分享"><span class="fi fi-share-fill"></span></button>
+        </div>
+      </div>
+    </footer>
+    <lib-wallpaper-prev-next [lang]="lang"></lib-wallpaper-prev-next>
+  </div>
+  <lib-wallpaper-related [lang]="lang"></lib-wallpaper-related>
+  <lib-make-money></lib-make-money>
+  <lib-comment [objectType]="commentType" [enableAI]="true"></lib-comment>
+  <lib-share-modal *ngIf="shareVisible" [shareUrl]="shareUrl" (close)="closeShareQrcode()"></lib-share-modal>
+  <lib-login-modal *ngIf="loginVisible" (close)="closeLoginModal()"></lib-login-modal>
+}

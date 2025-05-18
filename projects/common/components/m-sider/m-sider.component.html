@@ -1,0 +1,85 @@
+<div class="m-sider" [class.open]="siderVisible">
+  <aside class="m-sider-body">
+    <div class="m-sider-info">
+      <div class="m-sider-info-logo">
+        <img src="https://cdn.ifuyun.com/www/favicon.png" [alt]="appInfo?.appName" />
+      </div>
+      <div class="m-sider-info-profile">
+        <h2 class="m-sider-info-profile-name">{{ appInfo?.appName }}</h2>
+        <div *ngIf="appInfo?.appSlogan" class="m-sider-info-profile-slogan">{{ appInfo?.appSlogan }}</div>
+      </div>
+    </div>
+    <div class="m-sider-tool">
+      <div title="深色模式: 关闭"><nz-icon nzType="sun" theme="fill" /></div>
+    </div>
+    <nav class="m-sider-nav">
+      <ul class="m-sider-nav-list">
+        <li [class.active]="indexInfo?.isHome">
+          <lib-a [href]="domains['www'].url" (click)="closeSider()"><nz-icon nzType="home" /><span>首页</span></lib-a>
+        </li>
+        <li [class.active]="indexInfo?.isPost && indexInfo?.subPage !== 'archive'">
+          <lib-a [href]="domains['blog'].url"
+                 title="文章"
+                 (click)="closeSider()"><nz-icon nzType="form" /><span>文章</span></lib-a>
+        </li>
+        <li [class.active]="indexInfo?.isWallpaper && indexInfo?.subPage !== 'archive'">
+          <lib-a [href]="domains['wallpaper'].url"
+                 title="高清壁纸"
+                 (click)="closeSider()"><nz-icon nzType="picture" /><span>壁纸</span></lib-a>
+        </li>
+        <li [class.active]="indexInfo?.isJigsaw">
+          <lib-a [href]="domains['jigsaw'].url"
+                 title="壁纸拼图"
+                 (click)="closeSider()"><nz-icon nzType="product" /><span>拼图</span></lib-a>
+        </li>
+        <li [class.active]="indexInfo?.isGame">
+          <lib-a [href]="domains['game'].url"
+                 title="游戏"
+                 (click)="closeSider()"><nz-icon nzType="desktop" /><span>游戏</span></lib-a>
+        </li>
+        <li>
+          <a [href]="magazineUrl" target="_blank" title="过刊阅读平台"><nz-icon nzType="book" /><span>杂志</span></a>
+        </li>
+        <li [class.active]="indexInfo?.isTool">
+          <lib-a [href]="domains['www'].url + '/tool'"
+                 title="工具"
+                 (click)="closeSider()"><nz-icon nzType="tool" /><span>工具</span></lib-a>
+        </li>
+        <li [class.active]="indexInfo?.fullPage === 'post-archive'">
+          <lib-a [href]="domains['blog'].url + '/archive'"
+                 title="文章归档"
+                 (click)="closeSider()"><span class="fi fi-calendar-date"></span><span>文章归档</span></lib-a>
+        </li>
+        <li [class.active]="indexInfo?.fullPage === 'wallpaper-archive'">
+          <lib-a [href]="domains['wallpaper'].url + '/archive'"
+                 title="壁纸归档"
+                 (click)="closeSider()"><span class="fi fi-calendar-date"></span><span>壁纸归档</span></lib-a>
+        </li>
+        <div class="m-separator"></div>
+        <li [class.active]="indexInfo?.subPage === 'aboutme'">
+          <lib-a [href]="domains['www'].url + '/aboutme'"
+                 title="关于"
+                 (click)="closeSider()"><nz-icon nzType="info-circle" /><span>关于</span></lib-a>
+        </li>
+        <li>
+          <a (click)="showWechatCard()"><nz-icon nzType="heart" /><span>公众号</span></a>
+        </li>
+        <li>
+          <a href="https://github.com/ifuyun"
+             title="Follow us on GitHub" target="_blank"><nz-icon nzType="github" /><span>GitHub</span></a>
+        </li>
+        <div class="m-separator"></div>
+        @if (isSignIn) {
+          <li><a (click)="gotoAdmin()"><nz-icon nzType="dashboard" /><span>个人中心</span></a></li>
+          <li><a (click)="logout()"><nz-icon nzType="logout" /><span>退出登录</span></a></li>
+        } @else {
+          <li>
+            <lib-a [href]="domains['www'].url + '/user/login'"
+                   title="登录"
+                   (click)="closeSider()"><nz-icon nzType="login" /><span>登录</span></lib-a>
+          </li>
+        }
+      </ul>
+    </nav>
+  </aside>
+</div>

@@ -1,0 +1,16 @@
+{
+  "name": "common",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "ng build && gulp build"
+  },
+  "peerDependencies": {
+    "@angular/common": "^19.2.10",
+    "@angular/core": "^19.2.10",
+    "@angular/forms": "^19.2.10"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

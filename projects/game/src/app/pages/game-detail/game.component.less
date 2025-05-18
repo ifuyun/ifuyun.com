@@ -1,0 +1,42 @@
+@import "../../../../../../dist/common/components/style/variables";
+
+.game {
+  display: flex;
+  justify-content: center;
+
+  .game-cover {
+    position: relative;
+    display: flex;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .game-cover-action {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 16px;
+    display: flex;
+    justify-content: center;
+
+    > button:not(:last-child) {
+      margin-right: @primary-margin;
+    }
+  }
+}
+
+.p-game {
+  @game-width: @body-width - @sider-width - @primary-margin - @content-margin * 2 - 2;
+
+  .game-cover {
+    width: @game-width;
+    height: (@game-width * 9 / 16);
+  }
+}
+
+.m-game {
+}

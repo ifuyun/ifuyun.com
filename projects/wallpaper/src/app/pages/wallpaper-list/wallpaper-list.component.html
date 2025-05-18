@@ -1,0 +1,48 @@
+<lib-breadcrumb></lib-breadcrumb>
+@if (total > 0) {
+  <div class="filter" [class.p-filter]="!isMobile" [class.m-filter]="isMobile">
+    <nz-radio-group [(ngModel)]="langValue" nzButtonStyle="solid">
+      <a nz-radio-button
+         nzValue="all"
+         [routerLink]="paginationUrl"
+         [queryParams]="getListParam(null, mode)">全部</a>
+      <a nz-radio-button
+         nzValue="cn"
+         [routerLink]="paginationUrl"
+         [queryParams]="getListParam(WallpaperLang.CN, mode)">中文</a>
+      <a nz-radio-button
+         nzValue="en"
+         [routerLink]="paginationUrl"
+         [queryParams]="getListParam(WallpaperLang.EN, mode)">English</a>
+    </nz-radio-group>
+    <nz-radio-group class="icon-group" [(ngModel)]="modeValue" nzButtonStyle="solid">
+      <a nz-radio-button
+         nzValue="card"
+         [routerLink]="paginationUrl"
+         [queryParams]="getListParam(lang, ListMode.CARD, page)"
+         title="卡片模式"><nz-icon nzType="appstore" /></a>
+      <a nz-radio-button
+         nzValue="list"
+         [routerLink]="paginationUrl"
+         [queryParams]="getListParam(lang, ListMode.LIST, page)"
+         title="列表模式"><nz-icon nzType="bars" /></a>
+    </nz-radio-group>
+  </div>
+  <div [class.post-list]="mode === 'list' && !isMobile"
+       [class.m-post-list]="mode === 'list' && isMobile"
+       [class.post-card-list]="mode !== 'list'"
+       [class.post-card-list-2]="mode !== 'list' && !isMobile">
+    <lib-wallpaper-item *ngFor="let wallpaper of wallpapers; let i = index"
+                        [class.post-card-item-wrap]="mode !== 'list'"
+                        [wallpaper]="wallpaper"
+                        [lang]="lang"
+                        [mode]="mode"
+                        [index]="i"></lib-wallpaper-item>
+  </div>
+} @else {
+  <div class="empty" [class.p-empty]="!isMobile" [class.m-empty]="isMobile">
+    <nz-empty nzNotFoundImage="simple"></nz-empty>
+  </div>
+}
+<lib-make-money></lib-make-money>
+<lib-pagination></lib-pagination>

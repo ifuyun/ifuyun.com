@@ -1,0 +1,135 @@
+<lib-breadcrumb *ngIf="isArticle"></lib-breadcrumb>
+@if (post) {
+  <div class="post" [class.p-post]="!isMobile" [class.m-post]="isMobile">
+    <div class="original-sign" *ngIf="isArticle && post.postOriginal === 1">原创</div>
+    <header class="post-header">
+      <h1 class="post-title">
+        <a [routerLink]="post.postGuid" [title]="post.postTitle" rel="bookmark">{{ post.postTitle }}</a>
+      </h1>
+      <div class="post-meta post-meta-top">
+        <span title="写于: {{ post.postDate | date:'yyyy-MM-dd' }}">
+          <span class="fi fi-calendar-date"></span><span>{{ post.postDate | date:'yyyy-MM-dd' }}</span>
+        </span>
+        <span title="作者：{{ post.postAuthor || post.owner.userNickname }}">
+          <nz-icon nzType="user" /><span>{{ post.postAuthor || post.owner.userNickname }}</span>
+        </span>
+        <span title="阅读：{{ post.postViews | numberView: 'K' }}">
+          <nz-icon nzType="eye" /><span>{{ post.postViews | numberView: 'K' }}</span>
+        </span>
+      </div>
+    </header>
+    <div class="divider"></div>
+    <article class="post-content"
+             [class.no-auth]="!isSignIn"
+             [ngStyle]="{'user-select': post.postPayFlag || post.postLoginFlag && !isSignIn ? 'none' : ''}"
+             [innerHTML]="post.postContent | safeHtml"
+             (click)="onPostClick($event)"></article>
+    @if (showPayMask) {
+      <div class="pay-mask"></div>
+      <div class="pay-body">
+        <div class="pay-separator">
+          <div class="line"></div>
+          <div class="text-wrap">
+            <div class="text">还有 {{ 100 - (post.postFreePercent || 0) }}% 的精彩内容</div>
+          </div>
+        </div>
+        <div class="pay-icon"><span class="fi fi-lock"></span></div>
+        <div class="pay-tip">
+          <!--post.postPayFlag-->
+          <div *ngIf="post.postLoginFlag">本文仅限注册用户阅读，请先<a (click)="showLoginModal()" title="登录">登录</a>。</div>
+        </div>
+      </div>
+    }
+    <footer class="post-footer">
+      <div>
+        <div class="post-meta" *ngIf="isArticle && postCategories.length > 0">
+          <div class="post-meta-icon"><nz-icon nzType="folder" /></div>
+          <ul class="post-meta-info">
+            <li *ngFor="let cat of postCategories">
+              <lib-a [href]="blogHost + '/category/' + cat.taxonomySlug"
+                     title="{{ cat.taxonomyName }}"
+                     rel="category">{{ cat.taxonomyName }}</lib-a>
+            </li>
+          </ul>
+        </div>
+        <div class="post-meta" *ngIf="postTags.length > 0">
+          <div class="post-meta-icon"><nz-icon nzType="tag" /></div>
+          <ul class="post-meta-info">
+            <li *ngFor="let tag of postTags">
+              <lib-a [href]="blogHost + '/tag/' + tag.tagName"
+                     title="{{ tag.tagName }}"
+                     rel="category">{{ tag.tagName }}</lib-a>
+            </li>
+          </ul>
+        </div>
+        <div class="post-meta" *ngIf="post.postTranslator">
+          <div class="post-meta-icon"><nz-icon nzType="translation" /></div>
+          <div class="post-meta-info">
+            <span class="post-meta-info-text" title="译者：{{ post.postTranslator }}">译者：{{ post.postTranslator }}</span>
+          </div>
+        </div>
+        <div class="post-meta" *ngIf="isArticle">
+          <div class="post-meta-icon"><nz-icon nzType="book" /></div>
+          <div class="post-meta-info">
+            @if(post.postOriginal === 1) {
+              <span class="post-meta-info-text"
+                    title="来源: {{ post.owner.userNickname }}原创">来源：{{ post.owner.userNickname }}原创</span>
+            } @else {
+              <span class="post-meta-info-text"
+                    title="来源: {{ post.postSource }}">来源：{{ post.postSource }}</span>
+            }
+          </div>
+        </div>
+        <div class="post-meta" *ngIf="isArticle && post.postOriginal === 1">
+          <div class="post-meta-icon"><nz-icon nzType="copyright" /></div>
+          <div class="post-meta-info">
+            @if (['private', 'commercial'].includes(post.postCopyType)) {
+              <span class="post-meta-info-text"
+                    title="许可协议：{{ post.postCopyType | copyType }}">许可：{{ post.postCopyType | copyType }}</span>
+            } @else {
+              <span class="post-meta-info-text" title="许可协议：{{ post.postCopyType | copyType }}">
+                <a [href]="post.postCopyType | copyLink"
+                   target="_blank"
+                   rel="license">许可：{{ post.postCopyType | copyType }}</a>
+              </span>
+            }
+          </div>
+        </div>
+        <div class="post-meta">
+          <div class="post-meta-icon"><nz-icon nzType="clock-circle" /></div>
+          <div class="post-meta-info">
+            <span class="post-meta-info-text"
+                  title="更新于: {{ post.postModified | date:'yyyy-MM-dd HH:mm' }}">
+              最后更新：{{ post.postModified | date:'yyyy-MM-dd HH:mm' }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="post-actions">
+        <div>
+          <button class="button-like" [class.liked]="isVoted" (click)="vote()">
+            <nz-icon nzType="like" nzTheme="fill" />
+            <span class="text">真棒！{{ post.postLikes > 0 ? post.postLikes : '' }}</span>
+            <span class="parkinson-mask"><nz-icon nzType="like" nzTheme="fill" /></span>
+          </button>
+          <button (click)="showReward()" title="打赏"><nz-icon nzType="heart" nzTheme="fill" /></button>
+          <button *ngIf="isArticle"
+                  [class.liked]="isFavorite"
+                  (click)="addFavorite()"
+                  [title]="isFavorite ? '已收藏' : '收藏'">
+            <nz-icon nzType="star" nzTheme="fill" />
+          </button>
+          <button *ngIf="!isMobile"
+                  (click)="showShareQrcode()"
+                  title="分享"><span class="fi fi-share-fill"></span></button>
+        </div>
+      </div>
+    </footer>
+    <lib-post-prev-next *ngIf="isArticle"></lib-post-prev-next>
+  </div>
+  <lib-post-related *ngIf="isArticle"></lib-post-related>
+  <lib-make-money></lib-make-money>
+  <lib-comment [objectType]="commentType" [enableAI]="!post.postPayFlag && !post.postLoginFlag"></lib-comment>
+  <lib-share-modal *ngIf="shareVisible" [shareUrl]="shareUrl" (close)="closeShareQrcode()"></lib-share-modal>
+  <lib-login-modal *ngIf="loginVisible" (close)="closeLoginModal()"></lib-login-modal>
+}

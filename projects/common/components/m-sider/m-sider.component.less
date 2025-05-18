@@ -1,0 +1,131 @@
+@import "../style/variables";
+
+.m-sider {
+  @m-item-margin: 0.5rem;
+
+  position: fixed;
+  width: @m-sider-width;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: var(--m-sider-bg-color);
+  transform: translateX(-100%);
+  transition: all .38s ease-out;
+  z-index: 10;
+
+  &.open {
+    transform: translateZ(0);
+    overflow: hidden;
+  }
+
+  .m-sider-body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    color: var(--m-sider-font-color);
+    overflow: auto;
+  }
+
+  .m-sider-info {
+    @m-sider-info-size: 3.75rem;
+    @m-sider-info-padding: 1.25rem;
+
+    display: flex;
+    align-items: flex-start;
+    padding: @m-sider-info-padding;
+    border-bottom: 1px solid var(--m-sider-border-color);
+
+    .m-sider-info-logo {
+      width: @m-sider-info-size;
+      min-width: @m-sider-info-size;
+      height: @m-sider-info-size;
+
+      img {
+        box-sizing: border-box;
+        max-width: 100%;
+        border: 2px solid var(--m-sider-font-color);
+        border-radius: 50%;
+        background-color: var(--m-sider-font-color);
+        overflow: hidden;
+      }
+    }
+
+    .m-sider-info-profile {
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: @m-sider-info-size;
+      padding-left: 1rem;
+
+      &-name {
+        color: var(--m-sider-font-color);
+        font-size: 1.125rem;
+        font-weight: 600;
+      }
+
+      &-slogan {
+        margin-top: 0.5rem;
+        color: var(--primary-color);
+      }
+    }
+  }
+
+  .m-sider-tool {
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid var(--m-sider-border-color);
+    font-size: 1.125rem;
+
+    > div {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      padding: 0.75rem 0;
+    }
+  }
+
+  .m-sider-nav {
+    margin: 0.75rem 0;
+
+    li {
+      display: flex;
+      padding: 0 1.25rem;
+      line-height: 2.5rem;
+
+      &:not(:last-child) {
+        margin-bottom: @m-item-margin;
+      }
+
+      &.active {
+        background-color: var(--content-bg-color);
+
+        a, lib-a {
+          --lib-a-color: var(--primary-color);
+
+          color: var(--primary-color);
+        }
+      }
+    }
+
+    a, lib-a {
+      --lib-a-width: 100%;
+
+      display: inline-flex;
+      align-items: center;
+      width: 100%;
+      color: var(--m-sider-font-color);
+    }
+
+    nz-icon, .fi {
+      display: inline-block;
+      width: 1rem;
+      margin-right: 0.75rem;
+    }
+  }
+
+  .m-separator {
+    margin: @m-item-margin 0;
+    border-bottom: 1px solid var(--m-sider-border-color);
+  }
+}
