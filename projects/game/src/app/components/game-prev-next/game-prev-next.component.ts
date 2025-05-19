@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { GameService } from 'common/components';
 import { DestroyService, GAME_EMPTY_COVER, UserAgentService } from 'common/core';
 import { GameEntity } from 'common/interfaces';
+import { CommonService } from 'common/services';
 import { skipWhile, takeUntil } from 'rxjs';
 
 @Component({
@@ -12,7 +13,7 @@ import { skipWhile, takeUntil } from 'rxjs';
   templateUrl: './game-prev-next.component.html'
 })
 export class GamePrevNextComponent implements OnInit {
-  readonly emptyCover = GAME_EMPTY_COVER;
+  readonly emptyCover: string = '';
 
   isMobile = false;
   isChanged = false;
@@ -25,9 +26,11 @@ export class GamePrevNextComponent implements OnInit {
   constructor(
     private readonly destroy$: DestroyService,
     private readonly userAgentService: UserAgentService,
+    private readonly commonService: CommonService,
     private readonly gameService: GameService
   ) {
     this.isMobile = this.userAgentService.isMobile;
+    this.emptyCover = this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER;
   }
 
   ngOnInit(): void {

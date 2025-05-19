@@ -70,7 +70,7 @@ import { GameRelatedComponent } from '../../components/game-related/game-related
 })
 export class GameComponent implements OnInit {
   readonly commentType = CommentObjectType.GAME;
-  readonly emptyCover = GAME_EMPTY_COVER;
+  readonly emptyCover: string = '';
 
   isMobile = false;
   isSignIn = false;
@@ -114,6 +114,7 @@ export class GameComponent implements OnInit {
     private readonly gameService: GameService
   ) {
     this.isMobile = this.userAgentService.isMobile;
+    this.emptyCover = this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER;
   }
 
   ngOnInit(): void {
@@ -192,9 +193,10 @@ export class GameComponent implements OnInit {
   }
 
   showReward() {
+    const urlPrefix = this.commonService.getCdnUrlPrefix();
     const previewRef = this.imageService.preview([
       {
-        src: '/assets/images/reward.jpg'
+        src: urlPrefix + '/assets/images/reward.jpg'
       }
     ]);
     this.commonService.paddingPreview(previewRef.previewInstance.imagePreviewWrapper);

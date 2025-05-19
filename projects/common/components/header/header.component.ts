@@ -188,9 +188,10 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   }
 
   showRedPacket() {
+    const urlPrefix = this.commonService.getCdnUrlPrefix();
     const previewRef = this.imageService.preview([
       {
-        src: '/assets/images/red-packet.png'
+        src: urlPrefix + '/assets/images/red-packet.png'
       }
     ]);
     this.commonService.paddingPreview(previewRef.previewInstance.imagePreviewWrapper);
@@ -205,9 +206,11 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   }
 
   showWechatCard() {
+    const urlPrefix = this.commonService.getCdnUrlPrefix();
+
     this.imageService.preview([
       {
-        src: '/assets/images/wechat-card.png'
+        src: urlPrefix + '/assets/images/wechat-card.png'
       }
     ]);
 

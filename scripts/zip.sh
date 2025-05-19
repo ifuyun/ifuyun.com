@@ -26,5 +26,5 @@ cd $SHELL_PATH
 cd ../dist/$APP_NAME
 
 echo -e "\033[95m[build]\033[0m Zipping..."
-zip -q -FSr ../$ZIP_FILENAME *
+zip -q -FSr ../../$ZIP_FILENAME *
 echo -e "\033[95m[build]\033[0m Zipped, file: $ZIP_FILENAME."

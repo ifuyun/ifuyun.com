@@ -81,11 +81,13 @@ export class MSiderComponent implements OnInit {
   }
 
   showWechatCard() {
+    const urlPrefix = this.commonService.getCdnUrlPrefix();
+
     this.siderVisible = false;
     this.commonService.updateSiderVisible(false);
     this.imageService.preview([
       {
-        src: '/assets/images/wechat-card.png'
+        src: urlPrefix + '/assets/images/wechat-card.png'
       }
     ]);
 

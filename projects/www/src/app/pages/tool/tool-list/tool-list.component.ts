@@ -67,9 +67,10 @@ export class ToolListComponent implements OnInit {
   }
 
   showRedPacket() {
+    const urlPrefix = this.commonService.getCdnUrlPrefix();
     const previewRef = this.imageService.preview([
       {
-        src: '/assets/images/red-packet.png'
+        src: urlPrefix + '/assets/images/red-packet.png'
       }
     ]);
     this.commonService.paddingPreview(previewRef.previewInstance.imagePreviewWrapper);

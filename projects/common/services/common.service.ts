@@ -121,6 +121,15 @@ export class CommonService {
     }
   }
 
+  getCdnUrlPrefix() {
+    if (this.appConfigService.isDev) {
+      return '';
+    }
+    const curApp = this.getHostName().split('.')[0];
+
+    return 'https://cdn.ifuyun.com/' + curApp;
+  }
+
   getShareURL(userId?: string) {
     userId = userId || this.cookieService.get(COOKIE_KEY_USER_ID);
 

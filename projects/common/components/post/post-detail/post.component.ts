@@ -263,9 +263,10 @@ export class PostComponent implements OnInit {
   }
 
   showReward() {
+    const urlPrefix = this.commonService.getCdnUrlPrefix();
     const previewRef = this.imageService.preview([
       {
-        src: '/assets/images/reward.jpg'
+        src: urlPrefix + '/assets/images/reward.jpg'
       }
     ]);
     this.commonService.paddingPreview(previewRef.previewInstance.imagePreviewWrapper);

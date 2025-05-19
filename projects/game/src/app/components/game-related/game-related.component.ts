@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { GameService } from 'common/components';
 import { DestroyService, GAME_EMPTY_COVER, UserAgentService } from 'common/core';
 import { GameSearchItem } from 'common/interfaces';
+import { CommonService } from 'common/services';
 import { skipWhile, takeUntil } from 'rxjs';
 
 @Component({
@@ -13,7 +14,7 @@ import { skipWhile, takeUntil } from 'rxjs';
   templateUrl: './game-related.component.html'
 })
 export class GameRelatedComponent implements OnInit {
-  readonly emptyCover = GAME_EMPTY_COVER;
+  readonly emptyCover: string = '';
 
   isMobile = false;
   relatedGames: GameSearchItem[] = [];
@@ -25,9 +26,11 @@ export class GameRelatedComponent implements OnInit {
   constructor(
     private readonly destroy$: DestroyService,
     private readonly userAgentService: UserAgentService,
+    private readonly commonService: CommonService,
     private readonly gameService: GameService
   ) {
     this.isMobile = this.userAgentService.isMobile;
+    this.emptyCover = this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER;
   }
 
   ngOnInit(): void {

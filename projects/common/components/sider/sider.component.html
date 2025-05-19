@@ -37,7 +37,7 @@
         </li>
       </ul>
     </div>
-    <div class="widget" *ngIf="hotJigsaws && hotJigsaws.length > 0">
+    <div class="widget" *ngIf="indexInfo?.isJigsaw">
       <h3 class="widget-title">
         <span><nz-icon nzType="fire" /><span>热门拼图</span></span>
         <nz-radio-group nzSize="small" [(ngModel)]="hotJigsawType" (ngModelChange)="getHotJigsaws()">
@@ -46,13 +46,18 @@
           <label nz-radio-button nzValue="y">年</label>
         </nz-radio-group>
       </h3>
-      <ul class="hot-list">
-        <li *ngFor="let jigsaw of hotJigsaws; let i = index">
-          <span class="hot-num">{{ i + 1 }}</span>
-          <lib-a [href]="domains['jigsaw'].url + '/detail/' + jigsaw.wallpaperId"
-                 [title]="jigsaw.wallpaperCopyright">{{ jigsaw.wallpaperCopyright }}</lib-a>
-        </li>
-      </ul>
+      @if (hotJigsaws && hotJigsaws.length > 0) {
+        <ul class="hot-list">
+          <li *ngFor="let jigsaw of hotJigsaws; let i = index">
+            <span class="hot-num">{{ i + 1 }}</span>
+            <lib-a [href]="domains['jigsaw'].url + '/detail/' + jigsaw.wallpaperId"
+                   [title]="jigsaw.wallpaperCopyright">{{ jigsaw.wallpaperCopyright }}
+            </lib-a>
+          </li>
+        </ul>
+      } @else {
+        <nz-empty nzNotFoundImage="simple"></nz-empty>
+      }
     </div>
     <div class="widget" *ngIf="recentGames && recentGames.length > 0">
       <h3 class="widget-title"><span><nz-icon nzType="history" /><span>最近游戏</span></span></h3>

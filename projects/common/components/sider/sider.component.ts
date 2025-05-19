@@ -15,6 +15,7 @@ import { WallpaperLang } from 'common/enums';
 import { BookEntity, GameEntity, HotWallpaper, PostEntity, Wallpaper } from 'common/interfaces';
 import { BookService, CommonService, OptionService, PostService, WallpaperService } from 'common/services';
 import { isEmpty } from 'lodash';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { skipWhile, takeUntil } from 'rxjs';
@@ -25,7 +26,17 @@ import { SmartLinkComponent } from '../smart-link/smart-link.component';
 
 @Component({
   selector: 'lib-sider',
-  imports: [RouterLink, NgIf, NgFor, FormsModule, NzIconModule, NzRadioModule, AdsenseComponent, SmartLinkComponent],
+  imports: [
+    RouterLink,
+    NgIf,
+    NgFor,
+    FormsModule,
+    NzIconModule,
+    NzRadioModule,
+    NzEmptyModule,
+    AdsenseComponent,
+    SmartLinkComponent
+  ],
   providers: [DestroyService],
   templateUrl: './sider.component.html',
   styleUrl: './sider.component.less'

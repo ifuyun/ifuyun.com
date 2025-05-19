@@ -87,16 +87,6 @@
             "stylePreprocessorOptions": {
               "includePaths": ["dist", "node_modules"]
             },
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "projects/www/public"
-              },
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
             "styles": [
               "projects/www/src/styles.less"
             ],
@@ -112,6 +102,23 @@
           },
           "configurations": {
             "production": {
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public",
+                  "output": "/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/www/public/assets",
+                  "output": "/assets"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/www/public/fonts",
+                  "output": "/assets/fonts"
+                }
+              ],
               "deployUrl": "https://cdn.ifuyun.com/www/",
               "budgets": [
                 {
@@ -128,6 +135,23 @@
               "outputHashing": "all"
             },
             "development": {
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public",
+                  "output": "/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/www/public/assets",
+                  "output": "/assets"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/www/public/fonts",
+                  "output": "/www/assets/fonts"
+                }
+              ],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -171,11 +195,18 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "projects/www/public"
+                "input": "public",
+                "output": "/"
               },
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "projects/www/public/assets",
+                "output": "/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/www/public/fonts",
+                "output": "/assets/fonts"
               }
             ],
             "styles": [
@@ -237,16 +268,6 @@
             "stylePreprocessorOptions": {
               "includePaths": ["dist", "node_modules"]
             },
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "projects/blog/public"
-              },
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
             "styles": [
               "projects/blog/src/styles.less"
             ],
@@ -262,6 +283,23 @@
           },
           "configurations": {
             "production": {
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public",
+                  "output": "/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/blog/public/assets",
+                  "output": "/assets"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/blog/public/fonts",
+                  "output": "/assets/fonts"
+                }
+              ],
               "deployUrl": "https://cdn.ifuyun.com/blog/",
               "budgets": [
                 {
@@ -278,6 +316,23 @@
               "outputHashing": "all"
             },
             "development": {
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public",
+                  "output": "/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/blog/public/assets",
+                  "output": "/assets"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/blog/public/fonts",
+                  "output": "/blog/assets/fonts"
+                }
+              ],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -321,11 +376,18 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "projects/blog/public"
+                "input": "public",
+                "output": "/"
               },
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "projects/blog/public/assets",
+                "output": "/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/blog/public/fonts",
+                "output": "/assets/fonts"
               }
             ],
             "styles": [
@@ -387,16 +449,6 @@
             "stylePreprocessorOptions": {
               "includePaths": ["dist", "node_modules"]
             },
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "projects/wallpaper/public"
-              },
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
             "styles": [
               "projects/wallpaper/src/styles.less"
             ],
@@ -412,6 +464,23 @@
           },
           "configurations": {
             "production": {
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public",
+                  "output": "/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/wallpaper/public/assets",
+                  "output": "/assets"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/wallpaper/public/fonts",
+                  "output": "/assets/fonts"
+                }
+              ],
               "deployUrl": "https://cdn.ifuyun.com/wallpaper/",
               "budgets": [
                 {
@@ -428,6 +497,23 @@
               "outputHashing": "all"
             },
             "development": {
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public",
+                  "output": "/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/wallpaper/public/assets",
+                  "output": "/assets"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/wallpaper/public/fonts",
+                  "output": "/wallpaper/assets/fonts"
+                }
+              ],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -471,11 +557,18 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "projects/wallpaper/public"
+                "input": "public",
+                "output": "/"
               },
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "projects/wallpaper/public/assets",
+                "output": "/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/wallpaper/public/fonts",
+                "output": "/assets/fonts"
               }
             ],
             "styles": [
@@ -537,16 +630,6 @@
             "stylePreprocessorOptions": {
               "includePaths": ["dist", "node_modules", "projects"]
             },
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "projects/jigsaw/public"
-              },
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
             "styles": [
               "projects/jigsaw/src/styles.less"
             ],
@@ -562,6 +645,23 @@
           },
           "configurations": {
             "production": {
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public",
+                  "output": "/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/jigsaw/public/assets",
+                  "output": "/assets"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/jigsaw/public/fonts",
+                  "output": "/assets/fonts"
+                }
+              ],
               "deployUrl": "https://cdn.ifuyun.com/jigsaw/",
               "budgets": [
                 {
@@ -578,6 +678,23 @@
               "outputHashing": "all"
             },
             "development": {
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public",
+                  "output": "/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/jigsaw/public/assets",
+                  "output": "/assets"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/jigsaw/public/fonts",
+                  "output": "/jigsaw/assets/fonts"
+                }
+              ],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -621,11 +738,18 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "projects/jigsaw/public"
+                "input": "public",
+                "output": "/"
               },
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "projects/jigsaw/public/assets",
+                "output": "/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/jigsaw/public/fonts",
+                "output": "/assets/fonts"
               }
             ],
             "styles": [
@@ -687,16 +811,6 @@
             "stylePreprocessorOptions": {
               "includePaths": ["dist", "node_modules"]
             },
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "projects/game/public"
-              },
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
             "styles": [
               "projects/game/src/styles.less"
             ],
@@ -712,6 +826,23 @@
           },
           "configurations": {
             "production": {
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public",
+                  "output": "/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/game/public/assets",
+                  "output": "/assets"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/game/public/fonts",
+                  "output": "/assets/fonts"
+                }
+              ],
               "deployUrl": "https://cdn.ifuyun.com/game/",
               "budgets": [
                 {
@@ -728,6 +859,23 @@
               "outputHashing": "all"
             },
             "development": {
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public",
+                  "output": "/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/game/public/assets",
+                  "output": "/assets"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "projects/game/public/fonts",
+                  "output": "/game/assets/fonts"
+                }
+              ],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -771,11 +919,18 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "projects/game/public"
+                "input": "public",
+                "output": "/"
               },
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "projects/game/public/assets",
+                "output": "/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/game/public/fonts",
+                "output": "/assets/fonts"
               }
             ],
             "styles": [

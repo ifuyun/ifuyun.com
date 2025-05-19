@@ -7,6 +7,7 @@ import { Game } from 'common/interfaces';
 import { NumberViewPipe } from 'common/pipes';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { SmartLinkComponent } from '../../smart-link/smart-link.component';
+import { CommonService } from 'common/services';
 
 @Component({
   selector: 'lib-game-item',
@@ -22,8 +23,10 @@ export class GameItemComponent {
   isMobile = false;
   domains!: AppDomainConfig;
 
+  private defaultGameCover = '';
+
   get gameCover() {
-    return this.game.game.gameCover || GAME_EMPTY_COVER;
+    return this.game.game.gameCover || this.defaultGameCover;
   }
 
   get gameExcerpt() {
@@ -34,9 +37,11 @@ export class GameItemComponent {
 
   constructor(
     private readonly userAgentService: UserAgentService,
+    private readonly commonService: CommonService,
     private readonly appConfigService: AppConfigService
   ) {
     this.isMobile = this.userAgentService.isMobile;
     this.domains = this.appConfigService.apps;
+    this.defaultGameCover = this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER;
   }
 }
