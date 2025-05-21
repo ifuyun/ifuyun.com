@@ -11,6 +11,8 @@ import { AdsenseOptions } from 'common/interfaces';
 import { OptionService } from 'common/services';
 import { isEmpty, uniq } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
+import { AdsenseStatus } from './adsense.enum';
+import { AdsenseService } from './adsense.service';
 
 @Component({
   selector: 'lib-adsense',
@@ -62,6 +64,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
     private readonly userAgentService: UserAgentService,
     private readonly appConfigService: AppConfigService,
     private readonly optionService: OptionService,
+    private readonly adsenseService: AdsenseService,
     private readonly console: ConsoleService
   ) {
     this.isDev = this.appConfigService.isDev;
@@ -155,14 +158,19 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
 
           ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(ads);
           if (Array.isArray((window as any).adsbygoogle)) {
+            this.adsenseService.updateAdsenseStatus(AdsenseStatus.BLOCKED);
             this.console.warn('Ads is blocked.');
             this.hideAdsense();
+          } else {
+            this.adsenseService.updateAdsenseStatus(AdsenseStatus.ENABLED);
           }
         } catch (e: any) {
+          this.adsenseService.updateAdsenseStatus(AdsenseStatus.ERROR);
           this.console.error(e.message || 'Ads is not working.');
           this.hideAdsense();
         }
       } else {
+        this.adsenseService.updateAdsenseStatus(AdsenseStatus.DISABLED);
         this.console.warn('Ads is disabled.');
         this.hideAdsense();
       }

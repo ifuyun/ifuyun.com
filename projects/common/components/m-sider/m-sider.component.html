@@ -19,8 +19,8 @@
         </li>
         <li [class.active]="indexInfo?.isPost && indexInfo?.subPage !== 'archive'">
           <lib-a [href]="domains['blog'].url"
-                 title="文章"
-                 (click)="closeSider()"><nz-icon nzType="form" /><span>文章</span></lib-a>
+                 title="博客"
+                 (click)="closeSider()"><nz-icon nzType="form" /><span>博客</span></lib-a>
         </li>
         <li [class.active]="indexInfo?.isWallpaper && indexInfo?.subPage !== 'archive'">
           <lib-a [href]="domains['wallpaper'].url"
@@ -47,8 +47,8 @@
         </li>
         <li [class.active]="indexInfo?.fullPage === 'post-archive'">
           <lib-a [href]="domains['blog'].url + '/archive'"
-                 title="文章归档"
-                 (click)="closeSider()"><span class="fi fi-calendar-date"></span><span>文章归档</span></lib-a>
+                 title="博客归档"
+                 (click)="closeSider()"><span class="fi fi-calendar-date"></span><span>博客归档</span></lib-a>
         </li>
         <li [class.active]="indexInfo?.fullPage === 'wallpaper-archive'">
           <lib-a [href]="domains['wallpaper'].url + '/archive'"

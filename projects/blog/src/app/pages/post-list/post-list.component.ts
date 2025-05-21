@@ -212,7 +212,7 @@ export class PostListComponent implements OnInit {
   }
 
   private updatePageInfo(breadcrumbData: BreadcrumbEntity[]) {
-    const titles: string[] = ['文章', this.appInfo.appName];
+    const titles: string[] = ['博客', this.appInfo.appName];
     const categories: string[] = [];
     const keywords: string[] = (this.options['post_keywords'] || '').split(',');
     let description = '';
@@ -243,7 +243,7 @@ export class PostListComponent implements OnInit {
       keywords.unshift(this.postBook.bookName);
     }
     if (description) {
-      description += '文章列表';
+      description += '博客文章列表';
     }
     if (this.page > 1) {
       titles.unshift(`第${this.page}页`);
@@ -269,8 +269,8 @@ export class PostListComponent implements OnInit {
   private updateBreadcrumbs(breadcrumbData: BreadcrumbEntity[]) {
     let breadcrumbs: BreadcrumbEntity[] = [
       {
-        label: '文章',
-        tooltip: `文章列表`,
+        label: '博客',
+        tooltip: `博客文章列表`,
         url: '/list',
         domain: 'blog',
         isHeader: false
@@ -297,7 +297,7 @@ export class PostListComponent implements OnInit {
       breadcrumbs.push(
         {
           label: '归档',
-          tooltip: `文章归档`,
+          tooltip: `博客归档`,
           url: `/archive`,
           domain: 'blog',
           isHeader: false

@@ -375,8 +375,8 @@ export class PostComponent implements OnInit {
       domain: 'blog'
     }));
     breadcrumbs.unshift({
-      label: '文章',
-      tooltip: '文章列表',
+      label: '博客',
+      tooltip: '博客文章列表',
       url: '/list',
       domain: 'blog',
       isHeader: false
@@ -405,7 +405,7 @@ export class PostComponent implements OnInit {
       .concat((this.options['post_keywords'] || '').split(','));
 
     if (this.isArticle) {
-      titles.unshift('文章');
+      titles.unshift('博客');
     }
     if (this.postBook) {
       titles.unshift(this.postBook.bookName);

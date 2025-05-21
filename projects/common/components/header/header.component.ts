@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   readonly magazineUrl: string;
   readonly searchTypeMap: Record<string, string> = {
     [SearchType.ALL]: '全站',
-    [SearchType.POST]: '文章',
+    [SearchType.POST]: '博客',
     [SearchType.WALLPAPER]: '壁纸',
     [SearchType.GAME]: '游戏'
   };

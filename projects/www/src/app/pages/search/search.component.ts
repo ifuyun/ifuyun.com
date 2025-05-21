@@ -72,7 +72,7 @@ export class SearchComponent implements OnInit {
 
   private get searchTypeDesc() {
     const typeMap: Record<string, string> = {
-      [SearchType.POST]: '文章',
+      [SearchType.POST]: '博客',
       [SearchType.WALLPAPER]: '壁纸',
       [SearchType.GAME]: '游戏'
     };

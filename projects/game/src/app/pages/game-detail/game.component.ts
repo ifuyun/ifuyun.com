@@ -2,6 +2,8 @@ import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
+  AdsenseService,
+  AdsenseStatus,
   BreadcrumbComponent,
   CommentComponent,
   GameModalComponent,
@@ -93,6 +95,7 @@ export class GameComponent implements OnInit {
   private options: OptionEntity = {};
   private gameId = '';
   private referrer = '';
+  private adsStatus: AdsenseStatus = AdsenseStatus.UNKNOWN;
 
   constructor(
     private readonly destroy$: DestroyService,
@@ -111,7 +114,8 @@ export class GameComponent implements OnInit {
     private readonly voteService: VoteService,
     private readonly favoriteService: FavoriteService,
     private readonly commentService: CommentService,
-    private readonly gameService: GameService
+    private readonly gameService: GameService,
+    private readonly adsenseService: AdsenseService
   ) {
     this.isMobile = this.userAgentService.isMobile;
     this.emptyCover = this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER;
@@ -148,6 +152,9 @@ export class GameComponent implements OnInit {
       if (this.platform.isBrowser) {
         this.shareUrl = this.commonService.getShareURL(user.userId);
       }
+    });
+    this.adsenseService.adsenseStatus$.pipe(takeUntil(this.destroy$)).subscribe((status) => {
+      this.adsStatus = status;
     });
   }
 
@@ -233,6 +240,10 @@ export class GameComponent implements OnInit {
   }
 
   startPlay() {
+    if (!this.isSignIn && this.adsStatus === AdsenseStatus.BLOCKED) {
+      this.showLoginModal();
+      return;
+    }
     if (this.gameService.isGameCached(this.gameId)) {
       this.showGameModal();
       return;

@@ -2,6 +2,8 @@ import { DatePipe, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
+  AdsenseService,
+  AdsenseStatus,
   BreadcrumbComponent,
   CommentComponent,
   LoginModalComponent,
@@ -97,6 +99,7 @@ export class WallpaperComponent implements OnInit {
   private wallpaperData!: Wallpaper;
   private isChanged = false;
   private isLangChanged = false;
+  private adsStatus: AdsenseStatus = AdsenseStatus.UNKNOWN;
 
   constructor(
     private readonly destroy$: DestroyService,
@@ -115,7 +118,8 @@ export class WallpaperComponent implements OnInit {
     private readonly wallpaperService: WallpaperService,
     private readonly voteService: VoteService,
     private readonly favoriteService: FavoriteService,
-    private readonly commentService: CommentService
+    private readonly commentService: CommentService,
+    private readonly adsenseService: AdsenseService
   ) {
     this.isMobile = this.userAgentService.isMobile;
     this.domains = this.appConfigService.apps;
@@ -170,6 +174,9 @@ export class WallpaperComponent implements OnInit {
         this.shareUrl = this.commonService.getShareURL(user.userId);
       }
     });
+    this.adsenseService.adsenseStatus$.pipe(takeUntil(this.destroy$)).subscribe((status) => {
+      this.adsStatus = status;
+    });
   }
 
   showWallpaper() {
@@ -183,7 +190,7 @@ export class WallpaperComponent implements OnInit {
   }
 
   download(isUhd = false) {
-    if (!this.isSignIn && isUhd) {
+    if (!this.isSignIn && (isUhd || this.adsStatus === AdsenseStatus.BLOCKED)) {
       this.showLoginModal();
       return;
     }

@@ -9,8 +9,8 @@
           <lib-a [href]="domains['www'].url" title="{{appInfo?.appName}}首页">首页</lib-a>
         </li>
         <li [class.active]="indexInfo?.isPost">
-          <lib-a [href]="domains['blog'].url" title="文章">
-            <span>文章</span><span class="nav-arrow" *ngIf="postTaxonomies.length > 0"></span>
+          <lib-a [href]="domains['blog'].url" title="博客">
+            <span>博客</span><span class="nav-arrow" *ngIf="postTaxonomies.length > 0"></span>
           </lib-a>
           <div class="sub-nav-wrap" *ngIf="postTaxonomies.length > 0">
             <div class="sub-nav-list">
@@ -107,7 +107,7 @@
             <ng-template #searchTypeTpl>
               <nz-select name="searchType" [(ngModel)]="searchType">
                 <nz-option nzLabel="全站" nzValue="all"></nz-option>
-                <nz-option nzLabel="文章" nzValue="post"></nz-option>
+                <nz-option nzLabel="博客" nzValue="post"></nz-option>
                 <nz-option nzLabel="壁纸" nzValue="wallpaper"></nz-option>
                 <nz-option nzLabel="游戏" nzValue="game"></nz-option>
               </nz-select>
@@ -160,8 +160,8 @@
                   </a>
                 </li>
                 <li>
-                  <a class="sub-nav-link" [href]="domains['blog'].url + '/rss.xml'" (click)="logRSS()" title="文章 RSS 订阅">
-                    <nz-icon class="icon-rss" nzType="wifi" /><span>文章 RSS 订阅</span>
+                  <a class="sub-nav-link" [href]="domains['blog'].url + '/rss.xml'" (click)="logRSS()" title="博客 RSS 订阅">
+                    <nz-icon class="icon-rss" nzType="wifi" /><span>博客 RSS 订阅</span>
                   </a>
                 </li>
                 <li>
@@ -214,7 +214,7 @@
             <ng-template #searchTypeTpl>
               <nz-select name="searchType" nzSize="large" [(ngModel)]="searchType">
                 <nz-option nzLabel="全站" nzValue="all"></nz-option>
-                <nz-option nzLabel="文章" nzValue="post"></nz-option>
+                <nz-option nzLabel="博客" nzValue="post"></nz-option>
                 <nz-option nzLabel="壁纸" nzValue="wallpaper"></nz-option>
                 <nz-option nzLabel="游戏" nzValue="game"></nz-option>
               </nz-select>

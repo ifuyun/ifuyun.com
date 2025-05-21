@@ -1,4 +1,6 @@
 export * from './adsense/adsense.component';
+export * from './adsense/adsense.enum';
+export * from './adsense/adsense.service';
 export * from './app/app.component';
 export * from './auth-layout/auth-layout.component';
 export * from './breadcrumb/breadcrumb.component';
