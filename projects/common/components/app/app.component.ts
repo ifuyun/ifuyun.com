@@ -15,10 +15,17 @@ import {
 } from 'common/core';
 import { Theme } from 'common/enums';
 import { ForbiddenComponent, NotFoundComponent, ServerErrorComponent } from 'common/error';
-import { AdsStatus, CommonService, LogService, OptionService, TenantAppService, UserService } from 'common/services';
+import {
+  AdsStatus,
+  AdsService,
+  CommonService,
+  LogService,
+  OptionService,
+  TenantAppService,
+  UserService
+} from 'common/services';
 import { generateUid } from 'common/utils';
 import { filter, tap } from 'rxjs/operators';
-import { AdsenseService } from '../adsense/adsense.service';
 import { FooterComponent } from '../footer/footer.component';
 import { GameService } from '../game/game.service';
 import { HeaderComponent } from '../header/header.component';
@@ -69,7 +76,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private readonly tenantAppService: TenantAppService,
     private readonly logService: LogService,
     private readonly gameService: GameService,
-    private readonly adsenseService: AdsenseService
+    private readonly adsService: AdsService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -169,7 +176,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.gameService.activeRomURL$.subscribe((romURL) => (this.romURL = romURL));
 
     if (this.platform.isBrowser) {
-      this.adsenseService.adsenseStatus$.subscribe((status) => {
+      this.adsService.adsStatus$.subscribe((status) => {
         const oldAdsStatus = this.adsStatus;
 
         this.adsStatus = status;

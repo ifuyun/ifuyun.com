@@ -2,8 +2,6 @@ import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
-  AdsenseService,
-  AdsStatus,
   BreadcrumbComponent,
   CommentComponent,
   GameModalComponent,
@@ -30,6 +28,8 @@ import { CommentObjectType, FavoriteType, VoteType, VoteValue } from 'common/enu
 import { Game, GameEntity, TagEntity, TaxonomyEntity, TenantAppModel } from 'common/interfaces';
 import { NumberViewPipe, SafeHtmlPipe } from 'common/pipes';
 import {
+  AdsService,
+  AdsStatus,
   CommentService,
   CommonService,
   FavoriteService,
@@ -115,7 +115,7 @@ export class GameComponent implements OnInit {
     private readonly favoriteService: FavoriteService,
     private readonly commentService: CommentService,
     private readonly gameService: GameService,
-    private readonly adsenseService: AdsenseService
+    private readonly adsService: AdsService
   ) {
     this.isMobile = this.userAgentService.isMobile;
     this.emptyCover = this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER;
@@ -153,7 +153,7 @@ export class GameComponent implements OnInit {
         this.shareUrl = this.commonService.getShareURL(user.userId);
       }
     });
-    this.adsenseService.adsenseStatus$.pipe(takeUntil(this.destroy$)).subscribe((status) => {
+    this.adsService.adsStatus$.pipe(takeUntil(this.destroy$)).subscribe((status) => {
       this.adsStatus = status;
     });
   }

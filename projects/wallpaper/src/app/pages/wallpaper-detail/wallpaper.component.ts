@@ -2,7 +2,6 @@ import { DatePipe, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
-  AdsenseService,
   BreadcrumbComponent,
   CommentComponent,
   LoginModalComponent,
@@ -29,6 +28,7 @@ import { CommentObjectType, FavoriteType, VoteType, VoteValue, WallpaperLang } f
 import { TenantAppModel, Wallpaper } from 'common/interfaces';
 import { NumberViewPipe, SafeHtmlPipe } from 'common/pipes';
 import {
+  AdsService,
   AdsStatus,
   CommentService,
   CommonService,
@@ -119,7 +119,7 @@ export class WallpaperComponent implements OnInit {
     private readonly voteService: VoteService,
     private readonly favoriteService: FavoriteService,
     private readonly commentService: CommentService,
-    private readonly adsenseService: AdsenseService
+    private readonly adsService: AdsService
   ) {
     this.isMobile = this.userAgentService.isMobile;
     this.domains = this.appConfigService.apps;
@@ -174,7 +174,7 @@ export class WallpaperComponent implements OnInit {
         this.shareUrl = this.commonService.getShareURL(user.userId);
       }
     });
-    this.adsenseService.adsenseStatus$.pipe(takeUntil(this.destroy$)).subscribe((status) => {
+    this.adsService.adsStatus$.pipe(takeUntil(this.destroy$)).subscribe((status) => {
       this.adsStatus = status;
     });
   }

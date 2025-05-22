@@ -1,3 +1,4 @@
+export * from './ads.service';
 export * from './book.service';
 export * from './comment.service';
 export * from './common.service';
