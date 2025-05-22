@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   AdsenseService,
-  AdsenseStatus,
   BreadcrumbComponent,
   CommentComponent,
   LoginModalComponent,
@@ -30,6 +29,7 @@ import { CommentObjectType, FavoriteType, VoteType, VoteValue, WallpaperLang } f
 import { TenantAppModel, Wallpaper } from 'common/interfaces';
 import { NumberViewPipe, SafeHtmlPipe } from 'common/pipes';
 import {
+  AdsStatus,
   CommentService,
   CommonService,
   FavoriteService,
@@ -99,7 +99,7 @@ export class WallpaperComponent implements OnInit {
   private wallpaperData!: Wallpaper;
   private isChanged = false;
   private isLangChanged = false;
-  private adsStatus: AdsenseStatus = AdsenseStatus.UNKNOWN;
+  private adsStatus: AdsStatus = AdsStatus.UNKNOWN;
 
   constructor(
     private readonly destroy$: DestroyService,
@@ -190,7 +190,7 @@ export class WallpaperComponent implements OnInit {
   }
 
   download(isUhd = false) {
-    if (!this.isSignIn && (isUhd || this.adsStatus === AdsenseStatus.BLOCKED)) {
+    if (!this.isSignIn && (isUhd || this.adsStatus === AdsStatus.BLOCKED)) {
       this.showLoginModal();
       return;
     }

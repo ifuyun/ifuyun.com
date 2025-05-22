@@ -15,9 +15,10 @@ import {
 } from 'common/core';
 import { Theme } from 'common/enums';
 import { ForbiddenComponent, NotFoundComponent, ServerErrorComponent } from 'common/error';
-import { CommonService, LogService, OptionService, TenantAppService, UserService } from 'common/services';
+import { AdsStatus, CommonService, LogService, OptionService, TenantAppService, UserService } from 'common/services';
 import { generateUid } from 'common/utils';
 import { filter, tap } from 'rxjs/operators';
+import { AdsenseService } from '../adsense/adsense.service';
 import { FooterComponent } from '../footer/footer.component';
 import { GameService } from '../game/game.service';
 import { HeaderComponent } from '../header/header.component';
@@ -51,6 +52,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   private accessLogId = '';
   private bodyOffset = 0;
   private romURL = '';
+  private adsStatus: AdsStatus = AdsStatus.UNKNOWN;
 
   constructor(
     private readonly router: Router,
@@ -66,7 +68,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     private readonly userService: UserService,
     private readonly tenantAppService: TenantAppService,
     private readonly logService: LogService,
-    private readonly gameService: GameService
+    private readonly gameService: GameService,
+    private readonly adsenseService: AdsenseService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -113,10 +116,23 @@ export class AppComponent implements OnInit, AfterViewInit {
           });
           if (this.platform.isBrowser) {
             this.logService
-              .logAccess(this.logService.parseAccessLog(this.initialized, this.currentUrl, isNew, this.accessLogId))
+              .logAccess(
+                this.logService.parseAccessLog({
+                  initialized: this.initialized,
+                  referrer: this.currentUrl,
+                  isNew,
+                  adsStatus: this.adsStatus,
+                  logId: this.accessLogId
+                })
+              )
               .subscribe((res) => {
                 if (res.code === ResponseCode.SUCCESS) {
+                  const oldAccessLogId = this.accessLogId;
+
                   this.accessLogId = res.data.logId || '';
+                  this.checkAdsStatus({
+                    oldLogId: oldAccessLogId
+                  });
                 }
               });
           }
@@ -151,20 +167,27 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.siderVisible = visible;
     });
     this.gameService.activeRomURL$.subscribe((romURL) => (this.romURL = romURL));
+
+    if (this.platform.isBrowser) {
+      this.adsenseService.adsenseStatus$.subscribe((status) => {
+        const oldAdsStatus = this.adsStatus;
+
+        this.adsStatus = status;
+        this.checkAdsStatus({
+          oldStatus: oldAdsStatus
+        });
+      });
+    }
   }
 
   ngAfterViewInit(): void {
     if (this.platform.isBrowser) {
       window.addEventListener('pagehide', () => {
-        this.logService.logLeave({
-          logId: this.accessLogId
-        });
+        this.logService.logLeave(this.accessLogId);
       });
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'hidden') {
-          this.logService.logLeave({
-            logId: this.accessLogId
-          });
+          this.logService.logLeave(this.accessLogId);
         }
       });
     }
@@ -173,6 +196,15 @@ export class AppComponent implements OnInit, AfterViewInit {
   closeSider() {
     this.siderVisible = false;
     this.commonService.updateSiderVisible(false);
+  }
+
+  private checkAdsStatus(param: { oldLogId?: string; oldStatus?: AdsStatus }) {
+    const { oldLogId, oldStatus } = param;
+
+    // 同应用异步跳转直接合并在日志请求，无需额外请求
+    if (!oldLogId && this.accessLogId && this.adsStatus && this.adsStatus !== oldStatus) {
+      this.logService.logAdsStatus(this.accessLogId, this.adsStatus).subscribe(() => {});
+    }
   }
 
   private initTheme() {

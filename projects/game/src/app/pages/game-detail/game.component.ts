@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   AdsenseService,
-  AdsenseStatus,
+  AdsStatus,
   BreadcrumbComponent,
   CommentComponent,
   GameModalComponent,
@@ -95,7 +95,7 @@ export class GameComponent implements OnInit {
   private options: OptionEntity = {};
   private gameId = '';
   private referrer = '';
-  private adsStatus: AdsenseStatus = AdsenseStatus.UNKNOWN;
+  private adsStatus: AdsStatus = AdsStatus.UNKNOWN;
 
   constructor(
     private readonly destroy$: DestroyService,
@@ -240,7 +240,7 @@ export class GameComponent implements OnInit {
   }
 
   startPlay() {
-    if (!this.isSignIn && this.adsStatus === AdsenseStatus.BLOCKED) {
+    if (!this.isSignIn && this.adsStatus === AdsStatus.BLOCKED) {
       this.showLoginModal();
       return;
     }

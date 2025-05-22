@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { Router } from '@angular/router';
 import { AppConfigService, AppDomainConfig, DestroyService } from 'common/core';
 import { Wallpaper } from 'common/interfaces';
 import { CommonService, WallpaperService } from 'common/services';
@@ -29,7 +28,6 @@ export class WallpaperModalComponent implements OnChanges {
   }
 
   constructor(
-    private readonly router: Router,
     private readonly destroy$: DestroyService,
     private readonly commonService: CommonService,
     private readonly appConfigService: AppConfigService,

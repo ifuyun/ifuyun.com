@@ -46,9 +46,10 @@ export enum ApiUrl {
   // favorite
   FAVORITE = '/favorites/favorite',
   // log
-  ACCESS_LOG = '/logs/access',
-  LEAVE_LOG = '/logs/leave',
-  ACTION_LOG = '/logs/action',
+  LOG_ACCESS = '/logs/access',
+  LOG_LEAVE = '/logs/leave',
+  LOG_ACTION = '/logs/action',
+  LOG_ADS = '/logs/plugin',
   // wallpaper
   WALLPAPERS = '/wallpapers',
   WALLPAPER_HOT = '/wallpapers/hot',
