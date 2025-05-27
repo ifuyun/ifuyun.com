@@ -26,6 +26,13 @@
         </li>
       </ul>
     </div>
+    <div class="widget-ads" *ngIf="adsVisible && (indexInfo?.isPage || indexInfo?.isTool || indexInfo?.isSearch)">
+      <lib-adsense [class.ads-sider-wrap]="adsPlaceholder"
+                   wrapClass="ads-sider"
+                   optionKey="adsense_config_sider"
+                   [placeholder]="adsPlaceholder"
+                   text="虚位以待"></lib-adsense>
+    </div>
     <div class="widget" *ngIf="hotWallpapers && hotWallpapers.length > 0">
       <h3 class="widget-title"><span><nz-icon nzType="fire" /><span>热门壁纸</span></span></h3>
       <ul class="hot-list">
@@ -78,7 +85,7 @@
         </li>
       </ul>
     </div>
-    <div class="widget-ads" *ngIf="adsVisible">
+    <div class="widget-ads" *ngIf="adsVisible && !(indexInfo?.isPage || indexInfo?.isTool || indexInfo?.isSearch)">
       <lib-adsense [class.ads-sider-wrap]="adsPlaceholder"
                    wrapClass="ads-sider"
                    optionKey="adsense_config_sider"
