@@ -54,6 +54,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   isBodyCentered = false;
   siderVisible = false;
 
+  get adsImg() {
+    return this.commonService.getCdnUrlPrefix() + '/assets/images/adimage.gif';
+  }
+
   private currentUrl = '';
   private initialized = false;
   private accessLogId = '';
@@ -137,7 +141,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                   const oldAccessLogId = this.accessLogId;
 
                   this.accessLogId = res.data.logId || '';
-                  this.checkAdsStatus({
+                  this.logAdsStatus({
                     oldLogId: oldAccessLogId
                   });
                 }
@@ -180,7 +184,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         const oldAdsStatus = this.adsStatus;
 
         this.adsStatus = status;
-        this.checkAdsStatus({
+        this.logAdsStatus({
           oldStatus: oldAdsStatus
         });
       });
@@ -205,7 +209,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.commonService.updateSiderVisible(false);
   }
 
-  private checkAdsStatus(param: { oldLogId?: string; oldStatus?: AdsStatus }) {
+  checkAdsStatus(isLoaded: boolean) {
+    this.adsService.updateAdsStatus(isLoaded ? AdsStatus.ENABLED : AdsStatus.BLOCKED);
+  }
+
+  private logAdsStatus(param: { oldLogId?: string; oldStatus?: AdsStatus }) {
     const { oldLogId, oldStatus } = param;
 
     // 同应用异步跳转直接合并在日志请求，无需额外请求

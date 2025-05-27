@@ -4,6 +4,7 @@ import { ElementRef, Inject, Injectable, Optional, REQUEST, RESPONSE_INIT } from
 import { NavigationExtras, Router } from '@angular/router';
 import {
   AppConfigService,
+  CDN_HOST,
   COOKIE_KEY_THEME,
   COOKIE_KEY_USER_ID,
   CustomError,
@@ -127,7 +128,7 @@ export class CommonService {
     }
     const curApp = this.getHostName().split('.')[0];
 
-    return 'https://cdn.ifuyun.com/' + curApp;
+    return CDN_HOST + '/' + curApp;
   }
 
   getShareURL(userId?: string) {

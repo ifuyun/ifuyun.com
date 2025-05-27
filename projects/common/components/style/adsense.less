@@ -19,6 +19,8 @@
 
   &.ads-placeholder {
     ins {
+      display: block !important;
+
       &[data-ad-status='unfilled'] {
         min-height: 100%;
       }
@@ -27,8 +29,10 @@
 
   &:not(.ads-placeholder) {
     ins {
-      &[data-ad-status='unfilled'] {
-        display: none !important;
+      display: none !important;
+
+      &[data-ad-status='filled'] {
+        display: block !important;
       }
     }
   }
