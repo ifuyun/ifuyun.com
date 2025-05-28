@@ -129,7 +129,7 @@ export class WallpaperJigsawListComponent implements OnInit {
           page: this.page,
           total: this.total,
           pageSize: this.pageSize,
-          url: '/jigsaw',
+          url: '/list',
           param: {}
         });
 
