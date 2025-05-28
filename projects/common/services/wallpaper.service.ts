@@ -165,7 +165,7 @@ export class WallpaperService {
   }
 
   getWallpaperLink(wallpaperId: string, isEn: boolean) {
-    return `/wallpaper/${wallpaperId}${isEn ? '?lang=en' : ''}`;
+    return `${this.appConfigService.apps['wallpaper'].url}/detail/${wallpaperId}${isEn ? '?lang=en' : ''}`;
   }
 
   transformArchives(archiveData: ArchiveData[]): ArchiveList {

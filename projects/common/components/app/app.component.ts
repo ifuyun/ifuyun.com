@@ -25,7 +25,7 @@ import {
   UserService
 } from 'common/services';
 import { generateUid } from 'common/utils';
-import { filter, tap } from 'rxjs/operators';
+import { filter, takeWhile, tap } from 'rxjs/operators';
 import { FooterComponent } from '../footer/footer.component';
 import { GameService } from '../game/game.service';
 import { HeaderComponent } from '../header/header.component';
@@ -180,14 +180,16 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.gameService.activeRomURL$.subscribe((romURL) => (this.romURL = romURL));
 
     if (this.platform.isBrowser) {
-      this.adsService.adsStatus$.subscribe((status) => {
-        const oldAdsStatus = this.adsStatus;
+      this.adsService.adsStatus$
+        .pipe(takeWhile((status) => status !== AdsStatus.DISABLED, true))
+        .subscribe((status) => {
+          const oldAdsStatus = this.adsStatus;
 
-        this.adsStatus = status;
-        this.logAdsStatus({
-          oldStatus: oldAdsStatus
+          this.adsStatus = status;
+          this.logAdsStatus({
+            oldStatus: oldAdsStatus
+          });
         });
-      });
     }
   }
 

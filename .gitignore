@@ -44,3 +44,4 @@ Thumbs.db
 # Project
 package-lock.json
 /env
+baidu_verify_*.html
