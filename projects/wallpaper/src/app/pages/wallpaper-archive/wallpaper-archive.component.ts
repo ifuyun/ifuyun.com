@@ -96,7 +96,7 @@ export class WallpaperArchiveComponent implements OnInit {
       {
         label: `壁纸`,
         tooltip: `高清壁纸`,
-        url: '/list',
+        url: '/',
         domain: 'wallpaper',
         isHeader: false
       },

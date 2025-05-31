@@ -347,7 +347,7 @@ export class WallpaperComponent implements OnInit {
       {
         label: '壁纸',
         tooltip: '高清壁纸',
-        url: '/list',
+        url: '/',
         domain: 'wallpaper',
         param: this.lang === WallpaperLang.EN ? { lang: WallpaperLang.EN } : {},
         isHeader: false

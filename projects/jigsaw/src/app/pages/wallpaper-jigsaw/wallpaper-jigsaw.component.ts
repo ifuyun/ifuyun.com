@@ -327,7 +327,7 @@ export class WallpaperJigsawComponent implements OnInit {
       {
         label: '壁纸拼图',
         tooltip: '壁纸拼图',
-        url: '/list',
+        url: '/',
         domain: 'jigsaw',
         isHeader: false
       },

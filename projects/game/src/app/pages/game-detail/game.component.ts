@@ -330,8 +330,8 @@ export class GameComponent implements OnInit {
     }));
     breadcrumbs.unshift({
       label: '游戏',
-      tooltip: '游戏列表',
-      url: '/list',
+      tooltip: '游戏',
+      url: '/',
       domain: 'game',
       isHeader: false
     });

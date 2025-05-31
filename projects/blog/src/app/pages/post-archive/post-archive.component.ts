@@ -95,8 +95,8 @@ export class PostArchiveComponent implements OnInit {
     const breadcrumbs: BreadcrumbEntity[] = [
       {
         label: '博客',
-        tooltip: `博客文章列表`,
-        url: '/list',
+        tooltip: `博客`,
+        url: '/',
         domain: 'blog',
         isHeader: false
       },

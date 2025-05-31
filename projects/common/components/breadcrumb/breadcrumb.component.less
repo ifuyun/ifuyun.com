@@ -19,7 +19,7 @@
   > h3 {
     display: inline-flex;
 
-    > a {
+    lib-a {
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -27,11 +27,10 @@
   }
 
   > :not(:last-child) {
-    flex-shrink: 0;
+    --lib-a-color: var(--breadcrumb-minor-color);
 
-    &, > a {
-      color: var(--breadcrumb-minor-color);
-    }
+    flex-shrink: 0;
+    color: var(--breadcrumb-minor-color);
 
     &:not(:first-child)::after {
       content: '/';
@@ -40,13 +39,19 @@
   }
 
   > :last-child {
-    &, > a {
-      color: var(--breadcrumb-color);
-    }
+    --lib-a-color: var(--breadcrumb-color);
+
+    color: var(--breadcrumb-color);
   }
 
-  a:hover {
-    color: @primary-color-hover !important;
+  lib-a {
+    --lib-a-display: inline-block;
+
+    display: inline-flex;
+
+    &:hover {
+      --lib-a-color: @primary-color-hover;
+    }
   }
 
   h3 {
