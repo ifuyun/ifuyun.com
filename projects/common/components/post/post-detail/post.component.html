@@ -23,7 +23,8 @@
              [class.no-auth]="!isSignIn"
              [ngStyle]="{'user-select': post.postPayFlag || post.postLoginFlag && !isSignIn ? 'none' : ''}"
              [innerHTML]="post.postContent | safeHtml"
-             (click)="onPostClick($event)"></article>
+             (click)="onPostClick($event)"
+             (selectstart)="onPostSelect()"></article>
     @if (showPayMask) {
       <div class="pay-mask"></div>
       <div class="pay-body">
