@@ -1,12 +1,5 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {
-  AppConfigService,
-  ConsoleService,
-  DestroyService,
-  OptionEntity,
-  PlatformService,
-  UserAgentService
-} from 'common/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { AppConfigService, DestroyService, OptionEntity, PlatformService, UserAgentService } from 'common/core';
 import { AdsenseOptions } from 'common/interfaces';
 import { AdsService, AdsStatus, OptionService } from 'common/services';
 import { isEmpty, uniq } from 'lodash';
@@ -62,8 +55,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
     private readonly userAgentService: UserAgentService,
     private readonly appConfigService: AppConfigService,
     private readonly optionService: OptionService,
-    private readonly adsService: AdsService,
-    private readonly console: ConsoleService
+    private readonly adsService: AdsService
   ) {
     this.isDev = this.appConfigService.isDev;
     this.isMobile = this.userAgentService.isMobile;

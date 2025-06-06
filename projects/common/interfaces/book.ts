@@ -10,7 +10,7 @@ export interface BookEntity {
   bookIsbn: string;
   bookIssueCode?: string;
   bookIssueCodeForeign?: string;
-  bookIssueNumber?: string;
+  bookIssue?: string;
   bookIssueTotal?: number;
   bookPrice: number;
   bookType: BookType;

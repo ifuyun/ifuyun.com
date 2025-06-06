@@ -134,7 +134,7 @@ export class PostService {
       if ([BookType.BOOK, BookType.OTHER].includes(post.book.bookType)) {
         source = '《' + post.book.bookName + '》';
       } else {
-        source = '《' + post.book.bookName + '》' + post.book.bookIssueNumber;
+        source = '《' + post.book.bookName + '》' + post.book.bookIssue;
       }
     }
 

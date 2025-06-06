@@ -20,11 +20,11 @@ export class BookService {
       shortName = fullName = withMark ? `《${book.bookName}》` : book.bookName;
     }
     if (withMark) {
-      fullName = `《${book.bookName}》${book.bookIssueNumber ? '（' + book.bookIssueNumber + '）' : ''}`;
+      fullName = `《${book.bookName}》${book.bookIssue ? '（' + book.bookIssue + '）' : ''}`;
     } else {
-      fullName = `${book.bookName}${book.bookIssueNumber ? '（' + book.bookIssueNumber + '）' : ''}`;
+      fullName = `${book.bookName}${book.bookIssue ? '（' + book.bookIssue + '）' : ''}`;
     }
-    shortName = book.bookIssueNumber || book.bookName;
+    shortName = book.bookIssue || book.bookName;
 
     return {
       shortName,
