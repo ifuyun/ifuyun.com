@@ -8,8 +8,8 @@ export interface BookEntity {
   bookPress?: string;
   bookEdition?: string;
   bookIsbn: string;
-  bookIssueCode?: string;
-  bookIssueCodeForeign?: string;
+  bookPostCode?: string;
+  bookPostCodeForeign?: string;
   bookIssue?: string;
   bookIssueTotal?: number;
   bookPrice: number;

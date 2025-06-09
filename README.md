@@ -5,9 +5,17 @@
   </a>
 </p>
 
-Website of [ifuyun.com](https://www.ifuyun.com), implementation of Wutong CMS.
+A versatile content community that unites blogs, high-resolution wallpapers, wallpaper jigsaw puzzles, and classic NES mini-games into a one-stop hub for creativity and fun.
 
-[ifuyun.com](https://www.ifuyun.com) is powered by [Angular SSR](https://angular.dev), API services is powered by [Fuyun Tech](https://www.ireadpay.com).
+[ifuyun.com](https://www.ifuyun.com) is powered by [Fuyun Tech](https://www.ireadpay.com)'s [Wutong CMS](https://admin.ireadpay.com/auth/login?appId=00m3ln4mfe58zyk1).
+
+## Monorepos
+
+- **Home:** [`www.ifuyun.com`](https://www.ifuyun.com)
+- **Blog:** [`blog.ifuyun.com`](https://blog.ifuyun.com)
+- **Wallpapers:** [`wallpaper.ifuyun.com`](https://wallpaper.ifuyun.com)
+- **Wallpaper Jigsaw Puzzles:** [`jigsaw.ifuyun.com`](https://jigsaw.ifuyun.com)
+- **NES Games:** [`game.ifuyun.com`](https://game.ifuyun.com)
 
 ## Related projects
 
@@ -22,13 +30,17 @@ Website of [ifuyun.com](https://www.ifuyun.com), implementation of Wutong CMS.
 $ npm i
 
 # Develop
-$ npm run start
+$ npm run start:[app]
 $ npm run build
+$ npm run build:[app]
 $ npm run build:gulp
+$ npm run build:gulp:[app]
 $ npm run build:prod
+$ npm run build:prod:[app]
 $ npm run build:zip
-$ npm run watch
-$ npm run serve:ssr
+$ npm run build:zip:[app]
+$ npm run watch:[app]
+$ npm run serve:ssr:[app]
 
 # Code scaffolding
 $ ng g component|directive|pipe|service|class|guard|interface|enum|module name
@@ -36,19 +48,21 @@ $ ng g --help
 
 # Lint & test
 $ npm run lint
+$ npm run format
 $ npm run test
 $ ng test
 $ ng e2e
 
 # Deploy
-$ npm run deploy
+$ npm run deploy:zip
+$ npm run deploy:zip:[app]
 $ npm run deploy:local
-$ npm run deploy:manual
+$ npm run deploy:remote
 ```
 
 ## Further help
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+For more information about the project, please visit the [Evolution](https://www.ifuyun.com/evolution) page; for any feedback or suggestions, please visit the [Contact](https://www.ifuyun.com/contactus) page.
 
 ## License
 
