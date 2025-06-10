@@ -99,7 +99,7 @@ export class ToolListComponent implements OnInit {
 
   private updatePageInfo() {
     const titles = ['工具', this.appInfo.appName];
-    const description = `${this.appInfo.appName}${this.options['tool_description']}`;
+    const description = this.options['tool_description'];
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,

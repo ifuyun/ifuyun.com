@@ -132,7 +132,7 @@ export class ShoppingComponent implements OnInit {
 
   private updatePageInfo() {
     const titles = ['电商工具', '工具', this.appInfo.appName];
-    const description = `${this.appInfo.appName}${this.options['shopping_description']}`;
+    const description = this.options['shopping_description'];
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,

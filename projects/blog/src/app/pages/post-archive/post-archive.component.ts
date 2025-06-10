@@ -84,7 +84,7 @@ export class PostArchiveComponent implements OnInit {
     const titles = ['归档', '博客', this.appInfo.appName];
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
-      description: `${this.appInfo.appName}博客归档。${this.appInfo.appDescription}`,
+      description: `${this.appInfo.appName}博客归档。${this.options['post_description']}`,
       keywords: this.options['post_keywords'],
       author: this.options['site_author']
     };

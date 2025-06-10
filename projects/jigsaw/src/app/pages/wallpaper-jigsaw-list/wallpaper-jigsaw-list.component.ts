@@ -139,9 +139,8 @@ export class WallpaperJigsawListComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const siteName = this.appInfo.appName;
     let description = '';
-    const titles = ['壁纸拼图', siteName];
+    const titles = ['壁纸拼图', this.appInfo.appName];
     const keywords = (this.options['jigsaw_keywords'] || '').split(',');
 
     if (description) {
@@ -156,7 +155,7 @@ export class WallpaperJigsawListComponent implements OnInit {
     if (description) {
       description += '。';
     }
-    description += `${siteName}${this.options['jigsaw_description'] || ''}`;
+    description += this.options['jigsaw_description'];
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),

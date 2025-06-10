@@ -254,7 +254,7 @@ export class PostListComponent implements OnInit {
     if (description) {
       description += '。';
     }
-    description += this.appInfo.appDescription;
+    description += this.options['post_description'];
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),

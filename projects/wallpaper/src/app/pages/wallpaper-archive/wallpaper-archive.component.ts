@@ -84,7 +84,7 @@ export class WallpaperArchiveComponent implements OnInit {
     const titles = ['归档', '壁纸', this.appInfo.appName];
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
-      description: `${this.appInfo.appName}壁纸归档。${this.appInfo.appDescription}`,
+      description: `${this.appInfo.appName}壁纸归档。${this.options['wallpaper_description']}`,
       keywords: this.options['wallpaper_keywords'],
       author: this.options['site_author']
     };

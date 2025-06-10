@@ -216,9 +216,8 @@ export class WallpaperListComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const siteName = this.appInfo.appName;
     let description = '';
-    const titles = ['高清壁纸', siteName];
+    const titles = ['高清壁纸', this.appInfo.appName];
     const keywords = (this.options['wallpaper_keywords'] || '').split(',');
 
     if (this.year) {
@@ -238,7 +237,7 @@ export class WallpaperListComponent implements OnInit {
     if (description) {
       description += '。';
     }
-    description += `${siteName}${this.options['wallpaper_description']}`;
+    description += this.options['wallpaper_description'];
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
