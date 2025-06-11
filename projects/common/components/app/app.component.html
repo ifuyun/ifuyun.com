@@ -21,7 +21,7 @@
       </div>
       <lib-m-sider></lib-m-sider>
     }
-    <img [style.display]="'none'" [src]="adsImg" (load)="checkAdsStatus(true)" (error)="checkAdsStatus(false)" alt="">
+    <img [style.display]="'none'" [src]="adsImg" (load)="checkAdsStatus(true)" (error)="checkAdsStatus(false)" alt="none">
   } @else {
     <!--global errors-->
     <ng-container [ngSwitch]="errorState.code">
