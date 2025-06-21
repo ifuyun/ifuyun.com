@@ -9,19 +9,9 @@ export interface AccessLog {
   rm?: string;
   rs: string;
   cd: string;
-  im: 0 | 1;
-  ic: 0 | 1;
   ia: 0 | 1;
   in: 0 | 1;
   as: number;
-  os: string;
-  ov: string;
-  a: string;
-  b: string;
-  bv: string;
-  e: string;
-  ev: string;
-  ua: string;
   appId: string;
 }
 

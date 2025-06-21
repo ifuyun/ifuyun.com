@@ -1,6 +1,5 @@
 import { Inject, Injectable, Optional, REQUEST } from '@angular/core';
 import { IBrowser, ICPU, IDevice, IEngine, IOS, IResult, UAParser } from 'ua-parser-js';
-import { UserAgentInfo } from './common.interface';
 import { PlatformService } from './platform.service';
 
 @Injectable({
@@ -12,7 +11,7 @@ export class UserAgentService {
 
   constructor(
     private readonly platform: PlatformService,
-    @Optional() @Inject(REQUEST) private readonly request: Request
+    @Optional() @Inject(REQUEST) private readonly request: any
   ) {
     this._uaString = this.platform.isBrowser ? navigator.userAgent : this.request?.headers.get('user-agent') || '';
     this._uaResult = UAParser(this._uaString);
@@ -44,22 +43,6 @@ export class UserAgentService {
 
   get uaString() {
     return this._uaString;
-  }
-
-  get uaInfo(): UserAgentInfo {
-    return {
-      os: this.os.name || '',
-      osVersion: this.os.version || '',
-      architecture: this.cpu.architecture || '',
-      browser: this.browser.name || '',
-      browserVersion: this.browser.version || '',
-      engine: this.engine.name || '',
-      engineVersion: this.engine.version || '',
-      isMobile: this.isMobile,
-      isDesktop: this.isDesktop,
-      isCrawler: this.isCrawler,
-      userAgent: this._uaString
-    };
   }
 
   get isIE() {
@@ -104,16 +87,6 @@ export class UserAgentService {
 
   get isDesktop() {
     return !this.isMobile;
-  }
-
-  get isCrawler() {
-    return (
-      !this.os.name ||
-      !this.browser.name ||
-      /spider|googlebot|bingbot|applebot|amazonbot|crawler|robot/i.test(this._uaString) ||
-      /Mediapartners-Google|APIs-Google|AdsBot-Google|GoogleAdSenseInfeed/i.test(this._uaString) ||
-      /Storebot-Google|Google-InspectionTool|GoogleOther/i.test(this._uaString)
-    );
   }
 
   private checkBrowser(browserNames: string[]) {

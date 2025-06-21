@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiService, ApiUrl, AppConfigService, HttpResponseEntity, UserAgentService } from 'common/core';
+import { ApiService, ApiUrl, AppConfigService, HttpResponseEntity } from 'common/core';
 import { AccessLog, ActionLog } from 'common/interfaces';
 import { Observable } from 'rxjs';
 
@@ -17,7 +17,6 @@ export enum AdsStatus {
 export class LogService {
   constructor(
     private readonly apiService: ApiService,
-    private readonly userAgentService: UserAgentService,
     private readonly appConfigService: AppConfigService
   ) {}
 
@@ -29,7 +28,6 @@ export class LogService {
     logId: string;
   }): AccessLog {
     const { initialized, referrer, isNew, adsStatus, logId } = param;
-    const uaInfo = this.userAgentService.uaInfo;
 
     return {
       li: logId,
@@ -41,16 +39,6 @@ export class LogService {
       rs: window.screen.width + 'x' + window.screen.height,
       cd: window.screen.colorDepth.toString(),
       ia: initialized ? 1 : 0,
-      os: uaInfo.os,
-      ov: uaInfo.osVersion,
-      a: uaInfo.architecture,
-      b: uaInfo.browser,
-      bv: uaInfo.browserVersion,
-      e: uaInfo.engine,
-      ev: uaInfo.engineVersion,
-      im: uaInfo.isMobile ? 1 : 0,
-      ic: uaInfo.isCrawler ? 1 : 0,
-      ua: uaInfo.userAgent,
       appId: this.appConfigService.appId
     };
   }

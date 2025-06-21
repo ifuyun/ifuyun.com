@@ -7,6 +7,7 @@ import {
 } from '@angular/ssr/node';
 import { ApiUrl, Message } from 'common/core';
 import { SitemapData } from 'common/interfaces';
+import { antiCrawlers } from 'common/middlewares';
 import { simpleRequest } from 'common/utils';
 import { environment } from 'env/environment';
 import express, { Request, Response } from 'express';
@@ -21,23 +22,7 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
-const request = async (url: string, param: Record<string, any> = {}) => {
-  const reqParam = Object.entries(param)
-    .map((item) => `${item[0]}=${item[1]}`)
-    .join('&');
-  const urlParam = `?appId=${environment.appId}${reqParam ? '&' + reqParam : ''}`;
-  const response = await fetch(environment.apiBase + url + urlParam, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-
-  if (!response.ok) {
-    throw new Error(Message.ERROR_500);
-  }
-  return response.json();
-};
+app.use(antiCrawlers);
 app.get('/sitemap.xml', async (req: Request, res: Response) => {
   try {
     const sitemap: SitemapData = (

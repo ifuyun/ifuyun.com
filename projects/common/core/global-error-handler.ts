@@ -1,6 +1,5 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { ErrorHandler, Inject, Injectable, Optional, RESPONSE_INIT } from '@angular/core';
-import { Response } from 'express';
 import { AppConfigService } from './app-config.service';
 import { CustomError } from './custom-error';
 import { ErrorService } from './error.service';
@@ -12,7 +11,7 @@ export class GlobalErrorHandler implements ErrorHandler {
   protected message = '';
 
   constructor(
-    @Optional() @Inject(RESPONSE_INIT) private readonly response: Response,
+    @Optional() @Inject(RESPONSE_INIT) private readonly response: any,
     private readonly appConfigService: AppConfigService,
     private readonly errorService: ErrorService
   ) {}
@@ -41,7 +40,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     this.message = message || defaultMessage;
 
     if (this.response) {
-      this.response.status = <any>this.status;
+      this.response.status = this.status;
     }
     if (this.appConfigService.isDev) {
       console.error(

@@ -1,40 +1,50 @@
+# Default
 User-agent: *
+Disallow: /
+Allow: /$
+
+# Google
+User-agent: Googlebot
+User-agent: AdsBot-Google
+User-agent: Mediapartners-Google
+User-agent: APIs-Google
+User-agent: GoogleAdSenseInfeed
+User-agent: Storebot-Google
+User-agent: Google-InspectionTool
+User-agent: GoogleOther
 Allow: /
+
+# Bing
+User-agent: Bingbot
+User-agent: AdIdxBot
+Allow: /
+
+# CN
+User-agent: Baiduspider
+User-agent: Baidu-imagespider
+User-agent: Sogou
+User-agent: 360Spider
+User-agent: ShenmaSpider
+Allow: /
+
+# Other Search Engine
+User-agent: YandexBot
+User-agent: YandexImages
+User-agent: DuckDuckBot
+User-agent: Slurp
+User-agent: NaverBot
+User-agent: Exabot
+Allow: /
+
+# Others
+User-agent: Twitterbot
+User-agent: Facebot
+User-agent: Applebot
+User-agent: Amazonbot
+Allow: /
+
 Sitemap: https://www.ifuyun.com/sitemap.xml
 Sitemap: https://blog.ifuyun.com/sitemap.xml
 Sitemap: https://wallpaper.ifuyun.com/sitemap.xml
 Sitemap: https://jigsaw.ifuyun.com/sitemap.xml
 Sitemap: https://game.ifuyun.com/sitemap.xml
-
-User-agent: MJ12bot
-Disallow: /
-
-User-agent: AhrefsBot
-Disallow: /
-
-User-agent: JikeSpider
-Disallow: /
-
-User-agent: 360Spider
-Disallow: /
-
-User-agent: Bytespider
-Disallow: /
-
-User-agent: YisouSpider
-Disallow: /
-
-User-agent: SemrushBot
-Disallow: /
-
-User-agent: CCBot
-Disallow: /
-
-User-agent: DotBot
-Disallow: /
-
-User-agent: GrapeshotCrawler
-Disallow: /
-
-User-agent: DataForSeoBot
-Disallow: /

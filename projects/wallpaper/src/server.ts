@@ -9,6 +9,7 @@ import { Feed } from '@fuyun/feed';
 import { ApiUrl, Message } from 'common/core';
 import { WallpaperLang } from 'common/enums';
 import { SitemapData, Wallpaper } from 'common/interfaces';
+import { antiCrawlers } from 'common/middlewares';
 import { simpleRequest } from 'common/utils';
 import { environment } from 'env/environment';
 import express, { Request, Response } from 'express';
@@ -24,6 +25,7 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
+app.use(antiCrawlers);
 app.get('/rss.xml', async (req: Request, res: Response) => {
   try {
     const { page, size, lang } = req.query;

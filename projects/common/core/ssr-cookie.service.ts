@@ -1,6 +1,5 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID, REQUEST } from '@angular/core';
-import { Request } from 'express';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +7,7 @@ import { Request } from 'express';
 export class SsrCookieService {
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
-  private readonly request: Request | null = <Request | null>inject(REQUEST);
+  private readonly request = inject(REQUEST);
   private readonly documentIsAccessible: boolean = isPlatformBrowser(this.platformId);
 
   /**
@@ -40,7 +39,7 @@ export class SsrCookieService {
   }
 
   getHeaderCookie() {
-    return this.request ? (this.request.headers as any).get('cookie') : '';
+    return this.request ? this.request.headers.get('cookie') : '';
   }
 
   getCookie() {
@@ -85,10 +84,10 @@ export class SsrCookieService {
    */
   getAll(): { [key: string]: string } {
     const cookies: { [key: string]: string } = {};
-    const cookieString: any = this.documentIsAccessible ? this.document?.cookie : this.request?.headers.cookie;
+    const cookieString = this.documentIsAccessible ? this.document?.cookie : this.getHeaderCookie();
 
-    if (cookieString && cookieString !== '') {
-      cookieString.split(';').forEach((currentCookie: { split: (arg0: string) => [any, any] }) => {
+    if (cookieString) {
+      cookieString.split(';').forEach((currentCookie) => {
         const [cookieName, cookieValue] = currentCookie.split('=');
         cookies[SsrCookieService.safeDecodeURIComponent(cookieName.replace(/^ /, ''))] =
           SsrCookieService.safeDecodeURIComponent(cookieValue);
