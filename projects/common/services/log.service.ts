@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { ApiService, ApiUrl, AppConfigService, HttpResponseEntity } from 'common/core';
 import { AccessLog, ActionLog } from 'common/interfaces';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { CommonService } from './common.service';
 
 export enum AdsStatus {
   UNKNOWN = 0,
@@ -17,7 +19,8 @@ export enum AdsStatus {
 export class LogService {
   constructor(
     private readonly apiService: ApiService,
-    private readonly appConfigService: AppConfigService
+    private readonly appConfigService: AppConfigService,
+    private readonly commonService: CommonService
   ) {}
 
   parseAccessLog(param: {
@@ -36,7 +39,7 @@ export class LogService {
       rf: initialized ? referrer : document.referrer,
       s: 'web',
       as: adsStatus || AdsStatus.UNKNOWN,
-      rs: window.screen.width + 'x' + window.screen.height,
+      rs: this.commonService.getResolution(),
       cd: window.screen.colorDepth.toString(),
       ia: initialized ? 1 : 0,
       appId: this.appConfigService.appId
@@ -44,25 +47,13 @@ export class LogService {
   }
 
   logAccess(log: AccessLog): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(ApiUrl.LOG_ACCESS, log, false);
-  }
-
-  logAdsStatus(logId: string, status: AdsStatus): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(
-      ApiUrl.LOG_ADS,
-      {
-        logId,
-        status,
-        appId: this.appConfigService.appId
-      },
-      false
-    );
+    return this.apiService.httpPost(ApiUrl.ACCESS_LOG, log, false);
   }
 
   logLeave(logId: string): void {
     if (logId) {
       navigator.sendBeacon(
-        this.apiService.getApiUrl(ApiUrl.LOG_LEAVE),
+        this.apiService.getApiUrl(ApiUrl.ACCESS_LOG_LEAVE),
         JSON.stringify({
           logId,
           appId: this.appConfigService.appId
@@ -73,7 +64,7 @@ export class LogService {
 
   logAction(log: Omit<ActionLog, 'faId' | 'ref' | 'appId'>): Observable<HttpResponseEntity> {
     return this.apiService.httpPost(
-      ApiUrl.LOG_ACTION,
+      ApiUrl.ACTION_LOG,
       {
         ...log,
         ref: location.href,
@@ -82,5 +73,25 @@ export class LogService {
       },
       false
     );
+  }
+
+  logAdsStatus(logId: string, status: AdsStatus): Observable<HttpResponseEntity> {
+    return this.apiService.httpPost(
+      ApiUrl.ACCESS_LOG_PLUGIN,
+      {
+        logId,
+        status,
+        appId: this.appConfigService.appId
+      },
+      false
+    );
+  }
+
+  checkAccessLimit(): Observable<{ limit: boolean }> {
+    return this.apiService
+      .httpGet(ApiUrl.ACCESS_LOG_CHECK_LIMIT, {
+        appId: this.appConfigService.appId
+      })
+      .pipe(map((res) => res?.data || {}));
   }
 }

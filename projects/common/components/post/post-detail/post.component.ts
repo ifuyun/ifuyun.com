@@ -165,7 +165,7 @@ export class PostComponent implements OnInit {
       .subscribe(([appInfo, options, p]) => {
         this.appInfo = appInfo;
         this.options = options;
-        this.referrer = this.commonService.getReferrer();
+        this.referrer = this.commonService.getReferrer(true);
 
         const slug = p.get('slug')?.trim() || '';
         if (!slug) {

@@ -3,20 +3,25 @@ import { HttpStatusCode } from '@angular/common/http';
 import { ElementRef, Inject, Injectable, Optional, REQUEST, RESPONSE_INIT } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import {
+  ApiService,
+  ApiUrl,
   AppConfigService,
   CDN_HOST,
   COOKIE_KEY_THEME,
+  COOKIE_KEY_TURNSTILE_ID,
   COOKIE_KEY_USER_ID,
   CustomError,
+  HttpResponseEntity,
   MEDIA_QUERY_THEME_DARK,
   MEDIA_QUERY_THEME_LIGHT,
   Message,
   PageIndexInfo,
   PlatformService,
-  SsrCookieService
+  SsrCookieService,
+  UserAgentService
 } from 'common/core';
 import { Theme } from 'common/enums';
-import { Request } from 'express';
+import { isSuspiciousReferrer, isSuspiciousResolution } from 'common/middlewares';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -34,12 +39,14 @@ export class CommonService {
 
   constructor(
     @Inject(DOCUMENT) private readonly document: Document,
-    @Optional() @Inject(REQUEST) private readonly request: Request,
+    @Optional() @Inject(REQUEST) private readonly request: any,
     @Optional() @Inject(RESPONSE_INIT) private readonly response: any,
     private readonly router: Router,
     private readonly platform: PlatformService,
     private readonly cookieService: SsrCookieService,
-    private readonly appConfigService: AppConfigService
+    private readonly userAgentService: UserAgentService,
+    private readonly appConfigService: AppConfigService,
+    private readonly apiService: ApiService
   ) {}
 
   updatePageIndex(pageIndex: string) {
@@ -70,16 +77,16 @@ export class CommonService {
     this.siderVisible.next(visible);
   }
 
-  getReferrer() {
+  getReferrer(onlyPath = false) {
+    let referrer: string;
     if (this.platform.isServer) {
-      const headers: any = this.request?.headers;
-      if (headers) {
-        const referrer: string = headers.get('referer') || headers.get('referrer') || '';
-        return referrer.replace(/^https?:\/\/[^/]+/i, '');
-      }
-      return '';
+      const headers = this.request?.headers;
+      referrer = headers ? headers.get('referer') || headers.get('referrer') || '' : '';
+    } else {
+      referrer = this.document.referrer || '';
     }
-    return this.document.referrer.replace(/^https?:\/\/[^/]+/i, '');
+
+    return onlyPath ? referrer.replace(/^https?:\/\/[^/]+/i, '') : referrer;
   }
 
   getHost() {
@@ -100,6 +107,10 @@ export class CommonService {
     const curHost = this.getHost();
 
     return curHost === new URL(url).host;
+  }
+
+  getResolution() {
+    return this.platform.isBrowser ? window.screen.width + 'x' + window.screen.height : '';
   }
 
   smartNavigate(path: string, host: string, extras?: NavigationExtras): void {
@@ -194,6 +205,13 @@ export class CommonService {
     throw new CustomError(Message.ERROR_404, HttpStatusCode.NotFound);
   }
 
+  redirectToForbidden() {
+    if (this.platform.isServer) {
+      this.response.status = HttpStatusCode.Forbidden;
+    }
+    throw new CustomError(Message.ERROR_403, HttpStatusCode.Forbidden);
+  }
+
   serializeParams(params: Record<string, any>): string {
     return Object.keys(params)
       .sort()
@@ -215,5 +233,35 @@ export class CommonService {
     return Array.from(new Uint8Array(signature))
       .map((b) => b.toString(16).padStart(2, '0'))
       .join('');
+  }
+
+  isSuspicious() {
+    // 已知的 UA 已经拦截，除了 referrer 和 分辨率，还需要判断其它可能的 UA 和 IP 地址，或者调用三方接口判断
+    const turnstileId = this.cookieService.get(COOKIE_KEY_TURNSTILE_ID);
+    // 半小时内如果已经验证过，直接跳过
+    // todo: 需要调接口判断是否真实存在
+    if (turnstileId) {
+      return false;
+    }
+    const referrer = this.getReferrer(false);
+    const resolution = this.getResolution();
+
+    return (
+      !this.userAgentService.os.name ||
+      !this.userAgentService.browser.name ||
+      isSuspiciousReferrer(referrer) ||
+      (this.platform.isBrowser && isSuspiciousResolution(resolution))
+    );
+  }
+
+  verifyTurnstile(token: string): Observable<HttpResponseEntity> {
+    return this.apiService.httpPost(
+      ApiUrl.UTIL_TURNSTILE_VERIFY,
+      {
+        token,
+        appId: this.appConfigService.appId
+      },
+      true
+    );
   }
 }

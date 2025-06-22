@@ -3,10 +3,12 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import {
   AppConfigService,
+  COOKIE_KEY_TURNSTILE_ID,
   COOKIE_KEY_UV_ID,
   ErrorService,
   ErrorState,
   MEDIA_QUERY_THEME_DARK,
+  OptionEntity,
   PlatformService,
   ResponseCode,
   SsrCookieService,
@@ -16,8 +18,8 @@ import {
 import { Theme } from 'common/enums';
 import { ForbiddenComponent, NotFoundComponent, ServerErrorComponent } from 'common/error';
 import {
-  AdsStatus,
   AdsService,
+  AdsStatus,
   CommonService,
   LogService,
   OptionService,
@@ -30,6 +32,7 @@ import { FooterComponent } from '../footer/footer.component';
 import { GameService } from '../game/game.service';
 import { HeaderComponent } from '../header/header.component';
 import { MSiderComponent } from '../m-sider/m-sider.component';
+import { TurnstileComponent } from '../turnstile/turnstile.component';
 
 @Component({
   selector: 'app-root',
@@ -41,7 +44,8 @@ import { MSiderComponent } from '../m-sider/m-sider.component';
     NotFoundComponent,
     ForbiddenComponent,
     ServerErrorComponent,
-    MSiderComponent
+    MSiderComponent,
+    TurnstileComponent
   ],
   providers: [],
   templateUrl: './app.component.html',
@@ -53,6 +57,13 @@ export class AppComponent implements OnInit, AfterViewInit {
   errorPage = false;
   isBodyCentered = false;
   siderVisible = false;
+  options: OptionEntity = {};
+  isSuspicious = false;
+  isLimited = false;
+
+  get hostName() {
+    return this.commonService.getHostName();
+  }
 
   get adsImg() {
     return this.commonService.getCdnUrlPrefix() + '/assets/images/adimage.gif';
@@ -104,6 +115,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         filter((re) => re instanceof NavigationEnd)
       )
       .subscribe((event) => {
+        this.isSuspicious = this.commonService.isSuspicious();
         this.isBodyCentered = !!this.route.firstChild?.snapshot.data['centered'];
 
         let faId = this.cookieService.get(COOKIE_KEY_UV_ID);
@@ -148,6 +160,10 @@ export class AppComponent implements OnInit, AfterViewInit {
               });
           }
           this.currentUrl = (event as NavigationEnd).url;
+
+          this.logService.checkAccessLimit().subscribe((res) => {
+            this.isLimited = res.limit;
+          });
         }
         this.initialized = true;
       });
@@ -157,8 +173,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.optionService.getOptions().subscribe();
     this.tenantAppService.getAppInfo().subscribe();
     this.userService.getLoginUser().subscribe();
-    this.errorService.errorState$.subscribe((state) => {
-      this.errorState = state;
+    this.optionService.options$.subscribe((options) => {
+      this.options = options;
     });
     this.commonService.siderVisible$.subscribe((visible) => {
       if (this.platform.isBrowser) {
@@ -178,6 +194,9 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.siderVisible = visible;
     });
     this.gameService.activeRomURL$.subscribe((romURL) => (this.romURL = romURL));
+    this.errorService.errorState$.subscribe((state) => {
+      this.errorState = state;
+    });
 
     if (this.platform.isBrowser) {
       this.adsService.adsStatus$
@@ -209,6 +228,32 @@ export class AppComponent implements OnInit, AfterViewInit {
   closeSider() {
     this.siderVisible = false;
     this.commonService.updateSiderVisible(false);
+  }
+
+  verifyTurnstile(token: string | null) {
+    if (!token) {
+      return;
+    }
+    this.commonService.verifyTurnstile(token).subscribe((res) => {
+      if (res.code === ResponseCode.SUCCESS && res.data.success) {
+        this.cookieService.set(COOKIE_KEY_TURNSTILE_ID, res.data.turnstileId, {
+          path: '/',
+          domain: this.appConfigService.cookieDomain,
+          expires: 0.5 / 24,
+          secure: !this.appConfigService.isDev
+        });
+
+        this.isSuspicious = false;
+      } else {
+        this.commonService.redirectToForbidden();
+      }
+    });
+  }
+
+  verifyFailed(errCode: string | null) {
+    if (errCode) {
+      this.commonService.redirectToForbidden();
+    }
   }
 
   checkAdsStatus(isLoaded: boolean) {

@@ -32,6 +32,7 @@ export * from './post/copyright.constant';
 export * from './share-modal/share-modal.component';
 export * from './sider/sider.component';
 export * from './smart-link/smart-link.component';
+export * from './turnstile/turnstile.component';
 export * from './wallpaper/wallpaper-item/wallpaper-item.component';
 export * from './wallpaper/wallpaper-modal/wallpaper-modal.component';
 export * from './wallpaper/wallpaper-prev-next/wallpaper-prev-next.component';

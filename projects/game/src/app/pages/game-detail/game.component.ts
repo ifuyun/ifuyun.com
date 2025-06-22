@@ -130,7 +130,7 @@ export class GameComponent implements OnInit {
       .subscribe(([appInfo, options, p]) => {
         this.appInfo = appInfo;
         this.options = options;
-        this.referrer = this.commonService.getReferrer();
+        this.referrer = this.commonService.getReferrer(true);
         this.gameId = p.get('gid')?.trim() || '';
 
         if (!this.gameId) {

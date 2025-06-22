@@ -1,25 +1,39 @@
 @if (!errorPage) {
   @if (!errorState || !errorState.visible) {
-    @if (!isMobile) {
-      <lib-header></lib-header>
-      <div class="body-wrap">
-        <div class="body" [class.body-center]="isBodyCentered">
-          <router-outlet/>
-        </div>
-      </div>
-      <lib-footer></lib-footer>
-    } @else {
-      <div class="m-body-wrap" [class.open]="siderVisible">
+    @if (!isSuspicious && !isLimited) {
+      @if (!isMobile) {
         <lib-header></lib-header>
-        <div class="m-body">
-          <main class="m-main" [class.m-main-center]="isBodyCentered">
+        <div class="body-wrap">
+          <div class="body" [class.body-center]="isBodyCentered">
             <router-outlet/>
-          </main>
-          <lib-footer></lib-footer>
+          </div>
         </div>
-        <div *ngIf="siderVisible" class="m-mask m-mask-sider" (click)="closeSider()"></div>
+        <lib-footer></lib-footer>
+      } @else {
+        <div class="m-body-wrap" [class.open]="siderVisible">
+          <lib-header></lib-header>
+          <div class="m-body">
+            <main class="m-main" [class.m-main-center]="isBodyCentered">
+              <router-outlet/>
+            </main>
+            <lib-footer></lib-footer>
+          </div>
+          <div *ngIf="siderVisible" class="m-mask m-mask-sider" (click)="closeSider()"></div>
+        </div>
+        <lib-m-sider></lib-m-sider>
+      }
+    } @else {
+      <div class="turnstile">
+        <h1><img src="https://cdn.ifuyun.com/www/favicon.png" alt="Logo" /><span>{{ hostName }}</span></h1>
+        <p class="turnstile-tip-1">正在验证您是否是真人。这可能需要几秒钟时间。</p>
+        <lib-turnstile *ngIf="options['turnstile_site_key']"
+                       theme="light"
+                       [siteKey]="options['turnstile_site_key']"
+                       (resolved)="verifyTurnstile($event)"
+                       (errored)="verifyFailed($event)"
+                       [tabIndex]="0"></lib-turnstile>
+        <p class="turnstile-tip-2">继续之前，{{ hostName }} 需要先检查您的连接的安全性。</p>
       </div>
-      <lib-m-sider></lib-m-sider>
     }
     <img [style.display]="'none'" [src]="adsImg" (load)="checkAdsStatus(true)" (error)="checkAdsStatus(false)" alt="none">
   } @else {

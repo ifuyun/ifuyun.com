@@ -10,6 +10,7 @@ export const COOKIE_KEY_UV_ID = 'faid';
 export const COOKIE_KEY_USER_ID = 'uid';
 export const COOKIE_KEY_USER_NAME = 'user';
 export const COOKIE_KEY_USER_TOKEN = 'token';
+export const COOKIE_KEY_TURNSTILE_ID = 'turnstile_id';
 
 export const GAME_EMPTY_COVER = '/assets/images/game.svg';
 

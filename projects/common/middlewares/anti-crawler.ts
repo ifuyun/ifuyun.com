@@ -193,21 +193,39 @@ export const otherCrawlers = [
   /xtate\//i
 ];
 
-export const disallowedReferrers = ['ntp.msn.cn'];
-
 export function isAllowedCrawler(ua: string): boolean {
   return allowedCrawlers.some((pattern) => pattern.test(ua));
 }
 
-export function isDisallowedCrawler(ua: string): boolean {
-  return commonCrawlers.test(ua) || otherCrawlers.some((pattern) => pattern.test(ua));
+export function isCrawler(ua: string) {
+  if (!ua) {
+    return {
+      isAllowed: false,
+      isDisallowed: true
+    };
+  }
+  const isAllowed = isAllowedCrawler(ua);
+  const isDisallowed = !isAllowed && (commonCrawlers.test(ua) || otherCrawlers.some((pattern) => pattern.test(ua)));
+
+  return {
+    isAllowed,
+    isDisallowed
+  };
 }
 
-export function isDisallowedReferrer(referrer: string) {
+export const suspiciousReferrers = ['ntp.msn.cn'];
+
+export function isSuspiciousReferrer(referrer: string) {
   const domainReg = /^https?:\/\/([^\/]+)/i;
   const referrerDomain = referrer.match(domainReg)?.[1] || '';
 
-  return !!referrerDomain && disallowedReferrers.some((item) => item === referrerDomain);
+  return !!referrerDomain && suspiciousReferrers.includes(referrerDomain);
+}
+
+export const suspiciousResolutions = ['900x600', '800x600', '1600x1600', '1200x3000'];
+
+export function isSuspiciousResolution(resolution: string) {
+  return !resolution || suspiciousResolutions.includes(resolution);
 }
 
 export function antiCrawlers(req: Request, res: Response, next: NextFunction) {
@@ -218,12 +236,7 @@ export function antiCrawlers(req: Request, res: Response, next: NextFunction) {
   if (!ua || !host || !accept) {
     return res.status(400).send('Bad Request.');
   }
-
-  const referrer: string = req.headers['referer'] || <string>req.headers['referrer'] || '';
-  const isAllowed = isAllowedCrawler(ua);
-  const isCrawler = (!isAllowed && isDisallowedCrawler(ua)) || isDisallowedReferrer(referrer);
-
-  if (isCrawler) {
+  if (isCrawler(ua).isDisallowed) {
     return res.status(403).send('Forbidden.');
   }
 
