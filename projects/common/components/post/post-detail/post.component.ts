@@ -367,13 +367,13 @@ export class PostComponent implements OnInit {
 
     this.postService.updateActivePostId(post.post.postId);
     this.postService.updateActiveBook(post.book);
-    this.updateBreadcrumbs(this.isArticle ? post.breadcrumbs : []);
+    this.updateBreadcrumbs(this.isArticle ? post.breadcrumbs || [] : []);
     this.updatePageIndex();
     this.updatePageInfo();
   }
 
-  private updateBreadcrumbs(breadcrumbData?: BreadcrumbEntity[]) {
-    const breadcrumbs = (breadcrumbData || []).map((item) => ({
+  private updateBreadcrumbs(breadcrumbData: BreadcrumbEntity[]) {
+    const breadcrumbs = breadcrumbData.map((item) => ({
       ...item,
       url: `/category/${item.slug}`,
       domain: 'blog'

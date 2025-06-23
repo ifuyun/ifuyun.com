@@ -10,7 +10,6 @@ export const allowedCrawlers = [
   /Google-InspectionTool/i,
   /GoogleOther/i,
   /Bingbot/i,
-  /AdIdxBot/i,
   /Baiduspider/i,
   /Baidu-imagespider/i,
   /Sogou/i,
@@ -21,11 +20,7 @@ export const allowedCrawlers = [
   /DuckDuckBot/i,
   /Slurp/i,
   /NaverBot/i,
-  /Exabot/i,
-  /Twitterbot/i,
-  /Facebot/i,
-  /Applebot/i,
-  /Amazonbot/i
+  /Exabot/i
 ];
 export const commonCrawlers = /bot|crawl|spider|http|lighthouse|scan|search/i;
 export const otherCrawlers = [
@@ -236,7 +231,8 @@ export function antiCrawlers(req: Request, res: Response, next: NextFunction) {
   if (!ua || !host || !accept) {
     return res.status(400).send('Bad Request.');
   }
-  if (isCrawler(ua).isDisallowed) {
+  // 首页放行
+  if (req.path !== '/' && isCrawler(ua).isDisallowed) {
     return res.status(403).send('Forbidden.');
   }
 

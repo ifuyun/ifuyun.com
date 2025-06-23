@@ -110,12 +110,13 @@ export class AppComponent implements OnInit, AfterViewInit {
               this.gameService.clean(this.romURL);
               this.gameService.updateActiveRomURL('');
             }
+
+            this.isSuspicious = this.commonService.isSuspicious();
           }
         }),
         filter((re) => re instanceof NavigationEnd)
       )
       .subscribe((event) => {
-        this.isSuspicious = this.commonService.isSuspicious();
         this.isBodyCentered = !!this.route.firstChild?.snapshot.data['centered'];
 
         let faId = this.cookieService.get(COOKIE_KEY_UV_ID);

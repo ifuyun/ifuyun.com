@@ -16,7 +16,6 @@ Allow: /
 
 # Bing
 User-agent: Bingbot
-User-agent: AdIdxBot
 Allow: /
 
 # CN
@@ -34,13 +33,6 @@ User-agent: DuckDuckBot
 User-agent: Slurp
 User-agent: NaverBot
 User-agent: Exabot
-Allow: /
-
-# Others
-User-agent: Twitterbot
-User-agent: Facebot
-User-agent: Applebot
-User-agent: Amazonbot
 Allow: /
 
 Sitemap: https://www.ifuyun.com/sitemap.xml
