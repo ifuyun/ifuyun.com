@@ -19,10 +19,10 @@
             <div title="浏览: {{ wallpaper.wallpaperViews | numberView: 'K' }}">
               <nz-icon nzType="eye" /><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
             </div>
-            <a [routerLink]="domains['jigsaw'].url + wallpaper.wallpaperId"
-               title="拼图: {{ wallpaper.wallpaperPlays | numberView: 'K' }}">
+            <lib-a [href]="domains['jigsaw'].url + '/detail/' + wallpaper.wallpaperId"
+                   title="拼图: {{ wallpaper.wallpaperPlays | numberView: 'K' }}">
               <nz-icon nzType="product" /><span>{{ wallpaper.wallpaperPlays | numberView: 'K' }}</span>
-            </a>
+            </lib-a>
             <div title="喜欢: {{ wallpaper.wallpaperLikes | numberView: 'K' }}">
               <nz-icon nzType="like" /><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
             </div>
@@ -117,10 +117,10 @@
               <div title="浏览: {{ wallpaper.wallpaperViews | numberView: 'K' }}">
                 <nz-icon nzType="eye" /><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
               </div>
-              <a [routerLink]="domains['jigsaw'].url + wallpaper.wallpaperId"
-                 title="拼图: {{ wallpaper.wallpaperPlays | numberView: 'K' }}">
+              <lib-a [href]="domains['jigsaw'].url + '/detail/' + wallpaper.wallpaperId"
+                     title="拼图: {{ wallpaper.wallpaperPlays | numberView: 'K' }}">
                 <nz-icon nzType="product" /><span>{{ wallpaper.wallpaperPlays | numberView: 'K' }}</span>
-              </a>
+              </lib-a>
               <div title="喜欢: {{ wallpaper.wallpaperLikes | numberView: 'K' }}">
                 <nz-icon nzType="like" /><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
               </div>
