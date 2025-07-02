@@ -40,10 +40,10 @@ app.get('/rss.xml', async (req: Request, res: Response) => {
     });
     const showDetail = detail === '1';
     const { data: postList } = await simpleRequest({
-      url: ApiUrl.POST_RSS,
+      url: ApiUrl.POST_LIST_FOR_RSS,
       param: {
         page: Number(page) || 1,
-        pageSize: Math.min(Number(size) || 10, 100),
+        size: Math.min(Number(size) || 10, 100),
         detail: showDetail ? 1 : 0,
         sticky: 0
       },

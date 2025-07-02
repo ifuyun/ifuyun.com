@@ -203,7 +203,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
     this.wallpaperService
       .getWallpapers({
         page: 1,
-        pageSize: this.carouselOptions.size || 4,
+        size: this.carouselOptions.size || 4,
         lang: [WallpaperLang.CN, WallpaperLang.EN],
         orderBy: this.carouselOptions.orderBy === 'oldest' ? [['wallpaperDate', 'asc']] : [['wallpaperDate', 'desc']]
       })

@@ -147,7 +147,7 @@ export class PostListComponent implements OnInit {
   private getPosts() {
     const param: PostQueryParam = {
       page: this.page,
-      pageSize: this.pageSize
+      size: this.pageSize
     };
     if (this.category) {
       param.category = this.category;
@@ -184,7 +184,7 @@ export class PostListComponent implements OnInit {
     this.postService
       .getPostsByBookId<PostList>({
         page: this.page,
-        pageSize: this.pageSize,
+        size: this.pageSize,
         bookId: this.bookId,
         simple: 0
       })

@@ -17,7 +17,7 @@
         <div class="post-more-content-title">{{ prevGame.gameTitle }}</div>
         <div>上一篇</div>
       </div>
-      <a class="post-more-link" [routerLink]="'/game/' + prevGame.gameId" [title]="prevGame.gameTitle"></a>
+      <a class="post-more-link" [routerLink]="['/detail', prevGame.gameId]" [title]="prevGame.gameTitle"></a>
     </div>
   } @else {
     <div></div>
@@ -40,7 +40,7 @@
         <div class="post-more-content-title">{{ nextGame.gameTitle }}</div>
         <div>下一篇</div>
       </div>
-      <a class="post-more-link" [routerLink]="'/game/' + nextGame.gameId" [title]="nextGame.gameTitle"></a>
+      <a class="post-more-link" [routerLink]="['/detail', nextGame.gameId]" [title]="nextGame.gameTitle"></a>
     </div>
   } @else {
     <div></div>

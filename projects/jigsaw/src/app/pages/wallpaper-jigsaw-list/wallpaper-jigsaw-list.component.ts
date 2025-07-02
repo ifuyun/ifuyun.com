@@ -114,7 +114,7 @@ export class WallpaperJigsawListComponent implements OnInit {
   private getWallpapers() {
     const param: WallpaperQueryParam = {
       page: this.page,
-      pageSize: this.pageSize
+      size: this.pageSize
     };
 
     this.wallpaperService

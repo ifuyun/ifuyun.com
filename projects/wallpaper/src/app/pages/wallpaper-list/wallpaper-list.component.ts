@@ -173,7 +173,7 @@ export class WallpaperListComponent implements OnInit {
   private getWallpapers() {
     const param: WallpaperQueryParam = {
       page: this.page,
-      pageSize: this.pageSize
+      size: this.pageSize
     };
     if (this.lang) {
       param.lang = this.lang;

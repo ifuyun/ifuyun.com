@@ -43,7 +43,7 @@ app.get('/rss.xml', async (req: Request, res: Response) => {
       url: ApiUrl.WALLPAPERS,
       param: {
         page: Number(page) || 1,
-        pageSize: Math.min(Number(size) || 10, 100)
+        size: Math.min(Number(size) || 10, 100)
       },
       appId: environment.appId,
       apiBase: environment.apiBase

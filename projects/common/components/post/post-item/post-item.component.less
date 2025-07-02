@@ -65,8 +65,10 @@
         }
       }
 
-      a:hover {
-        color: @primary-color-hover;
+      lib-a:hover, a:hover {
+        nz-icon, span {
+          color: @primary-color-hover;
+        }
       }
 
       nz-icon, .fi {
@@ -300,6 +302,7 @@
 .post-item-tag {
   font-size: @meta-font-size;
   line-height: @post-tag-line-height;
+  color: var(--meta-color);
 
   > div {
     display: flex;

@@ -39,7 +39,7 @@ export class PostService {
 
   getPostsByBookId<T extends PostList | { posts: PostEntity[] }>(param: PostQueryParam): Observable<T> {
     return this.apiService
-      .httpGet(ApiUrl.POST_BOOK, {
+      .httpGet(ApiUrl.POST_LIST_BY_BOOK, {
         ...param,
         appId: this.appConfigService.appId
       })

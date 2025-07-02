@@ -119,7 +119,7 @@ export class GameListComponent implements OnInit {
   private getGames() {
     const param: GameQueryParam = {
       page: this.page,
-      pageSize: this.pageSize
+      size: this.pageSize
     };
     if (this.category) {
       param.category = this.category;

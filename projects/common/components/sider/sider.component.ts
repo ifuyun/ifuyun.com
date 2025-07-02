@@ -197,7 +197,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.postService
       .getPostsByBookId<{ posts: PostEntity[] }>({
         page: 1,
-        pageSize: 10,
+        size: 10,
         bookId: this.activeBook?.bookId,
         simple: 1
       })

@@ -19,8 +19,8 @@ export enum ApiUrl {
   POST_HOT = '/posts/hot',
   POST_RANDOM = '/posts/random',
   POST_RELATED = '/posts/related',
-  POST_BOOK = '/posts/book-posts',
-  POST_RSS = '/posts/rss-posts',
+  POST_LIST_BY_BOOK = '/posts/list-by-book',
+  POST_LIST_FOR_RSS = '/posts/list-for-rss',
   POST_PREV_AND_NEXT = '/posts/prev-and-next',
   POST_ARCHIVES = '/posts/archives',
   // taxonomy

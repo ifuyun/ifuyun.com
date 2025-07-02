@@ -16,7 +16,7 @@
         <div>上一篇</div>
       </div>
       <a class="post-more-link"
-         [routerLink]="['../' + prevWallpaper.wallpaperId]"
+         [routerLink]="['/detail', prevWallpaper.wallpaperId]"
          [queryParams]="getLangParams(prevWallpaper)"
          [title]="lang === 'en' ? prevWallpaper.wallpaperCopyrightEn : prevWallpaper.wallpaperCopyright"></a>
     </div>
@@ -40,7 +40,7 @@
         <div>下一篇</div>
       </div>
       <a class="post-more-link"
-         [routerLink]="['../' + nextWallpaper.wallpaperId]"
+         [routerLink]="['/detail', nextWallpaper.wallpaperId]"
          [queryParams]="getLangParams(nextWallpaper)"
          [title]="lang === 'en' ? nextWallpaper.wallpaperCopyrightEn : nextWallpaper.wallpaperCopyright"></a>
     </div>
