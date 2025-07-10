@@ -159,6 +159,8 @@ export class WallpaperService {
       wallpaperLocationEn: wallpaper.wallpaperLocationEn || wallpaper.wallpaperLocation || 'Unknown',
       wallpaperStory: wallpaper.wallpaperStory || wallpaper.wallpaperStoryEn,
       wallpaperStoryEn: wallpaper.wallpaperStoryEn || wallpaper.wallpaperStory,
+      wallpaperStoryTitle: wallpaper.wallpaperStoryTitle || wallpaper.wallpaperStoryTitleEn,
+      wallpaperStoryTitleEn: wallpaper.wallpaperStoryTitleEn || wallpaper.wallpaperStoryTitle,
       isCn: !!wallpaper.wallpaperCopyright,
       isEn: !!wallpaper.wallpaperCopyrightEn
     };

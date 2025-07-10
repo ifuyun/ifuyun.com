@@ -217,7 +217,7 @@ export function isSuspiciousReferrer(referrer: string) {
   return !!referrerDomain && suspiciousReferrers.includes(referrerDomain);
 }
 
-export const suspiciousResolutions = ['900x600', '800x600', '1600x1600', '1200x3000'];
+export const suspiciousResolutions: string[] = [];
 
 export function isSuspiciousResolution(resolution: string) {
   return !resolution || suspiciousResolutions.includes(resolution);
