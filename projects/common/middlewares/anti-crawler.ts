@@ -208,7 +208,7 @@ export function isCrawler(ua: string) {
   };
 }
 
-export const suspiciousReferrers = ['ntp.msn.cn'];
+export const suspiciousReferrers: string[] = [];
 
 export function isSuspiciousReferrer(referrer: string) {
   const domainReg = /^https?:\/\/([^\/]+)/i;
