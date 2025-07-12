@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { BreadcrumbComponent, MakeMoneyComponent, MD5_PAGE_DESCRIPTION, MD5_PAGE_KEYWORDS } from 'common/components';
 import {
   BreadcrumbEntity,
   BreadcrumbService,
@@ -8,19 +9,17 @@ import {
   MessageService,
   MetaService,
   OptionEntity,
+  ResponseCode,
   UserAgentService
 } from 'common/core';
 import { TenantAppModel } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService } from 'common/services';
-import { md5 } from 'common/utils';
 import { isEmpty, uniq } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { ClipboardModule } from 'ngx-clipboard';
 import { BehaviorSubject, combineLatest, debounceTime, skipWhile, takeUntil } from 'rxjs';
-import { BreadcrumbComponent } from 'common/components';
-import { MakeMoneyComponent } from 'common/components';
-import { MD5_PAGE_DESCRIPTION, MD5_PAGE_KEYWORDS } from 'common/components';
+import { Md5Service } from '../../../services/md5.service';
 
 @Component({
   selector: 'app-md5',
@@ -50,7 +49,8 @@ export class Md5Component implements OnInit {
     private readonly message: MessageService,
     private readonly breadcrumbService: BreadcrumbService,
     private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService
+    private readonly optionService: OptionService,
+    private readonly md5Service: Md5Service
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -83,8 +83,15 @@ export class Md5Component implements OnInit {
       );
       return;
     }
-    const result = md5(this.encryptContent);
-    this.encryptResult = isUpper ? result.toUpperCase() : result;
+    this.md5Service
+      .transform(this.encryptContent)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res.code === ResponseCode.SUCCESS) {
+          const result = res.data || '';
+          this.encryptResult = isUpper ? result.toUpperCase() : result;
+        }
+      });
   }
 
   reset() {

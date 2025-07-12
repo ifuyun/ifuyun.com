@@ -9,22 +9,21 @@ import {
   Validators
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, BaseComponent, BreadcrumbService, DestroyService, MetaService, OptionEntity } from 'common/core';
-import { TenantAppModel } from 'common/interfaces';
-import { CommonService, OptionService, TenantAppService } from 'common/services';
-import { md5 } from 'common/utils';
-import { isEmpty } from 'lodash';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import {
   USER_EMAIL_LENGTH,
   USER_PASSWORD_MAX_LENGTH,
   USER_PASSWORD_MIN_LENGTH,
   USER_PASSWORD_PATTERN
 } from 'common/components';
+import { AuthService, BaseComponent, BreadcrumbService, DestroyService, MetaService, OptionEntity } from 'common/core';
+import { TenantAppModel } from 'common/interfaces';
+import { CommonService, OptionService, TenantAppService } from 'common/services';
+import { isEmpty } from 'lodash';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-signup',
@@ -114,7 +113,7 @@ export class SignupComponent extends BaseComponent implements OnInit {
     this.authService
       .signup({
         userEmail: email,
-        userPassword: md5(password),
+        userPassword: password,
         userNickname: email.split('@')[0]
       })
       .pipe(takeUntil(this.destroy$))

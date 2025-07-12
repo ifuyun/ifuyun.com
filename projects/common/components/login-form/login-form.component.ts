@@ -16,7 +16,7 @@ import {
 } from 'common/core';
 import { TenantAppModel } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService } from 'common/services';
-import { format, md5 } from 'common/utils';
+import { format } from 'common/utils';
 import { isEmpty } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
@@ -141,7 +141,7 @@ export class LoginFormComponent extends BaseComponent implements OnInit {
     this.authService
       .login({
         username,
-        password: md5(password)
+        password
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {

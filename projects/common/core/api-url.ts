@@ -87,6 +87,7 @@ export enum ApiUrl {
   JD_GOODS_JINGFEN = '/union/jd/goods-jingfen',
   // tool
   TOOL_BASE64 = '/tool/base64',
+  TOOL_MD5 = '/tool/md5',
   // app
   TENANT_APP = '/apps/app',
   // IP
