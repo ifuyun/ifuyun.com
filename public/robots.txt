@@ -6,6 +6,7 @@ Allow: /$
 # Google
 User-agent: Googlebot
 User-agent: AdsBot-Google
+User-agent: Google-Display-Ads-Bot
 User-agent: Mediapartners-Google
 User-agent: APIs-Google
 User-agent: GoogleAdSenseInfeed

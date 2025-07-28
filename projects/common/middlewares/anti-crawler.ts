@@ -4,6 +4,7 @@ export const allowedCrawlers = [
   /Googlebot/i,
   /AdsBot-Google/i,
   /Mediapartners-Google/i,
+  /Google-Display-Ads-Bot/i,
   /APIs-Google/i,
   /GoogleAdSenseInfeed/i,
   /Storebot-Google/i,

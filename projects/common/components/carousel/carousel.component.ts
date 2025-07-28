@@ -216,7 +216,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private initCarousels() {
     if (this.carousels.length > 0) {
-      this.carousels.push(this.carousels[0]);
+      this.carousels.push({ ...this.carousels[0] });
     }
   }
 
