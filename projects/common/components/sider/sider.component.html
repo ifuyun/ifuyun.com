@@ -1,22 +1,5 @@
 <aside class="sider" #siderEle>
   <div>
-    <div class="widget" *ngIf="indexInfo?.isArticle && bookPosts && bookPosts.length > 0">
-      <h3 class="widget-title">
-        <span><nz-icon nzType="bars" /><span>目录</span></span>
-        <span class="more">
-          <lib-a [href]="domains['blog'].url"
-                 [queryParams]="{ bookId: activeBook?.bookId }"
-                 [title]="bookName + '文章'">
-            <span>更多</span><nz-icon nzType="double-right" />
-          </lib-a>
-        </span>
-      </h3>
-      <ul>
-        <li *ngFor="let post of bookPosts">
-          <lib-a [href]="domains['blog'].url + post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</lib-a>
-        </li>
-      </ul>
-    </div>
     <div class="widget" *ngIf="hotPosts && hotPosts.length > 0">
       <h3 class="widget-title"><span><nz-icon nzType="fire" /><span>热门文章</span></span></h3>
       <ul class="hot-list">

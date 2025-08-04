@@ -12,8 +12,8 @@ import {
   PlatformService
 } from 'common/core';
 import { WallpaperLang } from 'common/enums';
-import { BookEntity, GameEntity, HotWallpaper, PostEntity, Wallpaper } from 'common/interfaces';
-import { BookService, CommonService, OptionService, PostService, WallpaperService } from 'common/services';
+import { GameEntity, HotWallpaper, PostEntity, Wallpaper } from 'common/interfaces';
+import { CommonService, OptionService, PostService, WallpaperService } from 'common/services';
 import { isEmpty } from 'lodash';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -57,14 +57,8 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   hotGames: GameEntity[] = [];
   randomGames: GameEntity[] = [];
   recentGames: GameEntity[] = [];
-  bookPosts: PostEntity[] = [];
-  activeBook?: BookEntity;
   hotJigsaws: Wallpaper[] = [];
   hotJigsawType = 'm';
-
-  get bookName() {
-    return this.bookService.getBookName(this.activeBook).fullName;
-  }
 
   get adsVisible() {
     return (
@@ -85,7 +79,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly postService: PostService,
     private readonly wallpaperService: WallpaperService,
     private readonly gameService: GameService,
-    private readonly bookService: BookService,
     private readonly jigsawService: JigsawService
   ) {
     this.domains = this.appConfigService.apps;
@@ -158,12 +151,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
       });
-    this.postService.activeBook$.pipe(takeUntil(this.destroy$)).subscribe((book) => {
-      this.activeBook = book;
-      if (book) {
-        this.getPostsByBookId();
-      }
-    });
   }
 
   ngAfterViewInit(): void {
@@ -190,20 +177,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.hotJigsaws = res;
-      });
-  }
-
-  private getPostsByBookId() {
-    this.postService
-      .getPostsByBookId<{ posts: PostEntity[] }>({
-        page: 1,
-        size: 10,
-        bookId: this.activeBook?.bookId,
-        simple: 1
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.bookPosts = res.posts || [];
       });
   }
 

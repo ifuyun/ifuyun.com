@@ -1,6 +1,6 @@
 import { NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BreadcrumbComponent, MakeMoneyComponent, PaginationComponent, PostItemComponent } from 'common/components';
 import {
   BreadcrumbEntity,
@@ -11,8 +11,8 @@ import {
   PaginationService,
   UserAgentService
 } from 'common/core';
-import { BookEntity, Post, PostList, PostQueryParam, TenantAppModel } from 'common/interfaces';
-import { BookService, CommonService, OptionService, PostService, TenantAppService } from 'common/services';
+import { Post, PostQueryParam, TenantAppModel } from 'common/interfaces';
+import { CommonService, OptionService, PostService, TenantAppService } from 'common/services';
 import { isEmpty, uniq } from 'lodash';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
@@ -40,8 +40,6 @@ export class PostListComponent implements OnInit {
   private tag = '';
   private year = '';
   private month = '';
-  private bookId = '';
-  private postBook?: BookEntity;
 
   get paginationUrl() {
     if (this.category) {
@@ -57,19 +55,6 @@ export class PostListComponent implements OnInit {
     return '/list';
   }
 
-  get paginationParam(): Params {
-    const param: Params = {};
-    if (this.bookId) {
-      param['bookId'] = this.bookId;
-    }
-
-    return param;
-  }
-
-  private get postBookName() {
-    return this.bookService.getBookName(this.postBook, false);
-  }
-
   constructor(
     private readonly route: ActivatedRoute,
     private readonly destroy$: DestroyService,
@@ -80,8 +65,7 @@ export class PostListComponent implements OnInit {
     private readonly paginationService: PaginationService,
     private readonly tenantAppService: TenantAppService,
     private readonly optionService: OptionService,
-    private readonly postService: PostService,
-    private readonly bookService: BookService
+    private readonly postService: PostService
   ) {
     this.isMobile = this.userAgentService.isMobile;
   }
@@ -105,7 +89,6 @@ export class PostListComponent implements OnInit {
 
         this.pageSize = Number(this.options['post_page_size']) || 10;
         this.page = Number(qp.get('page')) || 1;
-        this.bookId = qp.get('bookId')?.trim() || '';
 
         this.category = p.get('category')?.trim() || '';
         this.tag = p.get('tag')?.trim() || '';
@@ -114,7 +97,6 @@ export class PostListComponent implements OnInit {
 
         const latestParam = JSON.stringify({
           page: this.page,
-          bookId: this.bookId,
           category: this.category,
           tag: this.tag,
           year: this.year,
@@ -132,11 +114,7 @@ export class PostListComponent implements OnInit {
         }
 
         this.updatePageIndex();
-        if (this.bookId) {
-          this.getPostsByBookId();
-        } else {
-          this.getPosts();
-        }
+        this.getPosts();
       });
   }
 
@@ -169,7 +147,6 @@ export class PostListComponent implements OnInit {
         this.posts = res.posts?.list || [];
         this.page = res.posts?.page || 1;
         this.total = res.posts?.total || 0;
-        this.postBook = undefined;
 
         const breadcrumbs = (res.breadcrumbs || []).map((item) => ({
           ...item,
@@ -180,32 +157,12 @@ export class PostListComponent implements OnInit {
       });
   }
 
-  private getPostsByBookId() {
-    this.postService
-      .getPostsByBookId<PostList>({
-        page: this.page,
-        size: this.pageSize,
-        bookId: this.bookId,
-        simple: 0
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.posts = res.posts?.list || [];
-        this.page = res.posts?.page || 1;
-        this.total = res.posts?.total || 0;
-        this.postBook = res.book;
-
-        this.initData([]);
-      });
-  }
-
   private initData(breadcrumbs: BreadcrumbEntity[]) {
     this.paginationService.updatePagination({
       page: this.page,
       total: this.total,
       pageSize: this.pageSize,
-      url: this.paginationUrl,
-      param: this.paginationParam
+      url: this.paginationUrl
     });
     this.updatePageInfo(breadcrumbs);
     this.updateBreadcrumbs(breadcrumbs);
@@ -213,34 +170,24 @@ export class PostListComponent implements OnInit {
 
   private updatePageInfo(breadcrumbData: BreadcrumbEntity[]) {
     const titles: string[] = ['博客', this.appInfo.appName];
-    const categories: string[] = [];
     const keywords: string[] = (this.options['post_keywords'] || '').split(',');
     let description = '';
 
     if (this.category && breadcrumbData.length > 0) {
       const label = breadcrumbData[breadcrumbData.length - 1].label;
       titles.unshift(label);
-      categories.push(label);
       keywords.unshift(label);
-    }
-    if (this.tag) {
+
+      description += `「${label}」`;
+    } else if (this.tag) {
       titles.unshift(this.tag);
-      categories.push(this.tag);
       keywords.unshift(this.tag);
-    }
-    description += categories.length > 0 ? `「${categories.join('-')}」` : '';
-    if (this.year) {
+
+      description += `「${this.tag}」`;
+    } else if (this.year) {
       const label = `${this.year}年${this.month ? this.month + '月' : ''}`;
       titles.unshift(label);
       description += label;
-    }
-    if (this.postBook) {
-      titles.unshift(this.postBook.bookName);
-      if (this.postBook.bookIssue) {
-        titles.unshift(this.postBook.bookIssue);
-      }
-      description += this.postBookName.fullName;
-      keywords.unshift(this.postBook.bookName);
     }
     if (description) {
       description += '博客文章列表';
@@ -276,7 +223,25 @@ export class PostListComponent implements OnInit {
         isHeader: false
       }
     ];
-    if (this.tag) {
+
+    if (this.category && breadcrumbData.length > 0) {
+      const cat = breadcrumbData[breadcrumbData.length - 1];
+      breadcrumbs.push(
+        {
+          label: '分类',
+          tooltip: '分类',
+          url: '',
+          isHeader: false
+        },
+        {
+          label: cat.label,
+          tooltip: cat.tooltip,
+          url: cat.url,
+          domain: 'blog',
+          isHeader: true
+        }
+      );
+    } else if (this.tag) {
       breadcrumbs.push(
         {
           label: '标签',
@@ -292,8 +257,7 @@ export class PostListComponent implements OnInit {
           isHeader: true
         }
       );
-    }
-    if (this.year) {
+    } else if (this.year) {
       breadcrumbs.push(
         {
           label: '归档',
@@ -319,21 +283,8 @@ export class PostListComponent implements OnInit {
           isHeader: true
         });
       }
-    }
-    if (breadcrumbData.length > 0) {
+    } else if (breadcrumbData.length > 0) {
       breadcrumbs = breadcrumbs.concat(breadcrumbData);
-    }
-    if (this.postBook) {
-      breadcrumbs.push({
-        label: this.postBookName.fullName,
-        tooltip: this.postBookName.fullName,
-        url: '/list',
-        domain: 'blog',
-        param: {
-          bookId: this.bookId
-        },
-        isHeader: true
-      });
     }
     if (this.page > 1) {
       breadcrumbs.push({

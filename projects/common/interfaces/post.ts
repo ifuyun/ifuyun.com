@@ -70,7 +70,6 @@ export interface PostQueryParam extends QueryParam {
   tag?: string;
   year?: string;
   month?: string;
-  bookId?: string;
   sticky?: 0 | 1;
   simple?: 0 | 1;
 }

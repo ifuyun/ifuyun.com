@@ -1,17 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ApiService, ApiUrl, AppConfigService, ArchiveData, ArchiveDataMap, ArchiveList } from 'common/core';
 import { BookType, PostType } from 'common/enums';
-import {
-  BookEntity,
-  Post,
-  PostEntity,
-  PostList,
-  PostQueryParam,
-  PostRelatedParam,
-  PostSearchItem
-} from 'common/interfaces';
+import { Post, PostEntity, PostList, PostQueryParam, PostRelatedParam, PostSearchItem } from 'common/interfaces';
 import highlight from 'highlight.js';
-import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +11,6 @@ import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
 export class PostService {
   private activePostId: BehaviorSubject<string> = new BehaviorSubject<string>('');
   public activePostId$: Observable<string> = this.activePostId.asObservable();
-
-  private activeBook: Subject<BookEntity | undefined> = new Subject<BookEntity | undefined>();
-  public activeBook$: Observable<BookEntity | undefined> = this.activeBook.asObservable();
 
   constructor(
     private readonly apiService: ApiService,
@@ -122,10 +111,6 @@ export class PostService {
 
   updateActivePostId(postId: string) {
     this.activePostId.next(postId);
-  }
-
-  updateActiveBook(book?: BookEntity) {
-    this.activeBook.next(book);
   }
 
   getPostSource(post: Post): string {

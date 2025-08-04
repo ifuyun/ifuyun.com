@@ -25,10 +25,9 @@ import {
   VoteType,
   VoteValue
 } from 'common/enums';
-import { BookEntity, Post, PostModel, TagEntity, TaxonomyEntity, TenantAppModel } from 'common/interfaces';
+import { Post, PostModel, TagEntity, TaxonomyEntity, TenantAppModel } from 'common/interfaces';
 import { NumberViewPipe, SafeHtmlPipe } from 'common/pipes';
 import {
-  BookService,
   CommentService,
   CommonService,
   FavoriteService,
@@ -110,10 +109,6 @@ export class PostComponent implements OnInit {
     );
   }
 
-  private get postBookName() {
-    return this.bookService.getBookName(this.postBook, false);
-  }
-
   protected pageIndex = 'post-article';
 
   private readonly copyHTML = '<span class="fi fi-copy"></span>Copy code';
@@ -125,7 +120,6 @@ export class PostComponent implements OnInit {
   private postId = '';
   private postSlug = '';
   private referrer = '';
-  private postBook?: BookEntity;
   private codeList: string[] = [];
 
   constructor(
@@ -147,8 +141,7 @@ export class PostComponent implements OnInit {
     private readonly favoriteService: FavoriteService,
     private readonly commentService: CommentService,
     private readonly clipboardService: ClipboardService,
-    private readonly logService: LogService,
-    private readonly bookService: BookService
+    private readonly logService: LogService
   ) {
     this.isMobile = this.userAgentService.isMobile;
     this.blogHost = this.appConfigService.apps['blog'].url;
@@ -350,7 +343,6 @@ export class PostComponent implements OnInit {
 
     this.post = post.post;
     this.post.postContent = result.content;
-    this.postBook = post.book;
     this.codeList = result.codeList;
     this.post.postSource = this.postService.getPostSource(post);
     this.postMeta = post.meta;
@@ -366,7 +358,6 @@ export class PostComponent implements OnInit {
     }
 
     this.postService.updateActivePostId(post.post.postId);
-    this.postService.updateActiveBook(post.book);
     this.updateBreadcrumbs(this.isArticle ? post.breadcrumbs || [] : []);
     this.updatePageIndex();
     this.updatePageInfo();
@@ -385,19 +376,6 @@ export class PostComponent implements OnInit {
       domain: 'blog',
       isHeader: false
     });
-    if (this.postBook) {
-      breadcrumbs[breadcrumbs.length - 1].isHeader = false;
-      breadcrumbs.push({
-        label: this.postBookName.fullName,
-        tooltip: this.postBookName.fullName,
-        url: '/list',
-        domain: 'blog',
-        param: {
-          bookId: this.postBook.bookId
-        },
-        isHeader: true
-      });
-    }
 
     this.breadcrumbService.updateBreadcrumbs(breadcrumbs);
   }
@@ -410,13 +388,6 @@ export class PostComponent implements OnInit {
 
     if (this.isArticle) {
       titles.unshift('博客');
-    }
-    if (this.postBook) {
-      titles.unshift(this.postBook.bookName);
-      if (this.postBook.bookIssue) {
-        titles.unshift(this.postBook.bookIssue);
-      }
-      keywords.unshift(this.postBook.bookName);
     }
     titles.unshift(this.post.postTitle);
 
