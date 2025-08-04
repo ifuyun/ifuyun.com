@@ -1,7 +1,7 @@
-import { DOCUMENT } from '@angular/common';
 import {
   afterNextRender,
   Component,
+  DOCUMENT,
   ElementRef,
   EventEmitter,
   Inject,
@@ -10,8 +10,8 @@ import {
   OnDestroy,
   Output
 } from '@angular/core';
-import { TurnstileOptions } from './turnstile.interface';
 import { AppConfigService } from 'common/core';
+import { TurnstileOptions } from './turnstile.interface';
 
 declare global {
   interface Window {

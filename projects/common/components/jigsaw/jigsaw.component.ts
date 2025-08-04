@@ -1,7 +1,8 @@
-import { DatePipe, DOCUMENT, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgFor, NgIf } from '@angular/common';
 import {
   AfterViewInit,
   Component,
+  DOCUMENT,
   ElementRef,
   Inject,
   Input,

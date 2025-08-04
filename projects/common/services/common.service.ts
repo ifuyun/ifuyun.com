@@ -1,6 +1,5 @@
-import { DOCUMENT } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
-import { ElementRef, Inject, Injectable, Optional, REQUEST, RESPONSE_INIT } from '@angular/core';
+import { DOCUMENT, ElementRef, Inject, Injectable, Optional, REQUEST, RESPONSE_INIT } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import {
   ApiService,
