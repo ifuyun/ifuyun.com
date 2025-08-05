@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -45,8 +45,6 @@ import { JigsawService } from './jigsaw.service';
 @Component({
   selector: 'lib-jigsaw',
   imports: [
-    NgIf,
-    NgFor,
     RouterLink,
     DatePipe,
     DurationPipe,

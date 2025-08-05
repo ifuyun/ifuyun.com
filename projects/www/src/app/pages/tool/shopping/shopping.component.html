@@ -11,7 +11,7 @@
                [(ngModel)]="keyword"
                (ngModelChange)="onContentChange($event)"
                placeholder="京东商品详情页地址或商品ID"
-               autocomplete="off" />
+               autocomplete="off"/>
       </nz-form-control>
     </nz-form-item>
     <div class="tool-actions">
@@ -46,7 +46,7 @@
                            [nzPadding]="0"
                            [nzBordered]="false"
                            [nzValue]="jdResult.shortURL || jdResult.clickURL || ''"
-                           nzIcon="//cdn.ifuyun.com/www/favicon.png"
+                           [nzIcon]="faviconUrl"
                            nzLevel="H"></nz-qrcode>
               }
             </div>

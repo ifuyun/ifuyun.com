@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BreadcrumbComponent, MakeMoneyComponent, PaginationComponent, PostItemComponent } from 'common/components';
@@ -19,7 +18,7 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-post-list',
-  imports: [NgFor, NzEmptyModule, BreadcrumbComponent, PaginationComponent, MakeMoneyComponent, PostItemComponent],
+  imports: [NzEmptyModule, BreadcrumbComponent, PaginationComponent, MakeMoneyComponent, PostItemComponent],
   providers: [DestroyService],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.less'

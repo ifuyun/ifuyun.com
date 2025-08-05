@@ -1,4 +1,4 @@
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
@@ -48,7 +48,6 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-wallpaper-jigsaw',
   imports: [
-    NgIf,
     RouterLink,
     NzIconModule,
     NzButtonModule,

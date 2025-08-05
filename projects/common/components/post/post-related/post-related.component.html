@@ -2,17 +2,16 @@
   <div class="related" [class.p-related]="!isMobile" [class.m-related]="isMobile">
     <h3>相关文章</h3>
     <div class="related-list">
-      <div class="related-item" *ngFor="let post of relatedPosts">
-        <a class="related-item-img"
-           [routerLink]="post.postGuid"
-           [title]="post.postTitle">
-          <div class="lazyload" [attr.data-bg]="post.cover"></div>
-        </a>
-        <div class="related-item-title">
-          <a [routerLink]="post.postGuid"
-             [title]="post.postTitle">{{ post.postTitle }}</a>
+      @for (post of relatedPosts; track post) {
+        <div class="related-item">
+          <a class="related-item-img" [routerLink]="post.postGuid" [title]="post.postTitle">
+            <div class="lazyload" [attr.data-bg]="post.cover"></div>
+          </a>
+          <div class="related-item-title">
+            <a [routerLink]="post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</a>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
 }

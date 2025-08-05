@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -26,7 +25,7 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-game-list',
-  imports: [NgFor, NzEmptyModule, BreadcrumbComponent, PaginationComponent, MakeMoneyComponent, GameItemComponent],
+  imports: [NzEmptyModule, BreadcrumbComponent, PaginationComponent, MakeMoneyComponent, GameItemComponent],
   providers: [DestroyService],
   templateUrl: './game-list.component.html',
   styleUrl: './game-list.component.less'

@@ -6,11 +6,17 @@
              type="text"
              formControlName="email"
              [maxlength]="maxEmailLength"
-             placeholder="邮箱地址" />
+             placeholder="邮箱地址"/>
       <ng-template #nameErrorTpl let-control>
-        <ng-container *ngIf="control.hasError('required')">请输入邮箱</ng-container>
-        <ng-container *ngIf="control.hasError('email')">请输入有效的邮箱</ng-container>
-        <ng-container *ngIf="control.hasError('maxlength')">邮箱最大长度为{{maxEmailLength}}字符</ng-container>
+        @if (control.hasError('required')) {
+          请输入邮箱
+        }
+        @if (control.hasError('email')) {
+          请输入有效的邮箱
+        }
+        @if (control.hasError('maxlength')) {
+          邮箱最大长度为{{ maxEmailLength }}字符
+        }
       </ng-template>
     </nz-form-control>
   </nz-form-item>
@@ -22,17 +28,25 @@
                [type]="passwordVisible ? 'text' : 'password'"
                formControlName="password"
                [maxlength]="maxPasswordLength"
-               placeholder="{{minPasswordLength}}-{{maxPasswordLength}}位密码，字母、数字、符号组合" />
+               placeholder="{{minPasswordLength}}-{{maxPasswordLength}}位密码，字母、数字、符号组合"/>
       </nz-input-group>
       <ng-template #pwdSuffix>
         <nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
-                 (click)="passwordVisible = !passwordVisible" />
+                 (click)="passwordVisible = !passwordVisible"/>
       </ng-template>
       <ng-template #pwdErrorTpl let-control>
-        <ng-container *ngIf="control.hasError('required')">请输入密码</ng-container>
-        <ng-container *ngIf="control.hasError('minlength')">密码最小长度为{{minPasswordLength}}位</ng-container>
-        <ng-container *ngIf="control.hasError('maxlength')">密码最大长度为{{maxPasswordLength}}位</ng-container>
-        <ng-container *ngIf="control.hasError('pattern')">密码为{{minPasswordLength}}-{{maxPasswordLength}}位字母、数字、符号的组合</ng-container>
+        @if (control.hasError('required')) {
+          请输入密码
+        }
+        @if (control.hasError('minlength')) {
+          密码最小长度为{{ minPasswordLength }}位
+        }
+        @if (control.hasError('maxlength')) {
+          密码最大长度为{{ maxPasswordLength }}位
+        }
+        @if (control.hasError('pattern')) {
+          密码为{{ minPasswordLength }}-{{ maxPasswordLength }}位字母、数字、符号的组合
+        }
       </ng-template>
     </nz-form-control>
   </nz-form-item>

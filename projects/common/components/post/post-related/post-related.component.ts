@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DestroyService, UserAgentService } from 'common/core';
@@ -8,7 +7,7 @@ import { skipWhile, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-post-related',
-  imports: [NgFor, RouterLink],
+  imports: [RouterLink],
   providers: [DestroyService],
   templateUrl: './post-related.component.html'
 })

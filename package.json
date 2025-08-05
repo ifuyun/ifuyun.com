@@ -80,8 +80,8 @@
     "serve:ssr:wallpaper": "node dist/wallpaper/server/server.mjs",
     "serve:ssr:jigsaw": "node dist/jigsaw/server/server.mjs",
     "serve:ssr:game": "node dist/game/server/server.mjs",
-    "lint": "eslint \"src/**/*.{ts,html}\" --fix",
-    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint \"projects/**/*.{ts,html}\" --fix",
+    "format": "prettier --write \"projects/**/*.ts\"",
     "deploy:zip": "bash scripts/deploy-zip-all.sh",
     "deploy:zip:www": "bash scripts/deploy-zip.sh --app=www",
     "deploy:zip:blog": "bash scripts/deploy-zip.sh --app=blog",
@@ -122,7 +122,7 @@
     "ngx-clipboard": "^16.0.0",
     "rxjs": "^7.8.2",
     "sitemap": "^8.0.0",
-    "tslib": "^2.3.0",
+    "tslib": "^2.8.1",
     "ua-parser-js": "^2.0.4",
     "zone.js": "^0.15.1"
   },
@@ -133,7 +133,7 @@
     "@types/express": "^4.17.23",
     "@types/jasmine": "^5.1.8",
     "@types/lodash": "^4.17.20",
-    "@types/node": "^22.16.5",
+    "@types/node": "^24.2.0",
     "@types/ua-parser-js": "^0.7.39",
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.8",
@@ -145,10 +145,10 @@
     "karma-coverage": "^2.2.1",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
-    "less": "^4.2.0",
+    "less": "^4.4.0",
     "ng-packagr": "^20.1.0",
     "prettier": "^3.6.2",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.38.0"
+    "typescript-eslint": "^8.39.0"
   }
 }

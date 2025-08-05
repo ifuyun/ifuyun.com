@@ -42,4 +42,8 @@ export class AppConfigService {
   get magazineUrl(): string {
     return this.config.magazineUrl;
   }
+
+  get faviconUrl(): string {
+    return this.config.isDev ? '/favicon.png' : 'https://cdn.ifuyun.com/www/favicon.png';
+  }
 }

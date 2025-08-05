@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { GameService } from 'common/components';
@@ -9,7 +8,7 @@ import { skipWhile, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-game-related',
-  imports: [NgFor, RouterLink],
+  imports: [RouterLink],
   providers: [DestroyService],
   templateUrl: './game-related.component.html'
 })

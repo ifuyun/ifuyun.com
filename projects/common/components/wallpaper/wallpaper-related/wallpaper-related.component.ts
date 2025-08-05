@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DestroyService, UserAgentService } from 'common/core';
@@ -9,7 +8,7 @@ import { skipWhile, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-wallpaper-related',
-  imports: [NgFor, RouterLink],
+  imports: [RouterLink],
   providers: [DestroyService],
   templateUrl: './wallpaper-related.component.html'
 })

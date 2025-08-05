@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
@@ -18,7 +17,7 @@ import { SmartLinkComponent } from '../smart-link/smart-link.component';
 
 @Component({
   selector: 'lib-breadcrumb',
-  imports: [NgIf, NgFor, RouterLink, NzIconModule, SmartLinkComponent],
+  imports: [RouterLink, NzIconModule, SmartLinkComponent],
   providers: [DestroyService],
   templateUrl: './breadcrumb.component.html',
   styleUrl: './breadcrumb.component.less'

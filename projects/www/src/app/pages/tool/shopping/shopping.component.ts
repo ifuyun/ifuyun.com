@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BreadcrumbComponent, MakeMoneyComponent, REGEXP_JD_PRODUCT_DETAIL_URL } from 'common/components';
 import {
+  AppConfigService,
   BreadcrumbEntity,
   BreadcrumbService,
   DestroyService,
@@ -39,6 +40,8 @@ import { ShoppingService } from '../../../services/shopping.service';
   styleUrls: ['../tool.less', './shopping.component.less']
 })
 export class ShoppingComponent implements OnInit {
+  readonly faviconUrl: string;
+
   isMobile = false;
   keyword = '';
   jdResult: JdUnionPromotionResponseBody | null = null;
@@ -53,6 +56,7 @@ export class ShoppingComponent implements OnInit {
     private readonly destroy$: DestroyService,
     private readonly userAgentService: UserAgentService,
     private readonly commonService: CommonService,
+    private readonly appConfigService: AppConfigService,
     private readonly metaService: MetaService,
     private readonly message: MessageService,
     private readonly breadcrumbService: BreadcrumbService,
@@ -60,7 +64,8 @@ export class ShoppingComponent implements OnInit {
     private readonly optionService: OptionService,
     private readonly shoppingService: ShoppingService
   ) {
-    this.isMobile = this.userAgentService.isMobile;
+    this.isMobile = userAgentService.isMobile;
+    this.faviconUrl = appConfigService.faviconUrl;
   }
 
   ngOnInit(): void {

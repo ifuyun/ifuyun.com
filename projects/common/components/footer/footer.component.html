@@ -2,28 +2,34 @@
   <div class="footer">
     <div class="footer-content">
       <ul class="footer-link">
-        <li *ngFor="let link of footerLinks">
-          @if (link.isExternal) {
-            <a [href]="link.linkUrl"
-               [target]="link.linkTarget"
-               [title]="link.linkDescription">{{ link.linkName }}</a>
-          } @else {
-            <lib-a [href]="wwwHost + link.linkUrl"
-                   [target]="link.linkTarget"
-                   [title]="link.linkDescription">{{ link.linkName }}</lib-a>
-          }
-        </li>
-      </ul>
-      <div class="friend-link" *ngIf="!isMobile">
-        <div class="footer-label">友情链接：</div>
-        <ul>
-          <li *ngFor="let link of friendLinks">
-            <a [href]="link.linkUrl"
-               [target]="link.linkTarget"
-               [title]="link.linkDescription">{{ link.linkName }}</a>
+        @for (link of footerLinks; track link.linkId) {
+          <li>
+            @if (link.isExternal) {
+              <a [href]="link.linkUrl"
+                 [target]="link.linkTarget"
+                 [title]="link.linkDescription">{{ link.linkName }}</a>
+            } @else {
+              <lib-a [href]="wwwHost + link.linkUrl"
+                     [target]="link.linkTarget"
+                     [title]="link.linkDescription">{{ link.linkName }}</lib-a>
+            }
           </li>
-        </ul>
-      </div>
+        }
+      </ul>
+      @if (!isMobile) {
+        <div class="friend-link">
+          <div class="footer-label">友情链接：</div>
+          <ul>
+            @for (link of friendLinks; track link.linkId) {
+              <li>
+                <a [href]="link.linkUrl"
+                   [target]="link.linkTarget"
+                   [title]="link.linkDescription">{{ link.linkName }}</a>
+              </li>
+            }
+          </ul>
+        </div>
+      }
       <div>{{ copyright }}</div>
       <div>&copy; Powered by <a href="https://www.ireadpay.com" target="_blank">抚云科技</a></div>
       @if (!isMobile) {
@@ -39,11 +45,13 @@
         <div><a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">{{ options['icp_code'] }}</a></div>
       }
     </div>
-    <div class="footer-qrcode" *ngIf="!isMobile">
-      <img class="img-preview lazyload"
-           src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-           [attr.data-src]="'/assets/images/wechat-qrcode.jpg'"
-           alt="黑匣子思维" />
-    </div>
+    @if (!isMobile) {
+      <div class="footer-qrcode">
+        <img class="img-preview lazyload"
+             src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+             [attr.data-src]="'/assets/images/wechat-qrcode.jpg'"
+             alt="黑匣子思维"/>
+      </div>
+    }
   </div>
 </footer>

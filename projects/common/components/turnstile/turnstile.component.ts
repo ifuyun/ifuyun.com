@@ -59,7 +59,7 @@ export class TurnstileComponent implements OnDestroy {
   }
 
   public createWidget(): void {
-    let turnstileOptions: TurnstileOptions = {
+    const turnstileOptions: TurnstileOptions = {
       sitekey: this.siteKey,
       theme: this.theme,
       language: this.language,

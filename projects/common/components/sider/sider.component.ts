@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Params, RouterLink } from '@angular/router';
@@ -26,17 +25,7 @@ import { SmartLinkComponent } from '../smart-link/smart-link.component';
 
 @Component({
   selector: 'lib-sider',
-  imports: [
-    RouterLink,
-    NgIf,
-    NgFor,
-    FormsModule,
-    NzIconModule,
-    NzRadioModule,
-    NzEmptyModule,
-    AdsenseComponent,
-    SmartLinkComponent
-  ],
+  imports: [RouterLink, FormsModule, NzIconModule, NzRadioModule, NzEmptyModule, AdsenseComponent, SmartLinkComponent],
   providers: [DestroyService],
   templateUrl: './sider.component.html',
   styleUrl: './sider.component.less'

@@ -12,10 +12,12 @@
            [title]="year + '年'">{{ year }}年({{ dateList[year].countByYear }})</a>
       </h2>
       <ul class="archive-list">
-        <li *ngFor="let item of dateList[year].list">
-          <a [routerLink]="'/archive/' + item.dateValue"
-             [title]="year + '年' + item.dateLabel">{{ item.dateLabel }}({{ item.count }})</a>
-        </li>
+        @for (item of dateList[year].list; track item) {
+          <li>
+            <a [routerLink]="'/archive/' + item.dateValue"
+               [title]="year + '年' + item.dateLabel">{{ item.dateLabel }}({{ item.count }})</a>
+          </li>
+        }
       </ul>
     }
   </div>

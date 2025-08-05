@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -31,7 +30,6 @@ import { USER_EMAIL_LENGTH, USER_PASSWORD_MAX_LENGTH } from './auth.constant';
 @Component({
   selector: 'lib-login-form',
   imports: [
-    NgIf,
     RouterLink,
     ReactiveFormsModule,
     NzFormModule,

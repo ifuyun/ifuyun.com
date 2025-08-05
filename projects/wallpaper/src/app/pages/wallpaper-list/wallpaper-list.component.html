@@ -20,24 +20,25 @@
          nzValue="card"
          [routerLink]="paginationUrl"
          [queryParams]="getListParam(lang, ListMode.CARD, page)"
-         title="卡片模式"><nz-icon nzType="appstore" /></a>
+         title="卡片模式"><nz-icon nzType="appstore"/></a>
       <a nz-radio-button
          nzValue="list"
          [routerLink]="paginationUrl"
          [queryParams]="getListParam(lang, ListMode.LIST, page)"
-         title="列表模式"><nz-icon nzType="bars" /></a>
+         title="列表模式"><nz-icon nzType="bars"/></a>
     </nz-radio-group>
   </div>
   <div [class.post-list]="mode === 'list' && !isMobile"
        [class.m-post-list]="mode === 'list' && isMobile"
        [class.post-card-list]="mode !== 'list'"
        [class.post-card-list-2]="mode !== 'list' && !isMobile">
-    <lib-wallpaper-item *ngFor="let wallpaper of wallpapers; let i = index"
-                        [class.post-card-item-wrap]="mode !== 'list'"
-                        [wallpaper]="wallpaper"
-                        [lang]="lang"
-                        [mode]="mode"
-                        [index]="i"></lib-wallpaper-item>
+    @for (wallpaper of wallpapers; track wallpaper; let i = $index) {
+      <lib-wallpaper-item [class.post-card-item-wrap]="mode !== 'list'"
+                          [wallpaper]="wallpaper"
+                          [lang]="lang"
+                          [mode]="mode"
+                          [index]="i"></lib-wallpaper-item>
+    }
   </div>
 } @else {
   <div class="empty" [class.p-empty]="!isMobile" [class.m-empty]="isMobile">

@@ -10,7 +10,7 @@
               <div class="meta">
                 <div class="info">
                   <div class="avatar">
-                    <img src="{{ comment.authorAvatar }}" alt="{{ comment.commentAuthor }}" />
+                    <img src="{{ comment.authorAvatar }}" alt="{{ comment.commentAuthor }}"/>
                   </div>
                   <div class="author">
                     <span class="from">
@@ -25,13 +25,14 @@
                 </div>
               </div>
               <div class="content">
-                <div class="parent" *ngIf="comment.parent">
-                  <span class="text">回复</span>
-                  <a class="author"
-                     [attr.data-hash]="comment.parent.commentHash"
-                     (click)="scrollToComment($event)"
-                  >#{{ comment.parent.commentHash }} &#64;{{ comment.parent.commentAuthor }}</a>
-                </div>
+                @if (comment.parent) {
+                  <div class="parent">
+                    <span class="text">回复</span>
+                    <a class="author"
+                       [attr.data-hash]="comment.parent.commentHash"
+                       (click)="scrollToComment($event)">#{{ comment.parent.commentHash }} &#64;{{ comment.parent.commentAuthor }}</a>
+                  </div>
+                }
                 <div [innerHTML]="comment.commentContent | safeHtml"></div>
               </div>
               <div class="actions">
@@ -39,9 +40,9 @@
                    [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
                    (click)="vote(comment, true)">
                   @if (commentVoteLoading[comment.commentId]) {
-                    <nz-icon nzType="loading" />
+                    <nz-icon nzType="loading"/>
                   } @else {
-                    <nz-icon nzType="like" [nzTheme]="comment.liked ? 'fill' : 'outline'" />
+                    <nz-icon nzType="like" [nzTheme]="comment.liked ? 'fill' : 'outline'"/>
                   }
                   <span>{{ comment.commentLikes }}</span>
                 </a>
@@ -49,18 +50,17 @@
                    [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
                    (click)="vote(comment, false)">
                   @if (commentVoteLoading[comment.commentId]) {
-                    <nz-icon nzType="loading" />
+                    <nz-icon nzType="loading"/>
                   } @else {
-                    <nz-icon nzType="dislike" [nzTheme]="comment.disliked ? 'fill' : 'outline'" />
+                    <nz-icon nzType="dislike" [nzTheme]="comment.disliked ? 'fill' : 'outline'"/>
                   }
                   <span>{{ comment.commentDislikes }}</span>
                 </a>
-                <a *ngIf="!replyVisibleMap[comment.commentId]" (click)="reply(comment)">
-                  <span class="fi fi-chat-square"></span><span>回复</span>
-                </a>
-                <a *ngIf="replyVisibleMap[comment.commentId]" (click)="cancelReply()">
-                  <nz-icon nzType="close" /><span>取消</span>
-                </a>
+                @if (!replyVisibleMap[comment.commentId]) {
+                  <a (click)="reply(comment)"><span class="fi fi-chat-square"></span><span>回复</span></a>
+                } @else {
+                  <a (click)="cancelReply()"><nz-icon nzType="close"/><span>取消</span></a>
+                }
               </div>
             </div>
           } @else {
@@ -68,7 +68,7 @@
                  id="{{ comment.commentHash }}"
                  [style.padding-left]="(comment.level - 1) * 32 + 'px'">
               <div class="avatar">
-                <img src="{{ comment.authorAvatar }}" alt="{{ comment.commentAuthor }}" />
+                <img src="{{ comment.authorAvatar }}" alt="{{ comment.commentAuthor }}"/>
               </div>
               <div class="body">
                 <div class="from">
@@ -76,13 +76,14 @@
                   <span class="location">from {{ comment.userLocation || 'Mars' }}</span>
                 </div>
                 <div class="content">
-                  <div class="parent" *ngIf="comment.parent">
-                    <span class="text">回复</span>
-                    <a class="author"
-                       [attr.data-hash]="comment.parent.commentHash"
-                       (click)="scrollToComment($event)"
-                    >#{{ comment.parent.commentHash }} &#64;{{ comment.parent.commentAuthor }}</a>
-                  </div>
+                  @if (comment.parent) {
+                    <div class="parent">
+                      <span class="text">回复</span>
+                      <a class="author"
+                         [attr.data-hash]="comment.parent.commentHash"
+                         (click)="scrollToComment($event)">#{{ comment.parent.commentHash }} &#64;{{ comment.parent.commentAuthor }}</a>
+                    </div>
+                  }
                   <div [innerHTML]="comment.commentContent | safeHtml"></div>
                 </div>
                 <div class="meta">
@@ -92,9 +93,9 @@
                        [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
                        (click)="vote(comment, true)">
                       @if (commentVoteLoading[comment.commentId]) {
-                        <nz-icon nzType="loading" />
+                        <nz-icon nzType="loading"/>
                       } @else {
-                        <nz-icon nzType="like" [nzTheme]="comment.liked ? 'fill' : 'outline'" />
+                        <nz-icon nzType="like" [nzTheme]="comment.liked ? 'fill' : 'outline'"/>
                       }
                       <span>{{ comment.commentLikes }}</span>
                     </a>
@@ -102,27 +103,27 @@
                        [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
                        (click)="vote(comment, false)">
                       @if (commentVoteLoading[comment.commentId]) {
-                        <nz-icon nzType="loading" />
+                        <nz-icon nzType="loading"/>
                       } @else {
-                        <nz-icon nzType="dislike" [nzTheme]="comment.disliked ? 'fill' : 'outline'" />
+                        <nz-icon nzType="dislike" [nzTheme]="comment.disliked ? 'fill' : 'outline'"/>
                       }
                       <span>{{ comment.commentDislikes }}</span>
                     </a>
-                    <a *ngIf="!replyVisibleMap[comment.commentId]" (click)="reply(comment)">
-                      <span class="fi fi-chat-square"></span>
-                    </a>
-                    <a *ngIf="replyVisibleMap[comment.commentId]" (click)="cancelReply()">
-                      <nz-icon nzType="close" />
-                    </a>
+                    @if (!replyVisibleMap[comment.commentId]) {
+                      <a (click)="reply(comment)"><span class="fi fi-chat-square"></span></a>
+                    } @else {
+                      <a (click)="cancelReply()"><nz-icon nzType="close"/></a>
+                    }
                   </div>
                 </div>
               </div>
             </div>
           }
-          <div *ngIf="replyVisibleMap[comment.commentId]"
-               [style.padding-left]="(comment.level - 1) * (isMobile ? 32 : 50) + 'px'">
-            <ng-container *ngTemplateOutlet="commentFormTpl; context: { $implicit: replyForm }"></ng-container>
-          </div>
+          @if (replyVisibleMap[comment.commentId]) {
+            <div [style.padding-left]="(comment.level - 1) * (isMobile ? 32 : 50) + 'px'">
+              <ng-container *ngTemplateOutlet="commentFormTpl; context: { $implicit: replyForm }"></ng-container>
+            </div>
+          }
           @if (comment.children.length > 0) {
             <ng-container *ngTemplateOutlet="commentsTpl; context: { $implicit: comment.children }"></ng-container>
           }
@@ -144,31 +145,40 @@
                         rows="4"
                         [placeholder]="isSignIn ? '评论内容' : '评论前请先登录'"></textarea>
               <ng-template #contentErrorTpl let-control>
-                <ng-container *ngIf="control.hasError('required')">请输入评论内容</ng-container>
-                <ng-container *ngIf="control.hasError('maxlength')">评论内容最大长度为{{ maxContentLength }}字符</ng-container>
+                @if (control.hasError('required')) {
+                  请输入评论内容
+                }
+                @if (control.hasError('maxlength')) {
+                  评论内容最大长度为{{ maxContentLength }}字符
+                }
               </ng-template>
             </nz-form-control>
           </nz-form-item>
-          <div *ngIf="!isSignIn" class="comment-mask" (click)="showLoginModal()"></div>
+          @if (!isSignIn) {
+            <div class="comment-mask" (click)="showLoginModal()"></div>
+          }
         </div>
         <div class="comment-actions">
           <div>
             <label nz-checkbox formControlName="aiComment" [nzDisabled]="!enableAI">向 AI 提问</label>
           </div>
           <div>
-            <button nz-button type="button" nzType="default" *ngIf="!isSignIn" (click)="showLoginModal()">登录</button>
-            <button nz-button
-                    type="submit"
-                    nzType="primary"
-                    [nzLoading]="saveLoading">我要评论</button>
+            @if (!isSignIn) {
+              <button nz-button type="button" nzType="default" (click)="showLoginModal()">登录</button>
+            }
+            <button nz-button type="submit" nzType="primary" [nzLoading]="saveLoading">我要评论</button>
           </div>
         </div>
       </form>
     </div>
   </ng-template>
-  <ng-container *ngIf="!replyMode">
-    <div class="divider" *ngIf="comments.length > 0"></div>
+  @if (!replyMode) {
+    @if (comments.length > 0) {
+      <div class="divider"></div>
+    }
     <ng-container *ngTemplateOutlet="commentFormTpl; context: { $implicit: commentForm }"></ng-container>
-  </ng-container>
+  }
 </div>
-<lib-login-modal *ngIf="loginVisible" (close)="closeLoginModal()"></lib-login-modal>
+@if (loginVisible) {
+  <lib-login-modal (close)="closeLoginModal()"></lib-login-modal>
+}

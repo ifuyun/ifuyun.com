@@ -2,14 +2,14 @@
   <nz-form-item>
     <nz-form-label>用户名或邮箱</nz-form-label>
     <nz-form-control [nzErrorTip]="nameErrorTpl">
-      <input nz-input
-             type="text"
-             formControlName="username"
-             [maxlength]="maxLoginLength"
-             placeholder="用户名或邮箱地址" />
+      <input nz-input type="text" formControlName="username" [maxlength]="maxLoginLength" placeholder="用户名或邮箱地址"/>
       <ng-template #nameErrorTpl let-control>
-        <ng-container *ngIf="control.hasError('required')">请输入用户名或邮箱</ng-container>
-        <ng-container *ngIf="control.hasError('maxlength')">用户名或邮箱最大长度为{{maxLoginLength}}位</ng-container>
+        @if (control.hasError('required')) {
+          请输入用户名或邮箱
+        }
+        @if (control.hasError('maxlength')) {
+          用户名或邮箱最大长度为{{ maxLoginLength }}位
+        }
       </ng-template>
     </nz-form-control>
   </nz-form-item>
@@ -22,51 +22,56 @@
                formControlName="password"
                [maxlength]="maxPasswordLength"
                autocomplete="off"
-               placeholder="用户密码" />
+               placeholder="用户密码"/>
       </nz-input-group>
       <ng-template #confirmPwdSuffix>
-        <nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible" />
+        <nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"/>
       </ng-template>
       <ng-template #confirmErrorTpl let-control>
-        <ng-container *ngIf="control.hasError('required')">请输入密码</ng-container>
-        <ng-container *ngIf="control.hasError('maxlength')">密码最大长度为{{maxPasswordLength}}位</ng-container>
+        @if (control.hasError('required')) {
+          请输入密码
+        }
+        @if (control.hasError('maxlength')) {
+          密码最大长度为{{ maxPasswordLength }}位
+        }
       </ng-template>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
     <div class="auth-actions">
       <div>
-        <lib-a *ngIf="enableSignup"
-               class="signup-link"
-               [href]="domains['www'].url + '/user/signup'"
-               title="立即注册"><nz-icon nzType="user-add" />立即注册</lib-a>
+        @if (enableSignup) {
+          <lib-a class="signup-link"
+                 [href]="domains['www'].url + '/user/signup'"
+                 title="立即注册"><nz-icon nzType="user-add"/>立即注册</lib-a>
+        }
       </div>
       <button nz-button nzType="primary" (click)="login()" [nzLoading]="loginLoading">登录</button>
     </div>
   </nz-form-item>
-  <ng-container *ngIf="enableThirdLogin">
+  @if (enableThirdLogin) {
     <nz-divider class="separator" nzText="其他登录方式"></nz-divider>
     <div class="auth-type">
       <nz-icon nzType="wechat"
                class="auth-type-wechat"
                [class.disabled]="!thirdLogin['wechat']"
-               (click)="gotoThirdLogin('wechat')" />
+               (click)="gotoThirdLogin('wechat')"/>
       <nz-icon nzType="qq"
                class="auth-type-qq"
                [class.disabled]="!thirdLogin['qq']"
-               (click)="gotoThirdLogin('qq')" />
+               (click)="gotoThirdLogin('qq')"/>
       <nz-icon nzType="alipay"
                class="auth-type-alipay"
                [class.disabled]="!thirdLogin['alipay']"
-               (click)="gotoThirdLogin('alipay')" />
+               (click)="gotoThirdLogin('alipay')"/>
       <nz-icon nzType="weibo"
                class="auth-type-weibo"
                [class.disabled]="!thirdLogin['weibo']"
-               (click)="gotoThirdLogin('weibo')" />
+               (click)="gotoThirdLogin('weibo')"/>
       <nz-icon nzType="github"
                class="auth-type-github"
                [class.disabled]="!thirdLogin['github']"
-               (click)="gotoThirdLogin('github')" />
+               (click)="gotoThirdLogin('github')"/>
     </div>
-  </ng-container>
+  }
 </form>

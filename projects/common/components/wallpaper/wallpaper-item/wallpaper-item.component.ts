@@ -1,4 +1,4 @@
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
 import { AppConfigService, AppDomainConfig, UserAgentService } from 'common/core';
@@ -11,7 +11,7 @@ import { SmartLinkComponent } from '../../smart-link/smart-link.component';
 
 @Component({
   selector: 'lib-wallpaper-item',
-  imports: [NgIf, RouterLink, NzIconModule, DatePipe, NumberViewPipe, SmartLinkComponent],
+  imports: [RouterLink, NzIconModule, DatePipe, NumberViewPipe, SmartLinkComponent],
   templateUrl: './wallpaper-item.component.html',
   styleUrls: ['../../post/post-item/post-item.component.less', './wallpaper-item.component.less']
 })

@@ -153,6 +153,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
           this.renderAdsense();
 
           ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(ads);
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e: any) {
           this.adsService.updateAdsStatus(AdsStatus.ERROR);
         }

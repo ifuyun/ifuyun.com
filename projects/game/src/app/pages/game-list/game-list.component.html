@@ -1,11 +1,9 @@
 <lib-breadcrumb></lib-breadcrumb>
 @if (total > 0) {
   <div class="post-card-list" [class.post-card-list-2]="!isMobile">
-    <lib-game-item class="post-card-item-wrap"
-                   *ngFor="let game of games; let i = index"
-                   [game]="game"
-                   [mode]="ListMode.CARD"
-                   [index]="i"></lib-game-item>
+    @for (game of games; track game; let i = $index) {
+      <lib-game-item class="post-card-item-wrap" [game]="game" [mode]="ListMode.CARD" [index]="i"></lib-game-item>
+    }
   </div>
 } @else {
   <div class="empty" [class.p-empty]="!isMobile" [class.m-empty]="isMobile">

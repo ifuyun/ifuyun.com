@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -38,7 +37,6 @@ import { SearchService } from './search.service';
 @Component({
   selector: 'app-search',
   imports: [
-    NgFor,
     NzEmptyModule,
     BreadcrumbComponent,
     PaginationComponent,

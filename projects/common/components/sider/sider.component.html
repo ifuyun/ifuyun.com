@@ -1,153 +1,195 @@
 <aside class="sider" #siderEle>
   <div>
-    <div class="widget" *ngIf="hotPosts && hotPosts.length > 0">
-      <h3 class="widget-title"><span><nz-icon nzType="fire" /><span>热门文章</span></span></h3>
-      <ul class="hot-list">
-        <li *ngFor="let post of hotPosts; let i = index">
-          <span class="hot-num">{{ i + 1 }}</span>
-          <lib-a [href]="domains['blog'].url + post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</lib-a>
-        </li>
-      </ul>
-    </div>
-    <div class="widget-ads" *ngIf="adsVisible && (indexInfo?.isPage || indexInfo?.isTool || indexInfo?.isSearch)">
-      <lib-adsense [class.ads-sider-wrap]="adsPlaceholder"
-                   wrapClass="ads-sider"
-                   optionKey="adsense_config_sider"
-                   [placeholder]="adsPlaceholder"
-                   text="虚位以待"></lib-adsense>
-    </div>
-    <div class="widget" *ngIf="hotWallpapers && hotWallpapers.length > 0">
-      <h3 class="widget-title"><span><nz-icon nzType="fire" /><span>热门壁纸</span></span></h3>
-      <ul class="hot-list">
-        <li *ngFor="let wallpaper of hotWallpapers; let i = index">
-          <span class="hot-num">{{ i + 1 }}</span>
-          <lib-a [href]="domains['wallpaper'].url + '/detail/' + wallpaper.wallpaperId"
-                 [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
-                 [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</lib-a>
-        </li>
-      </ul>
-    </div>
-    <div class="widget" *ngIf="indexInfo?.isJigsaw">
-      <h3 class="widget-title">
-        <span><nz-icon nzType="fire" /><span>热门拼图</span></span>
-        <nz-radio-group nzSize="small" [(ngModel)]="hotJigsawType" (ngModelChange)="getHotJigsaws()">
-          <label nz-radio-button nzValue="w">周</label>
-          <label nz-radio-button nzValue="m">月</label>
-          <label nz-radio-button nzValue="y">年</label>
-        </nz-radio-group>
-      </h3>
-      @if (hotJigsaws && hotJigsaws.length > 0) {
+    @if (hotPosts && hotPosts.length > 0) {
+      <div class="widget">
+        <h3 class="widget-title"><span><nz-icon nzType="fire"/><span>热门文章</span></span></h3>
         <ul class="hot-list">
-          <li *ngFor="let jigsaw of hotJigsaws; let i = index">
-            <span class="hot-num">{{ i + 1 }}</span>
-            <lib-a [href]="domains['jigsaw'].url + '/detail/' + jigsaw.wallpaperId"
-                   [title]="jigsaw.wallpaperCopyright">{{ jigsaw.wallpaperCopyright }}
-            </lib-a>
-          </li>
+          @for (post of hotPosts; track post; let i = $index) {
+            <li>
+              <span class="hot-num">{{ i + 1 }}</span>
+              <lib-a [href]="domains['blog'].url + post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</lib-a>
+            </li>
+          }
         </ul>
-      } @else {
-        <nz-empty nzNotFoundImage="simple"></nz-empty>
-      }
-    </div>
-    <div class="widget" *ngIf="recentGames && recentGames.length > 0">
-      <h3 class="widget-title"><span><nz-icon nzType="history" /><span>最近游戏</span></span></h3>
-      <ul>
-        <li *ngFor="let game of recentGames">
-          <lib-a [href]="domains['game'].url + '/detail/' + game.gameId"
-                 [title]="game.gameTitle">{{ game.gameTitle }}</lib-a>
-        </li>
-      </ul>
-    </div>
-    <div class="widget" *ngIf="hotGames && hotGames.length > 0">
-      <h3 class="widget-title"><span><nz-icon nzType="fire" /><span>热门游戏</span></span></h3>
-      <ul class="hot-list">
-        <li *ngFor="let game of hotGames; let i = index">
-          <span class="hot-num">{{ i + 1 }}</span>
-          <lib-a [href]="domains['game'].url + '/detail/' + game.gameId"
-                 [title]="game.gameTitle">{{ game.gameTitle }}</lib-a>
-        </li>
-      </ul>
-    </div>
-    <div class="widget-ads" *ngIf="adsVisible && !(indexInfo?.isPage || indexInfo?.isTool || indexInfo?.isSearch)">
-      <lib-adsense [class.ads-sider-wrap]="adsPlaceholder"
-                   wrapClass="ads-sider"
-                   optionKey="adsense_config_sider"
-                   [placeholder]="adsPlaceholder"
-                   text="虚位以待"></lib-adsense>
-    </div>
-    <div class="widget" *ngIf="postArchives && postArchives.length > 0">
-      <h3 class="widget-title">
-        <span><span class="fi fi-calendar-date"></span><span>博客归档</span></span>
-        <span class="more">
-          <lib-a [href]="domains['blog'].url + '/archive'"
-                 title="博客归档"><span>更多</span><nz-icon nzType="double-right" /></lib-a>
-        </span>
-      </h3>
-      <ul>
-        <li *ngFor="let item of postArchives">
-          <lib-a [href]="domains['blog'].url + '/archive/' + item.dateValue"
-                 [title]="item.dateLabel">{{ item.dateLabel }}({{ item.count }})</lib-a>
-        </li>
-      </ul>
-    </div>
-    <div class="widget" *ngIf="wallpaperArchives && wallpaperArchives.length > 0">
-      <h3 class="widget-title">
-        <span><span class="fi fi-calendar-date"></span><span>壁纸归档</span></span>
-        <span class="more">
-          <lib-a [href]="domains['wallpaper'].url + '/archive'"
-                 title="壁纸归档"><span>更多</span><nz-icon nzType="double-right" /></lib-a>
-        </span>
-      </h3>
-      <ul>
-        <li *ngFor="let item of wallpaperArchives">
-          <lib-a [href]="domains['wallpaper'].url + '/archive/' + item.dateValue"
-                 [title]="item.dateLabel">{{ item.dateLabel }}({{ item.count }})</lib-a>
-        </li>
-      </ul>
-    </div>
+      </div>
+    }
+    @if (adsVisible && (indexInfo?.isPage || indexInfo?.isTool || indexInfo?.isSearch)) {
+      <div class="widget-ads">
+        <lib-adsense [class.ads-sider-wrap]="adsPlaceholder"
+                     wrapClass="ads-sider"
+                     optionKey="adsense_config_sider"
+                     [placeholder]="adsPlaceholder"
+                     text="虚位以待"></lib-adsense>
+      </div>
+    }
+    @if (hotWallpapers && hotWallpapers.length > 0) {
+      <div class="widget">
+        <h3 class="widget-title"><span><nz-icon nzType="fire"/><span>热门壁纸</span></span></h3>
+        <ul class="hot-list">
+          @for (wallpaper of hotWallpapers; track wallpaper; let i = $index) {
+            <li>
+              <span class="hot-num">{{ i + 1 }}</span>
+              <lib-a [href]="domains['wallpaper'].url + '/detail/' + wallpaper.wallpaperId"
+                     [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
+                     [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</lib-a>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+    @if (indexInfo?.isJigsaw) {
+      <div class="widget">
+        <h3 class="widget-title">
+          <span><nz-icon nzType="fire"/><span>热门拼图</span></span>
+          <nz-radio-group nzSize="small" [(ngModel)]="hotJigsawType" (ngModelChange)="getHotJigsaws()">
+            <label nz-radio-button nzValue="w">周</label>
+            <label nz-radio-button nzValue="m">月</label>
+            <label nz-radio-button nzValue="y">年</label>
+          </nz-radio-group>
+        </h3>
+        @if (hotJigsaws && hotJigsaws.length > 0) {
+          <ul class="hot-list">
+            @for (jigsaw of hotJigsaws; track jigsaw; let i = $index) {
+              <li>
+                <span class="hot-num">{{ i + 1 }}</span>
+                <lib-a [href]="domains['jigsaw'].url + '/detail/' + jigsaw.wallpaperId"
+                       [title]="jigsaw.wallpaperCopyright">{{ jigsaw.wallpaperCopyright }}</lib-a>
+              </li>
+            }
+          </ul>
+        } @else {
+          <nz-empty nzNotFoundImage="simple"></nz-empty>
+        }
+      </div>
+    }
+    @if (recentGames && recentGames.length > 0) {
+      <div class="widget">
+        <h3 class="widget-title"><span><nz-icon nzType="history"/><span>最近游戏</span></span></h3>
+        <ul>
+          @for (game of recentGames; track game) {
+            <li>
+              <lib-a [href]="domains['game'].url + '/detail/' + game.gameId"
+                     [title]="game.gameTitle">{{ game.gameTitle }}</lib-a>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+    @if (hotGames && hotGames.length > 0) {
+      <div class="widget">
+        <h3 class="widget-title"><span><nz-icon nzType="fire"/><span>热门游戏</span></span></h3>
+        <ul class="hot-list">
+          @for (game of hotGames; track game; let i = $index) {
+            <li>
+              <span class="hot-num">{{ i + 1 }}</span>
+              <lib-a [href]="domains['game'].url + '/detail/' + game.gameId"
+                     [title]="game.gameTitle">{{ game.gameTitle }}</lib-a>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+    @if (adsVisible && !(indexInfo?.isPage || indexInfo?.isTool || indexInfo?.isSearch)) {
+      <div class="widget-ads">
+        <lib-adsense [class.ads-sider-wrap]="adsPlaceholder"
+                     wrapClass="ads-sider"
+                     optionKey="adsense_config_sider"
+                     [placeholder]="adsPlaceholder"
+                     text="虚位以待"></lib-adsense>
+      </div>
+    }
+    @if (postArchives && postArchives.length > 0) {
+      <div class="widget">
+        <h3 class="widget-title">
+          <span><span class="fi fi-calendar-date"></span><span>博客归档</span></span>
+          <span class="more">
+            <lib-a [href]="domains['blog'].url + '/archive'"
+                   title="博客归档"><span>更多</span><nz-icon nzType="double-right"/></lib-a>
+            </span>
+        </h3>
+        <ul>
+          @for (item of postArchives; track item) {
+            <li>
+              <lib-a [href]="domains['blog'].url + '/archive/' + item.dateValue"
+                     [title]="item.dateLabel">{{ item.dateLabel }}({{ item.count }})</lib-a>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+    @if (wallpaperArchives && wallpaperArchives.length > 0) {
+      <div class="widget">
+        <h3 class="widget-title">
+          <span><span class="fi fi-calendar-date"></span><span>壁纸归档</span></span>
+          <span class="more">
+              <lib-a [href]="domains['wallpaper'].url + '/archive'"
+                     title="壁纸归档"><span>更多</span><nz-icon nzType="double-right"/></lib-a>
+              </span>
+        </h3>
+        <ul>
+          @for (item of wallpaperArchives; track item) {
+            <li>
+              <lib-a [href]="domains['wallpaper'].url + '/archive/' + item.dateValue"
+                     [title]="item.dateLabel">{{ item.dateLabel }}({{ item.count }})</lib-a>
+            </li>
+          }
+        </ul>
+      </div>
+    }
     <!--非壁纸页-->
-    <div class="widget" *ngIf="randomPosts && randomPosts.length > 0">
-      <h3 class="widget-title"><span><nz-icon nzType="gift" /><span>手气不错</span></span></h3>
-      <ul>
-        <li *ngFor="let post of randomPosts">
-          <lib-a [href]="domains['blog'].url + post.postGuid"
-                 [title]="post.postTitle">{{ post.postTitle }}</lib-a>
-        </li>
-      </ul>
-    </div>
+    @if (randomPosts && randomPosts.length > 0) {
+      <div class="widget">
+        <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
+        <ul>
+          @for (post of randomPosts; track post) {
+            <li>
+              <lib-a [href]="domains['blog'].url + post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</lib-a>
+            </li>
+          }
+        </ul>
+      </div>
+    }
     <!--壁纸页-->
     @if (randomWallpapers && randomWallpapers.length > 0) {
       @if (indexInfo.isJigsaw) {
         <div class="widget">
-          <h3 class="widget-title"><span><nz-icon nzType="gift" /><span>手气不错</span></span></h3>
+          <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
           <ul>
-            <li *ngFor="let wallpaper of randomWallpapers">
-              <lib-a [href]="domains['jigsaw'].url + '/detail/' + wallpaper.wallpaperId"
-                     [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</lib-a>
-            </li>
+            @for (wallpaper of randomWallpapers; track wallpaper) {
+              <li>
+                <lib-a [href]="domains['jigsaw'].url + '/detail/' + wallpaper.wallpaperId"
+                       [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</lib-a>
+              </li>
+            }
           </ul>
         </div>
       } @else {
         <div class="widget">
           <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
           <ul>
-            <li *ngFor="let wallpaper of randomWallpapers">
-              <lib-a [href]="domains['wallpaper'].url + '/detail/' + wallpaper.wallpaperId"
-                     [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
-                     [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</lib-a>
-            </li>
+            @for (wallpaper of randomWallpapers; track wallpaper) {
+              <li>
+                <lib-a [href]="domains['wallpaper'].url + '/detail/' + wallpaper.wallpaperId"
+                       [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
+                       [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</lib-a>
+              </li>
+            }
           </ul>
         </div>
       }
     }
-    <div class="widget" *ngIf="randomGames && randomGames.length > 0">
-      <h3 class="widget-title"><span><nz-icon nzType="gift" /><span>手气不错</span></span></h3>
-      <ul>
-        <li *ngFor="let game of randomGames">
-          <lib-a [href]="domains['game'].url + '/detail/' + game.gameId"
-                 [title]="game.gameTitle">{{ game.gameTitle }}</lib-a>
-        </li>
-      </ul>
-    </div>
+    @if (randomGames && randomGames.length > 0) {
+      <div class="widget">
+        <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
+        <ul>
+          @for (game of randomGames; track game) {
+            <li>
+              <lib-a [href]="domains['game'].url + '/detail/' + game.gameId"
+                     [title]="game.gameTitle">{{ game.gameTitle }}</lib-a>
+            </li>
+          }
+        </ul>
+      </div>
+    }
   </div>
 </aside>

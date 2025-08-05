@@ -1,17 +1,17 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AppConfigService, AppDomainConfig, GAME_EMPTY_COVER, UserAgentService } from 'common/core';
 import { ListMode } from 'common/enums';
 import { Game } from 'common/interfaces';
 import { NumberViewPipe } from 'common/pipes';
+import { CommonService } from 'common/services';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { SmartLinkComponent } from '../../smart-link/smart-link.component';
-import { CommonService } from 'common/services';
 
 @Component({
   selector: 'lib-game-item',
-  imports: [NgIf, NgFor, RouterLink, NzIconModule, DatePipe, NumberViewPipe, SmartLinkComponent],
+  imports: [RouterLink, NzIconModule, DatePipe, NumberViewPipe, SmartLinkComponent],
   templateUrl: './game-item.component.html',
   styleUrls: ['../../post/post-item/post-item.component.less', './game-item.component.less']
 })

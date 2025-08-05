@@ -5,7 +5,8 @@
         @if (!isChanged) {
           <div class="post-more-photo-content lazyload" [attr.data-bg]="prevWallpaper.wallpaperThumbUrl"></div>
         } @else {
-          <div class="post-more-photo-content" [style.background-image]="'url(' + prevWallpaper.wallpaperThumbUrl + ')'"></div>
+          <div class="post-more-photo-content"
+               [style.background-image]="'url(' + prevWallpaper.wallpaperThumbUrl + ')'"></div>
         }
         <div class="post-more-photo-overlay"></div>
       </div>
@@ -29,7 +30,8 @@
         @if (!isChanged) {
           <div class="post-more-photo-content lazyload" [attr.data-bg]="nextWallpaper.wallpaperThumbUrl"></div>
         } @else {
-          <div class="post-more-photo-content" [style.background-image]="'url(' + nextWallpaper.wallpaperThumbUrl + ')'"></div>
+          <div class="post-more-photo-content"
+               [style.background-image]="'url(' + nextWallpaper.wallpaperThumbUrl + ')'"></div>
         }
         <div class="post-more-photo-overlay"></div>
       </div>

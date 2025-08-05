@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
 import { DestroyService, PaginationData, PaginationEntity, PaginationService, UserAgentService } from 'common/core';
@@ -8,7 +7,7 @@ import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-pagination',
-  imports: [NgIf, RouterLink, NzIconModule, RangePipe],
+  imports: [RouterLink, NzIconModule, RangePipe],
   providers: [DestroyService],
   templateUrl: './pagination.component.html',
   styleUrl: './pagination.component.less'

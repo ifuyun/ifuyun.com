@@ -7,13 +7,14 @@
           (nzOnCancel)="closeModal()"
           (nzOnOk)="closeModal()">
   <ng-container *nzModalContent>
-    <nz-qrcode *ngIf="shareUrl"
-               [nzSize]="320"
-               [nzPadding]="0"
-               [nzBordered]="false"
-               [nzValue]="shareUrl"
-               nzIcon="https://cdn.ifuyun.com/www/favicon.png"
-               [nzIconSize]="80"
-               nzLevel="H"></nz-qrcode>
+    @if (shareUrl) {
+      <nz-qrcode [nzSize]="320"
+                 [nzPadding]="0"
+                 [nzBordered]="false"
+                 [nzValue]="shareUrl"
+                 [nzIcon]="faviconUrl"
+                 [nzIconSize]="80"
+                 nzLevel="H"></nz-qrcode>
+    }
   </ng-container>
 </nz-modal>

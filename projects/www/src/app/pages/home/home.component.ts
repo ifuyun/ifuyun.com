@@ -1,4 +1,4 @@
-import { DatePipe, NgFor } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CarouselComponent, PostItemComponent, WallpaperItemComponent } from 'common/components';
 import {
@@ -22,7 +22,6 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-home',
   imports: [
-    NgFor,
     DatePipe,
     NzButtonModule,
     NzIconModule,

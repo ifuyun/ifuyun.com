@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
@@ -22,12 +21,13 @@ import { SmartLinkComponent } from '../smart-link/smart-link.component';
 
 @Component({
   selector: 'lib-m-sider',
-  imports: [NgIf, RouterLink, NzIconModule, SmartLinkComponent],
+  imports: [RouterLink, NzIconModule, SmartLinkComponent],
   providers: [DestroyService, NzImageService],
   templateUrl: './m-sider.component.html',
   styleUrl: './m-sider.component.less'
 })
 export class MSiderComponent implements OnInit {
+  readonly faviconUrl: string;
   readonly magazineUrl: string;
 
   siderVisible = false;
@@ -48,8 +48,9 @@ export class MSiderComponent implements OnInit {
     private readonly userService: UserService,
     private readonly logService: LogService
   ) {
-    this.domains = this.appConfigService.apps;
-    this.magazineUrl = this.appConfigService.magazineUrl;
+    this.domains = appConfigService.apps;
+    this.faviconUrl = appConfigService.faviconUrl;
+    this.magazineUrl = appConfigService.magazineUrl;
   }
 
   ngOnInit(): void {

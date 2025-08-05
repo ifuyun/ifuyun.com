@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AppConfigService, DestroyService, OptionEntity, UrlService, UserAgentService } from 'common/core';
@@ -10,7 +9,7 @@ import { SmartLinkComponent } from '../smart-link/smart-link.component';
 
 @Component({
   selector: 'lib-footer',
-  imports: [NgFor, NgIf, RouterLink, SmartLinkComponent],
+  imports: [RouterLink, SmartLinkComponent],
   providers: [DestroyService],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.less'

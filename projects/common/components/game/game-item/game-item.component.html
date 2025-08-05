@@ -4,20 +4,24 @@
       <div class="post-item-body">
         <div class="post-item-content">
           <header>
-            <span *ngIf="game.game.gameSticky" class="meta-tag meta-tag-sticky">置顶</span>
-            <h2><lib-a [href]="domains['game'].url + '/detail/' + game.game.gameId"
-                       [title]="game.game.gameTitle"
-                       rel="bookmark">{{ game.game.gameTitle }}</lib-a></h2>
+            @if (game.game.gameSticky) {
+              <span class="meta-tag meta-tag-sticky">置顶</span>
+            }
+            <h2>
+              <lib-a [href]="domains['game'].url + '/detail/' + game.game.gameId"
+                     [title]="game.game.gameTitle"
+                     rel="bookmark">{{ game.game.gameTitle }}</lib-a>
+            </h2>
           </header>
           <div class="post-item-meta">
             <div [title]="game.game.gameCreated | date:'yyyy-MM-dd'">
               <span class="fi fi-calendar-date"></span><span>{{ game.game.gameCreated | date:'yyyy-MM-dd' }}</span>
             </div>
             <div>
-              <nz-icon nzType="eye" /><span>{{ game.game.gameViews | numberView: 'K' }}</span>
+              <nz-icon nzType="eye"/><span>{{ game.game.gameViews | numberView: 'K' }}</span>
             </div>
             <div>
-              <nz-icon nzType="like" /><span>{{ game.game.gameLikes | numberView: 'K' }}</span>
+              <nz-icon nzType="like"/><span>{{ game.game.gameLikes | numberView: 'K' }}</span>
             </div>
           </div>
           <div class="post-item-excerpt">
@@ -39,45 +43,61 @@
           </lib-a>
         </div>
       </div>
-      <div class="post-item-tag-wrap" *ngIf="game.categories.length > 0 || game.tags.length > 0">
-        <div *ngIf="game.categories.length > 0" class="post-item-tag">
-          <div>
-            <div class="post-item-tag-icon"><nz-icon nzType="folder" /></div>
-            <ul>
-              <li *ngFor="let category of game.categories">
-                <lib-a [href]="domains['game'].url + '/category/' + category.taxonomySlug"
-                       title="{{ category.taxonomyName }}"
-                       rel="category">{{ category.taxonomyName }}</lib-a>
-              </li>
-            </ul>
-          </div>
+      @if (game.categories.length > 0 || game.tags.length > 0) {
+        <div class="post-item-tag-wrap">
+          @if (game.categories.length > 0) {
+            <div class="post-item-tag">
+              <div>
+                <div class="post-item-tag-icon">
+                  <nz-icon nzType="folder"/>
+                </div>
+                <ul>
+                  @for (category of game.categories; track category) {
+                    <li>
+                      <lib-a [href]="domains['game'].url + '/category/' + category.taxonomySlug"
+                             title="{{ category.taxonomyName }}"
+                             rel="category">{{ category.taxonomyName }}</lib-a>
+                    </li>
+                  }
+                </ul>
+              </div>
+            </div>
+          }
+          @if (game.tags.length > 0) {
+            <div class="post-item-tag">
+              <div>
+                <div class="post-item-tag-icon">
+                  <nz-icon nzType="tag"/>
+                </div>
+                <ul>
+                  @for (tag of game.tags; track tag) {
+                    <li>
+                      <lib-a [href]="domains['game'].url + '/tag/' + tag.tagName"
+                             [title]="tag.tagName"
+                             rel="category">{{ tag.tagName }}</lib-a>
+                    </li>
+                  }
+                </ul>
+              </div>
+            </div>
+          }
         </div>
-        <div *ngIf="game.tags.length > 0" class="post-item-tag">
-          <div>
-            <div class="post-item-tag-icon"><nz-icon nzType="tag" /></div>
-            <ul>
-              <li *ngFor="let tag of game.tags">
-                <lib-a [href]="domains['game'].url + '/tag/' + tag.tagName"
-                       [title]="tag.tagName"
-                       rel="category">{{ tag.tagName }}</lib-a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      }
     </article>
   } @else {
     <article class="m-post-item">
       <header>
         <h2>
-          <span *ngIf="game.game.gameSticky" class="m-meta-tag meta-tag-sticky"><nz-icon nzType="vertical-align-top" /></span>
+          @if (game.game.gameSticky) {
+            <span class="m-meta-tag meta-tag-sticky"><nz-icon nzType="vertical-align-top"/></span>
+          }
           <lib-a [href]="domains['game'].url + '/detail/' + game.game.gameId"
                  [title]="game.game.gameTitle"
                  rel="bookmark">{{ game.game.gameTitle }}</lib-a>
         </h2>
         <div class="m-post-item-stat">
-          <span><nz-icon nzType="eye" /><span>{{ game.game.gameViews | numberView: 'K' }}</span></span>
-          <span><nz-icon nzType="like" /><span>{{ game.game.gameLikes | numberView: 'K' }}</span></span>
+          <span><nz-icon nzType="eye"/><span>{{ game.game.gameViews | numberView: 'K' }}</span></span>
+          <span><nz-icon nzType="like"/><span>{{ game.game.gameLikes | numberView: 'K' }}</span></span>
         </div>
       </header>
       <div class="m-post-item-meta">
@@ -123,20 +143,25 @@
       </div>
       <div class="post-content">
         <header>
-          <span *ngIf="game.game.gameSticky" class="meta-tag meta-tag-sticky">置顶</span>
-          <h2><lib-a [href]="domains['game'].url + '/detail/' + game.game.gameId"
-                 [title]="game.game.gameTitle"
-                 rel="bookmark">{{ game.game.gameTitle }}</lib-a></h2>
+          @if (game.game.gameSticky) {
+            <span class="meta-tag meta-tag-sticky">置顶</span>
+          }
+          <h2>
+            <lib-a [href]="domains['game'].url + '/detail/' + game.game.gameId"
+                   [title]="game.game.gameTitle"
+                   rel="bookmark">{{ game.game.gameTitle }}</lib-a>
+          </h2>
         </header>
         <div class="post-meta-wrap">
           <div class="post-meta">
             <div class="tags">
-              <nz-icon nzType="folder" />
+              <nz-icon nzType="folder"/>
               <div class="game-tag">
-                <lib-a *ngFor="let category of game.categories"
-                   [href]="domains['game'].url + '/category/' + category.taxonomySlug"
-                   title="{{ category.taxonomyName }}"
-                   rel="category">{{ category.taxonomyName }}</lib-a>
+                @for (category of game.categories; track category) {
+                  <lib-a [href]="domains['game'].url + '/category/' + category.taxonomySlug"
+                         title="{{ category.taxonomyName }}"
+                         rel="category">{{ category.taxonomyName }}</lib-a>
+                }
               </div>
             </div>
           </div>
@@ -146,10 +171,10 @@
             </div>
             <div class="actions">
               <div title="浏览: {{ game.game.gameViews | numberView: 'K' }}">
-                <nz-icon nzType="eye" /><span>{{ game.game.gameViews | numberView: 'K' }}</span>
+                <nz-icon nzType="eye"/><span>{{ game.game.gameViews | numberView: 'K' }}</span>
               </div>
               <div title="喜欢: {{ game.game.gameLikes | numberView: 'K' }}">
-                <nz-icon nzType="like" /><span>{{ game.game.gameLikes | numberView: 'K' }}</span>
+                <nz-icon nzType="like"/><span>{{ game.game.gameLikes | numberView: 'K' }}</span>
               </div>
               <div title="评论: {{ game.game.gameComments | numberView: 'K' }}">
                 @if (game.game.gameComments > 0) {

@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
@@ -29,7 +28,6 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-wallpaper-list',
   imports: [
-    NgFor,
     RouterLink,
     FormsModule,
     NzIconModule,

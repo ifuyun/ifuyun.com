@@ -54,9 +54,9 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
       lastmod: new Date(item.wallpaperModified).toString()
     }));
 
-    streamToPromise(<Readable>Readable.from(links.concat(wallpapers)).pipe(sitemapStream)).then((data) =>
-      res.type('application/xml').send(data.toString())
-    );
+    streamToPromise(<Readable>Readable.from(links.concat(wallpapers)).pipe(sitemapStream)).then((data) => {
+      return res.type('application/xml').send(data.toString());
+    });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e: any) {
     res.status(HttpStatusCode.InternalServerError).send(Message.ERROR_500);

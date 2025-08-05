@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
@@ -27,7 +26,7 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-signup',
-  imports: [NgIf, ReactiveFormsModule, NzFormModule, NzInputModule, NzButtonModule, NzIconModule],
+  imports: [ReactiveFormsModule, NzFormModule, NzInputModule, NzButtonModule, NzIconModule],
   providers: [DestroyService],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.less'

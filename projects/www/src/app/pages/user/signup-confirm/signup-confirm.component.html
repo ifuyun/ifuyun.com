@@ -2,7 +2,7 @@
   <nz-form-item>
     <nz-form-label>邮箱</nz-form-label>
     <nz-form-control>
-      <nz-form-text>{{user?.userEmail}}</nz-form-text>
+      <nz-form-text>{{ user?.userEmail }}</nz-form-text>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
@@ -13,10 +13,14 @@
              formControlName="code"
              [maxlength]="4"
              [autofocus]="true"
-             placeholder="请输入验证码" />
+             placeholder="请输入验证码"/>
       <ng-template #codeErrorTpl let-control>
-        <ng-container *ngIf="control.hasError('required')">请输入验证码</ng-container>
-        <ng-container *ngIf="control.hasError('pattern')">验证码为4位数字</ng-container>
+        @if (control.hasError('required')) {
+          请输入验证码
+        }
+        @if (control.hasError('pattern')) {
+          验证码为4位数字
+        }
       </ng-template>
     </nz-form-control>
   </nz-form-item>
@@ -25,7 +29,7 @@
       <button nz-button
               type="button"
               (click)="resendCode()"
-              [disabled]="countdown > 0">重新发送{{countdown > 0 ? ' (' + countdown + 's)' : ''}}</button>
+              [disabled]="countdown > 0">重新发送{{ countdown > 0 ? ' (' + countdown + 's)' : '' }}</button>
       <button nz-button type="submit" nzType="primary" (click)="verify()" [nzLoading]="confirmLoading">确定</button>
     </div>
   </nz-form-item>

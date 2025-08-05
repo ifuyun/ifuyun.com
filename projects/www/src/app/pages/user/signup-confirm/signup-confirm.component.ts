@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -30,7 +29,7 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-signup-confirm',
-  imports: [NgIf, ReactiveFormsModule, NzFormModule, NzInputModule, NzButtonModule],
+  imports: [ReactiveFormsModule, NzFormModule, NzInputModule, NzButtonModule],
   providers: [DestroyService],
   templateUrl: './signup-confirm.component.html',
   styleUrl: './signup-confirm.component.less'

@@ -1,4 +1,5 @@
 export interface LinkEntity {
+  linkId: string;
   linkUrl: string;
   linkName: string;
   linkImage: string;

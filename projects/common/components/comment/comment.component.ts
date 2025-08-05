@@ -1,4 +1,4 @@
-import { DatePipe, NgIf, NgTemplateOutlet } from '@angular/common';
+import { DatePipe, NgTemplateOutlet } from '@angular/common';
 import { Component, DOCUMENT, Inject, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -26,7 +26,6 @@ import { LoginModalComponent } from '../login-modal/login-modal.component';
 @Component({
   selector: 'lib-comment',
   imports: [
-    NgIf,
     NgTemplateOutlet,
     RouterLink,
     FormsModule,

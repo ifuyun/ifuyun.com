@@ -2,19 +2,21 @@
   <div class="related" [class.p-related]="!isMobile" [class.m-related]="isMobile">
     <h3>相关{{ jigsaw ? '拼图' : '壁纸' }}</h3>
     <div class="related-list">
-      <div class="related-item" *ngFor="let wallpaper of relatedWallpapers">
-        <a class="related-item-img"
-           [routerLink]="['../' + wallpaper.wallpaperId]"
-           [queryParams]="getLangParams(wallpaper)"
-           [title]="getWallpaperCopyright(wallpaper)">
-          <div class="lazyload" [attr.data-bg]="wallpaper.wallpaperUrl"></div>
-        </a>
-        <div class="related-item-title">
-          <a [routerLink]="['../' + wallpaper.wallpaperId]"
+      @for (wallpaper of relatedWallpapers; track wallpaper) {
+        <div class="related-item">
+          <a class="related-item-img"
+             [routerLink]="['../' + wallpaper.wallpaperId]"
              [queryParams]="getLangParams(wallpaper)"
-             [title]="getWallpaperCopyright(wallpaper)">{{ getWallpaperCopyright(wallpaper) }}</a>
+             [title]="getWallpaperCopyright(wallpaper)">
+            <div class="lazyload" [attr.data-bg]="wallpaper.wallpaperUrl"></div>
+          </a>
+          <div class="related-item-title">
+            <a [routerLink]="['../' + wallpaper.wallpaperId]"
+               [queryParams]="getLangParams(wallpaper)"
+               [title]="getWallpaperCopyright(wallpaper)">{{ getWallpaperCopyright(wallpaper) }}</a>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
 }

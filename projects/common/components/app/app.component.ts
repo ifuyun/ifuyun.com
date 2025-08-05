@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import {
@@ -38,7 +37,6 @@ import { TurnstileComponent } from '../turnstile/turnstile.component';
   selector: 'app-root',
   imports: [
     RouterOutlet,
-    CommonModule,
     HeaderComponent,
     FooterComponent,
     NotFoundComponent,
@@ -52,6 +50,8 @@ import { TurnstileComponent } from '../turnstile/turnstile.component';
   styleUrl: './app.component.less'
 })
 export class AppComponent implements OnInit, AfterViewInit {
+  readonly faviconUrl: string;
+
   isMobile: boolean = false;
   errorState!: ErrorState;
   errorPage = false;
@@ -93,7 +93,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     private readonly gameService: GameService,
     private readonly adsService: AdsService
   ) {
-    this.isMobile = this.userAgentService.isMobile;
+    this.isMobile = userAgentService.isMobile;
+    this.faviconUrl = appConfigService.faviconUrl;
   }
 
   ngOnInit(): void {

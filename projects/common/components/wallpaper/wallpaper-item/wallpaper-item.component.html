@@ -4,27 +4,29 @@
       <div class="post-item-body">
         <div class="post-item-content">
           <header>
-            <h2><lib-a [href]="linkPrefix + wallpaper.wallpaperId"
-                       [queryParams]="getLangParams(wallpaper.isCn)"
-                       [title]="wallpaper.wallpaperCopyright"
-                       rel="bookmark">{{ wallpaper.wallpaperCopyright }}</lib-a></h2>
+            <h2>
+              <lib-a [href]="linkPrefix + wallpaper.wallpaperId"
+                     [queryParams]="getLangParams(wallpaper.isCn)"
+                     [title]="wallpaper.wallpaperCopyright"
+                     rel="bookmark">{{ wallpaper.wallpaperCopyright }}</lib-a>
+            </h2>
           </header>
           <div class="post-item-meta">
             <div [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
               <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
             </div>
             <div class="auto-fit" [title]="wallpaperLocation">
-              <nz-icon nzType="environment" /><span>{{ wallpaperLocation }}</span>
+              <nz-icon nzType="environment"/><span>{{ wallpaperLocation }}</span>
             </div>
             <div title="浏览: {{ wallpaper.wallpaperViews | numberView: 'K' }}">
-              <nz-icon nzType="eye" /><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
+              <nz-icon nzType="eye"/><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
             </div>
             <lib-a [href]="domains['jigsaw'].url + '/detail/' + wallpaper.wallpaperId"
                    title="拼图: {{ wallpaper.wallpaperPlays | numberView: 'K' }}">
-              <nz-icon nzType="product" /><span>{{ wallpaper.wallpaperPlays | numberView: 'K' }}</span>
+              <nz-icon nzType="product"/><span>{{ wallpaper.wallpaperPlays | numberView: 'K' }}</span>
             </lib-a>
             <div title="喜欢: {{ wallpaper.wallpaperLikes | numberView: 'K' }}">
-              <nz-icon nzType="like" /><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
+              <nz-icon nzType="like"/><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
             </div>
           </div>
           <div class="post-item-excerpt">
@@ -38,7 +40,8 @@
             @if (index > 3) {
               <span class="post-item-cover-img lazyload" [attr.data-bg]="wallpaper.wallpaperThumbUrl"></span>
             } @else {
-              <span class="post-item-cover-img" [style.background-image]="'url(' + wallpaper.wallpaperThumbUrl + ')'"></span>
+              <span class="post-item-cover-img"
+                    [style.background-image]="'url(' + wallpaper.wallpaperThumbUrl + ')'"></span>
             }
             <span class="overlay"></span>
           </lib-a>
@@ -48,14 +51,16 @@
   } @else {
     <article class="m-post-item">
       <header>
-        <h2><lib-a [href]="linkPrefix + wallpaper.wallpaperId"
-                   [queryParams]="getLangParams(wallpaper.isCn)"
-                   [title]="wallpaper.wallpaperCopyright"
-                   rel="bookmark">{{ wallpaper.wallpaperCopyright }}</lib-a></h2>
+        <h2>
+          <lib-a [href]="linkPrefix + wallpaper.wallpaperId"
+                 [queryParams]="getLangParams(wallpaper.isCn)"
+                 [title]="wallpaper.wallpaperCopyright"
+                 rel="bookmark">{{ wallpaper.wallpaperCopyright }}</lib-a>
+        </h2>
         <div class="m-post-item-stat">
-          <span><nz-icon nzType="eye" /><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span></span>
-          <span><nz-icon nzType="product" /><span>{{ wallpaper.wallpaperPlays | numberView: 'K' }}</span></span>
-          <span><nz-icon nzType="like" /><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span></span>
+          <span><nz-icon nzType="eye"/><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span></span>
+          <span><nz-icon nzType="product"/><span>{{ wallpaper.wallpaperPlays | numberView: 'K' }}</span></span>
+          <span><nz-icon nzType="like"/><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span></span>
         </div>
       </header>
       <div class="m-post-item-meta">
@@ -63,7 +68,7 @@
           <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
         </span>
         <span class="auto-fit" [title]="wallpaperLocation">
-          <nz-icon nzType="environment" /><span>{{ wallpaperLocation }}</span>
+          <nz-icon nzType="environment"/><span>{{ wallpaperLocation }}</span>
         </span>
       </div>
       <div class="m-post-item-cover">
@@ -73,7 +78,8 @@
           @if (index > 3) {
             <span class="m-post-item-cover-img lazyload" [attr.data-bg]="wallpaper.wallpaperThumbUrl"></span>
           } @else {
-            <span class="m-post-item-cover-img" [style.background-image]="'url(' + wallpaper.wallpaperThumbUrl + ')'"></span>
+            <span class="m-post-item-cover-img"
+                  [style.background-image]="'url(' + wallpaper.wallpaperThumbUrl + ')'"></span>
           }
           <span class="overlay"></span>
         </lib-a>
@@ -93,36 +99,41 @@
           @if (index > 3) {
             <span class="post-item-cover-img lazyload" [attr.data-bg]="wallpaper.wallpaperThumbUrl"></span>
           } @else {
-            <span class="post-item-cover-img" [style.background-image]="'url(' + wallpaper.wallpaperThumbUrl + ')'"></span>
+            <span class="post-item-cover-img"
+                  [style.background-image]="'url(' + wallpaper.wallpaperThumbUrl + ')'"></span>
           }
           <span class="overlay"></span>
         </lib-a>
       </div>
       <div class="post-content">
-        <h2><lib-a [href]="linkPrefix + wallpaper.wallpaperId"
-                   [queryParams]="getLangParams(wallpaper.isCn)"
-                   [title]="wallpaper.wallpaperCopyright"
-                   rel="bookmark">{{ wallpaper.wallpaperCopyright }}</lib-a></h2>
+        <h2>
+          <lib-a [href]="linkPrefix + wallpaper.wallpaperId"
+                 [queryParams]="getLangParams(wallpaper.isCn)"
+                 [title]="wallpaper.wallpaperCopyright"
+                 rel="bookmark">{{ wallpaper.wallpaperCopyright }}</lib-a>
+        </h2>
         <div class="post-meta-wrap">
-          <div class="post-meta" *ngIf="!isMobile">
-            <div class="auto-fit" [title]="wallpaperLocation">
-              <nz-icon nzType="environment" /><span>{{ wallpaperLocation }}</span>
+          @if (!isMobile) {
+            <div class="post-meta">
+              <div class="auto-fit" [title]="wallpaperLocation">
+                <nz-icon nzType="environment"/><span>{{ wallpaperLocation }}</span>
+              </div>
             </div>
-          </div>
+          }
           <div class="post-meta">
             <div class="date" [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
               <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
             </div>
             <div class="actions">
               <div title="浏览: {{ wallpaper.wallpaperViews | numberView: 'K' }}">
-                <nz-icon nzType="eye" /><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
+                <nz-icon nzType="eye"/><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
               </div>
               <lib-a [href]="domains['jigsaw'].url + '/detail/' + wallpaper.wallpaperId"
                      title="拼图: {{ wallpaper.wallpaperPlays | numberView: 'K' }}">
-                <nz-icon nzType="product" /><span>{{ wallpaper.wallpaperPlays | numberView: 'K' }}</span>
+                <nz-icon nzType="product"/><span>{{ wallpaper.wallpaperPlays | numberView: 'K' }}</span>
               </lib-a>
               <div title="喜欢: {{ wallpaper.wallpaperLikes | numberView: 'K' }}">
-                <nz-icon nzType="like" /><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
+                <nz-icon nzType="like"/><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
               </div>
               <lib-a [href]="linkPrefix + wallpaper.wallpaperId"
                      [queryParams]="getLangParams(wallpaper.isCn)"

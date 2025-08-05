@@ -1,4 +1,4 @@
-import { NgFor, NgIf, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DestroyService, PlatformService, UserAgentService } from 'common/core';
 import { ActionObjectType, ActionType, LinkTarget, WallpaperLang } from 'common/enums';
@@ -10,7 +10,7 @@ import { skipWhile, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-carousel',
-  imports: [NgFor, NgIf, NgStyle, RangePipe],
+  imports: [NgStyle, RangePipe],
   providers: [DestroyService],
   templateUrl: './carousel.component.html',
   styleUrl: './carousel.component.less'

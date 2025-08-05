@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -34,7 +33,6 @@ import { TOOL_LINKS } from './tool.constant';
   selector: 'lib-header',
   imports: [
     RouterLink,
-    CommonModule,
     FormsModule,
     NzInputModule,
     NzIconModule,
@@ -51,6 +49,7 @@ import { TOOL_LINKS } from './tool.constant';
 export class HeaderComponent implements OnInit, AfterViewChecked {
   @ViewChild('mSearchInput') mSearchInput!: ElementRef;
 
+  readonly faviconUrl: string;
   readonly magazineUrl: string;
   readonly searchTypeMap: Record<string, string> = {
     [SearchType.ALL]: '全站',
@@ -91,9 +90,10 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
     private readonly userService: UserService,
     private readonly logService: LogService
   ) {
-    this.domains = this.appConfigService.apps;
-    this.magazineUrl = this.appConfigService.magazineUrl;
-    this.isMobile = this.userAgentService.isMobile;
+    this.domains = appConfigService.apps;
+    this.faviconUrl = appConfigService.faviconUrl;
+    this.magazineUrl = appConfigService.magazineUrl;
+    this.isMobile = userAgentService.isMobile;
   }
 
   ngOnInit(): void {

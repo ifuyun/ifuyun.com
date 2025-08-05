@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf, NgStyle } from '@angular/common';
+import { DatePipe, NgStyle } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
@@ -58,8 +58,6 @@ import { PostRelatedComponent } from '../post-related/post-related.component';
 @Component({
   selector: 'lib-post',
   imports: [
-    NgIf,
-    NgFor,
     NgStyle,
     RouterLink,
     DatePipe,

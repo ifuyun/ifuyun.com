@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
@@ -49,8 +49,6 @@ import { GameRelatedComponent } from '../../components/game-related/game-related
 @Component({
   selector: 'app-game',
   imports: [
-    NgIf,
-    NgFor,
     RouterLink,
     DatePipe,
     NzIconModule,
