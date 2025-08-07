@@ -12,7 +12,7 @@
         @if (i < 2) {
           @if (!carousel.link) {
             <div class="carousel-img"
-                 [style.background-image]="'url(' + carousel.fullUrl + ')'"
+                 [style.background-image]="'url(' + carousel.url + ')'"
                  [title]="carousel.caption"></div>
           } @else {
             <a class="carousel-link"
@@ -20,19 +20,19 @@
                [title]="carousel.caption"
                (click)="logClick(carousel)"
                [target]="carousel.target">
-              <div class="carousel-img" [style.background-image]="'url(' + carousel.fullUrl + ')'"></div>
+              <div class="carousel-img" [style.background-image]="'url(' + carousel.url + ')'"></div>
             </a>
           }
         } @else {
           @if (!carousel.link) {
-            <div class="carousel-img lazyload" [title]="carousel.caption" [attr.data-bg]="carousel.fullUrl"></div>
+            <div class="carousel-img lazyload" [title]="carousel.caption" [attr.data-bg]="carousel.url"></div>
           } @else {
             <a class="carousel-link"
                [href]="carousel.link"
                [title]="carousel.caption"
                (click)="logClick(carousel)"
                [target]="carousel.target">
-              <div class="carousel-img lazyload" [attr.data-bg]="carousel.fullUrl"></div>
+              <div class="carousel-img lazyload" [attr.data-bg]="carousel.url"></div>
             </a>
           }
         }

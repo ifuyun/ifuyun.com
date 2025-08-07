@@ -10,10 +10,6 @@ export interface Carousel {
   order: number;
 }
 
-export interface CarouselVo extends Carousel {
-  fullUrl: string;
-}
-
 export interface CarouselOptions {
   type: 'album' | 'wallpaper';
   orderBy?: 'hottest' | 'newest' | 'oldest' | 'random';

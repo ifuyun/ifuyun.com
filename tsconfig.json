@@ -8,7 +8,6 @@
       "common/*": [
         "./dist/common/*"
       ],
-      "src/*": ["./src/*"],
       "env/*": ["./env/*"]
     },
     "outDir": "./dist/out-tsc",
