@@ -16,6 +16,7 @@ import {
 } from 'common/core';
 import { Theme } from 'common/enums';
 import { ForbiddenComponent, NotFoundComponent, ServerErrorComponent } from 'common/error';
+import { isAllowedCrawler } from 'common/middlewares';
 import {
   AdsService,
   AdsStatus,
@@ -164,7 +165,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.currentUrl = (event as NavigationEnd).url;
 
           this.logService.checkAccessLimit().subscribe((res) => {
-            this.isLimited = res.limit;
+            this.isLimited = !isAllowedCrawler(this.userAgentService.uaString) && res.limit;
           });
         }
         this.initialized = true;
