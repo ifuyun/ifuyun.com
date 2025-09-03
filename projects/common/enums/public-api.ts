@@ -1,4 +1,8 @@
 export * from './book';
+export * from './bot';
+export * from './bot-conversation';
+export * from './bot-model';
+export * from './bot-provider';
 export * from './comment';
 export * from './common';
 export * from './copyright';
@@ -7,6 +11,7 @@ export * from './game';
 export * from './link';
 export * from './log';
 export * from './option';
+export * from './permission';
 export * from './post';
 export * from './search';
 export * from './tag';

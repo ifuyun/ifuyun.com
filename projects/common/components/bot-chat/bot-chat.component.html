@@ -1,0 +1,165 @@
+<nz-drawer [nzVisible]="true"
+           [nzWidth]="720"
+           [nzTitle]="'AI 阅读助手'"
+           [nzExtra]="drawerExtra"
+           [nzClosable]="false"
+           [nzMaskClosable]="!isChatEnabled"
+           (nzOnClose)="closeChat()">
+  <ng-template #drawerExtra>
+    <div class="drawer-extra" (click)="closeChat()">
+      <nz-icon nzType="close"/>
+    </div>
+  </ng-template>
+  <ng-container *nzDrawerContent>
+    <div class="bot-wrap">
+      @if (initialized) {
+        @if (!authChat || user.userLlmStatus === 'disabled') {
+          <nz-alert nzBanner nzType="error" [nzMessage]="noAuthMessage"></nz-alert>
+        }
+        @if (authChat && user.userLlmStatus === 'expired') {
+          <nz-alert nzBanner nzType="error" [nzMessage]="expiredMessage"></nz-alert>
+        }
+        @if (authChat && user.userLlmStatus === 'enabled' && !isChatModelEnabled) {
+          <nz-alert nzBanner nzType="error" [nzMessage]="noModelAuthMessage"></nz-alert>
+        }
+        @if (authChat && user.userLlmStatus === 'enabled' && isChatModelEnabled && isChatLimit) {
+          <nz-alert nzBanner nzType="error" [nzMessage]="outOfLimitMessage"></nz-alert>
+        }
+        @if (isChatTrashed) {
+          <nz-alert nzBanner nzType="error" [nzMessage]="isTrashedMessage"></nz-alert>
+        }
+        @if (isNotOwner) {
+          <nz-alert nzBanner nzType="error" [nzMessage]="notOwnerMessage"></nz-alert>
+        }
+      }
+      <div class="messages">
+        <div class="message-list" #messageList>
+          @if (!messageLoading) {
+            @for (msg of messages; track msg) {
+              <div class="message-item"
+                   [class.message-item-bot]="msg.role === 'assistant'"
+                   [class.message-item-user]="msg.role === 'user'"
+                   [class.message-item-system]="msg.role === 'system'">
+                <div class="message-avatar"
+                     [style.background-image]="'url(' + (msg.role === 'user' ? userAvatar : botAvatar) + ')'"
+                     (click)="previewAvatar(msg.role === 'user' ? userAvatar : botAvatar)">
+                </div>
+                <div class="message-wrap">
+                  <div class="message-info">
+                    @if (msg.role === 'assistant' || msg.role === 'system') {
+                      <div class="message-user" [title]="botName">{{ botName }}</div>
+                    }
+                    @if (msg.role === 'user') {
+                      <div class="message-user" [title]="user.userNickname">{{ user.userNickname }}</div>
+                    }
+                    @if (msg.created) {
+                      <div class="message-created">{{ msg.created | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+                    }
+                  </div>
+                  <div class="message-body">
+                    @if (msg.role === 'assistant' || msg.role === 'system') {
+                      <div class="message-content-wrap">
+                        @if (msg.reasoningContent) {
+                          <div class="message-thoughts-action">
+                            <div (click)="toggleThoughtsVisible(msg)">
+                              @if (msg.expanded) {
+                                <span>隐藏思路</span><nz-icon nzType="up"/>
+                              } @else {
+                                <span>显示思路</span><nz-icon nzType="down"/>
+                              }
+                            </div>
+                          </div>
+                          @if (msg.expanded) {
+                            <div class="message-thoughts"
+                                 [class.loading]="msg.loading && msg.thinking"
+                                 [innerHTML]="msg.reasoningHtml | safeHtml"></div>
+                          }
+                        }
+                        @if (msg.content || msg.html && msg.loading) {
+                          <div class="message-content"
+                               [class.loading]="msg.loading && !msg.thinking"
+                               [innerHTML]="msg.html | safeHtml"
+                               (click)="onMessageClick($event)"></div>
+                        }
+                        @if (msg.status === 'error') {
+                          <div class="message-error"
+                               [style.margin-top]="!!msg.content || !!msg.reasoningContent ? '16px' : ''">
+                            <nz-icon nzType="exclamation-circle"/><span>{{ errorMessage }}</span>
+                          </div>
+                        }
+                      </div>
+                    } @else if (msg.role === 'user') {
+                      <div class="message-content">
+                        <div>{{ msg.content }}</div>
+                      </div>
+                    }
+                    @if (msg.role === 'assistant' && msg.status === 'done') {
+                      <div class="message-actions">
+                        @if (!msg.copying) {
+                          <div ngxClipboard
+                               class="message-action-item"
+                               [cbContent]="msg.content"
+                               (cbOnSuccess)="onCopied(msg)"
+                               title="Copy">
+                            <nz-icon nzType="copy"/>
+                          </div>
+                        } @else {
+                          <div class="message-action-item">
+                            <nz-icon nzType="check"/>
+                          </div>
+                        }
+                        @if (msg.vote === 0 || msg.vote === 1) {
+                          <div class="message-action-item"
+                               [class.disabled]="msg.vote === 1"
+                               (click)="voteMessage(msg, 1)"
+                               title="Like">
+                            <nz-icon nzType="like" [nzTheme]="msg.vote > 0 ? 'fill' : 'outline'"/>
+                          </div>
+                        }
+                        @if (msg.vote === 0 || msg.vote === -1) {
+                          <div class="message-action-item"
+                               [class.disabled]="msg.vote === -1"
+                               (click)="voteMessage(msg, -1)"
+                               title="Dislike">
+                            <nz-icon nzType="dislike" [nzTheme]="msg.vote < 0 ? 'fill' : 'outline'"/>
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+            @if (messages.length < 1) {
+              <div class="message-empty">
+                <nz-empty nzNotFoundImage="simple"></nz-empty>
+              </div>
+            }
+          } @else {
+            <div class="message-loading">
+              <nz-spin [nzSpinning]="messageLoading"></nz-spin>
+            </div>
+          }
+        </div>
+        <div class="message-input">
+            <textarea #promptInput nz-input
+                      placeholder="Send a message..."
+                      rows="1"
+                      [(ngModel)]="prompt"
+                      [disabled]="!isChatEnabled"
+                      (keydown)="onKeyDown($event)"
+                      (input)="onPromptInput($event)"></textarea>
+          <div class="send-icon"
+               [class.disabled]="!isChatEnabled || loading || !prompt.trim()"
+               (click)="startChat()">
+            @if (!loading) {
+              <nz-icon nzType="send"/>
+            } @else {
+              <nz-icon nzType="loading"/>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</nz-drawer>

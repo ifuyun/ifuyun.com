@@ -1,4 +1,6 @@
 export * from './ads.service';
+export * from './bot.service';
+export * from './bot-conversation.service';
 export * from './comment.service';
 export * from './common.service';
 export * from './favorite.service';

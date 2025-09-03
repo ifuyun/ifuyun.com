@@ -1,0 +1,236 @@
+@import "../style/variables";
+
+@conversation-width: 260px;
+
+.bot-wrap {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+
+  nz-alert {
+    margin-bottom: 16px;
+  }
+}
+
+.messages {
+  @prompt-input-height: 60px;
+
+  position: relative;
+  flex-grow: 1;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  .message-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    margin-bottom: @prompt-input-height;
+  }
+
+  .message-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-bottom: @prompt-input-height;
+    overflow-y: auto;
+  }
+
+  .message-item {
+    position: relative;
+    display: flex;
+    padding: 16px 8px;
+
+    &:not(:first-child) {
+      border-top: 1px solid #d9d9d9;
+    }
+
+    &.message-item-bot, &.message-item-system {
+      background-color: #f6f6f6;
+    }
+
+    &.message-item-bot:not(:last-child) {
+      .message-actions {
+        visibility: hidden;
+      }
+
+      &:hover {
+        .message-actions {
+          visibility: visible;
+        }
+      }
+    }
+
+    .message-avatar {
+      flex-shrink: 0;
+      flex-grow: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 2px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      cursor: zoom-in;
+    }
+
+    .message-wrap {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      margin-left: 16px;
+      overflow: hidden;
+    }
+
+    .message-info {
+      display: flex;
+      color: var(--meta-color);
+      font-size: 13px;
+
+      .message-user {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        + .message-created::before {
+          content: '-';
+          margin: 0 4px;
+        }
+      }
+
+      .message-created {
+        flex-shrink: 0;
+      }
+    }
+
+    .message-body {
+      margin-top: 8px;
+    }
+
+    .message-content-wrap {
+      flex-grow: 1;
+      overflow: hidden;
+    }
+
+    .message-content {
+      overflow: hidden;
+
+      &:not(:first-child) {
+        margin-top: 24px;
+      }
+    }
+
+    .message-thoughts-action {
+      display: flex;
+      margin-bottom: 8px;
+
+      > div {
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        cursor: pointer;
+
+        &:hover {
+          color: @primary-color;
+        }
+      }
+
+      nz-icon {
+        margin-left: 8px;
+      }
+    }
+
+    .message-thoughts {
+      border-left: 3px solid #dbdbdb;
+      padding-left: 12px;
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    .message-error {
+      display: flex;
+      align-items: center;
+      color: #ff4d4f;
+
+      nz-icon {
+        margin-right: 4px;
+      }
+    }
+
+    .message-actions {
+      position: absolute;
+      right: 8px;
+      bottom: -15px;
+      padding: 2px 4px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      display: flex;
+      flex-grow: 0;
+      flex-shrink: 0;
+      background: #fff;
+      z-index: 1;
+
+      .message-action-item {
+        padding: 4px;
+        font-size: 16px;
+        line-height: 16px;
+        color: #9b9b9b;
+        cursor: pointer;
+
+        &:not(.disabled):hover {
+          color: @primary-color;
+        }
+
+        &.disabled {
+          cursor: auto;
+        }
+      }
+    }
+  }
+
+  .message-input {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    font-size: 16px;
+    z-index: 9;
+
+    textarea {
+      height: 40px;
+      min-height: 40px;
+      max-height: 200px;
+      padding: 7px 36px 7px 11px;
+      line-height: 24px;
+      resize: none;
+    }
+
+    .send-icon {
+      position: absolute;
+      right: 12px;
+      bottom: 8px;
+      padding: 4px;
+      line-height: 16px;
+      cursor: pointer;
+
+      &.disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      &:not(.disabled):hover {
+        color: @primary-color;
+      }
+    }
+  }
+
+  .message-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+  }
+}
+
+.drawer-extra {
+  cursor: pointer;
+}

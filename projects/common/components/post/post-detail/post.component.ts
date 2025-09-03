@@ -107,7 +107,7 @@ export class PostComponent implements OnInit {
     );
   }
 
-  protected pageIndex = 'post-article';
+  protected pageIndex = 'post-detail';
 
   private readonly copyHTML = '<span class="fi fi-copy"></span>Copy code';
   private readonly copiedHTML = '<span class="fi fi-check-lg"></span>Copied!';
@@ -350,12 +350,13 @@ export class PostComponent implements OnInit {
     this.isVoted = post.isVoted;
 
     if (this.isArticle) {
-      this.pageIndex = 'post-article';
+      this.pageIndex = 'post-detail';
     } else {
       this.pageIndex = 'page-' + this.post.postName;
     }
 
     this.postService.updateActivePostId(post.post.postId);
+    this.postService.updateActivePost(post);
     this.updateBreadcrumbs(this.isArticle ? post.breadcrumbs || [] : []);
     this.updatePageIndex();
     this.updatePageInfo();

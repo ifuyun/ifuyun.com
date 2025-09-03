@@ -9,6 +9,26 @@
           </div>
         </div>
         <lib-footer></lib-footer>
+        @if ((indexInfo?.isPost || indexInfo?.isWallpaper) && indexInfo?.isDetail) {
+          <div class="ai-widget">
+            <button nz-button
+                    nz-tooltip
+                    nzType="primary"
+                    nzShape="circle"
+                    nzSize="large"
+                    nzTooltipTitle="AI 阅读助手"
+                    nzTooltipPlacement="topRight"
+                    (click)="showChat()"><nz-icon nzType="comment"/></button>
+          </div>
+        }
+        @if (chatVisible) {
+          <lib-bot-chat [conversationId]="conversationId"
+                        [prompt]="chatPrompt"
+                        [post]="post"
+                        [wallpaper]="wallpaper"
+                        [objectType]="indexInfo?.isPost ? 'post' : 'wallpaper'"
+                        (closeDrawer)="closeChat()"></lib-bot-chat>
+        }
       } @else {
         <div class="m-body-wrap" [class.open]="siderVisible">
           <lib-header></lib-header>

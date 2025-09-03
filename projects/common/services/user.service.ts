@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ApiService, ApiUrl, AppConfigService, HttpResponseEntity, UserModel } from 'common/core';
+import { ApiService, ApiUrl, AppConfigService, HttpResponseEntity, URL_AVATAR_API, UserModel } from 'common/core';
+import { UserLlmStatus } from 'common/enums';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { format } from 'common/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +12,11 @@ export class UserService {
   private user: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>({
     userId: '',
     userNickname: '',
+    permissions: [],
+    userLlmStatus: UserLlmStatus.DISABLED,
+    userLlmModels: [],
+    userLlmExpiresAt: 0,
+    userLlmLimit: 0,
     appId: ''
   });
   user$: Observable<UserModel> = this.user.asObservable();
@@ -45,5 +52,17 @@ export class UserService {
       source,
       appId: this.appConfigService.appId
     });
+  }
+
+  getUserAvatar(user: UserModel, avatarType: string): string {
+    let avatar: string;
+    if (user.userAvatar) {
+      avatar = user.userAvatar;
+    } else {
+      avatar = user.userEmailHash
+        ? format(URL_AVATAR_API, user.userEmailHash, avatarType || 'monsterid')
+        : this.appConfigService.faviconUrl;
+    }
+    return avatar;
   }
 }

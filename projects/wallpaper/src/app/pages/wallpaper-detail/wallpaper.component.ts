@@ -39,7 +39,7 @@ import {
   VoteService,
   WallpaperService
 } from 'common/services';
-import { filterHtmlTag, truncateString } from 'common/utils';
+import { cleanHtmlTag, truncateString } from 'common/utils';
 import { isEmpty } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -90,7 +90,7 @@ export class WallpaperComponent implements OnInit {
     return this.lang === WallpaperLang.CN ? { lang: WallpaperLang.EN } : {};
   }
 
-  protected pageIndex = 'wallpaper';
+  protected pageIndex = 'wallpaper-detail';
 
   private isSignIn = false;
   private appInfo!: TenantAppModel;
@@ -293,6 +293,7 @@ export class WallpaperComponent implements OnInit {
           return;
         }
         this.wallpaperData = wallpaper;
+        this.wallpaperService.updateActiveWallpaper(wallpaper);
         this.updateWallpaper(wallpaper);
       });
   }
@@ -331,7 +332,7 @@ export class WallpaperComponent implements OnInit {
     if (this.lang === WallpaperLang.EN) {
       description += ' ';
     }
-    const wallpaperDesc = truncateString(filterHtmlTag(this.wallpaper.wallpaperStory), 140);
+    const wallpaperDesc = truncateString(cleanHtmlTag(this.wallpaper.wallpaperStory), 140);
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),

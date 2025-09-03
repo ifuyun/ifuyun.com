@@ -90,16 +90,14 @@ export function truncateString(str: string, length: number) {
 }
 
 /**
- * 过滤HTML标签
- * @param {string} str 源字符串
- * @param {boolean} replaceLineBreak 是否过滤换行符，默认开启
- * @return {string} 过滤结果字符串
- * @version 1.1.0
- * @since 1.0.0
+ * 从HTML中提取文本（正则）
+ * @param {string} html 源字符串
+ * @param {boolean} removeLineBreak 是否过滤换行符，默认开启
+ * @return {string} 提取结果文本
  */
-export function filterHtmlTag(str: string, replaceLineBreak = true): string {
-  const result = str.replace(/<\/?[^>]*>/gi, '');
-  if (!replaceLineBreak) {
+export function cleanHtmlTag(html: string, removeLineBreak = true): string {
+  const result = html.replace(/<[^>]+>/gi, '');
+  if (!removeLineBreak) {
     return result;
   }
   return result.replace(/\n/gi, '');
@@ -137,4 +135,28 @@ export async function simpleRequest(payload: {
     throw new Error('Sorry, there is an error on server.');
   }
   return response.json();
+}
+
+export function textPosition(inputEle: HTMLInputElement, text: string, isSelected: boolean) {
+  const curVal = inputEle.value;
+  const start = inputEle.selectionStart || 0;
+  const end = inputEle.selectionEnd || 0;
+
+  if (text) {
+    const inputVal = curVal.substring(0, start) + text + curVal.substring(end, curVal.length);
+
+    inputEle.focus();
+    inputEle.value = inputVal;
+    if (isSelected) {
+      inputEle.selectionStart = start;
+    } else {
+      inputEle.selectionStart = start + text.length;
+    }
+    inputEle.selectionEnd = start + text.length;
+  }
+
+  return {
+    start,
+    end
+  };
 }

@@ -1,5 +1,7 @@
 export * from './adsense';
 export * from './book';
+export * from './bot';
+export * from './bot-conversation';
 export * from './carousel';
 export * from './comment';
 export * from './game';

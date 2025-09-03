@@ -78,6 +78,17 @@ export enum ApiUrl {
   GAME_LOG = '/games/log',
   GAME_CHECK_PLAY = '/games/check-play',
   GAME_DOWNLOAD_URL = '/games/download-url',
+  // conversation
+  CONVERSATION = '/conversations/conversation',
+  CONVERSATION_ASK_AI = '/conversations/ask-ai',
+  // message
+  BOT_MESSAGES = '/messages',
+  BOT_MESSAGE_VOTE = '/messages/vote',
+  BOT_MESSAGE_USAGE = '/messages/usage',
+  // chat
+  CHAT_STREAM = '/chat/stream',
+  CHAT_MESSAGE = '/chat/message',
+  CHAT_POST_ASK = '/chat/post-ask',
   // util
   UTIL_TURNSTILE_VERIFY = '/util/turnstile',
   // jd

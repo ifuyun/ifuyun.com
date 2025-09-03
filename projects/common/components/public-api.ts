@@ -2,6 +2,7 @@ export * from './adsense/adsense.component';
 export * from './app/app.component';
 export * from './auth-layout/auth-layout.component';
 export * from './breadcrumb/breadcrumb.component';
+export * from './bot-chat/bot-chat.component';
 export * from './carousel/carousel.component';
 export * from './comment/comment.component';
 export * from './content-layout/content-layout.component';

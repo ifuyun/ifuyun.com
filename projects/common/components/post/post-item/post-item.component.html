@@ -22,7 +22,7 @@
           </h2>
         </header>
         <div class="post-item-meta">
-          <div title="写于: {{ post.post.postDate | date:'yyyy-MM-dd' }}">
+          <div title="发布: {{ post.post.postDate | date:'yyyy-MM-dd' }}">
             <span class="fi fi-calendar-date"></span><span>{{ post.post.postDate | date:'yyyy-MM-dd' }}</span>
           </div>
           <div class="auto-fit" title="作者: {{ post.post.postAuthor || post.post.owner.userNickname }}">
@@ -132,7 +132,7 @@
       </div>
     </header>
     <div class="m-post-item-meta">
-      <span title="写于: {{ post.post.postDate | date:'yyyy-MM-dd' }}">
+      <span title="发布: {{ post.post.postDate | date:'yyyy-MM-dd' }}">
         <span class="fi fi-calendar-date"></span><span>{{ post.post.postDate | date:'yyyy-MM-dd' }}</span>
       </span>
       <span title="作者: {{ post.post.postAuthor || post.post.owner.userNickname }}">

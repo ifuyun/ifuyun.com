@@ -11,6 +11,8 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
 export class PostService {
   private activePostId: BehaviorSubject<string> = new BehaviorSubject<string>('');
   public activePostId$: Observable<string> = this.activePostId.asObservable();
+  private activePost: BehaviorSubject<Post | null> = new BehaviorSubject<Post | null>(null);
+  public activePost$: Observable<Post | null> = this.activePost.asObservable();
 
   constructor(
     private readonly apiService: ApiService,
@@ -111,6 +113,10 @@ export class PostService {
 
   updateActivePostId(postId: string) {
     this.activePostId.next(postId);
+  }
+
+  updateActivePost(post: Post) {
+    this.activePost.next(post);
   }
 
   getPostSource(post: Post): string {

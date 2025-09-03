@@ -1,14 +1,15 @@
 export interface PageIndexInfo {
   isHome: boolean;
   isPost: boolean;
-  isWallpaper: boolean;
   isArticle: boolean;
-  isJigsaw: boolean;
   isPage: boolean;
-  isGame: boolean;
-  isTool: boolean;
+  isDetail: boolean;
   isSearch: boolean;
   isAuth: boolean;
+  isWallpaper: boolean;
+  isJigsaw: boolean;
+  isGame: boolean;
+  isTool: boolean;
   fullPage: string;
   subPage: string;
 }

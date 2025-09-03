@@ -6,10 +6,10 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class WallpaperJigsawService {
-  private activeWallpaper: BehaviorSubject<Wallpaper | null> = new BehaviorSubject<Wallpaper | null>(null);
-  public activeWallpaper$: Observable<Wallpaper | null> = this.activeWallpaper.asObservable();
+  private activeJigsawWallpaper: BehaviorSubject<Wallpaper | null> = new BehaviorSubject<Wallpaper | null>(null);
+  public activeJigsawWallpaper$: Observable<Wallpaper | null> = this.activeJigsawWallpaper.asObservable();
 
-  updateActiveWallpaper(wallpaper: Wallpaper) {
-    this.activeWallpaper.next(wallpaper);
+  updateActiveJigsawWallpaper(wallpaper: Wallpaper) {
+    this.activeJigsawWallpaper.next(wallpaper);
   }
 }

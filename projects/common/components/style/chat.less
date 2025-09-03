@@ -1,0 +1,133 @@
+.message-content, .message-thoughts {
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+
+  p, section, blockquote, pre, ol, ul, figure {
+    margin: 16px 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    margin: 24px 0;
+    line-height: 24px;
+  }
+
+  h1 {
+    font-size: 16px;
+  }
+
+  h2 {
+    font-size: 15px;
+  }
+
+  h3, h4, h5, h6 {
+    font-size: 14px;
+  }
+
+  ul {
+    list-style: disc;
+  }
+
+  ol {
+    list-style: decimal;
+  }
+
+  ul, ol {
+    padding-left: 24px;
+
+    li:not(:last-child) {
+      margin-bottom: 16px;
+    }
+  }
+
+  th, td {
+    padding: 4px 12px;
+    border: 1px solid #d9d9d9;
+  }
+
+  th {
+    background-color: #eee;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  pre {
+    border-radius: 6px;
+    background: #000;
+
+    code {
+      color: #fff;
+    }
+
+    .i-code-info {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 16px;
+      font-family: Söhne Mono, Monaco, Andale Mono, Ubuntu Mono, monospace;
+      font-size: 12px;
+      color: #fff;
+      background-color: #343541;
+      line-height: 16px;
+
+      .i-code-copy {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      .icon {
+        margin-right: 6px;
+      }
+    }
+
+    .i-code-body {
+      display: flex;
+    }
+
+    ul.i-code-lines, .i-code-html {
+      padding: 8px 12px;
+    }
+
+    ul.i-code-lines {
+      margin: 0;
+      border-right: 1px solid rgba(255, 255, 255, .4);
+      list-style: none;
+      color: rgba(255, 255, 255, .65);
+      text-align: right;
+      line-height: 1.5;
+
+      li {
+        margin: 0;
+      }
+    }
+
+    .i-code-html {
+      width: max-content;
+      background-color: transparent;
+      overflow: auto;
+    }
+  }
+
+  &.loading {
+    > :not(ol):not(ul):not(pre):last-child::after,
+    > ol:last-child li:last-child::after,
+    > pre:last-child code::after,
+    > ul:last-child li:last-child::after {
+      content: "▋";
+      margin-left: .25rem;
+      vertical-align: baseline;
+      -webkit-animation: blink 1s steps(5, start) infinite;
+      animation: blink 1s steps(5, start) infinite;
+    }
+  }
+}

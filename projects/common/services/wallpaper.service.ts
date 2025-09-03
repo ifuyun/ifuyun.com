@@ -25,6 +25,8 @@ import { map } from 'rxjs/operators';
 export class WallpaperService {
   private activeWallpaperId: BehaviorSubject<string> = new BehaviorSubject<string>('');
   public activeWallpaperId$: Observable<string> = this.activeWallpaperId.asObservable();
+  private activeWallpaper: BehaviorSubject<Wallpaper | null> = new BehaviorSubject<Wallpaper | null>(null);
+  public activeWallpaper$: Observable<Wallpaper | null> = this.activeWallpaper.asObservable();
 
   constructor(
     private readonly apiService: ApiService,
@@ -133,6 +135,10 @@ export class WallpaperService {
 
   updateActiveWallpaperId(wallpaperId: string) {
     this.activeWallpaperId.next(wallpaperId);
+  }
+
+  updateActiveWallpaper(wallpaper: Wallpaper) {
+    this.activeWallpaper.next(wallpaper);
   }
 
   getWallpaperDownloadUrl(wallpaperId: string, uhd: 0 | 1): Observable<string> {

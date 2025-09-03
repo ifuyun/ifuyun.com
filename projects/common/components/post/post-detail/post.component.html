@@ -11,7 +11,7 @@
         <a [routerLink]="post.postGuid" [title]="post.postTitle" rel="bookmark">{{ post.postTitle }}</a>
       </h1>
       <div class="post-meta post-meta-top">
-        <span title="写于: {{ post.postDate | date:'yyyy-MM-dd' }}">
+        <span title="发布: {{ post.postDate | date:'yyyy-MM-dd' }}">
           <span class="fi fi-calendar-date"></span><span>{{ post.postDate | date:'yyyy-MM-dd' }}</span>
         </span>
         <span title="作者：{{ post.postAuthor || post.owner.userNickname }}">

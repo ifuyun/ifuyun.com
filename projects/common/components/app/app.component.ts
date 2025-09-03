@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import {
   AppConfigService,
@@ -8,6 +8,7 @@ import {
   ErrorState,
   MEDIA_QUERY_THEME_DARK,
   OptionEntity,
+  PageIndexInfo,
   PlatformService,
   ResponseCode,
   SsrCookieService,
@@ -23,16 +24,23 @@ import {
   CommonService,
   LogService,
   OptionService,
+  PostService,
   TenantAppService,
-  UserService
+  UserService,
+  WallpaperService
 } from 'common/services';
 import { generateUid } from 'common/utils';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { filter, takeWhile, tap } from 'rxjs/operators';
+import { BotChatComponent } from '../bot-chat/bot-chat.component';
 import { FooterComponent } from '../footer/footer.component';
 import { GameService } from '../game/game.service';
 import { HeaderComponent } from '../header/header.component';
 import { MSiderComponent } from '../m-sider/m-sider.component';
 import { TurnstileComponent } from '../turnstile/turnstile.component';
+import { Post, Wallpaper } from 'common/interfaces';
 
 @Component({
   selector: 'app-root',
@@ -40,11 +48,15 @@ import { TurnstileComponent } from '../turnstile/turnstile.component';
     RouterOutlet,
     HeaderComponent,
     FooterComponent,
+    MSiderComponent,
+    BotChatComponent,
     NotFoundComponent,
     ForbiddenComponent,
     ServerErrorComponent,
-    MSiderComponent,
-    TurnstileComponent
+    TurnstileComponent,
+    NzButtonModule,
+    NzTooltipModule,
+    NzIconModule
   ],
   providers: [],
   templateUrl: './app.component.html',
@@ -53,12 +65,18 @@ import { TurnstileComponent } from '../turnstile/turnstile.component';
 export class AppComponent implements OnInit, AfterViewInit {
   readonly faviconUrl: string;
 
-  isMobile: boolean = false;
+  isMobile = false;
   errorState!: ErrorState;
   errorPage = false;
   isBodyCentered = false;
   siderVisible = false;
   options: OptionEntity = {};
+  indexInfo?: PageIndexInfo;
+  post: Post | null = null;
+  wallpaper: Wallpaper | null = null;
+  chatVisible = false;
+  conversationId = '';
+  chatPrompt = '';
   isSuspicious = false;
   isLimited = false;
 
@@ -80,6 +98,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly cdr: ChangeDetectorRef,
     private readonly platform: PlatformService,
     private readonly userAgentService: UserAgentService,
     private readonly cookieService: SsrCookieService,
@@ -92,6 +111,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     private readonly tenantAppService: TenantAppService,
     private readonly logService: LogService,
     private readonly gameService: GameService,
+    private readonly postService: PostService,
+    private readonly wallpaperService: WallpaperService,
     private readonly adsService: AdsService
   ) {
     this.isMobile = userAgentService.isMobile;
@@ -196,6 +217,16 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
       this.siderVisible = visible;
     });
+    this.commonService.pageIndex$.subscribe((page) => {
+      this.indexInfo = this.commonService.getPageIndexInfo(page);
+      this.cdr.detectChanges();
+    });
+    this.postService.activePost$.subscribe((post) => {
+      this.post = post;
+    });
+    this.wallpaperService.activeWallpaper$.subscribe((wallpaper) => {
+      this.wallpaper = wallpaper;
+    });
     this.gameService.activeRomURL$.subscribe((romURL) => (this.romURL = romURL));
     this.errorService.errorState$.subscribe((state) => {
       this.errorState = state;
@@ -231,6 +262,15 @@ export class AppComponent implements OnInit, AfterViewInit {
   closeSider() {
     this.siderVisible = false;
     this.commonService.updateSiderVisible(false);
+  }
+
+  showChat() {
+    this.chatVisible = true;
+  }
+
+  closeChat() {
+    this.chatPrompt = '';
+    this.chatVisible = false;
   }
 
   verifyTurnstile(token: string | null) {

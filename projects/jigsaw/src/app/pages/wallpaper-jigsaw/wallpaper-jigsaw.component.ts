@@ -38,7 +38,7 @@ import {
   WallpaperJigsawService,
   WallpaperService
 } from 'common/services';
-import { filterHtmlTag, truncateString } from 'common/utils';
+import { cleanHtmlTag, truncateString } from 'common/utils';
 import { isEmpty } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -294,7 +294,7 @@ export class WallpaperJigsawComponent implements OnInit {
       this.wallpaper.wallpaperLocation = this.wallpaper.wallpaperLocationEn;
     }
 
-    this.wallpaperJigsawService.updateActiveWallpaper(this.wallpaper);
+    this.wallpaperJigsawService.updateActiveJigsawWallpaper(this.wallpaper);
     this.updatePageInfo();
     this.updateBreadcrumbs();
   }
@@ -311,7 +311,7 @@ export class WallpaperJigsawComponent implements OnInit {
     if (this.lang === WallpaperLang.EN) {
       description += ' ';
     }
-    const wallpaperDesc = truncateString(filterHtmlTag(this.wallpaper.wallpaperStory), 140);
+    const wallpaperDesc = truncateString(cleanHtmlTag(this.wallpaper.wallpaperStory), 140);
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),

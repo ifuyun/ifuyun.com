@@ -210,7 +210,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       this.userId = user.userId || '';
       this.isSignIn = !!user.userId;
     });
-    this.wallpaperJigsawService.activeWallpaper$
+    this.wallpaperJigsawService.activeJigsawWallpaper$
       .pipe(
         skipWhile((wallpaperId) => !wallpaperId),
         takeUntil(this.destroy$)

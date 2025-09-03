@@ -56,7 +56,7 @@ export class WallpaperListComponent implements OnInit {
   protected readonly WallpaperLang = WallpaperLang;
   protected readonly ListMode = ListMode;
 
-  protected pageIndex = 'wallpaper';
+  protected pageIndex = 'wallpaper-list';
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
@@ -141,7 +141,7 @@ export class WallpaperListComponent implements OnInit {
         if (this.year) {
           this.pageIndex = 'wallpaper-archive';
         } else {
-          this.pageIndex = 'wallpaper';
+          this.pageIndex = 'wallpaper-list';
         }
 
         this.updatePageIndex();
