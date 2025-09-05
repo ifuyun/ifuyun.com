@@ -10,8 +10,13 @@ import { map } from 'rxjs/operators';
 export class BotConversationService {
   constructor(private apiService: ApiService) {}
 
-  getConversation(conversationId: string): Observable<BotConversationModel> {
-    return this.apiService.httpGet(ApiUrl.CONVERSATION, { conversationId }).pipe(map((res) => res?.data || {}));
+  getConversation(conversationId: string, objectId?: string): Observable<BotConversationModel> {
+    return this.apiService
+      .httpGet(ApiUrl.CONVERSATION, {
+        conversationId,
+        objectId
+      })
+      .pipe(map((res) => res?.data || {}));
   }
 
   askAI(param: AskAIParam): Observable<{ conversationId: string }> {

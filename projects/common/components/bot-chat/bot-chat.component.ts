@@ -143,6 +143,16 @@ export class BotChatComponent extends BaseComponent implements OnInit, AfterView
   private inputFlag = false;
   private finishReason: string | null = '';
 
+  private get objectId() {
+    if (this.objectType === 'post' && this.post) {
+      return this.post.post.postId;
+    }
+    if (this.objectType === 'wallpaper' && this.wallpaper) {
+      return this.wallpaper.wallpaperId;
+    }
+    return '';
+  }
+
   constructor(
     private readonly destroy$: DestroyService,
     private readonly route: ActivatedRoute,
@@ -172,12 +182,7 @@ export class BotChatComponent extends BaseComponent implements OnInit, AfterView
         this.isChatLimit = chatUsage.limit >= 0 && chatUsage.used >= chatUsage.limit;
 
         this.initAuth();
-        if (this.conversationId) {
-          this.getConversation();
-        } else {
-          this.botAvatar = this.botService.getBotAvatar();
-          this.initGreeting();
-        }
+        this.getConversation();
       });
   }
 
@@ -201,13 +206,7 @@ export class BotChatComponent extends BaseComponent implements OnInit, AfterView
       return;
     }
 
-    let objectId = '';
-    if (this.objectType === 'post' && this.post) {
-      objectId = this.post.post.postId;
-    } else if (this.objectType === 'wallpaper' && this.wallpaper) {
-      objectId = this.wallpaper.wallpaperId;
-    }
-    if (!objectId) {
+    if (!this.objectId) {
       this.message.warning('提问对象不存在');
       return;
     }
@@ -223,7 +222,7 @@ export class BotChatComponent extends BaseComponent implements OnInit, AfterView
 
     this.botConversationService
       .askAI({
-        objectId,
+        objectId: this.objectId,
         objectType: this.objectType
       })
       .pipe(takeUntil(this.destroy$))
@@ -273,7 +272,7 @@ export class BotChatComponent extends BaseComponent implements OnInit, AfterView
     this.scrollBottom();
 
     const ctrl = new AbortController();
-    const chatUrl = this.botChatService.getPostAskUrl();
+    const chatUrl = this.botChatService.getAskUrl(this.objectType);
 
     fetchEventSource(chatUrl, {
       method: 'POST',
@@ -454,11 +453,12 @@ export class BotChatComponent extends BaseComponent implements OnInit, AfterView
   private getConversation() {
     this.messageLoading = true;
     this.botConversationService
-      .getConversation(this.conversationId)
+      .getConversation(this.conversationId, this.objectId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res && res.conversationId) {
           this.conversation = res;
+          this.conversationId = res.conversationId;
           if (this.conversation && this.conversation.user) {
             this.conversation.user.userAvatar = this.userService.getUserAvatar(
               this.conversation.user,
@@ -477,6 +477,8 @@ export class BotChatComponent extends BaseComponent implements OnInit, AfterView
           }
         } else {
           this.messageLoading = false;
+          this.botAvatar = this.botService.getBotAvatar();
+          this.initGreeting();
         }
       });
   }

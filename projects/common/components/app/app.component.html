@@ -44,6 +44,9 @@
         </div>
         <lib-m-sider></lib-m-sider>
       }
+      @if (loginVisible) {
+        <lib-login-modal (close)="closeLoginModal()"></lib-login-modal>
+      }
     } @else {
       <div class="turnstile">
         <h1><img [src]="faviconUrl" alt="Logo"/><span>{{ hostName }}</span></h1>

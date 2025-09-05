@@ -89,6 +89,7 @@ export enum ApiUrl {
   CHAT_STREAM = '/chat/stream',
   CHAT_MESSAGE = '/chat/message',
   CHAT_POST_ASK = '/chat/post-ask',
+  CHAT_WALLPAPER_ASK = '/chat/wallpaper-ask',
   // util
   UTIL_TURNSTILE_VERIFY = '/util/turnstile',
   // jd

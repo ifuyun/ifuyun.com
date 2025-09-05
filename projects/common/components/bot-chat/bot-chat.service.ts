@@ -22,6 +22,17 @@ export class BotChatService {
     return this.apiService.getApiUrl(ApiUrl.CHAT_POST_ASK);
   }
 
+  getWallpaperAskUrl() {
+    return this.apiService.getApiUrl(ApiUrl.CHAT_WALLPAPER_ASK);
+  }
+
+  getAskUrl(type: 'post' | 'wallpaper') {
+    if (type === 'post') {
+      return this.getPostAskUrl();
+    }
+    return this.getWallpaperAskUrl();
+  }
+
   getChatUsage(): Observable<{ limit: number; used: number }> {
     return this.apiService.httpGet(ApiUrl.BOT_MESSAGE_USAGE).pipe(map((res) => res?.data || {}));
   }

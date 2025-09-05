@@ -32,12 +32,14 @@ import {
 import { generateUid } from 'common/utils';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { filter, takeWhile, tap } from 'rxjs/operators';
 import { BotChatComponent } from '../bot-chat/bot-chat.component';
 import { FooterComponent } from '../footer/footer.component';
 import { GameService } from '../game/game.service';
 import { HeaderComponent } from '../header/header.component';
+import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { MSiderComponent } from '../m-sider/m-sider.component';
 import { TurnstileComponent } from '../turnstile/turnstile.component';
 import { Post, Wallpaper } from 'common/interfaces';
@@ -49,6 +51,7 @@ import { Post, Wallpaper } from 'common/interfaces';
     HeaderComponent,
     FooterComponent,
     MSiderComponent,
+    LoginModalComponent,
     BotChatComponent,
     NotFoundComponent,
     ForbiddenComponent,
@@ -66,6 +69,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   readonly faviconUrl: string;
 
   isMobile = false;
+  isSignIn = false;
   errorState!: ErrorState;
   errorPage = false;
   isBodyCentered = false;
@@ -74,6 +78,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   indexInfo?: PageIndexInfo;
   post: Post | null = null;
   wallpaper: Wallpaper | null = null;
+  loginVisible = false;
   chatVisible = false;
   conversationId = '';
   chatPrompt = '';
@@ -99,6 +104,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
+    private readonly message: NzMessageService,
     private readonly platform: PlatformService,
     private readonly userAgentService: UserAgentService,
     private readonly cookieService: SsrCookieService,
@@ -196,7 +202,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.initThemeListener();
     this.optionService.getOptions().subscribe();
     this.tenantAppService.getAppInfo().subscribe();
-    this.userService.getLoginUser().subscribe();
+    this.userService.getLoginUser().subscribe((user) => {
+      this.isSignIn = !!user.userId;
+    });
     this.optionService.options$.subscribe((options) => {
       this.options = options;
     });
@@ -264,7 +272,26 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.commonService.updateSiderVisible(false);
   }
 
+  showLoginModal() {
+    this.loginVisible = true;
+  }
+
+  closeLoginModal() {
+    this.loginVisible = false;
+  }
+
   showChat() {
+    if (!this.isSignIn) {
+      this.showLoginModal();
+      return;
+    }
+    if (!this.post && !this.wallpaper) {
+      return;
+    }
+    if (this.post && (!!this.post.post.postLoginFlag || !!this.post.post.postPayFlag)) {
+      this.message.warning('会员或付费文章无法使用 AI 阅读助手功能');
+      return;
+    }
     this.chatVisible = true;
   }
 
