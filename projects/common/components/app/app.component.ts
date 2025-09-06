@@ -15,7 +15,7 @@ import {
   UrlService,
   UserAgentService
 } from 'common/core';
-import { Theme } from 'common/enums';
+import { PostScope, PostStatus, Theme } from 'common/enums';
 import { ForbiddenComponent, NotFoundComponent, ServerErrorComponent } from 'common/error';
 import { isAllowedCrawler } from 'common/middlewares';
 import {
@@ -288,9 +288,15 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (!this.post && !this.wallpaper) {
       return;
     }
-    if (this.post && (!!this.post.post.postLoginFlag || !!this.post.post.postPayFlag)) {
-      this.message.warning('会员或付费文章无法使用 AI 阅读助手功能');
-      return;
+    if (this.post) {
+      if (!!this.post.post.postLoginFlag || !!this.post.post.postPayFlag) {
+        this.message.warning('会员或付费文章无法使用 AI 阅读助手功能');
+        return;
+      }
+      if (this.post.post.postStatus !== PostStatus.PUBLISH || this.post.post.postScope !== PostScope.PUBLIC) {
+        this.message.warning('非公开文章无法使用 AI 阅读助手功能');
+        return;
+      }
     }
     this.chatVisible = true;
   }
