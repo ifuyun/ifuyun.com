@@ -1,11 +1,4 @@
-export enum BotProviderStatus {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-  OFFLINE = 'offline',
-  TRASH = 'trash'
-}
-
-export enum BotProvider {
+export enum LlmProvider {
   ALIYUN = 'Aliyun',
   BAIDU = 'Baidu',
   VOLCENGINE = 'Volcengine',
@@ -13,4 +6,11 @@ export enum BotProvider {
   GOOGLE = 'Google',
   MOONSHOT = 'Moonshot',
   OPENAI = 'OpenAI'
+}
+
+export enum LlmProviderStatus {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  OFFLINE = 'offline',
+  TRASH = 'trash'
 }

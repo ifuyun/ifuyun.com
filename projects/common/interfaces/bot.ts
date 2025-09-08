@@ -1,13 +1,13 @@
 import { UserModel } from 'common/core';
-import { BotProvider, BotScope, BotStatus } from 'common/enums';
-import { BotModel } from './bot-model';
+import { LlmProvider, BotScope, BotStatus } from 'common/enums';
+import { LlmModel } from './llm-model';
 
 export interface BotEntity {
   botId: string;
   botParentId?: string;
   botName: string;
-  botProviderId: string;
-  botModelId: string;
+  llmProviderId: string;
+  llmModelId: string;
   botGreeting: string;
   botExcerpt: string;
   botDescription: string;
@@ -31,8 +31,8 @@ export interface Bot extends BotEntity {
   botFollowers?: number;
   botCreated?: number;
   botModified?: number;
-  botProvider: BotProvider;
-  botModel: BotModel;
+  llmProvider: LlmProvider;
+  llmModel: LlmModel;
   isFollowed?: boolean;
   isOwn?: boolean;
 }

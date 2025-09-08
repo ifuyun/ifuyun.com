@@ -86,7 +86,7 @@ export class BotChatComponent extends BaseComponent implements OnInit, AfterView
 
   get noModelAuthMessage() {
     if (this.conversation && this.conversation.bot) {
-      return format(Message.USER_CHAT_MODEL_IS_DISABLED, this.conversation.bot.botModel.botModelName);
+      return format(Message.USER_CHAT_MODEL_IS_DISABLED, this.conversation.bot.llmModel.llmModelName);
     }
     return '';
   }
@@ -96,7 +96,7 @@ export class BotChatComponent extends BaseComponent implements OnInit, AfterView
       return true;
     }
     if (this.conversation.bot) {
-      return this.user.userLlmModels.includes(this.conversation.bot.botModel.botModelId);
+      return this.user.userLlmModels.includes(this.conversation.bot.llmModel.llmModelId);
     }
     return false;
   }
@@ -267,7 +267,8 @@ export class BotChatComponent extends BaseComponent implements OnInit, AfterView
       reasoningContent: '',
       html: '<p></p>',
       loading: true,
-      expanded: true
+      expanded: true,
+      vote: 0
     });
     this.scrollBottom();
 

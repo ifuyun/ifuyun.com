@@ -1,4 +1,4 @@
-export enum BotModelType {
+export enum LlmModelType {
   TEXT_GENERATION = 'text-generation',
   REASONING = 'reasoning',
   TRANSLATION = 'translation',
@@ -11,7 +11,7 @@ export enum BotModelType {
   EMBEDDING = 'embedding'
 }
 
-export enum BotModelStatus {
+export enum LlmModelStatus {
   ACTIVE = 'active',
   INACTIVE = 'inactive',
   DEPRECATED = 'deprecated',

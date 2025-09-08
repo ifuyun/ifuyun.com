@@ -8,6 +8,7 @@ export * from './game';
 export * from './ip';
 export * from './jd-union';
 export * from './link';
+export * from './llm-model';
 export * from './log';
 export * from './post';
 export * from './search';
