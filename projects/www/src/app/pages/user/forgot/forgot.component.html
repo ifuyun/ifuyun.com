@@ -7,7 +7,12 @@
     <nz-form-label>邮箱</nz-form-label>
     <nz-form-control [nzErrorTip]="nameErrorTpl">
       <nz-input-group nzSearch [nzAddOnAfter]="sendBtn">
-        <input nz-input type="text" formControlName="email" [maxlength]="maxEmailLength" placeholder="邮箱地址"/>
+        <input #emailInput
+               nz-input
+               type="text"
+               formControlName="email"
+               [maxlength]="maxEmailLength"
+               placeholder="邮箱地址"/>
       </nz-input-group>
       <ng-template #sendBtn>
         <button nz-button
@@ -37,7 +42,6 @@
              name="code"
              formControlName="code"
              [maxlength]="4"
-             [autofocus]="true"
              placeholder="请输入验证码"/>
       <ng-template #codeErrorTpl let-control>
         @if (control.hasError('required')) {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   USER_EMAIL_LENGTH,
@@ -15,6 +15,7 @@ import {
   DestroyService,
   MetaService,
   OptionEntity,
+  PlatformService,
   ResponseCode
 } from 'common/core';
 import { TenantAppModel } from 'common/interfaces';
@@ -35,7 +36,9 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   templateUrl: './forgot.component.html',
   styleUrl: './forgot.component.less'
 })
-export class ForgotComponent extends BaseComponent implements OnInit, OnDestroy {
+export class ForgotComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('emailInput') emailInput!: ElementRef;
+
   readonly maxEmailLength = USER_EMAIL_LENGTH;
   readonly minPwdLength = USER_PASSWORD_MIN_LENGTH;
   readonly maxPwdLength = USER_PASSWORD_MAX_LENGTH;
@@ -53,6 +56,7 @@ export class ForgotComponent extends BaseComponent implements OnInit, OnDestroy 
 
   constructor(
     private readonly destroy$: DestroyService,
+    private readonly platform: PlatformService,
     private readonly fb: FormBuilder,
     private readonly message: NzMessageService,
     private readonly commonService: CommonService,
@@ -94,6 +98,12 @@ export class ForgotComponent extends BaseComponent implements OnInit, OnDestroy 
 
         this.updatePageInfo();
       });
+  }
+
+  ngAfterViewInit() {
+    if (this.platform.isBrowser) {
+      this.emailInput.nativeElement.focus();
+    }
   }
 
   ngOnDestroy() {

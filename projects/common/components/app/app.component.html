@@ -44,9 +44,7 @@
       <lib-m-sider></lib-m-sider>
     }
     @if (loginOptions.visible) {
-      <lib-login-modal [visible]="loginOptions.visible"
-                       [closable]="loginOptions.closable"
-                       (close)="closeLoginModal()"></lib-login-modal>
+      <lib-login-modal [closable]="loginOptions.closable" (close)="closeLoginModal()"></lib-login-modal>
     }
     <img [style.display]="'none'"
          [src]="adsImg"
