@@ -16,10 +16,21 @@
     flex-grow: 1;
   }
 
-  .signup-link {
+  .auth-action {
+    display: inline-flex;
+    align-items: center;
     line-height: 32px;
     font-size: 13px;
 
+    &:not(:last-child)::after {
+      content: '';
+      height: 15px;
+      margin: 0 8px;
+      border-right: 1px solid #333;
+    }
+  }
+
+  .auth-link {
     > a {
       color: #333;
 

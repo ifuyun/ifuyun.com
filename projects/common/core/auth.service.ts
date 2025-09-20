@@ -26,7 +26,7 @@ export class AuthService {
   login(payload: LoginEntity): Observable<HttpResponseEntity> {
     return this.apiService
       .httpPost(
-        ApiUrl.USER_LOGIN,
+        ApiUrl.AUTH_LOGIN,
         {
           ...payload,
           appId: this.appConfigService.appId
@@ -43,23 +43,41 @@ export class AuthService {
       );
   }
 
+  logout(): Observable<HttpResponseEntity> {
+    return this.apiService
+      .httpPost(
+        ApiUrl.AUTH_LOGOUT,
+        {
+          referer: location.href
+        },
+        false
+      )
+      .pipe(
+        tap((res) => {
+          if (res.code === ResponseCode.SUCCESS) {
+            this.clearAuth();
+          }
+        })
+      );
+  }
+
   signup(payload: SignupEntity): Observable<UserModel> {
     return this.apiService
       .httpPost(
-        ApiUrl.USER_SIGNUP,
+        ApiUrl.AUTH_SIGNUP,
         {
           ...payload,
           appId: this.appConfigService.appId
         },
         true
       )
-      .pipe(map((res) => <any>(res?.data || {})));
+      .pipe(map((res) => res?.data || {}));
   }
 
   verify(userId: string, code: string): Observable<LoginResponse> {
     return this.apiService
       .httpPost(
-        ApiUrl.USER_VERIFY,
+        ApiUrl.AUTH_VERIFY,
         {
           userId,
           code,
@@ -68,7 +86,7 @@ export class AuthService {
         true
       )
       .pipe(
-        map((res) => <any>(res?.data || {})),
+        map((res) => res?.data || {}),
         tap((res) => {
           if (res.token?.accessToken) {
             this.setAuth(res);
@@ -77,17 +95,17 @@ export class AuthService {
       );
   }
 
-  resend(userId: string): Observable<UserModel> {
+  sendCode(payload: { userId?: string; email?: string }): Observable<HttpResponseEntity> {
     return this.apiService
       .httpPost(
-        ApiUrl.USER_RESEND_CODE,
+        ApiUrl.AUTH_SEND_CODE,
         {
-          userId,
+          ...payload,
           appId: this.appConfigService.appId
         },
         true
       )
-      .pipe(map((res) => <any>(res?.data || {})));
+      .pipe(map((res) => res || {}));
   }
 
   thirdLogin(authCode: string, source: string): Observable<HttpResponseEntity> {
@@ -109,6 +127,19 @@ export class AuthService {
           }
         })
       );
+  }
+
+  resetPassword(payload: { email: string; code: string; password: string }): Observable<LoginResponse> {
+    return this.apiService
+      .httpPost(
+        ApiUrl.AUTH_RESET_PASSWORD,
+        {
+          ...payload,
+          appId: this.appConfigService.appId
+        },
+        true
+      )
+      .pipe(map((res) => res?.data || {}));
   }
 
   getToken(): string {
@@ -204,23 +235,5 @@ export class AuthService {
     };
 
     return btoa(JSON.stringify(stateData));
-  }
-
-  logout(): Observable<HttpResponseEntity> {
-    return this.apiService
-      .httpPost(
-        ApiUrl.USER_LOGOUT,
-        {
-          referer: location.href
-        },
-        false
-      )
-      .pipe(
-        tap((res) => {
-          if (res.code === ResponseCode.SUCCESS) {
-            this.clearAuth();
-          }
-        })
-      );
   }
 }

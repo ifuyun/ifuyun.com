@@ -1,0 +1,94 @@
+<form nz-form
+      nzLayout="vertical"
+      class="auth-form auth-form-padding"
+      [formGroup]="forgotForm"
+      (ngSubmit)="resetPassword()">
+  <nz-form-item>
+    <nz-form-label>邮箱</nz-form-label>
+    <nz-form-control [nzErrorTip]="nameErrorTpl">
+      <nz-input-group nzSearch [nzAddOnAfter]="sendBtn">
+        <input nz-input type="text" formControlName="email" [maxlength]="maxEmailLength" placeholder="邮箱地址"/>
+      </nz-input-group>
+      <ng-template #sendBtn>
+        <button nz-button
+                type="button"
+                nzType="primary"
+                [disabled]="!forgotForm.get('email')?.valid || countdown > 0"
+                (click)="sendVerificationCode()">验证{{ countdown > 0 ? ' (' + countdown + 's)' : '' }}</button>
+      </ng-template>
+      <ng-template #nameErrorTpl let-control>
+        @if (control.hasError('required')) {
+          请输入邮箱
+        }
+        @if (control.hasError('email')) {
+          请输入有效的邮箱
+        }
+        @if (control.hasError('maxlength')) {
+          邮箱最大长度为 {{ maxEmailLength }} 位
+        }
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label>验证码</nz-form-label>
+    <nz-form-control [nzErrorTip]="codeErrorTpl">
+      <input nz-input
+             type="text"
+             name="code"
+             formControlName="code"
+             [maxlength]="4"
+             [autofocus]="true"
+             placeholder="请输入验证码"/>
+      <ng-template #codeErrorTpl let-control>
+        @if (control.hasError('required')) {
+          请输入验证码
+        }
+        @if (control.hasError('pattern')) {
+          验证码为4位数字
+        }
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label>新密码</nz-form-label>
+    <nz-form-control [nzErrorTip]="confirmErrorTpl">
+      <nz-input-group [nzSuffix]="confirmPwdSuffix">
+        <input nz-input
+               [type]="passwordVisible ? 'text' : 'password'"
+               formControlName="password"
+               [maxlength]="maxPwdLength"
+               placeholder="{{minPwdLength}}-{{maxPwdLength}} 位密码，字母、数字、符号组合"
+               autocomplete="off"/>
+      </nz-input-group>
+      <ng-template #confirmPwdSuffix>
+        <nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"/>
+      </ng-template>
+      <ng-template #confirmErrorTpl let-control>
+        @if (control.hasError('required')) {
+          请输入新密码
+        }
+        @if (control.hasError('minLength')) {
+          新密码最小长度为{{ minPwdLength }}位
+        }
+        @if (control.hasError('maxlength')) {
+          新密码最大长度为{{ maxPwdLength }}位
+        }
+        @if (control.hasError('pattern')) {
+          新密码为 {{ minPwdLength }}-{{ maxPwdLength }} 位字母、数字、符号的组合
+        }
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <div class="auth-actions">
+      <div></div>
+      <div>
+        <button nz-button
+                type="submit"
+                nzType="primary"
+                (click)="resetPassword()"
+                [nzLoading]="resetLoading">确定</button>
+      </div>
+    </div>
+  </nz-form-item>
+</form>

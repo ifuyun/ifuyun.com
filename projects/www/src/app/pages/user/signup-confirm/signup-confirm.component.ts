@@ -14,6 +14,7 @@ import {
   MetaService,
   OptionEntity,
   PlatformService,
+  ResponseCode,
   UserModel
 } from 'common/core';
 import { UserStatus } from 'common/enums';
@@ -124,10 +125,12 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
   resendCode() {
     this.startCountdown();
     this.authService
-      .resend(this.userId)
+      .sendCode({
+        userId: this.userId
+      })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        if (res.userId) {
+        if (res.code === ResponseCode.SUCCESS) {
           this.message.success('验证码已重新发送');
         }
       });

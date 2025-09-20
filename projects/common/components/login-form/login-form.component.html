@@ -8,7 +8,7 @@
           请输入用户名或邮箱
         }
         @if (control.hasError('maxlength')) {
-          用户名或邮箱最大长度为{{ maxLoginLength }}位
+          用户名或邮箱最大长度为 {{ maxLoginLength }} 位
         }
       </ng-template>
     </nz-form-control>
@@ -32,7 +32,7 @@
           请输入密码
         }
         @if (control.hasError('maxlength')) {
-          密码最大长度为{{ maxPasswordLength }}位
+          密码最大长度为 {{ maxPasswordLength }} 位
         }
       </ng-template>
     </nz-form-control>
@@ -41,12 +41,19 @@
     <div class="auth-actions">
       <div>
         @if (enableSignup) {
-          <lib-a class="signup-link"
-                 [href]="domains['www'].url + '/user/signup'"
-                 title="立即注册"><nz-icon nzType="user-add"/>立即注册</lib-a>
+          <span class="auth-action">
+            <lib-a class="auth-link"
+                   [href]="domains['www'].url + '/user/signup'"
+                   title="立即注册"><nz-icon nzType="user-add"/>立即注册</lib-a>
+          </span>
         }
+        <span class="auth-action">
+          <lib-a class="auth-link"
+                 [href]="domains['www'].url + '/user/forgot'"
+                 title="忘记密码"><nz-icon nzType="key"/>忘记密码</lib-a>
+        </span>
       </div>
-      <button nz-button nzType="primary" (click)="login()" [nzLoading]="loginLoading">登录</button>
+      <button nz-button type="submit" nzType="primary" (click)="login()" [nzLoading]="loginLoading">登录</button>
     </div>
   </nz-form-item>
   @if (enableThirdLogin) {

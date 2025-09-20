@@ -10,6 +10,7 @@ import { Md5Component } from './pages/tool/md5/md5.component';
 import { MurmurhashComponent } from './pages/tool/murmurhash/murmurhash.component';
 import { ShoppingComponent } from './pages/tool/shopping/shopping.component';
 import { ToolListComponent } from './pages/tool/tool-list/tool-list.component';
+import { ForgotComponent } from './pages/user/forgot/forgot.component';
 import { LoginCallbackComponent } from './pages/user/login-callback/login-callback.component';
 import { LoginComponent } from './pages/user/login/login.component';
 import { SignupConfirmComponent } from './pages/user/signup-confirm/signup-confirm.component';
@@ -29,7 +30,8 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'login/callback', component: LoginCallbackComponent, data: { bg: false } },
       { path: 'signup', component: SignupComponent },
-      { path: 'confirm', component: SignupConfirmComponent }
+      { path: 'confirm', component: SignupConfirmComponent },
+      { path: 'forgot', component: ForgotComponent }
     ],
     data: {
       centered: true

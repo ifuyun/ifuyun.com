@@ -15,7 +15,7 @@
           请输入有效的邮箱
         }
         @if (control.hasError('maxlength')) {
-          邮箱最大长度为{{ maxEmailLength }}字符
+          邮箱最大长度为 {{ maxEmailLength }} 字符
         }
       </ng-template>
     </nz-form-control>
@@ -28,7 +28,7 @@
                [type]="passwordVisible ? 'text' : 'password'"
                formControlName="password"
                [maxlength]="maxPasswordLength"
-               placeholder="{{minPasswordLength}}-{{maxPasswordLength}}位密码，字母、数字、符号组合"/>
+               placeholder="{{minPasswordLength}}-{{maxPasswordLength}} 位密码，字母、数字、符号组合"/>
       </nz-input-group>
       <ng-template #pwdSuffix>
         <nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
@@ -39,13 +39,13 @@
           请输入密码
         }
         @if (control.hasError('minlength')) {
-          密码最小长度为{{ minPasswordLength }}位
+          密码最小长度为 {{ minPasswordLength }} 位
         }
         @if (control.hasError('maxlength')) {
-          密码最大长度为{{ maxPasswordLength }}位
+          密码最大长度为 {{ maxPasswordLength }} 位
         }
         @if (control.hasError('pattern')) {
-          密码为{{ minPasswordLength }}-{{ maxPasswordLength }}位字母、数字、符号的组合
+          密码为 {{ minPasswordLength }}-{{ maxPasswordLength }} 位字母、数字、符号的组合
         }
       </ng-template>
     </nz-form-control>
@@ -53,7 +53,7 @@
   <nz-form-item>
     <div class="auth-actions">
       <div></div>
-      <button nz-button nzType="primary" (click)="signup()" [nzLoading]="signupLoading">注册</button>
+      <button nz-button type="submit" nzType="primary" (click)="signup()" [nzLoading]="signupLoading">注册</button>
     </div>
   </nz-form-item>
 </form>

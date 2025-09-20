@@ -34,13 +34,15 @@ export enum ApiUrl {
   COMMENT = '/comments/comment',
   // vote
   VOTE = '/votes/vote',
+  // auth
+  AUTH_LOGIN = '/auth/login',
+  AUTH_LOGOUT = '/auth/logout',
+  AUTH_SIGNUP = '/auth/signup',
+  AUTH_SEND_CODE = '/auth/send-code',
+  AUTH_VERIFY = '/auth/verify',
+  USER_THIRD_LOGIN = '/auth/third-login',
+  AUTH_RESET_PASSWORD = '/auth/reset-password',
   // user
-  USER_LOGIN = '/users/login',
-  USER_LOGOUT = '/users/logout',
-  USER_SIGNUP = '/users/signup',
-  USER_VERIFY = '/users/verify',
-  USER_RESEND_CODE = '/users/resend',
-  USER_THIRD_LOGIN = '/users/third-login',
   USER_LOGIN_INFO = '/users/login-user',
   USER_SIGNUP_INFO = '/users/signup-user',
   // favorite
