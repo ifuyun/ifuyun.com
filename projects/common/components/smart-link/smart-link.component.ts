@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { Params, RouterModule, UrlTree } from '@angular/router';
+import { Params, RouterLink, UrlTree } from '@angular/router';
 import { CommonService } from 'common/services';
 
 @Component({
   selector: 'lib-a',
-  imports: [CommonModule, RouterModule],
+  imports: [NgTemplateOutlet, RouterLink],
   template: `
     <ng-template #contentTpl><ng-content /></ng-template>
     @if (isAbsoluteUrl) {

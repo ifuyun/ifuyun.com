@@ -9,7 +9,7 @@
           <lib-a [href]="domains['www'].url" title="{{appInfo?.appName}}首页">首页</lib-a>
         </li>
         <li [class.active]="indexInfo?.isPost">
-          <lib-a [href]="domains['blog'].url" title="博客">
+          <lib-a class="badge badge-ai" [href]="domains['blog'].url" title="博客">
             <span>博客</span>
             @if (postTaxonomies.length > 0) {
               <span class="nav-arrow"></span>
@@ -52,10 +52,10 @@
           }
         </li>
         <li [class.active]="indexInfo?.isWallpaper">
-          <lib-a [href]="domains['wallpaper'].url" title="高清壁纸">壁纸</lib-a>
+          <lib-a class="badge badge-ai" [href]="domains['wallpaper'].url" title="高清壁纸">壁纸</lib-a>
         </li>
         <li [class.active]="indexInfo?.isJigsaw">
-          <lib-a class="badge-new" [href]="domains['jigsaw'].url" title="壁纸拼图">拼图</lib-a>
+          <lib-a [href]="domains['jigsaw'].url" title="壁纸拼图">拼图</lib-a>
         </li>
         <li [class.active]="indexInfo?.isGame">
           <lib-a [href]="domains['game'].url" title="游戏">

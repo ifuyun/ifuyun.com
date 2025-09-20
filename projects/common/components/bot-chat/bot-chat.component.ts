@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -37,9 +37,7 @@ import { BotChatService } from './bot-chat.service';
 @Component({
   selector: 'lib-bot-chat',
   imports: [
-    CommonModule,
     FormsModule,
-    ClipboardModule,
     DatePipe,
     SafeHtmlPipe,
     NzDrawerModule,
@@ -47,7 +45,8 @@ import { BotChatService } from './bot-chat.service';
     NzAlertModule,
     NzEmptyModule,
     NzSpinModule,
-    NzInputModule
+    NzInputModule,
+    ClipboardModule
   ],
   providers: [DestroyService, NzImageService],
   templateUrl: './bot-chat.component.html',
