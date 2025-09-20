@@ -81,3 +81,8 @@ export interface IPInfo extends IPAddress {
   endIPStr?: string;
   isp: string;
 }
+
+export interface LoginModalOptions {
+  visible: boolean;
+  closable: boolean;
+}

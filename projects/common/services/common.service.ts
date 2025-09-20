@@ -11,6 +11,7 @@ import {
   COOKIE_KEY_USER_ID,
   CustomError,
   HttpResponseEntity,
+  LoginModalOptions,
   MEDIA_QUERY_THEME_DARK,
   MEDIA_QUERY_THEME_LIGHT,
   Message,
@@ -35,6 +36,12 @@ export class CommonService {
 
   private darkMode: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public darkMode$: Observable<boolean> = this.darkMode.asObservable();
+
+  private loginVisible: BehaviorSubject<LoginModalOptions> = new BehaviorSubject<LoginModalOptions>({
+    visible: false,
+    closable: true
+  });
+  public loginVisible$: Observable<LoginModalOptions> = this.loginVisible.asObservable();
 
   constructor(
     @Inject(DOCUMENT) private readonly document: Document,
@@ -75,6 +82,10 @@ export class CommonService {
 
   updateSiderVisible(visible: boolean) {
     this.siderVisible.next(visible);
+  }
+
+  updateLoginModalVisible(options: LoginModalOptions) {
+    this.loginVisible.next(options);
   }
 
   getReferrer(onlyPath = false) {

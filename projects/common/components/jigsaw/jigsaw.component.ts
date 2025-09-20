@@ -24,7 +24,7 @@ import {
 import { WallpaperLang } from 'common/enums';
 import { Wallpaper } from 'common/interfaces';
 import { DurationPipe } from 'common/pipes';
-import { UserService, WallpaperJigsawService, WallpaperService } from 'common/services';
+import { CommonService, UserService, WallpaperJigsawService, WallpaperService } from 'common/services';
 import { transformDuration } from 'common/utils';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
@@ -37,7 +37,6 @@ import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { skipWhile, takeUntil } from 'rxjs';
-import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { JigsawCacheService } from './jigsaw-cache.service';
 import { GameStatus, JigsawCacheData, JigsawDifficulty, JigsawLog, JigsawPiece } from './jigsaw.interface';
 import { JigsawService } from './jigsaw.service';
@@ -54,8 +53,7 @@ import { JigsawService } from './jigsaw.service';
     NzDropDownModule,
     NzPopoverModule,
     NzTableModule,
-    NzEmptyModule,
-    LoginModalComponent
+    NzEmptyModule
   ],
   providers: [DestroyService, NzImageService, NzModalService],
   templateUrl: './jigsaw.component.html',
@@ -96,7 +94,6 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   gameTime = 0;
   isFullScreen = false;
   isArranged = false;
-  loginVisible = false;
   downloading = false;
 
   cachedJigsaw: JigsawCacheData | null = null;
@@ -179,6 +176,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly destroy$: DestroyService,
     private readonly platform: PlatformService,
     private readonly userAgentService: UserAgentService,
+    private readonly commonService: CommonService,
     private readonly cookieService: SsrCookieService,
     private readonly appConfigService: AppConfigService,
     private readonly message: NzMessageService,
@@ -537,11 +535,10 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   showLoginModal() {
-    this.loginVisible = true;
-  }
-
-  closeLoginModal() {
-    this.loginVisible = false;
+    this.commonService.updateLoginModalVisible({
+      visible: true,
+      closable: true
+    });
   }
 
   private getClipSize(canvas: HTMLCanvasElement) {

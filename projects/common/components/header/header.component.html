@@ -214,9 +214,6 @@
       </div>
     </div>
   </header>
-  @if (loginModalVisible) {
-    <lib-login-modal (close)="closeLoginModal()"></lib-login-modal>
-  }
   <lib-wallpaper-modal [visible]="wallpaperModalVisible" (close)="closeWallpaperModal()"></lib-wallpaper-modal>
 } @else {
   <header class="m-header-wrap">

@@ -229,9 +229,6 @@
   </ul>
 </nz-dropdown-menu>
 @if (isBrowser) {
-  @if (loginVisible) {
-    <lib-login-modal (close)="closeLoginModal()"></lib-login-modal>
-  }
   <ng-template #confirmModalContent>
     <div class="confirm-progress">
       @if (cachedJigsaw) {

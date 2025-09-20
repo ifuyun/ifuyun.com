@@ -1,65 +1,52 @@
 @if (!errorPage) {
   @if (!errorState || !errorState.visible) {
-    @if (!isSuspicious && !isLimited) {
-      @if (!isMobile) {
-        <lib-header></lib-header>
-        <div class="body-wrap">
-          <div class="body" [class.body-center]="isBodyCentered">
-            <router-outlet/>
-          </div>
+    @if (!isMobile) {
+      <lib-header></lib-header>
+      <div class="body-wrap">
+        <div class="body" [class.body-center]="isBodyCentered">
+          <router-outlet/>
         </div>
-        <lib-footer></lib-footer>
-        @if ((indexInfo?.isPost || indexInfo?.isWallpaper) && indexInfo?.isDetail) {
-          <div class="ai-widget">
-            <button nz-button
-                    nz-tooltip
-                    nzType="primary"
-                    nzShape="circle"
-                    nzSize="large"
-                    nzTooltipTitle="AI 阅读助手"
-                    nzTooltipPlacement="topRight"
-                    (click)="showChat()"><nz-icon nzType="comment"/></button>
-          </div>
-        }
-        @if (chatVisible) {
-          <lib-bot-chat [conversationId]="conversationId"
-                        [prompt]="chatPrompt"
-                        [post]="post"
-                        [wallpaper]="wallpaper"
-                        [objectType]="indexInfo?.isPost ? 'post' : 'wallpaper'"
-                        (closeDrawer)="closeChat()"></lib-bot-chat>
-        }
-      } @else {
-        <div class="m-body-wrap" [class.open]="siderVisible">
-          <lib-header></lib-header>
-          <div class="m-body">
-            <main class="m-main" [class.m-main-center]="isBodyCentered">
-              <router-outlet/>
-            </main>
-            <lib-footer></lib-footer>
-          </div>
-          @if (siderVisible) {
-            <div class="m-mask m-mask-sider" (click)="closeSider()"></div>
-          }
+      </div>
+      <lib-footer></lib-footer>
+      @if ((indexInfo?.isPost || indexInfo?.isWallpaper) && indexInfo?.isDetail) {
+        <div class="ai-widget">
+          <button nz-button
+                  nz-tooltip
+                  nzType="primary"
+                  nzShape="circle"
+                  nzSize="large"
+                  nzTooltipTitle="AI 阅读助手"
+                  nzTooltipPlacement="topRight"
+                  (click)="showChat()"><nz-icon nzType="comment"/></button>
         </div>
-        <lib-m-sider></lib-m-sider>
       }
-      @if (loginVisible) {
-        <lib-login-modal (close)="closeLoginModal()"></lib-login-modal>
+      @if (chatVisible) {
+        <lib-bot-chat [conversationId]="conversationId"
+                      [prompt]="chatPrompt"
+                      [post]="post"
+                      [wallpaper]="wallpaper"
+                      [objectType]="indexInfo?.isPost ? 'post' : 'wallpaper'"
+                      (closeDrawer)="closeChat()"></lib-bot-chat>
       }
     } @else {
-      <div class="turnstile">
-        <h1><img [src]="faviconUrl" alt="Logo"/><span>{{ hostName }}</span></h1>
-        <p class="turnstile-tip-1">正在验证您是否是真人。这可能需要几秒钟时间。</p>
-        @if (options['turnstile_site_key']) {
-          <lib-turnstile theme="light"
-                         [siteKey]="options['turnstile_site_key']"
-                         (resolved)="verifyTurnstile($event)"
-                         (errored)="verifyFailed($event)"
-                         [tabIndex]="0"></lib-turnstile>
+      <div class="m-body-wrap" [class.open]="siderVisible">
+        <lib-header></lib-header>
+        <div class="m-body">
+          <main class="m-main" [class.m-main-center]="isBodyCentered">
+            <router-outlet/>
+          </main>
+          <lib-footer></lib-footer>
+        </div>
+        @if (siderVisible) {
+          <div class="m-mask m-mask-sider" (click)="closeSider()"></div>
         }
-        <p class="turnstile-tip-2">继续之前，{{ hostName }} 需要先检查您的连接的安全性。</p>
       </div>
+      <lib-m-sider></lib-m-sider>
+    }
+    @if (loginOptions.visible) {
+      <lib-login-modal [visible]="loginOptions.visible"
+                       [closable]="loginOptions.closable"
+                       (close)="closeLoginModal()"></lib-login-modal>
     }
     <img [style.display]="'none'"
          [src]="adsImg"

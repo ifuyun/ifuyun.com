@@ -179,6 +179,3 @@
     <ng-container *ngTemplateOutlet="commentFormTpl; context: { $implicit: commentForm }"></ng-container>
   }
 </div>
-@if (loginVisible) {
-  <lib-login-modal (close)="closeLoginModal()"></lib-login-modal>
-}

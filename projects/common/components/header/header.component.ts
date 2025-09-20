@@ -24,7 +24,6 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { skipWhile, takeUntil } from 'rxjs';
-import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { SmartLinkComponent } from '../smart-link/smart-link.component';
 import { WallpaperModalComponent } from '../wallpaper/wallpaper-modal/wallpaper-modal.component';
 import { TOOL_LINKS } from './tool.constant';
@@ -38,7 +37,6 @@ import { TOOL_LINKS } from './tool.constant';
     NzIconModule,
     NzButtonModule,
     NzSelectModule,
-    LoginModalComponent,
     WallpaperModalComponent,
     SmartLinkComponent
   ],
@@ -69,7 +67,6 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   toolLinks = TOOL_LINKS;
   keyword = '';
   searchType = 'all';
-  loginModalVisible = false;
   wallpaperModalVisible = false;
   searchVisible = false;
   isFocused = false;
@@ -164,11 +161,10 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   }
 
   showLoginModal() {
-    this.loginModalVisible = true;
-  }
-
-  closeLoginModal() {
-    this.loginModalVisible = false;
+    this.commonService.updateLoginModalVisible({
+      visible: true,
+      closable: true
+    });
   }
 
   showWallpaperModal() {

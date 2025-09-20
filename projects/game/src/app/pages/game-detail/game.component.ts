@@ -6,7 +6,6 @@ import {
   CommentComponent,
   GameModalComponent,
   GameService,
-  LoginModalComponent,
   MakeMoneyComponent,
   ShareModalComponent
 } from 'common/components';
@@ -61,7 +60,6 @@ import { GameRelatedComponent } from '../../components/game-related/game-related
     GameModalComponent,
     CommentComponent,
     ShareModalComponent,
-    LoginModalComponent,
     MakeMoneyComponent
   ],
   providers: [DestroyService, NzImageService],
@@ -83,7 +81,6 @@ export class GameComponent implements OnInit {
   favoriteLoading = false;
   shareVisible = false;
   shareUrl = '';
-  loginVisible = false;
   gameModalVisible = false;
   downloading = false;
 
@@ -276,11 +273,17 @@ export class GameComponent implements OnInit {
   }
 
   showLoginModal() {
-    this.loginVisible = true;
+    this.commonService.updateLoginModalVisible({
+      visible: true,
+      closable: true
+    });
   }
 
   closeLoginModal() {
-    this.loginVisible = false;
+    this.commonService.updateLoginModalVisible({
+      visible: false,
+      closable: true
+    });
   }
 
   showGameModal() {

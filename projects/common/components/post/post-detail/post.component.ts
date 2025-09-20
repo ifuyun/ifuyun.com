@@ -46,7 +46,6 @@ import { ClipboardService } from 'ngx-clipboard';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '../../breadcrumb/breadcrumb.component';
 import { CommentComponent } from '../../comment/comment.component';
-import { LoginModalComponent } from '../../login-modal/login-modal.component';
 import { MakeMoneyComponent } from '../../make-money/make-money.component';
 import { ShareModalComponent } from '../../share-modal/share-modal.component';
 import { SmartLinkComponent } from '../../smart-link/smart-link.component';
@@ -71,7 +70,6 @@ import { PostRelatedComponent } from '../post-related/post-related.component';
     PostRelatedComponent,
     CommentComponent,
     ShareModalComponent,
-    LoginModalComponent,
     MakeMoneyComponent,
     SmartLinkComponent
   ],
@@ -98,7 +96,6 @@ export class PostComponent implements OnInit {
   favoriteLoading = false;
   shareVisible = false;
   shareUrl = '';
-  loginVisible = false;
 
   get showPayMask() {
     return (
@@ -298,11 +295,17 @@ export class PostComponent implements OnInit {
   }
 
   showLoginModal() {
-    this.loginVisible = true;
+    this.commonService.updateLoginModalVisible({
+      visible: true,
+      closable: true
+    });
   }
 
   closeLoginModal() {
-    this.loginVisible = false;
+    this.commonService.updateLoginModalVisible({
+      visible: false,
+      closable: true
+    });
   }
 
   protected updatePageIndex(): void {

@@ -10,9 +10,14 @@ import { LoginFormComponent } from '../login-form/login-form.component';
 })
 export class LoginModalComponent {
   @Input() visible = true;
+  @Input() closable = true;
   @Output() close = new EventEmitter();
 
   closeModal() {
+    if (!this.closable) {
+      return;
+    }
+    this.visible = false;
     this.close.emit();
   }
 }

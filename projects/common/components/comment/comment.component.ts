@@ -13,7 +13,14 @@ import {
 import { CommentObjectType, VoteType, VoteValue } from 'common/enums';
 import { Comment, CommentModel, TenantAppModel } from 'common/interfaces';
 import { SafeHtmlPipe } from 'common/pipes';
-import { CommentService, OptionService, TenantAppService, UserService, VoteService } from 'common/services';
+import {
+  CommentService,
+  CommonService,
+  OptionService,
+  TenantAppService,
+  UserService,
+  VoteService
+} from 'common/services';
 import { isEmpty } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
@@ -21,7 +28,6 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
-import { LoginModalComponent } from '../login-modal/login-modal.component';
 
 @Component({
   selector: 'lib-comment',
@@ -36,8 +42,7 @@ import { LoginModalComponent } from '../login-modal/login-modal.component';
     NzInputModule,
     NzButtonModule,
     NzCheckboxModule,
-    NzIconModule,
-    LoginModalComponent
+    NzIconModule
   ],
   providers: [DestroyService],
   templateUrl: './comment.component.html',
@@ -58,7 +63,6 @@ export class CommentComponent extends BaseComponent implements OnInit {
   replyVisibleMap: Record<string, boolean> = {};
   commentVoteLoading: Record<string, boolean> = {};
   saveLoading = false;
-  loginVisible = false;
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
@@ -87,6 +91,7 @@ export class CommentComponent extends BaseComponent implements OnInit {
     private readonly destroy$: DestroyService,
     private readonly fb: FormBuilder,
     private readonly userAgentService: UserAgentService,
+    private readonly commonService: CommonService,
     private readonly message: MessageService,
     private readonly tenantAppService: TenantAppService,
     private readonly optionService: OptionService,
@@ -222,11 +227,10 @@ export class CommentComponent extends BaseComponent implements OnInit {
   }
 
   showLoginModal() {
-    this.loginVisible = true;
-  }
-
-  closeLoginModal() {
-    this.loginVisible = false;
+    this.commonService.updateLoginModalVisible({
+      visible: true,
+      closable: true
+    });
   }
 
   private getComments(scroll = false) {

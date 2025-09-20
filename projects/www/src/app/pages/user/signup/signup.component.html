@@ -28,7 +28,8 @@
                [type]="passwordVisible ? 'text' : 'password'"
                formControlName="password"
                [maxlength]="maxPasswordLength"
-               placeholder="{{minPasswordLength}}-{{maxPasswordLength}} 位密码，字母、数字、符号组合"/>
+               placeholder="{{minPasswordLength}}-{{maxPasswordLength}} 位密码，字母、数字、符号组合"
+               autocomplete="off"/>
       </nz-input-group>
       <ng-template #pwdSuffix>
         <nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"

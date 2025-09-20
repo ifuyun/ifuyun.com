@@ -1,8 +1,10 @@
 <nz-modal nzDraggable
           nzCentered
-          [nzVisible]="visible"
-          [nzWidth]="352"
           nzTitle="登录"
+          [nzWidth]="352"
+          [nzVisible]="visible"
+          [nzClosable]="closable"
+          [nzMaskClosable]="closable"
           [nzFooter]="null"
           (nzOnCancel)="closeModal()"
           (nzOnOk)="closeModal()">

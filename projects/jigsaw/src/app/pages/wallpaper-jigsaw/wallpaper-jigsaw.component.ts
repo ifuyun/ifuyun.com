@@ -5,7 +5,6 @@ import {
   BreadcrumbComponent,
   CommentComponent,
   JigsawComponent,
-  LoginModalComponent,
   MakeMoneyComponent,
   ShareModalComponent,
   WallpaperPrevNextComponent,
@@ -58,7 +57,6 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
     WallpaperPrevNextComponent,
     WallpaperRelatedComponent,
     ShareModalComponent,
-    LoginModalComponent,
     CommentComponent,
     MakeMoneyComponent
   ],
@@ -78,7 +76,6 @@ export class WallpaperJigsawComponent implements OnInit {
   favoriteLoading = false;
   shareVisible = false;
   shareUrl = '';
-  loginVisible = false;
 
   get langParams() {
     return this.lang === WallpaperLang.CN ? {} : { lang: this.lang };
@@ -261,11 +258,17 @@ export class WallpaperJigsawComponent implements OnInit {
   }
 
   showLoginModal() {
-    this.loginVisible = true;
+    this.commonService.updateLoginModalVisible({
+      visible: true,
+      closable: true
+    });
   }
 
   closeLoginModal() {
-    this.loginVisible = false;
+    this.commonService.updateLoginModalVisible({
+      visible: false,
+      closable: true
+    });
   }
 
   protected updatePageIndex(): void {

@@ -2,10 +2,10 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/co
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import {
   AppConfigService,
-  COOKIE_KEY_TURNSTILE_ID,
   COOKIE_KEY_UV_ID,
   ErrorService,
   ErrorState,
+  LoginModalOptions,
   MEDIA_QUERY_THEME_DARK,
   OptionEntity,
   PageIndexInfo,
@@ -17,7 +17,7 @@ import {
 } from 'common/core';
 import { PostScope, PostStatus, Theme } from 'common/enums';
 import { ForbiddenComponent, NotFoundComponent, ServerErrorComponent } from 'common/error';
-import { isAllowedCrawler } from 'common/middlewares';
+import { Post, Wallpaper } from 'common/interfaces';
 import {
   AdsService,
   AdsStatus,
@@ -41,8 +41,6 @@ import { GameService } from '../game/game.service';
 import { HeaderComponent } from '../header/header.component';
 import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { MSiderComponent } from '../m-sider/m-sider.component';
-import { TurnstileComponent } from '../turnstile/turnstile.component';
-import { Post, Wallpaper } from 'common/interfaces';
 
 @Component({
   selector: 'app-root',
@@ -56,7 +54,6 @@ import { Post, Wallpaper } from 'common/interfaces';
     NotFoundComponent,
     ForbiddenComponent,
     ServerErrorComponent,
-    TurnstileComponent,
     NzButtonModule,
     NzTooltipModule,
     NzIconModule
@@ -78,12 +75,13 @@ export class AppComponent implements OnInit, AfterViewInit {
   indexInfo?: PageIndexInfo;
   post: Post | null = null;
   wallpaper: Wallpaper | null = null;
-  loginVisible = false;
   chatVisible = false;
   conversationId = '';
   chatPrompt = '';
-  isSuspicious = false;
-  isLimited = false;
+  loginOptions: LoginModalOptions = {
+    visible: false,
+    closable: true
+  };
 
   get hostName() {
     return this.commonService.getHostName();
@@ -140,7 +138,10 @@ export class AppComponent implements OnInit, AfterViewInit {
               this.gameService.updateActiveRomURL('');
             }
 
-            this.isSuspicious = this.commonService.isSuspicious();
+            this.commonService.updateLoginModalVisible({
+              visible: false,
+              closable: true
+            });
           }
         }),
         filter((re) => re instanceof NavigationEnd)
@@ -190,10 +191,6 @@ export class AppComponent implements OnInit, AfterViewInit {
               });
           }
           this.currentUrl = (event as NavigationEnd).url;
-
-          this.logService.checkAccessLimit().subscribe((res) => {
-            this.isLimited = !isAllowedCrawler(this.userAgentService.uaString) && res.limit;
-          });
         }
         this.initialized = true;
       });
@@ -228,6 +225,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.commonService.pageIndex$.subscribe((page) => {
       this.indexInfo = this.commonService.getPageIndexInfo(page);
       this.cdr.detectChanges();
+    });
+    this.commonService.loginVisible$.subscribe((loginOptions) => {
+      this.loginOptions = loginOptions;
     });
     this.postService.activePost$.subscribe((post) => {
       this.post = post;
@@ -272,12 +272,18 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.commonService.updateSiderVisible(false);
   }
 
-  showLoginModal() {
-    this.loginVisible = true;
+  showLoginModal(closable = true) {
+    this.commonService.updateLoginModalVisible({
+      visible: true,
+      closable
+    });
   }
 
   closeLoginModal() {
-    this.loginVisible = false;
+    this.commonService.updateLoginModalVisible({
+      visible: false,
+      closable: true
+    });
   }
 
   showChat() {
@@ -304,32 +310,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   closeChat() {
     this.chatPrompt = '';
     this.chatVisible = false;
-  }
-
-  verifyTurnstile(token: string | null) {
-    if (!token) {
-      return;
-    }
-    this.commonService.verifyTurnstile(token).subscribe((res) => {
-      if (res.code === ResponseCode.SUCCESS && res.data.success) {
-        this.cookieService.set(COOKIE_KEY_TURNSTILE_ID, res.data.turnstileId, {
-          path: '/',
-          domain: this.appConfigService.cookieDomain,
-          expires: 0.5 / 24,
-          secure: !this.appConfigService.isDev
-        });
-
-        this.isSuspicious = false;
-      } else {
-        this.commonService.redirectToForbidden();
-      }
-    });
-  }
-
-  verifyFailed(errCode: string | null) {
-    if (errCode) {
-      this.commonService.redirectToForbidden();
-    }
   }
 
   checkAdsStatus(isLoaded: boolean) {
