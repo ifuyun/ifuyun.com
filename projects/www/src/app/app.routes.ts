@@ -1,6 +1,11 @@
 import { Routes } from '@angular/router';
 import { AuthLayoutComponent, ContentLayoutComponent } from 'common/components';
 import { ForbiddenComponent, NotFoundComponent, ServerErrorComponent } from 'common/error';
+import { ForgotComponent } from './pages/auth/forgot/forgot.component';
+import { LoginCallbackComponent } from './pages/auth/login-callback/login-callback.component';
+import { LoginComponent } from './pages/auth/login/login.component';
+import { SignupConfirmComponent } from './pages/auth/signup-confirm/signup-confirm.component';
+import { SignupComponent } from './pages/auth/signup/signup.component';
 import { HomeComponent } from './pages/home/home.component';
 import { PageComponent } from './pages/page/page.component';
 import { SearchComponent } from './pages/search/search.component';
@@ -10,11 +15,6 @@ import { Md5Component } from './pages/tool/md5/md5.component';
 import { MurmurhashComponent } from './pages/tool/murmurhash/murmurhash.component';
 import { ShoppingComponent } from './pages/tool/shopping/shopping.component';
 import { ToolListComponent } from './pages/tool/tool-list/tool-list.component';
-import { ForgotComponent } from './pages/user/forgot/forgot.component';
-import { LoginCallbackComponent } from './pages/user/login-callback/login-callback.component';
-import { LoginComponent } from './pages/user/login/login.component';
-import { SignupConfirmComponent } from './pages/user/signup-confirm/signup-confirm.component';
-import { SignupComponent } from './pages/user/signup/signup.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', component: HomeComponent },

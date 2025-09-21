@@ -42,7 +42,8 @@
              name="code"
              formControlName="code"
              [maxlength]="4"
-             placeholder="请输入验证码"/>
+             placeholder="请输入验证码"
+             autocomplete="off"/>
       <ng-template #codeErrorTpl let-control>
         @if (control.hasError('required')) {
           请输入验证码

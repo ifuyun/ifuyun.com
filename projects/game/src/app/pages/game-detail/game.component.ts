@@ -134,7 +134,6 @@ export class GameComponent implements OnInit {
         }
 
         this.closeGameModal();
-        this.closeLoginModal();
         this.closeShareQrcode();
 
         this.getGame();
@@ -275,13 +274,6 @@ export class GameComponent implements OnInit {
   showLoginModal() {
     this.commonService.updateLoginModalVisible({
       visible: true,
-      closable: true
-    });
-  }
-
-  closeLoginModal() {
-    this.commonService.updateLoginModalVisible({
-      visible: false,
       closable: true
     });
   }

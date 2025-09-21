@@ -7,7 +7,6 @@ import {
   ErrorState,
   LoginModalOptions,
   MEDIA_QUERY_THEME_DARK,
-  OptionEntity,
   PageIndexInfo,
   PlatformService,
   ResponseCode,
@@ -71,7 +70,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   errorPage = false;
   isBodyCentered = false;
   siderVisible = false;
-  options: OptionEntity = {};
   indexInfo?: PageIndexInfo;
   post: Post | null = null;
   wallpaper: Wallpaper | null = null;
@@ -201,9 +199,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.tenantAppService.getAppInfo().subscribe();
     this.userService.getLoginUser().subscribe((user) => {
       this.isSignIn = !!user.userId;
-    });
-    this.optionService.options$.subscribe((options) => {
-      this.options = options;
     });
     this.commonService.siderVisible$.subscribe((visible) => {
       if (this.platform.isBrowser) {

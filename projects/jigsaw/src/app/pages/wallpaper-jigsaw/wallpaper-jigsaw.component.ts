@@ -140,7 +140,6 @@ export class WallpaperJigsawComponent implements OnInit {
         this.isChanged = this.wallpaperId !== wid;
         this.wallpaperId = wid;
 
-        this.closeLoginModal();
         this.closeShareQrcode();
 
         const lang = <WallpaperLang>qp.get('lang')?.trim() || WallpaperLang.CN;
@@ -260,13 +259,6 @@ export class WallpaperJigsawComponent implements OnInit {
   showLoginModal() {
     this.commonService.updateLoginModalVisible({
       visible: true,
-      closable: true
-    });
-  }
-
-  closeLoginModal() {
-    this.commonService.updateLoginModalVisible({
-      visible: false,
       closable: true
     });
   }

@@ -160,8 +160,9 @@ export class PostComponent implements OnInit {
           this.commonService.redirectToNotFound();
           return;
         }
-        this.closeLoginModal();
+
         this.closeShareQrcode();
+
         if (REGEXP_ID.test(slug)) {
           this.postId = slug;
           this.getPost();
@@ -297,13 +298,6 @@ export class PostComponent implements OnInit {
   showLoginModal() {
     this.commonService.updateLoginModalVisible({
       visible: true,
-      closable: true
-    });
-  }
-
-  closeLoginModal() {
-    this.commonService.updateLoginModalVisible({
-      visible: false,
       closable: true
     });
   }
