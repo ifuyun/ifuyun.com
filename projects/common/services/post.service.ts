@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService, ApiUrl, AppConfigService, ArchiveData, ArchiveDataMap, ArchiveList } from 'common/core';
 import { BookType, PostType } from 'common/enums';
-import { Post, PostEntity, PostList, PostQueryParam, PostRelatedParam, PostSearchItem } from 'common/interfaces';
+import { Post, PostEntity, PostList, PostQueryParam, PostSearchItem } from 'common/interfaces';
 import highlight from 'highlight.js';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 
@@ -55,10 +55,10 @@ export class PostService {
       .pipe(map((res) => res?.data || []));
   }
 
-  getRelatedPosts(param: PostRelatedParam): Observable<PostSearchItem[]> {
+  getRelatedPosts(postId: string): Observable<PostSearchItem[]> {
     return this.apiService
       .httpGet(ApiUrl.POST_RELATED, {
-        ...param,
+        postId,
         appId: this.appConfigService.appId
       })
       .pipe(map((res) => res?.data || []));

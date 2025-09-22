@@ -92,9 +92,3 @@ export interface PostSearchItem {
   cover: string;
   score: number;
 }
-
-export interface PostRelatedParam {
-  postId: string;
-  page?: number;
-  size?: number;
-}

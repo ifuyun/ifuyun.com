@@ -95,7 +95,7 @@ export class GameModalComponent implements OnInit, AfterViewInit, OnDestroy {
     (<any>window)['EJS_player'] = '#game-box';
     (<any>window)['EJS_core'] = this.game.gameType;
     (<any>window)['EJS_gameUrl'] = this.romURL;
-    (<any>window)['EJS_language'] = 'zh-CN';
+    (<any>window)['EJS_language'] = 'zh';
     (<any>window)['EJS_startOnLoaded'] = true;
     (<any>window)['EJS_defaultControls'] = DEFAULT_GAME_CONTROLS;
     (<any>window)['EJS_Buttons'] = {

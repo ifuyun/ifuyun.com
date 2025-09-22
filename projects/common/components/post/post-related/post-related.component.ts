@@ -45,11 +45,7 @@ export class PostRelatedComponent implements OnInit {
 
   private getRelatedPosts(): void {
     this.postService
-      .getRelatedPosts({
-        postId: this.postId,
-        page: 1,
-        size: 4
-      })
+      .getRelatedPosts(this.postId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.relatedPosts = res;
