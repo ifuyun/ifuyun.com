@@ -14,6 +14,10 @@ export interface AppConfig {
     expires: number;
   };
   magazineUrl: string;
+  emulator?: {
+    basePath: string;
+    loaderPath: string;
+  };
 }
 
 export const APP_CONFIG = new InjectionToken<AppConfig>('common.config');

@@ -46,4 +46,12 @@ export class AppConfigService {
   get faviconUrl(): string {
     return this.config.isDev ? '/favicon.png' : 'https://cdn.ifuyun.com/www/favicon.png';
   }
+
+  get emulatorBasePath(): string {
+    return this.config.emulator?.basePath || '';
+  }
+
+  get emulatorLoaderPath(): string {
+    return this.config.emulator?.loaderPath || '';
+  }
 }

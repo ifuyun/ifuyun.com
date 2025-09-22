@@ -28,5 +28,9 @@ export const environment = {
     domain: 'localhost',
     expires: 3
   },
-  magazineUrl: 'https://www.struggleant.com'
+  magazineUrl: 'https://www.struggleant.com',
+  emulator: {
+    basePath: '/assets/game/',
+    loaderPath: '/assets/game/loader.min.js'
+  }
 };

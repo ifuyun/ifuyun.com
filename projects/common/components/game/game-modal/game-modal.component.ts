@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { DestroyService, PlatformService, ScriptLoaderService, UserAgentService } from 'common/core';
+import { AppConfigService, DestroyService, PlatformService, ScriptLoaderService, UserAgentService } from 'common/core';
 import { GameLogType } from 'common/enums';
 import { GameEntity } from 'common/interfaces';
 import { NzModalModule } from 'ng-zorro-antd/modal';
@@ -28,6 +28,7 @@ export class GameModalComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly destroy$: DestroyService,
     private readonly platform: PlatformService,
     private readonly userAgentService: UserAgentService,
+    private readonly appConfigService: AppConfigService,
     private readonly gameService: GameService,
     private readonly scriptLoaderService: ScriptLoaderService
   ) {
@@ -94,6 +95,7 @@ export class GameModalComponent implements OnInit, AfterViewInit, OnDestroy {
     (<any>window)['EJS_gameName'] = this.game.gameTitle;
     (<any>window)['EJS_player'] = '#game-box';
     (<any>window)['EJS_core'] = this.game.gameType;
+    (<any>window)['EJS_pathtodata'] = this.appConfigService.emulatorBasePath;
     (<any>window)['EJS_gameUrl'] = this.romURL;
     (<any>window)['EJS_language'] = 'zh';
     (<any>window)['EJS_startOnLoaded'] = true;
@@ -119,7 +121,7 @@ export class GameModalComponent implements OnInit, AfterViewInit, OnDestroy {
       exitEmulation: false
     };
 
-    this.scriptLoaderService.loadScript('/assets/game/loader.min.js', true).then(() => {});
+    this.scriptLoaderService.loadScript(this.appConfigService.emulatorLoaderPath, true).then(() => {});
   }
 
   private logGame() {

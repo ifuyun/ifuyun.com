@@ -46,7 +46,11 @@ export const appConfig: ApplicationConfig = {
           domain: environment.cookie.domain,
           expires: environment.cookie.expires
         },
-        magazineUrl: environment.magazineUrl
+        magazineUrl: environment.magazineUrl,
+        emulator: {
+          basePath: environment.emulator.basePath,
+          loaderPath: environment.emulator.loaderPath
+        }
       })
     ),
     provideNzI18n(zh_CN),
