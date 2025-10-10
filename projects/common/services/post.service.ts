@@ -11,6 +11,7 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
 export class PostService {
   private activePostId: BehaviorSubject<string> = new BehaviorSubject<string>('');
   public activePostId$: Observable<string> = this.activePostId.asObservable();
+
   private activePost: BehaviorSubject<Post | null> = new BehaviorSubject<Post | null>(null);
   public activePost$: Observable<Post | null> = this.activePost.asObservable();
 

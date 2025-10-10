@@ -34,12 +34,12 @@ export interface JigsawPiece {
 }
 
 export interface JigsawLogBaseEntity {
-  wallpaperId?: string;
-  jigsawId?: string;
   timestamp: number;
 }
 
 export interface JigsawStartEntity extends JigsawLogBaseEntity {
+  jigsawId?: string;
+  wallpaperId?: string;
   pieces: number;
 }
 

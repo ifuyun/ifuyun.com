@@ -65,7 +65,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   readonly faviconUrl: string;
 
   isMobile = false;
-  isSignIn = false;
   errorState!: ErrorState;
   errorPage = false;
   isBodyCentered = false;
@@ -89,6 +88,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     return this.commonService.getCdnUrlPrefix() + '/assets/images/adimage.gif';
   }
 
+  private isSignIn = false;
   private currentUrl = '';
   private initialized = false;
   private accessLogId = '';

@@ -1250,7 +1250,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   private saveStartLog() {
     this.jigsawService
       .startJigsaw({
-        wallpaperId: this.wallpaper?.wallpaperId,
+        wallpaperId: this.wallpaper?.wallpaperId || '',
         pieces: this.activeDifficulty.pieces,
         timestamp: Date.now()
       })
