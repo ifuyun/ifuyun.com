@@ -33,8 +33,11 @@ $ npm i
 $ npm run start:[app]
 $ npm run build
 $ npm run build:[app]
+$ npm run build:ng
+$ npm run build:ng:[app]
 $ npm run build:gulp
 $ npm run build:gulp:[app]
+$ npm run build:gulp:styles
 $ npm run build:prod
 $ npm run build:prod:[app]
 $ npm run build:zip

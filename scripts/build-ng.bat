@@ -7,7 +7,7 @@ REM Navigate to the project root directory
 pushd "%~dp0.."
 
 echo Building common...
-call npm run build:common
+call npm run build:ng:common
 if errorlevel 1 (
     echo Error during build:common
     popd
@@ -15,15 +15,15 @@ if errorlevel 1 (
 )
 
 echo Building common:styles...
-call npm run build:common:styles
+call npm run build:gulp:styles
 if errorlevel 1 (
-    echo Error during build:common:styles
+    echo Error during build:gulp:styles
     popd
     exit /b 1
 )
 
 echo Building www...
-call npm run build:www
+call npm run build:ng:www
 if errorlevel 1 (
     echo Error during build:www
     popd
@@ -31,7 +31,7 @@ if errorlevel 1 (
 )
 
 echo Building blog...
-call npm run build:blog
+call npm run build:ng:blog
 if errorlevel 1 (
     echo Error during build:blog
     popd
@@ -39,7 +39,7 @@ if errorlevel 1 (
 )
 
 echo Building wallpaper...
-call npm run build:wallpaper
+call npm run build:ng:wallpaper
 if errorlevel 1 (
     echo Error during build:wallpaper
     popd
@@ -47,7 +47,7 @@ if errorlevel 1 (
 )
 
 echo Building jigsaw...
-call npm run build:jigsaw
+call npm run build:ng:jigsaw
 if errorlevel 1 (
     echo Error during build:jigsaw
     popd
@@ -55,7 +55,7 @@ if errorlevel 1 (
 )
 
 echo Building game...
-call npm run build:game
+call npm run build:ng:game
 if errorlevel 1 (
     echo Error during build:game
     popd
