@@ -27,8 +27,6 @@ import { CommentObjectType, FavoriteType, VoteType, VoteValue, WallpaperLang } f
 import { TenantAppModel, Wallpaper } from 'common/interfaces';
 import { NumberViewPipe, SafeHtmlPipe } from 'common/pipes';
 import {
-  AdsService,
-  AdsStatus,
   CommentService,
   CommonService,
   FavoriteService,
@@ -95,7 +93,6 @@ export class WallpaperComponent implements OnInit {
   private wallpaperData!: Wallpaper;
   private isChanged = false;
   private isLangChanged = false;
-  private adsStatus: AdsStatus = AdsStatus.UNKNOWN;
 
   constructor(
     private readonly destroy$: DestroyService,
@@ -114,8 +111,7 @@ export class WallpaperComponent implements OnInit {
     private readonly wallpaperService: WallpaperService,
     private readonly voteService: VoteService,
     private readonly favoriteService: FavoriteService,
-    private readonly commentService: CommentService,
-    private readonly adsService: AdsService
+    private readonly commentService: CommentService
   ) {
     this.isMobile = this.userAgentService.isMobile;
     this.domains = this.appConfigService.apps;
@@ -169,9 +165,6 @@ export class WallpaperComponent implements OnInit {
         this.shareUrl = this.commonService.getShareURL(user.userId);
       }
     });
-    this.adsService.adsStatus$.pipe(takeUntil(this.destroy$)).subscribe((status) => {
-      this.adsStatus = status;
-    });
   }
 
   showWallpaper() {
@@ -185,7 +178,7 @@ export class WallpaperComponent implements OnInit {
   }
 
   download(isUhd = false) {
-    if (!this.isSignIn && (isUhd || this.adsStatus === AdsStatus.BLOCKED)) {
+    if (!this.isSignIn) {
       this.showLoginModal();
       return;
     }
