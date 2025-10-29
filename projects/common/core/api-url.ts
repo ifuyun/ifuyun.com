@@ -55,6 +55,7 @@ export enum ApiUrl {
   ACTION_LOG = '/action-logs/action',
   // wallpaper
   WALLPAPERS = '/wallpapers',
+  WALLPAPER_FUTURE = '/wallpapers/future',
   WALLPAPER_HOT = '/wallpapers/hot',
   WALLPAPER_RANDOM = '/wallpapers/random',
   WALLPAPER_RELATED = '/wallpapers/related',

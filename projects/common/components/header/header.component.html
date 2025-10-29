@@ -52,7 +52,18 @@
           }
         </li>
         <li [class.active]="indexInfo?.isWallpaper">
-          <lib-a class="badge badge-ai" [href]="domains['wallpaper'].url" title="高清壁纸">壁纸</lib-a>
+          <lib-a class="badge badge-ai" [href]="domains['wallpaper'].url" title="高清壁纸">
+            <span>壁纸</span><span class="nav-arrow"></span>
+          </lib-a>
+          <div class="sub-nav-wrap">
+            <div class="sub-nav-list">
+              <ul>
+                <li>
+                  <lib-a class="sub-nav-link" [href]="domains['wallpaper'].url + '/future'" title="未来壁纸">未来壁纸</lib-a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </li>
         <li [class.active]="indexInfo?.isJigsaw">
           <lib-a [href]="domains['jigsaw'].url" title="壁纸拼图">拼图</lib-a>

@@ -52,6 +52,25 @@ export class WallpaperService {
       );
   }
 
+  getFutureWallpapers(param: WallpaperQueryParam): Observable<ResultList<Wallpaper>> {
+    return this.apiService
+      .httpGet(ApiUrl.WALLPAPER_FUTURE, {
+        ...param,
+        appId: this.appConfigService.appId
+      })
+      .pipe(
+        map((res) => {
+          if (!res?.data) {
+            return {};
+          }
+          return {
+            ...res.data,
+            list: res.data.list.map((item: Wallpaper) => this.transformWallpaper(item))
+          };
+        })
+      );
+  }
+
   getHotWallpapers(size: number): Observable<HotWallpaper[]> {
     return this.apiService
       .httpGet(ApiUrl.WALLPAPER_HOT, {
@@ -163,10 +182,12 @@ export class WallpaperService {
       wallpaperCopyrightEn: wallpaper.wallpaperCopyrightEn || wallpaper.wallpaperCopyright,
       wallpaperLocation: wallpaper.wallpaperLocation || wallpaper.wallpaperLocationEn || '未知',
       wallpaperLocationEn: wallpaper.wallpaperLocationEn || wallpaper.wallpaperLocation || 'Unknown',
-      wallpaperStory: wallpaper.wallpaperStory || wallpaper.wallpaperStoryEn,
-      wallpaperStoryEn: wallpaper.wallpaperStoryEn || wallpaper.wallpaperStory,
       wallpaperStoryTitle: wallpaper.wallpaperStoryTitle || wallpaper.wallpaperStoryTitleEn,
       wallpaperStoryTitleEn: wallpaper.wallpaperStoryTitleEn || wallpaper.wallpaperStoryTitle,
+      wallpaperStory: wallpaper.wallpaperStory || wallpaper.wallpaperStoryEn,
+      wallpaperStoryEn: wallpaper.wallpaperStoryEn || wallpaper.wallpaperStory,
+      wallpaperFact: wallpaper.wallpaperFact || wallpaper.wallpaperFactEn,
+      wallpaperFactEn: wallpaper.wallpaperFactEn || wallpaper.wallpaperFact,
       isCn: !!wallpaper.wallpaperCopyright,
       isEn: !!wallpaper.wallpaperCopyrightEn
     };

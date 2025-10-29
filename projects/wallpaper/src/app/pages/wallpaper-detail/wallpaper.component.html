@@ -49,6 +49,10 @@
       </div>
       <h2>{{ wallpaper.wallpaperStoryTitle }}</h2>
       <article [innerHTML]="wallpaper.wallpaperStory | safeHtml"></article>
+      @if (wallpaper.wallpaperFact) {
+        <h2>{{ factTitle }}</h2>
+        <p>{{ wallpaper.wallpaperFact }}</p>
+      }
       @if (wallpaper.hasTranslation) {
         <p>
           <a routerLink="."

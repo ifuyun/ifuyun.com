@@ -34,6 +34,8 @@ export interface Wallpaper {
   wallpaperStoryTitleEn: string;
   wallpaperStory: string;
   wallpaperStoryEn: string;
+  wallpaperFact: string;
+  wallpaperFactEn: string;
   wallpaperLocation: string;
   wallpaperLocationEn: string;
   wallpaperViews: number;

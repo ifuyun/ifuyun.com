@@ -85,6 +85,10 @@ export class WallpaperComponent implements OnInit {
     return this.lang === WallpaperLang.CN ? { lang: WallpaperLang.EN } : {};
   }
 
+  get factTitle() {
+    return this.lang === WallpaperLang.CN ? '你知道吗？' : 'Do you know?';
+  }
+
   protected pageIndex = 'wallpaper-detail';
 
   private isSignIn = false;
@@ -297,6 +301,7 @@ export class WallpaperComponent implements OnInit {
       this.wallpaper.wallpaperCopyright = this.wallpaper.wallpaperCopyrightEn;
       this.wallpaper.wallpaperStoryTitle = this.wallpaper.wallpaperStoryTitleEn;
       this.wallpaper.wallpaperStory = this.wallpaper.wallpaperStoryEn;
+      this.wallpaper.wallpaperFact = this.wallpaper.wallpaperFactEn;
       this.wallpaper.wallpaperLocation = this.wallpaper.wallpaperLocationEn;
     } else {
       hasTranslation = this.wallpaper.isEn;

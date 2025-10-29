@@ -3,6 +3,7 @@ import { ContentLayoutComponent } from 'common/components';
 import { ForbiddenComponent, NotFoundComponent, ServerErrorComponent } from 'common/error';
 import { WallpaperArchiveComponent } from './pages/wallpaper-archive/wallpaper-archive.component';
 import { WallpaperComponent } from './pages/wallpaper-detail/wallpaper.component';
+import { WallpaperFutureListComponent } from './pages/wallpaper-future-list/wallpaper-future-list.component';
 import { WallpaperListComponent } from './pages/wallpaper-list/wallpaper-list.component';
 
 export const routes: Routes = [
@@ -12,6 +13,7 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: '/list' },
       { path: 'list', component: WallpaperListComponent },
+      { path: 'future', component: WallpaperFutureListComponent },
       { path: 'archive/:year', component: WallpaperListComponent },
       { path: 'archive/:year/:month', component: WallpaperListComponent },
       { path: 'archive', component: WallpaperArchiveComponent },
