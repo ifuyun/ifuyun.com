@@ -4,11 +4,11 @@
     <div class="related-list">
       @for (game of relatedGames; track game) {
         <div class="related-item">
-          <a class="related-item-img" [routerLink]="'/game/' + game.gameId" [title]="game.gameTitle">
+          <a class="related-item-img" [routerLink]="'/detail/' + game.gameId" [title]="game.gameTitle">
             <div class="lazyload" [attr.data-bg]="game.gameCover || emptyCover"></div>
           </a>
           <div class="related-item-title">
-            <a [routerLink]="'/game/' + game.gameId" [title]="game.gameTitle">{{ game.gameTitle }}</a>
+            <a [routerLink]="'/detail/' + game.gameId" [title]="game.gameTitle">{{ game.gameTitle }}</a>
           </div>
         </div>
       }

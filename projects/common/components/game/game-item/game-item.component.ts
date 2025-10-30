@@ -23,10 +23,10 @@ export class GameItemComponent {
   isMobile = false;
   domains!: AppDomainConfig;
 
-  private defaultGameCover = '';
+  private emptyCover = '';
 
   get gameCover() {
-    return this.game.game.gameCover || this.defaultGameCover;
+    return this.game.game.gameCover || this.emptyCover;
   }
 
   get gameExcerpt() {
@@ -42,6 +42,6 @@ export class GameItemComponent {
   ) {
     this.isMobile = this.userAgentService.isMobile;
     this.domains = this.appConfigService.apps;
-    this.defaultGameCover = this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER;
+    this.emptyCover = this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER;
   }
 }
