@@ -86,7 +86,7 @@ export class WallpaperComponent implements OnInit {
   }
 
   get factTitle() {
-    return this.lang === WallpaperLang.CN ? '你知道吗？' : 'Do you know?';
+    return this.lang === WallpaperLang.CN ? '你知道吗？' : 'Did you know?';
   }
 
   protected pageIndex = 'wallpaper-detail';
