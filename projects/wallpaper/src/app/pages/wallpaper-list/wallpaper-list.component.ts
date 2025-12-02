@@ -20,6 +20,7 @@ import { ListMode, WallpaperLang } from 'common/enums';
 import { TenantAppModel, Wallpaper, WallpaperQueryParam } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService, WallpaperService } from 'common/services';
 import { isEmpty, uniq } from 'lodash';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
@@ -32,6 +33,7 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
     FormsModule,
     NzIconModule,
     NzRadioModule,
+    NzButtonModule,
     NzEmptyModule,
     BreadcrumbComponent,
     PaginationComponent,

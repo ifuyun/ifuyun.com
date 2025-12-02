@@ -216,7 +216,7 @@ export class WallpaperFutureListComponent implements OnInit {
       },
       {
         label: '未来壁纸',
-        tooltip: '未来壁纸',
+        tooltip: '未来一周壁纸',
         url: '/future',
         domain: 'wallpaper',
         isHeader: true

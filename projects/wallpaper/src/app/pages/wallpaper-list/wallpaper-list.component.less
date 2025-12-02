@@ -13,17 +13,22 @@
 }
 
 .p-filter {
+  display: flex;
+  justify-content: space-between;
   margin: @primary-margin 0;
 
-  > nz-radio-group:not(:last-child) {
+  nz-radio-group:not(:last-child) {
     margin-right: 16px;
   }
 }
 
 .m-filter {
-  display: flex;
-  justify-content: space-between;
   margin: @m-primary-margin 0;
+
+  > div {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
 .m-post-list {

@@ -88,7 +88,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     600: { name: '600', rows: 20, cols: 30, pieces: 600, width: 1200 }
   };
   // 当前难度级别
-  activeDifficulty: JigsawDifficulty = this.difficultyLevels[54];
+  activeDifficulty: JigsawDifficulty = this.difficultyLevels[24];
   // 游戏状态相关
   gameStatus: GameStatus = 'ready';
   gameTime = 0;
