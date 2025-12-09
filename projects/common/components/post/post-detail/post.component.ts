@@ -99,7 +99,7 @@ export class PostComponent implements OnInit {
 
   get showPayMask() {
     return (
-      (this.post.postPayFlag && !this.user.isAdmin && this.post.postOwnerId !== this.user.userId) ||
+      (this.post.postPayFlag && (!this.user || (!this.user.isAdmin && this.post.postOwnerId !== this.user.userId))) ||
       (!!this.post.postLoginFlag && !this.isSignIn)
     );
   }
