@@ -120,6 +120,14 @@ export class CommonService {
     return curHost === new URL(url).host;
   }
 
+  getScreenWidth() {
+    return this.platform.isBrowser ? window.screen.width : null;
+  }
+
+  getScreenHeight() {
+    return this.platform.isBrowser ? window.screen.height : null;
+  }
+
   getResolution() {
     return this.platform.isBrowser ? window.screen.width + 'x' + window.screen.height : '';
   }

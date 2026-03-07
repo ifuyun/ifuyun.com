@@ -39,7 +39,8 @@ export class LogService {
       rf: initialized ? referrer : document.referrer,
       s: 'web',
       as: adsStatus || AdsStatus.UNKNOWN,
-      rs: this.commonService.getResolution(),
+      sw: this.commonService.getScreenWidth(),
+      sh: this.commonService.getScreenHeight(),
       cd: window.screen.colorDepth.toString(),
       ia: initialized ? 1 : 0,
       appId: this.appConfigService.appId

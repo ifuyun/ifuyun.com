@@ -7,7 +7,8 @@ export interface AccessLog {
   s: 'web' | 'admin';
   rf: string;
   rm?: string;
-  rs: string;
+  sw: number | null;
+  sh: number | null;
   cd: string;
   ia: 0 | 1;
   in: 0 | 1;
@@ -25,7 +26,6 @@ export interface ActionLog {
   objectType: ActionObjectType;
   objectId?: string;
   ref: string;
-  resolution?: string;
   from?: string;
   lang?: string;
   listMode?: string;
