@@ -13,18 +13,6 @@ import {
 import { AppConfigService } from 'common/core';
 import { TurnstileOptions } from './turnstile.interface';
 
-declare global {
-  interface Window {
-    onloadTurnstileCallback: () => void;
-    turnstile: {
-      render: (idOrContainer: string | HTMLElement, options: TurnstileOptions) => string;
-      reset: (widgetIdOrContainer: string | HTMLElement) => void;
-      getResponse: (widgetIdOrContainer: string | HTMLElement) => string | undefined;
-      remove: (widgetIdOrContainer: string | HTMLElement) => void;
-    };
-  }
-}
-
 @Component({
   selector: 'lib-turnstile',
   template: ``

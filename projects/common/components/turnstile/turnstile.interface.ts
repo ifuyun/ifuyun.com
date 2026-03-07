@@ -1,3 +1,15 @@
+declare global {
+  interface Window {
+    onloadTurnstileCallback: () => void;
+    turnstile: {
+      render: (idOrContainer: string | HTMLElement, options: TurnstileOptions) => string;
+      reset: (widgetIdOrContainer: string | HTMLElement) => void;
+      getResponse: (widgetIdOrContainer: string | HTMLElement) => string | undefined;
+      remove: (widgetIdOrContainer: string | HTMLElement) => void;
+    };
+  }
+}
+
 export interface TurnstileOptions {
   sitekey: string;
   action?: string;
@@ -12,3 +24,5 @@ export interface TurnstileOptions {
   retry?: 'never' | 'auto';
   size?: 'normal' | 'flexible' | 'compact';
 }
+
+export {};

@@ -4,7 +4,6 @@ import zh from '@angular/common/locales/zh';
 import { ApplicationConfig, ErrorHandler, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { provideClientHydration, withEventReplay, withHttpTransferCacheOptions } from '@angular/platform-browser';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { ApiRequestInterceptor, AppConfigModule, GlobalErrorHandler } from 'common/core';
 import { environment } from 'env/environment';
@@ -35,7 +34,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
     { provide: HTTP_INTERCEPTORS, useClass: ApiRequestInterceptor, multi: true },
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
-    provideAnimationsAsync(),
     importProvidersFrom(
       AppConfigModule.forRoot({
         isDev: !environment.production,
