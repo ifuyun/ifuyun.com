@@ -139,7 +139,7 @@ export class PostService {
     const result = content.replace(
       /<pre(?:\s+[^>]*)*>\s*<code(?:\s+[^>]*)?>([\s\S]*?)<\/code>\s*<\/pre>/gi,
       (preStr, codeStr: string) => {
-        const langReg = /^<pre(?:\s+[^>]*)*\s+class="([^"]+)"(?:\s+[^>]*)*>/gi;
+        const langReg = /^<pre[^>]*>\s*<code(?:\s+[^>]*)*\s+class="([^"]+)"(?:\s+[^>]*)*>/gi;
         const langResult = Array.from(preStr.matchAll(langReg));
         let langStr = '';
         let language = '';

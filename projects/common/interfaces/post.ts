@@ -22,9 +22,7 @@ export interface PostEntity {
   postLoginFlag: number;
   postPayFlag: number;
   postPrice?: number;
-  postFreeIndex?: number;
   postFreePercent?: number;
-  postFreeContent?: string;
   postCopyType: CopyType;
   postScope: PostScope;
   postPassword?: string;
