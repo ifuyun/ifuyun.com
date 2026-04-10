@@ -1,8 +1,3 @@
-# Default
-User-agent: *
-Disallow: /
-Allow: /$
-
 # Google
 User-agent: Googlebot
 User-agent: AdsBot-Google
@@ -35,6 +30,22 @@ User-agent: Slurp
 User-agent: NaverBot
 User-agent: Exabot
 Allow: /
+
+# AI/LLM
+User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-Web
+User-agent: anthropic-ai
+User-agent: Googlebot-Extended
+User-agent: Applebot
+User-agent: Applebot-Extended
+User-agent: Bytespider
+
+# Default
+User-agent: *
+Disallow: /
+Allow: /$
 
 Sitemap: https://www.ifuyun.com/sitemap.xml
 Sitemap: https://blog.ifuyun.com/sitemap.xml
