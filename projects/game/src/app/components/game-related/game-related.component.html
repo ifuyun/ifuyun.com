@@ -2,7 +2,7 @@
   <div class="related" [class.p-related]="!isMobile" [class.m-related]="isMobile">
     <h3>相关游戏</h3>
     <div class="related-list">
-      @for (game of relatedGames; track game) {
+      @for (game of relatedGames; track game.gameId) {
         <div class="related-item">
           <a class="related-item-img" [routerLink]="'/detail/' + game.gameId" [title]="game.gameTitle">
             <div class="lazyload" [attr.data-bg]="game.gameCover || emptyCover"></div>

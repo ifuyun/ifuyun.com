@@ -4,7 +4,7 @@
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="fire"/><span>热门文章</span></span></h3>
         <ul class="hot-list">
-          @for (post of hotPosts; track post; let i = $index) {
+          @for (post of hotPosts; track post.postId; let i = $index) {
             <li>
               <span class="hot-num">{{ i + 1 }}</span>
               <lib-a [href]="domains['blog'].url + post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</lib-a>
@@ -26,7 +26,7 @@
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="fire"/><span>热门壁纸</span></span></h3>
         <ul class="hot-list">
-          @for (wallpaper of hotWallpapers; track wallpaper; let i = $index) {
+          @for (wallpaper of hotWallpapers; track wallpaper.wallpaperId; let i = $index) {
             <li>
               <span class="hot-num">{{ i + 1 }}</span>
               <lib-a [href]="domains['wallpaper'].url + '/detail/' + wallpaper.wallpaperId"
@@ -49,7 +49,7 @@
         </h3>
         @if (hotJigsaws && hotJigsaws.length > 0) {
           <ul class="hot-list">
-            @for (jigsaw of hotJigsaws; track jigsaw; let i = $index) {
+            @for (jigsaw of hotJigsaws; track jigsaw.wallpaperId; let i = $index) {
               <li>
                 <span class="hot-num">{{ i + 1 }}</span>
                 <lib-a [href]="domains['jigsaw'].url + '/detail/' + jigsaw.wallpaperId"
@@ -66,7 +66,7 @@
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="history"/><span>最近游戏</span></span></h3>
         <ul>
-          @for (game of recentGames; track game) {
+          @for (game of recentGames; track game.gameId) {
             <li>
               <lib-a [href]="domains['game'].url + '/detail/' + game.gameId"
                      [title]="game.gameTitle">{{ game.gameTitle }}</lib-a>
@@ -79,7 +79,7 @@
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="fire"/><span>热门游戏</span></span></h3>
         <ul class="hot-list">
-          @for (game of hotGames; track game; let i = $index) {
+          @for (game of hotGames; track game.gameId; let i = $index) {
             <li>
               <span class="hot-num">{{ i + 1 }}</span>
               <lib-a [href]="domains['game'].url + '/detail/' + game.gameId"
@@ -108,7 +108,7 @@
             </span>
         </h3>
         <ul>
-          @for (item of postArchives; track item) {
+          @for (item of postArchives; track item.dateValue) {
             <li>
               <lib-a [href]="domains['blog'].url + '/archive/' + item.dateValue"
                      [title]="item.dateLabel">{{ item.dateLabel }}({{ item.count }})</lib-a>
@@ -127,7 +127,7 @@
               </span>
         </h3>
         <ul>
-          @for (item of wallpaperArchives; track item) {
+          @for (item of wallpaperArchives; track item.dateValue) {
             <li>
               <lib-a [href]="domains['wallpaper'].url + '/archive/' + item.dateValue"
                      [title]="item.dateLabel">{{ item.dateLabel }}({{ item.count }})</lib-a>
@@ -141,7 +141,7 @@
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
         <ul>
-          @for (post of randomPosts; track post) {
+          @for (post of randomPosts; track post.postId) {
             <li>
               <lib-a [href]="domains['blog'].url + post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</lib-a>
             </li>
@@ -155,7 +155,7 @@
         <div class="widget">
           <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
           <ul>
-            @for (wallpaper of randomWallpapers; track wallpaper) {
+            @for (wallpaper of randomWallpapers; track wallpaper.wallpaperId) {
               <li>
                 <lib-a [href]="domains['jigsaw'].url + '/detail/' + wallpaper.wallpaperId"
                        [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</lib-a>
@@ -167,7 +167,7 @@
         <div class="widget">
           <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
           <ul>
-            @for (wallpaper of randomWallpapers; track wallpaper) {
+            @for (wallpaper of randomWallpapers; track wallpaper.wallpaperId) {
               <li>
                 <lib-a [href]="domains['wallpaper'].url + '/detail/' + wallpaper.wallpaperId"
                        [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
@@ -182,7 +182,7 @@
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
         <ul>
-          @for (game of randomGames; track game) {
+          @for (game of randomGames; track game.gameId) {
             <li>
               <lib-a [href]="domains['game'].url + '/detail/' + game.gameId"
                      [title]="game.gameTitle">{{ game.gameTitle }}</lib-a>

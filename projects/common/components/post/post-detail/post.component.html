@@ -55,7 +55,7 @@
               <nz-icon nzType="folder"/>
             </div>
             <ul class="post-meta-info">
-              @for (cat of postCategories; track cat) {
+              @for (cat of postCategories; track cat.taxonomyId) {
                 <li>
                   <lib-a [href]="blogHost + '/category/' + cat.taxonomySlug"
                          title="{{ cat.taxonomyName }}"
@@ -71,7 +71,7 @@
               <nz-icon nzType="tag"/>
             </div>
             <ul class="post-meta-info">
-              @for (tag of postTags; track tag) {
+              @for (tag of postTags; track tag.tagId) {
                 <li>
                   <lib-a [href]="blogHost + '/tag/' + tag.tagName"
                          title="{{ tag.tagName }}"

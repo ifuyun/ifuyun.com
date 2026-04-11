@@ -19,7 +19,7 @@
             <div class="sub-nav-wrap">
               <div class="sub-nav-list">
                 <ul>
-                  @for (taxonomy of postTaxonomies; track taxonomy) {
+                  @for (taxonomy of postTaxonomies; track taxonomy.taxonomyId) {
                     <li>
                       <lib-a class="sub-nav-link"
                              [href]="domains['blog'].url + '/category/' + taxonomy.taxonomySlug"
@@ -33,7 +33,7 @@
                         <div class="child-nav-wrap">
                           <div class="child-nav-list">
                             <ul>
-                              @for (subTaxonomy of taxonomy.children; track subTaxonomy) {
+                              @for (subTaxonomy of taxonomy.children; track subTaxonomy.taxonomyId) {
                                 <li>
                                   <lib-a class="child-nav-link"
                                          [href]="domains['blog'].url + '/category/' + subTaxonomy.taxonomySlug"
@@ -79,7 +79,7 @@
             <div class="sub-nav-wrap">
               <div class="sub-nav-list">
                 <ul>
-                  @for (taxonomy of gameTaxonomies; track taxonomy) {
+                  @for (taxonomy of gameTaxonomies; track taxonomy.taxonomyId) {
                     <li>
                       <lib-a class="sub-nav-link"
                              [href]="domains['game'].url + '/category/' + taxonomy.taxonomySlug"
@@ -93,7 +93,7 @@
                         <div class="child-nav-wrap">
                           <div class="child-nav-list">
                             <ul>
-                              @for (subTaxonomy of taxonomy.children; track subTaxonomy) {
+                              @for (subTaxonomy of taxonomy.children; track subTaxonomy.taxonomyId) {
                                 <li>
                                   <lib-a class="child-nav-link"
                                          [href]="domains['game'].url + '/category/' + subTaxonomy.taxonomySlug"

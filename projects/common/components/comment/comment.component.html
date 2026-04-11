@@ -2,7 +2,7 @@
   @if (comments.length > 0) {
     <div class="comment-list">
       <ng-template #commentsTpl let-comments>
-        @for (comment of comments; track comment) {
+        @for (comment of comments; track comment.commentId) {
           @if (!isMobile) {
             <div class="comment-item p-comment-item"
                  id="{{ comment.commentHash }}"

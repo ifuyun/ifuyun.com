@@ -4,7 +4,7 @@
     <div class="banner-post">
       <div class="column-header">热门文章</div>
       <ul class="banner-post-list">
-        @for (post of hotPosts; track post; let i = $index) {
+        @for (post of hotPosts; track post.postId; let i = $index) {
           <li class="banner-post-item">
             <span class="hot-num">{{ i + 1 }}</span>
             <a [href]="domains['blog'].url + post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</a>
@@ -17,7 +17,7 @@
   <div class="main-content">
     <div class="column-header">最新文章</div>
     <div class="post-card-list post-card-list-4">
-      @for (post of latestPosts; track post) {
+      @for (post of latestPosts; track post.post.postId) {
         <article class="post-card-item post-card-item-wrap">
           <div class="post-card-item-body">
             <div class="post-card-cover">
@@ -64,7 +64,7 @@
   <div class="main-content">
     <div class="column-header">最新壁纸</div>
     <div class="post-card-list post-card-list-4">
-      @for (wallpaper of latestWallpapers; track wallpaper) {
+      @for (wallpaper of latestWallpapers; track wallpaper.wallpaperId) {
         <article class="post-card-item post-card-item-wrap">
           <div class="post-card-item-body">
             <div class="post-card-cover">
@@ -105,7 +105,7 @@
   <lib-carousel></lib-carousel>
   <div class="column-header m-column-header">最新文章</div>
   <div class="m-post-list">
-    @for (post of latestPosts; track post; let i = $index) {
+    @for (post of latestPosts; track post.post.postId; let i = $index) {
       <lib-post-item [post]="post" [index]="i"></lib-post-item>
     }
   </div>
@@ -114,7 +114,7 @@
   </div>
   <div class="column-header m-column-header">最新壁纸</div>
   <div class="m-post-list">
-    @for (wallpaper of latestWallpapers; track wallpaper; let i = $index) {
+    @for (wallpaper of latestWallpapers; track wallpaper.wallpaperId; let i = $index) {
       <lib-wallpaper-item [wallpaper]="wallpaper" [mode]="wallpaperListMode" [index]="i"></lib-wallpaper-item>
     }
   </div>

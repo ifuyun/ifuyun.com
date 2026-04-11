@@ -2,7 +2,7 @@
   <div class="related" [class.p-related]="!isMobile" [class.m-related]="isMobile">
     <h3>相关文章</h3>
     <div class="related-list">
-      @for (post of relatedPosts; track post) {
+      @for (post of relatedPosts; track post.postId) {
         <div class="related-item">
           <a class="related-item-img" [routerLink]="post.postGuid" [title]="post.postTitle">
             <div class="lazyload" [attr.data-bg]="post.cover"></div>

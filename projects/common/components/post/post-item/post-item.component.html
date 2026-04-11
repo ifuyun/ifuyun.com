@@ -67,7 +67,7 @@
                 <nz-icon nzType="folder"/>
               </div>
               <ul>
-                @for (category of post.categories; track category) {
+                @for (category of post.categories; track category.taxonomyId) {
                   <li>
                     <lib-a [href]="blogHost + '/category/' + category.taxonomySlug"
                            title="{{ category.taxonomyName }}"
@@ -85,7 +85,7 @@
                 <nz-icon nzType="tag"/>
               </div>
               <ul>
-                @for (tag of post.tags; track tag) {
+                @for (tag of post.tags; track tag.tagId) {
                   <li>
                     <lib-a [href]="blogHost + '/tag/' + tag.tagName"
                            [title]="tag.tagName"
@@ -164,7 +164,7 @@
             <nz-icon nzType="tag"/>
           </div>
           <ul>
-            @for (tag of post.tags; track tag) {
+            @for (tag of post.tags; track tag.tagId) {
               <li>
                 <lib-a [href]="blogHost + '/tag/' + tag.tagName"
                        [title]="tag.tagName"

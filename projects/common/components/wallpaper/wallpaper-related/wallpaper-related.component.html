@@ -2,7 +2,7 @@
   <div class="related" [class.p-related]="!isMobile" [class.m-related]="isMobile">
     <h3>相关{{ jigsaw ? '拼图' : '壁纸' }}</h3>
     <div class="related-list">
-      @for (wallpaper of relatedWallpapers; track wallpaper) {
+      @for (wallpaper of relatedWallpapers; track wallpaper.wallpaperId) {
         <div class="related-item">
           <a class="related-item-img"
              [routerLink]="['../' + wallpaper.wallpaperId]"

@@ -2,15 +2,15 @@
 @if (total > 0) {
   <div [class.post-list]="!isMobile" [class.m-post-list]="isMobile">
     @if (searchType === 'post') {
-      @for (item of postResult; track item; let i = $index) {
+      @for (item of postResult; track item.post.postId; let i = $index) {
         <lib-post-item [post]="item" [index]="i"></lib-post-item>
       }
     } @else if (searchType === 'wallpaper') {
-      @for (item of wallpaperResult; track item; let i = $index) {
+      @for (item of wallpaperResult; track item.wallpaperId; let i = $index) {
         <lib-wallpaper-item [wallpaper]="item" [mode]="ListMode.LIST" [index]="i"></lib-wallpaper-item>
       }
     } @else if (searchType === 'game') {
-      @for (item of gameResult; track item; let i = $index) {
+      @for (item of gameResult; track item.game.gameId; let i = $index) {
         <lib-game-item [game]="item" [mode]="ListMode.LIST" [index]="i"></lib-game-item>
       }
     } @else {

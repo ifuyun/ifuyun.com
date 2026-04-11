@@ -197,7 +197,7 @@
           </tr>
           </thead>
           <tbody>
-            @for (item of rankings; track item; let i = $index) {
+            @for (item of rankings; track item.jigsawLogId; let i = $index) {
               <tr [class.active]="item.faId === faId || item.userId === userId">
                 <td nzAlign="center" [title]="i + 1"><span class="hot-num">{{ i + 1 }}</span></td>
                 <td nzEllipsis [title]="item.user?.userNickname || '匿名用户'">

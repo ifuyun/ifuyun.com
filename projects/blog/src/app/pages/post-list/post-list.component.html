@@ -1,7 +1,7 @@
 <lib-breadcrumb></lib-breadcrumb>
 @if (total > 0) {
   <div [class.post-list]="!isMobile" [class.m-post-list]="isMobile">
-    @for (post of posts; track post; let i = $index) {
+    @for (post of posts; track post.post.postId; let i = $index) {
       <lib-post-item [post]="post" [index]="i"></lib-post-item>
     }
   </div>

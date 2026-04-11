@@ -52,7 +52,7 @@
                   <nz-icon nzType="folder"/>
                 </div>
                 <ul>
-                  @for (category of game.categories; track category) {
+                  @for (category of game.categories; track category.taxonomyId) {
                     <li>
                       <lib-a [href]="domains['game'].url + '/category/' + category.taxonomySlug"
                              title="{{ category.taxonomyName }}"
@@ -70,7 +70,7 @@
                   <nz-icon nzType="tag"/>
                 </div>
                 <ul>
-                  @for (tag of game.tags; track tag) {
+                  @for (tag of game.tags; track tag.tagId) {
                     <li>
                       <lib-a [href]="domains['game'].url + '/tag/' + tag.tagName"
                              [title]="tag.tagName"
@@ -157,7 +157,7 @@
             <div class="tags">
               <nz-icon nzType="folder"/>
               <div class="game-tag">
-                @for (category of game.categories; track category) {
+                @for (category of game.categories; track category.taxonomyId) {
                   <lib-a [href]="domains['game'].url + '/category/' + category.taxonomySlug"
                          title="{{ category.taxonomyName }}"
                          rel="category">{{ category.taxonomyName }}</lib-a>
