@@ -19,20 +19,6 @@ export const TOOL_LINKS = Object.freeze([
     title: 'MurmurHash',
     changefreq: 'monthly',
     priority: 0.8
-  },
-  {
-    label: 'IP 地址查询',
-    url: '/tool/ip',
-    title: 'IP 地址查询',
-    changefreq: 'monthly',
-    priority: 0.8
-  },
-  {
-    label: '电商工具',
-    url: '/tool/shopping',
-    title: '电商工具',
-    changefreq: 'weekly',
-    priority: 0.8
   }
 ]);
 

@@ -1,6 +1,5 @@
 import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import {
   ADMIN_URL_PARAM,
   AppConfigService,
@@ -31,7 +30,6 @@ import { TOOL_LINKS } from './tool.constant';
 @Component({
   selector: 'lib-header',
   imports: [
-    RouterLink,
     FormsModule,
     NzInputModule,
     NzIconModule,

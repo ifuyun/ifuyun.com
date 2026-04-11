@@ -1,26 +1,20 @@
-<form nz-form
-      nzLayout="vertical"
-      class="auth-form auth-form-padding"
-      [formGroup]="forgotForm"
-      (ngSubmit)="resetPassword()">
+<form nz-form nzLayout="vertical" class="auth-form auth-form-padding" [formGroup]="forgotForm">
   <nz-form-item>
     <nz-form-label>邮箱</nz-form-label>
     <nz-form-control [nzErrorTip]="nameErrorTpl">
-      <nz-input-group nzSearch [nzAddOnAfter]="sendBtn">
+      <nz-space-compact [style.width.%]="100">
         <input #emailInput
                nz-input
                type="text"
                formControlName="email"
                [maxlength]="maxEmailLength"
                placeholder="邮箱地址"/>
-      </nz-input-group>
-      <ng-template #sendBtn>
         <button nz-button
                 type="button"
                 nzType="primary"
                 [disabled]="!forgotForm.get('email')?.valid || countdown > 0"
                 (click)="sendVerificationCode()">验证{{ countdown > 0 ? ' (' + countdown + 's)' : '' }}</button>
-      </ng-template>
+      </nz-space-compact>
       <ng-template #nameErrorTpl let-control>
         @if (control.hasError('required')) {
           请输入邮箱

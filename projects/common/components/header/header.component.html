@@ -136,27 +136,20 @@
       </ul>
       <div class="actions">
         <div class="search">
-          <form method="get" action="/search" (ngSubmit)="search()">
-            <nz-input-group nzSearch [nzAddOnBefore]="searchTypeTpl" [nzAddOnAfter]="searchBtnTpl">
-              <input nz-input
-                     type="text"
-                     name="keyword"
-                     [(ngModel)]="keyword"
-                     autocomplete="off"
-                     placeholder="搜索{{searchTypeMap[this.searchType]}}（支持全文搜索）"/>
-            </nz-input-group>
-            <ng-template #searchTypeTpl>
-              <nz-select name="searchType" [(ngModel)]="searchType">
-                <nz-option nzLabel="全站" nzValue="all"></nz-option>
-                <nz-option nzLabel="博客" nzValue="post"></nz-option>
-                <nz-option nzLabel="壁纸" nzValue="wallpaper"></nz-option>
-                <nz-option nzLabel="游戏" nzValue="game"></nz-option>
-              </nz-select>
-            </ng-template>
-            <ng-template #searchBtnTpl>
-              <button nz-button nzSearch type="submit" nzType="primary"><nz-icon nzType="search"/></button>
-            </ng-template>
-          </form>
+          <nz-input-search (nzSearch)="search()">
+            <nz-select nzInputAddonBefore name="searchType" [(ngModel)]="searchType">
+              <nz-option nzLabel="全站" nzValue="all"></nz-option>
+              <nz-option nzLabel="博客" nzValue="post"></nz-option>
+              <nz-option nzLabel="壁纸" nzValue="wallpaper"></nz-option>
+              <nz-option nzLabel="游戏" nzValue="game"></nz-option>
+            </nz-select>
+            <input nz-input
+                   type="text"
+                   name="keyword"
+                   [(ngModel)]="keyword"
+                   autocomplete="off"
+                   placeholder="搜索{{searchTypeMap[this.searchType]}}（支持全文搜索）"/>
+          </nz-input-search>
         </div>
         @if (!isSignIn) {
           <a nz-button nzType="primary" [href]="domains['www'].url + '/user/login'">登录</a>
@@ -239,8 +232,14 @@
         </div>
       } @else {
         <div class="m-header-search">
-          <form class="m-search-form" method="get" action="/search" (ngSubmit)="search()">
-            <nz-input-group nzSearch nzSize="large" [nzAddOnBefore]="mSearchTypeTpl" [nzAddOnAfter]="mSearchBtnTpl">
+          <div class="m-search-form">
+            <nz-input-search (nzSearch)="search()">
+              <nz-select nzInputAddonBefore name="searchType" nzSize="large" [(ngModel)]="searchType">
+                <nz-option nzLabel="全站" nzValue="all"></nz-option>
+                <nz-option nzLabel="博客" nzValue="post"></nz-option>
+                <nz-option nzLabel="壁纸" nzValue="wallpaper"></nz-option>
+                <nz-option nzLabel="游戏" nzValue="game"></nz-option>
+              </nz-select>
               <input nz-input
                      #mSearchInput
                      type="text"
@@ -249,19 +248,8 @@
                      [(ngModel)]="keyword"
                      autocomplete="off"
                      placeholder="搜索{{searchTypeMap[this.searchType]}}（支持全文搜索）"/>
-            </nz-input-group>
-            <ng-template #mSearchTypeTpl>
-              <nz-select name="searchType" nzSize="large" [(ngModel)]="searchType">
-                <nz-option nzLabel="全站" nzValue="all"></nz-option>
-                <nz-option nzLabel="博客" nzValue="post"></nz-option>
-                <nz-option nzLabel="壁纸" nzValue="wallpaper"></nz-option>
-                <nz-option nzLabel="游戏" nzValue="game"></nz-option>
-              </nz-select>
-            </ng-template>
-            <ng-template #mSearchBtnTpl>
-              <button nz-button nzSearch type="submit" nzType="primary"><nz-icon nzType="search"/></button>
-            </ng-template>
-          </form>
+            </nz-input-search>
+          </div>
           <div class="m-mask m-mask-search" (click)="hideSearch()"></div>
         </div>
       }

@@ -13,7 +13,7 @@ import { NzResultModule } from 'ng-zorro-antd/result';
   styleUrl: '../error.component.less'
 })
 export class ServerErrorComponent implements OnInit {
-  @Input() errorState!: ErrorState;
+  @Input() errorState?: ErrorState;
 
   protected pageIndex = 'error-500';
 
