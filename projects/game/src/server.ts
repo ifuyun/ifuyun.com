@@ -20,7 +20,10 @@ const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
-const angularApp = new AngularNodeAppEngine();
+const angularApp = new AngularNodeAppEngine({
+  allowedHosts: environment.allowedHosts,
+  trustProxyHeaders: environment.trustProxies
+});
 
 app.use(antiCrawlers);
 app.get('/sitemap.xml', async (req: Request, res: Response) => {

@@ -1,5 +1,7 @@
 export const environment = {
   production: false,
+  allowedHosts: ['localhost'],
+  trustProxies: ['127.0.0.1'],
   apps: {
     www: {
       port: 6001,
