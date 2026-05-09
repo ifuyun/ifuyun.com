@@ -1,4 +1,4 @@
-<lib-breadcrumb></lib-breadcrumb>
+<lib-breadcrumb/>
 @if (game) {
   <div class="post" [class.p-post]="!isMobile" [class.m-post]="isMobile">
     <header class="post-header">
@@ -93,15 +93,15 @@
         </div>
       </div>
     </footer>
-    <app-game-prev-next></app-game-prev-next>
+    <app-game-prev-next/>
   </div>
-  <app-game-related></app-game-related>
-  <lib-make-money></lib-make-money>
-  <lib-comment [objectType]="commentType" [enableAI]="false"></lib-comment>
+  <app-game-related/>
+  <lib-make-money/>
+  <lib-comment [objectType]="commentType" [enableAI]="false"/>
   @if (shareVisible) {
-    <lib-share-modal [shareUrl]="shareUrl" (close)="closeShareQrcode()"></lib-share-modal>
+    <lib-share-modal [shareUrl]="shareUrl" (close)="closeShareQrcode()"/>
   }
   @if (gameModalVisible) {
-    <lib-game-modal [game]="game" (close)="closeGameModal()"></lib-game-modal>
+    <lib-game-modal [game]="game" (close)="closeGameModal()"/>
   }
 }

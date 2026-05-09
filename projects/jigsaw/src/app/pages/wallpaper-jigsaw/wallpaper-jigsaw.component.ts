@@ -24,6 +24,7 @@ import {
   UserAgentService
 } from 'common/core';
 import { CommentObjectType, FavoriteType, VoteType, VoteValue, WallpaperLang } from 'common/enums';
+import { IconCalendarDateComponent, IconShareFillComponent } from 'common/icons';
 import { TenantAppModel, Wallpaper } from 'common/interfaces';
 import { NumberViewPipe } from 'common/pipes';
 import {
@@ -58,7 +59,9 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
     WallpaperRelatedComponent,
     ShareModalComponent,
     CommentComponent,
-    MakeMoneyComponent
+    MakeMoneyComponent,
+    IconCalendarDateComponent,
+    IconShareFillComponent
   ],
   providers: [DestroyService, NzImageService],
   templateUrl: './wallpaper-jigsaw.component.html',

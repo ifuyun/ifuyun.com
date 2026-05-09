@@ -24,6 +24,7 @@ import {
   UserAgentService
 } from 'common/core';
 import { CommentObjectType, FavoriteType, VoteType, VoteValue } from 'common/enums';
+import { IconCalendarDateComponent, IconShareFillComponent } from 'common/icons';
 import { Game, GameEntity, TagEntity, TaxonomyEntity, TenantAppModel } from 'common/interfaces';
 import { NumberViewPipe, SafeHtmlPipe } from 'common/pipes';
 import {
@@ -60,7 +61,9 @@ import { GameRelatedComponent } from '../../components/game-related/game-related
     GameModalComponent,
     CommentComponent,
     ShareModalComponent,
-    MakeMoneyComponent
+    MakeMoneyComponent,
+    IconCalendarDateComponent,
+    IconShareFillComponent
   ],
   providers: [DestroyService, NzImageService],
   templateUrl: './game.component.html',

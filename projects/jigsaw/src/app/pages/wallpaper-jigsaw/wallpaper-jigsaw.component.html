@@ -1,4 +1,4 @@
-<lib-breadcrumb></lib-breadcrumb>
+<lib-breadcrumb/>
 @if (wallpaper) {
   <div class="post" [class.p-post]="!isMobile" [class.m-post]="isMobile">
     <header class="post-header">
@@ -19,7 +19,7 @@
     </header>
     <div class="divider"></div>
     <div class="jigsaw-body">
-      <lib-jigsaw></lib-jigsaw>
+      <lib-jigsaw/>
     </div>
     <footer class="post-footer">
       <div class="post-actions">
@@ -39,12 +39,12 @@
         </div>
       </div>
     </footer>
-    <lib-wallpaper-prev-next [jigsaw]="true" [lang]="lang"></lib-wallpaper-prev-next>
+    <lib-wallpaper-prev-next [jigsaw]="true" [lang]="lang"/>
   </div>
-  <lib-wallpaper-related [jigsaw]="true" [lang]="lang"></lib-wallpaper-related>
-  <lib-make-money></lib-make-money>
-  <lib-comment [objectType]="commentType" [enableAI]="true"></lib-comment>
+  <lib-wallpaper-related [jigsaw]="true" [lang]="lang"/>
+  <lib-make-money/>
+  <lib-comment [objectType]="commentType" [enableAI]="true"/>
   @if (shareVisible) {
-    <lib-share-modal [shareUrl]="shareUrl" (close)="closeShareQrcode()"></lib-share-modal>
+    <lib-share-modal [shareUrl]="shareUrl" (close)="closeShareQrcode()"/>
   }
 }

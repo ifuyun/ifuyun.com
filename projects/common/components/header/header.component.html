@@ -135,10 +135,10 @@
         <div class="search">
           <nz-input-search (nzSearch)="search()">
             <nz-select nzInputAddonBefore name="searchType" [(ngModel)]="searchType">
-              <nz-option nzLabel="全站" nzValue="all"></nz-option>
-              <nz-option nzLabel="博客" nzValue="post"></nz-option>
-              <nz-option nzLabel="壁纸" nzValue="wallpaper"></nz-option>
-              <nz-option nzLabel="游戏" nzValue="game"></nz-option>
+              <nz-option nzLabel="全站" nzValue="all"/>
+              <nz-option nzLabel="博客" nzValue="post"/>
+              <nz-option nzLabel="壁纸" nzValue="wallpaper"/>
+              <nz-option nzLabel="游戏" nzValue="game"/>
             </nz-select>
             <input nz-input
                    type="text"
@@ -215,7 +215,7 @@
       </div>
     </div>
   </header>
-  <lib-wallpaper-modal [visible]="wallpaperModalVisible" (close)="closeWallpaperModal()"></lib-wallpaper-modal>
+  <lib-wallpaper-modal [visible]="wallpaperModalVisible" (close)="closeWallpaperModal()"/>
 } @else {
   <header class="m-header-wrap">
     <div class="m-header">
@@ -232,10 +232,10 @@
           <div class="m-search-form">
             <nz-input-search (nzSearch)="search()">
               <nz-select nzInputAddonBefore name="searchType" nzSize="large" [(ngModel)]="searchType">
-                <nz-option nzLabel="全站" nzValue="all"></nz-option>
-                <nz-option nzLabel="博客" nzValue="post"></nz-option>
-                <nz-option nzLabel="壁纸" nzValue="wallpaper"></nz-option>
-                <nz-option nzLabel="游戏" nzValue="game"></nz-option>
+                <nz-option nzLabel="全站" nzValue="all"/>
+                <nz-option nzLabel="博客" nzValue="post"/>
+                <nz-option nzLabel="壁纸" nzValue="wallpaper"/>
+                <nz-option nzLabel="游戏" nzValue="game"/>
               </nz-select>
               <input nz-input
                      #mSearchInput

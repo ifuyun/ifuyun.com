@@ -121,15 +121,15 @@
           }
           @if (replyVisibleMap[comment.commentId]) {
             <div [style.padding-left]="(comment.level - 1) * (isMobile ? 32 : 50) + 'px'">
-              <ng-container *ngTemplateOutlet="commentFormTpl; context: { $implicit: replyForm }"></ng-container>
+              <ng-container *ngTemplateOutlet="commentFormTpl; context: { $implicit: replyForm }"/>
             </div>
           }
           @if (comment.children.length > 0) {
-            <ng-container *ngTemplateOutlet="commentsTpl; context: { $implicit: comment.children }"></ng-container>
+            <ng-container *ngTemplateOutlet="commentsTpl; context: { $implicit: comment.children }"/>
           }
         }
       </ng-template>
-      <ng-container *ngTemplateOutlet="commentsTpl; context: { $implicit: comments }"></ng-container>
+      <ng-container *ngTemplateOutlet="commentsTpl; context: { $implicit: comments }"/>
     </div>
   }
   <ng-template #commentFormTpl let-form>
@@ -173,6 +173,6 @@
     @if (comments.length > 0) {
       <div class="divider"></div>
     }
-    <ng-container *ngTemplateOutlet="commentFormTpl; context: { $implicit: commentForm }"></ng-container>
+    <ng-container *ngTemplateOutlet="commentFormTpl; context: { $implicit: commentForm }"/>
   }
 </div>

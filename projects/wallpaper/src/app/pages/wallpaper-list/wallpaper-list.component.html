@@ -1,4 +1,4 @@
-<lib-breadcrumb></lib-breadcrumb>
+<lib-breadcrumb/>
 @if (total > 0) {
   <div class="filter" [class.p-filter]="!isMobile" [class.m-filter]="isMobile">
     <div>
@@ -47,13 +47,13 @@
                           [wallpaper]="wallpaper"
                           [lang]="lang"
                           [mode]="mode"
-                          [index]="i"></lib-wallpaper-item>
+                          [index]="i"/>
     }
   </div>
 } @else {
   <div class="empty" [class.p-empty]="!isMobile" [class.m-empty]="isMobile">
-    <nz-empty nzNotFoundImage="simple"></nz-empty>
+    <nz-empty nzNotFoundImage="simple"/>
   </div>
 }
-<lib-make-money></lib-make-money>
-<lib-pagination></lib-pagination>
+<lib-make-money/>
+<lib-pagination/>

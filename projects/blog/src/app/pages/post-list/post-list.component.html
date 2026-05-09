@@ -1,14 +1,14 @@
-<lib-breadcrumb></lib-breadcrumb>
+<lib-breadcrumb/>
 @if (total > 0) {
   <div [class.post-list]="!isMobile" [class.m-post-list]="isMobile">
     @for (post of posts; track post.post.postId; let i = $index) {
-      <lib-post-item [post]="post" [index]="i"></lib-post-item>
+      <lib-post-item [post]="post" [index]="i"/>
     }
   </div>
 } @else {
   <div class="empty" [class.p-empty]="!isMobile" [class.m-empty]="isMobile">
-    <nz-empty nzNotFoundImage="simple"></nz-empty>
+    <nz-empty nzNotFoundImage="simple"/>
   </div>
 }
-<lib-make-money></lib-make-money>
-<lib-pagination></lib-pagination>
+<lib-make-money/>
+<lib-pagination/>

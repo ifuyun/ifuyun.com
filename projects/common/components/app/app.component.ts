@@ -31,9 +31,7 @@ import {
 } from 'common/services';
 import { generateUid } from 'common/utils';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzDropdownDirective, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzMenuDirective, NzMenuItemComponent } from 'ng-zorro-antd/menu';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { filter, takeWhile, tap } from 'rxjs/operators';
@@ -59,10 +57,6 @@ import { MSiderComponent } from '../m-sider/m-sider.component';
     NzButtonModule,
     NzTooltipModule,
     NzIconModule,
-    NzDropdownDirective,
-    NzDropdownMenuComponent,
-    NzMenuDirective,
-    NzMenuItemComponent,
     IconStarsComponent
   ],
   providers: [],

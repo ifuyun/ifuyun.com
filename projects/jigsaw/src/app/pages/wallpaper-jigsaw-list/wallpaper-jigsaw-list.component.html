@@ -1,4 +1,4 @@
-<lib-breadcrumb></lib-breadcrumb>
+<lib-breadcrumb/>
 @if (total > 0) {
   <div class="post-card-list" [class.post-card-list-2]="!isMobile">
     @for (wallpaper of wallpapers; track wallpaper.wallpaperId; let i = $index) {
@@ -6,13 +6,13 @@
                           [wallpaper]="wallpaper"
                           [mode]="ListMode.CARD"
                           [jigsaw]="true"
-                          [index]="i"></lib-wallpaper-item>
+                          [index]="i"/>
     }
   </div>
 } @else {
   <div class="empty" [class.p-empty]="!isMobile" [class.m-empty]="isMobile">
-    <nz-empty nzNotFoundImage="simple"></nz-empty>
+    <nz-empty nzNotFoundImage="simple"/>
   </div>
 }
-<lib-make-money></lib-make-money>
-<lib-pagination></lib-pagination>
+<lib-make-money/>
+<lib-pagination/>

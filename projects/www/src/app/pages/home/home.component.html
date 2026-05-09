@@ -1,6 +1,6 @@
 @if (!isMobile) {
   <div class="banner">
-    <lib-carousel></lib-carousel>
+    <lib-carousel/>
     <div class="banner-post">
       <div class="column-header">热门文章</div>
       <ul class="banner-post-list">
@@ -101,11 +101,11 @@
     </div>
   </div>
 } @else {
-  <lib-carousel></lib-carousel>
+  <lib-carousel/>
   <div class="column-header m-column-header">最新文章</div>
   <div class="m-post-list">
     @for (post of latestPosts; track post.post.postId; let i = $index) {
-      <lib-post-item [post]="post" [index]="i"></lib-post-item>
+      <lib-post-item [post]="post" [index]="i"/>
     }
   </div>
   <div class="post-more">
@@ -114,7 +114,7 @@
   <div class="column-header m-column-header">最新壁纸</div>
   <div class="m-post-list">
     @for (wallpaper of latestWallpapers; track wallpaper.wallpaperId; let i = $index) {
-      <lib-wallpaper-item [wallpaper]="wallpaper" [mode]="wallpaperListMode" [index]="i"></lib-wallpaper-item>
+      <lib-wallpaper-item [wallpaper]="wallpaper" [mode]="wallpaperListMode" [index]="i"/>
     }
   </div>
   <div class="post-more">

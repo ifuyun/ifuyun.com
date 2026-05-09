@@ -7,7 +7,7 @@ import { CommonService } from 'common/services';
   selector: 'lib-a',
   imports: [NgTemplateOutlet, RouterLink],
   template: `
-    <ng-template #contentTpl><ng-content /></ng-template>
+    <ng-template #contentTpl><ng-content></ng-content></ng-template>
     @if (isAbsoluteUrl) {
       <a [href]="href" [title]="title" [attr.target]="target" [attr.rel]="rel">
         <ng-container *ngTemplateOutlet="contentTpl"></ng-container>

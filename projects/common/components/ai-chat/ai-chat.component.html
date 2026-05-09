@@ -14,22 +14,22 @@
     <div class="bot-wrap">
       @if (initialized) {
         @if (!authChat || user.userLlmStatus === 'disabled') {
-          <nz-alert nzBanner nzType="error" [nzMessage]="noAuthMessage"></nz-alert>
+          <nz-alert nzBanner nzType="error" [nzMessage]="noAuthMessage"/>
         }
         @if (authChat && user.userLlmStatus === 'expired') {
-          <nz-alert nzBanner nzType="error" [nzMessage]="expiredMessage"></nz-alert>
+          <nz-alert nzBanner nzType="error" [nzMessage]="expiredMessage"/>
         }
         @if (authChat && user.userLlmStatus === 'enabled' && !isChatModelEnabled) {
-          <nz-alert nzBanner nzType="error" [nzMessage]="noModelAuthMessage"></nz-alert>
+          <nz-alert nzBanner nzType="error" [nzMessage]="noModelAuthMessage"/>
         }
         @if (authChat && user.userLlmStatus === 'enabled' && isChatModelEnabled && isChatLimit) {
-          <nz-alert nzBanner nzType="error" [nzMessage]="outOfLimitMessage"></nz-alert>
+          <nz-alert nzBanner nzType="error" [nzMessage]="outOfLimitMessage"/>
         }
         @if (isChatTrashed) {
-          <nz-alert nzBanner nzType="error" [nzMessage]="isTrashedMessage"></nz-alert>
+          <nz-alert nzBanner nzType="error" [nzMessage]="isTrashedMessage"/>
         }
         @if (isNotOwner) {
-          <nz-alert nzBanner nzType="error" [nzMessage]="notOwnerMessage"></nz-alert>
+          <nz-alert nzBanner nzType="error" [nzMessage]="notOwnerMessage"/>
         }
       }
       <div class="messages">
@@ -132,12 +132,12 @@
             }
             @if (messages.length < 1) {
               <div class="message-empty">
-                <nz-empty nzNotFoundImage="simple"></nz-empty>
+                <nz-empty nzNotFoundImage="simple"/>
               </div>
             }
           } @else {
             <div class="message-loading">
-              <nz-spin [nzSpinning]="messageLoading"></nz-spin>
+              <nz-spin [nzSpinning]="messageLoading"/>
             </div>
           }
         </div>

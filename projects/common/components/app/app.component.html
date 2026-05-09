@@ -1,13 +1,13 @@
 @if (!errorPage) {
   @if (!errorState || !errorState.visible) {
     @if (!isMobile) {
-      <lib-header></lib-header>
+      <lib-header/>
       <div class="body-wrap">
         <div class="body" [class.body-center]="isBodyCentered">
           <router-outlet/>
         </div>
       </div>
-      <lib-footer></lib-footer>
+      <lib-footer/>
       @if ((indexInfo?.isPost || indexInfo?.isWallpaper) && indexInfo?.isDetail) {
         <div class="tool-widget">
           <button nz-button
@@ -30,21 +30,21 @@
       }
     } @else {
       <div class="m-body-wrap" [class.open]="siderVisible">
-        <lib-header></lib-header>
+        <lib-header/>
         <div class="m-body">
           <main class="m-main" [class.m-main-center]="isBodyCentered">
             <router-outlet/>
           </main>
-          <lib-footer></lib-footer>
+          <lib-footer/>
         </div>
         @if (siderVisible) {
           <div class="m-mask m-mask-sider" (click)="closeSider()"></div>
         }
       </div>
-      <lib-m-sider></lib-m-sider>
+      <lib-m-sider/>
     }
     @if (loginOptions.visible) {
-      <lib-login-modal [closable]="loginOptions.closable" (close)="closeLoginModal()"></lib-login-modal>
+      <lib-login-modal [closable]="loginOptions.closable" (close)="closeLoginModal()"/>
     }
     <img [style.display]="'none'"
          [src]="adsImg"
@@ -55,13 +55,13 @@
     <!--global errors-->
     @switch (errorState.code) {
       @case (403) {
-        <lib-forbidden [errorState]="errorState"></lib-forbidden>
+        <lib-forbidden [errorState]="errorState"/>
       }
       @case (404) {
-        <lib-not-found [errorState]="errorState"></lib-not-found>
+        <lib-not-found [errorState]="errorState"/>
       }
       @default {
-        <lib-server-error [errorState]="errorState"></lib-server-error>
+        <lib-server-error [errorState]="errorState"/>
       }
     }
   }

@@ -1,5 +1,5 @@
 @if (isArticle) {
-  <lib-breadcrumb></lib-breadcrumb>
+  <lib-breadcrumb/>
 }
 @if (post) {
   <div class="post" [class.p-post]="!isMobile" [class.m-post]="isMobile">
@@ -157,15 +157,15 @@
       </div>
     </footer>
     @if (isArticle) {
-      <lib-post-prev-next></lib-post-prev-next>
+      <lib-post-prev-next/>
     }
   </div>
   @if (isArticle) {
-    <lib-post-related></lib-post-related>
+    <lib-post-related/>
   }
-  <lib-make-money></lib-make-money>
-  <lib-comment [objectType]="commentType" [enableAI]="!post.postPayFlag && !post.postLoginFlag"></lib-comment>
+  <lib-make-money/>
+  <lib-comment [objectType]="commentType" [enableAI]="!post.postPayFlag && !post.postLoginFlag"/>
   @if (shareVisible) {
-    <lib-share-modal [shareUrl]="shareUrl" (close)="closeShareQrcode()"></lib-share-modal>
+    <lib-share-modal [shareUrl]="shareUrl" (close)="closeShareQrcode()"/>
   }
 }
