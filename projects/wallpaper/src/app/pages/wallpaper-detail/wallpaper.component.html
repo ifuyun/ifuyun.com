@@ -10,7 +10,7 @@
       </h1>
       <div class="post-meta post-meta-top">
         <span title="日期: {{ wallpaper.wallpaperDate | date: 'yyyy-MM-dd' }}">
-          <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date: 'yyyy-MM-dd' }}</span>
+          <fi-calendar-date class="fi"/><span>{{ wallpaper.wallpaperDate | date: 'yyyy-MM-dd' }}</span>
         </span>
         <span title="访问：{{ wallpaper.wallpaperViews | numberView: 'K' }}">
           <nz-icon nzType="eye"/><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
@@ -32,14 +32,14 @@
                 (click)="download()"
                 [nzLoading]="downloading"
                 title="下载《{{wallpaper.wallpaperCopyright}}》高清壁纸">
-          <span class="fi fi-download"></span><span>{{ isMobile ? '2K' : '1920x1080' }}</span>
+          <fi-download class="fi"/><span>{{ isMobile ? '2K' : '1920x1080' }}</span>
         </button>
         <button nz-button
                 nzType="primary"
                 (click)="download(true)"
                 [nzLoading]="downloading"
                 title="下载《{{wallpaper.wallpaperCopyright}}》 4K 超高清壁纸">
-          <span class="fi fi-download"></span><span>{{ isMobile ? '4K' : '4K 超高清' }}</span>
+          <fi-download class="fi"/><span>{{ isMobile ? '4K' : '4K 超高清' }}</span>
         </button>
         <a nz-button
            nzType="primary"
@@ -94,7 +94,7 @@
                   (click)="addFavorite()"
                   [title]="wallpaper.isFavorite ? '已收藏' : '收藏'"><nz-icon nzType="star" nzTheme="fill"/></button>
           @if (!isMobile) {
-            <button (click)="showShareQrcode()" title="分享"><span class="fi fi-share-fill"></span></button>
+            <button (click)="showShareQrcode()" title="分享"><fi-share-fill/></button>
           }
         </div>
       </div>

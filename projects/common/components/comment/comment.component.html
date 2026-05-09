@@ -57,7 +57,7 @@
                   <span>{{ comment.commentDislikes }}</span>
                 </a>
                 @if (!replyVisibleMap[comment.commentId]) {
-                  <a (click)="reply(comment)"><span class="fi fi-chat-square"></span><span>回复</span></a>
+                  <a (click)="reply(comment)"><fi-chat-square class="fi"/><span>回复</span></a>
                 } @else {
                   <a (click)="cancelReply()"><nz-icon nzType="close"/><span>取消</span></a>
                 }
@@ -110,7 +110,7 @@
                       <span>{{ comment.commentDislikes }}</span>
                     </a>
                     @if (!replyVisibleMap[comment.commentId]) {
-                      <a (click)="reply(comment)"><span class="fi fi-chat-square"></span></a>
+                      <a (click)="reply(comment)"><fi-chat-square/></a>
                     } @else {
                       <a (click)="cancelReply()"><nz-icon nzType="close"/></a>
                     }

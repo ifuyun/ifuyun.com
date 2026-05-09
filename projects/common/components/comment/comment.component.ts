@@ -11,6 +11,7 @@ import {
   UserAgentService
 } from 'common/core';
 import { CommentObjectType, VoteType, VoteValue } from 'common/enums';
+import { IconChatSquareComponent } from 'common/icons';
 import { Comment, CommentModel, TenantAppModel } from 'common/interfaces';
 import { SafeHtmlPipe } from 'common/pipes';
 import {
@@ -42,7 +43,9 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
     NzInputModule,
     NzButtonModule,
     NzCheckboxModule,
-    NzIconModule
+    NzIconModule,
+    IconChatSquareComponent,
+    IconChatSquareComponent
   ],
   providers: [DestroyService],
   templateUrl: './comment.component.html',

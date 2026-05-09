@@ -15,7 +15,7 @@
           </header>
           <div class="post-item-meta">
             <div [title]="game.game.gameCreated | date:'yyyy-MM-dd'">
-              <span class="fi fi-calendar-date"></span><span>{{ game.game.gameCreated | date:'yyyy-MM-dd' }}</span>
+              <fi-calendar-date class="fi"/><span>{{ game.game.gameCreated | date:'yyyy-MM-dd' }}</span>
             </div>
             <div>
               <nz-icon nzType="eye"/><span>{{ game.game.gameViews | numberView: 'K' }}</span>
@@ -102,7 +102,7 @@
       </header>
       <div class="m-post-item-meta">
         <span [title]="game.game.gameCreated | date:'yyyy-MM-dd'">
-          <span class="fi fi-calendar-date"></span><span>{{ game.game.gameCreated | date:'yyyy-MM-dd' }}</span>
+          <fi-calendar-date class="fi"/><span>{{ game.game.gameCreated | date:'yyyy-MM-dd' }}</span>
         </span>
       </div>
       <div class="m-post-item-cover">
@@ -167,7 +167,7 @@
           </div>
           <div class="post-meta">
             <div class="date" [title]="game.game.gameCreated | date:'yyyy-MM-dd'">
-              <span class="fi fi-calendar-date"></span><span>{{ game.game.gameCreated | date:'yyyy-MM-dd' }}</span>
+              <fi-calendar-date class="fi"/><span>{{ game.game.gameCreated | date:'yyyy-MM-dd' }}</span>
             </div>
             <div class="actions">
               <div title="浏览: {{ game.game.gameViews | numberView: 'K' }}">
@@ -178,9 +178,9 @@
               </div>
               <div title="评论: {{ game.game.gameComments | numberView: 'K' }}">
                 @if (game.game.gameComments > 0) {
-                  <span class="fi fi-chat-square-dots"></span><span>{{ game.game.gameComments | numberView: 'K' }}</span>
+                  <fi-chat-square-dots class="fi"/><span>{{ game.game.gameComments | numberView: 'K' }}</span>
                 } @else {
-                  <span class="fi fi-chat-square"></span><span>0</span>
+                  <fi-chat-square class="fi"/><span>0</span>
                 }
               </div>
             </div>

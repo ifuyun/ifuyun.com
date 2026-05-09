@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import {
   ADMIN_URL_PARAM,
   AppConfigService,
@@ -10,6 +9,7 @@ import {
   ResponseCode
 } from 'common/core';
 import { ActionObjectType, ActionType } from 'common/enums';
+import { IconCalendarDateComponent } from 'common/icons';
 import { TenantAppModel } from 'common/interfaces';
 import { CommonService, LogService, TenantAppService, UserService } from 'common/services';
 import { format } from 'common/utils';
@@ -21,7 +21,7 @@ import { SmartLinkComponent } from '../smart-link/smart-link.component';
 
 @Component({
   selector: 'lib-m-sider',
-  imports: [RouterLink, NzIconModule, SmartLinkComponent],
+  imports: [NzIconModule, SmartLinkComponent, IconCalendarDateComponent],
   providers: [DestroyService, NzImageService],
   templateUrl: './m-sider.component.html',
   styleUrl: './m-sider.component.less'

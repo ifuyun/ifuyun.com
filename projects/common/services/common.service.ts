@@ -3,14 +3,12 @@ import { DOCUMENT, ElementRef, Inject, Injectable, Optional, REQUEST, RESPONSE_I
 import { NavigationExtras, Router } from '@angular/router';
 import {
   ApiService,
-  ApiUrl,
   AppConfigService,
   CDN_HOST,
   COOKIE_KEY_THEME,
   COOKIE_KEY_TURNSTILE_ID,
   COOKIE_KEY_USER_ID,
   CustomError,
-  HttpResponseEntity,
   LoginModalOptions,
   MEDIA_QUERY_THEME_DARK,
   MEDIA_QUERY_THEME_LIGHT,
@@ -270,17 +268,6 @@ export class CommonService {
       !this.userAgentService.browser.name ||
       isSuspiciousReferrer(referrer) ||
       (this.platform.isBrowser && isSuspiciousResolution(resolution))
-    );
-  }
-
-  verifyTurnstile(token: string): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(
-      ApiUrl.UTIL_TURNSTILE_VERIFY,
-      {
-        token,
-        appId: this.appConfigService.appId
-      },
-      true
     );
   }
 }

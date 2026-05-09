@@ -11,7 +11,6 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import {
   AppConfigService,
   AppDomainConfig,
@@ -22,15 +21,24 @@ import {
   UserAgentService
 } from 'common/core';
 import { WallpaperLang } from 'common/enums';
+import {
+  IconDownloadComponent,
+  IconFullscreenComponent,
+  IconFullscreenExitComponent,
+  IconPlayFillComponent,
+  IconStopFillComponent,
+  IconTrophyFillComponent
+} from 'common/icons';
 import { Wallpaper } from 'common/interfaces';
 import { DurationPipe } from 'common/pipes';
 import { CommonService, UserService, WallpaperJigsawService, WallpaperService } from 'common/services';
 import { transformDuration } from 'common/utils';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzDropdownDirective, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageService } from 'ng-zorro-antd/image';
+import { NzMenuDirective, NzMenuItemComponent } from 'ng-zorro-antd/menu';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
@@ -44,16 +52,28 @@ import { JigsawService } from './jigsaw.service';
 @Component({
   selector: 'lib-jigsaw',
   imports: [
-    RouterLink,
     DatePipe,
     DurationPipe,
     NzSelectModule,
     NzButtonModule,
     NzIconModule,
-    NzDropDownModule,
+    NzDropdownDirective,
+    NzDropdownMenuComponent,
+    NzMenuDirective,
+    NzMenuItemComponent,
     NzPopoverModule,
     NzTableModule,
-    NzEmptyModule
+    NzEmptyModule,
+    IconPlayFillComponent,
+    IconStopFillComponent,
+    IconDownloadComponent,
+    IconTrophyFillComponent,
+    IconFullscreenComponent,
+    IconFullscreenExitComponent,
+    IconPlayFillComponent,
+    IconStopFillComponent,
+    IconFullscreenExitComponent,
+    IconFullscreenComponent
   ],
   providers: [DestroyService, NzImageService, NzModalService],
   templateUrl: './jigsaw.component.html',

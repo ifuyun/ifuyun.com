@@ -1,8 +1,8 @@
 export * from './adsense/adsense.component';
+export * from './ai-chat/ai-chat.component';
 export * from './app/app.component';
 export * from './auth-layout/auth-layout.component';
 export * from './breadcrumb/breadcrumb.component';
-export * from './bot-chat/bot-chat.component';
 export * from './carousel/carousel.component';
 export * from './comment/comment.component';
 export * from './content-layout/content-layout.component';
@@ -33,7 +33,6 @@ export * from './post/copyright.constant';
 export * from './share-modal/share-modal.component';
 export * from './sider/sider.component';
 export * from './smart-link/smart-link.component';
-export * from './turnstile/turnstile.component';
 export * from './wallpaper/wallpaper-item/wallpaper-item.component';
 export * from './wallpaper/wallpaper-modal/wallpaper-modal.component';
 export * from './wallpaper/wallpaper-prev-next/wallpaper-prev-next.component';

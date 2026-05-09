@@ -12,7 +12,7 @@
       </h1>
       <div class="post-meta post-meta-top">
         <span title="发布: {{ post.postDate | date:'yyyy-MM-dd' }}">
-          <span class="fi fi-calendar-date"></span><span>{{ post.postDate | date:'yyyy-MM-dd' }}</span>
+          <fi-calendar-date class="fi"/><span>{{ post.postDate | date:'yyyy-MM-dd' }}</span>
         </span>
         <span title="作者：{{ post.postAuthor || post.owner.userNickname }}">
           <nz-icon nzType="user"/><span>{{ post.postAuthor || post.owner.userNickname }}</span>
@@ -38,7 +38,7 @@
             <div class="text">还有 {{ 100 - (post.postFreePercent || 0) }}% 的精彩内容</div>
           </div>
         </div>
-        <div class="pay-icon"><span class="fi fi-lock"></span></div>
+        <div class="pay-icon"><fi-lock/></div>
         <div class="pay-tip">
           <!--post.postPayFlag-->
           @if (post.postLoginFlag) {
@@ -151,7 +151,7 @@
                     [title]="isFavorite ? '已收藏' : '收藏'"><nz-icon nzType="star" nzTheme="fill"/></button>
           }
           @if (!isMobile) {
-            <button (click)="showShareQrcode()" title="分享"><span class="fi fi-share-fill"></span></button>
+            <button (click)="showShareQrcode()" title="分享"><fi-share-fill/></button>
           }
         </div>
       </div>

@@ -70,7 +70,6 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   isFocused = false;
 
   private adminUrl = '';
-  private botsUrl = '';
 
   constructor(
     private readonly destroy$: DestroyService,
@@ -103,7 +102,6 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
         this.appInfo = appInfo;
         if (this.appInfo.appAdminUrl) {
           this.adminUrl = this.appInfo.appAdminUrl + '?' + urlParam;
-          this.botsUrl = this.appInfo.appAdminUrl.replace(/\/$/i, '') + '/bots' + '?' + urlParam;
         }
       });
     this.taxonomyService.getTaxonomies().subscribe((taxonomies) => (this.postTaxonomies = taxonomies));
@@ -148,14 +146,6 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   hideSearch() {
     this.searchVisible = false;
     this.isFocused = false;
-  }
-
-  gotoBots() {
-    if (!this.isSignIn) {
-      this.showLoginModal();
-      return;
-    }
-    window.open(this.botsUrl);
   }
 
   showLoginModal() {

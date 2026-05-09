@@ -16,6 +16,7 @@ import {
 } from 'common/core';
 import { PostScope, PostStatus, Theme } from 'common/enums';
 import { ForbiddenComponent, NotFoundComponent, ServerErrorComponent } from 'common/error';
+import { IconStarsComponent } from 'common/icons';
 import { Post, Wallpaper } from 'common/interfaces';
 import {
   AdsService,
@@ -30,11 +31,13 @@ import {
 } from 'common/services';
 import { generateUid } from 'common/utils';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzDropdownDirective, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzMenuDirective, NzMenuItemComponent } from 'ng-zorro-antd/menu';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { filter, takeWhile, tap } from 'rxjs/operators';
-import { BotChatComponent } from '../bot-chat/bot-chat.component';
+import { AiChatComponent } from '../ai-chat/ai-chat.component';
 import { FooterComponent } from '../footer/footer.component';
 import { GameService } from '../game/game.service';
 import { HeaderComponent } from '../header/header.component';
@@ -49,13 +52,18 @@ import { MSiderComponent } from '../m-sider/m-sider.component';
     FooterComponent,
     MSiderComponent,
     LoginModalComponent,
-    BotChatComponent,
+    AiChatComponent,
     NotFoundComponent,
     ForbiddenComponent,
     ServerErrorComponent,
     NzButtonModule,
     NzTooltipModule,
-    NzIconModule
+    NzIconModule,
+    NzDropdownDirective,
+    NzDropdownMenuComponent,
+    NzMenuDirective,
+    NzMenuItemComponent,
+    IconStarsComponent
   ],
   providers: [],
   templateUrl: './app.component.html',

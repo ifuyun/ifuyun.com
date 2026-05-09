@@ -33,7 +33,7 @@
               <div class="post-meta-wrap">
                 <div class="post-meta">
                   <div class="date" [title]="post.post.postDate | date:'yyyy-MM-dd'">
-                    <span class="fi fi-calendar-date"></span><span>{{ post.post.postDate | date:'yyyy-MM-dd' }}</span>
+                    <fi-calendar-date class="fi"/><span>{{ post.post.postDate | date:'yyyy-MM-dd' }}</span>
                   </div>
                   <div class="actions">
                     <div class="action-item" title="浏览: {{ post.post.postViews | numberView: 'K' }}">
@@ -42,10 +42,9 @@
                     @if (post.post.commentFlag !== 'closed') {
                       <div class="action-item" title="评论: {{ post.post.postComments | numberView: 'K' }}">
                         @if (post.post.postComments > 0) {
-                          <span class="fi fi-chat-square-dots"></span>
-                          <span>{{ post.post.postComments | numberView: 'K' }}</span>
+                          <fi-chat-square-dots class="fi"/><span>{{ post.post.postComments | numberView: 'K' }}</span>
                         } @else {
-                          <span class="fi fi-chat-square"></span><span>0</span>
+                          <fi-chat-square class="fi"/><span>0</span>
                         }
                       </div>
                     }
@@ -80,7 +79,7 @@
               <div class="post-meta-wrap">
                 <div class="post-meta">
                   <div class="date" [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
-                    <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
+                    <fi-calendar-date class="fi"/><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
                   </div>
                   <div class="actions">
                     <div class="action-item" title="浏览: {{ wallpaper.wallpaperViews | numberView: 'K' }}">

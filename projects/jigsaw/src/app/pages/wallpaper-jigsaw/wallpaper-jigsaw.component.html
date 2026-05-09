@@ -10,7 +10,7 @@
       </h1>
       <div class="post-meta post-meta-top">
         <span title="日期: {{ wallpaper.wallpaperDate | date: 'yyyy-MM-dd' }}">
-          <span class="fi fi-calendar-date"></span><span>{{ wallpaper.wallpaperDate | date: 'yyyy-MM-dd' }}</span>
+          <fi-calendar-date class="fi"/><span>{{ wallpaper.wallpaperDate | date: 'yyyy-MM-dd' }}</span>
         </span>
         <span title="拼图：{{ wallpaper.wallpaperPlays | numberView: 'K' }}">
           <nz-icon nzType="product"/><span>{{ wallpaper.wallpaperPlays | numberView: 'K' }}</span>
@@ -34,7 +34,7 @@
                   (click)="addFavorite()"
                   [title]="wallpaper.isFavorite ? '已收藏' : '收藏'"><nz-icon nzType="star" nzTheme="fill"/></button>
           @if (!isMobile) {
-            <button (click)="showShareQrcode()" title="分享"><span class="fi fi-share-fill"></span></button>
+            <button (click)="showShareQrcode()" title="分享"><fi-share-fill/></button>
           }
         </div>
       </div>

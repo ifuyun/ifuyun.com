@@ -9,7 +9,7 @@
       </div>
       <lib-footer></lib-footer>
       @if ((indexInfo?.isPost || indexInfo?.isWallpaper) && indexInfo?.isDetail) {
-        <div class="ai-widget">
+        <div class="tool-widget">
           <button nz-button
                   nz-tooltip
                   nzType="primary"
@@ -21,12 +21,12 @@
         </div>
       }
       @if (chatVisible) {
-        <lib-bot-chat [conversationId]="conversationId"
-                      [prompt]="chatPrompt"
-                      [post]="post"
-                      [wallpaper]="wallpaper"
-                      [objectType]="indexInfo?.isPost ? 'post' : 'wallpaper'"
-                      (closeDrawer)="closeChat()"></lib-bot-chat>
+        <lib-ai-chat [conversationId]="conversationId"
+                     [prompt]="chatPrompt"
+                     [post]="post"
+                     [wallpaper]="wallpaper"
+                     [objectType]="indexInfo?.isPost ? 'post' : 'wallpaper'"
+                     (closeDrawer)="closeChat()"/>
       }
     } @else {
       <div class="m-body-wrap" [class.open]="siderVisible">

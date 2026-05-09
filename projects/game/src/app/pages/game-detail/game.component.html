@@ -7,7 +7,7 @@
       </h1>
       <div class="post-meta post-meta-top">
         <span title="发布: {{ game.gameCreated | date:'yyyy-MM-dd' }}">
-          <span class="fi fi-calendar-date"></span><span>{{ game.gameCreated | date:'yyyy-MM-dd' }}</span>
+          <fi-calendar-date class="fi"/><span>{{ game.gameCreated | date:'yyyy-MM-dd' }}</span>
         </span>
         <span title="阅读：{{ game.gameViews | numberView: 'K' }}">
           <nz-icon nzType="eye"/><span>{{ game.gameViews | numberView: 'K' }}</span>
@@ -88,7 +88,7 @@
                   (click)="addFavorite()"
                   [title]="isFavorite ? '已收藏' : '收藏'"><nz-icon nzType="star" nzTheme="fill"/></button>
           @if (!isMobile) {
-            <button (click)="showShareQrcode()" title="分享"><span class="fi fi-share-fill"></span></button>
+            <button (click)="showShareQrcode()" title="分享"><fi-share-fill/></button>
           }
         </div>
       </div>

@@ -11,6 +11,7 @@ import {
   UserAgentService
 } from 'common/core';
 import { ListMode, WallpaperLang } from 'common/enums';
+import { IconCalendarDateComponent, IconChatSquareComponent, IconChatSquareDotsComponent } from 'common/icons';
 import { Post, PostEntity, TenantAppModel, Wallpaper } from 'common/interfaces';
 import { NumberViewPipe } from 'common/pipes';
 import { CommonService, OptionService, PostService, TenantAppService, WallpaperService } from 'common/services';
@@ -28,7 +29,10 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
     CarouselComponent,
     NumberViewPipe,
     PostItemComponent,
-    WallpaperItemComponent
+    WallpaperItemComponent,
+    IconCalendarDateComponent,
+    IconChatSquareDotsComponent,
+    IconChatSquareComponent
   ],
   providers: [DestroyService],
   templateUrl: './home.component.html',

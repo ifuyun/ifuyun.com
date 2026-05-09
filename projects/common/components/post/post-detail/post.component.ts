@@ -25,6 +25,7 @@ import {
   VoteType,
   VoteValue
 } from 'common/enums';
+import { IconCalendarDateComponent, IconLockComponent, IconShareFillComponent } from 'common/icons';
 import { Post, PostModel, TagEntity, TaxonomyEntity, TenantAppModel } from 'common/interfaces';
 import { NumberViewPipe, SafeHtmlPipe } from 'common/pipes';
 import {
@@ -71,7 +72,10 @@ import { PostRelatedComponent } from '../post-related/post-related.component';
     CommentComponent,
     ShareModalComponent,
     MakeMoneyComponent,
-    SmartLinkComponent
+    SmartLinkComponent,
+    IconCalendarDateComponent,
+    IconShareFillComponent,
+    IconLockComponent
   ],
   providers: [DestroyService, NzImageService],
   templateUrl: './post.component.html',
@@ -106,8 +110,8 @@ export class PostComponent implements OnInit {
 
   protected pageIndex = 'post-detail';
 
-  private readonly copyHTML = '<span class="fi fi-copy"></span>Copy code';
-  private readonly copiedHTML = '<span class="fi fi-check-lg"></span>Copied!';
+  private readonly copyHTML = `<span class="fi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/></svg></span>Copy code`;
+  private readonly copiedHTML = `<span class="fi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg></span>Copied!`;
 
   private appInfo!: TenantAppModel;
   private options: OptionEntity = {};
@@ -336,7 +340,8 @@ export class PostComponent implements OnInit {
   private initData(post: Post) {
     const result = this.postService.parseHTML(post.post.postContent, this.copyHTML);
 
-    this.post = post.post;
+    // 避免覆盖
+    this.post = { ...post.post };
     this.post.postContent = result.content;
     this.codeList = result.codeList;
     this.post.postSource = this.postService.getPostSource(post);

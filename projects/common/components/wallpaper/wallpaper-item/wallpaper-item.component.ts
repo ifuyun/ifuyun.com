@@ -1,8 +1,9 @@
 import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { Params, RouterLink } from '@angular/router';
+import { Params } from '@angular/router';
 import { AppConfigService, AppDomainConfig, UserAgentService } from 'common/core';
 import { ListMode, WallpaperLang } from 'common/enums';
+import { IconCalendarDateComponent, IconChatSquareComponent, IconChatSquareDotsComponent } from 'common/icons';
 import { Wallpaper } from 'common/interfaces';
 import { NumberViewPipe } from 'common/pipes';
 import { WallpaperService } from 'common/services';
@@ -11,7 +12,15 @@ import { SmartLinkComponent } from '../../smart-link/smart-link.component';
 
 @Component({
   selector: 'lib-wallpaper-item',
-  imports: [RouterLink, NzIconModule, DatePipe, NumberViewPipe, SmartLinkComponent],
+  imports: [
+    NzIconModule,
+    DatePipe,
+    NumberViewPipe,
+    SmartLinkComponent,
+    IconCalendarDateComponent,
+    IconChatSquareDotsComponent,
+    IconChatSquareComponent
+  ],
   templateUrl: './wallpaper-item.component.html',
   styleUrls: ['../../post/post-item/post-item.component.less', './wallpaper-item.component.less']
 })

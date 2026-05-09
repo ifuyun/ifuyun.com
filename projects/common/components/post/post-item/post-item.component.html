@@ -23,7 +23,7 @@
         </header>
         <div class="post-item-meta">
           <div title="发布: {{ post.post.postDate | date:'yyyy-MM-dd' }}">
-            <span class="fi fi-calendar-date"></span><span>{{ post.post.postDate | date:'yyyy-MM-dd' }}</span>
+            <fi-calendar-date class="fi"/><span>{{ post.post.postDate | date:'yyyy-MM-dd' }}</span>
           </div>
           <div class="auto-fit" title="作者: {{ post.post.postAuthor || post.post.owner.userNickname }}">
             <nz-icon nzType="user"/><span>{{ post.post.postAuthor || post.post.owner.userNickname }}</span>
@@ -36,9 +36,9 @@
                    fragment="comments"
                    title="《{{ post.post.postTitle }}》评论">
               @if (post.post.postComments > 0) {
-                <span class="fi fi-chat-square-dots"></span><span>{{ post.post.postComments | numberView: 'K' }}</span>
+                <fi-chat-square-dots class="fi"/><span>{{ post.post.postComments | numberView: 'K' }}</span>
               } @else {
-                <span class="fi fi-chat-square"></span><span>0</span>
+                <fi-chat-square class="fi"/><span>0</span>
               }
             </lib-a>
           }
@@ -123,9 +123,9 @@
                  fragment="comments"
                  title="《{{ post.post.postTitle }}》评论">
             @if (post.post.postComments > 0) {
-              <span class="fi fi-chat-square-dots"></span><span>{{ post.post.postComments | numberView: 'K' }}</span>
+              <fi-chat-square-dots class="fi"/><span>{{ post.post.postComments | numberView: 'K' }}</span>
             } @else {
-              <span class="fi fi-chat-square"></span><span>0</span>
+              <fi-chat-square class="fi"/><span>0</span>
             }
           </lib-a>
         }
@@ -133,13 +133,13 @@
     </header>
     <div class="m-post-item-meta">
       <span title="发布: {{ post.post.postDate | date:'yyyy-MM-dd' }}">
-        <span class="fi fi-calendar-date"></span><span>{{ post.post.postDate | date:'yyyy-MM-dd' }}</span>
+        <fi-calendar-date class="fi"/><span>{{ post.post.postDate | date:'yyyy-MM-dd' }}</span>
       </span>
       <span title="作者: {{ post.post.postAuthor || post.post.owner.userNickname }}">
         <nz-icon nzType="user"/><span>{{ post.post.postAuthor || post.post.owner.userNickname }}</span>
       </span>
       @if (post.post.postOriginal === 1) {
-        <span title="{{ post.post.owner.userNickname }}原创"><span class="fi fi-pencil"></span><span>原创</span></span>
+        <span title="{{ post.post.owner.userNickname }}原创"><fi-pencil class="fi"/><span>原创</span></span>
       }
     </div>
     @if (post.post.cover) {

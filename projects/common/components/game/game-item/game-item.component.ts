@@ -1,8 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { AppConfigService, AppDomainConfig, GAME_EMPTY_COVER, UserAgentService } from 'common/core';
 import { ListMode } from 'common/enums';
+import { IconCalendarDateComponent, IconChatSquareComponent, IconChatSquareDotsComponent } from 'common/icons';
 import { Game } from 'common/interfaces';
 import { NumberViewPipe } from 'common/pipes';
 import { CommonService } from 'common/services';
@@ -11,7 +11,18 @@ import { SmartLinkComponent } from '../../smart-link/smart-link.component';
 
 @Component({
   selector: 'lib-game-item',
-  imports: [RouterLink, NzIconModule, DatePipe, NumberViewPipe, SmartLinkComponent],
+  imports: [
+    NzIconModule,
+    DatePipe,
+    NumberViewPipe,
+    SmartLinkComponent,
+    IconCalendarDateComponent,
+    IconChatSquareDotsComponent,
+    IconChatSquareComponent,
+    IconCalendarDateComponent,
+    IconChatSquareDotsComponent,
+    IconChatSquareComponent
+  ],
   templateUrl: './game-item.component.html',
   styleUrls: ['../../post/post-item/post-item.component.less', './game-item.component.less']
 })

@@ -93,13 +93,6 @@ export enum ApiUrl {
   CHAT_MESSAGE = '/chat/message',
   CHAT_POST_ASK = '/chat/post-ask',
   CHAT_WALLPAPER_ASK = '/chat/wallpaper-ask',
-  // util
-  UTIL_TURNSTILE_VERIFY = '/util/turnstile',
-  // jd
-  JD_SELLING_PROMOTION = '/union/jd/selling-promotion',
-  JD_PROMOTION_COMMON = '/union/jd/promotion-common',
-  JD_GOODS_MATERIAL = '/union/jd/goods-material',
-  JD_GOODS_JINGFEN = '/union/jd/goods-jingfen',
   // tool
   TOOL_BASE64 = '/tool/base64',
   TOOL_MD5 = '/tool/md5',

@@ -16,7 +16,7 @@
                nzType="link"
                class="icon-btn"
                title="开始"
-               (click)="startGame()"><span class="fi fi-play"></span></a>
+               (click)="startGame()"><fi-play-fill/></a>
           }
           @if (gameStatus === 'playing') {
             <a nz-button
@@ -29,14 +29,14 @@
                nzType="link"
                class="icon-btn"
                title="继续"
-               (click)="resumeGame()"><span class="fi fi-play"></span></a>
+               (click)="resumeGame()"><fi-play-fill/></a>
           }
           <a nz-button
              nzType="link"
              class="icon-btn"
              title="停止"
              [disabled]="gameStatus !== 'playing' && gameStatus !== 'paused'"
-             (click)="stopGame()"><span class="fi fi-stop"></span></a>
+             (click)="stopGame()"><fi-stop-fill/></a>
           <a nz-button
              nzType="link"
              title="重新开始"
@@ -58,7 +58,13 @@
                class="icon-btn"
                [title]="isArranged ? '取消扩散' : '四周扩散'"
                [disabled]="gameStatus !== 'playing'"
-               (click)="arrange()"><span class="fi {{ isArranged ? 'fi-fullscreen-exit' : 'fi-fullscreen'}}"></span></a>
+               (click)="arrange()">
+              @if (isArranged) {
+                <fi-fullscreen-exit/>
+              } @else {
+                <fi-fullscreen/>
+              }
+            </a>
           }
           <a nz-button
              nzType="link"
@@ -98,7 +104,7 @@
                nzType="link"
                class="icon-btn"
                (click)="download()"
-               title="下载《{{wallpaper?.wallpaperCopyright}}》高清壁纸"><span class="fi fi-download"></span></a>
+               title="下载《{{wallpaper?.wallpaperCopyright}}》高清壁纸"><fi-download/></a>
           }
         </div>
       </div>
@@ -115,7 +121,7 @@
                nzType="link"
                class="icon-btn"
                title="开始"
-               (click)="startGame()"><span class="fi fi-play"></span></a>
+               (click)="startGame()"><fi-play-fill/></a>
           }
           @if (gameStatus === 'playing') {
             <a nz-button nzType="link" title="暂停" (click)="pauseGame()"><nz-icon nzType="pause"/></a>
@@ -125,14 +131,14 @@
                nzType="link"
                class="icon-btn"
                title="继续"
-               (click)="resumeGame()"><span class="fi fi-play"></span></a>
+               (click)="resumeGame()"><fi-play-fill/></a>
           }
           <a nz-button
              nzType="link"
              class="icon-btn"
              title="停止"
              [disabled]="gameStatus !== 'playing' && gameStatus !== 'paused'"
-             (click)="stopGame()"><span class="fi fi-stop"></span></a>
+             (click)="stopGame()"><fi-stop-fill/></a>
           <a nz-button
              nzType="link"
              [title]="isFullScreen ? '退出全屏' : '全屏'"
@@ -168,16 +174,16 @@
     @if (gameStatus === 'ready' || gameStatus === 'paused') {
       <div class="puzzle-mask">
         @if (gameStatus === 'ready') {
-          <div (click)="startGame()"><span class="fi fi-play"></span><span>开始游戏</span></div>
+          <div (click)="startGame()"><fi-play-fill class="fi"/><span>开始游戏</span></div>
         } @else if (gameStatus === 'paused') {
-          <div (click)="resumeGame()"><span class="fi fi-play"></span><span>继续游戏</span></div>
+          <div (click)="resumeGame()"><fi-play-fill class="fi"/><span>继续游戏</span></div>
         }
       </div>
     }
   </div>
   @if (isBrowser) {
     <div class="ranking">
-      <h2><span class="fi fi-trophy-fill"></span><span>排行榜（{{ activeDifficulty.pieces }} 片）</span></h2>
+      <h2><fi-trophy-fill class="fi"/><span>排行榜（{{ activeDifficulty.pieces }} 片）</span></h2>
       <div class="ranking-table">
         <nz-table nzOuterBordered
                   nzTableLayout="fixed"

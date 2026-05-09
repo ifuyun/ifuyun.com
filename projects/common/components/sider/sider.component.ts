@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Params, RouterLink } from '@angular/router';
+import { Params } from '@angular/router';
 import {
   AppConfigService,
   AppDomainConfig,
@@ -11,6 +11,7 @@ import {
   PlatformService
 } from 'common/core';
 import { WallpaperLang } from 'common/enums';
+import { IconCalendarDateComponent } from 'common/icons';
 import { GameEntity, HotWallpaper, PostEntity, Wallpaper } from 'common/interfaces';
 import { CommonService, OptionService, PostService, WallpaperService } from 'common/services';
 import { isEmpty } from 'lodash';
@@ -25,7 +26,15 @@ import { SmartLinkComponent } from '../smart-link/smart-link.component';
 
 @Component({
   selector: 'lib-sider',
-  imports: [RouterLink, FormsModule, NzIconModule, NzRadioModule, NzEmptyModule, AdsenseComponent, SmartLinkComponent],
+  imports: [
+    FormsModule,
+    NzIconModule,
+    NzRadioModule,
+    NzEmptyModule,
+    AdsenseComponent,
+    SmartLinkComponent,
+    IconCalendarDateComponent
+  ],
   providers: [DestroyService],
   templateUrl: './sider.component.html',
   styleUrl: './sider.component.less'

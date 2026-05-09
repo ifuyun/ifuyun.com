@@ -52,12 +52,12 @@
         <li [class.active]="indexInfo?.fullPage === 'post-archive'">
           <lib-a [href]="domains['blog'].url + '/archive'"
                  title="博客归档"
-                 (click)="closeSider()"><span class="fi fi-calendar-date"></span><span>博客归档</span></lib-a>
+                 (click)="closeSider()"><fi-calendar-date class="fi"/><span>博客归档</span></lib-a>
         </li>
         <li [class.active]="indexInfo?.fullPage === 'wallpaper-archive'">
           <lib-a [href]="domains['wallpaper'].url + '/archive'"
                  title="壁纸归档"
-                 (click)="closeSider()"><span class="fi fi-calendar-date"></span><span>壁纸归档</span></lib-a>
+                 (click)="closeSider()"><fi-calendar-date class="fi"/><span>壁纸归档</span></lib-a>
         </li>
         <div class="m-separator"></div>
         <li [class.active]="indexInfo?.subPage === 'aboutme'">
