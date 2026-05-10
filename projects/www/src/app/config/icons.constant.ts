@@ -7,7 +7,6 @@ import {
   CheckOutline,
   ClockCircleOutline,
   CloseOutline,
-  CommentOutline,
   CopyOutline,
   CopyrightOutline,
   DashboardOutline,
@@ -65,7 +64,6 @@ import {
   VerticalAlignTopOutline,
   WechatOutline,
   WeiboOutline,
-  WifiOutline,
   ZoomInOutline,
   ZoomOutOutline
 } from '@ant-design/icons-angular/icons';
@@ -78,7 +76,6 @@ export const icons: IconDefinition[] = [
   CheckOutline,
   ClockCircleOutline,
   CloseOutline,
-  CommentOutline,
   CopyOutline,
   CopyrightOutline,
   DashboardOutline,
@@ -136,7 +133,6 @@ export const icons: IconDefinition[] = [
   VerticalAlignTopOutline,
   WechatOutline,
   WeiboOutline,
-  WifiOutline,
   ZoomInOutline,
   ZoomOutOutline
 ];

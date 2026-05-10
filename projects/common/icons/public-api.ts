@@ -7,6 +7,7 @@ export * from './icon-download.component';
 export * from './icon-fullscreen.component';
 export * from './icon-fullscreen-exit.component';
 export * from './icon-lock.component';
+export * from './icon-magic.component';
 export * from './icon-pencil.component';
 export * from './icon-play-fill.component';
 export * from './icon-rss.component';

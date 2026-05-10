@@ -173,49 +173,9 @@
             </div>
           </div>
         }
-        <div class="more-action-group">
-          <div class="more-action-nav">
-            <nz-icon nzType="ellipsis" class="more-action-icon"/>
-          </div>
-          <div class="more-action-list">
-            <div class="sub-nav-list">
-              <ul>
-                <li>
-                  <a class="sub-nav-link" (click)="showRedPacket()" title="支付宝扫码领红包">
-                    <nz-icon class="icon-red-packet" nzType="red-envelope"/><span>支付宝每日红包</span>
-                  </a>
-                </li>
-                <li>
-                  <a class="sub-nav-link" (click)="showWallpaperModal()" title="高清壁纸">
-                    <nz-icon class="icon-wallpaper" nzType="picture"/><span>高清壁纸</span>
-                  </a>
-                </li>
-                <li>
-                  <a class="sub-nav-link" [href]="domains['blog'].url + '/rss.xml'" (click)="logRSS()"title="博客 RSS 订阅">
-                    <nz-icon class="icon-rss" nzType="wifi"/><span>博客 RSS 订阅</span>
-                  </a>
-                </li>
-                <li>
-                  <a class="sub-nav-link"
-                     [href]="domains['wallpaper'].url + '/rss.xml'"
-                     (click)="logRSS(true)"
-                     title="壁纸 RSS 订阅">
-                    <nz-icon class="icon-rss" nzType="wifi"/><span>壁纸 RSS 订阅</span>
-                  </a>
-                </li>
-                <li>
-                  <a class="sub-nav-link" (click)="showWechatCard()" title="微信公众号">
-                    <nz-icon class="icon-wechat" nzType="wechat"/><span>微信公众号</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </header>
-  <lib-wallpaper-modal [visible]="wallpaperModalVisible" (close)="closeWallpaperModal()"/>
 } @else {
   <header class="m-header-wrap">
     <div class="m-header">

@@ -11,34 +11,24 @@ import {
   UserAgentService,
   UserModel
 } from 'common/core';
-import { ActionObjectType, ActionType, SearchType, TaxonomyType } from 'common/enums';
+import { SearchType, TaxonomyType } from 'common/enums';
 import { TaxonomyNode, TenantAppModel } from 'common/interfaces';
-import { CommonService, LogService, TaxonomyService, TenantAppService, UserService } from 'common/services';
+import { CommonService, TaxonomyService, TenantAppService, UserService } from 'common/services';
 import { format } from 'common/utils';
 import { isEmpty } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzImageService } from 'ng-zorro-antd/image';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { skipWhile, takeUntil } from 'rxjs';
 import { SmartLinkComponent } from '../smart-link/smart-link.component';
-import { WallpaperModalComponent } from '../wallpaper/wallpaper-modal/wallpaper-modal.component';
 import { TOOL_LINKS } from './tool.constant';
 
 @Component({
   selector: 'lib-header',
-  imports: [
-    FormsModule,
-    NzInputModule,
-    NzIconModule,
-    NzButtonModule,
-    NzSelectModule,
-    WallpaperModalComponent,
-    SmartLinkComponent
-  ],
-  providers: [DestroyService, NzImageService],
+  imports: [FormsModule, NzInputModule, NzIconModule, NzButtonModule, NzSelectModule, SmartLinkComponent],
+  providers: [DestroyService],
   templateUrl: './header.component.html',
   styleUrl: './header.component.less'
 })
@@ -65,7 +55,6 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   toolLinks = TOOL_LINKS;
   keyword = '';
   searchType = 'all';
-  wallpaperModalVisible = false;
   searchVisible = false;
   isFocused = false;
 
@@ -75,14 +64,12 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
     private readonly destroy$: DestroyService,
     private readonly userAgentService: UserAgentService,
     private readonly message: NzMessageService,
-    private readonly imageService: NzImageService,
     private readonly commonService: CommonService,
     private readonly appConfigService: AppConfigService,
     private readonly tenantAppService: TenantAppService,
     private readonly taxonomyService: TaxonomyService,
     private readonly authService: AuthService,
-    private readonly userService: UserService,
-    private readonly logService: LogService
+    private readonly userService: UserService
   ) {
     this.domains = appConfigService.apps;
     this.faviconUrl = appConfigService.faviconUrl;
@@ -148,65 +135,6 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
     this.isFocused = false;
   }
 
-  showLoginModal() {
-    this.commonService.updateLoginModalVisible({
-      visible: true,
-      closable: true
-    });
-  }
-
-  showWallpaperModal() {
-    this.wallpaperModalVisible = true;
-
-    this.logService
-      .logAction({
-        action: ActionType.SHOW_WALLPAPER_MODAL,
-        objectType: ActionObjectType.HEADER
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe();
-  }
-
-  closeWallpaperModal() {
-    this.wallpaperModalVisible = false;
-  }
-
-  showRedPacket() {
-    const urlPrefix = this.commonService.getCdnUrlPrefix();
-    const previewRef = this.imageService.preview([
-      {
-        src: urlPrefix + '/assets/images/red-packet.png'
-      }
-    ]);
-    this.commonService.paddingPreview(previewRef.previewInstance.imagePreviewWrapper);
-
-    this.logService
-      .logAction({
-        action: ActionType.SHOW_RED_PACKET,
-        objectType: ActionObjectType.HEADER
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe();
-  }
-
-  showWechatCard() {
-    const urlPrefix = this.commonService.getCdnUrlPrefix();
-
-    this.imageService.preview([
-      {
-        src: urlPrefix + '/assets/images/wechat-card.png'
-      }
-    ]);
-
-    this.logService
-      .logAction({
-        action: ActionType.SHOW_WECHAT_CARD,
-        objectType: ActionObjectType.HEADER
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe();
-  }
-
   gotoAdmin() {
     window.open(this.adminUrl);
   }
@@ -224,15 +152,5 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
 
   showSider() {
     this.commonService.updateSiderVisible(true);
-  }
-
-  logRSS(isWallpaper = false) {
-    this.logService
-      .logAction({
-        action: isWallpaper ? ActionType.OPEN_WALLPAPER_RSS : ActionType.OPEN_POST_RSS,
-        objectType: ActionObjectType.HEADER
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe();
   }
 }

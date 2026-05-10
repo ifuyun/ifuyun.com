@@ -8,6 +8,7 @@ import { IconDownloadComponent } from './icon-download.component';
 import { IconFullscreenExitComponent } from './icon-fullscreen-exit.component';
 import { IconFullscreenComponent } from './icon-fullscreen.component';
 import { IconLockComponent } from './icon-lock.component';
+import { IconMagicComponent } from './icon-magic.component';
 import { IconPencilComponent } from './icon-pencil.component';
 import { IconPlayFillComponent } from './icon-play-fill.component';
 import { IconRssComponent } from './icon-rss.component';
@@ -26,6 +27,7 @@ const icons = [
   IconFullscreenComponent,
   IconFullscreenExitComponent,
   IconLockComponent,
+  IconMagicComponent,
   IconPencilComponent,
   IconPlayFillComponent,
   IconRssComponent,

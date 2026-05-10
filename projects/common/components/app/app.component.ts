@@ -3,6 +3,7 @@ import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouterOutlet } 
 import {
   AppConfigService,
   COOKIE_KEY_UV_ID,
+  DestroyService,
   ErrorService,
   ErrorState,
   LoginModalOptions,
@@ -14,9 +15,9 @@ import {
   UrlService,
   UserAgentService
 } from 'common/core';
-import { PostScope, PostStatus, Theme } from 'common/enums';
+import { ActionObjectType, ActionType, PostScope, PostStatus, Theme } from 'common/enums';
 import { ForbiddenComponent, NotFoundComponent, ServerErrorComponent } from 'common/error';
-import { IconStarsComponent } from 'common/icons';
+import { IconMagicComponent, IconRssComponent, IconStarsComponent } from 'common/icons';
 import { Post, Wallpaper } from 'common/interfaces';
 import {
   AdsService,
@@ -31,9 +32,12 @@ import {
 } from 'common/services';
 import { generateUid } from 'common/utils';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzDropdownDirective, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzImageService } from 'ng-zorro-antd/image';
+import { NzMenuDirective, NzMenuItemComponent } from 'ng-zorro-antd/menu';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
+import { takeUntil } from 'rxjs';
 import { filter, takeWhile, tap } from 'rxjs/operators';
 import { AiChatComponent } from '../ai-chat/ai-chat.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -41,6 +45,7 @@ import { GameService } from '../game/game.service';
 import { HeaderComponent } from '../header/header.component';
 import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { MSiderComponent } from '../m-sider/m-sider.component';
+import { WallpaperModalComponent } from '../wallpaper/wallpaper-modal/wallpaper-modal.component';
 
 @Component({
   selector: 'app-root',
@@ -55,11 +60,17 @@ import { MSiderComponent } from '../m-sider/m-sider.component';
     ForbiddenComponent,
     ServerErrorComponent,
     NzButtonModule,
-    NzTooltipModule,
     NzIconModule,
-    IconStarsComponent
+    NzDropdownDirective,
+    NzDropdownMenuComponent,
+    NzMenuDirective,
+    NzMenuItemComponent,
+    IconStarsComponent,
+    IconMagicComponent,
+    IconRssComponent,
+    WallpaperModalComponent
   ],
-  providers: [],
+  providers: [DestroyService, NzImageService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.less'
 })
@@ -77,6 +88,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   chatVisible = false;
   conversationId = '';
   chatPrompt = '';
+  wallpaperModalVisible = false;
   loginOptions: LoginModalOptions = {
     visible: false,
     closable: true
@@ -99,10 +111,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   private adsStatus: AdsStatus = AdsStatus.UNKNOWN;
 
   constructor(
+    private readonly destroy$: DestroyService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
     private readonly message: NzMessageService,
+    private readonly imageService: NzImageService,
     private readonly platform: PlatformService,
     private readonly userAgentService: UserAgentService,
     private readonly cookieService: SsrCookieService,
@@ -267,6 +281,72 @@ export class AppComponent implements OnInit, AfterViewInit {
   closeSider() {
     this.siderVisible = false;
     this.commonService.updateSiderVisible(false);
+  }
+
+  showRedPacket() {
+    const urlPrefix = this.commonService.getCdnUrlPrefix();
+    const previewRef = this.imageService.preview([
+      {
+        src: urlPrefix + '/assets/images/red-packet.png'
+      }
+    ]);
+    this.commonService.paddingPreview(previewRef.previewInstance.imagePreviewWrapper);
+
+    this.logService
+      .logAction({
+        action: ActionType.SHOW_RED_PACKET,
+        objectType: ActionObjectType.HEADER
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
+  }
+
+  showWallpaperModal() {
+    this.wallpaperModalVisible = true;
+
+    this.logService
+      .logAction({
+        action: ActionType.SHOW_WALLPAPER_MODAL,
+        objectType: ActionObjectType.HEADER
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
+  }
+
+  closeWallpaperModal() {
+    this.wallpaperModalVisible = false;
+  }
+
+  showWechatCard() {
+    const urlPrefix = this.commonService.getCdnUrlPrefix();
+
+    this.imageService.preview([
+      {
+        src: urlPrefix + '/assets/images/wechat-card.png'
+      }
+    ]);
+
+    this.logService
+      .logAction({
+        action: ActionType.SHOW_WECHAT_CARD,
+        objectType: ActionObjectType.HEADER
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
+  }
+
+  openRSS(isWallpaper = false) {
+    const rssUrl = this.appConfigService.apps[isWallpaper ? 'wallpaper' : 'blog'].url + '/rss.xml';
+
+    this.logService
+      .logAction({
+        action: isWallpaper ? ActionType.OPEN_WALLPAPER_RSS : ActionType.OPEN_POST_RSS,
+        objectType: ActionObjectType.HEADER
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
+
+    window.open(rssUrl);
   }
 
   showLoginModal(closable = true) {
