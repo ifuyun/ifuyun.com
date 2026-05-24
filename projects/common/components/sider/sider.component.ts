@@ -58,13 +58,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   hotJigsaws: Wallpaper[] = [];
   hotJigsawType = 'm';
 
-  get adsVisible() {
-    return (
-      (!this.appConfigService.isDev && ['1', '0'].includes(this.options['ads_flag'])) ||
-      (this.appConfigService.isDev && ['2', '0'].includes(this.options['ads_flag']))
-    );
-  }
-
   private options: OptionEntity = {};
   private pageIndex = '';
 
@@ -80,6 +73,13 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly jigsawService: JigsawService
   ) {
     this.domains = this.appConfigService.apps;
+  }
+
+  get adsVisible() {
+    return (
+      (!this.appConfigService.isDev && ['1', '0'].includes(this.options['ads_flag'])) ||
+      (this.appConfigService.isDev && ['2', '0'].includes(this.options['ads_flag']))
+    );
   }
 
   ngOnInit(): void {
@@ -153,8 +153,8 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     if (this.platform.isBrowser) {
-      window.addEventListener('scroll', this.scrollHandler.bind(this));
-      window.addEventListener('resize', this.scrollHandler.bind(this));
+      window.addEventListener('scroll', this.scrollHandler);
+      window.addEventListener('resize', this.scrollHandler);
     }
   }
 
@@ -259,7 +259,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  private scrollHandler() {
+  private scrollHandler = () => {
     const docEle = document.documentElement;
     if (this.siderEle && docEle.scrollTop > 0) {
       if (docEle.scrollTop > this.siderEle.nativeElement.scrollHeight - docEle.clientHeight) {
@@ -275,5 +275,5 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
         this.siderEle.nativeElement.style.top = '';
       }
     }
-  }
+  };
 }

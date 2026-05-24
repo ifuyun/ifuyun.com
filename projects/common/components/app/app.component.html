@@ -66,8 +66,8 @@
     <li nz-menu-item class="tool-item tool-red-packet" (click)="showRedPacket()" title="支付宝扫码领红包">
       <nz-icon nzType="red-envelope"/><span>支付宝每日红包</span>
     </li>
-    <li nz-menu-item class="tool-item tool-wallpaper" (click)="showWallpaperModal()" title="高清壁纸">
-      <nz-icon nzType="picture"/><span>高清壁纸</span>
+    <li nz-menu-item class="tool-item tool-wechat" (click)="showWechatCard()" title="微信公众号">
+      <nz-icon nzType="wechat"/><span>微信公众号</span>
     </li>
     <li nz-menu-item class="tool-item tool-rss" (click)="openRSS()" title="博客 RSS 订阅">
       <fi-rss class="fi"/><span>博客 RSS 订阅</span>
@@ -75,8 +75,8 @@
     <li nz-menu-item class="tool-item tool-rss"(click)="openRSS(true)" title="壁纸 RSS 订阅">
       <fi-rss class="fi"/><span>壁纸 RSS 订阅</span>
     </li>
-    <li nz-menu-item class="tool-item tool-wechat" (click)="showWechatCard()" title="微信公众号">
-      <nz-icon nzType="wechat"/><span>微信公众号</span>
+    <li nz-menu-item class="tool-item tool-wallpaper" (click)="showWallpaperModal()" title="高清壁纸">
+      <nz-icon nzType="picture"/><span>高清壁纸</span>
     </li>
     @if ((indexInfo?.isPost || indexInfo?.isWallpaper) && indexInfo?.isDetail) {
       <li nz-menu-item class="tool-item tool-ai" (click)="showChat()">
