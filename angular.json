@@ -28,10 +28,7 @@
           "builder": "@angular/build:karma",
           "options": {
             "tsConfig": "projects/common/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "polyfills": ["zone.js", "zone.js/testing"]
           }
         }
       }
@@ -75,21 +72,14 @@
             "outputPath": "dist/www",
             "index": "projects/www/src/index.html",
             "browser": "projects/www/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/www/tsconfig.app.json",
             "inlineStyleLanguage": "less",
-            "allowedCommonJsDependencies": [
-              "lodash",
-              "murmurhash"
-            ],
+            "allowedCommonJsDependencies": ["lodash", "murmurhash"],
             "stylePreprocessorOptions": {
               "includePaths": ["dist", "node_modules"]
             },
-            "styles": [
-              "projects/www/src/styles.less"
-            ],
+            "styles": ["projects/www/src/styles.less"],
             "scripts": [
               "node_modules/lazysizes/lazysizes.min.js",
               "node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.min.js"
@@ -112,11 +102,6 @@
                   "glob": "**/*",
                   "input": "projects/www/public/assets",
                   "output": "/assets"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/www/public/fonts",
-                  "output": "/assets/fonts"
                 }
               ],
               "deployUrl": "https://cdn.ifuyun.com/www/",
@@ -145,11 +130,6 @@
                   "glob": "**/*",
                   "input": "projects/www/public/assets",
                   "output": "/assets"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/www/public/fonts",
-                  "output": "/www/assets/fonts"
                 }
               ],
               "optimization": false,
@@ -186,10 +166,7 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/www/tsconfig.spec.json",
             "inlineStyleLanguage": "less",
             "assets": [
@@ -202,16 +179,9 @@
                 "glob": "**/*",
                 "input": "projects/www/public/assets",
                 "output": "/assets"
-              },
-              {
-                "glob": "**/*",
-                "input": "projects/www/public/fonts",
-                "output": "/assets/fonts"
               }
             ],
-            "styles": [
-              "projects/www/src/styles.less"
-            ],
+            "styles": ["projects/www/src/styles.less"],
             "scripts": []
           }
         }
@@ -256,21 +226,14 @@
             "outputPath": "dist/blog",
             "index": "projects/blog/src/index.html",
             "browser": "projects/blog/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/blog/tsconfig.app.json",
             "inlineStyleLanguage": "less",
-            "allowedCommonJsDependencies": [
-              "lodash",
-              "murmurhash"
-            ],
+            "allowedCommonJsDependencies": ["lodash", "murmurhash"],
             "stylePreprocessorOptions": {
               "includePaths": ["dist", "node_modules"]
             },
-            "styles": [
-              "projects/blog/src/styles.less"
-            ],
+            "styles": ["projects/blog/src/styles.less"],
             "scripts": [
               "node_modules/lazysizes/lazysizes.min.js",
               "node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.min.js"
@@ -293,11 +256,6 @@
                   "glob": "**/*",
                   "input": "projects/blog/public/assets",
                   "output": "/assets"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/blog/public/fonts",
-                  "output": "/assets/fonts"
                 }
               ],
               "deployUrl": "https://cdn.ifuyun.com/blog/",
@@ -326,11 +284,6 @@
                   "glob": "**/*",
                   "input": "projects/blog/public/assets",
                   "output": "/assets"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/blog/public/fonts",
-                  "output": "/blog/assets/fonts"
                 }
               ],
               "optimization": false,
@@ -367,10 +320,7 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/blog/tsconfig.spec.json",
             "inlineStyleLanguage": "less",
             "assets": [
@@ -383,16 +333,9 @@
                 "glob": "**/*",
                 "input": "projects/blog/public/assets",
                 "output": "/assets"
-              },
-              {
-                "glob": "**/*",
-                "input": "projects/blog/public/fonts",
-                "output": "/assets/fonts"
               }
             ],
-            "styles": [
-              "projects/blog/src/styles.less"
-            ],
+            "styles": ["projects/blog/src/styles.less"],
             "scripts": []
           }
         }
@@ -437,21 +380,14 @@
             "outputPath": "dist/wallpaper",
             "index": "projects/wallpaper/src/index.html",
             "browser": "projects/wallpaper/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/wallpaper/tsconfig.app.json",
             "inlineStyleLanguage": "less",
-            "allowedCommonJsDependencies": [
-              "lodash",
-              "murmurhash"
-            ],
+            "allowedCommonJsDependencies": ["lodash", "murmurhash"],
             "stylePreprocessorOptions": {
               "includePaths": ["dist", "node_modules"]
             },
-            "styles": [
-              "projects/wallpaper/src/styles.less"
-            ],
+            "styles": ["projects/wallpaper/src/styles.less"],
             "scripts": [
               "node_modules/lazysizes/lazysizes.min.js",
               "node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.min.js"
@@ -474,11 +410,6 @@
                   "glob": "**/*",
                   "input": "projects/wallpaper/public/assets",
                   "output": "/assets"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/wallpaper/public/fonts",
-                  "output": "/assets/fonts"
                 }
               ],
               "deployUrl": "https://cdn.ifuyun.com/wallpaper/",
@@ -507,11 +438,6 @@
                   "glob": "**/*",
                   "input": "projects/wallpaper/public/assets",
                   "output": "/assets"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/wallpaper/public/fonts",
-                  "output": "/wallpaper/assets/fonts"
                 }
               ],
               "optimization": false,
@@ -548,10 +474,7 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/wallpaper/tsconfig.spec.json",
             "inlineStyleLanguage": "less",
             "assets": [
@@ -564,16 +487,9 @@
                 "glob": "**/*",
                 "input": "projects/wallpaper/public/assets",
                 "output": "/assets"
-              },
-              {
-                "glob": "**/*",
-                "input": "projects/wallpaper/public/fonts",
-                "output": "/assets/fonts"
               }
             ],
-            "styles": [
-              "projects/wallpaper/src/styles.less"
-            ],
+            "styles": ["projects/wallpaper/src/styles.less"],
             "scripts": []
           }
         }
@@ -618,21 +534,14 @@
             "outputPath": "dist/jigsaw",
             "index": "projects/jigsaw/src/index.html",
             "browser": "projects/jigsaw/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/jigsaw/tsconfig.app.json",
             "inlineStyleLanguage": "less",
-            "allowedCommonJsDependencies": [
-              "lodash",
-              "murmurhash"
-            ],
+            "allowedCommonJsDependencies": ["lodash", "murmurhash"],
             "stylePreprocessorOptions": {
               "includePaths": ["dist", "node_modules", "projects"]
             },
-            "styles": [
-              "projects/jigsaw/src/styles.less"
-            ],
+            "styles": ["projects/jigsaw/src/styles.less"],
             "scripts": [
               "node_modules/lazysizes/lazysizes.min.js",
               "node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.min.js"
@@ -655,11 +564,6 @@
                   "glob": "**/*",
                   "input": "projects/jigsaw/public/assets",
                   "output": "/assets"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/jigsaw/public/fonts",
-                  "output": "/assets/fonts"
                 }
               ],
               "deployUrl": "https://cdn.ifuyun.com/jigsaw/",
@@ -688,11 +592,6 @@
                   "glob": "**/*",
                   "input": "projects/jigsaw/public/assets",
                   "output": "/assets"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/jigsaw/public/fonts",
-                  "output": "/jigsaw/assets/fonts"
                 }
               ],
               "optimization": false,
@@ -729,10 +628,7 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/jigsaw/tsconfig.spec.json",
             "inlineStyleLanguage": "less",
             "assets": [
@@ -745,16 +641,9 @@
                 "glob": "**/*",
                 "input": "projects/jigsaw/public/assets",
                 "output": "/assets"
-              },
-              {
-                "glob": "**/*",
-                "input": "projects/jigsaw/public/fonts",
-                "output": "/assets/fonts"
               }
             ],
-            "styles": [
-              "projects/jigsaw/src/styles.less"
-            ],
+            "styles": ["projects/jigsaw/src/styles.less"],
             "scripts": []
           }
         }
@@ -799,21 +688,14 @@
             "outputPath": "dist/game",
             "index": "projects/game/src/index.html",
             "browser": "projects/game/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/game/tsconfig.app.json",
             "inlineStyleLanguage": "less",
-            "allowedCommonJsDependencies": [
-              "lodash",
-              "murmurhash"
-            ],
+            "allowedCommonJsDependencies": ["lodash", "murmurhash"],
             "stylePreprocessorOptions": {
               "includePaths": ["dist", "node_modules"]
             },
-            "styles": [
-              "projects/game/src/styles.less"
-            ],
+            "styles": ["projects/game/src/styles.less"],
             "scripts": [
               "node_modules/lazysizes/lazysizes.min.js",
               "node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.min.js"
@@ -836,11 +718,6 @@
                   "glob": "**/*",
                   "input": "projects/game/public/assets",
                   "output": "/assets"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/game/public/fonts",
-                  "output": "/assets/fonts"
                 }
               ],
               "deployUrl": "https://cdn.ifuyun.com/game/",
@@ -869,11 +746,6 @@
                   "glob": "**/*",
                   "input": "projects/game/public/assets",
                   "output": "/assets"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/game/public/fonts",
-                  "output": "/game/assets/fonts"
                 }
               ],
               "optimization": false,
@@ -910,10 +782,7 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/game/tsconfig.spec.json",
             "inlineStyleLanguage": "less",
             "assets": [
@@ -926,16 +795,9 @@
                 "glob": "**/*",
                 "input": "projects/game/public/assets",
                 "output": "/assets"
-              },
-              {
-                "glob": "**/*",
-                "input": "projects/game/public/fonts",
-                "output": "/assets/fonts"
               }
             ],
-            "styles": [
-              "projects/game/src/styles.less"
-            ],
+            "styles": ["projects/game/src/styles.less"],
             "scripts": []
           }
         }

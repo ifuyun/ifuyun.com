@@ -209,21 +209,6 @@ export function isCrawler(ua: string) {
   };
 }
 
-export const suspiciousReferrers: string[] = [];
-
-export function isSuspiciousReferrer(referrer: string) {
-  const domainReg = /^https?:\/\/([^\/]+)/i;
-  const referrerDomain = referrer.match(domainReg)?.[1] || '';
-
-  return !!referrerDomain && suspiciousReferrers.includes(referrerDomain);
-}
-
-export const suspiciousResolutions: string[] = [];
-
-export function isSuspiciousResolution(resolution: string) {
-  return !resolution || suspiciousResolutions.includes(resolution);
-}
-
 export function antiCrawlers(req: Request, res: Response, next: NextFunction) {
   const ua = req.headers['user-agent'] || '';
   const host = req.headers.host;

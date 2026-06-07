@@ -8,7 +8,6 @@ import {
 import { Feed } from '@fuyun/feed';
 import { ApiUrl, Message } from 'common/core';
 import { Post, SitemapData } from 'common/interfaces';
-import { antiCrawlers } from 'common/middlewares';
 import { simpleRequest } from 'common/utils';
 import { environment } from 'env/environment';
 import express, { Request, Response } from 'express';
@@ -27,7 +26,6 @@ const angularApp = new AngularNodeAppEngine({
   trustProxyHeaders: environment.trustProxies
 });
 
-app.use(antiCrawlers);
 app.get('/rss.xml', async (req: Request, res: Response) => {
   try {
     const { page, size, detail } = req.query;

@@ -6,7 +6,6 @@ import {
   AppConfigService,
   CDN_HOST,
   COOKIE_KEY_THEME,
-  COOKIE_KEY_TURNSTILE_ID,
   COOKIE_KEY_USER_ID,
   CustomError,
   LoginModalOptions,
@@ -19,7 +18,6 @@ import {
   UserAgentService
 } from 'common/core';
 import { Theme } from 'common/enums';
-import { isSuspiciousReferrer, isSuspiciousResolution } from 'common/middlewares';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -250,24 +248,5 @@ export class CommonService {
     return Array.from(new Uint8Array(signature))
       .map((b) => b.toString(16).padStart(2, '0'))
       .join('');
-  }
-
-  isSuspicious() {
-    // 已知的 UA 已经拦截，除了 referrer 和 分辨率，还需要判断其它可能的 UA 和 IP 地址，或者调用三方接口判断
-    const turnstileId = this.cookieService.get(COOKIE_KEY_TURNSTILE_ID);
-    // 半小时内如果已经验证过，直接跳过
-    // todo: 需要调接口判断是否真实存在
-    if (turnstileId) {
-      return false;
-    }
-    const referrer = this.getReferrer(false);
-    const resolution = this.getResolution();
-
-    return (
-      !this.userAgentService.os.name ||
-      !this.userAgentService.browser.name ||
-      isSuspiciousReferrer(referrer) ||
-      (this.platform.isBrowser && isSuspiciousResolution(resolution))
-    );
   }
 }
