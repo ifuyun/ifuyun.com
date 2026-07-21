@@ -33,22 +33,21 @@ export interface JigsawPiece {
   path: string;
 }
 
-export interface JigsawLogBaseEntity {
+export interface JigsawLogBaseDto {
   timestamp: number;
 }
 
-export interface JigsawStartEntity extends JigsawLogBaseEntity {
-  jigsawId?: string;
-  wallpaperId?: string;
+export interface JigsawStartDto extends JigsawLogBaseDto {
+  jigsawId: string;
   pieces: number;
 }
 
-export interface JigsawCompleteEntity extends JigsawLogBaseEntity {
+export interface JigsawCompleteDto extends JigsawLogBaseDto {
   logId: string;
   gameTime: number;
 }
 
-export interface JigsawProgressEntity extends JigsawLogBaseEntity {
+export interface JigsawProgressDto extends JigsawLogBaseDto {
   logId: string;
   progress: number;
 }
@@ -107,14 +106,13 @@ export interface JigsawRankParam {
 }
 
 export interface JigsawLog {
-  jigsawLogId: string;
-  jigsawLogStart: number;
-  jigsawLogEnd: number;
-  jigsawLogDuration: number;
-  wallpaperId?: string;
-  jigsawId?: string;
-  jigsawLogPieces: number;
-  jigsawLogProgress: number;
+  id: string;
+  startTime: number;
+  endTime: number;
+  duration: number;
+  jigsawId: string;
+  pieces: number;
+  progress: number;
   userId?: string;
   user?: UserModel;
   faId: string;

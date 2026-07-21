@@ -17,7 +17,7 @@ import {
   UserAgentService
 } from 'common/core';
 import { ListMode } from 'common/enums';
-import { Game, GameQueryParam, TenantAppModel } from 'common/interfaces';
+import { Game, GameQueryParam, TenantAppVo } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService } from 'common/services';
 import { isEmpty, uniq } from 'lodash';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
@@ -27,8 +27,7 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   selector: 'app-game-list',
   imports: [NzEmptyModule, BreadcrumbComponent, PaginationComponent, MakeMoneyComponent, GameItemComponent],
   providers: [DestroyService],
-  templateUrl: './game-list.component.html',
-  styleUrl: './game-list.component.less'
+  templateUrl: './game-list.component.html'
 })
 export class GameListComponent implements OnInit {
   isMobile = false;
@@ -41,7 +40,7 @@ export class GameListComponent implements OnInit {
 
   protected pageIndex = 'game-list';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private lastParam = '';
   private category = '';
@@ -151,7 +150,7 @@ export class GameListComponent implements OnInit {
   }
 
   private updatePageInfo(breadcrumbData: BreadcrumbEntity[]) {
-    const titles: string[] = ['游戏', this.appInfo.appName];
+    const titles: string[] = ['游戏', this.appInfo.name];
     const categories: string[] = [];
     const keywords: string[] = (this.options['game_keywords'] || '').split(',');
     let description = '';

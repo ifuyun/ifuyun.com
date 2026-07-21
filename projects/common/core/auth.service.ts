@@ -5,7 +5,7 @@ import { map, tap } from 'rxjs/operators';
 import { ApiUrl } from './api-url';
 import { ApiService } from './api.service';
 import { AppConfigService } from './app-config.service';
-import { LoginEntity, LoginResponse, SignupEntity } from './auth.interface';
+import { SigninDto, SigninResponse, SignupDto } from './auth.interface';
 import { COOKIE_KEY_USER_ID, COOKIE_KEY_USER_NAME, COOKIE_KEY_USER_TOKEN } from './common.constant';
 import { HttpResponseEntity } from './http-response.interface';
 import { OptionEntity } from './option.interface';
@@ -23,10 +23,10 @@ export class AuthService {
     private readonly appConfigService: AppConfigService
   ) {}
 
-  login(payload: LoginEntity): Observable<HttpResponseEntity> {
+  signin(payload: SigninDto): Observable<HttpResponseEntity> {
     return this.apiService
       .httpPost(
-        ApiUrl.AUTH_LOGIN,
+        ApiUrl.AUTH_SIGNIN,
         {
           ...payload,
           appId: this.appConfigService.appId
@@ -36,17 +36,17 @@ export class AuthService {
       .pipe(
         map((res) => res || {}),
         tap((res) => {
-          if (res.data?.token?.accessToken) {
+          if (res.data?.token?.token) {
             this.setAuth(res.data);
           }
         })
       );
   }
 
-  logout(): Observable<HttpResponseEntity> {
+  signout(): Observable<HttpResponseEntity> {
     return this.apiService
       .httpPost(
-        ApiUrl.AUTH_LOGOUT,
+        ApiUrl.AUTH_SIGNOUT,
         {
           referer: location.href
         },
@@ -61,7 +61,7 @@ export class AuthService {
       );
   }
 
-  signup(payload: SignupEntity): Observable<UserModel> {
+  signup(payload: SignupDto): Observable<UserModel> {
     return this.apiService
       .httpPost(
         ApiUrl.AUTH_SIGNUP,
@@ -74,12 +74,12 @@ export class AuthService {
       .pipe(map((res) => res?.data || {}));
   }
 
-  verify(userId: string, code: string): Observable<LoginResponse> {
+  verify(id: string, code: string): Observable<SigninResponse> {
     return this.apiService
       .httpPost(
         ApiUrl.AUTH_VERIFY,
         {
-          userId,
+          id,
           code,
           appId: this.appConfigService.appId
         },
@@ -88,14 +88,14 @@ export class AuthService {
       .pipe(
         map((res) => res?.data || {}),
         tap((res) => {
-          if (res.token?.accessToken) {
+          if (res.token?.token) {
             this.setAuth(res);
           }
         })
       );
   }
 
-  sendCode(payload: { userId?: string; email?: string }): Observable<HttpResponseEntity> {
+  sendCode(payload: { id?: string; email?: string }): Observable<HttpResponseEntity> {
     return this.apiService
       .httpPost(
         ApiUrl.AUTH_SEND_CODE,
@@ -108,10 +108,10 @@ export class AuthService {
       .pipe(map((res) => res || {}));
   }
 
-  thirdLogin(authCode: string, source: string): Observable<HttpResponseEntity> {
+  oauthSignin(authCode: string, source: string): Observable<HttpResponseEntity> {
     return this.apiService
       .httpPost(
-        ApiUrl.USER_THIRD_LOGIN,
+        ApiUrl.AUTH_OAUTH,
         {
           authCode,
           source,
@@ -122,14 +122,14 @@ export class AuthService {
       .pipe(
         map((res) => res || {}),
         tap((res) => {
-          if (res.data?.token?.accessToken) {
+          if (res.data?.token?.token) {
             this.setAuth(res.data);
           }
         })
       );
   }
 
-  resetPassword(payload: { email: string; code: string; password: string }): Observable<LoginResponse> {
+  resetPassword(payload: { email: string; code: string; password: string }): Observable<SigninResponse> {
     return this.apiService
       .httpPost(
         ApiUrl.AUTH_RESET_PASSWORD,
@@ -146,7 +146,7 @@ export class AuthService {
     return this.cookieService.get(COOKIE_KEY_USER_TOKEN);
   }
 
-  setAuth(authInfo: LoginResponse) {
+  setAuth(authInfo: SigninResponse) {
     const { user, token } = authInfo;
     const options = {
       path: '/',
@@ -155,23 +155,17 @@ export class AuthService {
     };
 
     this.cookieService.set(COOKIE_KEY_USER_ID, user.userId, options);
-    this.cookieService.set(COOKIE_KEY_USER_NAME, user.userNickname, options);
-    this.cookieService.set(COOKIE_KEY_USER_TOKEN, token.accessToken, options);
+    this.cookieService.set(COOKIE_KEY_USER_NAME, user.nickname, options);
+    this.cookieService.set(COOKIE_KEY_USER_TOKEN, token.token, options);
   }
 
   clearAuth() {
     this.cookieService.delete(COOKIE_KEY_USER_TOKEN);
   }
 
-  getThirdLoginURL(param: {
-    type: string;
-    ref: string;
-    options: OptionEntity;
-    callbackUrl: string;
-    isMobile: boolean;
-  }) {
+  getOauthURL(param: { type: string; ref: string; options: OptionEntity; callbackUrl: string; isMobile: boolean }) {
     const { type, ref, options, callbackUrl, isMobile } = param;
-    const thirdLoginApi: Record<string, string> = Object.freeze({
+    const oauthApi: Record<string, string> = Object.freeze({
       wechat: '',
       qq: '',
       alipay:
@@ -185,34 +179,34 @@ export class AuthService {
       case 'alipay':
         if (isMobile) {
           const authUrl = format(
-            thirdLoginApi[type],
+            oauthApi[type],
             options['open_alipay_app_id'],
-            encodeURIComponent(this.getThirdLoginCallbackURL('m_alipay', ref, callbackUrl)),
+            encodeURIComponent(this.getOauthCallbackURL('m_alipay', ref, callbackUrl)),
             this.generateState(ref)
           );
           url = `alipays://platformapi/startapp?appId=20000067&url=${encodeURIComponent(authUrl)}`;
         } else {
           url = format(
-            thirdLoginApi[type],
+            oauthApi[type],
             options['open_alipay_app_id'],
-            encodeURIComponent(this.getThirdLoginCallbackURL('alipay', ref, callbackUrl)),
+            encodeURIComponent(this.getOauthCallbackURL('alipay', ref, callbackUrl)),
             this.generateState(ref)
           );
         }
         break;
       case 'weibo':
         url = format(
-          thirdLoginApi[type],
+          oauthApi[type],
           options['open_weibo_app_key'],
-          encodeURIComponent(this.getThirdLoginCallbackURL('weibo', ref, callbackUrl)),
+          encodeURIComponent(this.getOauthCallbackURL('weibo', ref, callbackUrl)),
           this.generateState(ref)
         );
         break;
       case 'github':
         url = format(
-          thirdLoginApi[type],
+          oauthApi[type],
           options['open_github_client_id'],
-          encodeURIComponent(this.getThirdLoginCallbackURL('github', ref, callbackUrl)),
+          encodeURIComponent(this.getOauthCallbackURL('github', ref, callbackUrl)),
           this.generateState(ref)
         );
     }
@@ -220,7 +214,7 @@ export class AuthService {
     return url;
   }
 
-  getThirdLoginCallbackURL(channel: string, ref: string, callbackUrl: string) {
+  getOauthCallbackURL(channel: string, ref: string, callbackUrl: string) {
     callbackUrl = callbackUrl.replace('{from}', channel);
     if (channel === 'github') {
       return callbackUrl.replace('{ref}', '');

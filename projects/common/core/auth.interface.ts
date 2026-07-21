@@ -1,21 +1,21 @@
-export interface LoginEntity {
-  username: string;
+export interface SigninDto {
+  name: string;
   password: string;
 }
 
-export interface LoginResponse {
+export interface SigninResponse {
   user: {
     userId: string;
-    userNickname: string;
+    nickname: string;
   };
   token: {
-    accessToken: string;
+    token: string;
     expiresAt?: number;
   };
 }
 
-export interface SignupEntity {
-  userNickname: string;
-  userEmail: string;
-  userPassword: string;
+export interface SignupDto {
+  nickname: string;
+  email: string;
+  password: string;
 }

@@ -12,7 +12,7 @@ import {
 } from 'common/core';
 import { ListMode, WallpaperLang } from 'common/enums';
 import { IconCalendarDateComponent, IconChatSquareComponent, IconChatSquareDotsComponent } from 'common/icons';
-import { Post, PostEntity, TenantAppModel, Wallpaper } from 'common/interfaces';
+import { PostVo, PostEntity, TenantAppVo, Wallpaper } from 'common/interfaces';
 import { NumberViewPipe } from 'common/pipes';
 import { CommonService, OptionService, PostService, TenantAppService, WallpaperService } from 'common/services';
 import { isEmpty, uniq } from 'lodash';
@@ -44,12 +44,12 @@ export class HomeComponent implements OnInit {
   isMobile = false;
   domains!: AppDomainConfig;
   hotPosts: PostEntity[] = [];
-  latestPosts: Post[] = [];
+  latestPosts: PostVo[] = [];
   latestWallpapers: Wallpaper[] = [];
 
   protected pageIndex = 'index';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
 
   constructor(
@@ -91,7 +91,7 @@ export class HomeComponent implements OnInit {
   }
 
   getWallpaperUrl(wallpaper: Wallpaper): string {
-    const url = this.domains['wallpaper'].url + '/detail/' + wallpaper.wallpaperId;
+    const url = this.domains['wallpaper'].url + '/detail/' + wallpaper.id;
     const param = wallpaper.isCn ? '' : '?lang=' + WallpaperLang.EN;
 
     return url + param;
@@ -106,7 +106,7 @@ export class HomeComponent implements OnInit {
       .getPosts({
         page: 1,
         size: this.isMobile ? 10 : 8,
-        sticky: 0
+        isPinned: 0
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -137,9 +137,9 @@ export class HomeComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = [this.appInfo.appSlogan || '首页', this.appInfo.appName];
-    const description = this.appInfo.appDescription;
-    const keywords: string[] = [...this.appInfo.keywords];
+    const titles = [this.appInfo.slogan || '首页', this.appInfo.name];
+    const description = this.appInfo.description;
+    const keywords: string[] = [...this.appInfo.keywordList];
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),

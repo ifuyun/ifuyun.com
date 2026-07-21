@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import {
   AppConfigService,
   AppDomainConfig,
@@ -8,7 +7,7 @@ import {
   DestroyService,
   UserAgentService
 } from 'common/core';
-import { TenantAppModel } from 'common/interfaces';
+import { TenantAppVo } from 'common/interfaces';
 import { TenantAppService } from 'common/services';
 import { isEmpty } from 'lodash';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -17,7 +16,7 @@ import { SmartLinkComponent } from '../smart-link/smart-link.component';
 
 @Component({
   selector: 'lib-breadcrumb',
-  imports: [RouterLink, NzIconModule, SmartLinkComponent],
+  imports: [NzIconModule, SmartLinkComponent],
   providers: [DestroyService],
   templateUrl: './breadcrumb.component.html',
   styleUrl: './breadcrumb.component.less'
@@ -26,7 +25,7 @@ export class BreadcrumbComponent implements OnInit {
   isMobile = false;
   breadcrumbs: BreadcrumbEntity[] = [];
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private domains!: AppDomainConfig;
 
   constructor(
@@ -63,7 +62,7 @@ export class BreadcrumbComponent implements OnInit {
           this.breadcrumbs.unshift({
             label: '首页',
             url: this.domains['www'].url,
-            tooltip: this.appInfo.appName,
+            tooltip: this.appInfo.name,
             isHeader: false
           });
         }

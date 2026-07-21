@@ -1,37 +1,36 @@
 import { UserModel } from 'common/core';
-import { LlmProvider, BotScope, BotStatus } from 'common/enums';
+import { BotScope, BotStatus } from 'common/enums';
 import { LlmModel } from './llm-model';
 
 export interface BotEntity {
-  botId: string;
-  botParentId?: string;
-  botName: string;
+  id: string;
+  parentId?: string;
+  name: string;
   llmProviderId: string;
   llmModelId: string;
-  botGreeting: string;
-  botExcerpt: string;
-  botDescription: string;
-  botPrompt?: string;
-  botAvatar: string;
-  botScope: BotScope;
-  botVoice?: string;
+  greeting: string;
+  summary: string;
+  description: string;
+  prompt?: string;
+  avatarUrl: string;
+  scope: BotScope;
+  voice?: string;
   botCategories: string[];
   botTags: string[];
-  botTemperature: number;
-  botTopP: number;
-  botFrequencyPenalty: number;
-  botPresencePenalty: number;
-  botContextSize: number;
+  contextSize: number;
+  temperature: number;
+  topP: number;
+  frequencyPenalty: number;
+  presencePenalty: number;
 }
 
 export interface Bot extends BotEntity {
-  botStatus: BotStatus;
-  botCreatorId?: string;
+  status: BotStatus;
+  creatorId?: string;
   creator?: UserModel;
-  botFollowers?: number;
-  botCreated?: number;
-  botModified?: number;
-  llmProvider: LlmProvider;
+  followers?: number;
+  createdAt?: number;
+  updatedAt?: number;
   llmModel: LlmModel;
   isFollowed?: boolean;
   isOwn?: boolean;

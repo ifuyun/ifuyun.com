@@ -6,8 +6,7 @@ import { NzQRCodeModule } from 'ng-zorro-antd/qr-code';
 @Component({
   selector: 'lib-share-modal',
   imports: [NzModalModule, NzQRCodeModule],
-  templateUrl: './share-modal.component.html',
-  styleUrl: './share-modal.component.less'
+  templateUrl: './share-modal.component.html'
 })
 export class ShareModalComponent {
   @Input() visible = true;

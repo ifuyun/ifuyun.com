@@ -1,5 +1,5 @@
 import { DatePipe, NgStyle } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, input, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   AppConfigService,
@@ -17,16 +17,16 @@ import {
   UserModel
 } from 'common/core';
 import {
-  ActionObjectType,
-  ActionType,
-  CommentObjectType,
+  CommentTargetType,
+  ContentType,
   FavoriteType,
-  PostType,
+  LogActionType,
+  LogTargetType,
   VoteType,
   VoteValue
 } from 'common/enums';
 import { IconCalendarDateComponent, IconLockComponent, IconShareFillComponent } from 'common/icons';
-import { Post, PostModel, TagEntity, TaxonomyEntity, TenantAppModel } from 'common/interfaces';
+import { PostCategoryVo, PostModel, PostTagVo, PostVo, TenantAppVo } from 'common/interfaces';
 import { NumberViewPipe, SafeHtmlPipe } from 'common/pipes';
 import {
   CommentService,
@@ -50,8 +50,8 @@ import { CommentComponent } from '../../comment/comment.component';
 import { MakeMoneyComponent } from '../../make-money/make-money.component';
 import { ShareModalComponent } from '../../share-modal/share-modal.component';
 import { SmartLinkComponent } from '../../smart-link/smart-link.component';
-import { CopyLinkPipe } from '../copy-link.pipe';
-import { CopyTypePipe } from '../copy-type.pipe';
+import { LicenseLinkPipe } from '../license-link.pipe';
+import { LicensePipe } from '../license.pipe';
 import { PostPrevNextComponent } from '../post-prev-next/post-prev-next.component';
 import { PostRelatedComponent } from '../post-related/post-related.component';
 
@@ -64,8 +64,8 @@ import { PostRelatedComponent } from '../post-related/post-related.component';
     NzIconModule,
     SafeHtmlPipe,
     NumberViewPipe,
-    CopyTypePipe,
-    CopyLinkPipe,
+    LicensePipe,
+    LicenseLinkPipe,
     BreadcrumbComponent,
     PostPrevNextComponent,
     PostRelatedComponent,
@@ -82,9 +82,9 @@ import { PostRelatedComponent } from '../post-related/post-related.component';
   styleUrl: './post.component.less'
 })
 export class PostComponent implements OnInit {
-  @Input() postType: PostType = PostType.POST;
+  readonly contentType = input<ContentType>(ContentType.POST);
 
-  readonly commentType = CommentObjectType.POST;
+  readonly commentType = this.contentType() === ContentType.POST ? CommentTargetType.POST : CommentTargetType.PAGE;
 
   isMobile = false;
   isSignIn = false;
@@ -92,8 +92,8 @@ export class PostComponent implements OnInit {
   blogHost = '';
   post!: PostModel;
   postMeta: Record<string, any> = {};
-  postCategories: TaxonomyEntity[] = [];
-  postTags: TagEntity[] = [];
+  postCategories: PostCategoryVo[] = [];
+  postTags: PostTagVo[] = [];
   isFavorite = false;
   isVoted = false;
   voteLoading = false;
@@ -103,17 +103,17 @@ export class PostComponent implements OnInit {
 
   get showPayMask() {
     return (
-      (this.post.postPayFlag && (!this.user || (!this.user.isAdmin && this.post.postOwnerId !== this.user.userId))) ||
-      (!!this.post.postLoginFlag && !this.isSignIn)
+      (this.post.isPaid && (!this.user || (!this.user.isAdmin && this.post.creatorId !== this.user.id))) ||
+      (this.post.visibility === 3 && !this.isSignIn)
     );
   }
 
   protected pageIndex = 'post-detail';
 
-  private readonly copyHTML = `<span class="fi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/></svg></span>Copy code`;
-  private readonly copiedHTML = `<span class="fi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg></span>Copied!`;
+  private readonly copyHTML = `<span class="fi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/></svg></span>`;
+  private readonly copiedHTML = `<span class="fi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg></span>`;
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private user!: UserModel;
   private postId = '';
@@ -147,7 +147,7 @@ export class PostComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isArticle = this.postType === PostType.POST;
+    this.isArticle = this.contentType() === ContentType.POST;
 
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.paramMap])
       .pipe(
@@ -170,7 +170,7 @@ export class PostComponent implements OnInit {
         if (REGEXP_ID.test(slug)) {
           this.postId = slug;
           this.getPost();
-          this.commentService.updateObjectId(this.postId);
+          this.commentService.updateTargetId(this.postId);
         } else {
           this.postSlug = slug;
           this.getPage();
@@ -178,10 +178,10 @@ export class PostComponent implements OnInit {
       });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.user = user;
-      this.isSignIn = !!user.userId;
+      this.isSignIn = !!user.id;
 
       if (this.platform.isBrowser) {
-        this.shareUrl = this.commonService.getShareURL(user.userId);
+        this.shareUrl = this.commonService.getShareURL(user.id);
       }
     });
   }
@@ -194,7 +194,7 @@ export class PostComponent implements OnInit {
       e.stopPropagation();
 
       if (!this.isSignIn) {
-        this.showLoginModal();
+        this.showSigninModal();
         return;
       }
       const index = Number($target.dataset['i']);
@@ -209,9 +209,9 @@ export class PostComponent implements OnInit {
 
         this.logService
           .logAction({
-            action: ActionType.COPY_CODE,
-            objectType: ActionObjectType.POST,
-            objectId: this.post.postId,
+            action: LogActionType.COPY_CODE,
+            targetType: LogTargetType.POST,
+            targetId: this.post.id,
             index: index + 1
           })
           .pipe(takeUntil(this.destroy$))
@@ -230,7 +230,7 @@ export class PostComponent implements OnInit {
   }
 
   onPostSelect() {
-    return !this.post.postPayFlag && (!this.post.postLoginFlag || this.isSignIn);
+    return !this.post.isPaid && (this.post.visibility !== 3 || this.isSignIn);
   }
 
   vote() {
@@ -238,14 +238,14 @@ export class PostComponent implements OnInit {
       return;
     }
     if (!this.isSignIn) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
     this.voteService
       .saveVote({
-        objectId: this.post.postId,
+        targetId: this.post.id,
         value: VoteValue.LIKE,
-        type: this.postType === PostType.PAGE ? VoteType.PAGE : VoteType.POST
+        type: this.contentType() === ContentType.PAGE ? VoteType.PAGE : VoteType.POST
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -254,7 +254,7 @@ export class PostComponent implements OnInit {
         if (res.code === ResponseCode.SUCCESS) {
           this.message.success(Message.VOTE_SUCCESS);
           this.isVoted = true;
-          this.post.postLikes = res.data.likes;
+          this.post.postStat.likeCount = res.data.likes;
         }
       });
   }
@@ -274,7 +274,7 @@ export class PostComponent implements OnInit {
       return;
     }
     if (!this.isSignIn) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
     this.favoriteLoading = true;
@@ -299,8 +299,8 @@ export class PostComponent implements OnInit {
     this.shareVisible = false;
   }
 
-  showLoginModal() {
-    this.commonService.updateLoginModalVisible({
+  showSigninModal() {
+    this.commonService.updateSigninModalVisible({
       visible: true,
       closable: true
     });
@@ -312,7 +312,7 @@ export class PostComponent implements OnInit {
 
   private getPost(): void {
     this.postService
-      .getPostById(this.postId, this.postType, this.referrer)
+      .getPostById(this.postId, this.contentType(), this.referrer)
       .pipe(takeUntil(this.destroy$))
       .subscribe((post) => {
         if (!post) {
@@ -325,7 +325,7 @@ export class PostComponent implements OnInit {
 
   private getPage(): void {
     this.postService
-      .getPostBySlug(this.postSlug, this.postType, this.referrer)
+      .getPostBySlug(this.postSlug, this.contentType(), this.referrer)
       .pipe(takeUntil(this.destroy$))
       .subscribe((post) => {
         if (!post) {
@@ -333,19 +333,19 @@ export class PostComponent implements OnInit {
           return;
         }
         this.initData(post);
-        this.commentService.updateObjectId(post.post.postId);
+        this.commentService.updateTargetId(post.id);
       });
   }
 
-  private initData(post: Post) {
-    const result = this.postService.parseHTML(post.post.postContent, this.copyHTML);
+  private initData(post: PostVo) {
+    const result = this.postService.parseHTML(post.content, this.copyHTML);
 
     // 避免覆盖
-    this.post = { ...post.post };
-    this.post.postContent = result.content;
+    this.post = { ...post };
+    this.post.content = result.content;
     this.codeList = result.codeList;
-    this.post.postSource = this.postService.getPostSource(post);
-    this.postMeta = post.meta;
+    this.post.source = this.postService.getPostSource(post);
+    this.postMeta = post.metadata;
     this.postCategories = post.categories;
     this.postTags = post.tags;
     this.isFavorite = post.isFavorite;
@@ -354,10 +354,10 @@ export class PostComponent implements OnInit {
     if (this.isArticle) {
       this.pageIndex = 'post-detail';
     } else {
-      this.pageIndex = 'page-' + this.post.postName;
+      this.pageIndex = 'page-' + this.post.slug;
     }
 
-    this.postService.updateActivePostId(post.post.postId);
+    this.postService.updateActivePostId(post.id);
     this.postService.updateActivePost(post);
     this.updateBreadcrumbs(this.isArticle ? post.breadcrumbs || [] : []);
     this.updatePageIndex();
@@ -382,19 +382,19 @@ export class PostComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles: string[] = [this.appInfo.appName];
+    const titles: string[] = [this.appInfo.name];
     const keywords: string[] = this.postTags
-      .map((item) => item.tagName)
+      .map((item) => item.tag.name)
       .concat((this.options['post_keywords'] || '').split(','));
 
     if (this.isArticle) {
       titles.unshift('博客');
     }
-    titles.unshift(this.post.postTitle);
+    titles.unshift(this.post.title);
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
-      description: this.post.postExcerpt,
+      description: this.post.summary || '',
       keywords: uniq(keywords)
         .filter((item) => !!item)
         .join(','),

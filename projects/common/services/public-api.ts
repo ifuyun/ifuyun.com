@@ -1,6 +1,7 @@
 export * from './ads.service';
 export * from './bot.service';
 export * from './bot-conversation.service';
+export * from './category.service';
 export * from './comment.service';
 export * from './common.service';
 export * from './favorite.service';
@@ -9,7 +10,6 @@ export * from './link.service';
 export * from './log.service';
 export * from './option.service';
 export * from './post.service';
-export * from './taxonomy.service';
 export * from './tenant-app.service';
 export * from './user.service';
 export * from './vote.service';

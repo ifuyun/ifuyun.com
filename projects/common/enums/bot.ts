@@ -5,13 +5,14 @@ export enum BotScope {
 }
 
 export enum BotStatus {
-  NORMAL = 'normal',
-  TRASH = 'trash'
+  NORMAL = 1,
+  TRASHED = 2
 }
 
 export enum BotFollowStatus {
-  NORMAL = 'normal',
-  TRASH = 'trash'
+  NORMAL = 1,
+  TRASHED = 2,
+  UNFOLLOWED = 52
 }
 
 export enum CloseType {

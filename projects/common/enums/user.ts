@@ -1,11 +1,11 @@
 export enum UserStatus {
-  NORMAL = 'normal',
-  PENDING = 'pending',
-  TRASH = 'trash'
+  NORMAL = 1,
+  TRASHED = 2,
+  UNAUTHORIZED = 12
 }
 
-export enum UserLlmStatus {
-  ENABLED = 'enabled',
-  DISABLED = 'disabled',
-  EXPIRED = 'expired'
+export enum UserAiStatus {
+  ENABLED = 1,
+  DISABLED = 2,
+  EXPIRED = 3
 }

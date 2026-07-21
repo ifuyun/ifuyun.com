@@ -63,12 +63,12 @@ export class WallpaperPrevNextComponent implements OnInit {
         if (res.prevWallpaper) {
           this.prevWallpaper = {
             ...res.prevWallpaper,
-            wallpaperTitle: res.prevWallpaper.wallpaperTitle || res.prevWallpaper.wallpaperTitleEn,
-            wallpaperCopyright: res.prevWallpaper.wallpaperCopyright || res.prevWallpaper.wallpaperCopyrightEn,
-            wallpaperTitleEn: res.prevWallpaper.wallpaperTitleEn || res.prevWallpaper.wallpaperTitle,
-            wallpaperCopyrightEn: res.prevWallpaper.wallpaperCopyrightEn || res.prevWallpaper.wallpaperCopyright,
-            isCn: !!res.prevWallpaper.wallpaperCopyright,
-            isEn: !!res.prevWallpaper.wallpaperCopyrightEn
+            title: res.prevWallpaper.title || res.prevWallpaper.titleEn,
+            copyright: res.prevWallpaper.copyright || res.prevWallpaper.copyrightEn,
+            titleEn: res.prevWallpaper.titleEn || res.prevWallpaper.title,
+            copyrightEn: res.prevWallpaper.copyrightEn || res.prevWallpaper.copyright,
+            isCn: !!res.prevWallpaper.copyright,
+            isEn: !!res.prevWallpaper.copyrightEn
           };
         } else {
           this.prevWallpaper = undefined;
@@ -76,12 +76,12 @@ export class WallpaperPrevNextComponent implements OnInit {
         if (res.nextWallpaper) {
           this.nextWallpaper = {
             ...res.nextWallpaper,
-            wallpaperTitle: res.nextWallpaper.wallpaperTitle || res.nextWallpaper.wallpaperTitleEn,
-            wallpaperCopyright: res.nextWallpaper.wallpaperCopyright || res.nextWallpaper.wallpaperCopyrightEn,
-            wallpaperTitleEn: res.nextWallpaper.wallpaperTitleEn || res.nextWallpaper.wallpaperTitle,
-            wallpaperCopyrightEn: res.nextWallpaper.wallpaperCopyrightEn || res.nextWallpaper.wallpaperCopyright,
-            isCn: !!res.nextWallpaper.wallpaperCopyright,
-            isEn: !!res.nextWallpaper.wallpaperCopyrightEn
+            title: res.nextWallpaper.title || res.nextWallpaper.titleEn,
+            copyright: res.nextWallpaper.copyright || res.nextWallpaper.copyrightEn,
+            titleEn: res.nextWallpaper.titleEn || res.nextWallpaper.title,
+            copyrightEn: res.nextWallpaper.copyrightEn || res.nextWallpaper.copyright,
+            isCn: !!res.nextWallpaper.copyright,
+            isEn: !!res.nextWallpaper.copyrightEn
           };
         } else {
           this.nextWallpaper = undefined;

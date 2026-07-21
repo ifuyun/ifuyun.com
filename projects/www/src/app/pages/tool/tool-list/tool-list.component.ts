@@ -10,8 +10,8 @@ import {
   OptionEntity,
   UserAgentService
 } from 'common/core';
-import { ActionObjectType, ActionType } from 'common/enums';
-import { FavoriteLink, TenantAppModel } from 'common/interfaces';
+import { LogTargetType, LogActionType } from 'common/enums';
+import { FavoriteLink, TenantAppVo } from 'common/interfaces';
 import { CommonService, LinkService, LogService, OptionService, TenantAppService } from 'common/services';
 import { isEmpty } from 'lodash';
 import { NzImageService } from 'ng-zorro-antd/image';
@@ -30,7 +30,7 @@ export class ToolListComponent implements OnInit {
 
   protected pageIndex = 'tool';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
 
   constructor(
@@ -77,8 +77,8 @@ export class ToolListComponent implements OnInit {
 
     this.logService
       .logAction({
-        action: ActionType.SHOW_RED_PACKET,
-        objectType: ActionObjectType.TOOL_LIST
+        action: LogActionType.SHOW_RED_PACKET,
+        targetType: LogTargetType.TOOL_LIST
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe();
@@ -98,7 +98,7 @@ export class ToolListComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = ['工具', this.appInfo.appName];
+    const titles = ['工具', this.appInfo.name];
     const description = this.options['tool_description'];
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),

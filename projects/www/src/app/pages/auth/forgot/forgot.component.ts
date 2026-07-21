@@ -18,7 +18,7 @@ import {
   PlatformService,
   ResponseCode
 } from 'common/core';
-import { TenantAppModel } from 'common/interfaces';
+import { TenantAppVo } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService } from 'common/services';
 import { format } from 'common/utils';
 import { isEmpty } from 'lodash';
@@ -42,8 +42,7 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
     NzSpaceCompactComponent
   ],
   providers: [DestroyService],
-  templateUrl: './forgot.component.html',
-  styleUrl: './forgot.component.less'
+  templateUrl: './forgot.component.html'
 })
 export class ForgotComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('emailInput') emailInput!: ElementRef;
@@ -54,12 +53,11 @@ export class ForgotComponent extends BaseComponent implements OnInit, AfterViewI
 
   forgotForm!: FormGroup;
   countdown = 0; // 60s
-  passwordVisible = false;
   resetLoading = false;
 
   protected pageIndex = 'auth-forgot';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private sendTimer!: number;
 
@@ -158,9 +156,9 @@ export class ForgotComponent extends BaseComponent implements OnInit, AfterViewI
       .subscribe((res) => {
         this.resetLoading = false;
 
-        if (res.token?.accessToken) {
-          const urlParam = format(ADMIN_URL_PARAM, res.token.accessToken, this.appConfigService.appId);
-          window.location.href = this.appInfo.appAdminUrl + '?' + urlParam;
+        if (res.token?.token) {
+          const urlParam = format(ADMIN_URL_PARAM, res.token.token, this.appConfigService.appId);
+          window.location.href = this.appInfo.adminUrl + '?' + urlParam;
         }
       });
   }
@@ -185,10 +183,10 @@ export class ForgotComponent extends BaseComponent implements OnInit, AfterViewI
 
   private updatePageInfo() {
     this.metaService.updateHTMLMeta({
-      title: ['忘记密码', this.appInfo.appName].join(' - '),
-      description: this.appInfo.appDescription,
+      title: ['忘记密码', this.appInfo.name].join(' - '),
+      description: this.appInfo.description,
       author: this.options['site_author'],
-      keywords: this.appInfo.appKeywords
+      keywords: this.appInfo.keywords
     });
   }
 

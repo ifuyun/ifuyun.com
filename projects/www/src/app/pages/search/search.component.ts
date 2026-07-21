@@ -25,7 +25,7 @@ import {
   AllSearchResponse,
   GameSearchResponse,
   PostSearchResponse,
-  TenantAppModel,
+  TenantAppVo,
   WallpaperSearchResponse
 } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService } from 'common/services';
@@ -46,8 +46,7 @@ import { SearchService } from './search.service';
     MakeMoneyComponent
   ],
   providers: [DestroyService],
-  templateUrl: './search.component.html',
-  styleUrl: './search.component.less'
+  templateUrl: './search.component.html'
 })
 export class SearchComponent implements OnInit {
   isMobile = false;
@@ -64,7 +63,7 @@ export class SearchComponent implements OnInit {
 
   protected pageIndex = 'search';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private keyword = '';
 
@@ -183,8 +182,8 @@ export class SearchComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles: string[] = [this.keyword, `${this.searchTypeDesc}搜索`, this.appInfo.appName];
-    const keywords: string[] = [...this.appInfo.keywords];
+    const titles: string[] = [this.keyword, `${this.searchTypeDesc}搜索`, this.appInfo.name];
+    const keywords: string[] = [...this.appInfo.keywordList];
     let description = `「${this.keyword}」${this.searchTypeDesc}搜索结果`;
 
     keywords.unshift(...this.keyword.split(/\s+/i));
@@ -196,7 +195,7 @@ export class SearchComponent implements OnInit {
       }
     }
     description += '。';
-    description += this.appInfo.appDescription;
+    description += this.appInfo.description;
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),

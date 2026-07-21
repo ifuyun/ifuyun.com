@@ -1,28 +1,28 @@
-import { MessageRole, MessageStatus } from './ai-chat.enum';
+import { MessageRole, MessageStatus, ReasoningEffort } from './ai-chat.enum';
 
 export interface BotMessage {
-  messageId: string;
+  id: string;
   conversationId: string;
-  messageRole: MessageRole;
-  messageContent: string;
-  messageReasoningContent: string;
-  messageTokens: number;
-  messageVote: number;
-  messageStatus: MessageStatus;
+  role: MessageRole;
+  content: string;
+  reasoningContent: string;
+  tokens: number;
+  vote: number;
+  status: MessageStatus;
   userId: string;
-  messageCreated: number;
-  messageModified: number;
+  createdAt: number;
+  updatedAt: number;
   appId?: string;
 }
 
 export interface ChatMessage {
-  messageId?: string;
+  id?: string;
   role: MessageRole;
   content: string;
   html?: string;
   reasoningContent?: string;
   reasoningHtml?: string;
-  created?: number;
+  createdAt?: number;
   vote?: number;
   name?: string;
   loading?: boolean;
@@ -32,9 +32,16 @@ export interface ChatMessage {
   status?: 'done' | 'error';
 }
 
-export interface ChatParam {
+export interface StreamChatParam {
   conversationId: string;
   message: string;
+  effort?: ReasoningEffort;
+}
+
+export interface StreamChatEvent {
+  type: 'thinking' | 'message' | 'done' | 'error';
+  message?: string;
+  reasoningMessage?: string;
 }
 
 export interface ChatUsage {
@@ -46,9 +53,9 @@ export interface ChatUsage {
   total_tokens: number;
 }
 
-export interface ChatResponse {
+export interface ChatChunk {
   id: string;
-  created: number;
+  createdAt: number;
   model: string;
   choices: {
     // 非流式
@@ -66,12 +73,4 @@ export interface ChatResponse {
     usage?: ChatUsage;
   }[];
   usage?: ChatUsage;
-}
-
-export interface ChatEventData {
-  type: 'message' | 'thinking' | 'done' | 'error';
-  message?: string;
-  reasoningMessage?: string;
-  conversationId?: string;
-  error?: Error;
 }

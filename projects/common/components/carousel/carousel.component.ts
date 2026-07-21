@@ -1,7 +1,7 @@
 import { NgStyle } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DestroyService, PlatformService, UserAgentService } from 'common/core';
-import { ActionObjectType, ActionType, LinkTarget, WallpaperLang } from 'common/enums';
+import { LogTargetType, LogActionType, LinkTarget, WallpaperLang } from 'common/enums';
 import { Carousel, CarouselOptions, HotWallpaper, Wallpaper } from 'common/interfaces';
 import { RangePipe } from 'common/pipes';
 import { LogService, OptionService, WallpaperService } from 'common/services';
@@ -104,8 +104,8 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   logClick(carousel: Carousel) {
     this.logService
       .logAction({
-        action: ActionType.CLICK_CAROUSEL,
-        objectType: ActionObjectType.CAROUSEL,
+        action: LogActionType.CLICK_CAROUSEL,
+        targetType: LogTargetType.CAROUSEL,
         carouselTitle: carousel.title,
         carouselURL: carousel.link
       })
@@ -191,7 +191,17 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       .getHotWallpapers(this.carouselOptions.size || 4)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.carousels = this.transformToCarousels(res);
+        this.carousels = res.map((item, index) => {
+          return {
+            id: item.wallpaperId,
+            title: item.titleCn || item.titleEn,
+            caption: item.copyrightCn || item.copyrightEn,
+            url: item.url,
+            link: this.wallpaperService.getWallpaperLink(item.wallpaperId, !item.copyright && !!item.copyrightEn),
+            target: LinkTarget.SELF,
+            order: index + 1
+          };
+        });
         this.initCarousels();
       });
   }
@@ -202,7 +212,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
         page: 1,
         size: this.carouselOptions.size || 4,
         lang: [WallpaperLang.CN, WallpaperLang.EN],
-        orderBy: this.carouselOptions.orderBy === 'oldest' ? [['wallpaperDate', 'asc']] : [['wallpaperDate', 'desc']]
+        orderBy: this.carouselOptions.orderBy === 'oldest' ? [['bingDate', 'asc']] : [['bingDate', 'desc']]
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -222,14 +232,14 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private transformToCarousels(wallpapers: Wallpaper[] | HotWallpaper[]): Carousel[] {
+  private transformToCarousels(wallpapers: Wallpaper[]): Carousel[] {
     return wallpapers.map((item, index) => {
       return {
-        id: item.wallpaperId,
-        title: item.wallpaperTitle || item.wallpaperTitleEn,
-        caption: item.wallpaperCopyright || item.wallpaperCopyrightEn,
-        url: item.wallpaperUrl,
-        link: this.wallpaperService.getWallpaperLink(item.wallpaperId, !item.isCn && item.isEn),
+        id: item.id,
+        title: item.title || item.titleEn,
+        caption: item.copyright || item.copyrightEn,
+        url: item.url,
+        link: this.wallpaperService.getWallpaperLink(item.id, !item.isCn && item.isEn),
         target: LinkTarget.SELF,
         order: index + 1
       };

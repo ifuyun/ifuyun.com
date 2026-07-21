@@ -2,12 +2,12 @@
   <aside class="m-sider-body">
     <div class="m-sider-info">
       <div class="m-sider-info-logo">
-        <img [src]="faviconUrl" [alt]="appInfo?.appName"/>
+        <img [src]="faviconUrl" [alt]="appInfo?.name"/>
       </div>
       <div class="m-sider-info-profile">
-        <h2 class="m-sider-info-profile-name">{{ appInfo?.appName }}</h2>
-        @if (appInfo?.appSlogan) {
-          <div class="m-sider-info-profile-slogan">{{ appInfo?.appSlogan }}</div>
+        <h2 class="m-sider-info-profile-name">{{ appInfo?.name }}</h2>
+        @if (appInfo?.slogan) {
+          <div class="m-sider-info-profile-slogan">{{ appInfo?.slogan }}</div>
         }
       </div>
     </div>
@@ -76,10 +76,10 @@
         <div class="m-separator"></div>
         @if (isSignIn) {
           <li><a (click)="gotoAdmin()"><nz-icon nzType="dashboard"/><span>个人中心</span></a></li>
-          <li><a (click)="logout()"><nz-icon nzType="logout"/><span>退出登录</span></a></li>
+          <li><a (click)="signout()"><nz-icon nzType="logout"/><span>退出登录</span></a></li>
         } @else {
           <li>
-            <lib-a [href]="domains['www'].url + '/user/login'"
+            <lib-a [href]="domains['www'].url + '/user/signin'"
                    title="登录"
                    (click)="closeSider()"><nz-icon nzType="login"/><span>登录</span></lib-a>
           </li>

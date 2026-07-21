@@ -51,17 +51,13 @@
   <nz-form-item>
     <nz-form-label>新密码</nz-form-label>
     <nz-form-control [nzErrorTip]="confirmErrorTpl">
-      <nz-input-group [nzSuffix]="confirmPwdSuffix">
+      <nz-input-password>
         <input nz-input
-               [type]="passwordVisible ? 'text' : 'password'"
                formControlName="password"
                [maxlength]="maxPwdLength"
-               placeholder="{{minPwdLength}}-{{maxPwdLength}} 位密码，字母、数字、符号组合"
-               autocomplete="off"/>
-      </nz-input-group>
-      <ng-template #confirmPwdSuffix>
-        <nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"/>
-      </ng-template>
+               autocomplete="off"
+               placeholder="{{minPwdLength}}-{{maxPwdLength}} 位密码，字母、数字、符号组合"/>
+      </nz-input-password>
       <ng-template #confirmErrorTpl let-control>
         @if (control.hasError('required')) {
           请输入新密码

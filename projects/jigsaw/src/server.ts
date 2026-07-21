@@ -49,10 +49,10 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
       }
     ];
     const wallpapers: SitemapItemLoose[] = sitemap.wallpapers.map((item) => ({
-      url: `${environment.apps.jigsaw.url}/detail/${item.wallpaperId}`,
+      url: `${environment.apps.jigsaw.url}/detail/${item.id}`,
       changefreq: EnumChangefreq.ALWAYS,
       priority: 1,
-      lastmod: new Date(item.wallpaperModified).toString()
+      lastmod: new Date(item.updatedAt).toString()
     }));
 
     streamToPromise(<Readable>Readable.from(links.concat(wallpapers)).pipe(sitemapStream)).then((data) => {

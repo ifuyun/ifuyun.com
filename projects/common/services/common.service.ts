@@ -2,20 +2,21 @@ import { HttpStatusCode } from '@angular/common/http';
 import { DOCUMENT, ElementRef, Inject, Injectable, Optional, REQUEST, RESPONSE_INIT } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import {
-  ApiService,
   AppConfigService,
   CDN_HOST,
   COOKIE_KEY_THEME,
   COOKIE_KEY_USER_ID,
   CustomError,
-  LoginModalOptions,
+  SigninModalOptions,
   MEDIA_QUERY_THEME_DARK,
   MEDIA_QUERY_THEME_LIGHT,
   Message,
   PageIndexInfo,
   PlatformService,
   SsrCookieService,
-  UserAgentService
+  ArchiveData,
+  ArchiveDataMap,
+  ArchiveList
 } from 'common/core';
 import { Theme } from 'common/enums';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
@@ -33,11 +34,11 @@ export class CommonService {
   private darkMode: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public darkMode$: Observable<boolean> = this.darkMode.asObservable();
 
-  private loginVisible: BehaviorSubject<LoginModalOptions> = new BehaviorSubject<LoginModalOptions>({
+  private signinVisible: BehaviorSubject<SigninModalOptions> = new BehaviorSubject<SigninModalOptions>({
     visible: false,
     closable: true
   });
-  public loginVisible$: Observable<LoginModalOptions> = this.loginVisible.asObservable();
+  public signinVisible$: Observable<SigninModalOptions> = this.signinVisible.asObservable();
 
   constructor(
     @Inject(DOCUMENT) private readonly document: Document,
@@ -46,9 +47,7 @@ export class CommonService {
     private readonly router: Router,
     private readonly platform: PlatformService,
     private readonly cookieService: SsrCookieService,
-    private readonly userAgentService: UserAgentService,
-    private readonly appConfigService: AppConfigService,
-    private readonly apiService: ApiService
+    private readonly appConfigService: AppConfigService
   ) {}
 
   updatePageIndex(pageIndex: string) {
@@ -80,8 +79,8 @@ export class CommonService {
     this.siderVisible.next(visible);
   }
 
-  updateLoginModalVisible(options: LoginModalOptions) {
-    this.loginVisible.next(options);
+  updateSigninModalVisible(options: SigninModalOptions) {
+    this.signinVisible.next(options);
   }
 
   getReferrer(onlyPath = false) {
@@ -124,13 +123,9 @@ export class CommonService {
     return this.platform.isBrowser ? window.screen.height : null;
   }
 
-  getResolution() {
-    return this.platform.isBrowser ? window.screen.width + 'x' + window.screen.height : '';
-  }
-
   smartNavigate(path: string, host: string, extras?: NavigationExtras): void {
     if (this.isSameHost(host)) {
-      this.router.navigate([path], extras);
+      this.router.navigate([path], extras).then();
     } else {
       let queryStr = '';
       if (extras?.queryParams) {
@@ -232,6 +227,26 @@ export class CommonService {
       .sort()
       .map((key) => `${key}=${encodeURIComponent(params[key])}`)
       .join('&');
+  }
+
+  buildArchiveList(archiveData: ArchiveData[]): ArchiveList {
+    const dateList: ArchiveDataMap = {};
+    (archiveData || []).forEach((item) => {
+      const dates = item.dateValue.split('/');
+      const year = dates[0];
+      item.dateLabel = `${Number(dates[1])}月`;
+      dateList[year] = dateList[year] || {};
+      dateList[year].list = dateList[year].list || [];
+      dateList[year].list.push(item);
+      dateList[year].countByYear = dateList[year].countByYear || 0;
+      dateList[year].countByYear += item.count || 0;
+    });
+    const yearList = Object.keys(dateList).sort((a, b) => (a < b ? 1 : -1));
+
+    return {
+      dateList,
+      yearList
+    };
   }
 
   async generateHmacSignature(message: string, secret: string): Promise<string> {

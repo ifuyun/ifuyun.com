@@ -7,7 +7,7 @@ import {
 } from '@angular/ssr/node';
 import { Feed } from '@fuyun/feed';
 import { ApiUrl, Message } from 'common/core';
-import { Post, SitemapData } from 'common/interfaces';
+import { PostVo, SitemapData } from 'common/interfaces';
 import { simpleRequest } from 'common/utils';
 import { environment } from 'env/environment';
 import express, { Request, Response } from 'express';
@@ -51,37 +51,36 @@ app.get('/rss.xml', async (req: Request, res: Response) => {
       appId: environment.appId,
       apiBase: environment.apiBase
     });
-    const posts: Post[] = postList.list || [];
+    const posts: PostVo[] = postList.list || [];
     const feed = new Feed({
-      title: appInfo.appName,
-      description: appInfo.appDescription,
+      title: appInfo.name,
+      description: appInfo.description,
       language: 'zh-cn',
       dcExtension: true,
       id: environment.apps.blog.url,
       link: environment.apps.blog.url,
-      image: appInfo.appLogoUrl,
-      favicon: appInfo.appFaviconUrl,
-      copyright: `2014-${new Date().getFullYear()} ${appInfo.appDomain}`,
+      image: appInfo.logoUrl,
+      favicon: appInfo.faviconUrl,
+      copyright: `2014-${new Date().getFullYear()} ${appInfo.domain}`,
       updated: new Date(),
-      generator: appInfo.appDomain,
+      generator: appInfo.domain,
       feedLinks: {
         rss: `${environment.apps.blog.url}/rss.xml`
       },
       webMaster: options['site_author']
     });
 
-    posts.forEach((item) => {
-      const post = item.post;
+    posts.forEach((post) => {
       feed.addItem({
-        title: post.postTitle,
-        id: post.postId,
-        link: environment.apps.blog.url + post.postGuid,
-        description: post.postExcerpt,
-        content: showDetail ? post.postContent : post.postExcerpt,
-        creator: item.meta['post_author'] || post.owner.userNickname,
-        category: item.categories.map((category) => ({ name: category.taxonomySlug })),
-        date: new Date(post.postDate),
-        image: post.cover
+        title: post.title,
+        id: post.id,
+        link: environment.apps.blog.url + post.url,
+        description: post.summary,
+        content: showDetail ? post.content : post.summary,
+        creator: post.author || post.creator.nickname,
+        category: post.categories.map((category) => ({ name: category.category.slug })),
+        date: new Date(post.publishedAt),
+        image: post.coverUrl
       });
     });
 
@@ -121,10 +120,10 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
       }
     ];
     const posts: SitemapItemLoose[] = sitemap.posts.map((item) => ({
-      url: environment.apps.blog.url + item.postGuid,
+      url: environment.apps.blog.url + item.url,
       changefreq: EnumChangefreq.ALWAYS,
       priority: 1,
-      lastmod: new Date(item.postModified).toString()
+      lastmod: new Date(item.updatedAt).toString()
     }));
     const postArchivesByMonth: SitemapItemLoose[] = sitemap.postArchives.map((item) => ({
       url: `${environment.apps.blog.url}/archive/${item.dateValue}`,
@@ -138,20 +137,20 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
       changefreq: EnumChangefreq.DAILY,
       priority: 0.7
     }));
-    const taxonomies: SitemapItemLoose[] = sitemap.taxonomies.map((item) => ({
-      url: `${environment.apps.blog.url}/category/${item.taxonomySlug}`,
+    const categories: SitemapItemLoose[] = sitemap.categories.map((item) => ({
+      url: `${environment.apps.blog.url}/category/${item.slug}`,
       changefreq: EnumChangefreq.DAILY,
       priority: 0.7
     }));
     const tags: SitemapItemLoose[] = sitemap.tags.map((item) => ({
-      url: `${environment.apps.blog.url}/tag/${item.tagName}`,
+      url: `${environment.apps.blog.url}/tag/${item.name}`,
       changefreq: EnumChangefreq.DAILY,
       priority: 0.7
     }));
 
     streamToPromise(
       <Readable>(
-        Readable.from(links.concat(posts, taxonomies, tags, postArchivesByYear, postArchivesByMonth)).pipe(
+        Readable.from(links.concat(posts, categories, tags, postArchivesByYear, postArchivesByMonth)).pipe(
           sitemapStream
         )
       )

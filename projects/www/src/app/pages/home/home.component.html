@@ -4,11 +4,11 @@
     <div class="banner-post">
       <div class="column-header">热门文章</div>
       <ul class="banner-post-list">
-        @for (post of hotPosts; track post.postId; let i = $index) {
+        @for (post of hotPosts; track post.id; let i = $index) {
           <li class="banner-post-item">
             <span class="hot-num">{{ i + 1 }}</span>
-            <a [href]="domains['blog'].url + post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</a>
-            <span class="date">{{ post.postDate | date:'yyyy-MM-dd' }}</span>
+            <a [href]="domains['blog'].url + post.url" [title]="post.title">{{ post.title }}</a>
+            <span class="date">{{ post.publishedAt | date:'yyyy-MM-dd' }}</span>
           </li>
         }
       </ul>
@@ -17,32 +17,32 @@
   <div class="main-content">
     <div class="column-header">最新文章</div>
     <div class="post-card-list post-card-list-4">
-      @for (post of latestPosts; track post.post.postId) {
+      @for (post of latestPosts; track post.id) {
         <article class="post-card-item post-card-item-wrap">
           <div class="post-card-item-body">
             <div class="post-card-cover">
-              <a [href]="domains['blog'].url + post.post.postGuid" [title]="post.post.postTitle">
-                <span class="post-item-cover-img lazyload" [attr.data-bg]="post.post.cover"></span>
+              <a [href]="domains['blog'].url + post.url" [title]="post.title">
+                <span class="post-item-cover-img lazyload" [attr.data-bg]="post.coverUrl"></span>
                 <span class="overlay"></span>
               </a>
             </div>
             <div class="post-content">
-              <h2><a [href]="domains['blog'].url + post.post.postGuid"
-                     [title]="post.post.postTitle"
-                     rel="bookmark">{{ post.post.postTitle }}</a></h2>
+              <h2><a [href]="domains['blog'].url + post.url"
+                     [title]="post.title"
+                     rel="bookmark">{{ post.title }}</a></h2>
               <div class="post-meta-wrap">
                 <div class="post-meta">
-                  <div class="date" [title]="post.post.postDate | date:'yyyy-MM-dd'">
-                    <fi-calendar-date class="fi"/><span>{{ post.post.postDate | date:'yyyy-MM-dd' }}</span>
+                  <div class="date" [title]="post.publishedAt | date:'yyyy-MM-dd'">
+                    <fi-calendar-date class="fi"/><span>{{ post.publishedAt | date:'yyyy-MM-dd' }}</span>
                   </div>
                   <div class="actions">
-                    <div class="action-item" title="浏览: {{ post.post.postViews | numberView: 'K' }}">
-                      <nz-icon nzType="eye"/><span>{{ post.post.postViews | numberView: 'K' }}</span>
+                    <div class="action-item" title="浏览: {{ post.postStat.viewCount | numberView: 'K' }}">
+                      <nz-icon nzType="eye"/><span>{{ post.postStat.viewCount | numberView: 'K' }}</span>
                     </div>
-                    @if (post.post.commentFlag !== 'closed') {
-                      <div class="action-item" title="评论: {{ post.post.postComments | numberView: 'K' }}">
-                        @if (post.post.postComments > 0) {
-                          <fi-chat-square-dots class="fi"/><span>{{ post.post.postComments | numberView: 'K' }}</span>
+                    @if (post.commentStatus !== 2) {
+                      <div class="action-item" title="评论: {{ post.postStat.commentCount | numberView: 'K' }}">
+                        @if (post.postStat.commentCount > 0) {
+                          <fi-chat-square-dots class="fi"/><span>{{ post.postStat.commentCount | numberView: 'K' }}</span>
                         } @else {
                           <fi-chat-square class="fi"/><span>0</span>
                         }
@@ -63,30 +63,30 @@
   <div class="main-content">
     <div class="column-header">最新壁纸</div>
     <div class="post-card-list post-card-list-4">
-      @for (wallpaper of latestWallpapers; track wallpaper.wallpaperId) {
+      @for (wallpaper of latestWallpapers; track wallpaper.id) {
         <article class="post-card-item post-card-item-wrap">
           <div class="post-card-item-body">
             <div class="post-card-cover">
-              <a [href]="getWallpaperUrl(wallpaper)" [title]="wallpaper.wallpaperCopyright">
-                <span class="post-item-cover-img lazyload" [attr.data-bg]="wallpaper.wallpaperThumbUrl"></span>
+              <a [href]="getWallpaperUrl(wallpaper)" [title]="wallpaper.copyright">
+                <span class="post-item-cover-img lazyload" [attr.data-bg]="wallpaper.thumbUrl"></span>
                 <span class="overlay"></span>
               </a>
             </div>
             <div class="post-content">
               <h2><a [href]="getWallpaperUrl(wallpaper)"
-                     [title]="wallpaper.wallpaperCopyright"
-                     rel="bookmark">{{ wallpaper.wallpaperCopyright }}</a></h2>
+                     [title]="wallpaper.copyright"
+                     rel="bookmark">{{ wallpaper.copyright }}</a></h2>
               <div class="post-meta-wrap">
                 <div class="post-meta">
-                  <div class="date" [title]="wallpaper.wallpaperDate | date:'yyyy-MM-dd'">
-                    <fi-calendar-date class="fi"/><span>{{ wallpaper.wallpaperDate | date:'yyyy-MM-dd' }}</span>
+                  <div class="date" [title]="wallpaper.bingDate | date:'yyyy-MM-dd'">
+                    <fi-calendar-date class="fi"/><span>{{ wallpaper.bingDate | date:'yyyy-MM-dd' }}</span>
                   </div>
                   <div class="actions">
-                    <div class="action-item" title="浏览: {{ wallpaper.wallpaperViews | numberView: 'K' }}">
-                      <nz-icon nzType="eye"/><span>{{ wallpaper.wallpaperViews | numberView: 'K' }}</span>
+                    <div class="action-item" title="浏览: {{ wallpaper.wallpaperStat.viewCount | numberView: 'K' }}">
+                      <nz-icon nzType="eye"/><span>{{ wallpaper.wallpaperStat.viewCount | numberView: 'K' }}</span>
                     </div>
-                    <div class="action-item" title="点赞: {{ wallpaper.wallpaperLikes | numberView: 'K' }}">
-                      <nz-icon nzType="like"/><span>{{ wallpaper.wallpaperLikes | numberView: 'K' }}</span>
+                    <div class="action-item" title="点赞: {{ wallpaper.wallpaperStat.likeCount | numberView: 'K' }}">
+                      <nz-icon nzType="like"/><span>{{ wallpaper.wallpaperStat.likeCount | numberView: 'K' }}</span>
                     </div>
                   </div>
                 </div>
@@ -104,7 +104,7 @@
   <lib-carousel/>
   <div class="column-header m-column-header">最新文章</div>
   <div class="m-post-list">
-    @for (post of latestPosts; track post.post.postId; let i = $index) {
+    @for (post of latestPosts; track post.id; let i = $index) {
       <lib-post-item [post]="post" [index]="i"/>
     }
   </div>
@@ -113,7 +113,7 @@
   </div>
   <div class="column-header m-column-header">最新壁纸</div>
   <div class="m-post-list">
-    @for (wallpaper of latestWallpapers; track wallpaper.wallpaperId; let i = $index) {
+    @for (wallpaper of latestWallpapers; track wallpaper.id; let i = $index) {
       <lib-wallpaper-item [wallpaper]="wallpaper" [mode]="wallpaperListMode" [index]="i"/>
     }
   </div>

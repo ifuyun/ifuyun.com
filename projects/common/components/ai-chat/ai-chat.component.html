@@ -12,55 +12,50 @@
   </ng-template>
   <ng-container *nzDrawerContent>
     <div class="bot-wrap">
-      @if (initialized) {
-        @if (!authChat || user.userLlmStatus === 'disabled') {
-          <nz-alert nzBanner nzType="error" [nzMessage]="noAuthMessage"/>
+      @if (initialized()) {
+        @if (!authChat() || userAiStatus() === 2) {
+          <nz-alert nzBanner nzType="error" [nzMessage]="noAuthMessage"></nz-alert>
         }
-        @if (authChat && user.userLlmStatus === 'expired') {
-          <nz-alert nzBanner nzType="error" [nzMessage]="expiredMessage"/>
+        @if (authChat() && userAiStatus() === 3) {
+          <nz-alert nzBanner nzType="error" [nzMessage]="expiredMessage"></nz-alert>
         }
-        @if (authChat && user.userLlmStatus === 'enabled' && !isChatModelEnabled) {
-          <nz-alert nzBanner nzType="error" [nzMessage]="noModelAuthMessage"/>
+        @if (authChat() && userAiStatus() === 1 && !isChatModelEnabled()) {
+          <nz-alert nzBanner nzType="error" [nzMessage]="noModelAuthMessage()"></nz-alert>
         }
-        @if (authChat && user.userLlmStatus === 'enabled' && isChatModelEnabled && isChatLimit) {
-          <nz-alert nzBanner nzType="error" [nzMessage]="outOfLimitMessage"/>
+        @if (authChat() && userAiStatus() === 1 && isChatModelEnabled() && isChatLimit()) {
+          <nz-alert nzBanner nzType="error" [nzMessage]="outOfLimitMessage"></nz-alert>
         }
-        @if (isChatTrashed) {
-          <nz-alert nzBanner nzType="error" [nzMessage]="isTrashedMessage"/>
+        @if (isChatTrashed()) {
+          <nz-alert nzBanner nzType="error" [nzMessage]="isTrashedMessage"></nz-alert>
         }
-        @if (isNotOwner) {
-          <nz-alert nzBanner nzType="error" [nzMessage]="notOwnerMessage"/>
+        @if (isNotOwner()) {
+          <nz-alert nzBanner nzType="error" [nzMessage]="notOwnerMessage"></nz-alert>
         }
       }
-      <div class="messages">
-        <div class="message-list" #messageList>
-          @if (!messageLoading) {
-            @for (msg of messages; track msg) {
-              <div class="message-item"
-                   [class.message-item-bot]="msg.role === 'assistant'"
-                   [class.message-item-user]="msg.role === 'user'"
-                   [class.message-item-system]="msg.role === 'system'">
-                <div class="message-avatar"
-                     [style.background-image]="'url(' + (msg.role === 'user' ? userAvatar : botAvatar) + ')'"
-                     (click)="previewAvatar(msg.role === 'user' ? userAvatar : botAvatar)">
+      <div class="chat-body" #chatBody>
+        <div class="chat-list code-custom">
+          @if (!messageLoading()) {
+            @for (msg of messages(); track msg.id) {
+              @if (msg.role === 'user' && msg.createdAt) {
+                <div class="chat-info">
+                  <span>{{ msg.createdAt | date:'yyyy-MM-dd HH:mm:ss' }}</span>
                 </div>
-                <div class="message-wrap">
-                  <div class="message-info">
+              }
+              <div class="chat-item"
+                   [class.chat-item-bot]="msg.role === 'assistant'"
+                   [class.chat-item-user]="msg.role === 'user'"
+                   [class.chat-item-system]="msg.role === 'system'">
+                <div class="chat-item-body">
+                  @if (showAvatar() && msg.role !== 'user') {
+                    <div class="chat-avatar"
+                         [style.background-image]="'url(' + avatarUrl() + ')'"
+                         (click)="previewAvatar(avatarUrl())"></div>
+                  }
+                  <div class="chat-message">
                     @if (msg.role === 'assistant' || msg.role === 'system') {
-                      <div class="message-user" [title]="botName">{{ botName }}</div>
-                    }
-                    @if (msg.role === 'user') {
-                      <div class="message-user" [title]="user.userNickname">{{ user.userNickname }}</div>
-                    }
-                    @if (msg.created) {
-                      <div class="message-created">{{ msg.created | date:'yyyy-MM-dd HH:mm:ss' }}</div>
-                    }
-                  </div>
-                  <div class="message-body">
-                    @if (msg.role === 'assistant' || msg.role === 'system') {
-                      <div class="message-content-wrap">
+                      <div class="chat-content-wrap">
                         @if (msg.reasoningContent) {
-                          <div class="message-thoughts-action">
+                          <div class="chat-thoughts-action">
                             <div (click)="toggleThoughtsVisible(msg)">
                               @if (msg.expanded) {
                                 <span>隐藏思路</span><nz-icon nzType="up"/>
@@ -70,46 +65,46 @@
                             </div>
                           </div>
                           @if (msg.expanded) {
-                            <div class="message-thoughts"
+                            <div class="chat-thoughts"
                                  [class.loading]="msg.loading && msg.thinking"
                                  [innerHTML]="msg.reasoningHtml | safeHtml"></div>
                           }
                         }
                         @if (msg.content || msg.html && msg.loading) {
-                          <div class="message-content"
+                          <div class="chat-content"
                                [class.loading]="msg.loading && !msg.thinking"
                                [innerHTML]="msg.html | safeHtml"
                                (click)="onMessageClick($event)"></div>
                         }
                         @if (msg.status === 'error') {
-                          <div class="message-error"
+                          <div class="chat-error"
                                [style.margin-top]="!!msg.content || !!msg.reasoningContent ? '16px' : ''">
-                            <nz-icon nzType="exclamation-circle"/><span>{{ errorMessage }}</span>
+                            <nz-icon nzType="exclamation-circle"/><span>{{ errorMessage() }}</span>
                           </div>
                         }
                       </div>
                     } @else if (msg.role === 'user') {
-                      <div class="message-content message-content-user">
+                      <div class="chat-content chat-content-user">
                         <div>{{ msg.content }}</div>
                       </div>
                     }
                     @if (msg.role === 'assistant' && msg.status === 'done') {
-                      <div class="message-actions">
+                      <div class="chat-actions">
                         @if (!msg.copying) {
                           <div ngxClipboard
-                               class="message-action-item"
+                               class="chat-action"
                                [cbContent]="msg.content"
                                (cbOnSuccess)="onCopied(msg)"
                                title="Copy">
                             <nz-icon nzType="copy"/>
                           </div>
                         } @else {
-                          <div class="message-action-item">
+                          <div class="chat-action">
                             <nz-icon nzType="check"/>
                           </div>
                         }
                         @if (msg.vote === 0 || msg.vote === 1) {
-                          <div class="message-action-item"
+                          <div class="chat-action"
                                [class.disabled]="msg.vote === 1"
                                (click)="voteMessage(msg, 1)"
                                title="Like">
@@ -117,7 +112,7 @@
                           </div>
                         }
                         @if (msg.vote === 0 || msg.vote === -1) {
-                          <div class="message-action-item"
+                          <div class="chat-action"
                                [class.disabled]="msg.vote === -1"
                                (click)="voteMessage(msg, -1)"
                                title="Dislike">
@@ -127,37 +122,74 @@
                       </div>
                     }
                   </div>
+                  @if (showAvatar() && msg.role === 'user') {
+                    <div class="chat-avatar"
+                         [style.background-image]="'url(' + conversationUserAvatar() + ')'"
+                         (click)="previewAvatar(conversationUserAvatar())"></div>
+                  }
                 </div>
               </div>
             }
-            @if (messages.length < 1) {
-              <div class="message-empty">
-                <nz-empty nzNotFoundImage="simple"/>
+            @if (messages().length < 1) {
+              <div class="chat-empty">
+                <nz-empty nzNotFoundImage="simple"></nz-empty>
               </div>
             }
           } @else {
-            <div class="message-loading">
-              <nz-spin [nzSpinning]="messageLoading"/>
+            <div class="chat-loading">
+              <nz-spin [nzSpinning]="messageLoading()"></nz-spin>
             </div>
           }
         </div>
-        <div class="message-input">
-            <textarea #promptInput
-                      nz-input
-                      placeholder="Send a message..."
-                      rows="1"
-                      [(ngModel)]="prompt"
-                      [disabled]="!isChatEnabled"
-                      (keydown)="onKeyDown($event)"
-                      (input)="onPromptInput($event)"></textarea>
-          <div class="send-icon"
-               [class.disabled]="!isChatEnabled || loading || !prompt.trim()"
-               (click)="startChat()">
-            @if (!loading) {
-              <nz-icon nzType="send"/>
-            } @else {
-              <nz-icon nzType="loading"/>
-            }
+        <div class="chat-form">
+          <div class="chat-form-body">
+            <div class="chat-input">
+          <textarea nz-input
+                    rows="1"
+                    [(ngModel)]="prompt"
+                    [disabled]="!isChatEnabled()"
+                    (keydown)="onKeyDown($event)"
+                    (input)="onPromptInput($event)"
+                    (compositionstart)="onCompositionStart()"
+                    (compositionend)="onCompositionEnd()"
+                    placeholder="Write a message..."></textarea>
+            </div>
+            <div class="chat-setting">
+              <div>
+                <div class="chat-effort"
+                     [class.active]="effortVisible()"
+                     [nzDisabled]="!isChatEnabled()"
+                     nz-dropdown
+                     nzTrigger="click"
+                     nzPlacement="topLeft"
+                     [nzDropdownMenu]="menu"
+                     (nzVisibleChange)="handleEffortVisibleChange($event)">
+                  <fi-deep-thinking/>
+                  <span>深度思考</span>
+                  <nz-icon nzType="down"/>
+                </div>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                  <ul nz-menu>
+                    @for (effort of effortList; track effort.label) {
+                      <li nz-menu-item (click)="setEffort(effort.value)">
+                        <div class="effort-item">
+                          <span>{{ effort.label }}</span>
+                          <span [class.active]="effort.value === activeEffort()"><nz-icon nzType="check"/></span>
+                        </div>
+                      </li>
+                    }
+                  </ul>
+                </nz-dropdown-menu>
+              </div>
+              <button nz-button
+                      class="chat-btn-send"
+                      nzType="primary"
+                      [nzLoading]="loading()"
+                      [disabled]="!isChatEnabled() || loading() || !prompt().trim()"
+                      (click)="sendStreamMessage()">
+                <nz-icon nzType="arrow-up"/>
+              </button>
+            </div>
           </div>
         </div>
       </div>

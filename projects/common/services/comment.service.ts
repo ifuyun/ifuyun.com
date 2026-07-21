@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ApiService, ApiUrl, AppConfigService, HttpResponseEntity, ResultList, URL_AVATAR_API } from 'common/core';
-import { CommentObjectType } from 'common/enums';
-import { Comment, CommentEntity, MetaData } from 'common/interfaces';
+import { CommentTargetType } from 'common/enums';
+import { Comment, CommentDto } from 'common/interfaces';
 import { format } from 'common/utils';
-import { cloneDeep } from 'lodash';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { IpService } from './ip.service';
 
@@ -11,8 +10,8 @@ import { IpService } from './ip.service';
   providedIn: 'root'
 })
 export class CommentService {
-  private objectId: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  public objectId$: Observable<string> = this.objectId.asObservable();
+  private targetId: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  public targetId$: Observable<string> = this.targetId.asObservable();
 
   constructor(
     private readonly apiService: ApiService,
@@ -20,50 +19,82 @@ export class CommentService {
     private readonly appConfigService: AppConfigService
   ) {}
 
-  updateObjectId(objectId: string) {
-    this.objectId.next(objectId);
+  updateTargetId(targetId: string) {
+    this.targetId.next(targetId);
   }
 
-  getCommentsByPostId(postId: string): Observable<ResultList<Comment>> {
+  getCommentsByPostId(param: { postId: string; page: number; size: number }): Observable<ResultList<Comment>> {
+    const { postId, page, size } = param;
+
     return this.apiService
       .httpGet(ApiUrl.COMMENTS, {
-        objectId: postId,
-        objectType: CommentObjectType.POST,
+        targetId: postId,
+        page,
+        size,
         appId: this.appConfigService.appId
       })
       .pipe(map((res) => res?.data || {}));
   }
 
-  getCommentsByWallpaperId(wallpaperId: string): Observable<ResultList<Comment>> {
+  getCommentsByWallpaperId(param: {
+    wallpaperId: string;
+    page: number;
+    size: number;
+  }): Observable<ResultList<Comment>> {
+    const { wallpaperId, page, size } = param;
+
     return this.apiService
       .httpGet(ApiUrl.COMMENTS, {
-        objectId: wallpaperId,
-        objectType: CommentObjectType.WALLPAPER,
+        targetId: wallpaperId,
+        page,
+        size,
         appId: this.appConfigService.appId
       })
       .pipe(map((res) => res?.data || {}));
   }
 
-  getCommentsByGameId(gameId: string): Observable<ResultList<Comment>> {
+  getCommentsByGameId(param: { gameId: string; page: number; size: number }): Observable<ResultList<Comment>> {
+    const { gameId, page, size } = param;
+
     return this.apiService
       .httpGet(ApiUrl.COMMENTS, {
-        objectId: gameId,
-        objectType: CommentObjectType.GAME,
+        targetId: gameId,
+        page,
+        size,
         appId: this.appConfigService.appId
       })
       .pipe(map((res) => res?.data || {}));
   }
 
-  getCommentsByObjectId(objectId: string, objectType: CommentObjectType): Observable<ResultList<Comment>> {
-    if (objectType === CommentObjectType.POST) {
-      return this.getCommentsByPostId(objectId);
-    } else if (objectType === CommentObjectType.GAME) {
-      return this.getCommentsByGameId(objectId);
+  getCommentsByTargetId(param: {
+    targetId: string;
+    targetType: CommentTargetType;
+    page: number;
+    size: number;
+  }): Observable<ResultList<Comment>> {
+    const { targetId, targetType, page, size } = param;
+
+    if (targetType === CommentTargetType.POST) {
+      return this.getCommentsByPostId({
+        postId: targetId,
+        page,
+        size
+      });
+    } else if (targetType === CommentTargetType.GAME) {
+      return this.getCommentsByGameId({
+        gameId: targetId,
+        page,
+        size
+      });
     }
-    return this.getCommentsByWallpaperId(objectId);
+    return this.getCommentsByWallpaperId({
+      wallpaperId: targetId,
+      page,
+      size
+    });
   }
 
-  saveComment(comment: CommentEntity): Observable<HttpResponseEntity> {
+  saveComment(comment: CommentDto): Observable<HttpResponseEntity> {
     return this.apiService.httpPost(
       ApiUrl.COMMENT,
       {
@@ -74,80 +105,101 @@ export class CommentService {
     );
   }
 
-  generateCommentTree(comments: Comment[], threadDepth: number) {
-    const copies = [...comments];
-    let tree = copies.filter((father) => {
-      father.children = copies.filter((child) => {
-        if (father.commentId === child.commentParent) {
-          // 不能直接赋值，否则会循环引用
-          child.parent = { ...father };
-          return true;
-        }
-        return false;
-      });
-      father.isLeaf = father.children.length < 1;
-      return father.commentParent === father.commentTop;
-    });
-    const flattenIterator = (nodes: Comment[], list: Comment[]) => {
-      for (const node of nodes) {
-        list.push({ ...node, isLeaf: true, level: threadDepth, children: [] });
-        if (node.children.length > 0) {
-          flattenIterator(node.children, list);
-        }
-      }
-      return list;
-    };
-    const iterator = (nodes: Comment[], level: number) => {
-      if (threadDepth === 2) {
-        nodes = flattenIterator(nodes, []).sort((a, b) => (a.commentCreated > b.commentCreated ? 1 : -1));
-      } else {
-        nodes.forEach((node) => {
-          node.level = level;
-          if (node.children.length > 0) {
-            if (level < threadDepth - 1) {
-              node.children = iterator(node.children, level + 1);
-            } else {
-              node.children = flattenIterator(node.children, []).sort((a, b) => {
-                return a.commentCreated > b.commentCreated ? 1 : -1;
-              });
+  transformComments(comments: Comment[], avatarType: string): Comment[] {
+    return comments.map((item) => {
+      return {
+        ...item,
+        idHash: item.id.substring(4, 10),
+        userName: item.user?.nickname || item.userName,
+        userAvatar:
+          item.user?.avatarUrl || format(URL_AVATAR_API, item.user?.emailHash || item.userEmailHash, avatarType),
+        userLocation: this.ipService.getIPLocation(item.ipInfo),
+        depth: 1,
+        isLeaf: true,
+        parent: item.parent
+          ? {
+              ...item.parent,
+              idHash: item.parent.id.substring(4, 10),
+              userName: item.parent.user?.nickname || item.parent.userName
             }
-          }
-        });
+          : undefined,
+        children: []
+      };
+    });
+  }
+
+  initCommentTree(comments: Comment[]) {
+    const map = new Map<string, Comment>();
+
+    comments.forEach((item) => {
+      map.set(item.id, item);
+    });
+
+    const roots: Comment[] = [];
+
+    comments.forEach((item) => {
+      const node = map.get(item.id)!;
+      const parent = item.parentId ? map.get(item.parentId) : null;
+
+      if (!parent) {
+        roots.push(node);
+      } else {
+        parent.children.push(node);
       }
-      return nodes;
+    });
+
+    return roots;
+  }
+
+  flattenChildComments(node: Comment, depth: number) {
+    const result: Comment[] = [];
+    const walk = (n: Comment) => {
+      if (n.children.length < 1) {
+        return;
+      }
+      for (const child of n.children) {
+        result.push({
+          ...child,
+          children: [],
+          depth,
+          isLeaf: true
+        });
+        walk(child);
+      }
     };
-    tree = iterator(tree, 2);
+
+    walk(node);
+
+    return result.sort((a, b) => {
+      return a.createdAt > b.createdAt ? 1 : -1;
+    });
+  }
+
+  buildCommentTree(comments: Comment[], depth: number, avatarType: string) {
+    const tree = this.initCommentTree(this.transformComments(comments, avatarType));
+    const transform = (nodes: Comment[], curDepth: number) => {
+      for (const node of nodes) {
+        node.depth = curDepth;
+        if (node.children.length) {
+          if (curDepth < depth - 1) {
+            node.children = transform(node.children, curDepth + 1);
+          } else {
+            node.children = this.flattenChildComments(node, depth);
+          }
+          node.isLeaf = node.children.length < 1;
+        }
+      }
+
+      return nodes.sort((a, b) => {
+        return a.createdAt > b.createdAt ? 1 : -1;
+      });
+    };
+
+    for (const node of tree) {
+      node.children = transform(node.children, 2);
+      node.isLeaf = node.children.length < 1;
+    }
 
     return tree;
-  }
-
-  transformComments(comments: Comment[], threadDepth: number, avatarType: string) {
-    const initialFn = (comment: Comment) => {
-      comment.commentHash = comment.commentId.substring(4, 10);
-      comment.commentAuthor = comment.user?.userNickname || comment.authorName;
-      comment.authorAvatar =
-        comment.user?.userAvatar ||
-        format(URL_AVATAR_API, comment.user?.userEmailHash || comment.authorEmailHash, avatarType);
-      comment.commentMetaMap = this.transformMeta(comment.commentMeta || []);
-      comment.userLocation = this.ipService.getIPLocation(comment.ipInfo);
-    };
-
-    comments.forEach((comment) => {
-      comment.level = 1;
-      initialFn(comment);
-      comment.children.forEach((item) => initialFn(item));
-
-      comment.children = this.generateCommentTree(comment.children, threadDepth);
-      comment.children.forEach((child) => (child.parent = cloneDeep(comment)));
-    });
-
-    return comments;
-  }
-
-  transformMeta(meta: MetaData[]): Record<string, string> {
-    const result: Record<string, string> = {};
-    meta.forEach((item) => (result[item.metaKey] = item.metaValue));
-
-    return result;
   }
 }

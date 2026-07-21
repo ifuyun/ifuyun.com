@@ -6,7 +6,7 @@ import {
   DestroyService,
   ErrorService,
   ErrorState,
-  LoginModalOptions,
+  SigninModalOptions,
   MEDIA_QUERY_THEME_DARK,
   PageIndexInfo,
   PlatformService,
@@ -15,10 +15,10 @@ import {
   UrlService,
   UserAgentService
 } from 'common/core';
-import { ActionObjectType, ActionType, PostScope, PostStatus, Theme } from 'common/enums';
+import { LogTargetType, LogActionType, PostVisibility, PostStatus, Theme } from 'common/enums';
 import { ForbiddenComponent, NotFoundComponent, ServerErrorComponent } from 'common/error';
 import { IconMagicComponent, IconRssComponent, IconStarsComponent } from 'common/icons';
-import { Post, Wallpaper } from 'common/interfaces';
+import { PostVo, Wallpaper } from 'common/interfaces';
 import {
   AdsService,
   AdsStatus,
@@ -43,7 +43,7 @@ import { AiChatComponent } from '../ai-chat/ai-chat.component';
 import { FooterComponent } from '../footer/footer.component';
 import { GameService } from '../game/game.service';
 import { HeaderComponent } from '../header/header.component';
-import { LoginModalComponent } from '../login-modal/login-modal.component';
+import { SigninModalComponent } from '../signin-modal/signin-modal.component';
 import { MSiderComponent } from '../m-sider/m-sider.component';
 import { WallpaperModalComponent } from '../wallpaper/wallpaper-modal/wallpaper-modal.component';
 
@@ -54,7 +54,7 @@ import { WallpaperModalComponent } from '../wallpaper/wallpaper-modal/wallpaper-
     HeaderComponent,
     FooterComponent,
     MSiderComponent,
-    LoginModalComponent,
+    SigninModalComponent,
     AiChatComponent,
     NotFoundComponent,
     ForbiddenComponent,
@@ -83,13 +83,13 @@ export class AppComponent implements OnInit, AfterViewInit {
   isBodyCentered = false;
   siderVisible = false;
   indexInfo?: PageIndexInfo;
-  post: Post | null = null;
+  post: PostVo | null = null;
   wallpaper: Wallpaper | null = null;
   chatVisible = false;
   conversationId = '';
   chatPrompt = '';
   wallpaperModalVisible = false;
-  loginOptions: LoginModalOptions = {
+  loginOptions: SigninModalOptions = {
     visible: false,
     closable: true
   };
@@ -152,7 +152,7 @@ export class AppComponent implements OnInit, AfterViewInit {
               this.gameService.updateActiveRomURL('');
             }
 
-            this.commonService.updateLoginModalVisible({
+            this.commonService.updateSigninModalVisible({
               visible: false,
               closable: true
             });
@@ -185,7 +185,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           if (this.platform.isBrowser) {
             this.logService
               .logAccess(
-                this.logService.parseAccessLog({
+                this.logService.buildAccessLog({
                   initialized: this.initialized,
                   referrer: this.currentUrl,
                   isNew,
@@ -213,8 +213,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.initThemeListener();
     this.optionService.getOptions().subscribe();
     this.tenantAppService.getAppInfo().subscribe();
-    this.userService.getLoginUser().subscribe((user) => {
-      this.isSignIn = !!user.userId;
+    this.userService.getProfile().subscribe((user) => {
+      this.isSignIn = !!user.id;
     });
     this.commonService.siderVisible$.subscribe((visible) => {
       if (this.platform.isBrowser) {
@@ -237,7 +237,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.indexInfo = this.commonService.getPageIndexInfo(page);
       this.cdr.detectChanges();
     });
-    this.commonService.loginVisible$.subscribe((loginOptions) => {
+    this.commonService.signinVisible$.subscribe((loginOptions) => {
       this.loginOptions = loginOptions;
     });
     this.postService.activePost$.subscribe((post) => {
@@ -294,8 +294,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.logService
       .logAction({
-        action: ActionType.SHOW_RED_PACKET,
-        objectType: ActionObjectType.HEADER
+        action: LogActionType.SHOW_RED_PACKET,
+        targetType: LogTargetType.HEADER
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe();
@@ -306,8 +306,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.logService
       .logAction({
-        action: ActionType.SHOW_WALLPAPER_MODAL,
-        objectType: ActionObjectType.HEADER
+        action: LogActionType.SHOW_WALLPAPER_MODAL,
+        targetType: LogTargetType.HEADER
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe();
@@ -328,8 +328,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.logService
       .logAction({
-        action: ActionType.SHOW_WECHAT_CARD,
-        objectType: ActionObjectType.HEADER
+        action: LogActionType.SHOW_WECHAT_CARD,
+        targetType: LogTargetType.HEADER
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe();
@@ -340,8 +340,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.logService
       .logAction({
-        action: isWallpaper ? ActionType.OPEN_WALLPAPER_RSS : ActionType.OPEN_POST_RSS,
-        objectType: ActionObjectType.HEADER
+        action: isWallpaper ? LogActionType.OPEN_WALLPAPER_RSS : LogActionType.OPEN_POST_RSS,
+        targetType: LogTargetType.HEADER
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe();
@@ -349,15 +349,15 @@ export class AppComponent implements OnInit, AfterViewInit {
     window.open(rssUrl);
   }
 
-  showLoginModal(closable = true) {
-    this.commonService.updateLoginModalVisible({
+  showSigninModal(closable = true) {
+    this.commonService.updateSigninModalVisible({
       visible: true,
       closable
     });
   }
 
-  closeLoginModal() {
-    this.commonService.updateLoginModalVisible({
+  closeSigninModal() {
+    this.commonService.updateSigninModalVisible({
       visible: false,
       closable: true
     });
@@ -365,18 +365,18 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   showChat() {
     if (!this.isSignIn) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
     if (!this.post && !this.wallpaper) {
       return;
     }
     if (this.post) {
-      if (!!this.post.post.postLoginFlag || !!this.post.post.postPayFlag) {
+      if (this.post.visibility === PostVisibility.LOGIN_USER || !!this.post.isPaid) {
         this.message.warning('会员或付费文章无法使用 AI 阅读助手功能');
         return;
       }
-      if (this.post.post.postStatus !== PostStatus.PUBLISH || this.post.post.postScope !== PostScope.PUBLIC) {
+      if (this.post.status !== PostStatus.PUBLISHED || this.post.visibility !== PostVisibility.PUBLIC) {
         this.message.warning('非公开文章无法使用 AI 阅读助手功能');
         return;
       }

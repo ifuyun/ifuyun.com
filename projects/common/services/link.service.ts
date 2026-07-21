@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService, ApiUrl, AppConfigService } from 'common/core';
-import { FavoriteLink, LinkEntity } from 'common/interfaces';
+import { FavoriteLink, LinkVo } from 'common/interfaces';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -13,7 +13,7 @@ export class LinkService {
     private readonly appConfigService: AppConfigService
   ) {}
 
-  getFriendLinks(isHome: boolean): Observable<LinkEntity[]> {
+  getFriendLinks(isHome: boolean): Observable<LinkVo[]> {
     return this.apiService
       .httpGet(ApiUrl.LINK_FRIEND, {
         isHome,
@@ -30,7 +30,7 @@ export class LinkService {
       .pipe(map((res) => res?.data || []));
   }
 
-  getFooterLinks(): Observable<LinkEntity[]> {
+  getFooterLinks(): Observable<LinkVo[]> {
     return this.apiService
       .httpGet(ApiUrl.LINK_FOOTER, {
         appId: this.appConfigService.appId

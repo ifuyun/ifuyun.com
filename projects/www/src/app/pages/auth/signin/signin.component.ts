@@ -1,22 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginFormComponent } from 'common/components';
+import { SigninFormComponent } from 'common/components';
 import { BaseComponent, BreadcrumbService, DestroyService, MetaService, OptionEntity } from 'common/core';
-import { TenantAppModel } from 'common/interfaces';
+import { TenantAppVo } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService } from 'common/services';
 import { isEmpty } from 'lodash';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-login',
-  imports: [LoginFormComponent],
+  selector: 'app-signin',
+  imports: [SigninFormComponent],
   providers: [DestroyService],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.less'
+  templateUrl: './signin.component.html'
 })
-export class LoginComponent extends BaseComponent implements OnInit {
-  protected pageIndex = 'auth-login';
+export class SigninComponent extends BaseComponent implements OnInit {
+  protected pageIndex = 'auth-signin';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
 
   constructor(
@@ -53,10 +52,10 @@ export class LoginComponent extends BaseComponent implements OnInit {
 
   private updatePageInfo() {
     this.metaService.updateHTMLMeta({
-      title: ['登录', this.appInfo.appName].join(' - '),
-      description: this.appInfo.appDescription,
+      title: ['登录', this.appInfo.name].join(' - '),
+      description: this.appInfo.description,
       author: this.options['site_author'],
-      keywords: this.appInfo.appKeywords
+      keywords: this.appInfo.keywords
     });
   }
 

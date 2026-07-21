@@ -1,37 +1,42 @@
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  computed,
+  ElementRef,
+  Injector,
+  input,
+  model,
+  OnInit,
+  output,
+  signal,
+  viewChild
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { EventStreamContentType, fetchEventSource } from '@microsoft/fetch-event-source';
-import {
-  AuthService,
-  BaseComponent,
-  DestroyService,
-  Message,
-  OptionEntity,
-  ResponseCode,
-  UserModel
-} from 'common/core';
-import { ConversationStatus, Permission, UserLlmStatus } from 'common/enums';
-import { Bot, BotConversationModel, Post, Wallpaper } from 'common/interfaces';
+import { BaseComponent, DestroyService, Message, OptionEntity, ResponseCode, UserModel } from 'common/core';
+import { ConversationStatus, Permission, UserAiStatus } from 'common/enums';
+import { IconDeepThinkingComponent } from 'common/icons';
+import { Bot, BotConversationModel, PostVo, Wallpaper } from 'common/interfaces';
 import { SafeHtmlPipe } from 'common/pipes';
 import { BotConversationService, BotService, OptionService, UserService } from 'common/services';
-import { format, generateId, textPosition } from 'common/utils';
+import { format, generateId } from 'common/utils';
 import { isEmpty } from 'lodash';
 import { marked } from 'marked';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { NzDropdownModule } from 'ng-zorro-antd/dropdown';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImage, NzImageService } from 'ng-zorro-antd/image';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
+import { ClipboardModule } from 'ngx-clipboard';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
-import { ICON_COPIED, ICON_COPY } from './ai-chat.constant';
-import { MessageRole } from './ai-chat.enum';
-import { ChatEventData, ChatMessage, ChatResponse } from './ai-chat.interface';
+import { MessageRole, ReasoningEffort } from './ai-chat.enum';
+import { ChatMessage, StreamChatEvent, StreamChatParam } from './ai-chat.interface';
 import { AiChatService } from './ai-chat.service';
 
 @Component({
@@ -46,114 +51,134 @@ import { AiChatService } from './ai-chat.service';
     NzEmptyModule,
     NzSpinModule,
     NzInputModule,
-    ClipboardModule
+    ClipboardModule,
+    NzButtonComponent,
+    NzDropdownModule,
+    IconDeepThinkingComponent
   ],
   providers: [DestroyService, NzImageService],
   templateUrl: './ai-chat.component.html',
   styleUrls: ['./ai-chat.component.less']
 })
-export class AiChatComponent extends BaseComponent implements OnInit, AfterViewInit {
-  @Input() conversationId = '';
-  @Input() prompt = '';
-  @Input() objectType: 'post' | 'wallpaper' = 'post';
-  @Input() post: Post | null = null;
-  @Input() wallpaper: Wallpaper | null = null;
-  @Output() closeDrawer = new EventEmitter();
+export class AiChatComponent extends BaseComponent implements OnInit {
+  readonly conversationId = model<string>('');
+  readonly showAvatar = input<boolean>(true);
+  readonly prompt = model<string>('');
+  readonly targetType = model<'post' | 'wallpaper'>('post');
+  readonly post = input<PostVo | null>(null);
+  readonly wallpaper = input<Wallpaper | null>(null);
+  readonly closeDrawer = output<void>();
 
-  @ViewChild('messageList') messageList!: ElementRef;
-  @ViewChild('promptInput') promptInput!: ElementRef;
+  readonly chatBody = viewChild.required<ElementRef<HTMLDivElement>>('chatBody');
 
-  readonly errorMessage = 'Error occurred while generating.';
   readonly noAuthMessage = Message.USER_CHAT_BOT_IS_CLOSED;
   readonly expiredMessage = Message.USER_CHAT_BOT_IS_EXPIRED;
   readonly notOwnerMessage = Message.USER_CHAT_IS_NOT_OWNER;
   readonly isTrashedMessage = Message.USER_CHAT_IS_TRASHED;
   readonly outOfLimitMessage = Message.USER_CHAT_LIMIT_IS_UP;
 
-  user!: UserModel;
-  authChat = false;
+  readonly effortList: Array<{ label: string; value: ReasoningEffort }> = [
+    { label: 'None', value: null },
+    { label: 'Low', value: 'low' },
+    { label: 'Medium', value: 'medium' },
+    { label: 'High', value: 'high' },
+    { label: 'Max', value: 'xhigh' }
+  ];
 
-  isChatLimit = false;
-  initialized = false;
-  loading = false;
-  messageLoading = false;
-  messages: ChatMessage[] = [];
-  conversation?: BotConversationModel;
-  bot?: Bot;
-  botAvatar = '';
-  userAvatar = '';
+  readonly authChat = signal<boolean>(false);
+  readonly isChatLimit = signal<boolean>(false);
+  readonly initialized = signal<boolean>(false);
+  readonly loading = signal<boolean>(false);
+  readonly messageLoading = signal<boolean>(false);
+  readonly messages = signal<ChatMessage[]>([]);
+  readonly conversation = signal<BotConversationModel | null>(null);
+  readonly bot = signal<Bot | null>(null);
+  readonly avatarUrl = signal<string>('');
+  readonly errorMessage = signal<string>(Message.DEFAULT_CHAT_ERROR_MESSAGE);
+  readonly activeEffort = signal<ReasoningEffort>(null);
+  readonly effortVisible = signal<boolean>(false);
 
-  get noModelAuthMessage() {
-    if (this.conversation && this.conversation.bot) {
-      return format(Message.USER_CHAT_MODEL_IS_DISABLED, this.conversation.bot.llmModel.llmModelName);
+  readonly userAiStatus = computed(() => {
+    return this.user()?.aiStatus || UserAiStatus.DISABLED;
+  });
+  readonly noModelAuthMessage = computed(() => {
+    const conversation = this.conversation();
+
+    if (conversation?.bot) {
+      return format(Message.USER_CHAT_MODEL_IS_DISABLED, conversation.bot.llmModel.displayName);
     }
     return '';
-  }
+  });
+  readonly isChatModelEnabled = computed(() => {
+    const conversation = this.conversation();
 
-  get isChatModelEnabled() {
-    if (!this.conversation) {
-      return true;
-    }
-    if (this.conversation.bot) {
-      return this.user.userLlmModels.includes(this.conversation.bot.llmModel.llmModelId);
+    if (conversation?.bot) {
+      return this.aiModels().includes(conversation.bot.llmModel.id);
     }
     return false;
-  }
+  });
+  readonly isChatEnabled = computed(() => {
+    const conversation = this.conversation();
 
-  get isChatEnabled() {
     return (
-      this.authChat &&
-      this.user.userLlmStatus === UserLlmStatus.ENABLED &&
-      this.isChatModelEnabled &&
-      !this.isChatLimit &&
-      (!this.conversation ||
-        (this.conversation.userId === this.user.userId &&
-          this.conversation.conversationStatus === ConversationStatus.NORMAL))
+      this.authChat() &&
+      this.userAiStatus() === UserAiStatus.ENABLED &&
+      this.isChatModelEnabled() &&
+      !this.isChatLimit() &&
+      conversation?.userId === this.userId() &&
+      conversation?.status === ConversationStatus.NORMAL
     );
-  }
+  });
+  readonly isNotOwner = computed(() => {
+    const conversation = this.conversation();
 
-  get isNotOwner() {
     return (
-      this.authChat &&
-      this.user.userLlmStatus === UserLlmStatus.ENABLED &&
-      this.isChatModelEnabled &&
-      this.conversation?.userId !== this.user.userId
+      this.authChat() &&
+      this.userAiStatus() === UserAiStatus.ENABLED &&
+      this.isChatModelEnabled() &&
+      conversation?.userId !== this.userId()
     );
-  }
+  });
+  readonly isChatTrashed = computed(() => {
+    const conversation = this.conversation();
 
-  get isChatTrashed() {
     return (
-      this.authChat &&
-      this.user.userLlmStatus === UserLlmStatus.ENABLED &&
-      this.isChatModelEnabled &&
-      this.conversation?.userId === this.user.userId &&
-      this.conversation?.conversationStatus !== ConversationStatus.NORMAL
+      this.authChat() &&
+      this.userAiStatus() === UserAiStatus.ENABLED &&
+      this.isChatModelEnabled() &&
+      conversation?.userId === this.userId() &&
+      conversation?.status !== ConversationStatus.NORMAL
     );
-  }
-
-  get botName() {
-    return this.bot?.botName || 'AI 阅读助手';
-  }
+  });
+  readonly conversationUserAvatar = computed(() => {
+    return this.conversation()?.user?.avatarUrl || '';
+  });
 
   private readonly noneContent = '无输出';
   private readonly copyTimeout = 2000;
 
-  private options: OptionEntity = {};
-  private inputFlag = false;
-  private finishReason: string | null = '';
-
-  private get objectId() {
-    if (this.objectType === 'post' && this.post) {
-      return this.post.post.postId;
+  private readonly options = signal<OptionEntity>({});
+  private readonly inputFlag = signal(false);
+  private readonly user = signal<UserModel | null>(null);
+  private readonly userId = computed(() => {
+    return this.user()?.id || '';
+  });
+  private readonly aiModels = computed(() => {
+    return this.user()?.aiModels || [];
+  });
+  private readonly targetId = computed(() => {
+    if (this.targetType() === 'post' && this.post()) {
+      return this.post()?.id || '';
     }
-    if (this.objectType === 'wallpaper' && this.wallpaper) {
-      return this.wallpaper.wallpaperId;
+    if (this.targetType() === 'wallpaper' && this.wallpaper()) {
+      return this.wallpaper()?.id || '';
     }
     return '';
-  }
+  });
 
   constructor(
     private readonly destroy$: DestroyService,
+    private readonly injector: Injector,
     private readonly route: ActivatedRoute,
     private readonly message: NzMessageService,
     private readonly imageService: NzImageService,
@@ -161,9 +186,7 @@ export class AiChatComponent extends BaseComponent implements OnInit, AfterViewI
     private readonly userService: UserService,
     private readonly botService: BotService,
     private readonly botConversationService: BotConversationService,
-    private readonly botChatService: AiChatService,
-    private readonly authService: AuthService,
-    private readonly clipboardService: ClipboardService
+    private readonly botChatService: AiChatService
   ) {
     super();
   }
@@ -171,63 +194,98 @@ export class AiChatComponent extends BaseComponent implements OnInit, AfterViewI
   ngOnInit() {
     combineLatest([this.optionService.options$, this.userService.user$, this.botChatService.getChatUsage()])
       .pipe(
-        skipWhile(([options, user]) => isEmpty(options) || !user.userId),
+        skipWhile(([options, user]) => isEmpty(options) || !user.id),
         takeUntil(this.destroy$)
       )
       .subscribe(([options, user, chatUsage]) => {
-        this.options = options;
-        this.user = user;
-        this.userAvatar = this.userService.getUserAvatar(user, options['avatar_default_type']);
-        this.isChatLimit = chatUsage.limit >= 0 && chatUsage.used >= chatUsage.limit;
+        this.options.set(options);
+        this.user.set(user);
+        this.isChatLimit.set(chatUsage.limit >= 0 && chatUsage.used >= chatUsage.limit);
 
         this.initAuth();
         this.getConversation();
       });
   }
 
-  ngAfterViewInit() {
-    const $promptInput = this.promptInput?.nativeElement;
+  onKeyDown(e: KeyboardEvent) {
+    const key = e.key.toLowerCase();
+    const withCtrlKeys = e.altKey || e.ctrlKey || e.metaKey || e.shiftKey;
 
-    $promptInput.addEventListener('compositionstart', () => (this.inputFlag = true), false);
-    $promptInput.addEventListener('compositionend', () => (this.inputFlag = false), false);
+    if (key === 'enter' && !this.inputFlag() && !withCtrlKeys) {
+      e.preventDefault();
+      this.sendStreamMessage();
+    }
+  }
+
+  onPromptInput(e: Event) {
+    const $target = e.target as HTMLTextAreaElement;
+    const $chatBody = this.chatBody().nativeElement;
+    const threshold = 0;
+    const { scrollHeight, scrollTop, clientHeight } = $chatBody;
+    const isNearBottom = scrollHeight - scrollTop - clientHeight <= threshold;
+
+    $target.style.height = 'auto';
+    $target.style.height = $target.scrollHeight + 2 + 'px';
+
+    if (isNearBottom) {
+      $chatBody.scrollTop = $chatBody.scrollHeight;
+    } else {
+      // 解决跳动问题
+      $chatBody.scrollTop = scrollTop;
+    }
+  }
+
+  onCompositionStart() {
+    this.inputFlag.set(true);
+  }
+
+  onCompositionEnd() {
+    this.inputFlag.set(false);
+  }
+
+  setEffort(effort: ReasoningEffort) {
+    this.activeEffort.set(effort);
+  }
+
+  handleEffortVisibleChange(visible: boolean) {
+    this.effortVisible.set(visible);
   }
 
   startChat() {
     // 如果已经存在对话
-    if (this.conversationId) {
+    if (this.conversationId()) {
       this.sendStreamMessage();
       return;
     }
-    const prompt = this.prompt.trim();
+    const prompt = this.prompt().trim();
     if (!prompt) {
       this.message.warning('请输入内容');
-      this.prompt = '';
+      this.prompt.set('');
       return;
     }
-
-    if (!this.objectId) {
-      this.message.warning('提问对象不存在');
+    if (!this.targetId()) {
+      this.message.warning(`${this.targetType() === 'post' ? '文章' : '壁纸'}不存在`);
       return;
     }
-
-    if (this.user.userLlmStatus === UserLlmStatus.DISABLED) {
+    const user = this.user();
+    if (user?.aiStatus === UserAiStatus.DISABLED) {
       this.message.error(Message.USER_CHAT_BOT_IS_CLOSED);
       return;
     }
-    if (this.user.userLlmStatus === UserLlmStatus.EXPIRED) {
+    if (user?.aiStatus === UserAiStatus.EXPIRED) {
       this.message.error(Message.USER_CHAT_BOT_IS_EXPIRED);
       return;
     }
 
     this.botConversationService
       .askAI({
-        objectId: this.objectId,
-        objectType: this.objectType
+        targetId: this.targetId(),
+        targetType: this.targetType()
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res.conversationId) {
-          this.conversationId = res.conversationId;
+          this.conversationId.set(res.conversationId);
           this.sendStreamMessage();
         }
       });
@@ -238,150 +296,64 @@ export class AiChatComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   sendStreamMessage() {
-    if (!this.isChatEnabled || this.loading) {
+    if (!this.isChatEnabled() || this.loading()) {
       return;
     }
-    if (!this.conversationId) {
+    if (!this.conversationId()) {
       this.message.error('对话不存在');
       return;
     }
-    const prompt = this.prompt.trim();
+    if (!this.bot()) {
+      this.message.error('机器人不存在');
+      return;
+    }
+    const prompt = this.prompt().trim();
     if (!prompt) {
       this.message.warning('请输入内容');
-      this.prompt = '';
+      this.prompt.set('');
       return;
     }
 
-    this.messages.push({
-      role: MessageRole.USER,
-      content: prompt,
-      created: Date.now()
-    });
-    this.prompt = '';
-    this.finishReason = '';
-    this.loading = true;
-    this.messages.push({
-      role: MessageRole.ASSISTANT,
-      content: '',
-      reasoningContent: '',
-      html: '<p></p>',
-      loading: true,
-      expanded: true,
-      vote: 0
-    });
+    this.messages.update((messages) => [
+      ...messages,
+      {
+        role: MessageRole.USER,
+        content: prompt,
+        createdAt: Date.now()
+      }
+    ]);
+    this.prompt.set('');
+    this.loading.set(true);
+    this.messages.update((messages) => [
+      ...messages,
+      {
+        role: MessageRole.ASSISTANT,
+        content: '',
+        reasoningContent: '',
+        html: '<p></p>',
+        loading: true,
+        expanded: true,
+        vote: 0
+      }
+    ]);
     this.scrollBottom();
 
-    const ctrl = new AbortController();
-    const chatUrl = this.botChatService.getAskUrl(this.objectType);
+    const params: StreamChatParam = {
+      conversationId: this.conversationId(),
+      message: prompt
+    };
+    const effort = this.activeEffort();
 
-    fetchEventSource(chatUrl, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + this.authService.getToken()
-      },
-      body: JSON.stringify({
-        conversationId: this.conversationId,
-        message: prompt
-      }),
-      signal: ctrl.signal,
-      openWhenHidden: true,
-      onopen: async (response) => {
-        if (response.ok && response.headers.get('content-type') === EventStreamContentType) {
-          return;
-        }
-        throw new Error(response.status + ': ' + this.errorMessage);
-      },
-      onmessage: (msg) => {
-        if (msg.event === 'error') {
-          let errMsg = '';
-          try {
-            const errData = JSON.parse(msg.data);
-            errMsg = errData.message || this.errorMessage;
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          } catch (e) {
-            errMsg = this.errorMessage;
-          }
-          this.updateMessage({
-            type: 'error',
-            message: errMsg
-          });
-          ctrl.abort();
-        } else if (msg.event === 'data') {
-          try {
-            if (msg.data) {
-              const botMsg: ChatResponse = JSON.parse(msg.data);
-              if (botMsg.choices.length > 0) {
-                this.finishReason = botMsg.choices[0].finish_reason;
-
-                if (botMsg.choices[0].delta.reasoning_content) {
-                  this.updateMessage({
-                    type: 'thinking',
-                    reasoningMessage: botMsg.choices[0].delta.reasoning_content
-                  });
-                }
-                if (botMsg.choices[0].delta.content) {
-                  this.updateMessage({
-                    type: 'message',
-                    message: botMsg.choices[0].delta.content
-                  });
-                }
-              }
-            }
-          } catch (e: any) {
-            this.updateMessage({
-              type: 'error',
-              message: e.message || this.errorMessage
-            });
-            ctrl.abort();
-          }
-        } else if (msg.event === 'finish') {
-          // finished
-          this.updateMessage({
-            type: 'done'
-          });
-          ctrl.abort();
-        }
-      },
-      onerror: (err) => {
-        const errMsg = typeof err === 'string' ? err : err?.message || this.errorMessage;
-
-        this.updateMessage({
-          type: 'error',
-          message: errMsg
-        });
-        ctrl.abort();
-
-        throw err;
-      }
-    }).then(() => {
-      ctrl.abort();
-    });
-  }
-
-  onKeyDown(e: KeyboardEvent) {
-    const key = e.key.toLowerCase();
-    const isCtrlPressed = e.altKey || e.ctrlKey || e.metaKey || e.shiftKey;
-    const isShiftPressed = e.shiftKey;
-    if (key === 'enter') {
-      if (!isCtrlPressed) {
-        e.preventDefault();
-        if (!this.inputFlag) {
-          this.startChat();
-        }
-      } else {
-        if (!isShiftPressed) {
-          textPosition(<HTMLInputElement>e.target, '\n', false);
-        }
-      }
+    if (effort) {
+      params.effort = effort;
     }
-  }
 
-  onPromptInput(e: Event) {
-    const $target = e.target as HTMLTextAreaElement;
-    $target.style.height = 'auto';
-    $target.style.height = $target.scrollHeight + 2 + 'px';
+    this.botChatService
+      .streamChat(params, this.targetType())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.updateMessage(res);
+      });
   }
 
   toggleThoughtsVisible(msg: ChatMessage) {
@@ -401,7 +373,7 @@ export class AiChatComponent extends BaseComponent implements OnInit, AfterViewI
     }
     this.botChatService
       .saveMessageVote({
-        messageId: msg.messageId || '',
+        messageId: msg.id || '',
         vote
       })
       .pipe(takeUntil(this.destroy$))
@@ -413,24 +385,7 @@ export class AiChatComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   onMessageClick(e: MouseEvent) {
-    const $target = e.target as HTMLElement;
-    if ($target.classList.contains('i-code-copy')) {
-      const $parent = $target.parentNode?.parentNode;
-      if ($parent) {
-        const $code = $parent.querySelector('.i-code-html');
-        const codeText = $code?.textContent;
-        if (codeText) {
-          this.clipboardService.copy(codeText);
-          $target.innerHTML = ICON_COPIED;
-
-          window.setTimeout(() => {
-            $target.innerHTML = ICON_COPY;
-          }, this.copyTimeout);
-        }
-      }
-      e.preventDefault();
-      e.stopPropagation();
-    }
+    this.botChatService.copyCode(e);
   }
 
   previewAvatar(url?: string) {
@@ -446,64 +401,64 @@ export class AiChatComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   private initAuth() {
-    const { permissions } = this.user;
-    this.authChat = permissions.includes(Permission.CONVERSATION_CHAT);
+    const { permissions } = this.user() || {};
+    this.authChat.set(!!permissions && permissions.includes(Permission.CONVERSATION_CHAT));
   }
 
   private getConversation() {
-    this.messageLoading = true;
+    this.messageLoading.set(true);
     this.botConversationService
-      .getConversation(this.conversationId, this.objectId)
+      .getConversation(this.conversationId(), this.targetId())
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        if (res && res.conversationId) {
-          this.conversation = res;
-          this.conversationId = res.conversationId;
-          if (this.conversation && this.conversation.user) {
-            this.conversation.user.userAvatar = this.userService.getUserAvatar(
-              this.conversation.user,
-              this.options['avatar_default_type']
-            );
+        if (res && res.id) {
+          if (res.user) {
+            res.user.avatarUrl = this.userService.getUserAvatar(res.user, this.options()['avatar_default_type']);
           }
-          this.bot = res.bot;
-          this.botAvatar = this.botService.getBotAvatar(res.bot);
-          this.initialized = true;
+          this.conversation.set(res);
+          this.conversationId.set(res.id);
+
+          this.bot.set(res.bot || null);
+          this.avatarUrl.set(this.botService.getBotAvatar(res.bot));
+          this.initialized.set(true);
           // 快速开始对话时无需请求历史消息
-          if (!this.prompt) {
+          if (!this.prompt()) {
             this.getMessages();
           } else {
-            this.messageLoading = false;
+            this.messageLoading.set(false);
             this.sendStreamMessage();
           }
         } else {
-          this.messageLoading = false;
-          this.botAvatar = this.botService.getBotAvatar();
+          this.messageLoading.set(false);
+          this.avatarUrl.set(this.botService.getBotAvatar());
           this.initGreeting();
         }
       });
   }
 
   private getMessages() {
-    this.messageLoading = true;
+    this.messageLoading.set(true);
     this.botChatService
-      .getMessages(this.conversationId)
+      .getMessages(this.conversationId())
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.messageLoading = false;
-        this.messages = (res || []).map((item) => {
-          return {
-            messageId: item.messageId,
-            content: item.messageContent || this.noneContent,
-            html: this.parseMarkdown(item.messageContent || this.noneContent),
-            reasoningContent: item.messageReasoningContent || '',
-            reasoningHtml: this.parseMarkdown(item.messageReasoningContent || ''),
-            role: item.messageRole,
-            created: item.messageCreated,
-            vote: item.messageVote,
-            status: 'done'
-          };
-        });
-        if (this.isChatEnabled && this.messages.length < 1) {
+        this.messageLoading.set(false);
+        this.messages.set(
+          (res || []).map((item) => {
+            return {
+              id: item.id,
+              content: item.content || this.noneContent,
+              html: this.parseMarkdown(item.content || this.noneContent),
+              reasoningContent: item.reasoningContent || '',
+              reasoningHtml: this.parseMarkdown(item.reasoningContent || ''),
+              role: item.role,
+              createdAt: item.createdAt,
+              vote: item.vote,
+              status: 'done'
+            };
+          })
+        );
+        if (this.isChatEnabled() && this.messages().length < 1) {
           this.initGreeting();
         }
         this.scrollBottom();
@@ -511,20 +466,22 @@ export class AiChatComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   private getGreeting() {
-    if (this.bot?.botGreeting) {
-      return this.bot.botGreeting;
+    const bot = this.bot();
+    if (bot?.greeting) {
+      return bot.greeting;
     }
     const greeting: string =
       '👋 您好，我是智能阅读助手，可以结合本文（**《$0》**）内容为您解答疑问、提供背景知识和相关延伸信息。欢迎向我提问，一起进行更深入的交流。';
     let title = '';
-    if (this.objectType === 'post' && this.post) {
-      title = this.post.post.postTitle;
-    } else if (this.objectType === 'wallpaper' && this.wallpaper) {
+    const post = this.post();
+    const wallpaper = this.wallpaper();
+
+    if (this.targetType() === 'post' && post) {
+      title = post.title;
+    } else if (this.targetType() === 'wallpaper' && wallpaper) {
       const lang = this.route.snapshot.queryParams['lang'] || '';
       title =
-        lang === 'en'
-          ? this.wallpaper.wallpaperCopyrightEn || this.wallpaper.wallpaperCopyright
-          : this.wallpaper.wallpaperCopyright || this.wallpaper.wallpaperCopyrightEn;
+        lang === 'en' ? wallpaper.copyrightEn || wallpaper.copyright : wallpaper.copyright || wallpaper.copyrightEn;
     }
     if (title) {
       return greeting.replace('$0', title);
@@ -535,55 +492,70 @@ export class AiChatComponent extends BaseComponent implements OnInit, AfterViewI
   private initGreeting() {
     const greeting = this.getGreeting();
 
-    this.messages.push({
-      messageId: generateId(),
-      content: greeting,
-      html: this.parseMarkdown(greeting),
-      role: MessageRole.SYSTEM,
-      created: Date.now(),
-      vote: 0,
-      status: 'done'
-    });
+    this.messages.update((messages) => [
+      ...messages,
+      {
+        id: generateId(),
+        content: greeting,
+        html: this.parseMarkdown(greeting),
+        role: MessageRole.SYSTEM,
+        createdAt: Date.now(),
+        vote: 0,
+        status: 'done'
+      }
+    ]);
   }
 
-  private scrollBottom() {
-    const $messageList = this.messageList.nativeElement;
-    const { offsetHeight } = $messageList;
+  private scrollBottom(force = false) {
+    afterNextRender(
+      () => {
+        const $chatBody = this.chatBody().nativeElement;
+        const threshold = 260;
+        const { scrollHeight, scrollTop, clientHeight } = $chatBody;
+        const isNearBottom = scrollHeight - scrollTop - clientHeight <= threshold;
 
-    window.setTimeout(() => {
-      $messageList.scrollTop = $messageList.scrollHeight - offsetHeight;
-    }, 0);
+        if (isNearBottom || force) {
+          $chatBody.scrollTop = $chatBody.scrollHeight;
+        }
+      },
+      { injector: this.injector }
+    );
   }
 
-  private updateMessage(msg: ChatEventData) {
-    const activeMessage = <ChatMessage>this.messages.at(-1);
+  private updateMessage(msg: StreamChatEvent) {
+    const activeMessage = <ChatMessage>this.messages().at(-1);
     switch (msg.type) {
       case 'done':
         activeMessage.content = activeMessage.content || this.noneContent;
         activeMessage.html = this.parseMarkdown(activeMessage.content);
         activeMessage.status = 'done';
         activeMessage.loading = false;
-        this.loading = false;
+
+        this.loading.set(false);
         this.scrollBottom();
         break;
       case 'thinking':
         activeMessage.reasoningContent += msg.reasoningMessage || '';
         activeMessage.reasoningHtml = this.parseMarkdown(<string>activeMessage.reasoningContent);
         activeMessage.thinking = true;
+
         this.scrollBottom();
         break;
       case 'message':
         activeMessage.content += msg.message || '';
         activeMessage.html = this.parseMarkdown(activeMessage.content);
         activeMessage.thinking = false;
+
         this.scrollBottom();
         break;
       case 'error':
         activeMessage.status = 'error';
-        activeMessage.created = Date.now();
+        activeMessage.createdAt = Date.now();
         activeMessage.loading = false;
-        this.loading = false;
-        this.message.error(msg.message || this.errorMessage);
+
+        this.errorMessage.set(msg.message!);
+        this.loading.set(false);
+        this.message.error(msg.message!);
         this.scrollBottom();
     }
   }

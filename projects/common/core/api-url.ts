@@ -23,8 +23,8 @@ export enum ApiUrl {
   POST_LIST_FOR_RSS = '/posts/list-for-rss',
   POST_PREV_AND_NEXT = '/posts/prev-and-next',
   POST_ARCHIVES = '/posts/archives',
-  // taxonomy
-  TAXONOMY_TREE = '/taxonomies/taxonomy-tree',
+  // category
+  CATEGORY_TREE = '/categories/category-tree',
   // link
   LINK_FOOTER = '/links/footer',
   LINK_FRIEND = '/links/friend',
@@ -35,15 +35,15 @@ export enum ApiUrl {
   // vote
   VOTE = '/votes/vote',
   // auth
-  AUTH_LOGIN = '/auth/login',
-  AUTH_LOGOUT = '/auth/logout',
+  AUTH_SIGNIN = '/auth/signin',
+  AUTH_SIGNOUT = '/auth/signout',
   AUTH_SIGNUP = '/auth/signup',
   AUTH_SEND_CODE = '/auth/send-code',
   AUTH_VERIFY = '/auth/verify',
-  USER_THIRD_LOGIN = '/auth/third-login',
+  AUTH_OAUTH = '/auth/oauth',
   AUTH_RESET_PASSWORD = '/auth/reset-password',
   // user
-  USER_LOGIN_INFO = '/users/login-user',
+  USER_PROFILE = '/users/profile',
   USER_SIGNUP_INFO = '/users/signup-user',
   // favorite
   FAVORITE = '/favorites/favorite',

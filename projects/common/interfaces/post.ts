@@ -1,61 +1,82 @@
-import { BreadcrumbEntity, QueryParam, ResultList, UserEntity } from 'common/core';
-import { CommentFlag, CopyType, PostFormat, PostScope, PostStatus, PostType } from 'common/enums';
+import { BreadcrumbEntity, QueryParam, ResultList, UserDto } from 'common/core';
+import {
+  ContentForm,
+  ContentType,
+  PostCommentStatus,
+  PostLicense,
+  PostStatus,
+  PostVisibility,
+  SwitchValue
+} from 'common/enums';
 import { BookEntity } from './book';
-import { TagEntity } from './tag';
-import { TaxonomyEntity } from './taxonomy';
+import { TagVo } from './tag';
+import { CategoryVo } from './category';
 
 export interface PostEntity {
-  postId: string;
-  postTitle: string;
-  postName?: string;
-  postContent: string;
-  postExcerpt: string;
-  postDate: number;
-  postCover?: string;
-  postWallpaperCover?: string;
-  cover: string;
-  postOriginal: number;
-  postAuthor?: string;
-  postTranslator?: string;
-  postSource?: string;
-  postSourceLink?: string;
-  postLoginFlag: number;
-  postPayFlag: number;
-  postPrice?: number;
-  postFreePercent?: number;
-  postCopyType: CopyType;
-  postScope: PostScope;
-  postPassword?: string;
-  commentFlag: CommentFlag;
-  postStatus: PostStatus;
-  postSticky: number;
-  postStickyTime?: number;
-  postType: PostType;
-  postFormat: PostFormat;
-  postMimeType?: string;
-  postOwnerId: string;
-  postGuid: string;
-  postParent?: string;
-  postViews: number;
-  postLikes: number;
-  postComments: number;
-  postFavorites: number;
-  postCreated: number;
-  postModified: number;
-  owner: UserEntity;
+  id: string;
+  title: string;
+  slug?: string;
+  url: string;
+  content: string;
+  summary?: string;
+  contentType: ContentType;
+  contentForm?: ContentForm;
+  coverImageUrl?: string;
+  coverWallpaperId?: string;
+  isOriginal: SwitchValue;
+  author?: string;
+  translator?: string;
+  source?: string;
+  sourceUrl?: string;
+  bookId?: string;
+  bookColumnId?: string;
+  isPaid?: SwitchValue;
+  price?: number;
+  trialPercent?: number;
+  license: PostLicense;
+  visibility: PostVisibility;
+  viewPassword?: string;
+  commentStatus?: PostCommentStatus;
+  status: PostStatus;
+  isPinned?: SwitchValue;
+  pinnedAt?: number;
+  publishedAt: number;
+  parentId?: string;
+}
+
+export interface PostStatVo {
+  viewCount: number;
+  likeCount: number;
+  commentCount: number;
+  favoriteCount: number;
 }
 
 export interface PostModel extends PostEntity {
-  postPassword: string;
-  postName: string;
-  postMimeType: string;
+  url: string;
+  creatorId?: string;
+  creator: UserDto;
+  createdAt: number;
+  updatedAt: number;
+  postStat: PostStatVo;
+  coverUrl: string;
 }
 
-export interface Post {
-  post: PostModel;
-  meta: Record<string, string>;
-  categories: TaxonomyEntity[];
-  tags: TagEntity[];
+export interface PostCategoryVo {
+  postId: string;
+  sort: number;
+  category: CategoryVo;
+}
+
+export interface PostTagVo {
+  postId: string;
+  sort: number;
+  tag: TagVo;
+}
+
+export interface PostVo extends PostModel {
+  metadata: Record<string, string>;
+  categories: PostCategoryVo[];
+  tags: PostTagVo[];
   book?: BookEntity;
   breadcrumbs?: BreadcrumbEntity[];
   isFavorite: boolean;
@@ -63,17 +84,15 @@ export interface Post {
 }
 
 export interface PostQueryParam extends QueryParam {
-  postType?: PostType;
   category?: string;
   tag?: string;
   year?: string;
   month?: string;
-  sticky?: 0 | 1;
-  simple?: 0 | 1;
+  isPinned?: 0 | 1;
 }
 
 export interface PostList {
-  posts: ResultList<Post>;
+  posts: ResultList<PostVo>;
   book?: BookEntity;
   breadcrumbs: BreadcrumbEntity[];
 }
@@ -85,8 +104,8 @@ export interface PrevAndNextPosts {
 
 export interface PostSearchItem {
   postId: string;
-  postTitle: string;
-  postGuid: string;
-  cover: string;
+  title: string;
+  url: string;
+  coverUrl: string;
   score: number;
 }

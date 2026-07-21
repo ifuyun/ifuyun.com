@@ -11,7 +11,7 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: '/list' },
       { path: 'list', component: WallpaperJigsawListComponent },
-      { path: 'detail/:wid', component: WallpaperJigsawComponent }
+      { path: 'detail/:id', component: WallpaperJigsawComponent }
     ]
   },
   {

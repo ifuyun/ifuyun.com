@@ -15,7 +15,7 @@ import {
   USER_PASSWORD_PATTERN
 } from 'common/components';
 import { AuthService, BaseComponent, BreadcrumbService, DestroyService, MetaService, OptionEntity } from 'common/core';
-import { TenantAppModel } from 'common/interfaces';
+import { TenantAppVo } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService } from 'common/services';
 import { isEmpty } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -28,8 +28,7 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   selector: 'app-signup',
   imports: [ReactiveFormsModule, NzFormModule, NzInputModule, NzButtonModule, NzIconModule],
   providers: [DestroyService],
-  templateUrl: './signup.component.html',
-  styleUrl: './signup.component.less'
+  templateUrl: './signup.component.html'
 })
 export class SignupComponent extends BaseComponent implements OnInit {
   readonly maxEmailLength = USER_EMAIL_LENGTH;
@@ -37,12 +36,11 @@ export class SignupComponent extends BaseComponent implements OnInit {
   readonly maxPasswordLength = USER_PASSWORD_MAX_LENGTH;
 
   signupForm!: FormGroup;
-  passwordVisible = false;
   signupLoading = false;
 
   protected pageIndex = 'auth-signup';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
 
   constructor(
@@ -111,18 +109,18 @@ export class SignupComponent extends BaseComponent implements OnInit {
     this.signupLoading = true;
     this.authService
       .signup({
-        userEmail: email,
-        userPassword: password,
-        userNickname: email.split('@')[0]
+        email,
+        password: password,
+        nickname: email.split('@')[0]
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.signupLoading = false;
-        if (res.userId) {
+        if (res.id) {
           this.router.navigate(['/user/confirm'], {
             relativeTo: this.route,
             queryParams: {
-              userId: res.userId
+              userId: res.id
             }
           });
         }
@@ -135,10 +133,10 @@ export class SignupComponent extends BaseComponent implements OnInit {
 
   private updatePageInfo() {
     this.metaService.updateHTMLMeta({
-      title: ['注册', this.appInfo.appName].join(' - '),
-      description: this.appInfo.appDescription,
+      title: ['注册', this.appInfo.name].join(' - '),
+      description: this.appInfo.description,
       author: this.options['site_author'],
-      keywords: this.appInfo.appKeywords
+      keywords: this.appInfo.keywords
     });
   }
 

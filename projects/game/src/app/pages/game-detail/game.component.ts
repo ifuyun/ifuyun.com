@@ -23,9 +23,9 @@ import {
   ResponseCode,
   UserAgentService
 } from 'common/core';
-import { CommentObjectType, FavoriteType, VoteType, VoteValue } from 'common/enums';
+import { CommentTargetType, FavoriteType, VoteType, VoteValue } from 'common/enums';
 import { IconCalendarDateComponent, IconShareFillComponent } from 'common/icons';
-import { Game, GameEntity, TagEntity, TaxonomyEntity, TenantAppModel } from 'common/interfaces';
+import { Game, TenantAppVo } from 'common/interfaces';
 import { NumberViewPipe, SafeHtmlPipe } from 'common/pipes';
 import {
   AdsService,
@@ -70,14 +70,12 @@ import { GameRelatedComponent } from '../../components/game-related/game-related
   styleUrl: './game.component.less'
 })
 export class GameComponent implements OnInit {
-  readonly commentType = CommentObjectType.GAME;
+  readonly commentType = CommentTargetType.GAME;
   readonly emptyCover: string = '';
 
   isMobile = false;
   isSignIn = false;
-  game!: GameEntity;
-  gameCategories: TaxonomyEntity[] = [];
-  gameTags: TagEntity[] = [];
+  game!: Game;
   isFavorite = false;
   isVoted = false;
   voteLoading = false;
@@ -89,7 +87,7 @@ export class GameComponent implements OnInit {
 
   protected pageIndex = 'game-detail';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private gameId = '';
   private referrer = '';
@@ -140,14 +138,14 @@ export class GameComponent implements OnInit {
         this.closeShareQrcode();
 
         this.getGame();
-        this.commentService.updateObjectId(this.gameId);
+        this.commentService.updateTargetId(this.gameId);
         this.gameService.updateActiveGameId(this.gameId);
       });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      this.isSignIn = !!user.userId;
+      this.isSignIn = !!user.id;
 
       if (this.platform.isBrowser) {
-        this.shareUrl = this.commonService.getShareURL(user.userId);
+        this.shareUrl = this.commonService.getShareURL(user.id);
       }
     });
     this.adsService.adsStatus$.pipe(takeUntil(this.destroy$)).subscribe((status) => {
@@ -175,12 +173,12 @@ export class GameComponent implements OnInit {
       return;
     }
     if (!this.isSignIn) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
     this.voteService
       .saveVote({
-        objectId: this.game.gameId,
+        targetId: this.game.id,
         value: VoteValue.LIKE,
         type: VoteType.GAME
       })
@@ -191,7 +189,7 @@ export class GameComponent implements OnInit {
         if (res.code === ResponseCode.SUCCESS) {
           this.message.success(Message.VOTE_SUCCESS);
           this.isVoted = true;
-          this.game.gameLikes = res.data.likes;
+          this.game.gameStat.likeCount = res.data.likes;
         }
       });
   }
@@ -211,7 +209,7 @@ export class GameComponent implements OnInit {
       return;
     }
     if (!this.isSignIn) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
     this.favoriteLoading = true;
@@ -238,7 +236,7 @@ export class GameComponent implements OnInit {
 
   startPlay() {
     if (!this.isSignIn && this.adsStatus === AdsStatus.BLOCKED) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
     if (this.gameService.isGameCached(this.gameId)) {
@@ -252,14 +250,14 @@ export class GameComponent implements OnInit {
         if (res.code === ResponseCode.SUCCESS) {
           this.showGameModal();
         } else {
-          this.showLoginModal();
+          this.showSigninModal();
         }
       });
   }
 
   download() {
     if (!this.isSignIn) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
     this.downloading = true;
@@ -274,8 +272,8 @@ export class GameComponent implements OnInit {
       });
   }
 
-  showLoginModal() {
-    this.commonService.updateLoginModalVisible({
+  showSigninModal() {
+    this.commonService.updateSigninModalVisible({
       visible: true,
       closable: true
     });
@@ -307,9 +305,7 @@ export class GameComponent implements OnInit {
   }
 
   private initData(game: Game) {
-    this.game = game.game;
-    this.gameCategories = game.categories;
-    this.gameTags = game.tags;
+    this.game = { ...game };
     this.isFavorite = game.isFavorite;
     this.isVoted = game.isVoted;
 
@@ -336,15 +332,15 @@ export class GameComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles: string[] = [this.game.gameTitle, '游戏', this.appInfo.appName];
-    const keywords: string[] = this.gameTags
-      .map((item) => item.tagName)
+    const titles: string[] = [this.game.title, '游戏', this.appInfo.name];
+    const keywords: string[] = this.game.tags
+      .map((item) => item.tag.name)
       .concat((this.options['game_keywords'] || '').split(','));
-    const description = `「${this.game.gameTitle}」在线玩。${this.options['game_description']}`;
+    const description = `「${this.game.title}」在线玩。${this.options['game_description']}`;
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
-      description: this.game.gameExcerpt || description,
+      description: this.game.summary || description,
       keywords: uniq(keywords)
         .filter((item) => !!item)
         .join(','),

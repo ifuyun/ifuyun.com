@@ -7,7 +7,7 @@ import {
   IconChatSquareDotsComponent,
   IconPencilComponent
 } from 'common/icons';
-import { Post } from 'common/interfaces';
+import { PostVo } from 'common/interfaces';
 import { NumberViewPipe } from 'common/pipes';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { SmartLinkComponent } from '../../smart-link/smart-link.component';
@@ -28,7 +28,7 @@ import { SmartLinkComponent } from '../../smart-link/smart-link.component';
   styleUrl: './post-item.component.less'
 })
 export class PostItemComponent {
-  @Input() post!: Post;
+  @Input() post!: PostVo;
   @Input() index!: number;
 
   isMobile = false;

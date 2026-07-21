@@ -96,7 +96,7 @@
              nzType="link"
              [href]="detailLink"
              target="_blank"
-             title="《{{wallpaper?.wallpaperCopyright}}》壁纸详情"><nz-icon nzType="info-circle"/></a>
+             title="《{{wallpaper?.copyright}}》壁纸详情"><nz-icon nzType="info-circle"/></a>
           @if (downloading) {
             <a nz-button nzType="link" title="下载中..."><nz-icon nzType="loading"/></a>
           } @else {
@@ -104,7 +104,7 @@
                nzType="link"
                class="icon-btn"
                (click)="download()"
-               title="下载《{{wallpaper?.wallpaperCopyright}}》高清壁纸"><fi-download/></a>
+               title="下载《{{wallpaper?.copyright}}》高清壁纸"><fi-download/></a>
           }
         </div>
       </div>
@@ -164,7 +164,7 @@
              nzType="link"
              [href]="detailLink"
              target="_blank"
-             title="《{{wallpaper?.wallpaperCopyright}}》壁纸详情"><nz-icon nzType="info-circle"/></a>
+             title="《{{wallpaper?.copyright}}》壁纸详情"><nz-icon nzType="info-circle"/></a>
         </div>
         <div>
           <span>{{ gameTime | duration }} / {{ gamePercent }}%</span>
@@ -203,17 +203,17 @@
           </tr>
           </thead>
           <tbody>
-            @for (item of rankings; track item.jigsawLogId; let i = $index) {
+            @for (item of rankings; track item.id; let i = $index) {
               <tr [class.active]="item.faId === faId || item.userId === userId">
                 <td nzAlign="center" [title]="i + 1"><span class="hot-num">{{ i + 1 }}</span></td>
-                <td nzEllipsis [title]="item.user?.userNickname || '匿名用户'">
-                  {{ item.user?.userNickname || '匿名用户' }}{{ item.faId === faId || item.userId === userId ? '（你）' : '' }}
+                <td nzEllipsis [title]="item.user?.nickname || '匿名用户'">
+                  {{ item.user?.nickname || '匿名用户' }}{{ item.faId === faId || item.userId === userId ? '（你）' : '' }}
                 </td>
                 <td nzAlign="right"
                     nzEllipsis
-                    [title]="item.jigsawLogDuration | duration">{{ item.jigsawLogDuration | duration }}</td>
+                    [title]="item.duration | duration">{{ item.duration | duration }}</td>
                 <td nzAlign="center"
-                    [title]="item.jigsawLogEnd | date: dateFormat">{{ item.jigsawLogEnd | date: dateFormat }}</td>
+                    [title]="item.endTime | date: dateFormat">{{ item.endTime | date: dateFormat }}</td>
               </tr>
             }
           </tbody>
@@ -238,7 +238,7 @@
   <ng-template #confirmModalContent>
     <div class="confirm-progress">
       @if (cachedJigsaw) {
-        <p><span>拼图：</span><span>{{ wallpaper?.wallpaperCopyright }}</span></p>
+        <p><span>拼图：</span><span>{{ wallpaper?.copyright }}</span></p>
         <p><span>时间：</span><span>{{ cachedJigsaw.t | date:'yyyy-MM-dd HH:mm:ss' }}</span></p>
         <p><span>难度：</span><span>{{ cachedJigsaw.c }} 片</span></p>
         <p><span>进度：</span><span>{{ (cachedJigsaw.s / (cachedJigsaw.c - 1) * 100).toFixed(1) }}%</span></p>

@@ -4,11 +4,11 @@
     <div class="related-list">
       @for (post of relatedPosts; track post.postId) {
         <div class="related-item">
-          <a class="related-item-img" [routerLink]="post.postGuid" [title]="post.postTitle">
-            <div class="lazyload" [attr.data-bg]="post.cover"></div>
+          <a class="related-item-img" [routerLink]="post.url" [title]="post.title">
+            <div class="lazyload" [attr.data-bg]="post.coverUrl"></div>
           </a>
           <div class="related-item-title">
-            <a [routerLink]="post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</a>
+            <a [routerLink]="post.url" [title]="post.title">{{ post.title }}</a>
           </div>
         </div>
       }

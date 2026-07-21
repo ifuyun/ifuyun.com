@@ -17,7 +17,7 @@ import {
   UserAgentService
 } from 'common/core';
 import { ListMode, WallpaperLang } from 'common/enums';
-import { TenantAppModel, Wallpaper, WallpaperQueryParam } from 'common/interfaces';
+import { TenantAppVo, Wallpaper, WallpaperQueryParam } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService, WallpaperService } from 'common/services';
 import { isEmpty, uniq } from 'lodash';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
@@ -53,7 +53,7 @@ export class WallpaperJigsawListComponent implements OnInit {
 
   protected pageIndex = 'jigsaw';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private lastParam = '';
 
@@ -139,7 +139,7 @@ export class WallpaperJigsawListComponent implements OnInit {
 
   private updatePageInfo() {
     let description = '';
-    const titles = ['壁纸拼图', this.appInfo.appName];
+    const titles = ['壁纸拼图', this.appInfo.name];
     const keywords = (this.options['jigsaw_keywords'] || '').split(',');
 
     if (description) {

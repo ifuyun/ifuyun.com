@@ -16,7 +16,7 @@
                      [prompt]="chatPrompt"
                      [post]="post"
                      [wallpaper]="wallpaper"
-                     [objectType]="indexInfo?.isPost ? 'post' : 'wallpaper'"
+                     [targetType]="indexInfo?.isPost ? 'post' : 'wallpaper'"
                      (closeDrawer)="closeChat()"/>
       }
     } @else {
@@ -35,7 +35,7 @@
       <lib-m-sider/>
     }
     @if (loginOptions.visible) {
-      <lib-login-modal [closable]="loginOptions.closable" (close)="closeLoginModal()"/>
+      <lib-signin-modal [closable]="loginOptions.closable" (close)="closeSigninModal()"/>
     }
     <img [style.display]="'none'"
          [src]="adsImg"

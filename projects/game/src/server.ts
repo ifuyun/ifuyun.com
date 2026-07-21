@@ -48,18 +48,18 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
         priority: 1
       }
     ];
-    const taxonomies: SitemapItemLoose[] = sitemap.taxonomies.map((item) => ({
-      url: `${environment.apps.game.url}/category/${item.taxonomySlug}`,
+    const categories: SitemapItemLoose[] = sitemap.categories.map((item) => ({
+      url: `${environment.apps.game.url}/category/${item.slug}`,
       changefreq: EnumChangefreq.DAILY,
       priority: 0.7
     }));
     const tags: SitemapItemLoose[] = sitemap.tags.map((item) => ({
-      url: `${environment.apps.game.url}/tag/${item.tagName}`,
+      url: `${environment.apps.game.url}/tag/${item.name}`,
       changefreq: EnumChangefreq.DAILY,
       priority: 0.7
     }));
 
-    streamToPromise(<Readable>Readable.from(links.concat(taxonomies, tags)).pipe(sitemapStream)).then((data) => {
+    streamToPromise(<Readable>Readable.from(links.concat(categories, tags)).pipe(sitemapStream)).then((data) => {
       return res.type('application/xml').send(data.toString());
     });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

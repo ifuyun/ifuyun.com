@@ -17,7 +17,7 @@ import {
   UserAgentService
 } from 'common/core';
 import { ListMode, WallpaperLang } from 'common/enums';
-import { TenantAppModel, Wallpaper, WallpaperQueryParam } from 'common/interfaces';
+import { TenantAppVo, Wallpaper, WallpaperQueryParam } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService, WallpaperService } from 'common/services';
 import { isEmpty, uniq } from 'lodash';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
@@ -59,7 +59,7 @@ export class WallpaperFutureListComponent implements OnInit {
 
   protected pageIndex = 'wallpaper-future';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private lastParam = '';
 
@@ -163,9 +163,9 @@ export class WallpaperFutureListComponent implements OnInit {
         this.wallpapers = (res.list || []).map((item) => {
           return {
             ...item,
-            wallpaperCopyright: isEn ? item.wallpaperCopyrightEn : item.wallpaperCopyright,
-            wallpaperLocation: isEn ? item.wallpaperLocationEn : item.wallpaperLocation,
-            wallpaperStory: isEn ? item.wallpaperStoryEn : item.wallpaperStory
+            copyright: isEn ? item.copyrightEn : item.copyright,
+            location: isEn ? item.locationEn : item.location,
+            story: isEn ? item.storyEn : item.story
           };
         });
 
@@ -183,7 +183,7 @@ export class WallpaperFutureListComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = ['未来壁纸', '高清壁纸', this.appInfo.appName];
+    const titles = ['未来壁纸', '高清壁纸', this.appInfo.name];
     const keywords = (this.options['wallpaper_keywords'] || '').split(',');
     let description = '';
 

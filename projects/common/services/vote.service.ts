@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService, ApiUrl, AppConfigService, HttpResponseEntity } from 'common/core';
-import { VoteEntity } from 'common/interfaces';
+import { VoteDto } from 'common/interfaces';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class VoteService {
     private readonly appConfigService: AppConfigService
   ) {}
 
-  saveVote(payload: VoteEntity): Observable<HttpResponseEntity> {
+  saveVote(payload: VoteDto): Observable<HttpResponseEntity> {
     return this.apiService
       .httpPost(
         ApiUrl.VOTE,

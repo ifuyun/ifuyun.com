@@ -1,14 +1,14 @@
 import { ArchiveData } from 'common/core';
-import { PostEntity } from './post';
-import { TagEntity } from './tag';
-import { TaxonomyEntity } from './taxonomy';
+import { PostModel } from './post';
+import { TagVo } from './tag';
+import { CategoryVo } from './category';
 import { Wallpaper } from './wallpaper';
 
 export interface SitemapData {
-  posts: PostEntity[];
+  posts: PostModel[];
   postArchives: ArchiveData[];
   wallpaperArchives: ArchiveData[];
-  taxonomies: TaxonomyEntity[];
-  tags: TagEntity[];
+  categories: CategoryVo[];
+  tags: TagVo[];
   wallpapers: Wallpaper[];
 }

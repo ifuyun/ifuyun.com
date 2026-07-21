@@ -1,1 +1,1 @@
-export * from './anti-crawler';
+export default void 0;

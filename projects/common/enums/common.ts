@@ -14,6 +14,6 @@ export enum SwitchValue {
 }
 
 export enum CommonStatus {
-  NORMAL = 'normal',
-  TRASH = 'trash'
+  NORMAL = 1,
+  TRASHED = 2
 }

@@ -12,13 +12,13 @@ export class FavoriteService {
     private readonly appConfigService: AppConfigService
   ) {}
 
-  addFavorite(objectId: string, objectType = FavoriteType.POST): Observable<HttpResponseEntity> {
+  addFavorite(targetId: string, type = FavoriteType.POST): Observable<HttpResponseEntity> {
     return this.apiService
       .httpPost(
         ApiUrl.FAVORITE,
         {
-          objectId,
-          type: objectType,
+          targetId,
+          type,
           appId: this.appConfigService.appId
         },
         true

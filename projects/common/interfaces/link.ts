@@ -1,20 +1,19 @@
-export interface LinkEntity {
-  linkId: string;
-  linkUrl: string;
-  linkName: string;
-  linkImage: string;
-  linkTarget: string;
-  linkDescription: string;
-  linkRss: string;
+export interface LinkVo {
+  id: string;
+  name: string;
+  url: string;
+  description: string;
+  imageUrl?: string;
+  target: string;
   isExternal: boolean;
 }
 
 export interface FavoriteLink {
-  taxonomyId: string;
-  taxonomyName: string;
-  taxonomySlug: string;
-  taxonomyDescription: string;
-  taxonomyParent: string;
-  taxonomyOrder: number;
-  links: LinkEntity[];
+  catId: string;
+  catName: string;
+  catSlug: string;
+  catDescription: string;
+  catParentId: string | null;
+  catSort: number;
+  links: LinkVo[];
 }

@@ -3,7 +3,7 @@ import { AuthLayoutComponent, ContentLayoutComponent } from 'common/components';
 import { ForbiddenComponent, NotFoundComponent, ServerErrorComponent } from 'common/error';
 import { ForgotComponent } from './pages/auth/forgot/forgot.component';
 import { LoginCallbackComponent } from './pages/auth/login-callback/login-callback.component';
-import { LoginComponent } from './pages/auth/login/login.component';
+import { SigninComponent } from './pages/auth/signin/signin.component';
 import { SignupConfirmComponent } from './pages/auth/signup-confirm/signup-confirm.component';
 import { SignupComponent } from './pages/auth/signup/signup.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -25,7 +25,7 @@ export const routes: Routes = [
     path: 'user',
     component: AuthLayoutComponent,
     children: [
-      { path: 'login', component: LoginComponent },
+      { path: 'signin', component: SigninComponent },
       { path: 'login/callback', component: LoginCallbackComponent, data: { bg: false } },
       { path: 'signup', component: SignupComponent },
       { path: 'confirm', component: SignupConfirmComponent },

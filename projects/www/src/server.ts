@@ -70,7 +70,7 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
         priority: 0.8
       },
       {
-        url: environment.apps.www.url + '/user/login',
+        url: environment.apps.www.url + '/user/signin',
         changefreq: EnumChangefreq.MONTHLY,
         priority: 0.8
       },
@@ -81,10 +81,10 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
       }
     ];
     const pages: SitemapItemLoose[] = sitemap.posts.map((item) => ({
-      url: environment.apps.www.url + item.postGuid,
+      url: environment.apps.www.url + item.url,
       changefreq: EnumChangefreq.DAILY,
       priority: 1,
-      lastmod: new Date(item.postModified).toString()
+      lastmod: new Date(item.updatedAt).toString()
     }));
     const tools: SitemapItemLoose[] = TOOL_LINKS.map((item) => ({
       url: environment.apps.www.url + item.url,

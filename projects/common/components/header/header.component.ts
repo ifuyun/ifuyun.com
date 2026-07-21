@@ -11,9 +11,9 @@ import {
   UserAgentService,
   UserModel
 } from 'common/core';
-import { SearchType, TaxonomyType } from 'common/enums';
-import { TaxonomyNode, TenantAppModel } from 'common/interfaces';
-import { CommonService, TaxonomyService, TenantAppService, UserService } from 'common/services';
+import { CategoryType, SearchType } from 'common/enums';
+import { CategoryNode, TenantAppVo } from 'common/interfaces';
+import { CategoryService, CommonService, TenantAppService, UserService } from 'common/services';
 import { format } from 'common/utils';
 import { isEmpty } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -48,10 +48,10 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   isSignIn = false;
   domains!: AppDomainConfig;
   indexInfo?: PageIndexInfo;
-  appInfo?: TenantAppModel;
+  appInfo?: TenantAppVo;
   user!: UserModel;
-  postTaxonomies: TaxonomyNode[] = [];
-  gameTaxonomies: TaxonomyNode[] = [];
+  postCategories: CategoryNode[] = [];
+  gameCategories: CategoryNode[] = [];
   toolLinks = TOOL_LINKS;
   keyword = '';
   searchType = 'all';
@@ -67,7 +67,7 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
     private readonly commonService: CommonService,
     private readonly appConfigService: AppConfigService,
     private readonly tenantAppService: TenantAppService,
-    private readonly taxonomyService: TaxonomyService,
+    private readonly categoryService: CategoryService,
     private readonly authService: AuthService,
     private readonly userService: UserService
   ) {
@@ -87,18 +87,18 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
         const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), this.appConfigService.appId);
 
         this.appInfo = appInfo;
-        if (this.appInfo.appAdminUrl) {
-          this.adminUrl = this.appInfo.appAdminUrl + '?' + urlParam;
+        if (this.appInfo.adminUrl) {
+          this.adminUrl = this.appInfo.adminUrl + '?' + urlParam;
         }
       });
-    this.taxonomyService.getTaxonomies().subscribe((taxonomies) => (this.postTaxonomies = taxonomies));
-    this.taxonomyService.getTaxonomies(TaxonomyType.GAME).subscribe((taxonomies) => (this.gameTaxonomies = taxonomies));
+    this.categoryService.getCategories().subscribe((categories) => (this.postCategories = categories));
+    this.categoryService.getCategories(CategoryType.GAME).subscribe((categories) => (this.gameCategories = categories));
     this.commonService.pageIndex$.pipe(takeUntil(this.destroy$)).subscribe((page) => {
       this.indexInfo = this.commonService.getPageIndexInfo(page);
     });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.user = user;
-      this.isSignIn = !!user.userId;
+      this.isSignIn = !!user.id;
     });
   }
 
@@ -139,9 +139,9 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
     window.open(this.adminUrl);
   }
 
-  logout() {
+  signout() {
     this.authService
-      .logout()
+      .signout()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res.code === ResponseCode.SUCCESS) {

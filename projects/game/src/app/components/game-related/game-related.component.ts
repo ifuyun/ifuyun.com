@@ -51,7 +51,7 @@ export class GameRelatedComponent implements OnInit {
   private getRelatedGames(): void {
     this.gameService
       .getRelatedGames({
-        gameId: this.gameId,
+        id: this.gameId,
         page: 1,
         size: 4
       })

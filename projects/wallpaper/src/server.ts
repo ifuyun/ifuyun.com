@@ -51,17 +51,17 @@ app.get('/rss.xml', async (req: Request, res: Response) => {
     });
     const wallpapers: Wallpaper[] = wallpaperList.list || [];
     const feed = new Feed({
-      title: appInfo.appName,
-      description: appInfo.appDescription,
+      title: appInfo.name,
+      description: appInfo.description,
       language: 'zh-cn',
       dcExtension: true,
       id: environment.apps.wallpaper.url,
       link: environment.apps.wallpaper.url,
-      image: appInfo.appLogoUrl,
-      favicon: appInfo.appFaviconUrl,
-      copyright: `2014-${new Date().getFullYear()} ${appInfo.appDomain}`,
+      image: appInfo.logoUrl,
+      favicon: appInfo.faviconUrl,
+      copyright: `2014-${new Date().getFullYear()} ${appInfo.domain}`,
       updated: new Date(),
-      generator: appInfo.appDomain,
+      generator: appInfo.domain,
       feedLinks: {
         rss: `${environment.apps.wallpaper.url}/rss.xml`
       },
@@ -72,22 +72,22 @@ app.get('/rss.xml', async (req: Request, res: Response) => {
       let copyright: string;
       let title: string;
       if (lang === WallpaperLang.EN) {
-        copyright = wallpaper.wallpaperCopyrightEn || wallpaper.wallpaperCopyright;
-        title = wallpaper.wallpaperTitleEn || wallpaper.wallpaperTitle;
+        copyright = wallpaper.copyrightEn || wallpaper.copyright;
+        title = wallpaper.titleEn || wallpaper.title;
       } else {
-        copyright = wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn;
-        title = wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn;
+        copyright = wallpaper.copyright || wallpaper.copyrightEn;
+        title = wallpaper.title || wallpaper.titleEn;
       }
-      const langParam = !lang ? (!!wallpaper.wallpaperCopyright ? '' : `?lang=${WallpaperLang.EN}`) : `?lang=${lang}`;
+      const langParam = !lang ? (!!wallpaper.copyright ? '' : `?lang=${WallpaperLang.EN}`) : `?lang=${lang}`;
 
       feed.addItem({
         title: copyright,
-        id: wallpaper.wallpaperId,
-        link: environment.apps.wallpaper.url + '/detail/' + wallpaper.wallpaperId + langParam,
+        id: wallpaper.id,
+        link: environment.apps.wallpaper.url + '/detail/' + wallpaper.id + langParam,
         description: title,
-        creator: wallpaper.wallpaperCopyrightAuthor,
-        date: new Date(wallpaper.wallpaperDate),
-        image: wallpaper.wallpaperUrl
+        creator: wallpaper.copyrightAuthor,
+        date: new Date(wallpaper.bingDate),
+        image: wallpaper.url
       });
     });
 
@@ -128,20 +128,20 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
       }
     ];
     const wallpapersCn: SitemapItemLoose[] = sitemap.wallpapers
-      .filter((item) => !!item.wallpaperTitle)
+      .filter((item) => !!item.title)
       .map((item) => ({
-        url: `${environment.apps.wallpaper.url}/detail/${item.wallpaperId}`,
+        url: `${environment.apps.wallpaper.url}/detail/${item.id}`,
         changefreq: EnumChangefreq.ALWAYS,
         priority: 1,
-        lastmod: new Date(item.wallpaperModified).toString()
+        lastmod: new Date(item.updatedAt).toString()
       }));
     const wallpapersEn: SitemapItemLoose[] = sitemap.wallpapers
-      .filter((item) => !!item.wallpaperTitleEn)
+      .filter((item) => !!item.titleEn)
       .map((item) => ({
-        url: `${environment.apps.wallpaper.url}/detail/${item.wallpaperId}?lang=en`,
+        url: `${environment.apps.wallpaper.url}/detail/${item.id}?lang=en`,
         changefreq: EnumChangefreq.ALWAYS,
         priority: 1,
-        lastmod: new Date(item.wallpaperModified).toString()
+        lastmod: new Date(item.updatedAt).toString()
       }));
     const wallpaperArchivesByMonth: SitemapItemLoose[] = sitemap.wallpaperArchives.map((item) => ({
       url: `${environment.apps.wallpaper.url}/archive/${item.dateValue}`,

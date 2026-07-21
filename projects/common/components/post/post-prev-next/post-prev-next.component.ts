@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DestroyService, UserAgentService } from 'common/core';
-import { PostType } from 'common/enums';
-import { PostEntity } from 'common/interfaces';
+import { ContentType } from 'common/enums';
+import { PostModel } from 'common/interfaces';
 import { PostService } from 'common/services';
 import { skipWhile, takeUntil } from 'rxjs';
 
@@ -15,8 +15,8 @@ import { skipWhile, takeUntil } from 'rxjs';
 export class PostPrevNextComponent implements OnInit {
   isMobile = false;
   isChanged = false;
-  prevPost?: PostEntity;
-  nextPost?: PostEntity;
+  prevPost?: PostModel;
+  nextPost?: PostModel;
 
   private postId = '';
   private isLoaded = false;
@@ -48,8 +48,8 @@ export class PostPrevNextComponent implements OnInit {
   private getPostsOfPrevAndNext(): void {
     this.postService
       .getPostsOfPrevAndNext({
-        postId: this.postId,
-        postType: PostType.POST
+        id: this.postId,
+        contentType: ContentType.POST
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {

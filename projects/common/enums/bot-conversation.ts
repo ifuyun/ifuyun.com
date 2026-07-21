@@ -1,10 +1,10 @@
 export enum ConversationStatus {
-  NORMAL = 'normal',
-  TRASH = 'trash'
+  NORMAL = 1,
+  TRASHED = 2
 }
 
 export enum BotMessageShareStatus {
-  NORMAL = 'normal',
-  CANCELLED = 'cancelled',
-  TRASH = 'trash'
+  NORMAL = 1,
+  TRASHED = 2,
+  CANCELLED = 28
 }

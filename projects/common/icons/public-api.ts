@@ -3,6 +3,7 @@ export * from './icon-chat-square.component';
 export * from './icon-chat-square-dots.component';
 export * from './icon-check-lg.component';
 export * from './icon-copy.component';
+export * from './icon-deep-thinking.component';
 export * from './icon-download.component';
 export * from './icon-fullscreen.component';
 export * from './icon-fullscreen-exit.component';

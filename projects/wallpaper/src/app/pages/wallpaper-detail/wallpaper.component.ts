@@ -23,9 +23,9 @@ import {
   ResponseCode,
   UserAgentService
 } from 'common/core';
-import { CommentObjectType, FavoriteType, VoteType, VoteValue, WallpaperLang } from 'common/enums';
+import { CommentTargetType, FavoriteType, VoteType, VoteValue, WallpaperLang } from 'common/enums';
 import { IconCalendarDateComponent, IconDownloadComponent, IconShareFillComponent } from 'common/icons';
-import { TenantAppModel, Wallpaper } from 'common/interfaces';
+import { TenantAppVo, Wallpaper } from 'common/interfaces';
 import { NumberViewPipe, SafeHtmlPipe } from 'common/pipes';
 import {
   CommentService,
@@ -68,7 +68,7 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   styleUrl: './wallpaper.component.less'
 })
 export class WallpaperComponent implements OnInit {
-  readonly commentType = CommentObjectType.WALLPAPER;
+  readonly commentType = CommentTargetType.WALLPAPER;
 
   isMobile = false;
   domains!: AppDomainConfig;
@@ -96,7 +96,7 @@ export class WallpaperComponent implements OnInit {
   protected pageIndex = 'wallpaper-detail';
 
   private isSignIn = false;
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private wallpaperData!: Wallpaper;
   private isChanged = false;
@@ -144,13 +144,13 @@ export class WallpaperComponent implements OnInit {
         this.appInfo = appInfo;
         this.options = options;
 
-        const wid = p.get('wid')?.trim() || '';
-        if (!wid) {
+        const id = p.get('id')?.trim() || '';
+        if (!id) {
           this.commonService.redirectToNotFound();
           return;
         }
-        this.isChanged = this.wallpaperId !== wid;
-        this.wallpaperId = wid;
+        this.isChanged = this.wallpaperId !== id;
+        this.wallpaperId = id;
 
         this.closeShareQrcode();
 
@@ -161,16 +161,16 @@ export class WallpaperComponent implements OnInit {
         if (this.isChanged) {
           this.getWallpaper();
           this.wallpaperService.updateActiveWallpaperId(this.wallpaperId);
-          this.commentService.updateObjectId(this.wallpaperId);
+          this.commentService.updateTargetId(this.wallpaperId);
         } else if (this.isLangChanged) {
           this.updateWallpaper(this.wallpaperData);
         }
       });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      this.isSignIn = !!user.userId;
+      this.isSignIn = !!user.id;
 
       if (this.platform.isBrowser) {
-        this.shareUrl = this.commonService.getShareURL(user.userId);
+        this.shareUrl = this.commonService.getShareURL(user.id);
       }
     });
   }
@@ -179,7 +179,7 @@ export class WallpaperComponent implements OnInit {
     if (this.wallpaper) {
       this.imageService.preview([
         {
-          src: this.wallpaper.wallpaperUrl
+          src: this.wallpaper.url
         }
       ]);
     }
@@ -187,7 +187,7 @@ export class WallpaperComponent implements OnInit {
 
   download(isUhd = false) {
     if (!this.isSignIn) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
     this.downloading = true;
@@ -207,12 +207,12 @@ export class WallpaperComponent implements OnInit {
       return;
     }
     if (!this.isSignIn) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
     this.voteService
       .saveVote({
-        objectId: this.wallpaperId,
+        targetId: this.wallpaperId,
         value: VoteValue.LIKE,
         type: VoteType.WALLPAPER
       })
@@ -223,7 +223,7 @@ export class WallpaperComponent implements OnInit {
         if (res.code === ResponseCode.SUCCESS) {
           this.message.success(Message.VOTE_SUCCESS);
           this.wallpaper.isVoted = true;
-          this.wallpaper.wallpaperLikes = res.data.likes;
+          this.wallpaper.wallpaperStat.likeCount = res.data.likes;
         }
       });
   }
@@ -243,7 +243,7 @@ export class WallpaperComponent implements OnInit {
       return;
     }
     if (!this.isSignIn) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
     this.favoriteLoading = true;
@@ -268,8 +268,8 @@ export class WallpaperComponent implements OnInit {
     this.shareVisible = false;
   }
 
-  showLoginModal() {
-    this.commonService.updateLoginModalVisible({
+  showSigninModal() {
+    this.commonService.updateSigninModalVisible({
       visible: true,
       closable: true
     });
@@ -301,35 +301,35 @@ export class WallpaperComponent implements OnInit {
     if (this.lang === WallpaperLang.EN) {
       hasTranslation = this.wallpaper.isCn;
 
-      this.wallpaper.wallpaperTitle = this.wallpaper.wallpaperTitleEn;
-      this.wallpaper.wallpaperCopyright = this.wallpaper.wallpaperCopyrightEn;
-      this.wallpaper.wallpaperStoryTitle = this.wallpaper.wallpaperStoryTitleEn;
-      this.wallpaper.wallpaperStory = this.wallpaper.wallpaperStoryEn;
-      this.wallpaper.wallpaperFact = this.wallpaper.wallpaperFactEn;
-      this.wallpaper.wallpaperLocation = this.wallpaper.wallpaperLocationEn;
+      this.wallpaper.title = this.wallpaper.titleEn;
+      this.wallpaper.copyright = this.wallpaper.copyrightEn;
+      this.wallpaper.storyTitle = this.wallpaper.storyTitleEn;
+      this.wallpaper.story = this.wallpaper.storyEn;
+      this.wallpaper.fact = this.wallpaper.factEn;
+      this.wallpaper.location = this.wallpaper.locationEn;
     } else {
       hasTranslation = this.wallpaper.isEn;
     }
     this.wallpaper.hasTranslation = hasTranslation;
-    this.wallpaper.wallpaperCopyrightAuthor = wallpaper.wallpaperCopyrightAuthor.replace(/^©\s*/i, '');
+    this.wallpaper.copyrightAuthor = wallpaper.copyrightAuthor.replace(/^©\s*/i, '');
 
     this.updatePageInfo();
     this.updateBreadcrumbs();
   }
 
   private updatePageInfo() {
-    const titles: string[] = [this.wallpaper.wallpaperCopyright, '高清壁纸', this.appInfo.appName];
+    const titles: string[] = [this.wallpaper.copyright, '高清壁纸', this.appInfo.name];
     let description = '';
     const fullStop = this.lang === WallpaperLang.EN ? '.' : '。';
     const comma = this.lang === WallpaperLang.EN ? ', ' : '，';
-    const locationStr = this.wallpaper.wallpaperLocation ? comma + this.wallpaper.wallpaperLocation : '';
+    const locationStr = this.wallpaper.location ? comma + this.wallpaper.location : '';
 
-    description += `${this.wallpaper.wallpaperCopyright}${locationStr}`;
+    description += `${this.wallpaper.copyright}${locationStr}`;
     description += description.endsWith(fullStop) ? '' : fullStop;
     if (this.lang === WallpaperLang.EN) {
       description += ' ';
     }
-    const wallpaperDesc = truncateString(cleanHtmlTag(this.wallpaper.wallpaperStory), 140);
+    const wallpaperDesc = truncateString(cleanHtmlTag(this.wallpaper.story), 140);
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
@@ -350,8 +350,8 @@ export class WallpaperComponent implements OnInit {
         isHeader: false
       },
       {
-        label: this.wallpaper.wallpaperCopyright,
-        tooltip: this.wallpaper.wallpaperCopyright,
+        label: this.wallpaper.copyright,
+        tooltip: this.wallpaper.copyright,
         url: '.',
         domain: 'wallpaper',
         param: this.lang === WallpaperLang.EN ? { lang: WallpaperLang.EN } : {},

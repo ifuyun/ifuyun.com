@@ -1,30 +1,24 @@
-import { UserLlmStatus } from 'common/enums';
+import { UserAiStatus, UserStatus } from 'common/enums';
 
-export interface UserEntity {
-  userId?: string;
-  userNickname: string;
-  userEmail?: string;
-  userPassword?: string;
-  userCreated?: number;
-  userStatus?: string;
+export interface UserDto {
+  id?: string;
+  nickname: string;
+  email?: string;
+  password?: string;
+  createdAt?: number;
+  status?: UserStatus;
   appId: string;
 }
 
-export interface UserModel extends UserEntity {
-  userName?: string;
-  userLink?: string;
-  userEmailHash?: string;
-  userAvatar?: string;
-  userLlmStatus: UserLlmStatus;
-  userLlmModels: string[];
-  userLlmExpiresAt: number;
-  userLlmLimit: number;
+export interface UserModel extends UserDto {
+  name?: string;
+  emailHash?: string;
+  avatarUrl?: string;
+  aiStatus: UserAiStatus;
+  aiModels: string[];
+  aiExpiresAt: number;
+  aiLimit: number;
   isAdmin?: boolean;
-  meta?: Record<string, string>;
+  metadata?: Record<string, string>;
   permissions: string[];
-}
-
-export interface Guest {
-  name: string;
-  email: string;
 }

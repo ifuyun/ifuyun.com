@@ -17,7 +17,7 @@ export const routes: Routes = [
       { path: 'archive/:year', component: WallpaperListComponent },
       { path: 'archive/:year/:month', component: WallpaperListComponent },
       { path: 'archive', component: WallpaperArchiveComponent },
-      { path: 'detail/:wid', component: WallpaperComponent }
+      { path: 'detail/:id', component: WallpaperComponent }
     ]
   },
   {

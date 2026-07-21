@@ -37,13 +37,13 @@ export class GameItemComponent {
   private emptyCover = '';
 
   get gameCover() {
-    return this.game.game.gameCover || this.emptyCover;
+    return this.game.coverUrl || this.emptyCover;
   }
 
   get gameExcerpt() {
-    const category = this.game.categories[0]?.taxonomyName;
+    const category = this.game.categories[0]?.category.name;
 
-    return this.game.game.gameExcerpt || `${category ? category + '游戏' : ''}“${this.game.game.gameTitle}”在线玩。`;
+    return this.game.summary || `${category ? category + '游戏' : ''}“${this.game.title}”在线玩。`;
   }
 
   constructor(

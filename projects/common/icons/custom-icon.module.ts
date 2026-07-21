@@ -4,6 +4,7 @@ import { IconChatSquareDotsComponent } from './icon-chat-square-dots.component';
 import { IconChatSquareComponent } from './icon-chat-square.component';
 import { IconCheckLgComponent } from './icon-check-lg.component';
 import { IconCopyComponent } from './icon-copy.component';
+import { IconDeepThinkingComponent } from './icon-deep-thinking.component';
 import { IconDownloadComponent } from './icon-download.component';
 import { IconFullscreenExitComponent } from './icon-fullscreen-exit.component';
 import { IconFullscreenComponent } from './icon-fullscreen.component';
@@ -23,6 +24,7 @@ const icons = [
   IconChatSquareDotsComponent,
   IconCheckLgComponent,
   IconCopyComponent,
+  IconDeepThinkingComponent,
   IconDownloadComponent,
   IconFullscreenComponent,
   IconFullscreenExitComponent,

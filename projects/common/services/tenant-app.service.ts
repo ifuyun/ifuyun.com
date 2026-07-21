@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService, ApiUrl, AppConfigService } from 'common/core';
-import { TenantAppModel } from 'common/interfaces';
+import { TenantAppVo } from 'common/interfaces';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
@@ -8,22 +8,21 @@ import { map, tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class TenantAppService {
-  private appInfo: BehaviorSubject<TenantAppModel> = new BehaviorSubject<TenantAppModel>(<TenantAppModel>{});
-  public appInfo$: Observable<TenantAppModel> = this.appInfo.asObservable();
+  private appInfo: BehaviorSubject<TenantAppVo> = new BehaviorSubject<TenantAppVo>(<TenantAppVo>{});
+  public appInfo$: Observable<TenantAppVo> = this.appInfo.asObservable();
 
   constructor(
     private readonly apiService: ApiService,
     private readonly appConfigService: AppConfigService
   ) {}
 
-  getAppInfo(): Observable<TenantAppModel> {
+  getAppInfo(): Observable<TenantAppVo> {
     return this.apiService.httpGet(ApiUrl.TENANT_APP, { appId: this.appConfigService.appId }).pipe(
-      map((res) => <TenantAppModel>(res?.data || {})),
-      map((app): TenantAppModel => {
+      map((res) => <TenantAppVo>(res?.data || {})),
+      map((app): TenantAppVo => {
         return {
           ...app,
-          keywords: (app.appKeywords || '').split(','),
-          adminEmail: (app.appAdminEmail || '').split(',')
+          keywordList: (app.keywords || '').split(',')
         };
       }),
       tap((app) => this.appInfo.next(app))

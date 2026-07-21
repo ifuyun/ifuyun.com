@@ -5,13 +5,13 @@ import { CommonService } from 'common/services';
 import { shuffle } from 'lodash';
 import { map, Observable } from 'rxjs';
 import {
-  JigsawCompleteEntity,
+  JigsawCompleteDto,
   JigsawLog,
   JigsawPiece,
   JigsawPiecePath,
-  JigsawProgressEntity,
+  JigsawProgressDto,
   JigsawRankParam,
-  JigsawStartEntity
+  JigsawStartDto
 } from './jigsaw.interface';
 
 @Injectable({
@@ -441,7 +441,7 @@ export class JigsawService {
     return { x, y };
   }
 
-  async startJigsaw(payload: JigsawStartEntity): Promise<Observable<{ logId: string }>> {
+  async startJigsaw(payload: JigsawStartDto): Promise<Observable<{ logId: string }>> {
     const faId = this.cookieService.get(COOKIE_KEY_UV_ID);
     const param = this.commonService.serializeParams(payload);
     const sign = await this.commonService.generateHmacSignature(param, faId);
@@ -458,7 +458,7 @@ export class JigsawService {
       .pipe(map((res) => res.data || {}));
   }
 
-  async completeJigsaw(payload: JigsawCompleteEntity): Promise<Observable<HttpResponseEntity>> {
+  async completeJigsaw(payload: JigsawCompleteDto): Promise<Observable<HttpResponseEntity>> {
     const faId = this.cookieService.get(COOKIE_KEY_UV_ID);
     const param = this.commonService.serializeParams(payload);
     const sign = await this.commonService.generateHmacSignature(param, faId);
@@ -475,7 +475,7 @@ export class JigsawService {
       .pipe(map((res) => res || {}));
   }
 
-  async saveProgress(payload: JigsawProgressEntity): Promise<Observable<HttpResponseEntity>> {
+  async saveProgress(payload: JigsawProgressDto): Promise<Observable<HttpResponseEntity>> {
     const faId = this.cookieService.get(COOKIE_KEY_UV_ID);
     const param = this.commonService.serializeParams(payload);
     const sign = await this.commonService.generateHmacSignature(param, faId);
@@ -498,10 +498,10 @@ export class JigsawService {
         return (res?.data || []).map((item: Wallpaper) => {
           return {
             ...item,
-            wallpaperTitle: item.wallpaperTitle || item.wallpaperTitleEn,
-            wallpaperCopyright: item.wallpaperCopyright || item.wallpaperCopyrightEn,
-            isCn: !!item.wallpaperCopyright,
-            isEn: !!item.wallpaperCopyrightEn
+            title: item.title || item.titleEn,
+            copyright: item.copyright || item.copyrightEn,
+            isCn: !!item.copyright,
+            isEn: !!item.copyrightEn
           };
         });
       })

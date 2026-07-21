@@ -24,5 +24,6 @@ export enum Message {
   USER_CHAT_BOT_IS_CLOSED = '尚未开通 AI 助手，请联系管理员',
   USER_CHAT_BOT_IS_EXPIRED = 'AI 助手已到期，请联系管理员进行续期',
   USER_CHAT_MODEL_IS_DISABLED = '模型: $0 尚未开通，请联系管理员',
-  USER_CHAT_LIMIT_IS_UP = '今日聊天次数已用完，请明日再来'
+  USER_CHAT_LIMIT_IS_UP = '今日聊天次数已用完，请明日再来',
+  DEFAULT_CHAT_ERROR_MESSAGE = 'Error occurred while generating.'
 }

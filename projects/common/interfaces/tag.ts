@@ -1,8 +1,8 @@
 import { TagStatus } from 'common/enums';
 
-export interface TagEntity {
-  tagId: string;
-  tagName: string;
-  tagStatus: TagStatus;
+export interface TagVo {
+  id: string;
+  name: string;
+  status: TagStatus;
   objectCount?: number;
 }

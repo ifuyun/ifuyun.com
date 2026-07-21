@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { AppConfigService, DestroyService, OptionEntity, UrlService, UserAgentService } from 'common/core';
-import { LinkEntity } from 'common/interfaces';
+import { LinkVo } from 'common/interfaces';
 import { LinkService, OptionService } from 'common/services';
 import { isEmpty } from 'lodash';
 import { skipWhile, takeUntil } from 'rxjs';
@@ -9,7 +8,7 @@ import { SmartLinkComponent } from '../smart-link/smart-link.component';
 
 @Component({
   selector: 'lib-footer',
-  imports: [RouterLink, SmartLinkComponent],
+  imports: [SmartLinkComponent],
   providers: [DestroyService],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.less'
@@ -18,8 +17,8 @@ export class FooterComponent implements OnInit {
   isMobile = false;
   wwwHost = '';
   options: OptionEntity = {};
-  footerLinks: LinkEntity[] = [];
-  friendLinks: LinkEntity[] = [];
+  footerLinks: LinkVo[] = [];
+  friendLinks: LinkVo[] = [];
 
   get copyright() {
     if (this.options['copyright_notice']) {
@@ -82,7 +81,7 @@ export class FooterComponent implements OnInit {
         this.footerLinks = (res || []).map((item) => {
           return {
             ...item,
-            isExternal: /^https?:\/\//i.test(item.linkUrl)
+            isExternal: /^https?:\/\//i.test(item.url)
           };
         });
       });

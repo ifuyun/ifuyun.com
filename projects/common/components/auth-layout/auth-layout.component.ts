@@ -16,8 +16,6 @@ export class AuthLayoutComponent implements OnInit {
   isMobile = false;
   bgWallpaper?: Wallpaper;
 
-  private fromRouter = false;
-
   constructor(
     private readonly destroy$: DestroyService,
     private readonly route: ActivatedRoute,

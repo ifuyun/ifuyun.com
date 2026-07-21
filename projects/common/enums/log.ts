@@ -1,4 +1,4 @@
-export enum ActionObjectType {
+export enum LogTargetType {
   POST = 'post',
   WALLPAPER = 'wallpaper',
   GAME = 'game',
@@ -12,7 +12,7 @@ export enum ActionObjectType {
   ADS = 'ads'
 }
 
-export enum ActionType {
+export enum LogActionType {
   // post
   COPY_CODE = 'copy_code',
   // widget

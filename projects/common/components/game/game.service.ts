@@ -61,9 +61,9 @@ export class GameService {
     return this.apiService.httpGet(ApiUrl.GAME_RELATED, param).pipe(map((res) => res?.data || []));
   }
 
-  getGameById(gameId: string, ref?: string): Observable<Game> {
+  getGameById(id: string, ref?: string): Observable<Game> {
     const payload: Record<string, any> = {
-      gameId,
+      id,
       appId: this.appConfigService.appId
     };
     if (ref?.trim()) {
@@ -72,21 +72,21 @@ export class GameService {
     return this.apiService.httpGet(ApiUrl.GAME, payload).pipe(map((res) => res?.data));
   }
 
-  getGameROM(gameId: string): Observable<Blob> {
+  getGameROM(id: string): Observable<Blob> {
     return this.apiService.httpGetFile(
       ApiUrl.GAME_ROM,
       {
-        gameId,
+        id,
         appId: this.appConfigService.appId
       },
       true
     );
   }
 
-  getGamesOfPrevAndNext(gameId: string): Observable<{ prevGame: GameEntity; nextGame: GameEntity }> {
+  getGamesOfPrevAndNext(id: string): Observable<{ prevGame: GameEntity; nextGame: GameEntity }> {
     return this.apiService
       .httpGet(ApiUrl.GAME_PREV_AND_NEXT, {
-        gameId
+        id
       })
       .pipe(map((res) => res?.data || {}));
   }
@@ -95,20 +95,20 @@ export class GameService {
     return this.apiService.httpGet(ApiUrl.GAME_CHECK_PLAY, {}, true).pipe(map((res) => res || {}));
   }
 
-  getGameDownloadUrl(gameId: string): Observable<string> {
+  getGameDownloadUrl(id: string): Observable<string> {
     return this.apiService
       .httpGet(
         ApiUrl.GAME_DOWNLOAD_URL,
         {
-          gameId
+          id
         },
         true
       )
       .pipe(map((res) => res?.data || ''));
   }
 
-  updateActiveGameId(gameId: string) {
-    this.activeGameId.next(gameId);
+  updateActiveGameId(id: string) {
+    this.activeGameId.next(id);
   }
 
   updateActiveRomURL(romURL: string) {

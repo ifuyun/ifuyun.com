@@ -8,13 +8,13 @@ import {
   BreadcrumbService,
   CustomError,
   DestroyService,
-  LoginResponse,
+  SigninResponse,
   MetaService,
   OptionEntity,
   PlatformService,
   ResponseCode
 } from 'common/core';
-import { TenantAppModel } from 'common/interfaces';
+import { TenantAppVo } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService } from 'common/services';
 import { format } from 'common/utils';
 import { isEmpty } from 'lodash';
@@ -29,9 +29,9 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   styleUrl: './login-callback.component.less'
 })
 export class LoginCallbackComponent implements OnInit {
-  protected pageIndex = 'auth-login';
+  protected pageIndex = 'auth-signin';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private source = '';
   private authCode = '';
@@ -93,7 +93,7 @@ export class LoginCallbackComponent implements OnInit {
         } catch (e) {}
 
         if (this.platform.isBrowser) {
-          this.login();
+          this.signin();
         }
       });
   }
@@ -102,10 +102,10 @@ export class LoginCallbackComponent implements OnInit {
     this.commonService.updatePageIndex(this.pageIndex);
   }
 
-  private login() {
+  private signin() {
     if (this.source === 'weibo' && this.errorCode === '21330') {
       // cancel
-      this.router.navigate(['/user/login'], {
+      this.router.navigate(['/user/signin'], {
         replaceUrl: true,
         queryParams: {
           ref: this.ref ? encodeURIComponent(this.ref) : null
@@ -115,7 +115,7 @@ export class LoginCallbackComponent implements OnInit {
     }
     if (this.source === 'github' && this.errorCode === 'access_denied') {
       // cancel
-      this.router.navigate(['/user/login'], {
+      this.router.navigate(['/user/signin'], {
         replaceUrl: true,
         queryParams: {
           ref: this.ref ? encodeURIComponent(this.ref) : null
@@ -125,14 +125,14 @@ export class LoginCallbackComponent implements OnInit {
     }
 
     this.authService
-      .thirdLogin(this.authCode, this.source)
+      .oauthSignin(this.authCode, this.source)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        const authInfo: LoginResponse = res.data || {};
-        if (authInfo.token?.accessToken) {
-          // 不能用 router.navigate 跳转，否则会出现状态问题，并且会重复执行 login() 两次
-          const urlParam = format(ADMIN_URL_PARAM, authInfo.token.accessToken, this.appConfigService.appId);
-          location.replace(this.appInfo.appAdminUrl + '?' + urlParam);
+        const authInfo: SigninResponse = res.data || {};
+        if (authInfo.token?.token) {
+          // 不能用 router.navigate 跳转，否则会出现状态问题，并且会重复执行 signin() 两次
+          const urlParam = format(ADMIN_URL_PARAM, authInfo.token.token, this.appConfigService.appId);
+          location.replace(this.appInfo.adminUrl + '?' + urlParam);
         } else if (res.code === ResponseCode.USER_UNVERIFIED) {
           const user = authInfo.user;
           if (user?.userId) {
@@ -152,10 +152,10 @@ export class LoginCallbackComponent implements OnInit {
 
   private updatePageInfo() {
     this.metaService.updateHTMLMeta({
-      title: ['登录', this.appInfo.appName].join(' - '),
-      description: this.appInfo.appDescription,
+      title: ['登录', this.appInfo.name].join(' - '),
+      description: this.appInfo.description,
       author: this.options['site_author'],
-      keywords: this.appInfo.appKeywords
+      keywords: this.appInfo.keywords
     });
   }
 

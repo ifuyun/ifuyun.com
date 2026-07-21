@@ -18,7 +18,7 @@ import {
   UserModel
 } from 'common/core';
 import { UserStatus } from 'common/enums';
-import { TenantAppModel } from 'common/interfaces';
+import { TenantAppVo } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService, UserService } from 'common/services';
 import { format } from 'common/utils';
 import { isEmpty } from 'lodash';
@@ -43,7 +43,7 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
 
   protected pageIndex = 'auth-signup';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private userId = '';
   private sendTimer!: number;
@@ -115,9 +115,9 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
       .subscribe((res) => {
         this.confirmLoading = false;
 
-        if (res.token?.accessToken) {
-          const urlParam = format(ADMIN_URL_PARAM, res.token.accessToken, this.appConfigService.appId);
-          window.location.href = this.appInfo.appAdminUrl + '?' + urlParam;
+        if (res.token?.token) {
+          const urlParam = format(ADMIN_URL_PARAM, res.token.token, this.appConfigService.appId);
+          window.location.href = this.appInfo.adminUrl + '?' + urlParam;
         }
       });
   }
@@ -126,7 +126,7 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
     this.startCountdown();
     this.authService
       .sendCode({
-        userId: this.userId
+        id: this.userId
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -147,9 +147,9 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
       .subscribe((res) => {
         this.user = res;
 
-        if (res.userStatus === UserStatus.NORMAL) {
+        if (res.status === UserStatus.NORMAL) {
           this.message.info('账号已验证，无需重复验证');
-          this.router.navigate(['/user/login'], {
+          this.router.navigate(['/user/signin'], {
             relativeTo: this.route
           });
         }
@@ -168,10 +168,10 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
 
   private updatePageInfo() {
     this.metaService.updateHTMLMeta({
-      title: ['注册验证', this.appInfo.appName].join(' - '),
-      description: this.appInfo.appDescription,
+      title: ['注册验证', this.appInfo.name].join(' - '),
+      description: this.appInfo.description,
       author: this.options['site_author'],
-      keywords: this.appInfo.appKeywords
+      keywords: this.appInfo.keywords
     });
   }
 

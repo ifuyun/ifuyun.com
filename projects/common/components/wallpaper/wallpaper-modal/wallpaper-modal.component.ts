@@ -54,7 +54,7 @@ export class WallpaperModalComponent implements OnChanges {
 
   gotoDetail() {
     this.closeModal();
-    this.commonService.smartNavigate('/detail/' + this.activeWallpaper.wallpaperId, this.domains['wallpaper'].url, {
+    this.commonService.smartNavigate('/detail/' + this.activeWallpaper.id, this.domains['wallpaper'].url, {
       queryParams: {
         lang: this.activeWallpaper.isCn ? null : 'en',
         ref: 'toolbox'
@@ -63,7 +63,7 @@ export class WallpaperModalComponent implements OnChanges {
   }
 
   gotoSearch() {
-    window.open(this.activeWallpaper.wallpaperCopyrightLink);
+    window.open(this.activeWallpaper.copyrightUrl);
   }
 
   gotoWallpaper() {
@@ -86,14 +86,14 @@ export class WallpaperModalComponent implements OnChanges {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.wallpapers = res.map((item) => {
-          const loc = item.wallpaperLocation ? '，' + item.wallpaperLocation : ', ' + item.wallpaperLocationEn;
-          const description = item.wallpaperCopyright + loc + ' (' + item.wallpaperCopyrightAuthor + ')';
-          const enLink = item.wallpaperCopyrightLinkEn ? item.wallpaperCopyrightLinkEn + '&ensearch=1' : '';
+          const loc = item.location ? '，' + item.location : ', ' + item.locationEn;
+          const description = item.copyright + loc + ' (' + item.copyrightAuthor + ')';
+          const enLink = item.copyrightUrlEn ? item.copyrightUrlEn + '&ensearch=1' : '';
           return {
             ...item,
-            wallpaperTitle: item.wallpaperTitle || item.wallpaperTitleEn,
-            wallpaperCopyrightLink: `https://cn.bing.com${item.wallpaperCopyrightLink || enLink}`,
-            wallpaperDescription: description
+            title: item.title || item.titleEn,
+            copyrightUrl: `https://cn.bing.com${item.copyrightUrl || enLink}`,
+            description: description
           };
         });
         this.activeIndex = 0;

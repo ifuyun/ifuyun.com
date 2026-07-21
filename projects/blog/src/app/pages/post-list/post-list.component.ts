@@ -10,7 +10,7 @@ import {
   PaginationService,
   UserAgentService
 } from 'common/core';
-import { Post, PostQueryParam, TenantAppModel } from 'common/interfaces';
+import { PostQueryParam, PostVo, TenantAppVo } from 'common/interfaces';
 import { CommonService, OptionService, PostService, TenantAppService } from 'common/services';
 import { isEmpty, uniq } from 'lodash';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
@@ -28,11 +28,11 @@ export class PostListComponent implements OnInit {
   page = 1;
   pageSize = 10;
   total = 0;
-  posts: Post[] = [];
+  posts: PostVo[] = [];
 
   protected pageIndex = 'post-list';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private lastParam = '';
   private category = '';
@@ -168,7 +168,7 @@ export class PostListComponent implements OnInit {
   }
 
   private updatePageInfo(breadcrumbData: BreadcrumbEntity[]) {
-    const titles: string[] = ['博客', this.appInfo.appName];
+    const titles: string[] = ['博客', this.appInfo.name];
     const keywords: string[] = (this.options['post_keywords'] || '').split(',');
     let description = '';
 

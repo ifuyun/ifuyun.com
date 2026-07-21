@@ -1,12 +1,13 @@
 export enum BookType {
   BOOK = 'book',
   MAGAZINE = 'magazine',
-  PERIODICAL = 'periodical',
   NEWSPAPER = 'newspaper',
+  JOURNAL = 'journal',
+  PERIODICAL = 'periodical',
   OTHER = 'other'
 }
 
 export enum BookStatus {
-  NORMAL = 'normal',
-  TRASH = 'trash'
+  NORMAL = 1,
+  TRASHED = 2
 }

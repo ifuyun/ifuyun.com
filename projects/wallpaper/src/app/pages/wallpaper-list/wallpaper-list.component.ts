@@ -17,7 +17,7 @@ import {
   UserAgentService
 } from 'common/core';
 import { ListMode, WallpaperLang } from 'common/enums';
-import { TenantAppModel, Wallpaper, WallpaperQueryParam } from 'common/interfaces';
+import { TenantAppVo, Wallpaper, WallpaperQueryParam } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService, WallpaperService } from 'common/services';
 import { isEmpty, uniq } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -60,7 +60,7 @@ export class WallpaperListComponent implements OnInit {
 
   protected pageIndex = 'wallpaper-list';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private lastParam = '';
   private year = '';
@@ -196,9 +196,9 @@ export class WallpaperListComponent implements OnInit {
         this.wallpapers = (res.list || []).map((item) => {
           return {
             ...item,
-            wallpaperCopyright: isEn ? item.wallpaperCopyrightEn : item.wallpaperCopyright,
-            wallpaperLocation: isEn ? item.wallpaperLocationEn : item.wallpaperLocation,
-            wallpaperStory: isEn ? item.wallpaperStoryEn : item.wallpaperStory
+            copyright: isEn ? item.copyrightEn : item.copyright,
+            location: isEn ? item.locationEn : item.location,
+            story: isEn ? item.storyEn : item.story
           };
         });
 
@@ -217,7 +217,7 @@ export class WallpaperListComponent implements OnInit {
 
   private updatePageInfo() {
     let description = '';
-    const titles = ['高清壁纸', this.appInfo.appName];
+    const titles = ['高清壁纸', this.appInfo.name];
     const keywords = (this.options['wallpaper_keywords'] || '').split(',');
 
     if (this.year) {

@@ -8,9 +8,9 @@ import {
   PageIndexInfo,
   ResponseCode
 } from 'common/core';
-import { ActionObjectType, ActionType } from 'common/enums';
+import { LogTargetType, LogActionType } from 'common/enums';
 import { IconCalendarDateComponent } from 'common/icons';
-import { TenantAppModel } from 'common/interfaces';
+import { TenantAppVo } from 'common/interfaces';
 import { CommonService, LogService, TenantAppService, UserService } from 'common/services';
 import { format } from 'common/utils';
 import { isEmpty } from 'lodash';
@@ -34,7 +34,7 @@ export class MSiderComponent implements OnInit {
   isSignIn = false;
   domains!: AppDomainConfig;
   indexInfo?: PageIndexInfo;
-  appInfo?: TenantAppModel;
+  appInfo?: TenantAppVo;
 
   private adminUrl = '';
 
@@ -63,7 +63,7 @@ export class MSiderComponent implements OnInit {
         this.appInfo = appInfo;
 
         const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), this.appConfigService.appId);
-        this.adminUrl = this.appInfo.appAdminUrl + '?' + urlParam;
+        this.adminUrl = this.appInfo.adminUrl + '?' + urlParam;
       });
     this.commonService.siderVisible$.subscribe((visible) => {
       this.siderVisible = visible;
@@ -72,7 +72,7 @@ export class MSiderComponent implements OnInit {
       this.indexInfo = this.commonService.getPageIndexInfo(page);
     });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      this.isSignIn = !!user.userId;
+      this.isSignIn = !!user.id;
     });
   }
 
@@ -94,8 +94,8 @@ export class MSiderComponent implements OnInit {
 
     this.logService
       .logAction({
-        action: ActionType.SHOW_WECHAT_CARD,
-        objectType: ActionObjectType.SIDER
+        action: LogActionType.SHOW_WECHAT_CARD,
+        targetType: LogTargetType.SIDER
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe();
@@ -105,9 +105,9 @@ export class MSiderComponent implements OnInit {
     window.open(this.adminUrl);
   }
 
-  logout() {
+  signout() {
     this.authService
-      .logout()
+      .signout()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res.code === ResponseCode.SUCCESS) {

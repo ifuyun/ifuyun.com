@@ -1,5 +1,5 @@
 import { DatePipe, NgTemplateOutlet } from '@angular/common';
-import { Component, DOCUMENT, Inject, Input, OnInit } from '@angular/core';
+import { Component, DOCUMENT, Inject, Input, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import {
@@ -10,9 +10,9 @@ import {
   ResponseCode,
   UserAgentService
 } from 'common/core';
-import { CommentObjectType, VoteType, VoteValue } from 'common/enums';
+import { CommentTargetType, VoteType, VoteValue } from 'common/enums';
 import { IconChatSquareComponent } from 'common/icons';
-import { Comment, CommentModel, TenantAppModel } from 'common/interfaces';
+import { Comment, CommentModel, TenantAppVo } from 'common/interfaces';
 import { SafeHtmlPipe } from 'common/pipes';
 import {
   CommentService,
@@ -52,13 +52,15 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   styleUrl: './comment.component.less'
 })
 export class CommentComponent extends BaseComponent implements OnInit {
-  @Input() objectType: CommentObjectType = CommentObjectType.POST;
+  @Input() targetType: CommentTargetType = CommentTargetType.POST;
   @Input() enableAI = false;
 
   readonly maxContentLength = 400;
 
   isMobile = false;
   isSignIn = false;
+  readonly page = signal(1);
+  readonly pageSize = signal(50);
   comments: Comment[] = [];
   commentForm!: FormGroup;
   replyForm!: FormGroup;
@@ -67,9 +69,9 @@ export class CommentComponent extends BaseComponent implements OnInit {
   commentVoteLoading: Record<string, boolean> = {};
   saveLoading = false;
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
-  private objectId = '';
+  private targetId = '';
   private commentParentId = '';
   private commentTopId?: string = '';
   private commentFormConfig = {
@@ -80,7 +82,7 @@ export class CommentComponent extends BaseComponent implements OnInit {
   private get avatarType() {
     const avatarType = this.options['avatar_default_type'];
     if (!avatarType || avatarType === 'logo') {
-      return this.appInfo.appFaviconUrl;
+      return this.appInfo.faviconUrl;
     }
     return avatarType;
   }
@@ -118,23 +120,23 @@ export class CommentComponent extends BaseComponent implements OnInit {
         this.appInfo = appInfo;
         this.options = options;
       });
-    this.commentService.objectId$.pipe(takeUntil(this.destroy$)).subscribe((objectId) => {
-      this.objectId = objectId;
+    this.commentService.targetId$.pipe(takeUntil(this.destroy$)).subscribe((targetId) => {
+      this.targetId = targetId;
 
       this.resetCommentForm(this.commentForm);
       this.resetReplyStatus();
-      if (this.objectId) {
+      if (this.targetId) {
         this.getComments();
       }
     });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      this.isSignIn = !!user.userId;
+      this.isSignIn = !!user.id;
     });
   }
 
   saveComment(form: FormGroup) {
     if (!this.isSignIn) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
     const { value, valid } = this.validateForm(form);
@@ -147,11 +149,11 @@ export class CommentComponent extends BaseComponent implements OnInit {
     this.saveLoading = true;
     this.commentService
       .saveComment({
-        objectId: this.objectId,
-        objectType: this.objectType,
-        commentParent: this.commentParentId,
-        commentTop: this.commentTopId,
-        commentContent: value.content
+        targetId: this.targetId,
+        targetType: this.targetType,
+        parentId: this.commentParentId,
+        topId: this.commentTopId,
+        content: value.content
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -173,29 +175,29 @@ export class CommentComponent extends BaseComponent implements OnInit {
 
   vote(comment: CommentModel, like: boolean) {
     if (!this.isSignIn) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
-    if (this.commentVoteLoading[comment.commentId]) {
+    if (this.commentVoteLoading[comment.id]) {
       return;
     }
     if (comment.liked || comment.disliked) {
       return;
     }
-    this.commentVoteLoading[comment.commentId] = true;
+    this.commentVoteLoading[comment.id] = true;
     this.voteService
       .saveVote({
-        objectId: comment.commentId,
+        targetId: comment.id,
         value: like ? VoteValue.LIKE : VoteValue.DISLIKE,
         type: VoteType.COMMENT
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.commentVoteLoading[comment.commentId] = false;
+        this.commentVoteLoading[comment.id] = false;
 
         if (res.code === ResponseCode.SUCCESS) {
-          comment.commentLikes = res.data.likes;
-          comment.commentDislikes = res.data.dislikes;
+          comment.likes = res.data.likes;
+          comment.dislikes = res.data.dislikes;
           comment.liked = like;
           comment.disliked = !like;
         }
@@ -206,14 +208,16 @@ export class CommentComponent extends BaseComponent implements OnInit {
     this.resetReplyVisible();
     this.resetCommentForm(this.replyForm);
 
-    this.commentParentId = comment.commentId;
-    this.commentTopId = comment.commentTop;
-    this.replyVisibleMap[comment.commentId] = true;
+    this.commentParentId = comment.id;
+    this.commentTopId = comment.topId;
+    this.replyVisibleMap[comment.id] = true;
     this.replyMode = true;
   }
 
   cancelReply() {
     this.resetReplyVisible();
+    this.commentParentId = '';
+    this.commentTopId = '';
     this.replyMode = false;
   }
 
@@ -229,8 +233,8 @@ export class CommentComponent extends BaseComponent implements OnInit {
     }
   }
 
-  showLoginModal() {
-    this.commonService.updateLoginModalVisible({
+  showSigninModal() {
+    this.commonService.updateSigninModalVisible({
       visible: true,
       closable: true
     });
@@ -238,10 +242,15 @@ export class CommentComponent extends BaseComponent implements OnInit {
 
   private getComments(scroll = false) {
     this.commentService
-      .getCommentsByObjectId(this.objectId, this.objectType)
+      .getCommentsByTargetId({
+        targetId: this.targetId,
+        targetType: this.targetType,
+        page: this.page(),
+        size: this.pageSize()
+      })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.comments = this.commentService.transformComments(res.list || [], this.threadDepth, this.avatarType);
+        this.comments = this.commentService.buildCommentTree(res.list || [], this.threadDepth, this.avatarType);
 
         if (scroll) {
           this.scrollToComments();

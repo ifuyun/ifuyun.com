@@ -16,14 +16,14 @@
           <nz-icon nzType="loading"/>
         </div>
       } @else {
-        <div class="w-photo" [style.background-image]="'url(' + (activeWallpaper.wallpaperUrl || '') + ')'"></div>
+        <div class="w-photo" [style.background-image]="'url(' + (activeWallpaper.url || '') + ')'"></div>
         <div class="w-close">
           <nz-icon nzType="close" (click)="closeModal()"/>
         </div>
         <div class="w-content">
           <div>
-            <h2 class="w-image-title">{{ activeWallpaper.wallpaperTitle }}</h2>
-            <div class="w-image-desc">{{ activeWallpaper.wallpaperDescription }}</div>
+            <h2 class="w-image-title">{{ activeWallpaper.title }}</h2>
+            <div class="w-image-desc">{{ activeWallpaper.description }}</div>
           </div>
           <div class="w-actions">
             <nz-icon nzType="info" (click)="gotoDetail()" title="壁纸详情"/>

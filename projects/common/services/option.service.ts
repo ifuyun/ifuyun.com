@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiService, ApiUrl, AppConfigService, OptionEntity, OptionModel } from 'common/core';
+import { ApiService, ApiUrl, AppConfigService, OptionEntity } from 'common/core';
 import { Carousel } from 'common/interfaces';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 
@@ -26,15 +26,6 @@ export class OptionService {
           this.options.next(options);
         })
       );
-  }
-
-  getOptionByKey(key: string): Observable<OptionModel> {
-    return this.apiService
-      .httpGet(ApiUrl.OPTION, {
-        key,
-        appId: this.appConfigService.appId
-      })
-      .pipe(map((res) => res?.data || {}));
   }
 
   getCarousels(): Observable<Carousel[]> {

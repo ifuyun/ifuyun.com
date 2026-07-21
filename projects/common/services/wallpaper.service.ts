@@ -1,13 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  ApiService,
-  ApiUrl,
-  AppConfigService,
-  ArchiveData,
-  ArchiveDataMap,
-  ArchiveList,
-  ResultList
-} from 'common/core';
+import { ApiService, ApiUrl, AppConfigService, ArchiveData, ResultList } from 'common/core';
 import {
   HotWallpaper,
   PrevAndNextWallpapers,
@@ -82,10 +74,10 @@ export class WallpaperService {
           return (res?.data || []).map((item: HotWallpaper) => {
             return {
               ...item,
-              wallpaperTitle: item.wallpaperTitleCn || item.wallpaperTitleEn,
-              wallpaperCopyright: item.wallpaperCopyrightCn || item.wallpaperCopyrightEn,
-              isCn: !!item.wallpaperCopyrightCn,
-              isEn: !!item.wallpaperCopyrightEn
+              title: item.titleCn || item.titleEn,
+              copyright: item.copyrightCn || item.copyrightEn,
+              isCn: !!item.copyrightCn,
+              isEn: !!item.copyrightEn
             };
           });
         })
@@ -107,10 +99,10 @@ export class WallpaperService {
         return (res?.data || []).map((item: Wallpaper) => {
           return {
             ...item,
-            wallpaperTitle: item.wallpaperTitle || item.wallpaperTitleEn,
-            wallpaperCopyright: item.wallpaperCopyright || item.wallpaperCopyrightEn,
-            isCn: !!item.wallpaperCopyright,
-            isEn: !!item.wallpaperCopyrightEn
+            title: item.title || item.titleEn,
+            copyright: item.copyright || item.copyrightEn,
+            isCn: !!item.copyright,
+            isEn: !!item.copyrightEn
           };
         });
       })
@@ -133,39 +125,39 @@ export class WallpaperService {
       .pipe(map((res) => res?.data?.archives || []));
   }
 
-  getWallpaperById(wallpaperId: string, jigsaw = false): Observable<Wallpaper> {
+  getWallpaperById(id: string, jigsaw = false): Observable<Wallpaper> {
     return this.apiService
       .httpGet(ApiUrl.WALLPAPER, {
-        wallpaperId,
+        id,
         jigsaw: jigsaw ? 1 : 0,
         appId: this.appConfigService.appId
       })
       .pipe(map((res) => res?.data));
   }
 
-  getWallpapersOfPrevAndNext(wallpaperId: string): Observable<PrevAndNextWallpapers> {
+  getWallpapersOfPrevAndNext(id: string): Observable<PrevAndNextWallpapers> {
     return this.apiService
       .httpGet(ApiUrl.WALLPAPER_PREV_AND_NEXT, {
-        wallpaperId,
+        id,
         appId: this.appConfigService.appId
       })
       .pipe(map((res) => res?.data || {}));
   }
 
-  updateActiveWallpaperId(wallpaperId: string) {
-    this.activeWallpaperId.next(wallpaperId);
+  updateActiveWallpaperId(id: string) {
+    this.activeWallpaperId.next(id);
   }
 
   updateActiveWallpaper(wallpaper: Wallpaper) {
     this.activeWallpaper.next(wallpaper);
   }
 
-  getWallpaperDownloadUrl(wallpaperId: string, uhd: 0 | 1): Observable<string> {
+  getWallpaperDownloadUrl(id: string, uhd: 0 | 1): Observable<string> {
     return this.apiService
       .httpGet(
         ApiUrl.WALLPAPER_DOWNLOAD_URL,
         {
-          wallpaperId,
+          id,
           uhd
         },
         true
@@ -176,44 +168,24 @@ export class WallpaperService {
   transformWallpaper(wallpaper: Wallpaper): Wallpaper {
     return {
       ...wallpaper,
-      wallpaperTitle: wallpaper.wallpaperTitle || wallpaper.wallpaperTitleEn,
-      wallpaperTitleEn: wallpaper.wallpaperTitleEn || wallpaper.wallpaperTitle,
-      wallpaperCopyright: wallpaper.wallpaperCopyright || wallpaper.wallpaperCopyrightEn,
-      wallpaperCopyrightEn: wallpaper.wallpaperCopyrightEn || wallpaper.wallpaperCopyright,
-      wallpaperLocation: wallpaper.wallpaperLocation || wallpaper.wallpaperLocationEn || '未知',
-      wallpaperLocationEn: wallpaper.wallpaperLocationEn || wallpaper.wallpaperLocation || 'Unknown',
-      wallpaperStoryTitle: wallpaper.wallpaperStoryTitle || wallpaper.wallpaperStoryTitleEn,
-      wallpaperStoryTitleEn: wallpaper.wallpaperStoryTitleEn || wallpaper.wallpaperStoryTitle,
-      wallpaperStory: wallpaper.wallpaperStory || wallpaper.wallpaperStoryEn,
-      wallpaperStoryEn: wallpaper.wallpaperStoryEn || wallpaper.wallpaperStory,
-      wallpaperFact: wallpaper.wallpaperFact || wallpaper.wallpaperFactEn,
-      wallpaperFactEn: wallpaper.wallpaperFactEn || wallpaper.wallpaperFact,
-      isCn: !!wallpaper.wallpaperCopyright,
-      isEn: !!wallpaper.wallpaperCopyrightEn
+      title: wallpaper.title || wallpaper.titleEn,
+      titleEn: wallpaper.titleEn || wallpaper.title,
+      copyright: wallpaper.copyright || wallpaper.copyrightEn,
+      copyrightEn: wallpaper.copyrightEn || wallpaper.copyright,
+      location: wallpaper.location || wallpaper.locationEn || '未知',
+      locationEn: wallpaper.locationEn || wallpaper.location || 'Unknown',
+      storyTitle: wallpaper.storyTitle || wallpaper.storyTitleEn,
+      storyTitleEn: wallpaper.storyTitleEn || wallpaper.storyTitle,
+      story: wallpaper.story || wallpaper.storyEn,
+      storyEn: wallpaper.storyEn || wallpaper.story,
+      fact: wallpaper.fact || wallpaper.factEn,
+      factEn: wallpaper.factEn || wallpaper.fact,
+      isCn: !!wallpaper.copyright,
+      isEn: !!wallpaper.copyrightEn
     };
   }
 
-  getWallpaperLink(wallpaperId: string, isEn: boolean) {
-    return `${this.appConfigService.apps['wallpaper'].url}/detail/${wallpaperId}${isEn ? '?lang=en' : ''}`;
-  }
-
-  transformArchives(archiveData: ArchiveData[]): ArchiveList {
-    const dateList: ArchiveDataMap = {};
-    (archiveData || []).forEach((item) => {
-      const dates = item.dateValue.split('/');
-      const year = dates[0];
-      item.dateLabel = `${Number(dates[1])}月`;
-      dateList[year] = dateList[year] || {};
-      dateList[year].list = dateList[year].list || [];
-      dateList[year].list.push(item);
-      dateList[year].countByYear = dateList[year].countByYear || 0;
-      dateList[year].countByYear += item.count || 0;
-    });
-    const yearList = Object.keys(dateList).sort((a, b) => (a < b ? 1 : -1));
-
-    return {
-      dateList,
-      yearList
-    };
+  getWallpaperLink(id: string, isEn: boolean) {
+    return `${this.appConfigService.apps['wallpaper'].url}/detail/${id}${isEn ? '?lang=en' : ''}`;
   }
 }

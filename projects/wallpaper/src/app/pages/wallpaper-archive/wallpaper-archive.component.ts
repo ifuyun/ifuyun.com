@@ -11,7 +11,7 @@ import {
   OptionEntity,
   UserAgentService
 } from 'common/core';
-import { TenantAppModel } from 'common/interfaces';
+import { TenantAppVo } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService, WallpaperService } from 'common/services';
 import { isEmpty } from 'lodash';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
@@ -30,7 +30,7 @@ export class WallpaperArchiveComponent implements OnInit {
 
   protected pageIndex = 'wallpaper-archive';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
 
   constructor(
@@ -73,17 +73,17 @@ export class WallpaperArchiveComponent implements OnInit {
       .getWallpaperArchives(true, 0)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        const { dateList, yearList } = this.wallpaperService.transformArchives(res);
+        const { dateList, yearList } = this.commonService.buildArchiveList(res);
         this.dateList = dateList;
         this.yearList = yearList;
       });
   }
 
   private updatePageInfo() {
-    const titles = ['归档', '壁纸', this.appInfo.appName];
+    const titles = ['归档', '壁纸', this.appInfo.name];
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
-      description: `${this.appInfo.appName}壁纸归档。${this.options['wallpaper_description']}`,
+      description: `${this.appInfo.name}壁纸归档。${this.options['wallpaper_description']}`,
       keywords: this.options['wallpaper_keywords'],
       author: this.options['site_author']
     };

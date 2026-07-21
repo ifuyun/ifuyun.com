@@ -12,7 +12,7 @@ import {
   ResponseCode,
   UserAgentService
 } from 'common/core';
-import { TenantAppModel } from 'common/interfaces';
+import { TenantAppVo } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService } from 'common/services';
 import { isEmpty, uniq } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -37,7 +37,7 @@ export class Md5Component implements OnInit {
 
   protected pageIndex = 'tool-md5';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private contentChange$ = new BehaviorSubject('');
 
@@ -121,8 +121,8 @@ export class Md5Component implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = ['MD5 加密', '工具', this.appInfo.appName];
-    const description = `${this.appInfo.appName} ${MD5_PAGE_DESCRIPTION}`;
+    const titles = ['MD5 加密', '工具', this.appInfo.name];
+    const description = `${this.appInfo.name} ${MD5_PAGE_DESCRIPTION}`;
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,

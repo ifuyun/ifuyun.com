@@ -5,6 +5,10 @@ export enum MessageRole {
 }
 
 export enum MessageStatus {
-  NORMAL = 'normal',
-  TRASH = 'trash'
+  NORMAL = 1,
+  TRASHED = 2,
+  INTERRUPTED = 50,
+  ABORTED = 51
 }
+
+export type ReasoningEffort = 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | null;

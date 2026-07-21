@@ -2,26 +2,26 @@
   @if (comments.length > 0) {
     <div class="comment-list">
       <ng-template #commentsTpl let-comments>
-        @for (comment of comments; track comment.commentId) {
+        @for (comment of comments; track comment.id) {
           @if (!isMobile) {
             <div class="comment-item p-comment-item"
-                 id="{{ comment.commentHash }}"
-                 [style.padding-left]="(comment.level - 1) * 50 + 'px'">
+                 id="{{ comment.idHash }}"
+                 [style.padding-left]="(comment.depth - 1) * 50 + 'px'">
               <div class="meta">
                 <div class="info">
                   <div class="avatar">
-                    <img src="{{ comment.authorAvatar }}" alt="{{ comment.commentAuthor }}"/>
+                    <img src="{{ comment.userAvatar }}" alt="{{ comment.userName }}"/>
                   </div>
                   <div class="author">
                     <span class="from">
-                      <span class="name">{{ comment.commentAuthor }}</span>
+                      <span class="name">{{ comment.userName }}</span>
                       <span class="location">from {{ comment.userLocation || 'Mars' }}</span>
                     </span>
-                    <span class="time">{{ comment.commentCreated | date:'yyyy-MM-dd HH:mm' }}</span>
+                    <span class="time">{{ comment.createdAt | date:'yyyy-MM-dd HH:mm' }}</span>
                   </div>
                 </div>
                 <div class="hash">
-                  <a [routerLink]="['.']" [fragment]="comment.commentHash">#{{ comment.commentHash }}</a>
+                  <a [routerLink]="['.']" [fragment]="comment.idHash">#{{ comment.idHash }}</a>
                 </div>
               </div>
               <div class="content">
@@ -29,34 +29,34 @@
                   <div class="parent">
                     <span class="text">回复</span>
                     <a class="author"
-                       [attr.data-hash]="comment.parent.commentHash"
-                       (click)="scrollToComment($event)">#{{ comment.parent.commentHash }} &#64;{{ comment.parent.commentAuthor }}</a>
+                       [attr.data-hash]="comment.parent.idHash"
+                       (click)="scrollToComment($event)">#{{ comment.parent.idHash }} &#64;{{ comment.parent.userName }}</a>
                   </div>
                 }
-                <div [innerHTML]="comment.commentContent | safeHtml"></div>
+                <div [innerHTML]="comment.content | safeHtml"></div>
               </div>
               <div class="actions">
                 <a [class.voted]="comment.liked"
-                   [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
+                   [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.id]"
                    (click)="vote(comment, true)">
-                  @if (commentVoteLoading[comment.commentId]) {
+                  @if (commentVoteLoading[comment.id]) {
                     <nz-icon nzType="loading"/>
                   } @else {
                     <nz-icon nzType="like" [nzTheme]="comment.liked ? 'fill' : 'outline'"/>
                   }
-                  <span>{{ comment.commentLikes }}</span>
+                  <span>{{ comment.likes }}</span>
                 </a>
                 <a [class.voted]="comment.disliked"
-                   [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
+                   [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.id]"
                    (click)="vote(comment, false)">
-                  @if (commentVoteLoading[comment.commentId]) {
+                  @if (commentVoteLoading[comment.id]) {
                     <nz-icon nzType="loading"/>
                   } @else {
                     <nz-icon nzType="dislike" [nzTheme]="comment.disliked ? 'fill' : 'outline'"/>
                   }
-                  <span>{{ comment.commentDislikes }}</span>
+                  <span>{{ comment.dislikes }}</span>
                 </a>
-                @if (!replyVisibleMap[comment.commentId]) {
+                @if (!replyVisibleMap[comment.id]) {
                   <a (click)="reply(comment)"><fi-chat-square class="fi"/><span>回复</span></a>
                 } @else {
                   <a (click)="cancelReply()"><nz-icon nzType="close"/><span>取消</span></a>
@@ -65,14 +65,14 @@
             </div>
           } @else {
             <div class="comment-item m-comment-item"
-                 id="{{ comment.commentHash }}"
-                 [style.padding-left]="(comment.level - 1) * 32 + 'px'">
+                 id="{{ comment.idHash }}"
+                 [style.padding-left]="(comment.depth - 1) * 32 + 'px'">
               <div class="avatar">
-                <img src="{{ comment.authorAvatar }}" alt="{{ comment.commentAuthor }}"/>
+                <img src="{{ comment.userAvatar }}" alt="{{ comment.userName }}"/>
               </div>
               <div class="body">
                 <div class="from">
-                  <span class="name">{{ comment.commentAuthor }}</span>
+                  <span class="name">{{ comment.userName }}</span>
                   <span class="location">from {{ comment.userLocation || 'Mars' }}</span>
                 </div>
                 <div class="content">
@@ -80,36 +80,36 @@
                     <div class="parent">
                       <span class="text">回复</span>
                       <a class="author"
-                         [attr.data-hash]="comment.parent.commentHash"
-                         (click)="scrollToComment($event)">#{{ comment.parent.commentHash }} &#64;{{ comment.parent.commentAuthor }}</a>
+                         [attr.data-hash]="comment.parent.idHash"
+                         (click)="scrollToComment($event)">#{{ comment.parent.idHash }} &#64;{{ comment.parent.userName }}</a>
                     </div>
                   }
-                  <div [innerHTML]="comment.commentContent | safeHtml"></div>
+                  <div [innerHTML]="comment.content | safeHtml"></div>
                 </div>
                 <div class="meta">
-                  <span class="time">{{ comment.commentCreated | date:'yy-MM-dd HH:mm' }}</span>
+                  <span class="time">{{ comment.createdAt | date:'yy-MM-dd HH:mm' }}</span>
                   <div class="actions">
                     <a [class.voted]="comment.liked"
-                       [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
+                       [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.id]"
                        (click)="vote(comment, true)">
-                      @if (commentVoteLoading[comment.commentId]) {
+                      @if (commentVoteLoading[comment.id]) {
                         <nz-icon nzType="loading"/>
                       } @else {
                         <nz-icon nzType="like" [nzTheme]="comment.liked ? 'fill' : 'outline'"/>
                       }
-                      <span>{{ comment.commentLikes }}</span>
+                      <span>{{ comment.likes }}</span>
                     </a>
                     <a [class.voted]="comment.disliked"
-                       [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.commentId]"
+                       [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.id]"
                        (click)="vote(comment, false)">
-                      @if (commentVoteLoading[comment.commentId]) {
+                      @if (commentVoteLoading[comment.id]) {
                         <nz-icon nzType="loading"/>
                       } @else {
                         <nz-icon nzType="dislike" [nzTheme]="comment.disliked ? 'fill' : 'outline'"/>
                       }
-                      <span>{{ comment.commentDislikes }}</span>
+                      <span>{{ comment.dislikes }}</span>
                     </a>
-                    @if (!replyVisibleMap[comment.commentId]) {
+                    @if (!replyVisibleMap[comment.id]) {
                       <a (click)="reply(comment)"><fi-chat-square/></a>
                     } @else {
                       <a (click)="cancelReply()"><nz-icon nzType="close"/></a>
@@ -119,8 +119,8 @@
               </div>
             </div>
           }
-          @if (replyVisibleMap[comment.commentId]) {
-            <div [style.padding-left]="(comment.level - 1) * (isMobile ? 32 : 50) + 'px'">
+          @if (replyVisibleMap[comment.id]) {
+            <div [style.padding-left]="(comment.depth - 1) * (isMobile ? 32 : 50) + 'px'">
               <ng-container *ngTemplateOutlet="commentFormTpl; context: { $implicit: replyForm }"/>
             </div>
           }
@@ -155,13 +155,13 @@
             </nz-form-control>
           </nz-form-item>
           @if (!isSignIn) {
-            <div class="comment-mask" (click)="showLoginModal()"></div>
+            <div class="comment-mask" (click)="showSigninModal()"></div>
           }
         </div>
         <div class="comment-actions">
           <div>
             @if (!isSignIn) {
-              <button nz-button type="button" nzType="default" (click)="showLoginModal()">登录</button>
+              <button nz-button type="button" nzType="default" (click)="showSigninModal()">登录</button>
             }
             <button nz-button type="submit" nzType="primary" [nzLoading]="saveLoading">我要评论</button>
           </div>

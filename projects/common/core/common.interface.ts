@@ -14,20 +14,6 @@ export interface PageIndexInfo {
   subPage: string;
 }
 
-export interface UserAgentInfo {
-  os: string;
-  osVersion: string;
-  architecture: string;
-  browser: string;
-  browserVersion: string;
-  engine: string;
-  engineVersion: string;
-  isMobile: boolean;
-  isDesktop: boolean;
-  isCrawler: boolean;
-  userAgent: string;
-}
-
 export interface ErrorState {
   code: number;
   message: string;
@@ -82,7 +68,7 @@ export interface IPInfo extends IPAddress {
   isp: string;
 }
 
-export interface LoginModalOptions {
+export interface SigninModalOptions {
   visible: boolean;
   closable: boolean;
 }

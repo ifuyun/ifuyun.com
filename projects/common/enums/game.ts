@@ -1,14 +1,14 @@
-export enum GameScope {
-  PUBLIC = 'public',
-  PRIVATE = 'private'
+export enum GameVisibility {
+  PUBLIC = 1,
+  PRIVATE = 2
 }
 
 export enum GameStatus {
-  NORMAL = 'normal',
-  TRASH = 'trash'
+  NORMAL = 1,
+  TRASHED = 2
 }
 
 export enum GameLogType {
-  DOWNLOAD = 'download',
-  PLAY = 'play'
+  PLAY = 'play',
+  DOWNLOAD = 'download'
 }

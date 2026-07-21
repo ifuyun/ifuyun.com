@@ -23,9 +23,9 @@ import {
   ResponseCode,
   UserAgentService
 } from 'common/core';
-import { CommentObjectType, FavoriteType, VoteType, VoteValue, WallpaperLang } from 'common/enums';
+import { CommentTargetType, FavoriteType, VoteType, VoteValue, WallpaperLang } from 'common/enums';
 import { IconCalendarDateComponent, IconShareFillComponent } from 'common/icons';
-import { TenantAppModel, Wallpaper } from 'common/interfaces';
+import { TenantAppVo, Wallpaper } from 'common/interfaces';
 import { NumberViewPipe } from 'common/pipes';
 import {
   CommentService,
@@ -68,7 +68,7 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   styleUrl: './wallpaper-jigsaw.component.less'
 })
 export class WallpaperJigsawComponent implements OnInit {
-  readonly commentType = CommentObjectType.WALLPAPER;
+  readonly commentType = CommentTargetType.WALLPAPER;
 
   isMobile = false;
   wallpaperId = '';
@@ -87,7 +87,7 @@ export class WallpaperJigsawComponent implements OnInit {
   protected pageIndex = 'jigsaw';
 
   private isSignIn = false;
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private wallpaperData!: Wallpaper;
   private isChanged = false;
@@ -135,13 +135,13 @@ export class WallpaperJigsawComponent implements OnInit {
         this.appInfo = appInfo;
         this.options = options;
 
-        const wid = p.get('wid')?.trim() || '';
-        if (!wid) {
+        const id = p.get('id')?.trim() || '';
+        if (!id) {
           this.commonService.redirectToNotFound();
           return;
         }
-        this.isChanged = this.wallpaperId !== wid;
-        this.wallpaperId = wid;
+        this.isChanged = this.wallpaperId !== id;
+        this.wallpaperId = id;
 
         this.closeShareQrcode();
 
@@ -152,16 +152,16 @@ export class WallpaperJigsawComponent implements OnInit {
         if (this.isChanged) {
           this.getWallpaper();
           this.wallpaperService.updateActiveWallpaperId(this.wallpaperId);
-          this.commentService.updateObjectId(this.wallpaperId);
+          this.commentService.updateTargetId(this.wallpaperId);
         } else if (this.isLangChanged) {
           this.updateWallpaper(this.wallpaperData);
         }
       });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      this.isSignIn = !!user.userId;
+      this.isSignIn = !!user.id;
 
       if (this.platform.isBrowser) {
-        this.shareUrl = this.commonService.getShareURL(user.userId);
+        this.shareUrl = this.commonService.getShareURL(user.id);
       }
     });
   }
@@ -170,7 +170,7 @@ export class WallpaperJigsawComponent implements OnInit {
     if (this.wallpaper) {
       this.imageService.preview([
         {
-          src: this.wallpaper.wallpaperUrl
+          src: this.wallpaper.url
         }
       ]);
     }
@@ -178,7 +178,7 @@ export class WallpaperJigsawComponent implements OnInit {
 
   download(isUhd = false) {
     if (!this.isSignIn && isUhd) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
     this.downloading = true;
@@ -198,12 +198,12 @@ export class WallpaperJigsawComponent implements OnInit {
       return;
     }
     if (!this.isSignIn) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
     this.voteService
       .saveVote({
-        objectId: this.wallpaperId,
+        targetId: this.wallpaperId,
         value: VoteValue.LIKE,
         type: VoteType.WALLPAPER
       })
@@ -214,7 +214,7 @@ export class WallpaperJigsawComponent implements OnInit {
         if (res.code === ResponseCode.SUCCESS) {
           this.message.success(Message.VOTE_SUCCESS);
           this.wallpaper.isVoted = true;
-          this.wallpaper.wallpaperLikes = res.data.likes;
+          this.wallpaper.wallpaperStat.likeCount = res.data.likes;
         }
       });
   }
@@ -234,7 +234,7 @@ export class WallpaperJigsawComponent implements OnInit {
       return;
     }
     if (!this.isSignIn) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
     this.favoriteLoading = true;
@@ -259,8 +259,8 @@ export class WallpaperJigsawComponent implements OnInit {
     this.shareVisible = false;
   }
 
-  showLoginModal() {
-    this.commonService.updateLoginModalVisible({
+  showSigninModal() {
+    this.commonService.updateSigninModalVisible({
       visible: true,
       closable: true
     });
@@ -287,9 +287,9 @@ export class WallpaperJigsawComponent implements OnInit {
   private updateWallpaper(wallpaper: Wallpaper): void {
     this.wallpaper = this.wallpaperService.transformWallpaper(wallpaper);
     if (this.lang === WallpaperLang.EN) {
-      this.wallpaper.wallpaperTitle = this.wallpaper.wallpaperTitleEn;
-      this.wallpaper.wallpaperCopyright = this.wallpaper.wallpaperCopyrightEn;
-      this.wallpaper.wallpaperLocation = this.wallpaper.wallpaperLocationEn;
+      this.wallpaper.title = this.wallpaper.titleEn;
+      this.wallpaper.copyright = this.wallpaper.copyrightEn;
+      this.wallpaper.location = this.wallpaper.locationEn;
     }
 
     this.wallpaperJigsawService.updateActiveJigsawWallpaper(this.wallpaper);
@@ -298,18 +298,18 @@ export class WallpaperJigsawComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles: string[] = [this.wallpaper.wallpaperCopyright, '壁纸拼图', this.appInfo.appName];
+    const titles: string[] = [this.wallpaper.copyright, '壁纸拼图', this.appInfo.name];
     let description = '';
     const fullStop = this.lang === WallpaperLang.EN ? '.' : '。';
     const comma = this.lang === WallpaperLang.EN ? ', ' : '，';
-    const locationStr = this.wallpaper.wallpaperLocation ? comma + this.wallpaper.wallpaperLocation : '';
+    const locationStr = this.wallpaper.location ? comma + this.wallpaper.location : '';
 
-    description += `${this.wallpaper.wallpaperCopyright}${locationStr}`;
+    description += `${this.wallpaper.copyright}${locationStr}`;
     description += description.endsWith(fullStop) ? '' : fullStop;
     if (this.lang === WallpaperLang.EN) {
       description += ' ';
     }
-    const wallpaperDesc = truncateString(cleanHtmlTag(this.wallpaper.wallpaperStory), 140);
+    const wallpaperDesc = truncateString(cleanHtmlTag(this.wallpaper.story), 140);
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
@@ -329,8 +329,8 @@ export class WallpaperJigsawComponent implements OnInit {
         isHeader: false
       },
       {
-        label: this.wallpaper.wallpaperCopyright,
-        tooltip: this.wallpaper.wallpaperCopyright,
+        label: this.wallpaper.copyright,
+        tooltip: this.wallpaper.copyright,
         url: '.',
         isHeader: true
       }

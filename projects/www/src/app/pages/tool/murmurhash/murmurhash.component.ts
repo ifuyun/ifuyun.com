@@ -16,7 +16,7 @@ import {
   OptionEntity,
   UserAgentService
 } from 'common/core';
-import { TenantAppModel } from 'common/interfaces';
+import { TenantAppVo } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService } from 'common/services';
 import { isEmpty, uniq } from 'lodash';
 import murmurhash from 'murmurhash';
@@ -43,7 +43,7 @@ export class MurmurhashComponent implements OnInit {
 
   protected pageIndex = 'tool-murmurhash';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private contentChange$ = new BehaviorSubject('');
 
@@ -128,8 +128,8 @@ export class MurmurhashComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = ['MurmurHash', '工具', this.appInfo.appName];
-    const description = `${this.appInfo.appName} ${MURMURHASH_PAGE_DESCRIPTION}`;
+    const titles = ['MurmurHash', '工具', this.appInfo.name];
+    const description = `${this.appInfo.name} ${MURMURHASH_PAGE_DESCRIPTION}`;
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,

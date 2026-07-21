@@ -17,7 +17,7 @@ import {
   ResponseCode,
   UserAgentService
 } from 'common/core';
-import { TenantAppModel } from 'common/interfaces';
+import { TenantAppVo } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService } from 'common/services';
 import { isEmpty, uniq } from 'lodash';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -42,7 +42,7 @@ export class Base64Component implements OnInit {
 
   protected pageIndex = 'tool-base64';
 
-  private appInfo!: TenantAppModel;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private contentChange$ = new BehaviorSubject('');
 
@@ -125,8 +125,8 @@ export class Base64Component implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = ['Base64 编解码', '工具', this.appInfo.appName];
-    const description = `${this.appInfo.appName} ${BASE64_PAGE_DESCRIPTION}`;
+    const titles = ['Base64 编解码', '工具', this.appInfo.name];
+    const description = `${this.appInfo.name} ${BASE64_PAGE_DESCRIPTION}`;
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,

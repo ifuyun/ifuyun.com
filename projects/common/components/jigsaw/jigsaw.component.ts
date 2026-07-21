@@ -126,7 +126,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get detailLink() {
     if (this.wallpaper) {
-      const url = this.domains['wallpaper'].url + '/detail/' + this.wallpaper.wallpaperId;
+      const url = this.domains['wallpaper'].url + '/detail/' + this.wallpaper.id;
       const param = this.wallpaper.isCn ? '' : '?lang=' + WallpaperLang.EN;
 
       return url + param;
@@ -139,7 +139,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get cacheKey() {
-    return 'jigsaw-' + (this.wallpaper?.wallpaperId || '');
+    return 'jigsaw-' + (this.wallpaper?.id || '');
   }
 
   get dateFormat() {
@@ -225,12 +225,12 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     this.initDifficulty();
 
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      this.userId = user.userId || '';
-      this.isSignIn = !!user.userId;
+      this.userId = user.id || '';
+      this.isSignIn = !!user.id;
     });
     this.wallpaperJigsawService.activeJigsawWallpaper$
       .pipe(
-        skipWhile((wallpaperId) => !wallpaperId),
+        skipWhile((id) => !id),
         takeUntil(this.destroy$)
       )
       .subscribe((wallpaper) => {
@@ -539,12 +539,12 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     if (!this.isSignIn && isUhd) {
-      this.showLoginModal();
+      this.showSigninModal();
       return;
     }
     this.downloading = true;
     this.wallpaperService
-      .getWallpaperDownloadUrl(this.wallpaper.wallpaperId, isUhd ? 1 : 0)
+      .getWallpaperDownloadUrl(this.wallpaper.id, isUhd ? 1 : 0)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.downloading = false;
@@ -554,8 +554,8 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  showLoginModal() {
-    this.commonService.updateLoginModalVisible({
+  showSigninModal() {
+    this.commonService.updateSigninModalVisible({
       visible: true,
       closable: true
     });
@@ -599,7 +599,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.src = this.wallpaper!.wallpaperUrl;
+    img.src = this.wallpaper!.url;
     img.onload = () => {
       this.originalImage = img;
 
@@ -1270,7 +1270,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   private saveStartLog() {
     this.jigsawService
       .startJigsaw({
-        wallpaperId: this.wallpaper?.wallpaperId || '',
+        jigsawId: this.wallpaper?.id || '',
         pieces: this.activeDifficulty.pieces,
         timestamp: Date.now()
       })
@@ -1361,7 +1361,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     this.rankingLoading = true;
     this.jigsawService
       .getRankings({
-        id: this.wallpaper?.wallpaperId || '',
+        id: this.wallpaper?.id || '',
         pieces: this.activeDifficulty.pieces
       })
       .pipe(takeUntil(this.destroy$))

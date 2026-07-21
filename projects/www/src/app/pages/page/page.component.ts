@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { PostComponent } from 'common/components';
-import { PostType } from 'common/enums';
+import { ContentType } from 'common/enums';
 
 @Component({
   selector: 'app-page',
   imports: [PostComponent],
-  template: `<lib-post [postType]="postType"></lib-post>`
+  template: `<lib-post [contentType]="contentType"></lib-post>`
 })
 export class PageComponent {
-  postType = PostType.PAGE;
+  contentType = ContentType.PAGE;
 }

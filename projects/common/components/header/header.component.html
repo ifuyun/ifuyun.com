@@ -1,43 +1,43 @@
 @if (!isMobile) {
   <header class="header-wrap">
     <div class="header">
-      <lib-a class="logo" [href]="domains['www'].url" [title]="appInfo?.appName">
-        <img [src]="faviconUrl" [alt]="appInfo?.appName"/><span>{{ appInfo?.appName }}</span>
+      <lib-a class="logo" [href]="domains['www'].url" [title]="appInfo?.name">
+        <img [src]="faviconUrl" [alt]="appInfo?.name"/><span>{{ appInfo?.name }}</span>
       </lib-a>
       <ul class="nav">
         <li [class.active]="indexInfo?.isHome">
-          <lib-a [href]="domains['www'].url" title="{{appInfo?.appName}}首页">首页</lib-a>
+          <lib-a [href]="domains['www'].url" title="{{appInfo?.name}}首页">首页</lib-a>
         </li>
         <li [class.active]="indexInfo?.isPost">
           <lib-a class="badge badge-ai" [href]="domains['blog'].url" title="博客">
             <span>博客</span>
-            @if (postTaxonomies.length > 0) {
+            @if (postCategories.length > 0) {
               <span class="nav-arrow"></span>
             }
           </lib-a>
-          @if (postTaxonomies.length > 0) {
+          @if (postCategories.length > 0) {
             <div class="sub-nav-wrap">
               <div class="sub-nav-list">
                 <ul>
-                  @for (taxonomy of postTaxonomies; track taxonomy.taxonomyId) {
+                  @for (category of postCategories; track category.id) {
                     <li>
                       <lib-a class="sub-nav-link"
-                             [href]="domains['blog'].url + '/category/' + taxonomy.taxonomySlug"
-                             [title]="taxonomy.taxonomyDescription">
-                        <span>{{ taxonomy.taxonomyName }}</span>
-                        @if (!taxonomy.isLeaf) {
+                             [href]="domains['blog'].url + '/category/' + category.slug"
+                             [title]="category.description">
+                        <span>{{ category.name }}</span>
+                        @if (!category.isLeaf) {
                           <span class="sub-nav-arrow"></span>
                         }
                       </lib-a>
-                      @if (!taxonomy.isLeaf) {
+                      @if (!category.isLeaf) {
                         <div class="child-nav-wrap">
                           <div class="child-nav-list">
                             <ul>
-                              @for (subTaxonomy of taxonomy.children; track subTaxonomy.taxonomyId) {
+                              @for (subCategory of category.children; track subCategory.id) {
                                 <li>
                                   <lib-a class="child-nav-link"
-                                         [href]="domains['blog'].url + '/category/' + subTaxonomy.taxonomySlug"
-                                         [title]="subTaxonomy.taxonomyDescription">{{ subTaxonomy.taxonomyName }}</lib-a>
+                                         [href]="domains['blog'].url + '/category/' + subCategory.slug"
+                                         [title]="subCategory.description">{{ subCategory.name }}</lib-a>
                                 </li>
                               }
                             </ul>
@@ -71,33 +71,33 @@
         <li [class.active]="indexInfo?.isGame">
           <lib-a [href]="domains['game'].url" title="游戏">
             <span>游戏</span>
-            @if (gameTaxonomies.length > 0) {
+            @if (gameCategories.length > 0) {
               <span class="nav-arrow"></span>
             }
           </lib-a>
-          @if (gameTaxonomies.length > 0) {
+          @if (gameCategories.length > 0) {
             <div class="sub-nav-wrap">
               <div class="sub-nav-list">
                 <ul>
-                  @for (taxonomy of gameTaxonomies; track taxonomy.taxonomyId) {
+                  @for (category of gameCategories; track category.id) {
                     <li>
                       <lib-a class="sub-nav-link"
-                             [href]="domains['game'].url + '/category/' + taxonomy.taxonomySlug"
-                             [title]="taxonomy.taxonomyDescription">
-                        <span>{{ taxonomy.taxonomyName }}</span>
-                        @if (!taxonomy.isLeaf) {
+                             [href]="domains['game'].url + '/category/' + category.slug"
+                             [title]="category.description">
+                        <span>{{ category.name }}</span>
+                        @if (!category.isLeaf) {
                           <span class="sub-nav-arrow"></span>
                         }
                       </lib-a>
-                      @if (!taxonomy.isLeaf) {
+                      @if (!category.isLeaf) {
                         <div class="child-nav-wrap">
                           <div class="child-nav-list">
                             <ul>
-                              @for (subTaxonomy of taxonomy.children; track subTaxonomy.taxonomyId) {
+                              @for (subCategory of category.children; track subCategory.id) {
                                 <li>
                                   <lib-a class="child-nav-link"
-                                         [href]="domains['game'].url + '/category/' + subTaxonomy.taxonomySlug"
-                                         [title]="subTaxonomy.taxonomyDescription">{{ subTaxonomy.taxonomyName }}</lib-a>
+                                         [href]="domains['game'].url + '/category/' + subCategory.slug"
+                                         [title]="subCategory.description">{{ subCategory.name }}</lib-a>
                                 </li>
                               }
                             </ul>
@@ -149,11 +149,11 @@
           </nz-input-search>
         </div>
         @if (!isSignIn) {
-          <a nz-button nzType="primary" [href]="domains['www'].url + '/user/login'">登录</a>
+          <a nz-button nzType="primary" [href]="domains['www'].url + '/user/signin'">登录</a>
         } @else {
           <div class="more-action-group">
             <div class="more-action-nav">
-              <nz-icon nzType="user"/><span>{{ user.userNickname }}</span><span class="nav-arrow"></span>
+              <nz-icon nzType="user"/><span>{{ user.nickname }}</span><span class="nav-arrow"></span>
             </div>
             <div class="more-action-list">
               <div class="sub-nav-list">
@@ -164,7 +164,7 @@
                     </a>
                   </li>
                   <li>
-                    <a class="sub-nav-link" (click)="logout()">
+                    <a class="sub-nav-link" (click)="signout()">
                       <nz-icon nzType="logout"/><span>退出登录</span>
                     </a>
                   </li>
@@ -182,8 +182,8 @@
       @if (!searchVisible) {
         <div class="m-header-body">
           <nz-icon nzType="menu" (click)="showSider()"/>
-          <lib-a class="m-logo" [href]="domains['www'].url" [title]="appInfo?.appName">
-            <img [src]="faviconUrl" [alt]="appInfo?.appName"/><span>{{ appInfo?.appName }}</span>
+          <lib-a class="m-logo" [href]="domains['www'].url" [title]="appInfo?.name">
+            <img [src]="faviconUrl" [alt]="appInfo?.name"/><span>{{ appInfo?.name }}</span>
           </lib-a>
           <nz-icon nzType="search" (click)="showSearch()"/>
         </div>

@@ -1,18 +1,17 @@
-import { BookStatus, BookType } from 'common/enums';
+import { BookType } from 'common/enums';
 
 export interface BookEntity {
-  bookId: string;
-  bookName: string;
-  bookAuthor?: string;
-  bookTranslator?: string;
-  bookPress?: string;
-  bookEdition?: string;
-  bookIsbn: string;
-  bookPostCode?: string;
-  bookPostCodeForeign?: string;
-  bookIssue?: string;
-  bookIssueTotal?: number;
-  bookPrice: number;
-  bookType: BookType;
-  bookStatus: BookStatus;
+  id: string;
+  name: string;
+  author: string;
+  translator: string;
+  press: string;
+  edition: string;
+  isbn: string;
+  postCode: string;
+  postCodeForeign: string;
+  issue: string;
+  issueTotal: number;
+  price?: number;
+  type: BookType;
 }

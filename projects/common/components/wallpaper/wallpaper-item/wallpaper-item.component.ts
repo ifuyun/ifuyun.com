@@ -40,8 +40,8 @@ export class WallpaperItemComponent implements OnInit {
     return domain + '/detail/';
   }
 
-  get wallpaperLocation() {
-    return this.wallpaper.isCn ? this.wallpaper.wallpaperLocation : this.wallpaper.wallpaperLocationEn;
+  get location() {
+    return this.wallpaper.isCn ? this.wallpaper.location : this.wallpaper.locationEn;
   }
 
   constructor(

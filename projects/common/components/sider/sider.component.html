@@ -4,10 +4,10 @@
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="fire"/><span>热门文章</span></span></h3>
         <ul class="hot-list">
-          @for (post of hotPosts; track post.postId; let i = $index) {
+          @for (post of hotPosts; track post.id; let i = $index) {
             <li>
               <span class="hot-num">{{ i + 1 }}</span>
-              <lib-a [href]="domains['blog'].url + post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</lib-a>
+              <lib-a [href]="domains['blog'].url + post.url" [title]="post.title">{{ post.title }}</lib-a>
             </li>
           }
         </ul>
@@ -31,7 +31,7 @@
               <span class="hot-num">{{ i + 1 }}</span>
               <lib-a [href]="domains['wallpaper'].url + '/detail/' + wallpaper.wallpaperId"
                      [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
-                     [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</lib-a>
+                     [title]="wallpaper.copyright">{{ wallpaper.copyright }}</lib-a>
             </li>
           }
         </ul>
@@ -49,11 +49,11 @@
         </h3>
         @if (hotJigsaws && hotJigsaws.length > 0) {
           <ul class="hot-list">
-            @for (jigsaw of hotJigsaws; track jigsaw.wallpaperId; let i = $index) {
+            @for (jigsaw of hotJigsaws; track jigsaw.id; let i = $index) {
               <li>
                 <span class="hot-num">{{ i + 1 }}</span>
-                <lib-a [href]="domains['jigsaw'].url + '/detail/' + jigsaw.wallpaperId"
-                       [title]="jigsaw.wallpaperCopyright">{{ jigsaw.wallpaperCopyright }}</lib-a>
+                <lib-a [href]="domains['jigsaw'].url + '/detail/' + jigsaw.id"
+                       [title]="jigsaw.copyright">{{ jigsaw.copyright }}</lib-a>
               </li>
             }
           </ul>
@@ -66,10 +66,10 @@
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="history"/><span>最近游戏</span></span></h3>
         <ul>
-          @for (game of recentGames; track game.gameId) {
+          @for (game of recentGames; track game.id) {
             <li>
-              <lib-a [href]="domains['game'].url + '/detail/' + game.gameId"
-                     [title]="game.gameTitle">{{ game.gameTitle }}</lib-a>
+              <lib-a [href]="domains['game'].url + '/detail/' + game.id"
+                     [title]="game.title">{{ game.title }}</lib-a>
             </li>
           }
         </ul>
@@ -79,11 +79,11 @@
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="fire"/><span>热门游戏</span></span></h3>
         <ul class="hot-list">
-          @for (game of hotGames; track game.gameId; let i = $index) {
+          @for (game of hotGames; track game.id; let i = $index) {
             <li>
               <span class="hot-num">{{ i + 1 }}</span>
-              <lib-a [href]="domains['game'].url + '/detail/' + game.gameId"
-                     [title]="game.gameTitle">{{ game.gameTitle }}</lib-a>
+              <lib-a [href]="domains['game'].url + '/detail/' + game.id"
+                     [title]="game.title">{{ game.title }}</lib-a>
             </li>
           }
         </ul>
@@ -141,9 +141,9 @@
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
         <ul>
-          @for (post of randomPosts; track post.postId) {
+          @for (post of randomPosts; track post.id) {
             <li>
-              <lib-a [href]="domains['blog'].url + post.postGuid" [title]="post.postTitle">{{ post.postTitle }}</lib-a>
+              <lib-a [href]="domains['blog'].url + post.url" [title]="post.title">{{ post.title }}</lib-a>
             </li>
           }
         </ul>
@@ -151,41 +151,36 @@
     }
     <!--壁纸页-->
     @if (randomWallpapers && randomWallpapers.length > 0) {
-      @if (indexInfo.isJigsaw) {
         <div class="widget">
           <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
           <ul>
-            @for (wallpaper of randomWallpapers; track wallpaper.wallpaperId) {
-              <li>
-                <lib-a [href]="domains['jigsaw'].url + '/detail/' + wallpaper.wallpaperId"
-                       [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</lib-a>
-              </li>
+            @if (indexInfo.isJigsaw) {
+              @for (wallpaper of randomWallpapers; track wallpaper.id) {
+                <li>
+                  <lib-a [href]="domains['jigsaw'].url + '/detail/' + wallpaper.id"
+                         [title]="wallpaper.copyright">{{ wallpaper.copyright }}</lib-a>
+                </li>
+              }
+            } @else {
+              @for (wallpaper of randomWallpapers; track wallpaper.id) {
+                <li>
+                  <lib-a [href]="domains['wallpaper'].url + '/detail/' + wallpaper.id"
+                         [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
+                         [title]="wallpaper.copyright">{{ wallpaper.copyright }}</lib-a>
+                </li>
+              }
             }
           </ul>
         </div>
-      } @else {
-        <div class="widget">
-          <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
-          <ul>
-            @for (wallpaper of randomWallpapers; track wallpaper.wallpaperId) {
-              <li>
-                <lib-a [href]="domains['wallpaper'].url + '/detail/' + wallpaper.wallpaperId"
-                       [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
-                       [title]="wallpaper.wallpaperCopyright">{{ wallpaper.wallpaperCopyright }}</lib-a>
-              </li>
-            }
-          </ul>
-        </div>
-      }
     }
     @if (randomGames && randomGames.length > 0) {
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
         <ul>
-          @for (game of randomGames; track game.gameId) {
+          @for (game of randomGames; track game.id) {
             <li>
-              <lib-a [href]="domains['game'].url + '/detail/' + game.gameId"
-                     [title]="game.gameTitle">{{ game.gameTitle }}</lib-a>
+              <lib-a [href]="domains['game'].url + '/detail/' + game.id"
+                     [title]="game.title">{{ game.title }}</lib-a>
             </li>
           }
         </ul>

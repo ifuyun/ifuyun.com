@@ -3,56 +3,56 @@
     <div class="post-item-body">
       <div class="post-item-content">
         <header>
-          @if (post.post.postSticky) {
+          @if (post.isPinned) {
             <span class="meta-tag meta-tag-sticky">置顶</span>
           }
-          @if (post.post.postOriginal === 1) {
+          @if (post.isOriginal === 1) {
             <span class="meta-tag meta-tag-original">原创</span>
           }
-          @if (post.post.postPayFlag) {
+          @if (post.isPaid) {
             <span class="meta-tag meta-tag-pay">付费</span>
           }
-          @if (post.post.postLoginFlag) {
+          @if (post.visibility === 3) {
             <span class="meta-tag meta-tag-vip">会员</span>
           }
           <h2>
-            <lib-a [href]="blogHost + post.post.postGuid"
-                   [title]="post.post.postTitle"
-                   rel="bookmark">{{ post.post.postTitle }}</lib-a>
+            <lib-a [href]="blogHost + post.url"
+                   [title]="post.title"
+                   rel="bookmark">{{ post.title }}</lib-a>
           </h2>
         </header>
         <div class="post-item-meta">
-          <div title="发布: {{ post.post.postDate | date:'yyyy-MM-dd' }}">
-            <fi-calendar-date class="fi"/><span>{{ post.post.postDate | date:'yyyy-MM-dd' }}</span>
+          <div title="发布: {{ post.publishedAt | date:'yyyy-MM-dd' }}">
+            <fi-calendar-date class="fi"/><span>{{ post.publishedAt | date:'yyyy-MM-dd' }}</span>
           </div>
-          <div class="auto-fit" title="作者: {{ post.post.postAuthor || post.post.owner.userNickname }}">
-            <nz-icon nzType="user"/><span>{{ post.post.postAuthor || post.post.owner.userNickname }}</span>
+          <div class="auto-fit" title="作者: {{ post.author || post.creator.nickname }}">
+            <nz-icon nzType="user"/><span>{{ post.author || post.creator.nickname }}</span>
           </div>
           <div>
-            <nz-icon nzType="eye"/><span>{{ post.post.postViews | numberView: 'K' }}</span>
+            <nz-icon nzType="eye"/><span>{{ post.postStat.viewCount | numberView: 'K' }}</span>
           </div>
-          @if (post.post.commentFlag !== 'closed') {
-            <lib-a [href]="blogHost + post.post.postGuid"
+          @if (post.commentStatus !== 2) {
+            <lib-a [href]="blogHost + post.url"
                    fragment="comments"
-                   title="《{{ post.post.postTitle }}》评论">
-              @if (post.post.postComments > 0) {
-                <fi-chat-square-dots class="fi"/><span>{{ post.post.postComments | numberView: 'K' }}</span>
+                   title="《{{ post.title }}》评论">
+              @if (post.postStat.commentCount > 0) {
+                <fi-chat-square-dots class="fi"/><span>{{ post.postStat.commentCount | numberView: 'K' }}</span>
               } @else {
                 <fi-chat-square class="fi"/><span>0</span>
               }
             </lib-a>
           }
         </div>
-        <div class="post-item-excerpt">
-          <span [innerHTML]="post.post.postExcerpt"></span>
+        <div class="post-item-summary">
+          <span [innerHTML]="post.summary"></span>
         </div>
       </div>
       <div class="post-item-cover">
-        <lib-a [href]="blogHost + post.post.postGuid" [title]="post.post.postTitle">
+        <lib-a [href]="blogHost + post.url" [title]="post.title">
           @if (index > 3) {
-            <span class="post-item-cover-img lazyload" [attr.data-bg]="post.post.cover"></span>
+            <span class="post-item-cover-img lazyload" [attr.data-bg]="post.coverUrl"></span>
           } @else {
-            <span class="post-item-cover-img" [style.background-image]="'url(' + post.post.cover + ')'"></span>
+            <span class="post-item-cover-img" [style.background-image]="'url(' + post.coverUrl + ')'"></span>
           }
           <span class="overlay"></span>
         </lib-a>
@@ -67,11 +67,11 @@
                 <nz-icon nzType="folder"/>
               </div>
               <ul>
-                @for (category of post.categories; track category.taxonomyId) {
+                @for (category of post.categories; track category.category.id) {
                   <li>
-                    <lib-a [href]="blogHost + '/category/' + category.taxonomySlug"
-                           title="{{ category.taxonomyName }}"
-                           rel="category">{{ category.taxonomyName }}</lib-a>
+                    <lib-a [href]="blogHost + '/category/' + category.category.slug"
+                           title="{{ category.category.name }}"
+                           rel="category">{{ category.category.name }}</lib-a>
                   </li>
                 }
               </ul>
@@ -85,11 +85,11 @@
                 <nz-icon nzType="tag"/>
               </div>
               <ul>
-                @for (tag of post.tags; track tag.tagId) {
+                @for (tag of post.tags; track tag.tag.id) {
                   <li>
-                    <lib-a [href]="blogHost + '/tag/' + tag.tagName"
-                           [title]="tag.tagName"
-                           rel="category">{{ tag.tagName }}</lib-a>
+                    <lib-a [href]="blogHost + '/tag/' + tag.tag.name"
+                           [title]="tag.tag.name"
+                           rel="category">{{ tag.tag.name }}</lib-a>
                   </li>
                 }
               </ul>
@@ -103,27 +103,27 @@
   <article class="m-post-item">
     <header>
       <h2>
-        @if (post.post.postSticky) {
+        @if (post.isPinned) {
           <span class="m-meta-tag meta-tag-sticky"><nz-icon nzType="vertical-align-top"/></span>
         }
-        @if (post.post.postPayFlag) {
+        @if (post.isPaid) {
           <span class="m-meta-tag meta-tag-pay"><nz-icon nzType="lock"/></span>
         }
-        @if (post.post.postLoginFlag) {
+        @if (post.visibility === 3) {
           <span class="m-meta-tag meta-tag-vip"><nz-icon nzType="user-add"/></span>
         }
-        <lib-a [href]="blogHost + post.post.postGuid"
-               [title]="post.post.postTitle"
-               rel="bookmark">{{ post.post.postTitle }}</lib-a>
+        <lib-a [href]="blogHost + post.url"
+               [title]="post.title"
+               rel="bookmark">{{ post.title }}</lib-a>
       </h2>
       <div class="m-post-item-stat">
-        <span><nz-icon nzType="eye"/><span>{{ post.post.postViews | numberView: 'K' }}</span></span>
-        @if (post.post.commentFlag !== 'closed') {
-          <lib-a [href]="blogHost + post.post.postGuid"
+        <span><nz-icon nzType="eye"/><span>{{ post.postStat.viewCount | numberView: 'K' }}</span></span>
+        @if (post.commentStatus !== 2) {
+          <lib-a [href]="blogHost + post.url"
                  fragment="comments"
-                 title="《{{ post.post.postTitle }}》评论">
-            @if (post.post.postComments > 0) {
-              <fi-chat-square-dots class="fi"/><span>{{ post.post.postComments | numberView: 'K' }}</span>
+                 title="《{{ post.title }}》评论">
+            @if (post.postStat.commentCount > 0) {
+              <fi-chat-square-dots class="fi"/><span>{{ post.postStat.commentCount | numberView: 'K' }}</span>
             } @else {
               <fi-chat-square class="fi"/><span>0</span>
             }
@@ -132,30 +132,30 @@
       </div>
     </header>
     <div class="m-post-item-meta">
-      <span title="发布: {{ post.post.postDate | date:'yyyy-MM-dd' }}">
-        <fi-calendar-date class="fi"/><span>{{ post.post.postDate | date:'yyyy-MM-dd' }}</span>
+      <span title="发布: {{ post.publishedAt | date:'yyyy-MM-dd' }}">
+        <fi-calendar-date class="fi"/><span>{{ post.publishedAt | date:'yyyy-MM-dd' }}</span>
       </span>
-      <span title="作者: {{ post.post.postAuthor || post.post.owner.userNickname }}">
-        <nz-icon nzType="user"/><span>{{ post.post.postAuthor || post.post.owner.userNickname }}</span>
+      <span title="作者: {{ post.author || post.creator.nickname }}">
+        <nz-icon nzType="user"/><span>{{ post.author || post.creator.nickname }}</span>
       </span>
-      @if (post.post.postOriginal === 1) {
-        <span title="{{ post.post.owner.userNickname }}原创"><fi-pencil class="fi"/><span>原创</span></span>
+      @if (post.isOriginal === 1) {
+        <span title="{{ post.creator.nickname }}原创"><fi-pencil class="fi"/><span>原创</span></span>
       }
     </div>
-    @if (post.post.cover) {
+    @if (post.coverUrl) {
       <div class="m-post-item-cover">
-        <lib-a [href]="blogHost + post.post.postGuid" [title]="post.post.postTitle">
+        <lib-a [href]="blogHost + post.url" [title]="post.title">
           @if (index > 3) {
-            <span class="m-post-item-cover-img lazyload" [attr.data-bg]="post.post.cover"></span>
+            <span class="m-post-item-cover-img lazyload" [attr.data-bg]="post.coverUrl"></span>
           } @else {
-            <span class="m-post-item-cover-img" [style.background-image]="'url(' + post.post.cover + ')'"></span>
+            <span class="m-post-item-cover-img" [style.background-image]="'url(' + post.coverUrl + ')'"></span>
           }
           <span class="overlay"></span>
         </lib-a>
       </div>
     }
-    <div class="m-post-item-excerpt">
-      <span [innerHTML]="post.post.postExcerpt"></span>
+    <div class="m-post-item-summary">
+      <span [innerHTML]="post.summary"></span>
     </div>
     @if (post.tags.length > 0) {
       <div class="post-item-tag m-post-item-tag">
@@ -164,11 +164,11 @@
             <nz-icon nzType="tag"/>
           </div>
           <ul>
-            @for (tag of post.tags; track tag.tagId) {
+            @for (tag of post.tags; track tag.tag.id) {
               <li>
-                <lib-a [href]="blogHost + '/tag/' + tag.tagName"
-                       [title]="tag.tagName"
-                       rel="category">{{ tag.tagName }}</lib-a>
+                <lib-a [href]="blogHost + '/tag/' + tag.tag.name"
+                       [title]="tag.tag.name"
+                       rel="category">{{ tag.tag.name }}</lib-a>
               </li>
             }
           </ul>

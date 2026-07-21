@@ -3,17 +3,17 @@
     <div class="post-more-prev">
       <div class="post-more-photo">
         @if (!isChanged) {
-          <div class="post-more-photo-content lazyload" [attr.data-bg]="prevPost.postCover"></div>
+          <div class="post-more-photo-content lazyload" [attr.data-bg]="prevPost.coverUrl"></div>
         } @else {
-          <div class="post-more-photo-content" [style.background-image]="'url(' + prevPost.postCover + ')'"></div>
+          <div class="post-more-photo-content" [style.background-image]="'url(' + prevPost.coverUrl + ')'"></div>
         }
         <div class="post-more-photo-overlay"></div>
       </div>
       <div class="post-more-content">
-        <div class="post-more-content-title">{{ prevPost.postTitle }}</div>
+        <div class="post-more-content-title">{{ prevPost.title }}</div>
         <div>上一篇</div>
       </div>
-      <a class="post-more-link" [routerLink]="prevPost.postGuid" [title]="prevPost.postTitle"></a>
+      <a class="post-more-link" [routerLink]="prevPost.url" [title]="prevPost.title"></a>
     </div>
   } @else {
     <div></div>
@@ -22,17 +22,17 @@
     <div class="post-more-next">
       <div class="post-more-photo">
         @if (!isChanged) {
-          <div class="post-more-photo-content lazyload" [attr.data-bg]="nextPost.postCover"></div>
+          <div class="post-more-photo-content lazyload" [attr.data-bg]="nextPost.coverUrl"></div>
         } @else {
-          <div class="post-more-photo-content" [style.background-image]="'url(' + nextPost.postCover + ')'"></div>
+          <div class="post-more-photo-content" [style.background-image]="'url(' + nextPost.coverUrl + ')'"></div>
         }
         <div class="post-more-photo-overlay"></div>
       </div>
       <div class="post-more-content">
-        <div class="post-more-content-title">{{ nextPost.postTitle }}</div>
+        <div class="post-more-content-title">{{ nextPost.title }}</div>
         <div>下一篇</div>
       </div>
-      <a class="post-more-link" [routerLink]="nextPost.postGuid" [title]="nextPost.postTitle"></a>
+      <a class="post-more-link" [routerLink]="nextPost.url" [title]="nextPost.title"></a>
     </div>
   } @else {
     <div></div>

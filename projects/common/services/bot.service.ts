@@ -9,6 +9,6 @@ export class BotService {
   constructor(private readonly appConfigService: AppConfigService) {}
 
   getBotAvatar(bot?: Bot): string {
-    return bot?.botAvatar || this.appConfigService.faviconUrl;
+    return bot?.avatarUrl || this.appConfigService.faviconUrl;
   }
 }

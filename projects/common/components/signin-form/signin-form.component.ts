@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
   ADMIN_URL_PARAM,
   AppConfigService,
@@ -8,12 +8,12 @@ import {
   AuthService,
   BaseComponent,
   DestroyService,
-  LoginResponse,
   OptionEntity,
   ResponseCode,
+  SigninResponse,
   UserAgentService
 } from 'common/core';
-import { TenantAppModel } from 'common/interfaces';
+import { TenantAppVo } from 'common/interfaces';
 import { CommonService, OptionService, TenantAppService } from 'common/services';
 import { format } from 'common/utils';
 import { isEmpty } from 'lodash';
@@ -28,9 +28,8 @@ import { SmartLinkComponent } from '../smart-link/smart-link.component';
 import { USER_EMAIL_LENGTH, USER_PASSWORD_MAX_LENGTH } from './auth.constant';
 
 @Component({
-  selector: 'lib-login-form',
+  selector: 'lib-signin-form',
   imports: [
-    RouterLink,
     ReactiveFormsModule,
     NzFormModule,
     NzInputModule,
@@ -40,22 +39,21 @@ import { USER_EMAIL_LENGTH, USER_PASSWORD_MAX_LENGTH } from './auth.constant';
     SmartLinkComponent
   ],
   providers: [DestroyService],
-  templateUrl: './login-form.component.html',
-  styleUrl: './login-form.component.less'
+  templateUrl: './signin-form.component.html',
+  styleUrl: './signin-form.component.less'
 })
-export class LoginFormComponent extends BaseComponent implements OnInit {
+export class SigninFormComponent extends BaseComponent implements OnInit {
   @Input() isModal = true;
   @Input() padding = false;
   @Output() closeForm = new EventEmitter();
 
-  readonly maxLoginLength = USER_EMAIL_LENGTH;
+  readonly maxNameLength = USER_EMAIL_LENGTH;
   readonly maxPasswordLength = USER_PASSWORD_MAX_LENGTH;
 
   domains!: AppDomainConfig;
-  loginForm!: FormGroup;
-  passwordVisible = false;
-  loginLoading = false;
-  thirdLogin: Record<string, boolean> = {
+  signinForm!: FormGroup;
+  signinLoading = false;
+  oauthMap: Record<string, boolean> = {
     wechat: false,
     qq: false,
     alipay: false,
@@ -67,18 +65,18 @@ export class LoginFormComponent extends BaseComponent implements OnInit {
     return this.options['open_signup'] === '1';
   }
 
-  get enableThirdLogin() {
+  get enableOauth() {
     return (
-      this.thirdLogin['wechat'] ||
-      this.thirdLogin['qq'] ||
-      this.thirdLogin['alipay'] ||
-      this.thirdLogin['weibo'] ||
-      this.thirdLogin['github']
+      this.oauthMap['wechat'] ||
+      this.oauthMap['qq'] ||
+      this.oauthMap['alipay'] ||
+      this.oauthMap['weibo'] ||
+      this.oauthMap['github']
     );
   }
 
-  private isMobile = false;
-  private appInfo!: TenantAppModel;
+  private readonly isMobile: boolean = false;
+  private appInfo!: TenantAppVo;
   private options: OptionEntity = {};
   private referrer = '';
 
@@ -97,8 +95,8 @@ export class LoginFormComponent extends BaseComponent implements OnInit {
     super();
     this.isMobile = this.userAgentService.isMobile;
     this.domains = this.appConfigService.apps;
-    this.loginForm = this.fb.group({
-      username: ['', [Validators.required, Validators.maxLength(this.maxLoginLength)]],
+    this.signinForm = this.fb.group({
+      name: ['', [Validators.required, Validators.maxLength(this.maxNameLength)]],
       password: [null, [Validators.required, Validators.maxLength(this.maxPasswordLength)]]
     });
   }
@@ -112,9 +110,9 @@ export class LoginFormComponent extends BaseComponent implements OnInit {
       .subscribe(([appInfo, options, qp]) => {
         this.appInfo = appInfo;
         this.options = options;
-        this.thirdLogin['alipay'] = !!options['open_alipay_app_id'];
-        this.thirdLogin['weibo'] = !!options['open_weibo_app_key'];
-        this.thirdLogin['github'] = !!options['open_github_client_id'];
+        this.oauthMap['alipay'] = !!options['open_alipay_app_id'];
+        this.oauthMap['weibo'] = !!options['open_weibo_app_key'];
+        this.oauthMap['github'] = !!options['open_github_client_id'];
 
         const ref = qp.get('ref')?.trim() || '';
         try {
@@ -129,25 +127,25 @@ export class LoginFormComponent extends BaseComponent implements OnInit {
       });
   }
 
-  login() {
-    const { value, valid } = this.validateForm(this.loginForm);
+  signin() {
+    const { value, valid } = this.validateForm(this.signinForm);
     if (!valid) {
       return;
     }
-    const { username, password } = value;
-    this.loginLoading = true;
+    const { name, password } = value;
+    this.signinLoading = true;
     this.authService
-      .login({
-        username,
+      .signin({
+        name,
         password
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.loginLoading = false;
-        const authInfo: LoginResponse = res.data || {};
+        this.signinLoading = false;
+        const authInfo: SigninResponse = res.data || {};
 
-        if (authInfo.token?.accessToken) {
-          const urlParam = format(ADMIN_URL_PARAM, authInfo.token.accessToken, this.appConfigService.appId);
+        if (authInfo.token?.token) {
+          const urlParam = format(ADMIN_URL_PARAM, authInfo.token.token, this.appConfigService.appId);
           let redirectUrl: string;
           if (!this.isModal) {
             if (this.referrer && this.referrer !== 'logout') {
@@ -157,10 +155,10 @@ export class LoginFormComponent extends BaseComponent implements OnInit {
                 redirectUrl = this.referrer + separator + urlParam;
               } else {
                 // 相对路径，不需要带上token
-                redirectUrl = this.appInfo.appUrl + '/' + this.referrer.replace(/^\//i, '');
+                redirectUrl = this.appInfo.homeUrl + '/' + this.referrer.replace(/^\//i, '');
               }
             } else {
-              redirectUrl = this.appInfo.appAdminUrl + '?' + urlParam;
+              redirectUrl = this.appInfo.adminUrl + '?' + urlParam;
             }
             location.href = redirectUrl;
           } else {
@@ -181,15 +179,15 @@ export class LoginFormComponent extends BaseComponent implements OnInit {
       });
   }
 
-  gotoThirdLogin(type: string): void {
-    if (!this.thirdLogin[type]) {
+  oauthSignin(type: string): void {
+    if (!this.oauthMap[type]) {
       this.message.warning('Sorry, we are stepping up our efforts to launch this feature, please wait...');
       return;
     }
-    const url = this.authService.getThirdLoginURL({
+    const url = this.authService.getOauthURL({
       type,
       options: this.options,
-      callbackUrl: this.appInfo.appCallbackUrl,
+      callbackUrl: this.appInfo.callbackUrl,
       ref: '',
       isMobile: this.isMobile
     });

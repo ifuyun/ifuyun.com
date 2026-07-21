@@ -2,16 +2,16 @@
   <div class="footer">
     <div class="footer-content">
       <ul class="footer-link">
-        @for (link of footerLinks; track link.linkId) {
+        @for (link of footerLinks; track link.id) {
           <li>
             @if (link.isExternal) {
-              <a [href]="link.linkUrl"
-                 [target]="link.linkTarget"
-                 [title]="link.linkDescription">{{ link.linkName }}</a>
+              <a [href]="link.url"
+                 [target]="link.target"
+                 [title]="link.description">{{ link.name }}</a>
             } @else {
-              <lib-a [href]="wwwHost + link.linkUrl"
-                     [target]="link.linkTarget"
-                     [title]="link.linkDescription">{{ link.linkName }}</lib-a>
+              <lib-a [href]="wwwHost + link.url"
+                     [target]="link.target"
+                     [title]="link.description">{{ link.name }}</lib-a>
             }
           </li>
         }
@@ -20,11 +20,11 @@
         <div class="friend-link">
           <div class="footer-label">友情链接：</div>
           <ul>
-            @for (link of friendLinks; track link.linkId) {
+            @for (link of friendLinks; track link.id) {
               <li>
-                <a [href]="link.linkUrl"
-                   [target]="link.linkTarget"
-                   [title]="link.linkDescription">{{ link.linkName }}</a>
+                <a [href]="link.url"
+                   [target]="link.target"
+                   [title]="link.description">{{ link.name }}</a>
               </li>
             }
           </ul>

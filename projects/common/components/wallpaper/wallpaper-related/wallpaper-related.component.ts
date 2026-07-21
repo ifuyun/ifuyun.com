@@ -55,13 +55,13 @@ export class WallpaperRelatedComponent implements OnInit {
   }
 
   getWallpaperCopyright(wallpaper: WallpaperSearchItem) {
-    return this.lang === WallpaperLang.EN ? wallpaper.wallpaperCopyrightEn : wallpaper.wallpaperCopyrightCn;
+    return this.lang === WallpaperLang.EN ? wallpaper.copyrightEn : wallpaper.copyrightCn;
   }
 
   private getRelatedWallpapers(): void {
     this.wallpaperService
       .getRelatedWallpapers({
-        wid: this.wallpaperId,
+        id: this.wallpaperId,
         page: 1,
         size: 4
       })
@@ -70,12 +70,12 @@ export class WallpaperRelatedComponent implements OnInit {
         this.relatedWallpapers = (res || []).map((item) => {
           return {
             ...item,
-            wallpaperTitleCn: item.wallpaperTitleCn || item.wallpaperTitleEn,
-            wallpaperTitleEn: item.wallpaperTitleEn || item.wallpaperTitleCn,
-            wallpaperCopyrightCn: item.wallpaperCopyrightCn || item.wallpaperCopyrightEn,
-            wallpaperCopyrightEn: item.wallpaperCopyrightEn || item.wallpaperCopyrightCn,
-            isCn: !!item.wallpaperCopyrightCn,
-            isEn: !!item.wallpaperCopyrightEn
+            titleCn: item.titleCn || item.titleEn,
+            titleEn: item.titleEn || item.titleCn,
+            copyrightCn: item.copyrightCn || item.copyrightEn,
+            copyrightEn: item.copyrightEn || item.copyrightCn,
+            isCn: !!item.copyrightCn,
+            isEn: !!item.copyrightEn
           };
         });
       });

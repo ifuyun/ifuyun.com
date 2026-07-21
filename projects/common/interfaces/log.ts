@@ -1,4 +1,4 @@
-import { ActionObjectType, ActionType, Theme } from 'common/enums';
+import { LogTargetType, LogActionType, Theme } from 'common/enums';
 
 export interface AccessLog {
   li?: string;
@@ -22,21 +22,12 @@ export interface LeaveLog {
 }
 
 export interface ActionLog {
-  action: ActionType;
-  objectType: ActionObjectType;
-  objectId?: string;
+  action: LogActionType;
+  targetType: LogTargetType;
+  targetId?: string;
   ref: string;
-  from?: string;
-  lang?: string;
-  listMode?: string;
-  keyword?: string;
-  theme?: Theme;
   carouselTitle?: string;
   carouselURL?: string;
   index?: number;
-  adsPosition?: string;
-  goodsURL?: string;
-  goodsName?: string;
-  ip?: string;
   appId: string;
 }

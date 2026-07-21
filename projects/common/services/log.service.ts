@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { ApiService, ApiUrl, AppConfigService, HttpResponseEntity } from 'common/core';
 import { AccessLog, ActionLog } from 'common/interfaces';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { CommonService } from './common.service';
 
 export enum AdsStatus {
@@ -23,7 +22,7 @@ export class LogService {
     private readonly commonService: CommonService
   ) {}
 
-  parseAccessLog(param: {
+  buildAccessLog(param: {
     initialized: boolean;
     referrer: string;
     isNew: boolean;
@@ -69,7 +68,6 @@ export class LogService {
       {
         ...log,
         ref: location.href,
-        site: 'web',
         appId: this.appConfigService.appId
       },
       false
@@ -86,13 +84,5 @@ export class LogService {
       },
       false
     );
-  }
-
-  checkAccessLimit(): Observable<{ limit: boolean }> {
-    return this.apiService
-      .httpGet(ApiUrl.ACCESS_LOG_CHECK_LIMIT, {
-        appId: this.appConfigService.appId
-      })
-      .pipe(map((res) => res?.data || {}));
   }
 }

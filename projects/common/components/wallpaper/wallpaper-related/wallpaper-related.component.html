@@ -8,7 +8,7 @@
              [routerLink]="['../' + wallpaper.wallpaperId]"
              [queryParams]="getLangParams(wallpaper)"
              [title]="getWallpaperCopyright(wallpaper)">
-            <div class="lazyload" [attr.data-bg]="wallpaper.wallpaperUrl"></div>
+            <div class="lazyload" [attr.data-bg]="wallpaper.url"></div>
           </a>
           <div class="related-item-title">
             <a [routerLink]="['../' + wallpaper.wallpaperId]"

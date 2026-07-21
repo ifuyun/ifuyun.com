@@ -12,9 +12,9 @@ export enum LlmModelType {
 }
 
 export enum LlmModelStatus {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-  DEPRECATED = 'deprecated',
-  OFFLINE = 'offline',
-  TRASH = 'trash'
+  TRASHED = 2,
+  DISABLED = 16,
+  ACTIVE = 17,
+  OFFLINE = 22,
+  DEPRECATED = 25
 }

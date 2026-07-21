@@ -55,7 +55,7 @@ export class GameModalComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private getGameROM(): void {
-    const cachedGame = this.gameService.getCachedGame(this.game.gameId);
+    const cachedGame = this.gameService.getCachedGame(this.game.id);
     if (cachedGame) {
       const uint8Array = new Uint8Array(cachedGame.length);
       for (let i = 0; i < cachedGame.length; i++) {
@@ -65,22 +65,22 @@ export class GameModalComponent implements OnInit, AfterViewInit, OnDestroy {
       this.logGame();
       // 刷新缓存
       this.gameService.cacheGameList({
-        id: this.game.gameId,
-        name: this.game.gameTitle,
+        id: this.game.id,
+        name: this.game.title,
         added: Date.now()
       });
     } else {
       this.gameService
-        .getGameROM(this.game.gameId)
+        .getGameROM(this.game.id)
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
           this.initROM(res);
           this.logGame();
           // 缓存游戏
-          this.gameService.cacheGame(this.game.gameId, res);
+          this.gameService.cacheGame(this.game.id, res);
           this.gameService.cacheGameList({
-            id: this.game.gameId,
-            name: this.game.gameTitle,
+            id: this.game.id,
+            name: this.game.title,
             added: Date.now()
           });
         });
@@ -91,10 +91,10 @@ export class GameModalComponent implements OnInit, AfterViewInit, OnDestroy {
     this.romURL = URL.createObjectURL(rom);
     this.gameService.updateActiveRomURL(this.romURL);
 
-    (<any>window)['EJS_gameID'] = this.game.gameId;
-    (<any>window)['EJS_gameName'] = this.game.gameTitle;
+    (<any>window)['EJS_gameID'] = this.game.id;
+    (<any>window)['EJS_gameName'] = this.game.title;
     (<any>window)['EJS_player'] = '#game-box';
-    (<any>window)['EJS_core'] = this.game.gameType;
+    (<any>window)['EJS_core'] = this.game.type;
     (<any>window)['EJS_pathtodata'] = this.appConfigService.emulatorBasePath;
     (<any>window)['EJS_gameUrl'] = this.romURL;
     (<any>window)['EJS_language'] = 'zh';
@@ -127,8 +127,8 @@ export class GameModalComponent implements OnInit, AfterViewInit, OnDestroy {
   private logGame() {
     this.gameService
       .saveGameLog({
-        gameLogType: GameLogType.PLAY,
-        gameId: this.game.gameId
+        type: GameLogType.PLAY,
+        gameId: this.game.id
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe();

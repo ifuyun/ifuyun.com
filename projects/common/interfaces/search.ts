@@ -1,6 +1,6 @@
 import { SearchType } from 'common/enums';
 import { Game } from './game';
-import { Post } from './post';
+import { PostVo } from './post';
 import { Wallpaper } from './wallpaper';
 
 export interface SearchParam {
@@ -9,7 +9,7 @@ export interface SearchParam {
   size?: number;
 }
 
-export interface PostSearchResponse extends Post {
+export interface PostSearchResponse extends PostVo {
   score: number;
 }
 
@@ -23,6 +23,6 @@ export interface GameSearchResponse extends Game {
 
 export interface AllSearchResponse {
   type: Exclude<SearchType, SearchType.ALL>;
-  data: Post | Wallpaper | Game;
+  data: PostVo | Wallpaper | Game;
   score: number;
 }

@@ -2,7 +2,7 @@
 
 @conversation-width: 260px;
 
-.bot-wrap {
+.chat-wrap {
   display: flex;
   flex-direction: column;
   position: relative;
@@ -13,16 +13,19 @@
   }
 }
 
-.messages {
-  @prompt-input-height: 60px;
+.chat-body {
+  @prompt-input-height: 100px;
 
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   flex-grow: 1;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
 
-  .message-loading {
+  .chat-loading {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -30,90 +33,81 @@
     margin-bottom: @prompt-input-height;
   }
 
-  .message-list {
+  .chat-list {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    padding-bottom: @prompt-input-height;
-    overflow-y: auto;
+    padding-bottom: 16px;
   }
 
-  .message-item {
+  .chat-info {
+    display: flex;
+    justify-content: center;
+    color: var(--meta-color);
+    font-size: 13px;
+  }
+
+  .chat-item {
     position: relative;
     display: flex;
-    padding: 16px 8px;
+
+    &.chat-item-user {
+      justify-content: flex-end;
+
+      .chat-item-body {
+        max-width: 70%;
+      }
+    }
 
     &:not(:first-child) {
-      border-top: 1px solid #d9d9d9;
+      margin-top: 24px;
     }
 
-    &.message-item-bot, &.message-item-system {
-      background-color: #f6f6f6;
-    }
-
-    &.message-item-bot:not(:last-child) {
-      .message-actions {
+    &.chat-item-bot:not(:last-child) {
+      .chat-actions {
         visibility: hidden;
       }
 
       &:hover {
-        .message-actions {
+        .chat-actions {
           visibility: visible;
         }
       }
     }
 
-    .message-avatar {
+    .chat-item-body {
+      display: flex;
+      max-width: 100%;
+
+      > :not(:last-child) {
+        margin-right: 16px;
+      }
+    }
+
+    .chat-avatar {
       flex-shrink: 0;
       flex-grow: 0;
-      width: 32px;
-      height: 32px;
-      border-radius: 2px;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
       cursor: zoom-in;
     }
 
-    .message-wrap {
+    .chat-message {
       display: flex;
       flex-direction: column;
       flex-grow: 1;
-      margin-left: 16px;
       overflow: hidden;
     }
 
-    .message-info {
-      display: flex;
-      color: var(--meta-color);
-      font-size: 13px;
-
-      .message-user {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-
-        + .message-created::before {
-          content: '-';
-          margin: 0 4px;
-        }
-      }
-
-      .message-created {
-        flex-shrink: 0;
-      }
-    }
-
-    .message-body {
-      margin-top: 8px;
-    }
-
-    .message-content-wrap {
+    .chat-content-wrap {
       flex-grow: 1;
       overflow: hidden;
     }
 
-    .message-content {
+    .chat-content {
       overflow: hidden;
       overflow-wrap: break-word;
 
@@ -122,11 +116,15 @@
       }
     }
 
-    .message-content-user {
+    .chat-content-user {
+      padding: 8px 16px;
+      line-height: 24px;
+      border-radius: 24px;
+      background: #eaeaea;
       white-space: pre-wrap;
     }
 
-    .message-thoughts-action {
+    .chat-thoughts-action {
       display: flex;
       margin-bottom: 8px;
 
@@ -146,13 +144,13 @@
       }
     }
 
-    .message-thoughts {
+    .chat-thoughts {
       border-left: 3px solid #dbdbdb;
       padding-left: 12px;
       color: rgba(0, 0, 0, 0.5);
     }
 
-    .message-error {
+    .chat-error {
       display: flex;
       align-items: center;
       color: #ff4d4f;
@@ -162,25 +160,24 @@
       }
     }
 
-    .message-actions {
-      position: absolute;
-      right: 8px;
-      bottom: -15px;
-      padding: 2px 4px;
-      border: 1px solid #d9d9d9;
-      border-radius: 4px;
+    .chat-actions {
+      margin-top: 12px;
       display: flex;
       flex-grow: 0;
       flex-shrink: 0;
       background: #fff;
       z-index: 1;
 
-      .message-action-item {
+      .chat-action {
         padding: 4px;
         font-size: 16px;
         line-height: 16px;
         color: #9b9b9b;
         cursor: pointer;
+
+        &:not(:last-child) {
+          margin-right: 4px;
+        }
 
         &:not(.disabled):hover {
           color: @primary-color;
@@ -193,42 +190,7 @@
     }
   }
 
-  .message-input {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    font-size: 16px;
-    z-index: 9;
-
-    textarea {
-      height: 40px;
-      min-height: 40px;
-      max-height: 200px;
-      padding: 7px 36px 7px 11px;
-      line-height: 24px;
-      resize: none;
-    }
-
-    .send-icon {
-      position: absolute;
-      right: 12px;
-      bottom: 8px;
-      padding: 4px;
-      line-height: 16px;
-      cursor: pointer;
-
-      &.disabled {
-        opacity: 0.3;
-        cursor: not-allowed;
-      }
-
-      &:not(.disabled):hover {
-        color: @primary-color;
-      }
-    }
-  }
-
-  .message-empty {
+  .chat-empty {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -236,6 +198,80 @@
   }
 }
 
-.drawer-extra {
-  cursor: pointer;
+.chat-form {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  padding: 12px;
+  background: #fff;
+  z-index: 9;
+
+  .chat-form-body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    box-shadow: rgba(0, 0, 0, 0.035) 0 4px 20px 0, rgba(31, 31, 30, 0.15) 0 0 0 0.5px;
+    border-radius: 16px;
+  }
+
+  textarea {
+    height: 40px;
+    min-height: 40px;
+    max-height: 200px;
+    padding: 7px 11px;
+    border: none;
+    line-height: 24px;
+    resize: none;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .chat-setting {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .chat-effort {
+    padding: 5px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:hover, &.active {
+      background: #f5f5f5;
+    }
+
+    > :not(:last-child) {
+      margin-right: 4px;
+    }
+  }
+
+  .chat-btn-send {
+    border-radius: 50%;
+  }
+}
+
+.effort-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  > :first-child {
+    flex-basis: 100px;
+    flex-shrink: 0;
+  }
+
+  > :last-child {
+    flex-shrink: 0;
+    text-align: right;
+    color: @primary-color;
+
+    &:not(.active) {
+      display: none;
+    }
+  }
 }
