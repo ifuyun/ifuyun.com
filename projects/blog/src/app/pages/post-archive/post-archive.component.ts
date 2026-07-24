@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BreadcrumbComponent } from 'common/components';
 import {
@@ -24,27 +24,23 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   styleUrl: './post-archive.component.less'
 })
 export class PostArchiveComponent implements OnInit {
-  isMobile = false;
-  dateList!: ArchiveDataMap;
-  yearList: string[] = [];
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly commonService = inject(CommonService);
+  private readonly metaService = inject(MetaService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+  private readonly postService = inject(PostService);
 
-  protected pageIndex = 'post-archive';
+  readonly isMobile = this.uaService.isMobile;
+  readonly dateList = signal<ArchiveDataMap>({});
+  readonly yearList = signal<string[]>([]);
 
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
+  protected readonly pageIndex = 'post-archive';
 
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly commonService: CommonService,
-    private readonly metaService: MetaService,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService,
-    private readonly postService: PostService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly options = signal<OptionEntity>({});
 
   ngOnInit(): void {
     this.updatePageIndex();
@@ -57,8 +53,8 @@ export class PostArchiveComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe(([appInfo, options]) => {
-        this.appInfo = appInfo;
-        this.options = options;
+        this.appInfo.set(appInfo);
+        this.options.set(options);
 
         this.updatePageInfo();
       });
@@ -74,18 +70,18 @@ export class PostArchiveComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         const { dateList, yearList } = this.commonService.buildArchiveList(res);
-        this.dateList = dateList;
-        this.yearList = yearList;
+        this.dateList.set(dateList);
+        this.yearList.set(yearList);
       });
   }
 
   private updatePageInfo() {
-    const titles = ['归档', '博客', this.appInfo.name];
+    const titles = ['归档', '博客', this.appInfo()!.name];
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
-      description: `${this.appInfo.name}博客归档。${this.options['post_description']}`,
-      keywords: this.options['post_keywords'],
-      author: this.options['site_author']
+      description: `${this.appInfo()!.name}博客归档。${this.options()['post_description']}`,
+      keywords: this.options()['post_keywords'],
+      author: this.options()['site_author']
     };
     this.metaService.updateHTMLMeta(metaData);
   }

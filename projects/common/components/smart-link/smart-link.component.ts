@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, input, model, OnInit, signal } from '@angular/core';
 import { Params, RouterLink, UrlTree } from '@angular/router';
 import { CommonService } from 'common/services';
 
@@ -8,18 +8,18 @@ import { CommonService } from 'common/services';
   imports: [NgTemplateOutlet, RouterLink],
   template: `
     <ng-template #contentTpl><ng-content></ng-content></ng-template>
-    @if (isAbsoluteUrl) {
-      <a [href]="href" [title]="title" [attr.target]="target" [attr.rel]="rel">
+    @if (isAbsoluteUrl()) {
+      <a [href]="href()" [title]="title()" [attr.target]="target()" [attr.rel]="rel()">
         <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
       </a>
     } @else {
       <a
-        [routerLink]="href"
-        [queryParams]="queryParams"
-        [fragment]="fragment"
-        [title]="title"
-        [attr.target]="target"
-        [attr.rel]="rel"
+        [routerLink]="href()"
+        [queryParams]="queryParams()"
+        [fragment]="fragment()"
+        [title]="title()"
+        [attr.target]="target()"
+        [attr.rel]="rel()"
       >
         <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
       </a>
@@ -45,29 +45,31 @@ import { CommonService } from 'common/services';
   ]
 })
 export class SmartLinkComponent implements OnInit {
-  @Input() href?: any[] | string | UrlTree | null;
-  @Input() queryParams?: Params | null;
-  @Input() fragment?: string;
-  @Input() title?: string = '';
-  @Input() target?: string;
-  @Input() rel?: string;
+  private readonly commonService = inject(CommonService);
 
-  isAbsoluteUrl = false;
+  readonly href = model<any[] | string | UrlTree | null>(null);
+  readonly queryParams = input<Params | null | undefined>(null);
+  readonly fragment = input<string | undefined>(undefined);
+  readonly title = input<string | undefined>(undefined);
+  readonly target = input<string | undefined>(undefined);
+  readonly rel = input<string | undefined>(undefined);
 
-  constructor(private readonly commonService: CommonService) {}
+  readonly isAbsoluteUrl = signal(false);
 
   ngOnInit(): void {
-    if (typeof this.href !== 'string' || !/^https?:\/\//i.test(this.href)) {
-      this.isAbsoluteUrl = false;
+    const href = this.href();
+
+    if (typeof href !== 'string' || !/^https?:\/\//i.test(href)) {
+      this.isAbsoluteUrl.set(false);
     } else {
       const curHost = this.commonService.getHost();
-      const url = new URL(this.href);
+      const url = new URL(href);
       const urlHost = url.host;
 
-      this.isAbsoluteUrl = curHost !== urlHost;
+      this.isAbsoluteUrl.set(curHost !== urlHost);
 
-      if (!this.isAbsoluteUrl) {
-        this.href = decodeURIComponent(url.pathname) + url.search + url.hash;
+      if (!this.isAbsoluteUrl()) {
+        this.href.set(decodeURIComponent(url.pathname) + url.search + url.hash);
       }
     }
   }

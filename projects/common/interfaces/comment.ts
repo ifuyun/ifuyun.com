@@ -14,6 +14,7 @@ export interface CommentDto {
 
 export interface CommentModel extends CommentDto {
   id: string;
+  floor: number;
   status: CommentStatus;
   createdAt: Date;
   updatedAt: Date;

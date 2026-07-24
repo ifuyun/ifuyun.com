@@ -1,8 +1,18 @@
 import { NgStyle } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  viewChild
+} from '@angular/core';
 import { DestroyService, PlatformService, UserAgentService } from 'common/core';
-import { LogTargetType, LogActionType, LinkTarget, WallpaperLang } from 'common/enums';
-import { Carousel, CarouselOptions, HotWallpaper, Wallpaper } from 'common/interfaces';
+import { LinkTarget, LogActionType, LogTargetType, WallpaperLang } from 'common/enums';
+import { Carousel, CarouselOptions, Wallpaper } from 'common/interfaces';
 import { RangePipe } from 'common/pipes';
 import { LogService, OptionService, WallpaperService } from 'common/services';
 import { isEmpty } from 'lodash';
@@ -16,29 +26,25 @@ import { skipWhile, takeUntil } from 'rxjs';
   styleUrl: './carousel.component.less'
 })
 export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('carouselBody') carouselBody!: ElementRef;
+  private readonly destroy$ = inject(DestroyService);
+  private readonly platform = inject(PlatformService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly optionService = inject(OptionService);
+  private readonly wallpaperService = inject(WallpaperService);
+  private readonly logService = inject(LogService);
 
-  isMobile = false;
-  carousels: Carousel[] = [];
-  activeIndex = 0;
-  isRevert = false;
+  readonly carouselBody = viewChild.required<ElementRef<HTMLDivElement>>('carouselBody');
 
-  private carouselOptions!: CarouselOptions;
-  private interval = 3000;
-  private isPaused = false;
-  private lastTimestamp = 0;
-  private rafId: number | null = null;
+  readonly isMobile = this.uaService.isMobile;
+  readonly carousels = signal<Carousel[]>([]);
+  readonly activeIndex = signal(0);
+  readonly isRevert = signal(false);
 
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly platform: PlatformService,
-    private readonly userAgentService: UserAgentService,
-    private readonly optionService: OptionService,
-    private readonly wallpaperService: WallpaperService,
-    private readonly logService: LogService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  private readonly carouselOptions = signal<CarouselOptions | null>(null);
+  private readonly interval = 3000;
+  private readonly isPaused = signal(false);
+  private readonly lastTimestamp = signal(0);
+  private readonly rafId = signal<number | null>(null);
 
   ngOnInit(): void {
     this.optionService.options$
@@ -48,21 +54,24 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       )
       .subscribe((options) => {
         try {
-          this.carouselOptions = JSON.parse(options['carousel_config']);
+          this.carouselOptions.set(JSON.parse(options['carousel_config']));
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
-          this.carouselOptions = { type: 'wallpaper', orderBy: 'newest' };
+          this.carouselOptions.set({ type: 'wallpaper', orderBy: 'newest' });
         }
 
-        if (this.carouselOptions.type === 'album') {
-          this.getCarousels();
-        } else {
-          if (this.carouselOptions.orderBy === 'random') {
-            this.getRandomWallpapers();
-          } else if (this.carouselOptions.orderBy === 'hottest') {
-            this.getHotWallpapers();
+        const carouselOptions = this.carouselOptions();
+        if (carouselOptions) {
+          if (carouselOptions.type === 'album') {
+            this.getCarousels();
           } else {
-            this.getWallpapers();
+            if (carouselOptions.orderBy === 'random') {
+              this.getRandomWallpapers();
+            } else if (carouselOptions.orderBy === 'hottest') {
+              this.getHotWallpapers();
+            } else {
+              this.getWallpapers();
+            }
           }
         }
       });
@@ -83,21 +92,21 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   carouselMouseOver() {
-    this.isPaused = true;
+    this.isPaused.set(true);
     this.pause();
   }
 
   carouselMouseOut() {
-    this.isPaused = false;
+    this.isPaused.set(false);
     this.start();
   }
 
   switchCarousel(index: number) {
-    if (index === this.activeIndex) {
+    if (index === this.activeIndex()) {
       return;
     }
-    this.isRevert = index < this.activeIndex;
-    this.activeIndex = index;
+    this.isRevert.set(index < this.activeIndex());
+    this.activeIndex.set(index);
     this.update();
   }
 
@@ -114,46 +123,46 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private loop = (timestamp: number) => {
-    if (!this.lastTimestamp) {
-      this.lastTimestamp = timestamp;
+    if (!this.lastTimestamp()) {
+      this.lastTimestamp.set(timestamp);
     }
-    if (timestamp - this.lastTimestamp >= this.interval) {
+    if (timestamp - this.lastTimestamp() >= this.interval) {
       this.next();
-      this.lastTimestamp = timestamp;
+      this.lastTimestamp.set(timestamp);
     }
 
-    this.rafId = requestAnimationFrame(this.loop);
+    this.rafId.set(requestAnimationFrame(this.loop));
   };
 
   private start() {
-    if (!this.rafId) {
-      this.lastTimestamp = 0;
-      this.rafId = requestAnimationFrame(this.loop);
+    if (!this.rafId()) {
+      this.lastTimestamp.set(0);
+      this.rafId.set(requestAnimationFrame(this.loop));
     }
   }
 
   private pause() {
-    if (this.rafId) {
-      cancelAnimationFrame(this.rafId);
+    if (this.rafId()) {
+      cancelAnimationFrame(this.rafId()!);
 
-      this.rafId = null;
+      this.rafId.set(null);
     }
   }
 
   private next() {
-    this.isRevert = false;
-    this.activeIndex = (this.activeIndex + 1) % this.carousels.length;
+    this.isRevert.set(false);
+    this.activeIndex.set((this.activeIndex() + 1) % this.carousels().length);
     this.update();
   }
 
   private update(): void {
-    this.carouselBody.nativeElement.style.transitionDuration = '';
+    this.carouselBody().nativeElement.style.transitionDuration = '';
 
-    if (this.activeIndex === this.carousels.length - 1) {
+    if (this.activeIndex() === this.carousels().length - 1) {
       window.setTimeout(() => {
-        this.activeIndex = 0;
-        this.carouselBody.nativeElement.style.transitionDuration = '0s';
-        this.carouselBody.nativeElement.style.transform = 'translateX(0%)';
+        this.activeIndex.set(0);
+        this.carouselBody().nativeElement.style.transitionDuration = '0s';
+        this.carouselBody().nativeElement.style.transform = 'translateX(0%)';
       }, 300);
     }
   }
@@ -161,7 +170,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
   private onVisibilityChange = () => {
     if (document.visibilityState === 'hidden') {
       this.pause();
-    } else if (!this.isPaused) {
+    } else if (!this.isPaused()) {
       this.start();
     }
   };
@@ -171,37 +180,39 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       .getCarousels()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.carousels = res || [];
+        this.carousels.set(res || []);
         this.initCarousels();
       });
   }
 
   private getRandomWallpapers() {
     this.wallpaperService
-      .getRandomWallpapers(this.carouselOptions.size || 4)
+      .getRandomWallpapers(this.carouselOptions()?.size || 4)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.carousels = this.transformToCarousels(res);
+        this.carousels.set(this.transformToCarousels(res));
         this.initCarousels();
       });
   }
 
   private getHotWallpapers() {
     this.wallpaperService
-      .getHotWallpapers(this.carouselOptions.size || 4)
+      .getHotWallpapers(this.carouselOptions()?.size || 4)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.carousels = res.map((item, index) => {
-          return {
-            id: item.wallpaperId,
-            title: item.titleCn || item.titleEn,
-            caption: item.copyrightCn || item.copyrightEn,
-            url: item.url,
-            link: this.wallpaperService.getWallpaperLink(item.wallpaperId, !item.copyright && !!item.copyrightEn),
-            target: LinkTarget.SELF,
-            order: index + 1
-          };
-        });
+        this.carousels.set(
+          res.map((item, index) => {
+            return {
+              id: item.wallpaperId,
+              title: item.titleCn || item.titleEn,
+              caption: item.copyrightCn || item.copyrightEn,
+              url: item.url,
+              link: this.wallpaperService.getWallpaperLink(item.wallpaperId, !item.copyright && !!item.copyrightEn),
+              target: LinkTarget.SELF,
+              order: index + 1
+            };
+          })
+        );
         this.initCarousels();
       });
   }
@@ -210,24 +221,24 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
     this.wallpaperService
       .getWallpapers({
         page: 1,
-        size: this.carouselOptions.size || 4,
+        size: this.carouselOptions()?.size || 4,
         lang: [WallpaperLang.CN, WallpaperLang.EN],
-        orderBy: this.carouselOptions.orderBy === 'oldest' ? [['bingDate', 'asc']] : [['bingDate', 'desc']]
+        orderBy: this.carouselOptions()?.orderBy === 'oldest' ? [['bingDate', 'asc']] : [['bingDate', 'desc']]
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.carousels = this.transformToCarousels(res.list || []);
+        this.carousels.set(this.transformToCarousels(res.list || []));
         this.initCarousels();
       });
   }
 
   private initCarousels() {
-    if (this.carousels.length > 0) {
-      const firstCarousel = this.carousels[0];
-      const lastCarousel = this.carousels[this.carousels.length - 1];
+    if (this.carousels().length > 0) {
+      const firstCarousel = this.carousels()[0];
+      const lastCarousel = this.carousels()[this.carousels().length - 1];
 
-      if (this.carousels.length < 2 || firstCarousel.id !== lastCarousel.id) {
-        this.carousels.push({ ...this.carousels[0] });
+      if (this.carousels().length < 2 || firstCarousel.id !== lastCarousel.id) {
+        this.carousels.update((data) => [...data, { ...this.carousels()[0] }]);
       }
     }
   }

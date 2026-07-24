@@ -27,17 +27,17 @@
       <button nz-button
               type="submit"
               nzType="primary"
-              [disabled]="!hashKey"
+              [disabled]="!hashKey()"
               (click)="hash()">MurmurHash</button>
       <button nz-button
               nzType="primary"
               ngxClipboard
-              [cbContent]="hashResult"
-              [disabled]="!hashResult"
+              [cbContent]="hashResult()"
+              [disabled]="!hashResult()"
               (click)="onCopied()">复制结果</button>
       <button nz-button
               nzType="primary"
-              [disabled]="!hashKey"
+              [disabled]="!hashKey()"
               (click)="reset()">清空</button>
     </div>
     <div>

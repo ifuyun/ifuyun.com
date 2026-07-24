@@ -1,7 +1,7 @@
 <lib-breadcrumb/>
-@if (total > 0) {
+@if (total() > 0) {
   <div class="post-card-list" [class.post-card-list-2]="!isMobile">
-    @for (wallpaper of wallpapers; track wallpaper.id; let i = $index) {
+    @for (wallpaper of wallpapers(); track wallpaper.id; let i = $index) {
       <lib-wallpaper-item class="post-card-item-wrap"
                           [wallpaper]="wallpaper"
                           [mode]="ListMode.CARD"
@@ -15,4 +15,4 @@
   </div>
 }
 <lib-make-money/>
-<lib-pagination/>
+<lib-pagination [page]="page()" [total]="total()" [pageSize]="pageSize()" [url]="paginationUrl"/>

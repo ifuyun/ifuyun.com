@@ -1,10 +1,11 @@
+@let ii = indexInfo();
 <aside class="sider" #siderEle>
   <div>
-    @if (hotPosts && hotPosts.length > 0) {
+    @if (hotPosts().length > 0) {
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="fire"/><span>热门文章</span></span></h3>
         <ul class="hot-list">
-          @for (post of hotPosts; track post.id; let i = $index) {
+          @for (post of hotPosts(); track post.id; let i = $index) {
             <li>
               <span class="hot-num">{{ i + 1 }}</span>
               <lib-a [href]="domains['blog'].url + post.url" [title]="post.title">{{ post.title }}</lib-a>
@@ -13,7 +14,7 @@
         </ul>
       </div>
     }
-    @if (adsVisible && (indexInfo?.isPage || indexInfo?.isTool || indexInfo?.isSearch)) {
+    @if (adsVisible() && (ii?.isPage || ii?.isTool || ii?.isSearch)) {
       <div class="widget-ads">
         <lib-adsense [class.ads-sider-wrap]="adsPlaceholder"
                      wrapClass="ads-sider"
@@ -22,11 +23,11 @@
                      text="虚位以待"/>
       </div>
     }
-    @if (hotWallpapers && hotWallpapers.length > 0) {
+    @if (hotWallpapers().length > 0) {
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="fire"/><span>热门壁纸</span></span></h3>
         <ul class="hot-list">
-          @for (wallpaper of hotWallpapers; track wallpaper.wallpaperId; let i = $index) {
+          @for (wallpaper of hotWallpapers(); track wallpaper.wallpaperId; let i = $index) {
             <li>
               <span class="hot-num">{{ i + 1 }}</span>
               <lib-a [href]="domains['wallpaper'].url + '/detail/' + wallpaper.wallpaperId"
@@ -37,7 +38,7 @@
         </ul>
       </div>
     }
-    @if (indexInfo?.isJigsaw) {
+    @if (ii?.isJigsaw) {
       <div class="widget">
         <h3 class="widget-title">
           <span><nz-icon nzType="fire"/><span>热门拼图</span></span>
@@ -47,9 +48,9 @@
             <label nz-radio-button nzValue="y">年</label>
           </nz-radio-group>
         </h3>
-        @if (hotJigsaws && hotJigsaws.length > 0) {
+        @if (hotJigsaws().length > 0) {
           <ul class="hot-list">
-            @for (jigsaw of hotJigsaws; track jigsaw.id; let i = $index) {
+            @for (jigsaw of hotJigsaws(); track jigsaw.id; let i = $index) {
               <li>
                 <span class="hot-num">{{ i + 1 }}</span>
                 <lib-a [href]="domains['jigsaw'].url + '/detail/' + jigsaw.id"
@@ -62,11 +63,11 @@
         }
       </div>
     }
-    @if (recentGames && recentGames.length > 0) {
+    @if (recentGames().length > 0) {
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="history"/><span>最近游戏</span></span></h3>
         <ul>
-          @for (game of recentGames; track game.id) {
+          @for (game of recentGames(); track game.id) {
             <li>
               <lib-a [href]="domains['game'].url + '/detail/' + game.id"
                      [title]="game.title">{{ game.title }}</lib-a>
@@ -75,11 +76,11 @@
         </ul>
       </div>
     }
-    @if (hotGames && hotGames.length > 0) {
+    @if (hotGames().length > 0) {
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="fire"/><span>热门游戏</span></span></h3>
         <ul class="hot-list">
-          @for (game of hotGames; track game.id; let i = $index) {
+          @for (game of hotGames(); track game.id; let i = $index) {
             <li>
               <span class="hot-num">{{ i + 1 }}</span>
               <lib-a [href]="domains['game'].url + '/detail/' + game.id"
@@ -89,7 +90,7 @@
         </ul>
       </div>
     }
-    @if (adsVisible && !(indexInfo?.isPage || indexInfo?.isTool || indexInfo?.isSearch)) {
+    @if (adsVisible() && !(ii?.isPage || ii?.isTool || ii?.isSearch)) {
       <div class="widget-ads">
         <lib-adsense [class.ads-sider-wrap]="adsPlaceholder"
                      wrapClass="ads-sider"
@@ -98,7 +99,7 @@
                      text="虚位以待"/>
       </div>
     }
-    @if (postArchives && postArchives.length > 0) {
+    @if (postArchives().length > 0) {
       <div class="widget">
         <h3 class="widget-title">
           <span><fi-calendar-date class="fi"/><span>博客归档</span></span>
@@ -108,7 +109,7 @@
             </span>
         </h3>
         <ul>
-          @for (item of postArchives; track item.dateValue) {
+          @for (item of postArchives(); track item.dateValue) {
             <li>
               <lib-a [href]="domains['blog'].url + '/archive/' + item.dateValue"
                      [title]="item.dateLabel">{{ item.dateLabel }}({{ item.count }})</lib-a>
@@ -117,7 +118,7 @@
         </ul>
       </div>
     }
-    @if (wallpaperArchives && wallpaperArchives.length > 0) {
+    @if (wallpaperArchives().length > 0) {
       <div class="widget">
         <h3 class="widget-title">
           <span><fi-calendar-date class="fi"/><span>壁纸归档</span></span>
@@ -127,7 +128,7 @@
               </span>
         </h3>
         <ul>
-          @for (item of wallpaperArchives; track item.dateValue) {
+          @for (item of wallpaperArchives(); track item.dateValue) {
             <li>
               <lib-a [href]="domains['wallpaper'].url + '/archive/' + item.dateValue"
                      [title]="item.dateLabel">{{ item.dateLabel }}({{ item.count }})</lib-a>
@@ -137,11 +138,11 @@
       </div>
     }
     <!--非壁纸页-->
-    @if (randomPosts && randomPosts.length > 0) {
+    @if (randomPosts().length > 0) {
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
         <ul>
-          @for (post of randomPosts; track post.id) {
+          @for (post of randomPosts(); track post.id) {
             <li>
               <lib-a [href]="domains['blog'].url + post.url" [title]="post.title">{{ post.title }}</lib-a>
             </li>
@@ -150,19 +151,19 @@
       </div>
     }
     <!--壁纸页-->
-    @if (randomWallpapers && randomWallpapers.length > 0) {
+    @if (randomWallpapers().length > 0) {
         <div class="widget">
           <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
           <ul>
-            @if (indexInfo.isJigsaw) {
-              @for (wallpaper of randomWallpapers; track wallpaper.id) {
+            @if (ii?.isJigsaw) {
+              @for (wallpaper of randomWallpapers(); track wallpaper.id) {
                 <li>
                   <lib-a [href]="domains['jigsaw'].url + '/detail/' + wallpaper.id"
                          [title]="wallpaper.copyright">{{ wallpaper.copyright }}</lib-a>
                 </li>
               }
             } @else {
-              @for (wallpaper of randomWallpapers; track wallpaper.id) {
+              @for (wallpaper of randomWallpapers(); track wallpaper.id) {
                 <li>
                   <lib-a [href]="domains['wallpaper'].url + '/detail/' + wallpaper.id"
                          [queryParams]="getWallpaperLangParams(wallpaper.isCn)"
@@ -173,11 +174,11 @@
           </ul>
         </div>
     }
-    @if (randomGames && randomGames.length > 0) {
+    @if (randomGames().length > 0) {
       <div class="widget">
         <h3 class="widget-title"><span><nz-icon nzType="gift"/><span>手气不错</span></span></h3>
         <ul>
-          @for (game of randomGames; track game.id) {
+          @for (game of randomGames(); track game.id) {
             <li>
               <lib-a [href]="domains['game'].url + '/detail/' + game.id"
                      [title]="game.title">{{ game.title }}</lib-a>

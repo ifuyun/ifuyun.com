@@ -1,5 +1,5 @@
 import { DatePipe, NgTemplateOutlet } from '@angular/common';
-import { Component, DOCUMENT, Inject, Input, OnInit, signal } from '@angular/core';
+import { Component, computed, DOCUMENT, inject, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import {
@@ -52,63 +52,54 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   styleUrl: './comment.component.less'
 })
 export class CommentComponent extends BaseComponent implements OnInit {
-  @Input() targetType: CommentTargetType = CommentTargetType.POST;
-  @Input() enableAI = false;
+  readonly targetType = input<CommentTargetType>(CommentTargetType.POST);
+  readonly enableAI = input(false);
 
   readonly maxContentLength = 400;
 
-  isMobile = false;
-  isSignIn = false;
+  readonly isMobile = computed(() => this.uaService.isMobile);
+  readonly isSignIn = signal(false);
   readonly page = signal(1);
-  readonly pageSize = signal(50);
-  comments: Comment[] = [];
-  commentForm!: FormGroup;
-  replyForm!: FormGroup;
-  replyMode = false;
-  replyVisibleMap: Record<string, boolean> = {};
-  commentVoteLoading: Record<string, boolean> = {};
-  saveLoading = false;
+  readonly comments = signal<Comment[]>([]);
+  readonly commentForm = computed(() => this.fb.group(this.commentFormConfig));
+  readonly replyForm = computed(() => this.fb.group(this.commentFormConfig));
+  readonly replyMode = signal(false);
+  readonly replyVisibleMap = signal<Record<string, boolean>>({});
+  readonly voteLoadingMap = signal<Record<string, boolean>>({});
+  readonly saveLoading = signal(false);
 
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
-  private targetId = '';
-  private commentParentId = '';
-  private commentTopId?: string = '';
-  private commentFormConfig = {
+  private readonly pageSize = 50;
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly options = signal<OptionEntity>({});
+  private readonly targetId = signal('');
+  private readonly commentParentId = signal('');
+  private readonly commentTopId = signal('');
+  private readonly commentFormConfig = {
     content: ['', [Validators.required, Validators.maxLength(this.maxContentLength)]],
     aiComment: [false, []]
   };
-
-  private get avatarType() {
-    const avatarType = this.options['avatar_default_type'];
+  private readonly avatarType = computed(() => {
+    const avatarType = this.options()['avatar_default_type'];
     if (!avatarType || avatarType === 'logo') {
-      return this.appInfo.faviconUrl;
+      return this.appInfo()?.faviconUrl || '';
     }
     return avatarType;
-  }
+  });
+  private readonly threadDepth = computed(() => {
+    return this.isMobile() ? 2 : Number(this.options()['comment_thread_depth']) || 3;
+  });
 
-  private get threadDepth() {
-    return this.isMobile ? 2 : Number(this.options['comment_thread_depth']) || 3;
-  }
-
-  constructor(
-    @Inject(DOCUMENT) private readonly document: Document,
-    private readonly destroy$: DestroyService,
-    private readonly fb: FormBuilder,
-    private readonly userAgentService: UserAgentService,
-    private readonly commonService: CommonService,
-    private readonly message: MessageService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService,
-    private readonly userService: UserService,
-    private readonly commentService: CommentService,
-    private readonly voteService: VoteService
-  ) {
-    super();
-    this.isMobile = this.userAgentService.isMobile;
-    this.commentForm = fb.group(this.commentFormConfig);
-    this.replyForm = fb.group(this.commentFormConfig);
-  }
+  private readonly document = inject(DOCUMENT);
+  private readonly destroy$ = inject(DestroyService);
+  private readonly fb = inject(FormBuilder);
+  private readonly uaService = inject(UserAgentService);
+  private readonly commonService = inject(CommonService);
+  private readonly message = inject(MessageService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+  private readonly userService = inject(UserService);
+  private readonly commentService = inject(CommentService);
+  private readonly voteService = inject(VoteService);
 
   ngOnInit(): void {
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])
@@ -117,25 +108,25 @@ export class CommentComponent extends BaseComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe(([appInfo, options]) => {
-        this.appInfo = appInfo;
-        this.options = options;
+        this.appInfo.set(appInfo);
+        this.options.set(options);
       });
     this.commentService.targetId$.pipe(takeUntil(this.destroy$)).subscribe((targetId) => {
-      this.targetId = targetId;
+      this.targetId.set(targetId);
 
-      this.resetCommentForm(this.commentForm);
+      this.resetCommentForm(this.commentForm());
       this.resetReplyStatus();
-      if (this.targetId) {
+      if (this.targetId()) {
         this.getComments();
       }
     });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      this.isSignIn = !!user.id;
+      this.isSignIn.set(!!user.id);
     });
   }
 
   saveComment(form: FormGroup) {
-    if (!this.isSignIn) {
+    if (!this.isSignIn()) {
       this.showSigninModal();
       return;
     }
@@ -146,26 +137,25 @@ export class CommentComponent extends BaseComponent implements OnInit {
     if (!valid) {
       return;
     }
-    this.saveLoading = true;
+    this.saveLoading.set(true);
     this.commentService
       .saveComment({
-        targetId: this.targetId,
-        targetType: this.targetType,
-        parentId: this.commentParentId,
-        topId: this.commentTopId,
+        targetId: this.targetId(),
+        targetType: this.targetType(),
+        parentId: this.commentParentId(),
+        topId: this.commentTopId(),
         content: value.content
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.saveLoading = false;
+        this.saveLoading.set(false);
         if (res.code === ResponseCode.SUCCESS) {
-          this.replyMode = false;
           this.resetCommentForm(form);
-          this.resetReplyVisible();
+          this.cancelReply();
 
           if (res.data.status === 'success') {
             this.message.success('评论成功');
-            this.getComments(true);
+            this.getComments();
           } else {
             this.message.success('评论成功，审核通过后将显示在页面上');
           }
@@ -174,17 +164,22 @@ export class CommentComponent extends BaseComponent implements OnInit {
   }
 
   vote(comment: CommentModel, like: boolean) {
-    if (!this.isSignIn) {
+    if (!this.isSignIn()) {
       this.showSigninModal();
       return;
     }
-    if (this.commentVoteLoading[comment.id]) {
+    if (this.voteLoadingMap()[comment.id]) {
       return;
     }
     if (comment.liked || comment.disliked) {
       return;
     }
-    this.commentVoteLoading[comment.id] = true;
+    this.voteLoadingMap.update((data) => {
+      return {
+        ...data,
+        [comment.id]: true
+      };
+    });
     this.voteService
       .saveVote({
         targetId: comment.id,
@@ -193,11 +188,16 @@ export class CommentComponent extends BaseComponent implements OnInit {
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.commentVoteLoading[comment.id] = false;
+        this.voteLoadingMap.update((data) => {
+          return {
+            ...data,
+            [comment.id]: false
+          };
+        });
 
         if (res.code === ResponseCode.SUCCESS) {
-          comment.likes = res.data.likes;
-          comment.dislikes = res.data.dislikes;
+          comment.likes = res.data.likeCount;
+          comment.dislikes = res.data.dislikeCount;
           comment.liked = like;
           comment.disliked = !like;
         }
@@ -206,19 +206,24 @@ export class CommentComponent extends BaseComponent implements OnInit {
 
   reply(comment: CommentModel) {
     this.resetReplyVisible();
-    this.resetCommentForm(this.replyForm);
+    this.resetCommentForm(this.replyForm());
 
-    this.commentParentId = comment.id;
-    this.commentTopId = comment.topId;
-    this.replyVisibleMap[comment.id] = true;
-    this.replyMode = true;
+    this.commentParentId.set(comment.id);
+    this.commentTopId.set(comment.topId || '');
+    this.replyVisibleMap.update((data) => {
+      return {
+        ...data,
+        [comment.id]: true
+      };
+    });
+    this.replyMode.set(true);
   }
 
   cancelReply() {
     this.resetReplyVisible();
-    this.commentParentId = '';
-    this.commentTopId = '';
-    this.replyMode = false;
+    this.commentParentId.set('');
+    this.commentTopId.set('');
+    this.replyMode.set(false);
   }
 
   scrollToComment(e: MouseEvent) {
@@ -234,7 +239,7 @@ export class CommentComponent extends BaseComponent implements OnInit {
   }
 
   showSigninModal() {
-    this.commonService.updateSigninModalVisible({
+    this.commonService.updateSigninOptions({
       visible: true,
       closable: true
     });
@@ -243,14 +248,20 @@ export class CommentComponent extends BaseComponent implements OnInit {
   private getComments(scroll = false) {
     this.commentService
       .getCommentsByTargetId({
-        targetId: this.targetId,
-        targetType: this.targetType,
+        targetId: this.targetId(),
+        targetType: this.targetType(),
         page: this.page(),
-        size: this.pageSize()
+        size: this.pageSize
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.comments = this.commentService.buildCommentTree(res.list || [], this.threadDepth, this.avatarType);
+        this.comments.set(
+          this.commentService.buildCommentTree({
+            comments: res.list || [],
+            depth: this.threadDepth(),
+            avatarType: this.avatarType()
+          })
+        );
 
         if (scroll) {
           this.scrollToComments();
@@ -280,10 +291,10 @@ export class CommentComponent extends BaseComponent implements OnInit {
 
   private resetReplyStatus() {
     this.resetReplyVisible();
-    this.replyMode = false;
+    this.replyMode.set(false);
   }
 
   private resetReplyVisible() {
-    this.replyVisibleMap = {};
+    this.replyVisibleMap.set({});
   }
 }

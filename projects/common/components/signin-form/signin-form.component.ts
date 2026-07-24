@@ -1,10 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, computed, inject, input, OnInit, output, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
   ADMIN_URL_PARAM,
   AppConfigService,
-  AppDomainConfig,
   AuthService,
   BaseComponent,
   DestroyService,
@@ -43,63 +42,49 @@ import { USER_EMAIL_LENGTH, USER_PASSWORD_MAX_LENGTH } from './auth.constant';
   styleUrl: './signin-form.component.less'
 })
 export class SigninFormComponent extends BaseComponent implements OnInit {
-  @Input() isModal = true;
-  @Input() padding = false;
-  @Output() closeForm = new EventEmitter();
+  private readonly destroy$ = inject(DestroyService);
+  private readonly fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+  private readonly message = inject(NzMessageService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly commonService = inject(CommonService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+  private readonly authService = inject(AuthService);
+
+  readonly isModal = input(true);
+  readonly padding = input(false);
+  readonly closeForm = output<void>();
 
   readonly maxNameLength = USER_EMAIL_LENGTH;
   readonly maxPasswordLength = USER_PASSWORD_MAX_LENGTH;
-
-  domains!: AppDomainConfig;
-  signinForm!: FormGroup;
-  signinLoading = false;
-  oauthMap: Record<string, boolean> = {
+  readonly domains = this.appConfigService.apps;
+  readonly signinForm = this.fb.group({
+    name: ['', [Validators.required, Validators.maxLength(this.maxNameLength)]],
+    password: [null, [Validators.required, Validators.maxLength(this.maxPasswordLength)]]
+  });
+  readonly signinLoading = signal(false);
+  readonly oauthMap = signal<Record<string, boolean>>({
     wechat: false,
     qq: false,
     alipay: false,
     weibo: false,
     github: false
-  };
+  });
+  readonly isSignupEnable = computed(() => {
+    return this.options()['open_signup'] === '1';
+  });
+  readonly isOauthEnable = computed(() => {
+    const oauthMap = this.oauthMap();
 
-  get enableSignup() {
-    return this.options['open_signup'] === '1';
-  }
+    return oauthMap['wechat'] || oauthMap['qq'] || oauthMap['alipay'] || oauthMap['weibo'] || oauthMap['github'];
+  });
 
-  get enableOauth() {
-    return (
-      this.oauthMap['wechat'] ||
-      this.oauthMap['qq'] ||
-      this.oauthMap['alipay'] ||
-      this.oauthMap['weibo'] ||
-      this.oauthMap['github']
-    );
-  }
-
-  private readonly isMobile: boolean = false;
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
-  private referrer = '';
-
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly fb: FormBuilder,
-    private readonly route: ActivatedRoute,
-    private readonly message: NzMessageService,
-    private readonly userAgentService: UserAgentService,
-    private readonly appConfigService: AppConfigService,
-    private readonly commonService: CommonService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService,
-    private readonly authService: AuthService
-  ) {
-    super();
-    this.isMobile = this.userAgentService.isMobile;
-    this.domains = this.appConfigService.apps;
-    this.signinForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(this.maxNameLength)]],
-      password: [null, [Validators.required, Validators.maxLength(this.maxPasswordLength)]]
-    });
-  }
+  private readonly isMobile = this.uaService.isMobile;
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly options = signal<OptionEntity>({});
+  private readonly referrer = signal('');
 
   ngOnInit(): void {
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.queryParamMap])
@@ -108,18 +93,21 @@ export class SigninFormComponent extends BaseComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe(([appInfo, options, qp]) => {
-        this.appInfo = appInfo;
-        this.options = options;
-        this.oauthMap['alipay'] = !!options['open_alipay_app_id'];
-        this.oauthMap['weibo'] = !!options['open_weibo_app_key'];
-        this.oauthMap['github'] = !!options['open_github_client_id'];
+        this.appInfo.set(appInfo);
+        this.options.set(options);
+        this.oauthMap.update((data) => ({
+          ...data,
+          alipay: !!options['open_alipay_app_id'],
+          weibo: !!options['open_weibo_app_key'],
+          github: !!options['open_github_client_id']
+        }));
 
         const ref = qp.get('ref')?.trim() || '';
         try {
-          this.referrer = decodeURIComponent(ref);
+          this.referrer.set(decodeURIComponent(ref));
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
-          this.referrer = ref;
+          this.referrer.set(ref);
         }
         if (ref === 'logout') {
           this.authService.clearAuth();
@@ -133,7 +121,7 @@ export class SigninFormComponent extends BaseComponent implements OnInit {
       return;
     }
     const { name, password } = value;
-    this.signinLoading = true;
+    this.signinLoading.set(true);
     this.authService
       .signin({
         name,
@@ -141,24 +129,26 @@ export class SigninFormComponent extends BaseComponent implements OnInit {
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.signinLoading = false;
+        this.signinLoading.set(false);
         const authInfo: SigninResponse = res.data || {};
 
         if (authInfo.token?.token) {
+          const referrer = this.referrer();
+          const appInfo = this.appInfo();
           const urlParam = format(ADMIN_URL_PARAM, authInfo.token.token, this.appConfigService.appId);
           let redirectUrl: string;
-          if (!this.isModal) {
-            if (this.referrer && this.referrer !== 'logout') {
-              const separator = this.referrer.indexOf('?') >= 0 ? '&' : '?';
-              if (/^https?:\/\//i.test(this.referrer)) {
+          if (!this.isModal()) {
+            if (referrer && referrer !== 'logout') {
+              const separator = referrer.indexOf('?') >= 0 ? '&' : '?';
+              if (/^https?:\/\//i.test(referrer)) {
                 // 绝对路径
-                redirectUrl = this.referrer + separator + urlParam;
+                redirectUrl = referrer + separator + urlParam;
               } else {
                 // 相对路径，不需要带上token
-                redirectUrl = this.appInfo.homeUrl + '/' + this.referrer.replace(/^\//i, '');
+                redirectUrl = appInfo?.homeUrl + '/' + referrer.replace(/^\//i, '');
               }
             } else {
-              redirectUrl = this.appInfo.adminUrl + '?' + urlParam;
+              redirectUrl = appInfo?.adminUrl + '?' + urlParam;
             }
             location.href = redirectUrl;
           } else {
@@ -180,14 +170,14 @@ export class SigninFormComponent extends BaseComponent implements OnInit {
   }
 
   oauthSignin(type: string): void {
-    if (!this.oauthMap[type]) {
+    if (!this.oauthMap()[type]) {
       this.message.warning('Sorry, we are stepping up our efforts to launch this feature, please wait...');
       return;
     }
     const url = this.authService.getOauthURL({
       type,
-      options: this.options,
-      callbackUrl: this.appInfo.callbackUrl,
+      options: this.options(),
+      callbackUrl: this.appInfo()?.callbackUrl || '',
       ref: '',
       isMobile: this.isMobile
     });

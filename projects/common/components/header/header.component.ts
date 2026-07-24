@@ -1,9 +1,8 @@
-import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, inject, model, OnInit, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   ADMIN_URL_PARAM,
   AppConfigService,
-  AppDomainConfig,
   AuthService,
   DestroyService,
   PageIndexInfo,
@@ -33,10 +32,22 @@ import { TOOL_LINKS } from './tool.constant';
   styleUrl: './header.component.less'
 })
 export class HeaderComponent implements OnInit, AfterViewChecked {
-  @ViewChild('mSearchInput') mSearchInput!: ElementRef;
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly message = inject(NzMessageService);
+  private readonly commonService = inject(CommonService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly categoryService = inject(CategoryService);
+  private readonly authService = inject(AuthService);
+  private readonly userService = inject(UserService);
 
-  readonly faviconUrl: string;
-  readonly magazineUrl: string;
+  readonly mSearchInput = viewChild<ElementRef<HTMLInputElement>>('mSearchInput');
+
+  readonly domains = this.appConfigService.apps;
+  readonly faviconUrl = this.appConfigService.faviconUrl;
+  readonly magazineUrl = this.appConfigService.magazineUrl;
+  readonly isMobile = this.uaService.isMobile;
   readonly searchTypeMap: Record<string, string> = {
     [SearchType.ALL]: '全站',
     [SearchType.POST]: '博客',
@@ -44,38 +55,19 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
     [SearchType.GAME]: '游戏'
   };
 
-  isMobile = false;
-  isSignIn = false;
-  domains!: AppDomainConfig;
-  indexInfo?: PageIndexInfo;
-  appInfo?: TenantAppVo;
-  user!: UserModel;
-  postCategories: CategoryNode[] = [];
-  gameCategories: CategoryNode[] = [];
-  toolLinks = TOOL_LINKS;
-  keyword = '';
-  searchType = 'all';
-  searchVisible = false;
-  isFocused = false;
+  readonly isSignIn = signal(false);
+  readonly indexInfo = signal<PageIndexInfo | null>(null);
+  readonly appInfo = signal<TenantAppVo | null>(null);
+  readonly user = signal<UserModel | null>(null);
+  readonly postCategories = signal<CategoryNode[]>([]);
+  readonly gameCategories = signal<CategoryNode[]>([]);
+  readonly toolLinks = TOOL_LINKS;
+  readonly keyword = model('');
+  readonly searchType = model('all');
+  readonly searchVisible = signal(false);
+  readonly isFocused = signal(false);
 
-  private adminUrl = '';
-
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly message: NzMessageService,
-    private readonly commonService: CommonService,
-    private readonly appConfigService: AppConfigService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly categoryService: CategoryService,
-    private readonly authService: AuthService,
-    private readonly userService: UserService
-  ) {
-    this.domains = appConfigService.apps;
-    this.faviconUrl = appConfigService.faviconUrl;
-    this.magazineUrl = appConfigService.magazineUrl;
-    this.isMobile = userAgentService.isMobile;
-  }
+  private readonly adminUrl = signal('');
 
   ngOnInit(): void {
     this.tenantAppService.appInfo$
@@ -86,57 +78,62 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
       .subscribe((appInfo) => {
         const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), this.appConfigService.appId);
 
-        this.appInfo = appInfo;
-        if (this.appInfo.adminUrl) {
-          this.adminUrl = this.appInfo.adminUrl + '?' + urlParam;
+        this.appInfo.set(appInfo);
+        if (appInfo.adminUrl) {
+          this.adminUrl.set(appInfo.adminUrl + '?' + urlParam);
         }
       });
-    this.categoryService.getCategories().subscribe((categories) => (this.postCategories = categories));
-    this.categoryService.getCategories(CategoryType.GAME).subscribe((categories) => (this.gameCategories = categories));
+    this.categoryService.getCategories().subscribe((categories) => this.postCategories.set(categories));
+    this.categoryService
+      .getCategories(CategoryType.GAME)
+      .subscribe((categories) => this.gameCategories.set(categories));
     this.commonService.pageIndex$.pipe(takeUntil(this.destroy$)).subscribe((page) => {
-      this.indexInfo = this.commonService.getPageIndexInfo(page);
+      this.indexInfo.set(this.commonService.getPageIndexInfo(page));
     });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      this.user = user;
-      this.isSignIn = !!user.id;
+      this.user.set(user);
+      this.isSignIn.set(!!user.id);
     });
   }
 
   ngAfterViewChecked(): void {
-    if (!this.isFocused && this.mSearchInput) {
-      this.mSearchInput.nativeElement.focus();
-      this.isFocused = true;
+    const $input = this.mSearchInput();
+    if (!this.isFocused() && $input) {
+      $input.nativeElement.focus();
+
+      this.isFocused.set(true);
     }
   }
 
   search(): void {
-    this.keyword = this.keyword.trim();
-    if (!this.keyword) {
+    const keyword = this.keyword().trim();
+    if (!keyword) {
       this.message.error('请输入搜索关键词');
+
       if (this.isMobile) {
-        this.mSearchInput.nativeElement.focus();
+        this.mSearchInput()?.nativeElement.focus();
       }
       return;
     }
     this.commonService.smartNavigate('/search', this.domains['www'].url, {
       queryParams: {
-        type: this.searchType === 'all' ? undefined : this.searchType,
-        keyword: this.keyword
+        type: this.searchType() === 'all' ? undefined : this.searchType(),
+        keyword: keyword
       }
     });
   }
 
   showSearch() {
-    this.searchVisible = true;
+    this.searchVisible.set(true);
   }
 
   hideSearch() {
-    this.searchVisible = false;
-    this.isFocused = false;
+    this.searchVisible.set(false);
+    this.isFocused.set(false);
   }
 
   gotoAdmin() {
-    window.open(this.adminUrl);
+    window.open(this.adminUrl());
   }
 
   signout() {

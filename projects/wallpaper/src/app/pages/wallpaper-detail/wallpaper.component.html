@@ -1,19 +1,20 @@
+@let w = wallpaper();
 <lib-breadcrumb/>
-@if (wallpaper) {
+@if (w) {
   <div class="post" [class.p-post]="!isMobile" [class.m-post]="isMobile">
     <header class="post-header">
       <h1 class="post-title">
         <a routerLink="."
-           [queryParams]="langParams"
-           [title]="wallpaper.copyright"
-           rel="bookmark">{{ wallpaper.copyright }}</a>
+           [queryParams]="langParams()"
+           [title]="w.copyright"
+           rel="bookmark">{{ w.copyright }}</a>
       </h1>
       <div class="post-meta post-meta-top">
-        <span title="日期: {{ wallpaper.bingDate | date: 'yyyy-MM-dd' }}">
-          <fi-calendar-date class="fi"/><span>{{ wallpaper.bingDate | date: 'yyyy-MM-dd' }}</span>
+        <span title="日期: {{ w.bingDate | date: 'yyyy-MM-dd' }}">
+          <fi-calendar-date class="fi"/><span>{{ w.bingDate | date: 'yyyy-MM-dd' }}</span>
         </span>
-        <span title="访问：{{ wallpaper.wallpaperStat.viewCount | numberView: 'K' }}">
-          <nz-icon nzType="eye"/><span>{{ wallpaper.wallpaperStat.viewCount | numberView: 'K' }}</span>
+        <span title="访问：{{ w.wallpaperStat.viewCount | numberView: 'K' }}">
+          <nz-icon nzType="eye"/><span>{{ w.wallpaperStat.viewCount | numberView: 'K' }}</span>
         </span>
       </div>
     </header>
@@ -21,41 +22,41 @@
     <div class="post-content wallpaper">
       <figure>
         <div class="wallpaper-preview" (click)="showWallpaper()">
-          <img [src]="wallpaper.url" [alt]="wallpaper.copyright"/>
+          <img [src]="w.url" [alt]="w.copyright"/>
           <div class="wallpaper-overlay"></div>
         </div>
-        <figcaption>{{ wallpaper.title }}</figcaption>
+        <figcaption>{{ w.title }}</figcaption>
       </figure>
       <div class="wallpaper-actions">
         <button nz-button
                 nzType="primary"
                 (click)="download()"
-                [nzLoading]="downloading"
-                title="下载《{{wallpaper.copyright}}》高清壁纸">
+                [nzLoading]="downloading()"
+                title="下载《{{w.copyright}}》高清壁纸">
           <fi-download class="fi"/><span>{{ isMobile ? '2K' : '1920x1080' }}</span>
         </button>
         <button nz-button
                 nzType="primary"
                 (click)="download(true)"
-                [nzLoading]="downloading"
-                title="下载《{{wallpaper.copyright}}》 4K 超高清壁纸">
+                [nzLoading]="downloading()"
+                title="下载《{{w.copyright}}》 4K 超高清壁纸">
           <fi-download class="fi"/><span>{{ isMobile ? '4K' : '4K 超高清' }}</span>
         </button>
         <a nz-button
            nzType="primary"
-           [href]="domains['jigsaw'].url + '/detail/' + wallpaper.id"
-           title="《{{wallpaper.copyright}}》拼图"><nz-icon nzType="product"/><span>拼图</span></a>
+           [href]="domains['jigsaw'].url + '/detail/' + w.id"
+           title="《{{w.copyright}}》拼图"><nz-icon nzType="product"/><span>拼图</span></a>
       </div>
-      <h2>{{ wallpaper.storyTitle }}</h2>
-      <article [innerHTML]="wallpaper.story | safeHtml"></article>
-      @if (wallpaper.fact) {
-        <h2>{{ factTitle }}</h2>
-        <p>{{ wallpaper.fact }}</p>
+      <h2>{{ w.storyTitle }}</h2>
+      <article [innerHTML]="w.story | safeHtml"></article>
+      @if (w.fact) {
+        <h2>{{ factTitle() }}</h2>
+        <p>{{ w.fact }}</p>
       }
-      @if (wallpaper.hasTranslation) {
+      @if (w.hasTranslation) {
         <p>
           <a routerLink="."
-             [queryParams]="translateLangParams"
+             [queryParams]="translateLangParams()"
              title="查看翻译"
              rel="bookmark">查看翻译</a>
         </p>
@@ -69,7 +70,7 @@
           </div>
           <div class="post-meta-info">
             <span class="post-meta-info-text"
-                  title="地点: {{ wallpaper.location }}">{{ wallpaper.location }}</span>
+                  title="地点: {{ w.location }}">{{ w.location }}</span>
           </div>
         </div>
       </div>
@@ -79,32 +80,32 @@
         </div>
         <div class="post-meta-info">
           <span class="post-meta-info-text"
-                title="版权: {{ wallpaper.copyrightAuthor }}">{{ wallpaper.copyrightAuthor }}</span>
+                title="版权: {{ w.copyrightAuthor }}">{{ w.copyrightAuthor }}</span>
         </div>
       </div>
       <div class="post-actions">
         <div>
-          <button class="button-like" [class.liked]="wallpaper.isVoted" (click)="vote()">
+          <button class="button-like" [class.liked]="w.isVoted" (click)="vote()">
             <nz-icon nzType="like" nzTheme="fill"/>
-            <span class="text">真棒！{{ wallpaper.wallpaperStat.likeCount > 0 ? wallpaper.wallpaperStat.likeCount : '' }}</span>
+            <span class="text">真棒！{{ w.wallpaperStat.likeCount > 0 ? w.wallpaperStat.likeCount : '' }}</span>
             <span class="parkinson-mask"><nz-icon nzType="like" nzTheme="fill"/></span>
           </button>
           <button (click)="showReward()" title="打赏"><nz-icon nzType="heart" nzTheme="fill"/></button>
-          <button [class.liked]="wallpaper.isFavorite"
+          <button [class.liked]="w.isFavorite"
                   (click)="addFavorite()"
-                  [title]="wallpaper.isFavorite ? '已收藏' : '收藏'"><nz-icon nzType="star" nzTheme="fill"/></button>
+                  [title]="w.isFavorite ? '已收藏' : '收藏'"><nz-icon nzType="star" nzTheme="fill"/></button>
           @if (!isMobile) {
             <button (click)="showShareQrcode()" title="分享"><fi-share-fill/></button>
           }
         </div>
       </div>
     </footer>
-    <lib-wallpaper-prev-next [lang]="lang"/>
+    <lib-wallpaper-prev-next [lang]="lang()"/>
   </div>
-  <lib-wallpaper-related [lang]="lang"/>
+  <lib-wallpaper-related [lang]="lang()"/>
   <lib-make-money/>
   <lib-comment [targetType]="commentType" [enableAI]="true"/>
-  @if (shareVisible) {
-    <lib-share-modal [shareUrl]="shareUrl" (close)="closeShareQrcode()"/>
+  @if (shareVisible()) {
+    <lib-share-modal [shareUrl]="shareUrl()" (close)="closeShareQrcode()"/>
   }
 }

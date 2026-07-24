@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { GameService } from 'common/components';
 import { DestroyService, GAME_EMPTY_COVER, UserAgentService } from 'common/core';
@@ -13,24 +13,18 @@ import { skipWhile, takeUntil } from 'rxjs';
   templateUrl: './game-related.component.html'
 })
 export class GameRelatedComponent implements OnInit {
-  readonly emptyCover: string = '';
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly commonService = inject(CommonService);
+  private readonly gameService = inject(GameService);
 
-  isMobile = false;
-  relatedGames: GameSearchItem[] = [];
+  readonly emptyCover = this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER;
+  readonly isMobile = this.uaService.isMobile;
+  readonly relatedGames = signal<GameSearchItem[]>([]);
 
-  private gameId = '';
-  private isChanged = false;
-  private isLoaded = false;
-
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly commonService: CommonService,
-    private readonly gameService: GameService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-    this.emptyCover = this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER;
-  }
+  private readonly gameId = signal('');
+  private readonly isChanged = signal(false);
+  private readonly isLoaded = signal(false);
 
   ngOnInit(): void {
     this.gameService.activeGameId$
@@ -39,11 +33,11 @@ export class GameRelatedComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe((gameId) => {
-        this.isChanged = this.gameId !== gameId;
-        this.gameId = gameId;
-        if (!this.isLoaded || this.isChanged) {
+        this.isChanged.set(this.gameId() !== gameId);
+        this.gameId.set(gameId);
+        if (!this.isLoaded() || this.isChanged()) {
           this.getRelatedGames();
-          this.isLoaded = true;
+          this.isLoaded.set(true);
         }
       });
   }
@@ -51,13 +45,13 @@ export class GameRelatedComponent implements OnInit {
   private getRelatedGames(): void {
     this.gameService
       .getRelatedGames({
-        id: this.gameId,
+        id: this.gameId(),
         page: 1,
         size: 4
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.relatedGames = res;
+        this.relatedGames.set(res);
       });
   }
 }

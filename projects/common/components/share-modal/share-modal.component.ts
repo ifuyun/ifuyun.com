@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { AppConfigService } from 'common/core';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzQRCodeModule } from 'ng-zorro-antd/qr-code';
@@ -9,15 +9,13 @@ import { NzQRCodeModule } from 'ng-zorro-antd/qr-code';
   templateUrl: './share-modal.component.html'
 })
 export class ShareModalComponent {
-  @Input() visible = true;
-  @Input() shareUrl = '';
-  @Output() close = new EventEmitter();
+  private readonly appConfigService = inject(AppConfigService);
 
-  readonly faviconUrl: string;
+  readonly visible = input(true);
+  readonly shareUrl = input('');
+  readonly close = output<void>();
 
-  constructor(private readonly appConfigService: AppConfigService) {
-    this.faviconUrl = appConfigService.faviconUrl;
-  }
+  readonly faviconUrl = this.appConfigService.faviconUrl;
 
   closeModal() {
     this.close.emit();

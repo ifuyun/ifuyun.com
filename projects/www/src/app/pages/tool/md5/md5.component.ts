@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, model, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BreadcrumbComponent, MakeMoneyComponent, MD5_PAGE_DESCRIPTION, MD5_PAGE_KEYWORDS } from 'common/components';
 import {
@@ -29,31 +29,26 @@ import { Md5Service } from '../../../services/md5.service';
   styleUrl: '../tool.less'
 })
 export class Md5Component implements OnInit {
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly commonService = inject(CommonService);
+  private readonly metaService = inject(MetaService);
+  private readonly message = inject(MessageService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+  private readonly md5Service = inject(Md5Service);
+
   readonly maxContentLength = 8000;
+  readonly isMobile = this.uaService.isMobile;
+  readonly encryptContent = model('');
+  readonly encryptResult = model('');
 
-  isMobile = false;
-  encryptContent = '';
-  encryptResult = '';
+  protected readonly pageIndex = 'tool-md5';
 
-  protected pageIndex = 'tool-md5';
-
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
-  private contentChange$ = new BehaviorSubject('');
-
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly commonService: CommonService,
-    private readonly metaService: MetaService,
-    private readonly message: MessageService,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService,
-    private readonly md5Service: Md5Service
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly options = signal<OptionEntity>({});
+  private readonly contentChange$ = new BehaviorSubject('');
 
   ngOnInit(): void {
     this.updatePageIndex();
@@ -66,37 +61,38 @@ export class Md5Component implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe(([appInfo, options]) => {
-        this.appInfo = appInfo;
-        this.options = options;
+        this.appInfo.set(appInfo);
+        this.options.set(options);
 
         this.updatePageInfo();
       });
   }
 
   encrypt(isUpper = false) {
-    if (!this.encryptContent) {
+    if (!this.encryptContent()) {
       return;
     }
-    if (this.encryptContent.length > this.maxContentLength) {
+    if (this.encryptContent().length > this.maxContentLength) {
       this.message.error(
-        `待加密内容最大长度为 ${this.maxContentLength} 字符，当前为 ${this.encryptContent.length} 字符`
+        `待加密内容最大长度为 ${this.maxContentLength} 字符，当前为 ${this.encryptContent().length} 字符`
       );
       return;
     }
     this.md5Service
-      .transform(this.encryptContent)
+      .transform(this.encryptContent())
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res.code === ResponseCode.SUCCESS) {
           const result = res.data || '';
-          this.encryptResult = isUpper ? result.toUpperCase() : result;
+
+          this.encryptResult.set(isUpper ? result.toUpperCase() : result);
         }
       });
   }
 
   reset() {
-    this.encryptContent = '';
-    this.encryptResult = '';
+    this.encryptContent.set('');
+    this.encryptResult.set('');
   }
 
   onContentChange(content: string) {
@@ -116,20 +112,20 @@ export class Md5Component implements OnInit {
       .asObservable()
       .pipe(debounceTime(500), takeUntil(this.destroy$))
       .subscribe(() => {
-        this.encryptResult = '';
+        this.encryptResult.set('');
       });
   }
 
   private updatePageInfo() {
-    const titles = ['MD5 加密', '工具', this.appInfo.name];
-    const description = `${this.appInfo.name} ${MD5_PAGE_DESCRIPTION}`;
+    const titles = ['MD5 加密', '工具', this.appInfo()!.name];
+    const description = `${this.appInfo()!.name} ${MD5_PAGE_DESCRIPTION}`;
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,
       keywords: uniq(MD5_PAGE_KEYWORDS)
         .filter((item) => !!item)
         .join(','),
-      author: this.options['site_author']
+      author: this.options()['site_author']
     };
     this.metaService.updateHTMLMeta(metaData);
   }

@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   ElementRef,
+  inject,
   Injector,
   input,
   model,
@@ -61,6 +62,17 @@ import { AiChatService } from './ai-chat.service';
   styleUrls: ['./ai-chat.component.less']
 })
 export class AiChatComponent extends BaseComponent implements OnInit {
+  private readonly destroy$ = inject(DestroyService);
+  private readonly injector = inject(Injector);
+  private readonly route = inject(ActivatedRoute);
+  private readonly message = inject(NzMessageService);
+  private readonly imageService = inject(NzImageService);
+  private readonly optionService = inject(OptionService);
+  private readonly userService = inject(UserService);
+  private readonly botService = inject(BotService);
+  private readonly botConversationService = inject(BotConversationService);
+  private readonly botChatService = inject(AiChatService);
+
   readonly conversationId = model<string>('');
   readonly showAvatar = input<boolean>(true);
   readonly prompt = model<string>('');
@@ -175,21 +187,6 @@ export class AiChatComponent extends BaseComponent implements OnInit {
     }
     return '';
   });
-
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly injector: Injector,
-    private readonly route: ActivatedRoute,
-    private readonly message: NzMessageService,
-    private readonly imageService: NzImageService,
-    private readonly optionService: OptionService,
-    private readonly userService: UserService,
-    private readonly botService: BotService,
-    private readonly botConversationService: BotConversationService,
-    private readonly botChatService: AiChatService
-  ) {
-    super();
-  }
 
   ngOnInit() {
     combineLatest([this.optionService.options$, this.userService.user$, this.botChatService.getChatUsage()])

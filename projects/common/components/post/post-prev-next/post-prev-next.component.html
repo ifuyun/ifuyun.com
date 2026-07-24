@@ -1,38 +1,40 @@
+@let prev = prevPost();
+@let next = nextPost();
 <div class="post-more" [class.p-post-more]="!isMobile" [class.m-post-more]="isMobile">
-  @if (prevPost) {
+  @if (prev) {
     <div class="post-more-prev">
       <div class="post-more-photo">
-        @if (!isChanged) {
-          <div class="post-more-photo-content lazyload" [attr.data-bg]="prevPost.coverUrl"></div>
+        @if (!isChanged()) {
+          <div class="post-more-photo-content lazyload" [attr.data-bg]="prev.coverUrl"></div>
         } @else {
-          <div class="post-more-photo-content" [style.background-image]="'url(' + prevPost.coverUrl + ')'"></div>
+          <div class="post-more-photo-content" [style.background-image]="'url(' + prev.coverUrl + ')'"></div>
         }
         <div class="post-more-photo-overlay"></div>
       </div>
       <div class="post-more-content">
-        <div class="post-more-content-title">{{ prevPost.title }}</div>
+        <div class="post-more-content-title">{{ prev.title }}</div>
         <div>上一篇</div>
       </div>
-      <a class="post-more-link" [routerLink]="prevPost.url" [title]="prevPost.title"></a>
+      <a class="post-more-link" [routerLink]="prev.url" [title]="prev.title"></a>
     </div>
   } @else {
     <div></div>
   }
-  @if (nextPost) {
+  @if (next) {
     <div class="post-more-next">
       <div class="post-more-photo">
-        @if (!isChanged) {
-          <div class="post-more-photo-content lazyload" [attr.data-bg]="nextPost.coverUrl"></div>
+        @if (!isChanged()) {
+          <div class="post-more-photo-content lazyload" [attr.data-bg]="next.coverUrl"></div>
         } @else {
-          <div class="post-more-photo-content" [style.background-image]="'url(' + nextPost.coverUrl + ')'"></div>
+          <div class="post-more-photo-content" [style.background-image]="'url(' + next.coverUrl + ')'"></div>
         }
         <div class="post-more-photo-overlay"></div>
       </div>
       <div class="post-more-content">
-        <div class="post-more-content-title">{{ nextPost.title }}</div>
+        <div class="post-more-content-title">{{ next.title }}</div>
         <div>下一篇</div>
       </div>
-      <a class="post-more-link" [routerLink]="nextPost.url" [title]="nextPost.title"></a>
+      <a class="post-more-link" [routerLink]="next.url" [title]="next.title"></a>
     </div>
   } @else {
     <div></div>

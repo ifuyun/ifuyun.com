@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DestroyService, UserAgentService } from 'common/core';
 import { ContentType } from 'common/enums';
@@ -13,21 +13,17 @@ import { skipWhile, takeUntil } from 'rxjs';
   templateUrl: './post-prev-next.component.html'
 })
 export class PostPrevNextComponent implements OnInit {
-  isMobile = false;
-  isChanged = false;
-  prevPost?: PostModel;
-  nextPost?: PostModel;
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly postService = inject(PostService);
 
-  private postId = '';
-  private isLoaded = false;
+  readonly isMobile = this.uaService.isMobile;
+  readonly isChanged = signal(false);
+  readonly prevPost = signal<PostModel | null>(null);
+  readonly nextPost = signal<PostModel | null>(null);
 
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly postService: PostService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  private readonly postId = signal('');
+  private readonly isLoaded = signal(false);
 
   ngOnInit(): void {
     this.postService.activePostId$
@@ -36,11 +32,12 @@ export class PostPrevNextComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe((postId) => {
-        this.isChanged = this.postId !== postId;
-        this.postId = postId;
-        if (!this.isLoaded || this.isChanged) {
+        this.isChanged.set(this.postId() !== postId);
+        this.postId.set(postId);
+
+        if (!this.isLoaded() || this.isChanged()) {
           this.getPostsOfPrevAndNext();
-          this.isLoaded = true;
+          this.isLoaded.set(true);
         }
       });
   }
@@ -48,13 +45,13 @@ export class PostPrevNextComponent implements OnInit {
   private getPostsOfPrevAndNext(): void {
     this.postService
       .getPostsOfPrevAndNext({
-        id: this.postId,
+        id: this.postId(),
         contentType: ContentType.POST
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.prevPost = res.prevPost;
-        this.nextPost = res.nextPost;
+        this.prevPost.set(res.prevPost);
+        this.nextPost.set(res.nextPost);
       });
   }
 }

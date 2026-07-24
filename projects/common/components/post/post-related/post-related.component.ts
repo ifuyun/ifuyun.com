@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DestroyService, UserAgentService } from 'common/core';
 import { PostSearchItem } from 'common/interfaces';
@@ -12,20 +12,16 @@ import { skipWhile, takeUntil } from 'rxjs';
   templateUrl: './post-related.component.html'
 })
 export class PostRelatedComponent implements OnInit {
-  isMobile = false;
-  relatedPosts: PostSearchItem[] = [];
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly postService = inject(PostService);
 
-  private postId = '';
-  private isChanged = false;
-  private isLoaded = false;
+  readonly isMobile = this.uaService.isMobile;
+  readonly relatedPosts = signal<PostSearchItem[]>([]);
 
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly postService: PostService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  private readonly postId = signal('');
+  private readonly isChanged = signal(false);
+  private readonly isLoaded = signal(false);
 
   ngOnInit(): void {
     this.postService.activePostId$
@@ -34,21 +30,21 @@ export class PostRelatedComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe((postId) => {
-        this.isChanged = this.postId !== postId;
-        this.postId = postId;
-        if (!this.isLoaded || this.isChanged) {
+        this.isChanged.set(this.postId() !== postId);
+        this.postId.set(postId);
+        if (!this.isLoaded() || this.isChanged()) {
           this.getRelatedPosts();
-          this.isLoaded = true;
+          this.isLoaded.set(true);
         }
       });
   }
 
   private getRelatedPosts(): void {
     this.postService
-      .getRelatedPosts(this.postId)
+      .getRelatedPosts(this.postId())
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.relatedPosts = res;
+        this.relatedPosts.set(res);
       });
   }
 }

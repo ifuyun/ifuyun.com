@@ -1,17 +1,17 @@
 <nz-modal nzDraggable
           nzCentered
-          [nzVisible]="visible"
+          [nzVisible]="visible()"
           [nzWidth]="392"
           [nzBodyStyle]="{ display: 'flex' }"
           [nzFooter]="null"
           (nzOnCancel)="closeModal()"
           (nzOnOk)="closeModal()">
   <ng-container *nzModalContent>
-    @if (shareUrl) {
+    @if (shareUrl()) {
       <nz-qrcode [nzSize]="320"
                  [nzPadding]="0"
                  [nzBordered]="false"
-                 [nzValue]="shareUrl"
+                 [nzValue]="shareUrl()"
                  [nzIcon]="faviconUrl"
                  [nzIconSize]="80"
                  nzLevel="H"/>

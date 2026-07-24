@@ -12,8 +12,8 @@
         <button nz-button
                 type="button"
                 nzType="primary"
-                [disabled]="!forgotForm.get('email')?.valid || countdown > 0"
-                (click)="sendVerificationCode()">验证{{ countdown > 0 ? ' (' + countdown + 's)' : '' }}</button>
+                [disabled]="!forgotForm.get('email')?.valid || countdown() > 0"
+                (click)="sendVerificationCode()">验证{{ countdown() > 0 ? ' (' + countdown() + 's)' : '' }}</button>
       </nz-space-compact>
       <ng-template #nameErrorTpl let-control>
         @if (control.hasError('required')) {
@@ -82,7 +82,7 @@
                 type="submit"
                 nzType="primary"
                 (click)="resetPassword()"
-                [nzLoading]="resetLoading">确定</button>
+                [nzLoading]="resetLoading()">确定</button>
       </div>
     </div>
   </nz-form-item>

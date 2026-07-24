@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DestroyService, UserAgentService } from 'common/core';
 import { WallpaperLang } from 'common/enums';
@@ -13,24 +13,20 @@ import { skipWhile, takeUntil } from 'rxjs';
   templateUrl: './wallpaper-prev-next.component.html'
 })
 export class WallpaperPrevNextComponent implements OnInit {
-  @Input() lang: WallpaperLang = WallpaperLang.CN;
-  @Input() jigsaw = false;
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly wallpaperService = inject(WallpaperService);
 
-  isMobile = false;
-  isChanged = false;
-  prevWallpaper?: Wallpaper;
-  nextWallpaper?: Wallpaper;
+  readonly lang = input(WallpaperLang.CN);
+  readonly jigsaw = input(false);
 
-  private wallpaperId = '';
-  private isLoaded = false;
+  readonly isMobile = this.uaService.isMobile;
+  readonly isChanged = signal(false);
+  readonly prevWallpaper = signal<Wallpaper | null>(null);
+  readonly nextWallpaper = signal<Wallpaper | null>(null);
 
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly wallpaperService: WallpaperService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  private readonly wallpaperId = signal('');
+  private readonly isLoaded = signal(false);
 
   ngOnInit(): void {
     this.wallpaperService.activeWallpaperId$
@@ -39,17 +35,18 @@ export class WallpaperPrevNextComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe((wallpaperId) => {
-        this.isChanged = this.wallpaperId !== wallpaperId;
-        this.wallpaperId = wallpaperId;
-        if (!this.isLoaded || this.isChanged) {
+        this.isChanged.set(this.wallpaperId() !== wallpaperId);
+        this.wallpaperId.set(wallpaperId);
+
+        if (!this.isLoaded() || this.isChanged()) {
           this.getWallpapersOfPrevAndNext();
-          this.isLoaded = true;
+          this.isLoaded.set(true);
         }
       });
   }
 
   getLangParams(wallpaper: Wallpaper) {
-    if (this.lang === WallpaperLang.CN) {
+    if (this.lang() === WallpaperLang.CN) {
       return !wallpaper.isCn ? { lang: WallpaperLang.EN } : {};
     }
     return !wallpaper.isEn ? {} : { lang: WallpaperLang.EN };
@@ -57,11 +54,11 @@ export class WallpaperPrevNextComponent implements OnInit {
 
   private getWallpapersOfPrevAndNext(): void {
     this.wallpaperService
-      .getWallpapersOfPrevAndNext(this.wallpaperId)
+      .getWallpapersOfPrevAndNext(this.wallpaperId())
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res.prevWallpaper) {
-          this.prevWallpaper = {
+          this.prevWallpaper.set({
             ...res.prevWallpaper,
             title: res.prevWallpaper.title || res.prevWallpaper.titleEn,
             copyright: res.prevWallpaper.copyright || res.prevWallpaper.copyrightEn,
@@ -69,12 +66,12 @@ export class WallpaperPrevNextComponent implements OnInit {
             copyrightEn: res.prevWallpaper.copyrightEn || res.prevWallpaper.copyright,
             isCn: !!res.prevWallpaper.copyright,
             isEn: !!res.prevWallpaper.copyrightEn
-          };
+          });
         } else {
-          this.prevWallpaper = undefined;
+          this.prevWallpaper.set(null);
         }
         if (res.nextWallpaper) {
-          this.nextWallpaper = {
+          this.nextWallpaper.set({
             ...res.nextWallpaper,
             title: res.nextWallpaper.title || res.nextWallpaper.titleEn,
             copyright: res.nextWallpaper.copyright || res.nextWallpaper.copyrightEn,
@@ -82,9 +79,9 @@ export class WallpaperPrevNextComponent implements OnInit {
             copyrightEn: res.nextWallpaper.copyrightEn || res.nextWallpaper.copyright,
             isCn: !!res.nextWallpaper.copyright,
             isEn: !!res.nextWallpaper.copyrightEn
-          };
+          });
         } else {
-          this.nextWallpaper = undefined;
+          this.nextWallpaper.set(null);
         }
       });
   }

@@ -1,4 +1,4 @@
-<form nz-form nzLayout="vertical" class="auth-form" [class.auth-form-padding]="padding" [formGroup]="signinForm">
+<form nz-form nzLayout="vertical" class="auth-form" [class.auth-form-padding]="padding()" [formGroup]="signinForm">
   <nz-form-item>
     <nz-form-label>用户名或邮箱</nz-form-label>
     <nz-form-control [nzErrorTip]="nameErrorTpl">
@@ -36,7 +36,7 @@
   <nz-form-item>
     <div class="auth-actions">
       <div>
-        @if (enableSignup) {
+        @if (isSignupEnable()) {
           <span class="auth-action">
             <lib-a class="auth-link"
                    [href]="domains['www'].url + '/user/signup'"
@@ -49,31 +49,32 @@
                  title="忘记密码"><nz-icon nzType="key"/>忘记密码</lib-a>
         </span>
       </div>
-      <button nz-button type="submit" nzType="primary" (click)="signin()" [nzLoading]="signinLoading">登录</button>
+      <button nz-button type="submit" nzType="primary" (click)="signin()" [nzLoading]="signinLoading()">登录</button>
     </div>
   </nz-form-item>
-  @if (enableOauth) {
+  @if (isOauthEnable()) {
+    @let o = oauthMap();
     <nz-divider class="separator" nzText="其他登录方式"/>
     <div class="auth-type">
       <nz-icon nzType="wechat"
                class="auth-type-wechat"
-               [class.disabled]="!oauthMap['wechat']"
+               [class.disabled]="!o['wechat']"
                (click)="oauthSignin('wechat')"/>
       <nz-icon nzType="qq"
                class="auth-type-qq"
-               [class.disabled]="!oauthMap['qq']"
+               [class.disabled]="!o['qq']"
                (click)="oauthSignin('qq')"/>
       <nz-icon nzType="alipay"
                class="auth-type-alipay"
-               [class.disabled]="!oauthMap['alipay']"
+               [class.disabled]="!o['alipay']"
                (click)="oauthSignin('alipay')"/>
       <nz-icon nzType="weibo"
                class="auth-type-weibo"
-               [class.disabled]="!oauthMap['weibo']"
+               [class.disabled]="!o['weibo']"
                (click)="oauthSignin('weibo')"/>
       <nz-icon nzType="github"
                class="auth-type-github"
-               [class.disabled]="!oauthMap['github']"
+               [class.disabled]="!o['github']"
                (click)="oauthSignin('github')"/>
     </div>
   }

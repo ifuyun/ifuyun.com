@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, model, output } from '@angular/core';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { SigninFormComponent } from '../signin-form/signin-form.component';
 
@@ -9,15 +9,15 @@ import { SigninFormComponent } from '../signin-form/signin-form.component';
   styleUrl: './signin-modal.component.less'
 })
 export class SigninModalComponent {
-  @Input() visible = true;
-  @Input() closable = true;
-  @Output() close = new EventEmitter();
+  readonly visible = model(true);
+  readonly closable = input(true);
+  readonly close = output<void>();
 
   closeModal() {
-    if (!this.closable) {
+    if (!this.closable()) {
       return;
     }
-    this.visible = false;
+    this.visible.set(false);
     this.close.emit();
   }
 }

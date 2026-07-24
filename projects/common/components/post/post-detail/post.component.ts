@@ -1,5 +1,5 @@
 import { DatePipe, NgStyle } from '@angular/common';
-import { Component, input, OnInit } from '@angular/core';
+import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   AppConfigService,
@@ -82,82 +82,81 @@ import { PostRelatedComponent } from '../post-related/post-related.component';
   styleUrl: './post.component.less'
 })
 export class PostComponent implements OnInit {
+  private readonly destroy$ = inject(DestroyService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly platform = inject(PlatformService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly message = inject(MessageService);
+  private readonly imageService = inject(NzImageService);
+  private readonly commonService = inject(CommonService);
+  private readonly metaService = inject(MetaService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+  private readonly userService = inject(UserService);
+  private readonly postService = inject(PostService);
+  private readonly voteService = inject(VoteService);
+  private readonly favoriteService = inject(FavoriteService);
+  private readonly commentService = inject(CommentService);
+  private readonly clipboardService = inject(ClipboardService);
+  private readonly logService = inject(LogService);
+
   readonly contentType = input<ContentType>(ContentType.POST);
 
   readonly commentType = this.contentType() === ContentType.POST ? CommentTargetType.POST : CommentTargetType.PAGE;
 
-  isMobile = false;
-  isSignIn = false;
-  isArticle = false;
-  blogHost = '';
-  post!: PostModel;
-  postMeta: Record<string, any> = {};
-  postCategories: PostCategoryVo[] = [];
-  postTags: PostTagVo[] = [];
-  isFavorite = false;
-  isVoted = false;
-  voteLoading = false;
-  favoriteLoading = false;
-  shareVisible = false;
-  shareUrl = '';
+  isMobile = this.uaService.isMobile;
+  isArticle = this.contentType() === ContentType.POST;
+  blogHost = this.appConfigService.apps['blog'].url;
+  isSignIn = signal(false);
+  post = signal<PostModel | null>(null);
+  postMeta = signal<Record<string, any>>({});
+  postCategories = signal<PostCategoryVo[]>([]);
+  postTags = signal<PostTagVo[]>([]);
+  isFavorite = signal(false);
+  isVoted = signal(false);
+  voteLoading = signal(false);
+  favoriteLoading = signal(false);
+  shareVisible = signal(false);
+  shareUrl = signal('');
+  showPayMask = computed(() => {
+    const post = this.post();
+    const user = this.user();
 
-  get showPayMask() {
+    if (!post) {
+      return false;
+    }
+
     return (
-      (this.post.isPaid && (!this.user || (!this.user.isAdmin && this.post.creatorId !== this.user.id))) ||
-      (this.post.visibility === 3 && !this.isSignIn)
+      (post.isPaid && (!user || (!user.isAdmin && post.creatorId !== user.id))) ||
+      (post.visibility === 3 && !this.isSignIn())
     );
-  }
+  });
 
-  protected pageIndex = 'post-detail';
+  protected pageIndex = signal('post-detail');
 
   private readonly copyHTML = `<span class="fi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/></svg></span>`;
   private readonly copiedHTML = `<span class="fi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg></span>`;
 
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
-  private user!: UserModel;
-  private postId = '';
-  private postSlug = '';
-  private referrer = '';
-  private codeList: string[] = [];
-
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly route: ActivatedRoute,
-    private readonly platform: PlatformService,
-    private readonly userAgentService: UserAgentService,
-    private readonly message: MessageService,
-    private readonly imageService: NzImageService,
-    private readonly commonService: CommonService,
-    private readonly metaService: MetaService,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly appConfigService: AppConfigService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService,
-    private readonly userService: UserService,
-    private readonly postService: PostService,
-    private readonly voteService: VoteService,
-    private readonly favoriteService: FavoriteService,
-    private readonly commentService: CommentService,
-    private readonly clipboardService: ClipboardService,
-    private readonly logService: LogService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-    this.blogHost = this.appConfigService.apps['blog'].url;
-  }
+  private appInfo = signal<TenantAppVo | null>(null);
+  private options = signal<OptionEntity>({});
+  private user = signal<UserModel | null>(null);
+  private postId = signal('');
+  private postSlug = signal('');
+  private referrer = signal('');
+  private codeList = signal<string[]>([]);
 
   ngOnInit(): void {
-    this.isArticle = this.contentType() === ContentType.POST;
-
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.paramMap])
       .pipe(
         skipWhile(([appInfo, options]) => isEmpty(appInfo) || isEmpty(options)),
         takeUntil(this.destroy$)
       )
       .subscribe(([appInfo, options, p]) => {
-        this.appInfo = appInfo;
-        this.options = options;
-        this.referrer = this.commonService.getReferrer(true);
+        this.appInfo.set(appInfo);
+        this.options.set(options);
+        this.referrer.set(this.commonService.getReferrer(true));
 
         const slug = p.get('slug')?.trim() || '';
         if (!slug) {
@@ -168,20 +167,20 @@ export class PostComponent implements OnInit {
         this.closeShareQrcode();
 
         if (REGEXP_ID.test(slug)) {
-          this.postId = slug;
+          this.postId.set(slug);
           this.getPost();
-          this.commentService.updateTargetId(this.postId);
+          this.commentService.updateTargetId(slug);
         } else {
-          this.postSlug = slug;
+          this.postSlug.set(slug);
           this.getPage();
         }
       });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      this.user = user;
-      this.isSignIn = !!user.id;
+      this.user.set(user);
+      this.isSignIn.set(!!user.id);
 
       if (this.platform.isBrowser) {
-        this.shareUrl = this.commonService.getShareURL(user.id);
+        this.shareUrl.set(this.commonService.getShareURL(user.id));
       }
     });
   }
@@ -193,12 +192,12 @@ export class PostComponent implements OnInit {
       e.preventDefault();
       e.stopPropagation();
 
-      if (!this.isSignIn) {
+      if (!this.isSignIn()) {
         this.showSigninModal();
         return;
       }
       const index = Number($target.dataset['i']);
-      const codeText = this.codeList[index];
+      const codeText = this.codeList()[index];
       if (codeText) {
         this.clipboardService.copy(decodeEntities(codeText));
         $target.innerHTML = this.copiedHTML;
@@ -211,7 +210,7 @@ export class PostComponent implements OnInit {
           .logAction({
             action: LogActionType.COPY_CODE,
             targetType: LogTargetType.POST,
-            targetId: this.post.id,
+            targetId: this.post()!.id,
             index: index + 1
           })
           .pipe(takeUntil(this.destroy$))
@@ -230,31 +229,51 @@ export class PostComponent implements OnInit {
   }
 
   onPostSelect() {
-    return !this.post.isPaid && (this.post.visibility !== 3 || this.isSignIn);
+    const post = this.post();
+
+    if (!post) {
+      return true;
+    }
+
+    return !post.isPaid && (post.visibility !== 3 || this.isSignIn());
   }
 
   vote() {
-    if (this.voteLoading || this.isVoted) {
+    if (this.voteLoading() || this.isVoted()) {
       return;
     }
-    if (!this.isSignIn) {
+    if (!this.isSignIn()) {
       this.showSigninModal();
+      return;
+    }
+    const post = this.post();
+    if (!post) {
       return;
     }
     this.voteService
       .saveVote({
-        targetId: this.post.id,
+        targetId: post.id,
         value: VoteValue.LIKE,
         type: this.contentType() === ContentType.PAGE ? VoteType.PAGE : VoteType.POST
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.voteLoading = false;
+        this.voteLoading.set(false);
 
         if (res.code === ResponseCode.SUCCESS) {
           this.message.success(Message.VOTE_SUCCESS);
-          this.isVoted = true;
-          this.post.postStat.likeCount = res.data.likes;
+          this.isVoted.set(true);
+          this.post.update((data) => {
+            return data
+              ? {
+                  ...data,
+                  postStat: {
+                    ...data.postStat,
+                    likeCount: res.data.likeCount
+                  }
+                }
+              : null;
+          });
         }
       });
   }
@@ -270,49 +289,49 @@ export class PostComponent implements OnInit {
   }
 
   addFavorite() {
-    if (this.favoriteLoading || this.isFavorite) {
+    if (this.favoriteLoading() || this.isFavorite()) {
       return;
     }
-    if (!this.isSignIn) {
+    if (!this.isSignIn()) {
       this.showSigninModal();
       return;
     }
-    this.favoriteLoading = true;
+    this.favoriteLoading.set(true);
     this.favoriteService
-      .addFavorite(this.postId, FavoriteType.POST)
+      .addFavorite(this.postId(), FavoriteType.POST)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.favoriteLoading = false;
+        this.favoriteLoading.set(false);
 
         if (res.code === ResponseCode.SUCCESS || res.code === ResponseCode.FAVORITE_IS_EXIST) {
           this.message.success(Message.ADD_FAVORITE_SUCCESS);
-          this.isFavorite = true;
+          this.isFavorite.set(true);
         }
       });
   }
 
   showShareQrcode() {
-    this.shareVisible = true;
+    this.shareVisible.set(true);
   }
 
   closeShareQrcode() {
-    this.shareVisible = false;
+    this.shareVisible.set(false);
   }
 
   showSigninModal() {
-    this.commonService.updateSigninModalVisible({
+    this.commonService.updateSigninOptions({
       visible: true,
       closable: true
     });
   }
 
   protected updatePageIndex(): void {
-    this.commonService.updatePageIndex(this.pageIndex);
+    this.commonService.updatePageIndex(this.pageIndex());
   }
 
   private getPost(): void {
     this.postService
-      .getPostById(this.postId, this.contentType(), this.referrer)
+      .getPostById(this.postId(), this.contentType(), this.referrer())
       .pipe(takeUntil(this.destroy$))
       .subscribe((post) => {
         if (!post) {
@@ -325,7 +344,7 @@ export class PostComponent implements OnInit {
 
   private getPage(): void {
     this.postService
-      .getPostBySlug(this.postSlug, this.contentType(), this.referrer)
+      .getPostBySlug(this.postSlug(), this.contentType(), this.referrer())
       .pipe(takeUntil(this.destroy$))
       .subscribe((post) => {
         if (!post) {
@@ -341,21 +360,18 @@ export class PostComponent implements OnInit {
     const result = this.postService.parseHTML(post.content, this.copyHTML);
 
     // 避免覆盖
-    this.post = { ...post };
-    this.post.content = result.content;
-    this.codeList = result.codeList;
-    this.post.source = this.postService.getPostSource(post);
-    this.postMeta = post.metadata;
-    this.postCategories = post.categories;
-    this.postTags = post.tags;
-    this.isFavorite = post.isFavorite;
-    this.isVoted = post.isVoted;
-
-    if (this.isArticle) {
-      this.pageIndex = 'post-detail';
-    } else {
-      this.pageIndex = 'page-' + this.post.slug;
-    }
+    this.post.set({
+      ...post,
+      content: result.content,
+      source: this.postService.getPostSource(post)
+    });
+    this.codeList.set(result.codeList);
+    this.postMeta.set(post.metadata);
+    this.postCategories.set(post.categories);
+    this.postTags.set(post.tags);
+    this.isFavorite.set(post.isFavorite);
+    this.isVoted.set(post.isVoted);
+    this.pageIndex.set(this.isArticle ? 'post-detail' : 'page-' + post.slug);
 
     this.postService.updateActivePostId(post.id);
     this.postService.updateActivePost(post);
@@ -382,23 +398,23 @@ export class PostComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles: string[] = [this.appInfo.name];
-    const keywords: string[] = this.postTags
+    const titles: string[] = [this.appInfo()?.name || ''];
+    const keywords: string[] = this.postTags()
       .map((item) => item.tag.name)
-      .concat((this.options['post_keywords'] || '').split(','));
+      .concat((this.options()['post_keywords'] || '').split(','));
 
     if (this.isArticle) {
       titles.unshift('博客');
     }
-    titles.unshift(this.post.title);
+    titles.unshift(this.post()?.title || '');
 
     this.metaService.updateHTMLMeta({
-      title: titles.join(' - '),
-      description: this.post.summary || '',
+      title: titles.filter((item) => !!item).join(' - '),
+      description: this.post()?.summary || '',
       keywords: uniq(keywords)
         .filter((item) => !!item)
         .join(','),
-      author: this.options['site_author']
+      author: this.options()['site_author']
     });
   }
 }

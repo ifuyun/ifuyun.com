@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   BreadcrumbComponent,
@@ -70,52 +70,47 @@ import { GameRelatedComponent } from '../../components/game-related/game-related
   styleUrl: './game.component.less'
 })
 export class GameComponent implements OnInit {
-  readonly commentType = CommentTargetType.GAME;
-  readonly emptyCover: string = '';
+  private readonly destroy$ = inject(DestroyService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly platform = inject(PlatformService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly message = inject(MessageService);
+  private readonly imageService = inject(NzImageService);
+  private readonly commonService = inject(CommonService);
+  private readonly metaService = inject(MetaService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+  private readonly userService = inject(UserService);
+  private readonly voteService = inject(VoteService);
+  private readonly favoriteService = inject(FavoriteService);
+  private readonly commentService = inject(CommentService);
+  private readonly gameService = inject(GameService);
+  private readonly adsService = inject(AdsService);
 
-  isMobile = false;
-  isSignIn = false;
-  game!: Game;
-  isFavorite = false;
-  isVoted = false;
-  voteLoading = false;
-  favoriteLoading = false;
-  shareVisible = false;
-  shareUrl = '';
-  gameModalVisible = false;
-  downloading = false;
+  readonly commentType = CommentTargetType.GAME;
+  readonly emptyCover = this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER;
+
+  isMobile = this.uaService.isMobile;
+  isSignIn = signal(false);
+  game = signal<Game | null>(null);
+  isFavorite = signal(false);
+  isVoted = signal(false);
+  voteLoading = signal(false);
+  favoriteLoading = signal(false);
+  shareVisible = signal(false);
+  shareUrl = signal('');
+  gameModalVisible = signal(false);
+  downloading = signal(false);
 
   protected pageIndex = 'game-detail';
 
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
-  private gameId = '';
-  private referrer = '';
-  private adsStatus: AdsStatus = AdsStatus.UNKNOWN;
-
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly route: ActivatedRoute,
-    private readonly platform: PlatformService,
-    private readonly userAgentService: UserAgentService,
-    private readonly message: MessageService,
-    private readonly imageService: NzImageService,
-    private readonly commonService: CommonService,
-    private readonly metaService: MetaService,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly appConfigService: AppConfigService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService,
-    private readonly userService: UserService,
-    private readonly voteService: VoteService,
-    private readonly favoriteService: FavoriteService,
-    private readonly commentService: CommentService,
-    private readonly gameService: GameService,
-    private readonly adsService: AdsService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-    this.emptyCover = this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER;
-  }
+  private appInfo = signal<TenantAppVo | null>(null);
+  private options = signal<OptionEntity>({});
+  private gameId = signal('');
+  private referrer = signal('');
+  private adsStatus = signal(AdsStatus.UNKNOWN);
 
   ngOnInit(): void {
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.paramMap])
@@ -124,12 +119,12 @@ export class GameComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe(([appInfo, options, p]) => {
-        this.appInfo = appInfo;
-        this.options = options;
-        this.referrer = this.commonService.getReferrer(true);
-        this.gameId = p.get('gid')?.trim() || '';
+        this.appInfo.set(appInfo);
+        this.options.set(options);
+        this.referrer.set(this.commonService.getReferrer(true));
+        this.gameId.set(p.get('gid')?.trim() || '');
 
-        if (!this.gameId) {
+        if (!this.gameId()) {
           this.commonService.redirectToNotFound();
           return;
         }
@@ -138,18 +133,18 @@ export class GameComponent implements OnInit {
         this.closeShareQrcode();
 
         this.getGame();
-        this.commentService.updateTargetId(this.gameId);
-        this.gameService.updateActiveGameId(this.gameId);
+        this.commentService.updateTargetId(this.gameId());
+        this.gameService.updateActiveGameId(this.gameId());
       });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      this.isSignIn = !!user.id;
+      this.isSignIn.set(!!user.id);
 
       if (this.platform.isBrowser) {
-        this.shareUrl = this.commonService.getShareURL(user.id);
+        this.shareUrl.set(this.commonService.getShareURL(user.id));
       }
     });
     this.adsService.adsStatus$.pipe(takeUntil(this.destroy$)).subscribe((status) => {
-      this.adsStatus = status;
+      this.adsStatus.set(status);
     });
   }
 
@@ -169,27 +164,33 @@ export class GameComponent implements OnInit {
   }
 
   vote() {
-    if (this.voteLoading || this.isVoted) {
+    if (this.voteLoading() || this.isVoted()) {
       return;
     }
-    if (!this.isSignIn) {
+    if (!this.isSignIn()) {
       this.showSigninModal();
       return;
     }
     this.voteService
       .saveVote({
-        targetId: this.game.id,
+        targetId: this.game()!.id,
         value: VoteValue.LIKE,
         type: VoteType.GAME
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.voteLoading = false;
+        this.voteLoading.set(false);
 
         if (res.code === ResponseCode.SUCCESS) {
           this.message.success(Message.VOTE_SUCCESS);
-          this.isVoted = true;
-          this.game.gameStat.likeCount = res.data.likes;
+          this.isVoted.set(true);
+          this.game.update((data) => ({
+            ...data!,
+            gameStat: {
+              ...data!.gameStat,
+              likeCount: res.data.likeCount
+            }
+          }));
         }
       });
   }
@@ -205,41 +206,41 @@ export class GameComponent implements OnInit {
   }
 
   addFavorite() {
-    if (this.favoriteLoading || this.isFavorite) {
+    if (this.favoriteLoading() || this.isFavorite()) {
       return;
     }
-    if (!this.isSignIn) {
+    if (!this.isSignIn()) {
       this.showSigninModal();
       return;
     }
-    this.favoriteLoading = true;
+    this.favoriteLoading.set(true);
     this.favoriteService
-      .addFavorite(this.gameId, FavoriteType.GAME)
+      .addFavorite(this.gameId(), FavoriteType.GAME)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.favoriteLoading = false;
+        this.favoriteLoading.set(false);
 
         if (res.code === ResponseCode.SUCCESS || res.code === ResponseCode.FAVORITE_IS_EXIST) {
           this.message.success(Message.ADD_FAVORITE_SUCCESS);
-          this.isFavorite = true;
+          this.isFavorite.set(true);
         }
       });
   }
 
   showShareQrcode() {
-    this.shareVisible = true;
+    this.shareVisible.set(true);
   }
 
   closeShareQrcode() {
-    this.shareVisible = false;
+    this.shareVisible.set(false);
   }
 
   startPlay() {
-    if (!this.isSignIn && this.adsStatus === AdsStatus.BLOCKED) {
+    if (!this.isSignIn() && this.adsStatus() === AdsStatus.BLOCKED) {
       this.showSigninModal();
       return;
     }
-    if (this.gameService.isGameCached(this.gameId)) {
+    if (this.gameService.isGameCached(this.gameId())) {
       this.showGameModal();
       return;
     }
@@ -256,16 +257,17 @@ export class GameComponent implements OnInit {
   }
 
   download() {
-    if (!this.isSignIn) {
+    if (!this.isSignIn()) {
       this.showSigninModal();
       return;
     }
-    this.downloading = true;
+    this.downloading.set(true);
+
     this.gameService
-      .getGameDownloadUrl(this.gameId)
+      .getGameDownloadUrl(this.gameId())
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.downloading = false;
+        this.downloading.set(false);
         if (res) {
           window.open(this.appConfigService.apiBase + res);
         }
@@ -273,18 +275,18 @@ export class GameComponent implements OnInit {
   }
 
   showSigninModal() {
-    this.commonService.updateSigninModalVisible({
+    this.commonService.updateSigninOptions({
       visible: true,
       closable: true
     });
   }
 
   showGameModal() {
-    this.gameModalVisible = true;
+    this.gameModalVisible.set(true);
   }
 
   closeGameModal() {
-    this.gameModalVisible = false;
+    this.gameModalVisible.set(false);
   }
 
   protected updatePageIndex(): void {
@@ -293,7 +295,7 @@ export class GameComponent implements OnInit {
 
   private getGame() {
     this.gameService
-      .getGameById(this.gameId, this.referrer)
+      .getGameById(this.gameId(), this.referrer())
       .pipe(takeUntil(this.destroy$))
       .subscribe((game) => {
         if (!game) {
@@ -305,9 +307,9 @@ export class GameComponent implements OnInit {
   }
 
   private initData(game: Game) {
-    this.game = { ...game };
-    this.isFavorite = game.isFavorite;
-    this.isVoted = game.isVoted;
+    this.game.set(game);
+    this.isFavorite.set(game.isFavorite);
+    this.isVoted.set(game.isVoted);
 
     this.updateBreadcrumbs(game.breadcrumbs);
     this.updatePageIndex();
@@ -332,19 +334,20 @@ export class GameComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles: string[] = [this.game.title, '游戏', this.appInfo.name];
-    const keywords: string[] = this.game.tags
+    const game = this.game();
+    const titles: string[] = [game!.title, '游戏', this.appInfo()!.name];
+    const keywords: string[] = game!.tags
       .map((item) => item.tag.name)
-      .concat((this.options['game_keywords'] || '').split(','));
-    const description = `「${this.game.title}」在线玩。${this.options['game_description']}`;
+      .concat((this.options()['game_keywords'] || '').split(','));
+    const description = `「${game!.title}」在线玩。${this.options()['game_description']}`;
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
-      description: this.game.summary || description,
+      description: game!.summary || description,
       keywords: uniq(keywords)
         .filter((item) => !!item)
         .join(','),
-      author: this.options['site_author']
+      author: this.options()['site_author']
     });
   }
 }

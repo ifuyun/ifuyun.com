@@ -2,7 +2,7 @@
           [nzVisible]="true"
           [nzWidth]="modalWidth"
           [nzBodyStyle]="{ padding: '8px' }"
-          [nzTitle]="game.title"
+          [nzTitle]="game().title"
           [nzContent]="gameModalContent"
           [nzFooter]="null"
           (nzOnCancel)="closeGameModal()"
@@ -10,7 +10,7 @@
           [nzMaskClosable]="false"
           [nzAutofocus]="null">
   <ng-template #gameModalContent>
-    <div [style.height]="modalHeight + 'px'">
+    <div [style.height]="modalHeight() + 'px'">
       <div id="game-box"></div>
     </div>
   </ng-template>

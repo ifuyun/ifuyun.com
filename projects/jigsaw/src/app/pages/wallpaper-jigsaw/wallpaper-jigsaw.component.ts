@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   BreadcrumbComponent,
@@ -11,7 +11,6 @@ import {
   WallpaperRelatedComponent
 } from 'common/components';
 import {
-  AppConfigService,
   BreadcrumbEntity,
   BreadcrumbService,
   DestroyService,
@@ -68,53 +67,45 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   styleUrl: './wallpaper-jigsaw.component.less'
 })
 export class WallpaperJigsawComponent implements OnInit {
+  private readonly destroy$ = inject(DestroyService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly platform = inject(PlatformService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly message = inject(MessageService);
+  private readonly imageService = inject(NzImageService);
+  private readonly commonService = inject(CommonService);
+  private readonly metaService = inject(MetaService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+  private readonly userService = inject(UserService);
+  private readonly wallpaperService = inject(WallpaperService);
+  private readonly voteService = inject(VoteService);
+  private readonly favoriteService = inject(FavoriteService);
+  private readonly commentService = inject(CommentService);
+  private readonly wallpaperJigsawService = inject(WallpaperJigsawService);
+
   readonly commentType = CommentTargetType.WALLPAPER;
+  readonly isMobile = this.uaService.isMobile;
+  readonly wallpaperId = signal('');
+  readonly wallpaper = signal<Wallpaper | null>(null);
+  readonly lang = signal(WallpaperLang.CN);
+  readonly voteLoading = signal(false);
+  readonly favoriteLoading = signal(false);
+  readonly shareVisible = signal(false);
+  readonly shareUrl = signal('');
+  readonly langParams = computed(() => {
+    return this.lang() === WallpaperLang.CN ? {} : { lang: this.lang() };
+  });
 
-  isMobile = false;
-  wallpaperId = '';
-  wallpaper!: Wallpaper;
-  lang = WallpaperLang.CN;
-  downloading = false;
-  voteLoading = false;
-  favoriteLoading = false;
-  shareVisible = false;
-  shareUrl = '';
+  protected readonly pageIndex = 'jigsaw';
 
-  get langParams() {
-    return this.lang === WallpaperLang.CN ? {} : { lang: this.lang };
-  }
-
-  protected pageIndex = 'jigsaw';
-
-  private isSignIn = false;
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
-  private wallpaperData!: Wallpaper;
-  private isChanged = false;
-  private isLangChanged = false;
-
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly route: ActivatedRoute,
-    private readonly platform: PlatformService,
-    private readonly userAgentService: UserAgentService,
-    private readonly message: MessageService,
-    private readonly imageService: NzImageService,
-    private readonly commonService: CommonService,
-    private readonly appConfigService: AppConfigService,
-    private readonly metaService: MetaService,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService,
-    private readonly userService: UserService,
-    private readonly wallpaperService: WallpaperService,
-    private readonly voteService: VoteService,
-    private readonly favoriteService: FavoriteService,
-    private readonly commentService: CommentService,
-    private readonly wallpaperJigsawService: WallpaperJigsawService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  private readonly isSignIn = signal(false);
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly options = signal<OptionEntity>({});
+  private readonly wallpaperData = signal<Wallpaper | null>(null);
+  private readonly isChanged = signal(false);
+  private readonly isLangChanged = signal(false);
 
   ngOnInit(): void {
     this.updatePageIndex();
@@ -132,89 +123,67 @@ export class WallpaperJigsawComponent implements OnInit {
       .subscribe(([appInfo, options]) => {
         const { queryParamMap: qp, paramMap: p } = this.route.snapshot;
 
-        this.appInfo = appInfo;
-        this.options = options;
+        this.appInfo.set(appInfo);
+        this.options.set(options);
 
         const id = p.get('id')?.trim() || '';
         if (!id) {
           this.commonService.redirectToNotFound();
           return;
         }
-        this.isChanged = this.wallpaperId !== id;
-        this.wallpaperId = id;
+        this.isChanged.set(this.wallpaperId() !== id);
+        this.wallpaperId.set(id);
 
         this.closeShareQrcode();
 
         const lang = <WallpaperLang>qp.get('lang')?.trim() || WallpaperLang.CN;
-        this.isLangChanged = this.lang !== lang;
-        this.lang = lang;
+        this.isLangChanged.set(this.lang() !== lang);
+        this.lang.set(lang);
 
-        if (this.isChanged) {
+        if (this.isChanged()) {
           this.getWallpaper();
-          this.wallpaperService.updateActiveWallpaperId(this.wallpaperId);
-          this.commentService.updateTargetId(this.wallpaperId);
-        } else if (this.isLangChanged) {
-          this.updateWallpaper(this.wallpaperData);
+          this.wallpaperService.updateActiveWallpaperId(this.wallpaperId());
+          this.commentService.updateTargetId(this.wallpaperId());
+        } else if (this.isLangChanged()) {
+          this.updateWallpaper(this.wallpaperData()!);
         }
       });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      this.isSignIn = !!user.id;
+      this.isSignIn.set(!!user.id);
 
       if (this.platform.isBrowser) {
-        this.shareUrl = this.commonService.getShareURL(user.id);
+        this.shareUrl.set(this.commonService.getShareURL(user.id));
       }
     });
   }
 
-  showWallpaper() {
-    if (this.wallpaper) {
-      this.imageService.preview([
-        {
-          src: this.wallpaper.url
-        }
-      ]);
-    }
-  }
-
-  download(isUhd = false) {
-    if (!this.isSignIn && isUhd) {
-      this.showSigninModal();
-      return;
-    }
-    this.downloading = true;
-    this.wallpaperService
-      .getWallpaperDownloadUrl(this.wallpaperId, isUhd ? 1 : 0)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.downloading = false;
-        if (res) {
-          window.open(this.appConfigService.apiBase + res);
-        }
-      });
-  }
-
   vote() {
-    if (this.voteLoading || this.wallpaper.isVoted) {
+    if (this.voteLoading() || this.wallpaper()?.isVoted) {
       return;
     }
-    if (!this.isSignIn) {
+    if (!this.isSignIn()) {
       this.showSigninModal();
       return;
     }
     this.voteService
       .saveVote({
-        targetId: this.wallpaperId,
+        targetId: this.wallpaperId(),
         value: VoteValue.LIKE,
         type: VoteType.WALLPAPER
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.voteLoading = false;
+        this.voteLoading.set(false);
 
         if (res.code === ResponseCode.SUCCESS) {
           this.message.success(Message.VOTE_SUCCESS);
-          this.wallpaper.isVoted = true;
-          this.wallpaper.wallpaperStat.likeCount = res.data.likes;
+          this.wallpaper.update((data) => ({
+            ...data!,
+            wallpaperStat: {
+              ...data!.wallpaperStat,
+              likeCount: res.data.likeCount
+            }
+          }));
         }
       });
   }
@@ -230,37 +199,40 @@ export class WallpaperJigsawComponent implements OnInit {
   }
 
   addFavorite() {
-    if (this.favoriteLoading || this.wallpaper.isFavorite) {
+    if (this.favoriteLoading() || this.wallpaper()?.isFavorite) {
       return;
     }
-    if (!this.isSignIn) {
+    if (!this.isSignIn()) {
       this.showSigninModal();
       return;
     }
-    this.favoriteLoading = true;
+    this.favoriteLoading.set(true);
     this.favoriteService
-      .addFavorite(this.wallpaperId, FavoriteType.WALLPAPER)
+      .addFavorite(this.wallpaperId(), FavoriteType.WALLPAPER)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.favoriteLoading = false;
+        this.favoriteLoading.set(false);
 
         if (res.code === ResponseCode.SUCCESS || res.code === ResponseCode.FAVORITE_IS_EXIST) {
           this.message.success(Message.ADD_FAVORITE_SUCCESS);
-          this.wallpaper.isFavorite = true;
+          this.wallpaper.update((data) => ({
+            ...data!,
+            isFavorite: true
+          }));
         }
       });
   }
 
   showShareQrcode() {
-    this.shareVisible = true;
+    this.shareVisible.set(true);
   }
 
   closeShareQrcode() {
-    this.shareVisible = false;
+    this.shareVisible.set(false);
   }
 
   showSigninModal() {
-    this.commonService.updateSigninModalVisible({
+    this.commonService.updateSigninOptions({
       visible: true,
       closable: true
     });
@@ -272,50 +244,54 @@ export class WallpaperJigsawComponent implements OnInit {
 
   private getWallpaper(): void {
     this.wallpaperService
-      .getWallpaperById(this.wallpaperId, true)
+      .getWallpaperById(this.wallpaperId(), true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((wallpaper) => {
         if (!wallpaper) {
           this.commonService.redirectToNotFound();
           return;
         }
-        this.wallpaperData = wallpaper;
+        this.wallpaperData.set(wallpaper);
         this.updateWallpaper(wallpaper);
       });
   }
 
   private updateWallpaper(wallpaper: Wallpaper): void {
-    this.wallpaper = this.wallpaperService.transformWallpaper(wallpaper);
-    if (this.lang === WallpaperLang.EN) {
-      this.wallpaper.title = this.wallpaper.titleEn;
-      this.wallpaper.copyright = this.wallpaper.copyrightEn;
-      this.wallpaper.location = this.wallpaper.locationEn;
+    const curWallpaper = this.wallpaperService.transformWallpaper(wallpaper);
+
+    if (this.lang() === WallpaperLang.EN) {
+      curWallpaper.title = curWallpaper.titleEn;
+      curWallpaper.copyright = curWallpaper.copyrightEn;
+      curWallpaper.location = curWallpaper.locationEn;
     }
 
-    this.wallpaperJigsawService.updateActiveJigsawWallpaper(this.wallpaper);
+    this.wallpaper.set(curWallpaper);
+
+    this.wallpaperJigsawService.updateActiveJigsawWallpaper(curWallpaper);
     this.updatePageInfo();
     this.updateBreadcrumbs();
   }
 
   private updatePageInfo() {
-    const titles: string[] = [this.wallpaper.copyright, '壁纸拼图', this.appInfo.name];
+    const wallpaper = this.wallpaper()!;
+    const titles: string[] = [wallpaper.copyright, '壁纸拼图', this.appInfo()!.name];
     let description = '';
-    const fullStop = this.lang === WallpaperLang.EN ? '.' : '。';
-    const comma = this.lang === WallpaperLang.EN ? ', ' : '，';
-    const locationStr = this.wallpaper.location ? comma + this.wallpaper.location : '';
+    const fullStop = this.lang() === WallpaperLang.EN ? '.' : '。';
+    const comma = this.lang() === WallpaperLang.EN ? ', ' : '，';
+    const locationStr = wallpaper.location ? comma + wallpaper.location : '';
 
-    description += `${this.wallpaper.copyright}${locationStr}`;
+    description += `${wallpaper.copyright}${locationStr}`;
     description += description.endsWith(fullStop) ? '' : fullStop;
-    if (this.lang === WallpaperLang.EN) {
+    if (this.lang() === WallpaperLang.EN) {
       description += ' ';
     }
-    const wallpaperDesc = truncateString(cleanHtmlTag(this.wallpaper.story), 140);
+    const wallpaperDesc = truncateString(cleanHtmlTag(wallpaper.story), 140);
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
       description: `${description}${wallpaperDesc}`,
-      keywords: this.options['jigsaw_keywords'],
-      author: this.options['site_author']
+      keywords: this.options()['jigsaw_keywords'],
+      author: this.options()['site_author']
     });
   }
 
@@ -329,8 +305,8 @@ export class WallpaperJigsawComponent implements OnInit {
         isHeader: false
       },
       {
-        label: this.wallpaper.copyright,
-        tooltip: this.wallpaper.copyright,
+        label: this.wallpaper()!.copyright,
+        tooltip: this.wallpaper()!.copyright,
         url: '.',
         isHeader: true
       }

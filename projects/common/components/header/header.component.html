@@ -1,25 +1,29 @@
+@let ii = indexInfo();
+@let ai = appInfo();
+@let pc = postCategories();
+@let gc = gameCategories();
 @if (!isMobile) {
   <header class="header-wrap">
     <div class="header">
-      <lib-a class="logo" [href]="domains['www'].url" [title]="appInfo?.name">
-        <img [src]="faviconUrl" [alt]="appInfo?.name"/><span>{{ appInfo?.name }}</span>
+      <lib-a class="logo" [href]="domains['www'].url" [title]="ai?.name">
+        <img [src]="faviconUrl" [alt]="ai?.name"/><span>{{ ai?.name }}</span>
       </lib-a>
       <ul class="nav">
-        <li [class.active]="indexInfo?.isHome">
-          <lib-a [href]="domains['www'].url" title="{{appInfo?.name}}首页">首页</lib-a>
+        <li [class.active]="ii?.isHome">
+          <lib-a [href]="domains['www'].url" title="{{ai?.name}}首页">首页</lib-a>
         </li>
-        <li [class.active]="indexInfo?.isPost">
+        <li [class.active]="ii?.isPost">
           <lib-a class="badge badge-ai" [href]="domains['blog'].url" title="博客">
             <span>博客</span>
-            @if (postCategories.length > 0) {
+            @if (pc.length > 0) {
               <span class="nav-arrow"></span>
             }
           </lib-a>
-          @if (postCategories.length > 0) {
+          @if (pc.length > 0) {
             <div class="sub-nav-wrap">
               <div class="sub-nav-list">
                 <ul>
-                  @for (category of postCategories; track category.id) {
+                  @for (category of pc; track category.id) {
                     <li>
                       <lib-a class="sub-nav-link"
                              [href]="domains['blog'].url + '/category/' + category.slug"
@@ -51,7 +55,7 @@
             </div>
           }
         </li>
-        <li [class.active]="indexInfo?.isWallpaper">
+        <li [class.active]="ii?.isWallpaper">
           <lib-a class="badge badge-ai" [href]="domains['wallpaper'].url" title="高清壁纸">
             <span>壁纸</span><span class="nav-arrow"></span>
           </lib-a>
@@ -65,21 +69,21 @@
             </div>
           </div>
         </li>
-        <li [class.active]="indexInfo?.isJigsaw">
+        <li [class.active]="ii?.isJigsaw">
           <lib-a [href]="domains['jigsaw'].url" title="壁纸拼图">拼图</lib-a>
         </li>
-        <li [class.active]="indexInfo?.isGame">
+        <li [class.active]="ii?.isGame">
           <lib-a [href]="domains['game'].url" title="游戏">
             <span>游戏</span>
-            @if (gameCategories.length > 0) {
+            @if (gc.length > 0) {
               <span class="nav-arrow"></span>
             }
           </lib-a>
-          @if (gameCategories.length > 0) {
+          @if (gc.length > 0) {
             <div class="sub-nav-wrap">
               <div class="sub-nav-list">
                 <ul>
-                  @for (category of gameCategories; track category.id) {
+                  @for (category of gc; track category.id) {
                     <li>
                       <lib-a class="sub-nav-link"
                              [href]="domains['game'].url + '/category/' + category.slug"
@@ -114,7 +118,7 @@
         <li>
           <a [href]="magazineUrl" target="_blank" title="过刊阅读平台">杂志</a>
         </li>
-        <li [class.active]="indexInfo?.isTool">
+        <li [class.active]="ii?.isTool">
           <lib-a [href]="domains['www'].url + '/tool'" title="工具"><span>工具</span><span class="nav-arrow"></span></lib-a>
           <div class="sub-nav-wrap">
             <div class="sub-nav-list">
@@ -145,15 +149,15 @@
                    name="keyword"
                    [(ngModel)]="keyword"
                    autocomplete="off"
-                   placeholder="搜索{{searchTypeMap[this.searchType]}}（支持全文搜索）"/>
+                   placeholder="搜索{{searchTypeMap[searchType()]}}（支持全文搜索）"/>
           </nz-input-search>
         </div>
-        @if (!isSignIn) {
+        @if (!isSignIn()) {
           <a nz-button nzType="primary" [href]="domains['www'].url + '/user/signin'">登录</a>
         } @else {
           <div class="more-action-group">
             <div class="more-action-nav">
-              <nz-icon nzType="user"/><span>{{ user.nickname }}</span><span class="nav-arrow"></span>
+              <nz-icon nzType="user"/><span>{{ user()?.nickname }}</span><span class="nav-arrow"></span>
             </div>
             <div class="more-action-list">
               <div class="sub-nav-list">
@@ -179,11 +183,11 @@
 } @else {
   <header class="m-header-wrap">
     <div class="m-header">
-      @if (!searchVisible) {
+      @if (!searchVisible()) {
         <div class="m-header-body">
           <nz-icon nzType="menu" (click)="showSider()"/>
-          <lib-a class="m-logo" [href]="domains['www'].url" [title]="appInfo?.name">
-            <img [src]="faviconUrl" [alt]="appInfo?.name"/><span>{{ appInfo?.name }}</span>
+          <lib-a class="m-logo" [href]="domains['www'].url" [title]="ai?.name">
+            <img [src]="faviconUrl" [alt]="ai?.name"/><span>{{ ai?.name }}</span>
           </lib-a>
           <nz-icon nzType="search" (click)="showSearch()"/>
         </div>
@@ -204,7 +208,7 @@
                      nzSize="large"
                      [(ngModel)]="keyword"
                      autocomplete="off"
-                     placeholder="搜索{{searchTypeMap[this.searchType]}}（支持全文搜索）"/>
+                     placeholder="搜索{{searchTypeMap[searchType()]}}（支持全文搜索）"/>
             </nz-input-search>
           </div>
           <div class="m-mask m-mask-search" (click)="hideSearch()"></div>

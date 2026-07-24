@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -13,7 +13,6 @@ import {
   DestroyService,
   MetaService,
   OptionEntity,
-  PaginationService,
   UserAgentService
 } from 'common/core';
 import { ListMode, WallpaperLang } from 'common/enums';
@@ -42,35 +41,30 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   styleUrls: ['./wallpaper-jigsaw-list.component.less']
 })
 export class WallpaperJigsawListComponent implements OnInit {
-  isMobile = false;
-  page = 1;
-  pageSize = 10;
-  total = 0;
-  wallpapers: Wallpaper[] = [];
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly commonService = inject(CommonService);
+  private readonly metaService = inject(MetaService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+  private readonly wallpaperService = inject(WallpaperService);
+
+  readonly isMobile = this.uaService.isMobile;
+  readonly page = signal(1);
+  readonly pageSize = signal(10);
+  readonly total = signal(0);
+  readonly wallpapers = signal<Wallpaper[]>([]);
+  readonly paginationUrl = '/list';
 
   protected readonly WallpaperLang = WallpaperLang;
   protected readonly ListMode = ListMode;
+  protected readonly pageIndex = 'jigsaw';
 
-  protected pageIndex = 'jigsaw';
-
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
-  private lastParam = '';
-
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly commonService: CommonService,
-    private readonly metaService: MetaService,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly paginationService: PaginationService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService,
-    private readonly wallpaperService: WallpaperService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly options = signal<OptionEntity>({});
+  private readonly lastParam = signal('');
 
   ngOnInit(): void {
     combineLatest([
@@ -86,19 +80,18 @@ export class WallpaperJigsawListComponent implements OnInit {
       .subscribe(([appInfo, options]) => {
         const { queryParamMap: qp } = this.route.snapshot;
 
-        this.appInfo = appInfo;
-        this.options = options;
-
-        this.pageSize = Number(this.options['wallpaper_page_size']) || 10;
-        this.page = Number(qp.get('page')) || 1;
+        this.appInfo.set(appInfo);
+        this.options.set(options);
+        this.pageSize.set(Number(this.options()['wallpaper_page_size']) || 10);
+        this.page.set(Number(qp.get('page')) || 1);
 
         const latestParam = JSON.stringify({
-          page: this.page
+          page: this.page()
         });
-        if (latestParam === this.lastParam) {
+        if (latestParam === this.lastParam()) {
           return;
         }
-        this.lastParam = latestParam;
+        this.lastParam.set(latestParam);
 
         this.updatePageIndex();
         this.getWallpapers();
@@ -111,8 +104,8 @@ export class WallpaperJigsawListComponent implements OnInit {
 
   private getWallpapers() {
     const param: WallpaperQueryParam = {
-      page: this.page,
-      size: this.pageSize,
+      page: this.page(),
+      size: this.pageSize(),
       future: 1
     };
 
@@ -120,17 +113,9 @@ export class WallpaperJigsawListComponent implements OnInit {
       .getWallpapers(param)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.page = res.page || 1;
-        this.total = res.total || 0;
-        this.wallpapers = res.list || [];
-
-        this.paginationService.updatePagination({
-          page: this.page,
-          total: this.total,
-          pageSize: this.pageSize,
-          url: '/list',
-          param: {}
-        });
+        this.page.set(res.page || 1);
+        this.total.set(res.total || 0);
+        this.wallpapers.set(res.list || []);
 
         this.updatePageInfo();
         this.updateBreadcrumbs();
@@ -139,22 +124,22 @@ export class WallpaperJigsawListComponent implements OnInit {
 
   private updatePageInfo() {
     let description = '';
-    const titles = ['壁纸拼图', this.appInfo.name];
-    const keywords = (this.options['jigsaw_keywords'] || '').split(',');
+    const titles = ['壁纸拼图', this.appInfo()!.name];
+    const keywords = (this.options()['jigsaw_keywords'] || '').split(',');
 
     if (description) {
       description += '壁纸拼图';
     }
-    if (this.page > 1) {
-      titles.unshift(`第${this.page}页`);
+    if (this.page() > 1) {
+      titles.unshift(`第${this.page()}页`);
       if (description) {
-        description += `(第${this.page}页)`;
+        description += `(第${this.page()}页)`;
       }
     }
     if (description) {
       description += '。';
     }
-    description += this.options['jigsaw_description'];
+    description += this.options()['jigsaw_description'];
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
@@ -162,7 +147,7 @@ export class WallpaperJigsawListComponent implements OnInit {
       keywords: uniq(keywords)
         .filter((item) => !!item)
         .join(','),
-      author: this.options['site_author']
+      author: this.options()['site_author']
     });
   }
 
@@ -176,10 +161,10 @@ export class WallpaperJigsawListComponent implements OnInit {
         isHeader: true
       }
     ];
-    if (this.page > 1) {
+    if (this.page() > 1) {
       breadcrumbs.push({
-        label: `第${this.page}页`,
-        tooltip: `第${this.page}页`,
+        label: `第${this.page()}页`,
+        tooltip: `第${this.page()}页`,
         url: '',
         isHeader: false
       });

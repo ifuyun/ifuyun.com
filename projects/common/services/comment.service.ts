@@ -175,7 +175,8 @@ export class CommentService {
     });
   }
 
-  buildCommentTree(comments: Comment[], depth: number, avatarType: string) {
+  buildCommentTree(params: { comments: Comment[]; depth: number; avatarType: string }) {
+    const { comments, depth, avatarType } = params;
     const tree = this.initCommentTree(this.transformComments(comments, avatarType));
     const transform = (nodes: Comment[], curDepth: number) => {
       for (const node of nodes) {

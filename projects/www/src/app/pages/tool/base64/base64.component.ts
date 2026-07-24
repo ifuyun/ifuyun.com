@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, model, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   BASE64_PAGE_DESCRIPTION,
@@ -34,31 +34,26 @@ import { Base64Service } from '../../../services/base64.service';
   styleUrl: '../tool.less'
 })
 export class Base64Component implements OnInit {
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly commonService = inject(CommonService);
+  private readonly metaService = inject(MetaService);
+  private readonly message = inject(MessageService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+  private readonly base64Service = inject(Base64Service);
+
   readonly maxContentLength = 2000;
+  readonly isMobile = this.uaService.isMobile;
+  readonly encryptContent = model('');
+  readonly encryptResult = model('');
 
-  isMobile = false;
-  encryptContent = '';
-  encryptResult = '';
+  protected readonly pageIndex = 'tool-base64';
 
-  protected pageIndex = 'tool-base64';
-
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
-  private contentChange$ = new BehaviorSubject('');
-
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly commonService: CommonService,
-    private readonly metaService: MetaService,
-    private readonly message: MessageService,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService,
-    private readonly base64Service: Base64Service
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly options = signal<OptionEntity>({});
+  private readonly contentChange$ = new BehaviorSubject('');
 
   ngOnInit(): void {
     this.updatePageIndex();
@@ -71,36 +66,36 @@ export class Base64Component implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe(([appInfo, options]) => {
-        this.appInfo = appInfo;
-        this.options = options;
+        this.appInfo.set(appInfo);
+        this.options.set(options);
 
         this.updatePageInfo();
       });
   }
 
   transform(action: 'encode' | 'decode') {
-    if (!this.encryptContent) {
+    if (!this.encryptContent()) {
       return;
     }
-    if (this.encryptContent.length > this.maxContentLength) {
+    if (this.encryptContent().length > this.maxContentLength) {
       this.message.error(
-        `待编解码内容最大长度为 ${this.maxContentLength} 字符，当前为 ${this.encryptContent.length} 字符`
+        `待编解码内容最大长度为 ${this.maxContentLength} 字符，当前为 ${this.encryptContent().length} 字符`
       );
       return;
     }
     this.base64Service
-      .transform(this.encryptContent, action)
+      .transform(this.encryptContent(), action)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res.code === ResponseCode.SUCCESS) {
-          this.encryptResult = res.data || '';
+          this.encryptResult.set(res.data || '');
         }
       });
   }
 
   reset() {
-    this.encryptContent = '';
-    this.encryptResult = '';
+    this.encryptContent.set('');
+    this.encryptResult.set('');
   }
 
   onContentChange(content: string) {
@@ -120,20 +115,20 @@ export class Base64Component implements OnInit {
       .asObservable()
       .pipe(debounceTime(500), takeUntil(this.destroy$))
       .subscribe(() => {
-        this.encryptResult = '';
+        this.encryptResult.set('');
       });
   }
 
   private updatePageInfo() {
-    const titles = ['Base64 编解码', '工具', this.appInfo.name];
-    const description = `${this.appInfo.name} ${BASE64_PAGE_DESCRIPTION}`;
+    const titles = ['Base64 编解码', '工具', this.appInfo()!.name];
+    const description = `${this.appInfo()!.name} ${BASE64_PAGE_DESCRIPTION}`;
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,
       keywords: uniq(BASE64_PAGE_KEYWORDS)
         .filter((item) => !!item)
         .join(','),
-      author: this.options['site_author']
+      author: this.options()['site_author']
     };
     this.metaService.updateHTMLMeta(metaData);
   }

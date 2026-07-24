@@ -1,7 +1,8 @@
+@let gs = gameStatus();
 <main>
   <div class="puzzle" [class.p-puzzle]="!isMobile" [class.m-puzzle]="isMobile" #puzzle>
     <div class="puzzle-board">
-      <canvas class="puzzle-canvas" #puzzleCanvas [attr.width]="canvasWidth" [attr.height]="canvasHeight"></canvas>
+      <canvas class="puzzle-canvas" #puzzleCanvas [attr.width]="canvasWidth()" [attr.height]="canvasHeight()"></canvas>
     </div>
     @if (!isMobile) {
       <div class="puzzle-control">
@@ -9,22 +10,22 @@
           <a nz-dropdown
              class="puzzle-difficulty"
              [nzDropdownMenu]="difficulty"
-             [nzDisabled]="gameStatus === 'playing' || gameStatus === 'paused'"
-             nzPlacement="topLeft">{{ activeDifficulty.name }}片<nz-icon nzType="down"/></a>
-          @if (gameStatus === 'ready' || gameStatus === 'completed') {
+             [nzDisabled]="gs === 'playing' || gs === 'paused'"
+             nzPlacement="topLeft">{{ activeDifficulty().name }}片<nz-icon nzType="down"/></a>
+          @if (gs === 'ready' || gs === 'completed') {
             <a nz-button
                nzType="link"
                class="icon-btn"
                title="开始"
                (click)="startGame()"><fi-play-fill/></a>
           }
-          @if (gameStatus === 'playing') {
+          @if (gs === 'playing') {
             <a nz-button
                nzType="link"
                title="暂停"
                (click)="pauseGame()"><nz-icon nzType="pause"/></a>
           }
-          @if (gameStatus === 'paused') {
+          @if (gs === 'paused') {
             <a nz-button
                nzType="link"
                class="icon-btn"
@@ -35,31 +36,31 @@
              nzType="link"
              class="icon-btn"
              title="停止"
-             [disabled]="gameStatus !== 'playing' && gameStatus !== 'paused'"
+             [disabled]="gs !== 'playing' && gs !== 'paused'"
              (click)="stopGame()"><fi-stop-fill/></a>
           <a nz-button
              nzType="link"
              title="重新开始"
-             [disabled]="gameStatus === 'ready'"
+             [disabled]="gs === 'ready'"
              (click)="restartGame()"><nz-icon nzType="reload"/></a>
           <a nz-button
              nzType="link"
              title="放大"
-             [disabled]="gameStatus !== 'playing' && gameStatus !== 'completed'"
+             [disabled]="gs !== 'playing' && gs !== 'completed'"
              (click)="zoom()"><nz-icon nzType="zoom-in"/></a>
           <a nz-button
              nzType="link"
              title="缩小"
-             [disabled]="gameStatus !== 'playing' && gameStatus !== 'completed'"
+             [disabled]="gs !== 'playing' && gs !== 'completed'"
              (click)="zoom(false)"><nz-icon nzType="zoom-out"/></a>
-          @if (isFullScreen) {
+          @if (isFullScreen()) {
             <a nz-button
                nzType="link"
                class="icon-btn"
-               [title]="isArranged ? '取消扩散' : '四周扩散'"
-               [disabled]="gameStatus !== 'playing'"
+               [title]="isArranged() ? '取消扩散' : '四周扩散'"
+               [disabled]="gs !== 'playing'"
                (click)="arrange()">
-              @if (isArranged) {
+              @if (isArranged()) {
                 <fi-fullscreen-exit/>
               } @else {
                 <fi-fullscreen/>
@@ -68,14 +69,14 @@
           }
           <a nz-button
              nzType="link"
-             [title]="isFullScreen ? '退出全屏' : '全屏'"
-             (click)="fullscreen()"><nz-icon [nzType]="isFullScreen ? 'fullscreen-exit' : 'fullscreen'"/></a>
+             [title]="isFullScreen() ? '退出全屏' : '全屏'"
+             (click)="fullscreen()"><nz-icon [nzType]="isFullScreen() ? 'fullscreen-exit' : 'fullscreen'"/></a>
         </div>
         <div>
-          <span>{{ gameTime | duration }} / {{ gamePercent }}%</span>
+          <span>{{ gameTime() | duration }} / {{ gamePercent() }}%</span>
         </div>
         <div>
-          @if (scaledImage) {
+          @if (scaledImage(); as image) {
             <a nz-button
                nz-popover
                nzType="link"
@@ -85,7 +86,7 @@
             <ng-template #popoverTemplate>
               <img [style.width]="'300px'"
                    [style.cursor]="'zoom-in'"
-                   [src]="scaledImage.src"
+                   [src]="image.src"
                    (click)="showFullImage()"
                    alt="预览"/>
             </ng-template>
@@ -94,17 +95,17 @@
           }
           <a nz-button
              nzType="link"
-             [href]="detailLink"
+             [href]="detailLink()"
              target="_blank"
-             title="《{{wallpaper?.copyright}}》壁纸详情"><nz-icon nzType="info-circle"/></a>
-          @if (downloading) {
+             title="《{{ wallpaper()?.copyright }}》壁纸详情"><nz-icon nzType="info-circle"/></a>
+          @if (downloading()) {
             <a nz-button nzType="link" title="下载中..."><nz-icon nzType="loading"/></a>
           } @else {
             <a nz-button
                nzType="link"
                class="icon-btn"
                (click)="download()"
-               title="下载《{{wallpaper?.copyright}}》高清壁纸"><fi-download/></a>
+               title="下载《{{ wallpaper()?.copyright }}》高清壁纸"><fi-download/></a>
           }
         </div>
       </div>
@@ -114,19 +115,19 @@
           <a nz-dropdown
              class="puzzle-difficulty"
              [nzDropdownMenu]="difficulty"
-             [nzDisabled]="gameStatus === 'playing' || gameStatus === 'paused'"
-             nzPlacement="topLeft">{{ activeDifficulty.name }}片<nz-icon nzType="down"/></a>
-          @if (gameStatus === 'ready' || gameStatus === 'completed') {
+             [nzDisabled]="gs === 'playing' || gs === 'paused'"
+             nzPlacement="topLeft">{{ activeDifficulty().name }}片<nz-icon nzType="down"/></a>
+          @if (gs === 'ready' || gs === 'completed') {
             <a nz-button
                nzType="link"
                class="icon-btn"
                title="开始"
                (click)="startGame()"><fi-play-fill/></a>
           }
-          @if (gameStatus === 'playing') {
+          @if (gs === 'playing') {
             <a nz-button nzType="link" title="暂停" (click)="pauseGame()"><nz-icon nzType="pause"/></a>
           }
-          @if (gameStatus === 'paused') {
+          @if (gs === 'paused') {
             <a nz-button
                nzType="link"
                class="icon-btn"
@@ -137,13 +138,13 @@
              nzType="link"
              class="icon-btn"
              title="停止"
-             [disabled]="gameStatus !== 'playing' && gameStatus !== 'paused'"
+             [disabled]="gs !== 'playing' && gs !== 'paused'"
              (click)="stopGame()"><fi-stop-fill/></a>
           <a nz-button
              nzType="link"
-             [title]="isFullScreen ? '退出全屏' : '全屏'"
-             (click)="fullscreen()"><nz-icon [nzType]="isFullScreen ? 'fullscreen-exit' : 'fullscreen'"/></a>
-          @if (scaledImage) {
+             [title]="isFullScreen() ? '退出全屏' : '全屏'"
+             (click)="fullscreen()"><nz-icon [nzType]="isFullScreen() ? 'fullscreen-exit' : 'fullscreen'"/></a>
+          @if (scaledImage(); as image) {
             <a nz-button
                nz-popover
                nzType="link"
@@ -153,7 +154,7 @@
             <ng-template #mPopoverTemplate>
               <img [style.width]="'270px'"
                    [style.cursor]="'zoom-in'"
-                   [src]="scaledImage.src"
+                   [src]="image.src"
                    (click)="showFullImage()"
                    alt="预览"/>
             </ng-template>
@@ -162,20 +163,20 @@
           }
           <a nz-button
              nzType="link"
-             [href]="detailLink"
+             [href]="detailLink()"
              target="_blank"
-             title="《{{wallpaper?.copyright}}》壁纸详情"><nz-icon nzType="info-circle"/></a>
+             title="《{{ wallpaper()?.copyright }}》壁纸详情"><nz-icon nzType="info-circle"/></a>
         </div>
         <div>
-          <span>{{ gameTime | duration }} / {{ gamePercent }}%</span>
+          <span>{{ gameTime() | duration }} / {{ gamePercent() }}%</span>
         </div>
       </div>
     }
-    @if (gameStatus === 'ready' || gameStatus === 'paused') {
+    @if (gs === 'ready' || gs === 'paused') {
       <div class="puzzle-mask">
-        @if (gameStatus === 'ready') {
+        @if (gs === 'ready') {
           <div (click)="startGame()"><fi-play-fill class="fi"/><span>开始游戏</span></div>
-        } @else if (gameStatus === 'paused') {
+        } @else if (gs === 'paused') {
           <div (click)="resumeGame()"><fi-play-fill class="fi"/><span>继续游戏</span></div>
         }
       </div>
@@ -183,16 +184,16 @@
   </div>
   @if (isBrowser) {
     <div class="ranking">
-      <h2><fi-trophy-fill class="fi"/><span>排行榜（{{ activeDifficulty.pieces }} 片）</span></h2>
+      <h2><fi-trophy-fill class="fi"/><span>排行榜（{{ activeDifficulty().pieces }} 片）</span></h2>
       <div class="ranking-table">
         <nz-table nzOuterBordered
                   nzTableLayout="fixed"
                   nzSize="middle"
-                  [nzData]="rankings"
+                  [nzData]="rankings()"
                   [nzFrontPagination]="true"
                   [nzShowPagination]="false"
                   [nzHideOnSinglePage]="true"
-                  [nzLoading]="rankingLoading"
+                  [nzLoading]="rankingLoading()"
                   [nzNoResult]="emptyRankingTpl">
           <thead>
           <tr>
@@ -203,11 +204,11 @@
           </tr>
           </thead>
           <tbody>
-            @for (item of rankings; track item.id; let i = $index) {
-              <tr [class.active]="item.faId === faId || item.userId === userId">
+            @for (item of rankings(); track item.id; let i = $index) {
+              <tr [class.active]="item.faId === faId || item.userId === userId()">
                 <td nzAlign="center" [title]="i + 1"><span class="hot-num">{{ i + 1 }}</span></td>
                 <td nzEllipsis [title]="item.user?.nickname || '匿名用户'">
-                  {{ item.user?.nickname || '匿名用户' }}{{ item.faId === faId || item.userId === userId ? '（你）' : '' }}
+                  {{ item.user?.nickname || '匿名用户' }}{{ item.faId === faId || item.userId === userId() ? '（你）' : '' }}
                 </td>
                 <td nzAlign="right"
                     nzEllipsis
@@ -229,7 +230,7 @@
   <ul nz-menu nzSelectable>
     @for (item of difficultyList; track item.name) {
       <li nz-menu-item
-          [nzSelected]="activeDifficulty.name === item.name"
+          [nzSelected]="activeDifficulty().name === item.name"
           (click)="setDifficulty(item)">{{ item.name + '片(' + item.rows + 'x' + item.cols + ')' }}</li>
     }
   </ul>
@@ -237,12 +238,12 @@
 @if (isBrowser) {
   <ng-template #confirmModalContent>
     <div class="confirm-progress">
-      @if (cachedJigsaw) {
-        <p><span>拼图：</span><span>{{ wallpaper?.copyright }}</span></p>
-        <p><span>时间：</span><span>{{ cachedJigsaw.t | date:'yyyy-MM-dd HH:mm:ss' }}</span></p>
-        <p><span>难度：</span><span>{{ cachedJigsaw.c }} 片</span></p>
-        <p><span>进度：</span><span>{{ (cachedJigsaw.s / (cachedJigsaw.c - 1) * 100).toFixed(1) }}%</span></p>
-        <p><span>用时：</span><span>{{ cachedJigsaw.d | duration }}</span></p>
+      @if (cachedJigsaw(); as progress) {
+        <p><span>拼图：</span><span>{{ wallpaper()?.copyright }}</span></p>
+        <p><span>时间：</span><span>{{ progress.t | date:'yyyy-MM-dd HH:mm:ss' }}</span></p>
+        <p><span>难度：</span><span>{{ progress.c }} 片</span></p>
+        <p><span>进度：</span><span>{{ (progress.s / (progress.c - 1) * 100).toFixed(1) }}%</span></p>
+        <p><span>用时：</span><span>{{ progress.d | duration }}</span></p>
       }
     </div>
   </ng-template>

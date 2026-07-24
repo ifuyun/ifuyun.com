@@ -1,4 +1,14 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  inject,
+  input,
+  model,
+  OnDestroy,
+  signal,
+  viewChild
+} from '@angular/core';
 import { AppConfigService, DestroyService, OptionEntity, PlatformService, UserAgentService } from 'common/core';
 import { AdsenseOptions } from 'common/interfaces';
 import { AdsService, AdsStatus, OptionService } from 'common/services';
@@ -12,54 +22,46 @@ import { skipWhile, takeUntil } from 'rxjs';
   templateUrl: './adsense.component.html'
 })
 export class AdsenseComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('adsense', { read: ElementRef, static: true }) adsenseEle!: ElementRef;
+  private readonly destroy$ = inject(DestroyService);
+  private readonly platform = inject(PlatformService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly optionService = inject(OptionService);
+  private readonly adsService = inject(AdsService);
 
-  @Input() dynamic = true;
-  @Input() optionKey = '';
-  @Input() placeholder = false;
-  @Input() text = '';
-  @Input() wrapClass = '';
+  readonly adsenseEle = viewChild<ElementRef, ElementRef>('adsense', { read: ElementRef });
+
+  readonly dynamic = input<boolean>(true);
+  readonly optionKey = input<string>('');
+  readonly placeholder = input<boolean>(false);
+  readonly text = input<string>('');
+  readonly wrapClass = input<string>('');
   // full options
-  @Input() clientId!: string;
-  @Input() slotId!: string | number;
-  @Input() format!: string;
-  @Input() responsive!: boolean | undefined;
-  @Input() className!: string;
-  @Input() style!: string;
-  @Input() display: string = 'block';
-  @Input() width!: number | string;
-  @Input() height!: number | string;
-  @Input() minWidth!: number | string;
-  @Input() minHeight!: number | string;
-  @Input() maxWidth!: number | string;
-  @Input() maxHeight!: number | string;
-  @Input() region = 'ad-' + Math.floor(Math.random() * 10000) + 1;
-  @Input() testMode: boolean = false;
+  readonly clientId = model<string>('');
+  readonly slotId = model<string | number>('');
+  readonly format = model<string>('');
+  readonly responsive = model<boolean | undefined>(true);
+  readonly className = model<string>('');
+  readonly style = model<string>('');
+  readonly display = model<string>('block');
+  readonly width = model<number | string>('');
+  readonly height = model<number | string>('');
+  readonly minWidth = model<number | string>('');
+  readonly minHeight = model<number | string>('');
+  readonly maxWidth = model<number | string>('');
+  readonly maxHeight = model<number | string>('');
+  readonly region = model<string>('ad-' + Math.floor(Math.random() * 10000) + 1);
+  readonly testMode = model<boolean>(false);
 
-  isMobile = false;
+  private readonly adsenseClass = signal('adsbygoogle');
+  private readonly customClass = signal('ads-ins');
 
-  private readonly isDev: boolean;
-  private readonly adsenseClass = 'adsbygoogle';
-  private readonly customClass = 'ads-ins';
-
-  private options: OptionEntity = {};
+  private readonly options = signal<OptionEntity>({});
   // 开关配置
-  private adsFlag = false;
+  private readonly adsFlag = signal(false);
   // 是否配置 clientId 和 slotId
-  private isValid = false;
-  private pageLevelAds = false;
-
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly platform: PlatformService,
-    private readonly userAgentService: UserAgentService,
-    private readonly appConfigService: AppConfigService,
-    private readonly optionService: OptionService,
-    private readonly adsService: AdsService
-  ) {
-    this.isDev = this.appConfigService.isDev;
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  private readonly isValid = signal(false);
+  private readonly pageLevelAds = signal(false);
 
   ngAfterViewInit(): void {
     if (this.platform.isServer) {
@@ -71,10 +73,12 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe((options) => {
-        this.options = options;
+        this.options.set(options);
 
+        const isDev = this.appConfigService.isDev;
         const adsFlag = options['ads_flag'] || '';
-        this.adsFlag = (!this.isDev && ['1', '0'].includes(adsFlag)) || (this.isDev && ['2', '0'].includes(adsFlag));
+
+        this.adsFlag.set((!isDev && ['1', '0'].includes(adsFlag)) || (isDev && ['2', '0'].includes(adsFlag)));
 
         this.initOptions();
         this.initAdsense();
@@ -87,7 +91,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    const iframe = this.adsenseEle?.nativeElement.querySelector('iframe');
+    const iframe = this.adsenseEle()?.nativeElement.querySelector('iframe');
     if (iframe && iframe.contentWindow) {
       iframe.src = 'about:blank';
       iframe.remove();
@@ -106,9 +110,9 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
       testMode: false
     };
     let adsenseOptions: Partial<AdsenseOptions> = {};
-    if (this.dynamic && this.optionKey) {
+    if (this.dynamic() && this.optionKey()) {
       try {
-        adsenseOptions = JSON.parse(this.options[this.optionKey]);
+        adsenseOptions = JSON.parse(this.options()[this.optionKey()]);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {}
     }
@@ -117,36 +121,36 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
       ...adsenseOptions
     };
 
-    this.clientId = this.clientId ?? adsenseOptions.clientId;
-    this.slotId = this.slotId ?? adsenseOptions.slotId;
-    this.format = this.format ?? adsenseOptions.format;
-    this.responsive = this.responsive ?? adsenseOptions.responsive;
-    this.style = this.style ?? adsenseOptions.style;
-    this.display = this.display ?? adsenseOptions.display;
-    this.width = this.parseSize(this.width ?? adsenseOptions.width);
-    this.height = this.parseSize(this.height ?? adsenseOptions.height);
-    this.minWidth = this.parseSize(this.minWidth ?? adsenseOptions.minWidth);
-    this.minHeight = this.parseSize(this.minHeight ?? adsenseOptions.minHeight);
-    this.maxWidth = this.parseSize(this.maxWidth ?? adsenseOptions.maxWidth);
-    this.maxHeight = this.parseSize(this.maxHeight ?? adsenseOptions.maxHeight);
-    this.testMode = this.testMode ?? adsenseOptions.testMode;
-    this.isValid = !!(this.clientId && this.slotId);
+    this.clientId.set(this.clientId() ?? adsenseOptions.clientId);
+    this.slotId.set(this.slotId() ?? adsenseOptions.slotId);
+    this.format.set(this.format() ?? adsenseOptions.format);
+    this.responsive.set(this.responsive() ?? adsenseOptions.responsive);
+    this.style.set(this.style() ?? adsenseOptions.style);
+    this.display.set(this.display() ?? adsenseOptions.display);
+    this.width.set(this.parseSize(this.width() ?? adsenseOptions.width));
+    this.height.set(this.parseSize(this.height() ?? adsenseOptions.height));
+    this.minWidth.set(this.parseSize(this.minWidth() ?? adsenseOptions.minWidth));
+    this.minHeight.set(this.parseSize(this.minHeight() ?? adsenseOptions.minHeight));
+    this.maxWidth.set(this.parseSize(this.maxWidth() ?? adsenseOptions.maxWidth));
+    this.maxHeight.set(this.parseSize(this.maxHeight() ?? adsenseOptions.maxHeight));
+    this.testMode.set(this.testMode() ?? adsenseOptions.testMode);
+    this.isValid.set(!!(this.clientId() && this.slotId()));
 
     const className = [
-      this.adsenseClass,
-      this.className,
+      this.adsenseClass(),
+      this.className(),
       adsenseOptions.className,
-      this.isMobile ? `m-${this.customClass}` : `p-${this.customClass}`
+      this.uaService.isMobile ? `m-${this.customClass()}` : `p-${this.customClass()}`
     ];
-    this.className = uniq(className.filter((item) => !!item)).join(' ');
+    this.className.set(uniq(className.filter((item) => !!item)).join(' '));
   }
 
   private initAdsense() {
     if (this.platform.isBrowser) {
-      if (this.adsFlag && this.isValid) {
+      if (this.adsFlag() && this.isValid()) {
         const ads: Record<string, string | boolean> = {};
-        if (this.pageLevelAds) {
-          ads['google_ad_client'] = this.clientId;
+        if (this.pageLevelAds()) {
+          ads['google_ad_client'] = this.clientId();
           ads['enable_page_level_ads'] = true;
         }
         try {
@@ -164,59 +168,67 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
   }
 
   private renderAdsense() {
-    if (!this.adsenseEle) {
+    const adsenseEle = this.adsenseEle();
+    if (!adsenseEle) {
       return;
     }
     const adsBodyEle = document.createElement('ins');
 
-    adsBodyEle.className = this.className;
-    adsBodyEle.setAttribute('style', this.style);
-    adsBodyEle.style.display = this.display;
+    adsBodyEle.className = this.className();
+    adsBodyEle.setAttribute('style', this.style());
+    adsBodyEle.style.display = this.display();
 
-    if (this.width && (!this.placeholder || (this.placeholder && this.width !== '0' && this.width !== '0px'))) {
-      adsBodyEle.style.width = this.width + '';
+    if (
+      this.width() &&
+      (!this.placeholder() || (this.placeholder() && this.width() !== '0' && this.width() !== '0px'))
+    ) {
+      adsBodyEle.style.width = this.width() + '';
     }
-    if (this.height && (!this.placeholder || (this.placeholder && this.height !== '0' && this.height !== '0px'))) {
-      adsBodyEle.style.height = this.height + '';
+    if (
+      this.height() &&
+      (!this.placeholder() || (this.placeholder() && this.height() !== '0' && this.height() !== '0px'))
+    ) {
+      adsBodyEle.style.height = this.height() + '';
     }
-    if (this.minWidth) {
-      adsBodyEle.style.minWidth = this.minWidth + '';
+    if (this.minWidth()) {
+      adsBodyEle.style.minWidth = this.minWidth() + '';
     }
-    if (this.minHeight) {
-      adsBodyEle.style.minHeight = this.minHeight + '';
+    if (this.minHeight()) {
+      adsBodyEle.style.minHeight = this.minHeight() + '';
     }
-    if (this.maxWidth) {
-      adsBodyEle.style.maxWidth = this.maxWidth + '';
+    if (this.maxWidth()) {
+      adsBodyEle.style.maxWidth = this.maxWidth() + '';
     }
-    if (this.maxHeight) {
-      adsBodyEle.style.maxHeight = this.maxHeight + '';
+    if (this.maxHeight()) {
+      adsBodyEle.style.maxHeight = this.maxHeight() + '';
     }
 
-    adsBodyEle.setAttribute('data-ad-client', this.clientId);
-    adsBodyEle.setAttribute('data-ad-slot', this.slotId + '');
-    adsBodyEle.setAttribute('data-ad-region', this.region);
-    if (this.format) {
-      adsBodyEle.setAttribute('data-ad-format', this.format);
+    adsBodyEle.setAttribute('data-ad-client', this.clientId());
+    adsBodyEle.setAttribute('data-ad-slot', this.slotId() + '');
+    adsBodyEle.setAttribute('data-ad-region', this.region());
+    if (this.format()) {
+      adsBodyEle.setAttribute('data-ad-format', this.format());
     }
-    if (this.testMode) {
+    if (this.testMode()) {
       adsBodyEle.setAttribute('data-ad-adtest', 'on');
     }
-    if (typeof this.responsive === 'boolean') {
-      adsBodyEle.setAttribute('data-full-width-responsive', this.responsive + '');
+    if (typeof this.responsive() === 'boolean') {
+      adsBodyEle.setAttribute('data-full-width-responsive', this.responsive() + '');
     }
 
-    const adsEle = this.adsenseEle.nativeElement;
-    if (this.wrapClass) {
-      adsEle.classList.add(this.wrapClass);
+    const adsEle = adsenseEle.nativeElement;
+    if (this.wrapClass()) {
+      adsEle.classList.add(this.wrapClass());
     }
     adsEle.classList.remove('ads-border');
     adsEle.appendChild(adsBodyEle);
   }
 
   private hideAdsense() {
+    const adsenseEle = this.adsenseEle();
     // placeholder 为 true 时，显示占位内容
-    if (!this.placeholder && this.adsenseEle) {
-      this.adsenseEle.nativeElement.style.display = 'none';
+    if (!this.placeholder() && adsenseEle) {
+      adsenseEle.nativeElement.style.display = 'none';
     }
   }
 

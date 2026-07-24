@@ -1,9 +1,19 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  model,
+  OnDestroy,
+  OnInit,
+  signal,
+  viewChild
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Params } from '@angular/router';
 import {
   AppConfigService,
-  AppDomainConfig,
   ArchiveData,
   DestroyService,
   OptionEntity,
@@ -40,47 +50,41 @@ import { SmartLinkComponent } from '../smart-link/smart-link.component';
   styleUrl: './sider.component.less'
 })
 export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('siderEle') siderEle!: ElementRef;
+  private readonly destroy$ = inject(DestroyService);
+  private readonly platform = inject(PlatformService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly commonService = inject(CommonService);
+  private readonly optionService = inject(OptionService);
+  private readonly postService = inject(PostService);
+  private readonly wallpaperService = inject(WallpaperService);
+  private readonly gameService = inject(GameService);
+  private readonly jigsawService = inject(JigsawService);
+
+  readonly siderEle = viewChild<ElementRef<HTMLElement>>('siderEle');
 
   readonly adsPlaceholder = true;
-
-  domains!: AppDomainConfig;
-  indexInfo!: PageIndexInfo;
-  hotPosts: PostEntity[] = [];
-  randomPosts: PostEntity[] = [];
-  postArchives: ArchiveData[] = [];
-  hotWallpapers: HotWallpaper[] = [];
-  randomWallpapers: Wallpaper[] = [];
-  wallpaperArchives: ArchiveData[] = [];
-  hotGames: GameEntity[] = [];
-  randomGames: GameEntity[] = [];
-  recentGames: GameEntity[] = [];
-  hotJigsaws: Wallpaper[] = [];
-  hotJigsawType = 'm';
-
-  private options: OptionEntity = {};
-  private pageIndex = '';
-
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly platform: PlatformService,
-    private readonly appConfigService: AppConfigService,
-    private readonly commonService: CommonService,
-    private readonly optionService: OptionService,
-    private readonly postService: PostService,
-    private readonly wallpaperService: WallpaperService,
-    private readonly gameService: GameService,
-    private readonly jigsawService: JigsawService
-  ) {
-    this.domains = this.appConfigService.apps;
-  }
-
-  get adsVisible() {
+  readonly domains = this.appConfigService.apps;
+  readonly indexInfo = signal<PageIndexInfo | null>(null);
+  readonly hotPosts = signal<PostEntity[]>([]);
+  readonly randomPosts = signal<PostEntity[]>([]);
+  readonly postArchives = signal<ArchiveData[]>([]);
+  readonly hotWallpapers = signal<HotWallpaper[]>([]);
+  readonly randomWallpapers = signal<Wallpaper[]>([]);
+  readonly wallpaperArchives = signal<ArchiveData[]>([]);
+  readonly hotGames = signal<GameEntity[]>([]);
+  readonly randomGames = signal<GameEntity[]>([]);
+  readonly recentGames = signal<GameEntity[]>([]);
+  readonly hotJigsaws = signal<Wallpaper[]>([]);
+  readonly hotJigsawType = model('m');
+  readonly adsVisible = computed(() => {
     return (
-      (!this.appConfigService.isDev && ['1', '0'].includes(this.options['ads_flag'])) ||
-      (this.appConfigService.isDev && ['2', '0'].includes(this.options['ads_flag']))
+      (!this.appConfigService.isDev && ['1', '0'].includes(this.options()['ads_flag'])) ||
+      (this.appConfigService.isDev && ['2', '0'].includes(this.options()['ads_flag']))
     );
-  }
+  });
+
+  private readonly options = signal<OptionEntity>({});
+  private readonly pageIndex = signal('');
 
   ngOnInit(): void {
     this.optionService.options$
@@ -89,63 +93,65 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe((options) => {
-        this.options = options;
+        this.options.set(options);
       });
     this.commonService.pageIndex$
       .pipe(
-        skipWhile((page) => !page),
+        skipWhile((pageIndex) => !pageIndex),
         takeUntil(this.destroy$)
       )
-      .subscribe((page) => {
-        if (this.pageIndex !== page) {
-          this.pageIndex = page;
-          this.indexInfo = this.commonService.getPageIndexInfo(page);
+      .subscribe((pageIndex) => {
+        if (this.pageIndex() !== pageIndex) {
+          const indexInfo = this.commonService.getPageIndexInfo(pageIndex);
 
-          const { isPost, isWallpaper, isJigsaw, isGame, isTool, isPage, isSearch } = this.indexInfo;
+          this.pageIndex.set(pageIndex);
+          this.indexInfo.set(indexInfo);
+
+          const { isPost, isWallpaper, isJigsaw, isGame, isTool, isPage, isSearch } = indexInfo;
 
           if (isPost || isPage || isTool || isSearch) {
             this.getHotPosts();
           } else {
-            this.hotPosts = [];
+            this.hotPosts.set([]);
           }
           if (isWallpaper || isPage || isTool || isSearch) {
             this.getHotWallpapers();
           } else {
-            this.hotWallpapers = [];
+            this.hotWallpapers.set([]);
           }
           if (isGame || isPage || isTool || isSearch) {
             this.getHotGames();
           } else {
-            this.hotGames = [];
+            this.hotGames.set([]);
           }
           if (isPost) {
             this.getPostArchives();
             this.getRandomPosts();
           } else {
-            this.postArchives = [];
-            this.randomPosts = [];
+            this.postArchives.set([]);
+            this.randomPosts.set([]);
           }
           if (isWallpaper) {
             this.getWallpaperArchives();
           } else {
-            this.wallpaperArchives = [];
+            this.wallpaperArchives.set([]);
           }
           if (isWallpaper || isJigsaw) {
             this.getRandomWallpapers();
           } else {
-            this.randomWallpapers = [];
+            this.randomWallpapers.set([]);
           }
           if (isGame) {
             this.getRecentGames();
             this.getRandomGames();
           } else {
-            this.recentGames = [];
-            this.randomGames = [];
+            this.recentGames.set([]);
+            this.randomGames.set([]);
           }
           if (isJigsaw) {
             this.getHotJigsaws();
           } else {
-            this.hotJigsaws = [];
+            this.hotJigsaws.set([]);
           }
         }
       });
@@ -171,10 +177,10 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getHotJigsaws() {
     this.jigsawService
-      .getHotJigsaws(this.hotJigsawType)
+      .getHotJigsaws(this.hotJigsawType())
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.hotJigsaws = res;
+        this.hotJigsaws.set(res);
       });
   }
 
@@ -183,7 +189,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       .getHotPosts()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.hotPosts = res;
+        this.hotPosts.set(res);
       });
   }
 
@@ -192,7 +198,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       .getRandomPosts(10, false)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.randomPosts = res;
+        this.randomPosts.set(res);
       });
   }
 
@@ -201,7 +207,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       .getPostArchives(true, 10)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.postArchives = res;
+        this.postArchives.set(res);
       });
   }
 
@@ -210,7 +216,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       .getHotWallpapers(10)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.hotWallpapers = res;
+        this.hotWallpapers.set(res);
       });
   }
 
@@ -219,7 +225,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       .getRandomWallpapers(10, true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.randomWallpapers = res;
+        this.randomWallpapers.set(res);
       });
   }
 
@@ -228,7 +234,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       .getWallpaperArchives(true, 10)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.wallpaperArchives = res;
+        this.wallpaperArchives.set(res);
       });
   }
 
@@ -237,7 +243,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       .getHotGames()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.hotGames = res;
+        this.hotGames.set(res);
       });
   }
 
@@ -246,7 +252,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       .getRandomGames(10)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.randomGames = res;
+        this.randomGames.set(res);
       });
   }
 
@@ -255,24 +261,25 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       .getRecentGames(10)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.recentGames = res;
+        this.recentGames.set(res);
       });
   }
 
   private scrollHandler = () => {
     const docEle = document.documentElement;
-    if (this.siderEle && docEle.scrollTop > 0) {
-      if (docEle.scrollTop > this.siderEle.nativeElement.scrollHeight - docEle.clientHeight) {
-        this.siderEle.nativeElement.style.position = 'sticky';
-        if (this.siderEle.nativeElement.scrollHeight < docEle.clientHeight) {
-          this.siderEle.nativeElement.style.top = 0;
+    const siderEle = this.siderEle();
+
+    if (siderEle && docEle.scrollTop > 0) {
+      if (docEle.scrollTop > siderEle.nativeElement.scrollHeight - docEle.clientHeight) {
+        siderEle.nativeElement.style.position = 'sticky';
+        if (siderEle.nativeElement.scrollHeight < docEle.clientHeight) {
+          siderEle.nativeElement.style.top = '0';
         } else {
-          this.siderEle.nativeElement.style.top =
-            docEle.clientHeight - this.siderEle.nativeElement.scrollHeight - 16 + 'px';
+          siderEle.nativeElement.style.top = docEle.clientHeight - siderEle.nativeElement.scrollHeight - 16 + 'px';
         }
       } else {
-        this.siderEle.nativeElement.style.position = 'relative';
-        this.siderEle.nativeElement.style.top = '';
+        siderEle.nativeElement.style.position = 'relative';
+        siderEle.nativeElement.style.top = '';
       }
     }
   };

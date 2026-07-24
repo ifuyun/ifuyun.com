@@ -1,8 +1,9 @@
-@if (relatedPosts && relatedPosts.length > 0) {
+@let rp = relatedPosts();
+@if (rp.length > 0) {
   <div class="related" [class.p-related]="!isMobile" [class.m-related]="isMobile">
     <h3>相关文章</h3>
     <div class="related-list">
-      @for (post of relatedPosts; track post.postId) {
+      @for (post of rp; track post.postId) {
         <div class="related-item">
           <a class="related-item-img" [routerLink]="post.url" [title]="post.title">
             <div class="lazyload" [attr.data-bg]="post.coverUrl"></div>

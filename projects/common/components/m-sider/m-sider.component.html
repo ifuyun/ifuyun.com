@@ -1,13 +1,15 @@
-<div class="m-sider" [class.open]="siderVisible">
+@let ai = appInfo();
+@let ii = indexInfo();
+<div class="m-sider" [class.open]="siderVisible()">
   <aside class="m-sider-body">
     <div class="m-sider-info">
       <div class="m-sider-info-logo">
-        <img [src]="faviconUrl" [alt]="appInfo?.name"/>
+        <img [src]="faviconUrl" [alt]="ai?.name"/>
       </div>
       <div class="m-sider-info-profile">
-        <h2 class="m-sider-info-profile-name">{{ appInfo?.name }}</h2>
-        @if (appInfo?.slogan) {
-          <div class="m-sider-info-profile-slogan">{{ appInfo?.slogan }}</div>
+        <h2 class="m-sider-info-profile-name">{{ ai?.name }}</h2>
+        @if (ai?.slogan) {
+          <div class="m-sider-info-profile-slogan">{{ ai?.slogan }}</div>
         }
       </div>
     </div>
@@ -18,25 +20,25 @@
     </div>
     <nav class="m-sider-nav">
       <ul class="m-sider-nav-list">
-        <li [class.active]="indexInfo?.isHome">
+        <li [class.active]="ii?.isHome">
           <lib-a [href]="domains['www'].url" (click)="closeSider()"><nz-icon nzType="home"/><span>首页</span></lib-a>
         </li>
-        <li [class.active]="indexInfo?.isPost && indexInfo?.subPage !== 'archive'">
+        <li [class.active]="ii?.isPost && ii?.subPage !== 'archive'">
           <lib-a [href]="domains['blog'].url"
                  title="博客"
                  (click)="closeSider()"><nz-icon nzType="form"/><span>博客</span></lib-a>
         </li>
-        <li [class.active]="indexInfo?.isWallpaper && indexInfo?.subPage !== 'archive'">
+        <li [class.active]="ii?.isWallpaper && ii?.subPage !== 'archive'">
           <lib-a [href]="domains['wallpaper'].url"
                  title="高清壁纸"
                  (click)="closeSider()"><nz-icon nzType="picture"/><span>壁纸</span></lib-a>
         </li>
-        <li [class.active]="indexInfo?.isJigsaw">
+        <li [class.active]="ii?.isJigsaw">
           <lib-a [href]="domains['jigsaw'].url"
                  title="壁纸拼图"
                  (click)="closeSider()"><nz-icon nzType="product"/><span>拼图</span></lib-a>
         </li>
-        <li [class.active]="indexInfo?.isGame">
+        <li [class.active]="ii?.isGame">
           <lib-a [href]="domains['game'].url"
                  title="游戏"
                  (click)="closeSider()"><nz-icon nzType="desktop"/><span>游戏</span></lib-a>
@@ -44,23 +46,23 @@
         <li>
           <a [href]="magazineUrl" target="_blank" title="过刊阅读平台"><nz-icon nzType="book"/><span>杂志</span></a>
         </li>
-        <li [class.active]="indexInfo?.isTool">
+        <li [class.active]="ii?.isTool">
           <lib-a [href]="domains['www'].url + '/tool'"
                  title="工具"
                  (click)="closeSider()"><nz-icon nzType="tool"/><span>工具</span></lib-a>
         </li>
-        <li [class.active]="indexInfo?.fullPage === 'post-archive'">
+        <li [class.active]="ii?.fullPage === 'post-archive'">
           <lib-a [href]="domains['blog'].url + '/archive'"
                  title="博客归档"
                  (click)="closeSider()"><fi-calendar-date class="fi"/><span>博客归档</span></lib-a>
         </li>
-        <li [class.active]="indexInfo?.fullPage === 'wallpaper-archive'">
+        <li [class.active]="ii?.fullPage === 'wallpaper-archive'">
           <lib-a [href]="domains['wallpaper'].url + '/archive'"
                  title="壁纸归档"
                  (click)="closeSider()"><fi-calendar-date class="fi"/><span>壁纸归档</span></lib-a>
         </li>
         <div class="m-separator"></div>
-        <li [class.active]="indexInfo?.subPage === 'aboutme'">
+        <li [class.active]="ii?.subPage === 'aboutme'">
           <lib-a [href]="domains['www'].url + '/aboutme'"
                  title="关于"
                  (click)="closeSider()"><nz-icon nzType="info-circle"/><span>关于</span></lib-a>
@@ -74,7 +76,7 @@
              target="_blank"><nz-icon nzType="github"/><span>GitHub</span></a>
         </li>
         <div class="m-separator"></div>
-        @if (isSignIn) {
+        @if (isSignIn()) {
           <li><a (click)="gotoAdmin()"><nz-icon nzType="dashboard"/><span>个人中心</span></a></li>
           <li><a (click)="signout()"><nz-icon nzType="logout"/><span>退出登录</span></a></li>
         } @else {

@@ -8,6 +8,7 @@ export enum LogTargetType {
   USER = 'user',
   HEADER = 'header',
   SIDER = 'sider',
+  WIDGET = 'widget',
   CAROUSEL = 'carousel',
   ADS = 'ads'
 }

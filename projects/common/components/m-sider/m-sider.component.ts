@@ -1,14 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   ADMIN_URL_PARAM,
   AppConfigService,
-  AppDomainConfig,
   AuthService,
   DestroyService,
   PageIndexInfo,
   ResponseCode
 } from 'common/core';
-import { LogTargetType, LogActionType } from 'common/enums';
+import { LogActionType, LogTargetType } from 'common/enums';
 import { IconCalendarDateComponent } from 'common/icons';
 import { TenantAppVo } from 'common/interfaces';
 import { CommonService, LogService, TenantAppService, UserService } from 'common/services';
@@ -27,31 +26,25 @@ import { SmartLinkComponent } from '../smart-link/smart-link.component';
   styleUrl: './m-sider.component.less'
 })
 export class MSiderComponent implements OnInit {
-  readonly faviconUrl: string;
-  readonly magazineUrl: string;
+  private readonly destroy$ = inject(DestroyService);
+  private readonly imageService = inject(NzImageService);
+  private readonly commonService = inject(CommonService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly authService = inject(AuthService);
+  private readonly userService = inject(UserService);
+  private readonly logService = inject(LogService);
 
-  siderVisible = false;
-  isSignIn = false;
-  domains!: AppDomainConfig;
-  indexInfo?: PageIndexInfo;
-  appInfo?: TenantAppVo;
+  readonly faviconUrl = this.appConfigService.faviconUrl;
+  readonly magazineUrl = this.appConfigService.magazineUrl;
 
-  private adminUrl = '';
+  readonly siderVisible = signal(false);
+  readonly isSignIn = signal(false);
+  readonly domains = this.appConfigService.apps;
+  readonly indexInfo = signal<PageIndexInfo | null>(null);
+  readonly appInfo = signal<TenantAppVo | null>(null);
 
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly imageService: NzImageService,
-    private readonly commonService: CommonService,
-    private readonly appConfigService: AppConfigService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly authService: AuthService,
-    private readonly userService: UserService,
-    private readonly logService: LogService
-  ) {
-    this.domains = appConfigService.apps;
-    this.faviconUrl = appConfigService.faviconUrl;
-    this.magazineUrl = appConfigService.magazineUrl;
-  }
+  private readonly adminUrl = signal('');
 
   ngOnInit(): void {
     this.tenantAppService.appInfo$
@@ -60,31 +53,34 @@ export class MSiderComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe((appInfo) => {
-        this.appInfo = appInfo;
+        this.appInfo.set(appInfo);
 
         const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), this.appConfigService.appId);
-        this.adminUrl = this.appInfo.adminUrl + '?' + urlParam;
+
+        this.adminUrl.set(appInfo.adminUrl + '?' + urlParam);
       });
     this.commonService.siderVisible$.subscribe((visible) => {
-      this.siderVisible = visible;
+      this.siderVisible.set(visible);
     });
     this.commonService.pageIndex$.pipe(takeUntil(this.destroy$)).subscribe((page) => {
-      this.indexInfo = this.commonService.getPageIndexInfo(page);
+      this.indexInfo.set(this.commonService.getPageIndexInfo(page));
     });
     this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      this.isSignIn = !!user.id;
+      this.isSignIn.set(!!user.id);
     });
   }
 
   closeSider() {
-    this.siderVisible = false;
+    this.siderVisible.set(false);
+
     this.commonService.updateSiderVisible(false);
   }
 
   showWechatCard() {
     const urlPrefix = this.commonService.getCdnUrlPrefix();
 
-    this.siderVisible = false;
+    this.siderVisible.set(false);
+
     this.commonService.updateSiderVisible(false);
     this.imageService.preview([
       {
@@ -102,7 +98,7 @@ export class MSiderComponent implements OnInit {
   }
 
   gotoAdmin() {
-    window.open(this.adminUrl);
+    window.open(this.adminUrl());
   }
 
   signout() {

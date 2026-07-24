@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   BreadcrumbComponent,
@@ -13,7 +13,6 @@ import {
   DestroyService,
   MetaService,
   OptionEntity,
-  PaginationService,
   UserAgentService
 } from 'common/core';
 import { ListMode } from 'common/enums';
@@ -30,47 +29,40 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   templateUrl: './game-list.component.html'
 })
 export class GameListComponent implements OnInit {
-  isMobile = false;
-  page = 1;
-  pageSize = 10;
-  total = 0;
-  games: Game[] = [];
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly commonService = inject(CommonService);
+  private readonly metaService = inject(MetaService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+  private readonly gameService = inject(GameService);
 
-  protected readonly ListMode = ListMode;
-
-  protected pageIndex = 'game-list';
-
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
-  private lastParam = '';
-  private category = '';
-  private tag = '';
-
-  get paginationUrl() {
-    if (this.category) {
-      return `/category/${this.category}`;
+  readonly isMobile = this.uaService.isMobile;
+  readonly page = signal(1);
+  readonly pageSize = signal(10);
+  readonly total = signal(0);
+  readonly games = signal<Game[]>([]);
+  readonly paginationUrl = computed(() => {
+    if (this.category()) {
+      return `/category/${this.category()}`;
     }
-    if (this.tag) {
-      return `/tag/${this.tag}`;
+    if (this.tag()) {
+      return `/tag/${this.tag()}`;
     }
 
     return '/list';
-  }
+  });
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly commonService: CommonService,
-    private readonly metaService: MetaService,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly paginationService: PaginationService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService,
-    private readonly gameService: GameService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  protected readonly ListMode = ListMode;
+  protected readonly pageIndex = 'game-list';
+
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly options = signal<OptionEntity>({});
+  private readonly lastParam = signal('');
+  private readonly category = signal('');
+  private readonly tag = signal('');
 
   ngOnInit(): void {
     combineLatest([
@@ -86,24 +78,23 @@ export class GameListComponent implements OnInit {
       .subscribe(([appInfo, options]) => {
         const { queryParamMap: qp, paramMap: p } = this.route.snapshot;
 
-        this.appInfo = appInfo;
-        this.options = options;
+        this.appInfo.set(appInfo);
+        this.options.set(options);
 
-        this.pageSize = Number(this.options['game_page_size']) || 10;
-        this.page = Number(qp.get('page')) || 1;
-
-        this.category = p.get('category')?.trim() || '';
-        this.tag = p.get('tag')?.trim() || '';
+        this.pageSize.set(Number(this.options()['game_page_size']) || 10);
+        this.page.set(Number(qp.get('page')) || 1);
+        this.category.set(p.get('category')?.trim() || '');
+        this.tag.set(p.get('tag')?.trim() || '');
 
         const latestParam = JSON.stringify({
-          page: this.page,
-          category: this.category,
-          tag: this.tag
+          page: this.page(),
+          category: this.category(),
+          tag: this.tag()
         });
-        if (latestParam === this.lastParam) {
+        if (latestParam === this.lastParam()) {
           return;
         }
-        this.lastParam = latestParam;
+        this.lastParam.set(latestParam);
 
         this.updatePageIndex();
         this.getGames();
@@ -116,70 +107,64 @@ export class GameListComponent implements OnInit {
 
   private getGames() {
     const param: GameQueryParam = {
-      page: this.page,
-      size: this.pageSize
+      page: this.page(),
+      size: this.pageSize()
     };
-    if (this.category) {
-      param.category = this.category;
+    if (this.category()) {
+      param.category = this.category();
     }
-    if (this.tag) {
-      param.tag = this.tag;
+    if (this.tag()) {
+      param.tag = this.tag();
     }
 
     this.gameService
       .getGames(param)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.games = res.games?.list || [];
-        this.page = res.games?.page || 1;
-        this.total = res.games?.total || 0;
+        this.games.set(res.games?.list || []);
+        this.page.set(res.games?.page || 1);
+        this.total.set(res.games?.total || 0);
 
         const breadcrumbs = (res.breadcrumbs || []).map((item) => ({
           ...item,
           url: `/game/category/${item.slug}`
         }));
-        this.paginationService.updatePagination({
-          page: this.page,
-          total: this.total,
-          pageSize: this.pageSize,
-          url: this.paginationUrl
-        });
         this.updatePageInfo(breadcrumbs);
         this.updateBreadcrumbs(breadcrumbs);
       });
   }
 
   private updatePageInfo(breadcrumbData: BreadcrumbEntity[]) {
-    const titles: string[] = ['游戏', this.appInfo.name];
+    const titles: string[] = ['游戏', this.appInfo()!.name];
     const categories: string[] = [];
-    const keywords: string[] = (this.options['game_keywords'] || '').split(',');
+    const keywords: string[] = (this.options()['game_keywords'] || '').split(',');
     let description = '';
 
-    if (this.category && breadcrumbData.length > 0) {
+    if (this.category() && breadcrumbData.length > 0) {
       const label = breadcrumbData[breadcrumbData.length - 1].label;
       titles.unshift(label);
       categories.push(label);
       keywords.unshift(label);
     }
-    if (this.tag) {
-      titles.unshift(this.tag);
-      categories.push(this.tag);
-      keywords.unshift(this.tag);
+    if (this.tag()) {
+      titles.unshift(this.tag());
+      categories.push(this.tag());
+      keywords.unshift(this.tag());
     }
     description += categories.length > 0 ? `「${categories.join('-')}」` : '';
     if (description) {
       description += '游戏列表';
     }
-    if (this.page > 1) {
-      titles.unshift(`第${this.page}页`);
+    if (this.page() > 1) {
+      titles.unshift(`第${this.page()}页`);
       if (description) {
-        description += `(第${this.page}页)`;
+        description += `(第${this.page()}页)`;
       }
     }
     if (description) {
       description += '。';
     }
-    description += this.options['game_description'];
+    description += this.options()['game_description'];
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
@@ -187,7 +172,7 @@ export class GameListComponent implements OnInit {
       keywords: uniq(keywords)
         .filter((item) => !!item)
         .join(','),
-      author: this.options['site_author']
+      author: this.options()['site_author']
     });
   }
 
@@ -201,7 +186,7 @@ export class GameListComponent implements OnInit {
         isHeader: false
       }
     ];
-    if (this.tag) {
+    if (this.tag()) {
       breadcrumbs.push(
         {
           label: '标签',
@@ -210,9 +195,9 @@ export class GameListComponent implements OnInit {
           isHeader: false
         },
         {
-          label: this.tag,
-          tooltip: this.tag,
-          url: `/tag/${this.tag}`,
+          label: this.tag(),
+          tooltip: this.tag(),
+          url: `/tag/${this.tag()}`,
           domain: 'game',
           isHeader: true
         }
@@ -221,10 +206,10 @@ export class GameListComponent implements OnInit {
     if (breadcrumbData.length > 0) {
       breadcrumbs = breadcrumbs.concat(breadcrumbData);
     }
-    if (this.page > 1) {
+    if (this.page() > 1) {
       breadcrumbs.push({
-        label: `第${this.page}页`,
-        tooltip: `第${this.page}页`,
+        label: `第${this.page()}页`,
+        tooltip: `第${this.page()}页`,
         url: '',
         isHeader: false
       });

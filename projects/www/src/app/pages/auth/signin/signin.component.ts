@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { SigninFormComponent } from 'common/components';
 import { BaseComponent, BreadcrumbService, DestroyService, MetaService, OptionEntity } from 'common/core';
 import { TenantAppVo } from 'common/interfaces';
@@ -13,21 +13,17 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   templateUrl: './signin.component.html'
 })
 export class SigninComponent extends BaseComponent implements OnInit {
-  protected pageIndex = 'auth-signin';
+  private readonly destroy$ = inject(DestroyService);
+  private readonly commonService = inject(CommonService);
+  private readonly metaService = inject(MetaService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
 
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
+  protected readonly pageIndex = 'auth-signin';
 
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly commonService: CommonService,
-    private readonly metaService: MetaService,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService
-  ) {
-    super();
-  }
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly options = signal<OptionEntity>({});
 
   ngOnInit(): void {
     this.updatePageIndex();
@@ -39,8 +35,8 @@ export class SigninComponent extends BaseComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe(([appInfo, options]) => {
-        this.appInfo = appInfo;
-        this.options = options;
+        this.appInfo.set(appInfo);
+        this.options.set(options);
 
         this.updatePageInfo();
       });
@@ -52,10 +48,10 @@ export class SigninComponent extends BaseComponent implements OnInit {
 
   private updatePageInfo() {
     this.metaService.updateHTMLMeta({
-      title: ['登录', this.appInfo.name].join(' - '),
-      description: this.appInfo.description,
-      author: this.options['site_author'],
-      keywords: this.appInfo.keywords
+      title: ['登录', this.appInfo()!.name].join(' - '),
+      description: this.appInfo()!.description,
+      author: this.options()['site_author'],
+      keywords: this.appInfo()!.keywords
     });
   }
 

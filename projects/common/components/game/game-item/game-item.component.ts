@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { AppConfigService, AppDomainConfig, GAME_EMPTY_COVER, UserAgentService } from 'common/core';
+import { Component, computed, inject, input } from '@angular/core';
+import { AppConfigService, GAME_EMPTY_COVER, UserAgentService } from 'common/core';
 import { ListMode } from 'common/enums';
 import { IconCalendarDateComponent, IconChatSquareComponent, IconChatSquareDotsComponent } from 'common/icons';
 import { Game } from 'common/interfaces';
@@ -27,32 +27,23 @@ import { SmartLinkComponent } from '../../smart-link/smart-link.component';
   styleUrls: ['../../post/post-item/post-item.component.less', './game-item.component.less']
 })
 export class GameItemComponent {
-  @Input() game!: Game;
-  @Input() mode!: ListMode;
-  @Input() index!: number;
+  readonly game = input.required<Game>();
+  readonly mode = input.required<ListMode>();
+  readonly index = input.required<number>();
 
-  isMobile = false;
-  domains!: AppDomainConfig;
+  readonly isMobile = computed(() => this.uaService.isMobile);
+  readonly domains = computed(() => this.appConfigService.apps);
+  readonly gameCover = computed(() => this.game().coverUrl || this.emptyCover());
+  readonly gameExcerpt = computed(() => {
+    const game = this.game();
+    const category = game.categories[0]?.category.name;
 
-  private emptyCover = '';
+    return game.summary || `${category ? category + '游戏' : ''}“${game.title}”在线玩。`;
+  });
 
-  get gameCover() {
-    return this.game.coverUrl || this.emptyCover;
-  }
+  private readonly emptyCover = computed(() => this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER);
 
-  get gameExcerpt() {
-    const category = this.game.categories[0]?.category.name;
-
-    return this.game.summary || `${category ? category + '游戏' : ''}“${this.game.title}”在线玩。`;
-  }
-
-  constructor(
-    private readonly userAgentService: UserAgentService,
-    private readonly commonService: CommonService,
-    private readonly appConfigService: AppConfigService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-    this.domains = this.appConfigService.apps;
-    this.emptyCover = this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER;
-  }
+  private readonly uaService = inject(UserAgentService);
+  private readonly commonService = inject(CommonService);
+  private readonly appConfigService = inject(AppConfigService);
 }

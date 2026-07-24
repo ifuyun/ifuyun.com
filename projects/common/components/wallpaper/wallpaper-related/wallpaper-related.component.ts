@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DestroyService, UserAgentService } from 'common/core';
 import { WallpaperLang } from 'common/enums';
@@ -13,23 +13,19 @@ import { skipWhile, takeUntil } from 'rxjs';
   templateUrl: './wallpaper-related.component.html'
 })
 export class WallpaperRelatedComponent implements OnInit {
-  @Input() lang: WallpaperLang = WallpaperLang.CN;
-  @Input() jigsaw = false;
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly wallpaperService = inject(WallpaperService);
 
-  isMobile = false;
-  relatedWallpapers: WallpaperSearchItem[] = [];
+  readonly lang = input(WallpaperLang.CN);
+  readonly jigsaw = input(false);
 
-  private wallpaperId = '';
-  private isChanged = false;
-  private isLoaded = false;
+  readonly isMobile = this.uaService.isMobile;
+  readonly relatedWallpapers = signal<WallpaperSearchItem[]>([]);
 
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly wallpaperService: WallpaperService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  private readonly wallpaperId = signal('');
+  private readonly isChanged = signal(false);
+  private readonly isLoaded = signal(false);
 
   ngOnInit(): void {
     this.wallpaperService.activeWallpaperId$
@@ -38,46 +34,49 @@ export class WallpaperRelatedComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe((wallpaperId) => {
-        this.isChanged = this.wallpaperId !== wallpaperId;
-        this.wallpaperId = wallpaperId;
-        if (!this.isLoaded || this.isChanged) {
+        this.isChanged.set(this.wallpaperId() !== wallpaperId);
+        this.wallpaperId.set(wallpaperId);
+
+        if (!this.isLoaded() || this.isChanged()) {
           this.getRelatedWallpapers();
-          this.isLoaded = true;
+          this.isLoaded.set(true);
         }
       });
   }
 
   getLangParams(wallpaper: WallpaperSearchItem) {
-    if (this.lang === WallpaperLang.CN) {
+    if (this.lang() === WallpaperLang.CN) {
       return !wallpaper.isCn ? { lang: WallpaperLang.EN } : {};
     }
     return !wallpaper.isEn ? {} : { lang: WallpaperLang.EN };
   }
 
   getWallpaperCopyright(wallpaper: WallpaperSearchItem) {
-    return this.lang === WallpaperLang.EN ? wallpaper.copyrightEn : wallpaper.copyrightCn;
+    return this.lang() === WallpaperLang.EN ? wallpaper.copyrightEn : wallpaper.copyrightCn;
   }
 
   private getRelatedWallpapers(): void {
     this.wallpaperService
       .getRelatedWallpapers({
-        id: this.wallpaperId,
+        id: this.wallpaperId(),
         page: 1,
         size: 4
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.relatedWallpapers = (res || []).map((item) => {
-          return {
-            ...item,
-            titleCn: item.titleCn || item.titleEn,
-            titleEn: item.titleEn || item.titleCn,
-            copyrightCn: item.copyrightCn || item.copyrightEn,
-            copyrightEn: item.copyrightEn || item.copyrightCn,
-            isCn: !!item.copyrightCn,
-            isEn: !!item.copyrightEn
-          };
-        });
+        this.relatedWallpapers.set(
+          (res || []).map((item) => {
+            return {
+              ...item,
+              titleCn: item.titleCn || item.titleEn,
+              titleEn: item.titleEn || item.titleCn,
+              copyrightCn: item.copyrightCn || item.copyrightEn,
+              copyrightEn: item.copyrightEn || item.copyrightCn,
+              isCn: !!item.copyrightCn,
+              isEn: !!item.copyrightEn
+            };
+          })
+        );
       });
   }
 }

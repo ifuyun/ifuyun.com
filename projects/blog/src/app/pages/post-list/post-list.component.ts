@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BreadcrumbComponent, MakeMoneyComponent, PaginationComponent, PostItemComponent } from 'common/components';
 import {
@@ -7,7 +7,6 @@ import {
   DestroyService,
   MetaService,
   OptionEntity,
-  PaginationService,
   UserAgentService
 } from 'common/core';
 import { PostQueryParam, PostVo, TenantAppVo } from 'common/interfaces';
@@ -24,50 +23,44 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   styleUrl: './post-list.component.less'
 })
 export class PostListComponent implements OnInit {
-  isMobile = false;
-  page = 1;
-  pageSize = 10;
-  total = 0;
-  posts: PostVo[] = [];
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly commonService = inject(CommonService);
+  private readonly metaService = inject(MetaService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+  private readonly postService = inject(PostService);
 
-  protected pageIndex = 'post-list';
-
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
-  private lastParam = '';
-  private category = '';
-  private tag = '';
-  private year = '';
-  private month = '';
-
-  get paginationUrl() {
-    if (this.category) {
-      return `/category/${this.category}`;
+  readonly isMobile = this.uaService.isMobile;
+  readonly page = signal(1);
+  readonly pageSize = signal(10);
+  readonly total = signal(0);
+  readonly posts = signal<PostVo[]>([]);
+  readonly paginationUrl = computed(() => {
+    if (this.category()) {
+      return `/category/${this.category()}`;
     }
-    if (this.tag) {
-      return `/tag/${this.tag}`;
+    if (this.tag()) {
+      return `/tag/${this.tag()}`;
     }
-    if (this.year) {
-      return `/archive/${this.year}${this.month ? '/' + this.month : ''}`;
+    if (this.year()) {
+      return `/archive/${this.year()}${this.month() ? '/' + this.month() : ''}`;
     }
 
     return '/list';
-  }
+  });
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly commonService: CommonService,
-    private readonly metaService: MetaService,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly paginationService: PaginationService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService,
-    private readonly postService: PostService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  protected readonly pageIndex = signal('post-list');
+
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly options = signal<OptionEntity>({});
+  private readonly lastParam = signal('');
+  private readonly category = signal('');
+  private readonly tag = signal('');
+  private readonly year = signal('');
+  private readonly month = signal('');
 
   ngOnInit(): void {
     combineLatest([
@@ -83,34 +76,29 @@ export class PostListComponent implements OnInit {
       .subscribe(([appInfo, options]) => {
         const { queryParamMap: qp, paramMap: p } = this.route.snapshot;
 
-        this.appInfo = appInfo;
-        this.options = options;
+        this.appInfo.set(appInfo);
+        this.options.set(options);
 
-        this.pageSize = Number(this.options['post_page_size']) || 10;
-        this.page = Number(qp.get('page')) || 1;
+        this.pageSize.set(Number(this.options()['post_page_size']) || 10);
+        this.page.set(Number(qp.get('page')) || 1);
 
-        this.category = p.get('category')?.trim() || '';
-        this.tag = p.get('tag')?.trim() || '';
-        this.year = p.get('year')?.trim() || '';
-        this.month = p.get('month')?.trim() || '';
+        this.category.set(p.get('category')?.trim() || '');
+        this.tag.set(p.get('tag')?.trim() || '');
+        this.year.set(p.get('year')?.trim() || '');
+        this.month.set(p.get('month')?.trim() || '');
 
         const latestParam = JSON.stringify({
-          page: this.page,
-          category: this.category,
-          tag: this.tag,
-          year: this.year,
-          month: this.month
+          page: this.page(),
+          category: this.category(),
+          tag: this.tag(),
+          year: this.year(),
+          month: this.month()
         });
-        if (latestParam === this.lastParam) {
+        if (latestParam === this.lastParam()) {
           return;
         }
-        this.lastParam = latestParam;
-
-        if (this.year) {
-          this.pageIndex = 'post-archive';
-        } else {
-          this.pageIndex = 'post-list';
-        }
+        this.lastParam.set(latestParam);
+        this.pageIndex.set(this.year() ? 'post-archive' : 'post-list');
 
         this.updatePageIndex();
         this.getPosts();
@@ -118,24 +106,24 @@ export class PostListComponent implements OnInit {
   }
 
   protected updatePageIndex(): void {
-    this.commonService.updatePageIndex(this.pageIndex);
+    this.commonService.updatePageIndex(this.pageIndex());
   }
 
   private getPosts() {
     const param: PostQueryParam = {
-      page: this.page,
-      size: this.pageSize
+      page: this.page(),
+      size: this.pageSize()
     };
-    if (this.category) {
-      param.category = this.category;
+    if (this.category()) {
+      param.category = this.category();
     }
-    if (this.tag) {
-      param.tag = this.tag;
+    if (this.tag()) {
+      param.tag = this.tag();
     }
-    if (this.year) {
-      param.year = this.year;
-      if (this.month) {
-        param.month = this.month;
+    if (this.year()) {
+      param.year = this.year();
+      if (this.month()) {
+        param.month = this.month();
       }
     }
 
@@ -143,9 +131,9 @@ export class PostListComponent implements OnInit {
       .getPosts(param)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.posts = res.posts?.list || [];
-        this.page = res.posts?.page || 1;
-        this.total = res.posts?.total || 0;
+        this.posts.set(res.posts?.list || []);
+        this.page.set(res.posts?.page || 1);
+        this.total.set(res.posts?.total || 0);
 
         const breadcrumbs = (res.breadcrumbs || []).map((item) => ({
           ...item,
@@ -157,50 +145,44 @@ export class PostListComponent implements OnInit {
   }
 
   private initData(breadcrumbs: BreadcrumbEntity[]) {
-    this.paginationService.updatePagination({
-      page: this.page,
-      total: this.total,
-      pageSize: this.pageSize,
-      url: this.paginationUrl
-    });
     this.updatePageInfo(breadcrumbs);
     this.updateBreadcrumbs(breadcrumbs);
   }
 
   private updatePageInfo(breadcrumbData: BreadcrumbEntity[]) {
-    const titles: string[] = ['博客', this.appInfo.name];
-    const keywords: string[] = (this.options['post_keywords'] || '').split(',');
+    const titles: string[] = ['博客', this.appInfo()!.name];
+    const keywords: string[] = (this.options()['post_keywords'] || '').split(',');
     let description = '';
 
-    if (this.category && breadcrumbData.length > 0) {
+    if (this.category() && breadcrumbData.length > 0) {
       const label = breadcrumbData[breadcrumbData.length - 1].label;
       titles.unshift(label);
       keywords.unshift(label);
 
       description += `「${label}」`;
-    } else if (this.tag) {
-      titles.unshift(this.tag);
-      keywords.unshift(this.tag);
+    } else if (this.tag()) {
+      titles.unshift(this.tag());
+      keywords.unshift(this.tag());
 
-      description += `「${this.tag}」`;
-    } else if (this.year) {
-      const label = `${this.year}年${this.month ? this.month + '月' : ''}`;
+      description += `「${this.tag()}」`;
+    } else if (this.year()) {
+      const label = `${this.year()}年${this.month() ? this.month() + '月' : ''}`;
       titles.unshift(label);
       description += label;
     }
     if (description) {
       description += '博客文章列表';
     }
-    if (this.page > 1) {
-      titles.unshift(`第${this.page}页`);
+    if (this.page() > 1) {
+      titles.unshift(`第${this.page()}页`);
       if (description) {
-        description += `(第${this.page}页)`;
+        description += `(第${this.page()}页)`;
       }
     }
     if (description) {
       description += '。';
     }
-    description += this.options['post_description'];
+    description += this.options()['post_description'];
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
@@ -208,7 +190,7 @@ export class PostListComponent implements OnInit {
       keywords: uniq(keywords)
         .filter((item) => !!item)
         .join(','),
-      author: this.options['site_author']
+      author: this.options()['site_author']
     });
   }
 
@@ -223,7 +205,7 @@ export class PostListComponent implements OnInit {
       }
     ];
 
-    if (this.category && breadcrumbData.length > 0) {
+    if (this.category() && breadcrumbData.length > 0) {
       const cat = breadcrumbData[breadcrumbData.length - 1];
       breadcrumbs.push(
         {
@@ -240,7 +222,7 @@ export class PostListComponent implements OnInit {
           isHeader: true
         }
       );
-    } else if (this.tag) {
+    } else if (this.tag()) {
       breadcrumbs.push(
         {
           label: '标签',
@@ -249,14 +231,14 @@ export class PostListComponent implements OnInit {
           isHeader: false
         },
         {
-          label: this.tag,
-          tooltip: this.tag,
-          url: `/tag/${this.tag}`,
+          label: this.tag(),
+          tooltip: this.tag(),
+          url: `/tag/${this.tag()}`,
           domain: 'blog',
           isHeader: true
         }
       );
-    } else if (this.year) {
+    } else if (this.year()) {
       breadcrumbs.push(
         {
           label: '归档',
@@ -266,18 +248,18 @@ export class PostListComponent implements OnInit {
           isHeader: false
         },
         {
-          label: `${this.year}年`,
-          tooltip: `${this.year}年`,
-          url: `/archive/${this.year}`,
+          label: `${this.year()}年`,
+          tooltip: `${this.year()}年`,
+          url: `/archive/${this.year()}`,
           domain: 'blog',
-          isHeader: !this.month
+          isHeader: !this.month()
         }
       );
-      if (this.month) {
+      if (this.month()) {
         breadcrumbs.push({
-          label: `${Number(this.month)}月`,
-          tooltip: `${this.year}年${this.month}月`,
-          url: `/archive/${this.year}/${this.month}`,
+          label: `${Number(this.month())}月`,
+          tooltip: `${this.year()}年${this.month()}月`,
+          url: `/archive/${this.year()}/${this.month()}`,
           domain: 'blog',
           isHeader: true
         });
@@ -285,10 +267,10 @@ export class PostListComponent implements OnInit {
     } else if (breadcrumbData.length > 0) {
       breadcrumbs = breadcrumbs.concat(breadcrumbData);
     }
-    if (this.page > 1) {
+    if (this.page() > 1) {
       breadcrumbs.push({
-        label: `第${this.page}页`,
-        tooltip: `第${this.page}页`,
+        label: `第${this.page()}页`,
+        tooltip: `第${this.page()}页`,
         url: '',
         isHeader: false
       });

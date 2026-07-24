@@ -1,7 +1,8 @@
-@if (breadcrumbs && breadcrumbs.length > 0) {
+@let b = breadcrumbs();
+@if (b && b.length > 0) {
   <div class="breadcrumb" [class.m-breadcrumb]="isMobile" [class.p-breadcrumb]="!isMobile">
     <nz-icon nzType="environment"/>
-    @for (breadcrumb of breadcrumbs; track breadcrumb) {
+    @for (breadcrumb of b; track breadcrumb.label + '_' + breadcrumb.url) {
       @if (breadcrumb.url !== '') {
         @if (!breadcrumb.isHeader) {
           <lib-a [href]="breadcrumb.url"

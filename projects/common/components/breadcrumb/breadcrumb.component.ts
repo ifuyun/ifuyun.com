@@ -1,12 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  AppConfigService,
-  AppDomainConfig,
-  BreadcrumbEntity,
-  BreadcrumbService,
-  DestroyService,
-  UserAgentService
-} from 'common/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { AppConfigService, BreadcrumbEntity, BreadcrumbService, DestroyService, UserAgentService } from 'common/core';
 import { TenantAppVo } from 'common/interfaces';
 import { TenantAppService } from 'common/services';
 import { isEmpty } from 'lodash';
@@ -22,22 +15,17 @@ import { SmartLinkComponent } from '../smart-link/smart-link.component';
   styleUrl: './breadcrumb.component.less'
 })
 export class BreadcrumbComponent implements OnInit {
-  isMobile = false;
-  breadcrumbs: BreadcrumbEntity[] = [];
+  private readonly destroy$ = inject(DestroyService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly uaService = inject(UserAgentService);
 
-  private appInfo!: TenantAppVo;
-  private domains!: AppDomainConfig;
+  readonly isMobile = this.uaService.isMobile;
+  readonly breadcrumbs = signal<BreadcrumbEntity[]>([]);
 
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly appConfigService: AppConfigService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly userAgentService: UserAgentService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-    this.domains = this.appConfigService.apps;
-  }
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly domains = this.appConfigService.apps;
 
   ngOnInit(): void {
     combineLatest([this.tenantAppService.appInfo$, this.breadcrumbService.breadcrumbs$])
@@ -46,25 +34,27 @@ export class BreadcrumbComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe(([appInfo, breadcrumbs]) => {
-        this.appInfo = appInfo;
+        this.appInfo.set(appInfo);
 
         if (breadcrumbs.length > 0) {
-          this.breadcrumbs = breadcrumbs.map((item) => {
-            return {
-              ...item,
-              url: item.url
-                ? item.domain && item.url !== '.'
-                  ? this.domains[item.domain].url + item.url
-                  : item.url
-                : ''
-            };
-          });
-          this.breadcrumbs.unshift({
-            label: '首页',
-            url: this.domains['www'].url,
-            tooltip: this.appInfo.name,
-            isHeader: false
-          });
+          this.breadcrumbs.set([
+            {
+              label: '首页',
+              url: this.domains['www'].url || '',
+              tooltip: appInfo.name || '',
+              isHeader: false
+            },
+            ...breadcrumbs.map((item) => {
+              return {
+                ...item,
+                url: item.url
+                  ? item.domain && item.url !== '.'
+                    ? this.domains[item.domain].url + item.url
+                    : item.url
+                  : ''
+              };
+            })
+          ]);
         }
       });
   }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { UserAgentService } from 'common/core';
 import { AdsenseComponent } from '../adsense/adsense.component';
 
@@ -8,9 +8,7 @@ import { AdsenseComponent } from '../adsense/adsense.component';
   templateUrl: './make-money.component.html'
 })
 export class MakeMoneyComponent {
-  isMobile = false;
+  private readonly uaService = inject(UserAgentService);
 
-  constructor(private readonly userAgentService: UserAgentService) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  readonly isMobile = this.uaService.isMobile;
 }

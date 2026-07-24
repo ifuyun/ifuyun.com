@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { AppConfigService, UserAgentService } from 'common/core';
 import {
   IconCalendarDateComponent,
@@ -28,17 +28,12 @@ import { SmartLinkComponent } from '../../smart-link/smart-link.component';
   styleUrl: './post-item.component.less'
 })
 export class PostItemComponent {
-  @Input() post!: PostVo;
-  @Input() index!: number;
+  private readonly uaService = inject(UserAgentService);
+  private readonly appConfigService = inject(AppConfigService);
 
-  isMobile = false;
-  blogHost = '';
+  readonly post = input.required<PostVo>();
+  readonly index = input.required<number>();
 
-  constructor(
-    private readonly userAgentService: UserAgentService,
-    private readonly appConfigService: AppConfigService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-    this.blogHost = this.appConfigService.apps['blog'].url;
-  }
+  readonly isMobile = this.uaService.isMobile;
+  readonly blogHost = this.appConfigService.apps['blog'].url;
 }

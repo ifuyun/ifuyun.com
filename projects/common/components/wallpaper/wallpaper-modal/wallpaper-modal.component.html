@@ -1,5 +1,6 @@
+@let aw = activeWallpaper();
 <nz-modal nzCentered
-          [nzVisible]="visible"
+          [nzVisible]="visible()"
           nzWidth="88vw"
           [nzStyle]="{ height: '88vh', 'max-width': '1280px', 'max-height': '720px' }"
           [nzBodyStyle]="{ display: 'flex', padding: '8px', height: '100%' }"
@@ -11,29 +12,29 @@
           (nzOnOk)="closeModal()">
   <ng-container *nzModalContent>
     <div class="w-modal">
-      @if (loading || !wallpapers.length) {
+      @if (loading() || !wallpapers().length) {
         <div>
           <nz-icon nzType="loading"/>
         </div>
       } @else {
-        <div class="w-photo" [style.background-image]="'url(' + (activeWallpaper.url || '') + ')'"></div>
+        <div class="w-photo" [style.background-image]="'url(' + (aw.url || '') + ')'"></div>
         <div class="w-close">
           <nz-icon nzType="close" (click)="closeModal()"/>
         </div>
         <div class="w-content">
           <div>
-            <h2 class="w-image-title">{{ activeWallpaper.title }}</h2>
-            <div class="w-image-desc">{{ activeWallpaper.description }}</div>
+            <h2 class="w-image-title">{{ aw.title }}</h2>
+            <div class="w-image-desc">{{ aw.description }}</div>
           </div>
           <div class="w-actions">
             <nz-icon nzType="info" (click)="gotoDetail()" title="壁纸详情"/>
             <nz-icon nzType="search" (click)="gotoSearch()" title="搜索壁纸"/>
             <nz-icon nzType="left"
-                     [class.disabled]="activeIndex === 0"
+                     [class.disabled]="activeIndex() === 0"
                      (click)="prevWallpaper()"
                      title="上一张"/>
             <nz-icon nzType="right"
-                     [class.disabled]="activeIndex === wallpapers.length - 1"
+                     [class.disabled]="activeIndex() === wallpapers().length - 1"
                      (click)="nextWallpaper()"
                      title="下一张"/>
             <nz-icon nzType="unordered-list" (click)="gotoWallpaper()" title="高清壁纸"/>

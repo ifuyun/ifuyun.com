@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { AppConfigService, DestroyService, OptionEntity, UrlService, UserAgentService } from 'common/core';
 import { LinkVo } from 'common/interfaces';
 import { LinkService, OptionService } from 'common/services';
@@ -14,41 +14,38 @@ import { SmartLinkComponent } from '../smart-link/smart-link.component';
   styleUrl: './footer.component.less'
 })
 export class FooterComponent implements OnInit {
-  isMobile = false;
-  wwwHost = '';
-  options: OptionEntity = {};
-  footerLinks: LinkVo[] = [];
-  friendLinks: LinkVo[] = [];
+  readonly isMobile = computed(() => this.uaService.isMobile);
+  readonly wwwHost = computed(() => this.appConfigService.apps['www'].url);
+  readonly options = signal<OptionEntity>({});
+  readonly footerLinks = signal<LinkVo[]>([]);
+  readonly friendLinks = signal<LinkVo[]>([]);
+  readonly copyright = computed(() => {
+    const copyright = this.options()['copyright_notice'];
 
-  get copyright() {
-    if (this.options['copyright_notice']) {
-      return this.options['copyright_notice'].replace('$now', new Date().getFullYear() + '');
+    if (copyright) {
+      return copyright.replace('$now', new Date().getFullYear() + '');
     }
     return '';
-  }
+  });
+  readonly recordCode = computed(() => {
+    const recordCode = this.options()['record_code'];
 
-  get recordCode() {
-    if (this.options['record_code']) {
-      return this.options['record_code'].replace(/[^\d]/gi, '');
+    if (recordCode) {
+      return recordCode.replace(/[^\d]/gi, '');
     }
     return '';
-  }
+  });
 
-  private isLoaded = false;
-  private isHome = false;
-  private isHomeChanged = false;
+  private readonly isLoaded = signal(false);
+  private readonly isHome = signal(false);
+  private readonly isHomeChanged = signal(false);
 
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly appConfigService: AppConfigService,
-    private readonly optionService: OptionService,
-    private readonly linkService: LinkService,
-    private readonly urlService: UrlService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-    this.wwwHost = this.appConfigService.apps['www'].url;
-  }
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly optionService = inject(OptionService);
+  private readonly linkService = inject(LinkService);
+  private readonly urlService = inject(UrlService);
 
   ngOnInit(): void {
     this.optionService.options$
@@ -56,20 +53,22 @@ export class FooterComponent implements OnInit {
         skipWhile((options) => isEmpty(options)),
         takeUntil(this.destroy$)
       )
-      .subscribe((options) => (this.options = options));
+      .subscribe((options) => this.options.set(options));
+
     this.getFooterLinks();
+
     this.urlService.urlInfo$.pipe(takeUntil(this.destroy$)).subscribe((url) => {
       const isHome = url.current.split('?')[0] === '/';
 
-      this.isHomeChanged = isHome !== this.isHome;
-      if (!this.isLoaded || this.isHomeChanged) {
-        this.isHome = isHome;
+      this.isHomeChanged.set(isHome !== this.isHome());
+      if (!this.isLoaded() || this.isHomeChanged()) {
+        this.isHome.set(isHome);
 
-        if (!this.isMobile) {
+        if (!this.isMobile()) {
           this.getFriendLinks();
         }
       }
-      this.isLoaded = true;
+      this.isLoaded.set(true);
     });
   }
 
@@ -78,21 +77,23 @@ export class FooterComponent implements OnInit {
       .getFooterLinks()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.footerLinks = (res || []).map((item) => {
-          return {
-            ...item,
-            isExternal: /^https?:\/\//i.test(item.url)
-          };
-        });
+        this.footerLinks.set(
+          (res || []).map((item) => {
+            return {
+              ...item,
+              isExternal: /^https?:\/\//i.test(item.url)
+            };
+          })
+        );
       });
   }
 
   private getFriendLinks() {
     this.linkService
-      .getFriendLinks(this.isHome)
+      .getFriendLinks(this.isHome())
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.friendLinks = res;
+        this.friendLinks.set(res);
       });
   }
 }

@@ -1,6 +1,6 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ADMIN_URL_PARAM,
@@ -36,39 +36,34 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   styleUrl: './signup-confirm.component.less'
 })
 export class SignupConfirmComponent extends BaseComponent implements OnInit, OnDestroy {
-  confirmForm!: FormGroup;
-  confirmLoading = false;
-  user?: UserModel;
-  countdown = 60; // 60s
+  private readonly destroy$ = inject(DestroyService);
+  private readonly fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly platform = inject(PlatformService);
+  private readonly message = inject(NzMessageService);
+  private readonly commonService = inject(CommonService);
+  private readonly metaService = inject(MetaService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+  private readonly authService = inject(AuthService);
+  private readonly userService = inject(UserService);
 
-  protected pageIndex = 'auth-signup';
+  readonly confirmForm = this.fb.group({
+    code: ['', [Validators.required, Validators.pattern(/^\s*\d{4}\s*$/i)]]
+  });
+  readonly confirmLoading = signal(false);
+  readonly user = signal<UserModel | null>(null);
+  readonly countdown = signal(60); // 60s
 
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
-  private userId = '';
-  private sendTimer!: number;
+  protected readonly pageIndex = 'auth-signup';
 
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly fb: FormBuilder,
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private readonly platform: PlatformService,
-    private readonly message: NzMessageService,
-    private readonly commonService: CommonService,
-    private readonly metaService: MetaService,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly appConfigService: AppConfigService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService,
-    private readonly authService: AuthService,
-    private readonly userService: UserService
-  ) {
-    super();
-    this.confirmForm = this.fb.group({
-      code: ['', [Validators.required, Validators.pattern(/^\s*\d{4}\s*$/i)]]
-    });
-  }
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly options = signal<OptionEntity>({});
+  private readonly userId = signal('');
+  private readonly sendTimer = signal<number | null>(null);
 
   ngOnInit(): void {
     this.updatePageIndex();
@@ -80,11 +75,11 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
         takeUntil(this.destroy$)
       )
       .subscribe(([appInfo, options, qp]) => {
-        this.appInfo = appInfo;
-        this.options = options;
-        this.userId = qp.get('userId') || '';
+        this.appInfo.set(appInfo);
+        this.options.set(options);
+        this.userId.set(qp.get('userId') || '');
 
-        if (!this.userId) {
+        if (!this.userId()) {
           throw new CustomError(Message.USER_NOT_FOUND, HttpStatusCode.BadRequest);
         }
 
@@ -97,8 +92,8 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
   }
 
   ngOnDestroy() {
-    if (this.sendTimer) {
-      window.clearInterval(this.sendTimer);
+    if (this.sendTimer()) {
+      window.clearInterval(this.sendTimer()!);
     }
   }
 
@@ -108,16 +103,16 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
       return;
     }
     const { code } = value;
-    this.confirmLoading = true;
+    this.confirmLoading.set(true);
     this.authService
-      .verify(this.userId, code)
+      .verify(this.userId(), code)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.confirmLoading = false;
+        this.confirmLoading.set(false);
 
         if (res.token?.token) {
           const urlParam = format(ADMIN_URL_PARAM, res.token.token, this.appConfigService.appId);
-          window.location.href = this.appInfo.adminUrl + '?' + urlParam;
+          window.location.href = this.appInfo()!.adminUrl + '?' + urlParam;
         }
       });
   }
@@ -126,7 +121,7 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
     this.startCountdown();
     this.authService
       .sendCode({
-        id: this.userId
+        id: this.userId()
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -142,10 +137,10 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
 
   private getSignupUser() {
     this.userService
-      .getSignupUser(this.userId)
+      .getSignupUser(this.userId())
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.user = res;
+        this.user.set(res);
 
         if (res.status === UserStatus.NORMAL) {
           this.message.info('账号已验证，无需重复验证');
@@ -157,21 +152,24 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
   }
 
   private startCountdown() {
-    this.countdown = 60;
-    this.sendTimer = window.setInterval(() => {
-      this.countdown -= 1;
-      if (this.countdown <= 0) {
-        window.clearInterval(this.sendTimer);
-      }
-    }, 1000);
+    this.countdown.set(60);
+    this.sendTimer.set(
+      window.setInterval(() => {
+        this.countdown.update((data) => data - 1);
+
+        if (this.countdown() <= 0) {
+          window.clearInterval(this.sendTimer()!);
+        }
+      }, 1000)
+    );
   }
 
   private updatePageInfo() {
     this.metaService.updateHTMLMeta({
-      title: ['注册验证', this.appInfo.name].join(' - '),
-      description: this.appInfo.description,
-      author: this.options['site_author'],
-      keywords: this.appInfo.keywords
+      title: ['注册验证', this.appInfo()!.name].join(' - '),
+      description: this.appInfo()!.description,
+      author: this.options()['site_author'],
+      keywords: this.appInfo()!.keywords
     });
   }
 

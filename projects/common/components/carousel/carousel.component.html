@@ -3,12 +3,14 @@
      [class.p-carousel-wrap]="!isMobile"
      (mouseover)="carouselMouseOver()"
      (mouseout)="carouselMouseOut()">
+  @let list = carousels();
+  @let index = activeIndex();
   <div class="carousel"
        #carouselBody
-       [ngStyle]="{'width': (100 * (carousels.length)) + '%'}"
-       [style.transform]="'translateX(-' + (100 / carousels.length) * activeIndex + '%)'">
-    @for (carousel of carousels; track carousel; let i = $index) {
-      <div class="carousel-slide" [ngStyle]="{'width': (100 / (carousels.length)) + '%'}">
+       [ngStyle]="{'width': (100 * (list.length)) + '%'}"
+       [style.transform]="'translateX(-' + (100 / list.length) * index + '%)'">
+    @for (carousel of list; track carousel; let i = $index) {
+      <div class="carousel-slide" [ngStyle]="{'width': (100 / (list.length)) + '%'}">
         @if (i < 2) {
           @if (!carousel.link) {
             <div class="carousel-img"
@@ -41,16 +43,16 @@
   </div>
   <div class="indicator">
     <div class="caption">
-      @if (carousels[activeIndex]) {
-        <a [href]="carousels[activeIndex].link"
-           [title]="carousels[activeIndex].title"
-           (click)="logClick(carousels[activeIndex])">{{ carousels[activeIndex].title }}</a>
+      @if (list[index]) {
+        <a [href]="list[index].link"
+           [title]="list[index].title"
+           (click)="logClick(list[index])">{{ list[index].title }}</a>
       }
     </div>
     <ul class="dots">
-      @for (i of carousels.length - 1 | range; track i) {
-        <li [class.active]="activeIndex === i || i === 0 && activeIndex === carousels.length - 1"
-            [class.revert]="isRevert && activeIndex === i"
+      @for (i of list.length - 1 | range; track i) {
+        <li [class.active]="index === i || i === 0 && index === list.length - 1"
+            [class.revert]="isRevert() && index === i"
             (click)="switchCarousel(i)">
           <div class="before"></div>
           <div class="after"></div>

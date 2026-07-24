@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { ContentLayoutComponent } from 'common/components';
 import { ForbiddenComponent, NotFoundComponent, ServerErrorComponent } from 'common/error';
-import { GameComponent } from './pages/game-detail/game.component';
+import { GameComponent } from './pages/game/game.component';
 import { GameListComponent } from './pages/game-list/game-list.component';
 
 export const routes: Routes = [

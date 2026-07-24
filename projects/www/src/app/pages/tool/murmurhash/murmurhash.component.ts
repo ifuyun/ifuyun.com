@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, model, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   BreadcrumbComponent,
@@ -33,32 +33,27 @@ import { BehaviorSubject, combineLatest, debounceTime, skipWhile, takeUntil } fr
   styleUrl: '../tool.less'
 })
 export class MurmurhashComponent implements OnInit {
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly commonService = inject(CommonService);
+  private readonly metaService = inject(MetaService);
+  private readonly message = inject(MessageService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+
   readonly maxHashKeyLength = 2000;
   readonly maxHashSeedLength = 10;
+  readonly isMobile = this.uaService.isMobile;
+  readonly hashKey = model('');
+  readonly hashSeed = model('');
+  readonly hashResult = model('');
 
-  isMobile = false;
-  hashKey = '';
-  hashSeed = '';
-  hashResult = '';
+  protected readonly pageIndex = 'tool-murmurhash';
 
-  protected pageIndex = 'tool-murmurhash';
-
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
-  private contentChange$ = new BehaviorSubject('');
-
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly commonService: CommonService,
-    private readonly metaService: MetaService,
-    private readonly message: MessageService,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly options = signal<OptionEntity>({});
+  private readonly contentChange$ = new BehaviorSubject('');
 
   ngOnInit(): void {
     this.updatePageIndex();
@@ -71,22 +66,24 @@ export class MurmurhashComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe(([appInfo, options]) => {
-        this.appInfo = appInfo;
-        this.options = options;
+        this.appInfo.set(appInfo);
+        this.options.set(options);
 
         this.updatePageInfo();
       });
   }
 
   hash() {
-    if (!this.hashKey) {
+    if (!this.hashKey()) {
       return;
     }
-    if (this.hashKey.length > this.maxHashKeyLength) {
-      this.message.error(`MurmurHash Key 最大长度为 ${this.maxHashKeyLength} 字符，当前为 ${this.hashKey.length} 字符`);
+    if (this.hashKey().length > this.maxHashKeyLength) {
+      this.message.error(
+        `MurmurHash Key 最大长度为 ${this.maxHashKeyLength} 字符，当前为 ${this.hashKey().length} 字符`
+      );
       return;
     }
-    const hashSeed = this.hashSeed.trim();
+    const hashSeed = this.hashSeed().trim();
     if (hashSeed && !/^[1-9]\d*$/i.test(hashSeed)) {
       this.message.error('MurmurHash Seed 应为正整数');
       return;
@@ -96,14 +93,14 @@ export class MurmurhashComponent implements OnInit {
       return;
     }
 
-    const result = murmurhash(this.hashKey, hashSeed ? Number(hashSeed) : undefined);
-    this.hashResult = result.toString();
+    const result = murmurhash(this.hashKey(), hashSeed ? Number(hashSeed) : undefined);
+    this.hashResult.set(result.toString());
   }
 
   reset() {
-    this.hashKey = '';
-    this.hashSeed = '';
-    this.hashResult = '';
+    this.hashKey.set('');
+    this.hashSeed.set('');
+    this.hashResult.set('');
   }
 
   onContentChange(content: string) {
@@ -123,20 +120,20 @@ export class MurmurhashComponent implements OnInit {
       .asObservable()
       .pipe(debounceTime(500), takeUntil(this.destroy$))
       .subscribe(() => {
-        this.hashResult = '';
+        this.hashResult.set('');
       });
   }
 
   private updatePageInfo() {
-    const titles = ['MurmurHash', '工具', this.appInfo.name];
-    const description = `${this.appInfo.name} ${MURMURHASH_PAGE_DESCRIPTION}`;
+    const titles = ['MurmurHash', '工具', this.appInfo()!.name];
+    const description = `${this.appInfo()!.name} ${MURMURHASH_PAGE_DESCRIPTION}`;
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,
       keywords: uniq(MURMURHASH_PAGE_KEYWORDS)
         .filter((item) => !!item)
         .join(','),
-      author: this.options['site_author']
+      author: this.options()['site_author']
     };
     this.metaService.updateHTMLMeta(metaData);
   }

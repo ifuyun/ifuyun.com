@@ -1,46 +1,48 @@
+@let prev = prevGame();
+@let next = nextGame();
 <div class="post-more" [class.p-post-more]="!isMobile" [class.m-post-more]="isMobile">
-  @if(prevGame) {
+  @if(prev) {
     <div class="post-more-prev">
       <div class="post-more-photo">
-        @if (!isChanged) {
+        @if (!isChanged()) {
           <div class="post-more-photo-content lazyload"
-               [class.full-img]="!prevGame.coverUrl"
-               [attr.data-bg]="prevGame.coverUrl || emptyCover"></div>
+               [class.full-img]="!prev.coverUrl"
+               [attr.data-bg]="prev.coverUrl || emptyCover"></div>
         } @else {
           <div class="post-more-photo-content"
-               [class.full-img]="!prevGame.coverUrl"
-               [style.background-image]="'url(' + (prevGame.coverUrl || emptyCover) + ')'"></div>
+               [class.full-img]="!prev.coverUrl"
+               [style.background-image]="'url(' + (prev.coverUrl || emptyCover) + ')'"></div>
         }
         <div class="post-more-photo-overlay"></div>
       </div>
       <div class="post-more-content">
-        <div class="post-more-content-title">{{ prevGame.title }}</div>
+        <div class="post-more-content-title">{{ prev.title }}</div>
         <div>上一篇</div>
       </div>
-      <a class="post-more-link" [routerLink]="['/detail', prevGame.id]" [title]="prevGame.title"></a>
+      <a class="post-more-link" [routerLink]="['/detail', prev.id]" [title]="prev.title"></a>
     </div>
   } @else {
     <div></div>
   }
-  @if(nextGame) {
+  @if(next) {
     <div class="post-more-next">
       <div class="post-more-photo">
-        @if (!isChanged) {
+        @if (!isChanged()) {
           <div class="post-more-photo-content lazyload"
-               [class.full-img]="!nextGame.coverUrl"
-               [attr.data-bg]="nextGame.coverUrl || emptyCover"></div>
+               [class.full-img]="!next.coverUrl"
+               [attr.data-bg]="next.coverUrl || emptyCover"></div>
         } @else {
           <div class="post-more-photo-content"
-               [class.full-img]="!nextGame.coverUrl"
-               [style.background-image]="'url(' + (nextGame.coverUrl || emptyCover) + ')'"></div>
+               [class.full-img]="!next.coverUrl"
+               [style.background-image]="'url(' + (next.coverUrl || emptyCover) + ')'"></div>
         }
         <div class="post-more-photo-overlay"></div>
       </div>
       <div class="post-more-content">
-        <div class="post-more-content-title">{{ nextGame.title }}</div>
+        <div class="post-more-content-title">{{ next.title }}</div>
         <div>下一篇</div>
       </div>
-      <a class="post-more-link" [routerLink]="['/detail', nextGame.id]" [title]="nextGame.title"></a>
+      <a class="post-more-link" [routerLink]="['/detail', next.id]" [title]="next.title"></a>
     </div>
   } @else {
     <div></div>

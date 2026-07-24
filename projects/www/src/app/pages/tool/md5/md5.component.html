@@ -17,27 +17,27 @@
       @if (!isMobile) {
         <button nz-button
                 nzType="primary"
-                [disabled]="!encryptContent"
+                [disabled]="!encryptContent()"
                 (click)="encrypt()">MD5加密（小写）</button>
         <button nz-button
                 nzType="primary"
-                [disabled]="!encryptContent"
+                [disabled]="!encryptContent()"
                 (click)="encrypt(true)">MD5加密（大写）</button>
       } @else {
         <button nz-button
                 nzType="primary"
-                [disabled]="!encryptContent"
+                [disabled]="!encryptContent()"
                 (click)="encrypt()">MD5加密</button>
       }
       <button nz-button
               nzType="primary"
               ngxClipboard
-              [cbContent]="encryptResult"
-              [disabled]="!encryptResult"
+              [cbContent]="encryptResult()"
+              [disabled]="!encryptResult()"
               (click)="onCopied()">复制结果</button>
       <button nz-button
               nzType="primary"
-              [disabled]="!encryptContent"
+              [disabled]="!encryptContent()"
               (click)="reset()">清空</button>
     </div>
     <div>

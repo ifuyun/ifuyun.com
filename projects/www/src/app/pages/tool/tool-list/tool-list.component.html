@@ -17,7 +17,7 @@
       <li><a routerLink="/tool/murmurhash" title="MurmurHash">MurmurHash</a></li>
     </ul>
     <h2 class="tool-header">常用链接</h2>
-    @for (data of favoriteLinks; track data.catId) {
+    @for (data of favoriteLinks(); track data.catId) {
       @if (data.links.length > 0) {
         <h3>{{ data.catName }}</h3>
         <ul>

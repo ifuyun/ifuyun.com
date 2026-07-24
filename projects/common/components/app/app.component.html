@@ -1,9 +1,11 @@
-@if (!errorPage) {
-  @if (!errorState || !errorState.visible) {
+@let es = errorState();
+@let ii = indexInfo();
+@if (!errorPage()) {
+  @if (!es || !es.visible) {
     @if (!isMobile) {
       <lib-header/>
       <div class="body-wrap">
-        <div class="body" [class.body-center]="isBodyCentered">
+        <div class="body" [class.body-center]="isBodyCentered()">
           <router-outlet/>
         </div>
       </div>
@@ -11,31 +13,31 @@
       <div class="tool-widget" nz-dropdown nzTrigger="hover" nzPlacement="topRight" [nzDropdownMenu]="toolMenu">
         <button nz-button nzType="primary" nzShape="circle" nzSize="large"><fi-stars/></button>
       </div>
-      @if (chatVisible) {
-        <lib-ai-chat [conversationId]="conversationId"
-                     [prompt]="chatPrompt"
-                     [post]="post"
-                     [wallpaper]="wallpaper"
-                     [targetType]="indexInfo?.isPost ? 'post' : 'wallpaper'"
+      @if (chatVisible()) {
+        <lib-ai-chat [conversationId]="conversationId()"
+                     [prompt]="chatPrompt()"
+                     [post]="post()"
+                     [wallpaper]="wallpaper()"
+                     [targetType]="ii?.isPost ? 'post' : 'wallpaper'"
                      (closeDrawer)="closeChat()"/>
       }
     } @else {
-      <div class="m-body-wrap" [class.open]="siderVisible">
+      <div class="m-body-wrap" [class.open]="siderVisible()">
         <lib-header/>
         <div class="m-body">
-          <main class="m-main" [class.m-main-center]="isBodyCentered">
+          <main class="m-main" [class.m-main-center]="isBodyCentered()">
             <router-outlet/>
           </main>
           <lib-footer/>
         </div>
-        @if (siderVisible) {
+        @if (siderVisible()) {
           <div class="m-mask m-mask-sider" (click)="closeSider()"></div>
         }
       </div>
       <lib-m-sider/>
     }
-    @if (loginOptions.visible) {
-      <lib-signin-modal [closable]="loginOptions.closable" (close)="closeSigninModal()"/>
+    @if (signinOptions().visible) {
+      <lib-signin-modal [closable]="signinOptions().closable" (close)="closeSigninModal()"/>
     }
     <img [style.display]="'none'"
          [src]="adsImg"
@@ -44,15 +46,15 @@
          alt="none"/>
   } @else {
     <!--global errors-->
-    @switch (errorState.code) {
+    @switch (es.code) {
       @case (403) {
-        <lib-forbidden [errorState]="errorState"/>
+        <lib-forbidden [errorState]="es"/>
       }
       @case (404) {
-        <lib-not-found [errorState]="errorState"/>
+        <lib-not-found [errorState]="es"/>
       }
       @default {
-        <lib-server-error [errorState]="errorState"/>
+        <lib-server-error [errorState]="es"/>
       }
     }
   }
@@ -60,7 +62,7 @@
   <!--error pages-->
   <router-outlet/>
 }
-<lib-wallpaper-modal [visible]="wallpaperModalVisible" (close)="closeWallpaperModal()"/>
+<lib-wallpaper-modal [visible]="wallpaperModalVisible()" (close)="closeWallpaperModal()"/>
 <nz-dropdown-menu #toolMenu="nzDropdownMenu">
   <ul nz-menu [nzSelectable]="false">
     <li nz-menu-item class="tool-item tool-red-packet" (click)="showRedPacket()" title="支付宝扫码领红包">
@@ -72,13 +74,13 @@
     <li nz-menu-item class="tool-item tool-rss" (click)="openRSS()" title="博客 RSS 订阅">
       <fi-rss class="fi"/><span>博客 RSS 订阅</span>
     </li>
-    <li nz-menu-item class="tool-item tool-rss"(click)="openRSS(true)" title="壁纸 RSS 订阅">
+    <li nz-menu-item class="tool-item tool-rss" (click)="openRSS(true)" title="壁纸 RSS 订阅">
       <fi-rss class="fi"/><span>壁纸 RSS 订阅</span>
     </li>
     <li nz-menu-item class="tool-item tool-wallpaper" (click)="showWallpaperModal()" title="高清壁纸">
       <nz-icon nzType="picture"/><span>高清壁纸</span>
     </li>
-    @if ((indexInfo?.isPost || indexInfo?.isWallpaper) && indexInfo?.isDetail) {
+    @if ((ii?.isPost || ii?.isWallpaper) && ii?.isDetail) {
       <li nz-menu-item class="tool-item tool-ai" (click)="showChat()">
         <fi-magic class="fi"/><span>AI 阅读助手</span>
       </li>

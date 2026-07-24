@@ -2,7 +2,7 @@
   <nz-form-item>
     <nz-form-label>邮箱</nz-form-label>
     <nz-form-control>
-      <nz-form-text>{{ user?.email }}</nz-form-text>
+      <nz-form-text>{{ user()?.email }}</nz-form-text>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
@@ -29,8 +29,8 @@
       <button nz-button
               type="button"
               (click)="resendCode()"
-              [disabled]="countdown > 0">重新发送{{ countdown > 0 ? ' (' + countdown + 's)' : '' }}</button>
-      <button nz-button type="submit" nzType="primary" (click)="verify()" [nzLoading]="confirmLoading">确定</button>
+              [disabled]="countdown() > 0">重新发送{{ countdown() > 0 ? ' (' + countdown() + 's)' : '' }}</button>
+      <button nz-button type="submit" nzType="primary" (click)="verify()" [nzLoading]="confirmLoading()">确定</button>
     </div>
   </nz-form-item>
 </form>

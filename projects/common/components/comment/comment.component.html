@@ -1,9 +1,13 @@
-<div id="comments" class="comment" [class.p-comment]="!isMobile" [class.m-comment]="isMobile">
-  @if (comments.length > 0) {
+@let m = isMobile();
+<div id="comments" class="comment" [class.p-comment]="!m" [class.m-comment]="m">
+  @let vlm = voteLoadingMap();
+  @let rvm = replyVisibleMap();
+  @let c = comments();
+  @if (c.length > 0) {
     <div class="comment-list">
       <ng-template #commentsTpl let-comments>
         @for (comment of comments; track comment.id) {
-          @if (!isMobile) {
+          @if (!m) {
             <div class="comment-item p-comment-item"
                  id="{{ comment.idHash }}"
                  [style.padding-left]="(comment.depth - 1) * 50 + 'px'">
@@ -21,7 +25,7 @@
                   </div>
                 </div>
                 <div class="hash">
-                  <a [routerLink]="['.']" [fragment]="comment.idHash">#{{ comment.idHash }}</a>
+                  <a [routerLink]="['.']" [fragment]="comment.idHash">#{{ comment.floor }}</a>
                 </div>
               </div>
               <div class="content">
@@ -30,16 +34,16 @@
                     <span class="text">回复</span>
                     <a class="author"
                        [attr.data-hash]="comment.parent.idHash"
-                       (click)="scrollToComment($event)">#{{ comment.parent.idHash }} &#64;{{ comment.parent.userName }}</a>
+                       (click)="scrollToComment($event)">#{{ comment.parent.floor }} &#64;{{ comment.parent.userName }}</a>
                   </div>
                 }
                 <div [innerHTML]="comment.content | safeHtml"></div>
               </div>
               <div class="actions">
                 <a [class.voted]="comment.liked"
-                   [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.id]"
+                   [class.disabled]="comment.liked || comment.disliked || vlm[comment.id]"
                    (click)="vote(comment, true)">
-                  @if (commentVoteLoading[comment.id]) {
+                  @if (vlm[comment.id]) {
                     <nz-icon nzType="loading"/>
                   } @else {
                     <nz-icon nzType="like" [nzTheme]="comment.liked ? 'fill' : 'outline'"/>
@@ -47,16 +51,16 @@
                   <span>{{ comment.likes }}</span>
                 </a>
                 <a [class.voted]="comment.disliked"
-                   [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.id]"
+                   [class.disabled]="comment.liked || comment.disliked || vlm[comment.id]"
                    (click)="vote(comment, false)">
-                  @if (commentVoteLoading[comment.id]) {
+                  @if (vlm[comment.id]) {
                     <nz-icon nzType="loading"/>
                   } @else {
                     <nz-icon nzType="dislike" [nzTheme]="comment.disliked ? 'fill' : 'outline'"/>
                   }
                   <span>{{ comment.dislikes }}</span>
                 </a>
-                @if (!replyVisibleMap[comment.id]) {
+                @if (!rvm[comment.id]) {
                   <a (click)="reply(comment)"><fi-chat-square class="fi"/><span>回复</span></a>
                 } @else {
                   <a (click)="cancelReply()"><nz-icon nzType="close"/><span>取消</span></a>
@@ -81,7 +85,7 @@
                       <span class="text">回复</span>
                       <a class="author"
                          [attr.data-hash]="comment.parent.idHash"
-                         (click)="scrollToComment($event)">#{{ comment.parent.idHash }} &#64;{{ comment.parent.userName }}</a>
+                         (click)="scrollToComment($event)">#{{ comment.parent.floor }} &#64;{{ comment.parent.userName }}</a>
                     </div>
                   }
                   <div [innerHTML]="comment.content | safeHtml"></div>
@@ -90,9 +94,9 @@
                   <span class="time">{{ comment.createdAt | date:'yy-MM-dd HH:mm' }}</span>
                   <div class="actions">
                     <a [class.voted]="comment.liked"
-                       [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.id]"
+                       [class.disabled]="comment.liked || comment.disliked || vlm[comment.id]"
                        (click)="vote(comment, true)">
-                      @if (commentVoteLoading[comment.id]) {
+                      @if (vlm[comment.id]) {
                         <nz-icon nzType="loading"/>
                       } @else {
                         <nz-icon nzType="like" [nzTheme]="comment.liked ? 'fill' : 'outline'"/>
@@ -100,16 +104,16 @@
                       <span>{{ comment.likes }}</span>
                     </a>
                     <a [class.voted]="comment.disliked"
-                       [class.disabled]="comment.liked || comment.disliked || commentVoteLoading[comment.id]"
+                       [class.disabled]="comment.liked || comment.disliked || vlm[comment.id]"
                        (click)="vote(comment, false)">
-                      @if (commentVoteLoading[comment.id]) {
+                      @if (vlm[comment.id]) {
                         <nz-icon nzType="loading"/>
                       } @else {
                         <nz-icon nzType="dislike" [nzTheme]="comment.disliked ? 'fill' : 'outline'"/>
                       }
                       <span>{{ comment.dislikes }}</span>
                     </a>
-                    @if (!replyVisibleMap[comment.id]) {
+                    @if (!rvm[comment.id]) {
                       <a (click)="reply(comment)"><fi-chat-square/></a>
                     } @else {
                       <a (click)="cancelReply()"><nz-icon nzType="close"/></a>
@@ -119,9 +123,9 @@
               </div>
             </div>
           }
-          @if (replyVisibleMap[comment.id]) {
-            <div [style.padding-left]="(comment.depth - 1) * (isMobile ? 32 : 50) + 'px'">
-              <ng-container *ngTemplateOutlet="commentFormTpl; context: { $implicit: replyForm }"/>
+          @if (rvm[comment.id]) {
+            <div [style.padding-left]="(comment.depth - 1) * (m ? 32 : 50) + 'px'">
+              <ng-container *ngTemplateOutlet="commentFormTpl; context: { $implicit: replyForm() }"/>
             </div>
           }
           @if (comment.children.length > 0) {
@@ -129,7 +133,7 @@
           }
         }
       </ng-template>
-      <ng-container *ngTemplateOutlet="commentsTpl; context: { $implicit: comments }"/>
+      <ng-container *ngTemplateOutlet="commentsTpl; context: { $implicit: c }"/>
     </div>
   }
   <ng-template #commentFormTpl let-form>
@@ -143,7 +147,7 @@
                         formControlName="content"
                         [maxLength]="maxContentLength"
                         rows="4"
-                        [placeholder]="isSignIn ? '评论内容' : '评论前请先登录'"></textarea>
+                        [placeholder]="isSignIn() ? '评论内容' : '评论前请先登录'"></textarea>
               <ng-template #contentErrorTpl let-control>
                 @if (control.hasError('required')) {
                   请输入评论内容
@@ -154,25 +158,25 @@
               </ng-template>
             </nz-form-control>
           </nz-form-item>
-          @if (!isSignIn) {
+          @if (!isSignIn()) {
             <div class="comment-mask" (click)="showSigninModal()"></div>
           }
         </div>
         <div class="comment-actions">
           <div>
-            @if (!isSignIn) {
+            @if (!isSignIn()) {
               <button nz-button type="button" nzType="default" (click)="showSigninModal()">登录</button>
             }
-            <button nz-button type="submit" nzType="primary" [nzLoading]="saveLoading">我要评论</button>
+            <button nz-button type="submit" nzType="primary" [nzLoading]="saveLoading()">我要评论</button>
           </div>
         </div>
       </form>
     </div>
   </ng-template>
-  @if (!replyMode) {
-    @if (comments.length > 0) {
+  @if (!replyMode()) {
+    @if (c.length > 0) {
       <div class="divider"></div>
     }
-    <ng-container *ngTemplateOutlet="commentFormTpl; context: { $implicit: commentForm }"/>
+    <ng-container *ngTemplateOutlet="commentFormTpl; context: { $implicit: commentForm() }"/>
   }
 </div>

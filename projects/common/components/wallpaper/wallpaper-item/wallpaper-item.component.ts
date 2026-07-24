@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, computed, inject, input, model, OnInit } from '@angular/core';
 import { Params } from '@angular/router';
-import { AppConfigService, AppDomainConfig, UserAgentService } from 'common/core';
+import { AppConfigService, UserAgentService } from 'common/core';
 import { ListMode, WallpaperLang } from 'common/enums';
 import { IconCalendarDateComponent, IconChatSquareComponent, IconChatSquareDotsComponent } from 'common/icons';
 import { Wallpaper } from 'common/interfaces';
@@ -25,47 +25,45 @@ import { SmartLinkComponent } from '../../smart-link/smart-link.component';
   styleUrls: ['../../post/post-item/post-item.component.less', './wallpaper-item.component.less']
 })
 export class WallpaperItemComponent implements OnInit {
-  @Input() wallpaper!: Wallpaper;
-  @Input() lang?: WallpaperLang;
-  @Input() mode!: ListMode;
-  @Input() index!: number;
-  @Input() jigsaw = false;
+  private readonly uaService = inject(UserAgentService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly wallpaperService = inject(WallpaperService);
 
-  isMobile = false;
-  domains!: AppDomainConfig;
+  readonly wallpaper = model.required<Wallpaper>();
+  readonly lang = input(WallpaperLang.CN);
+  readonly mode = input(ListMode.CARD);
+  readonly index = input.required<number>();
+  readonly jigsaw = input(false);
 
-  get linkPrefix() {
-    const domain = this.jigsaw ? this.domains['jigsaw'].url : this.domains['wallpaper'].url;
+  readonly isMobile = this.uaService.isMobile;
+  readonly domains = this.appConfigService.apps;
+
+  readonly linkPrefix = computed(() => {
+    const domain = this.jigsaw() ? this.domains['jigsaw'].url : this.domains['wallpaper'].url;
 
     return domain + '/detail/';
-  }
+  });
+  readonly wallpaperLocation = computed(() => {
+    const wallpaper = this.wallpaper();
 
-  get location() {
-    return this.wallpaper.isCn ? this.wallpaper.location : this.wallpaper.locationEn;
-  }
-
-  constructor(
-    private readonly userAgentService: UserAgentService,
-    private readonly appConfigService: AppConfigService,
-    private readonly wallpaperService: WallpaperService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-    this.domains = this.appConfigService.apps;
-  }
+    return wallpaper.isCn ? wallpaper.location : wallpaper.locationEn;
+  });
 
   ngOnInit(): void {
-    if (!this.wallpaper.isCn && !this.wallpaper.isEn) {
-      this.wallpaper = this.wallpaperService.transformWallpaper(this.wallpaper);
+    const wallpaper = this.wallpaper();
+
+    if (!wallpaper.isCn && !wallpaper.isEn) {
+      this.wallpaper.set(this.wallpaperService.transformWallpaper(wallpaper));
     }
   }
 
   getLangParams(isCn: boolean): Params {
-    if (this.jigsaw) {
+    if (this.jigsaw()) {
       return {};
     }
-    if (!this.lang) {
+    if (!this.lang()) {
       return isCn ? {} : { lang: WallpaperLang.EN };
     }
-    return { lang: this.lang };
+    return { lang: this.lang() };
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { GameService } from 'common/components';
 import { DestroyService, GAME_EMPTY_COVER, UserAgentService } from 'common/core';
@@ -13,25 +13,19 @@ import { skipWhile, takeUntil } from 'rxjs';
   templateUrl: './game-prev-next.component.html'
 })
 export class GamePrevNextComponent implements OnInit {
-  readonly emptyCover: string = '';
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly commonService = inject(CommonService);
+  private readonly gameService = inject(GameService);
 
-  isMobile = false;
-  isChanged = false;
-  prevGame?: GameEntity;
-  nextGame?: GameEntity;
+  readonly emptyCover = this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER;
+  readonly isMobile = this.uaService.isMobile;
+  readonly isChanged = signal(false);
+  readonly prevGame = signal<GameEntity | null>(null);
+  readonly nextGame = signal<GameEntity | null>(null);
 
-  private gameId = '';
-  private isLoaded = false;
-
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly commonService: CommonService,
-    private readonly gameService: GameService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-    this.emptyCover = this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER;
-  }
+  private readonly gameId = signal('');
+  private readonly isLoaded = signal(false);
 
   ngOnInit(): void {
     this.gameService.activeGameId$
@@ -40,22 +34,22 @@ export class GamePrevNextComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe((gameId) => {
-        this.isChanged = this.gameId !== gameId;
-        this.gameId = gameId;
-        if (!this.isLoaded || this.isChanged) {
+        this.isChanged.set(this.gameId() !== gameId);
+        this.gameId.set(gameId);
+        if (!this.isLoaded() || this.isChanged()) {
           this.getGamesOfPrevAndNext();
-          this.isLoaded = true;
+          this.isLoaded.set(true);
         }
       });
   }
 
   private getGamesOfPrevAndNext(): void {
     this.gameService
-      .getGamesOfPrevAndNext(this.gameId)
+      .getGamesOfPrevAndNext(this.gameId())
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.prevGame = res.prevGame;
-        this.nextGame = res.nextGame;
+        this.prevGame.set(res.prevGame);
+        this.nextGame.set(res.nextGame);
       });
   }
 }

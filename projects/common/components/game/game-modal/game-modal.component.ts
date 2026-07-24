@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, computed, inject, input, OnDestroy, OnInit, output, signal } from '@angular/core';
 import { AppConfigService, DestroyService, PlatformService, ScriptLoaderService, UserAgentService } from 'common/core';
 import { GameLogType } from 'common/enums';
 import { GameEntity } from 'common/interfaces';
@@ -15,29 +15,25 @@ import { GameService } from '../game.service';
   styleUrl: './game-modal.component.less'
 })
 export class GameModalComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() game!: GameEntity;
-  @Output() close = new EventEmitter();
+  readonly game = input.required<GameEntity>();
+  readonly close = output<void>();
 
-  isMobile = false;
-  modalWidth = 800;
-  modalHeight = (this.modalWidth * 2) / 3;
+  readonly modalWidth = 800;
+  readonly modalHeight = signal((this.modalWidth * 2) / 3);
 
-  private romURL: string = '';
+  private readonly isMobile = computed(() => this.uaService.isMobile);
+  private readonly romURL = signal('');
 
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly platform: PlatformService,
-    private readonly userAgentService: UserAgentService,
-    private readonly appConfigService: AppConfigService,
-    private readonly gameService: GameService,
-    private readonly scriptLoaderService: ScriptLoaderService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  private readonly destroy$ = inject(DestroyService);
+  private readonly platform = inject(PlatformService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly gameService = inject(GameService);
+  private readonly scriptLoaderService = inject(ScriptLoaderService);
 
   ngOnInit(): void {
-    if (this.platform.isBrowser && this.isMobile) {
-      this.modalHeight = document.body.clientHeight - 87;
+    if (this.platform.isBrowser && this.isMobile()) {
+      this.modalHeight.set(document.body.clientHeight - 87);
     }
   }
 
@@ -50,12 +46,13 @@ export class GameModalComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   closeGameModal() {
-    this.gameService.clean(this.romURL);
+    this.gameService.clean(this.romURL());
     this.close.emit();
   }
 
   private getGameROM(): void {
-    const cachedGame = this.gameService.getCachedGame(this.game.id);
+    const game = this.game();
+    const cachedGame = this.gameService.getCachedGame(game.id);
     if (cachedGame) {
       const uint8Array = new Uint8Array(cachedGame.length);
       for (let i = 0; i < cachedGame.length; i++) {
@@ -65,22 +62,22 @@ export class GameModalComponent implements OnInit, AfterViewInit, OnDestroy {
       this.logGame();
       // 刷新缓存
       this.gameService.cacheGameList({
-        id: this.game.id,
-        name: this.game.title,
+        id: game.id,
+        name: game.title,
         added: Date.now()
       });
     } else {
       this.gameService
-        .getGameROM(this.game.id)
+        .getGameROM(game.id)
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
           this.initROM(res);
           this.logGame();
           // 缓存游戏
-          this.gameService.cacheGame(this.game.id, res);
+          this.gameService.cacheGame(game.id, res);
           this.gameService.cacheGameList({
-            id: this.game.id,
-            name: this.game.title,
+            id: game.id,
+            name: game.title,
             added: Date.now()
           });
         });
@@ -88,15 +85,17 @@ export class GameModalComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private initROM(rom: Blob) {
-    this.romURL = URL.createObjectURL(rom);
-    this.gameService.updateActiveRomURL(this.romURL);
+    const game = this.game();
 
-    (<any>window)['EJS_gameID'] = this.game.id;
-    (<any>window)['EJS_gameName'] = this.game.title;
+    this.romURL.set(URL.createObjectURL(rom));
+    this.gameService.updateActiveRomURL(this.romURL());
+
+    (<any>window)['EJS_gameID'] = game.id;
+    (<any>window)['EJS_gameName'] = game.title;
     (<any>window)['EJS_player'] = '#game-box';
-    (<any>window)['EJS_core'] = this.game.type;
+    (<any>window)['EJS_core'] = game.type;
     (<any>window)['EJS_pathtodata'] = this.appConfigService.emulatorBasePath;
-    (<any>window)['EJS_gameUrl'] = this.romURL;
+    (<any>window)['EJS_gameUrl'] = this.romURL();
     (<any>window)['EJS_language'] = 'zh';
     (<any>window)['EJS_startOnLoaded'] = true;
     (<any>window)['EJS_defaultControls'] = DEFAULT_GAME_CONTROLS;
@@ -128,7 +127,7 @@ export class GameModalComponent implements OnInit, AfterViewInit, OnDestroy {
     this.gameService
       .saveGameLog({
         type: GameLogType.PLAY,
-        gameId: this.game.id
+        gameId: this.game().id
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe();

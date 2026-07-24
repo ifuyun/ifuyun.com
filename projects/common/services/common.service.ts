@@ -34,11 +34,11 @@ export class CommonService {
   private darkMode: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public darkMode$: Observable<boolean> = this.darkMode.asObservable();
 
-  private signinVisible: BehaviorSubject<SigninModalOptions> = new BehaviorSubject<SigninModalOptions>({
+  private signinOptions: BehaviorSubject<SigninModalOptions> = new BehaviorSubject<SigninModalOptions>({
     visible: false,
     closable: true
   });
-  public signinVisible$: Observable<SigninModalOptions> = this.signinVisible.asObservable();
+  public signinOptions$: Observable<SigninModalOptions> = this.signinOptions.asObservable();
 
   constructor(
     @Inject(DOCUMENT) private readonly document: Document,
@@ -79,8 +79,8 @@ export class CommonService {
     this.siderVisible.next(visible);
   }
 
-  updateSigninModalVisible(options: SigninModalOptions) {
-    this.signinVisible.next(options);
+  updateSigninOptions(options: SigninModalOptions) {
+    this.signinOptions.next(options);
   }
 
   getReferrer(onlyPath = false) {

@@ -1,50 +1,53 @@
+@let l = lang();
+@let prev = prevWallpaper();
+@let next = nextWallpaper();
 <div class="post-more" [class.p-post-more]="!isMobile" [class.m-post-more]="isMobile">
-  @if (prevWallpaper) {
+  @if (prev) {
     <div class="post-more-prev">
       <div class="post-more-photo">
-        @if (!isChanged) {
-          <div class="post-more-photo-content lazyload" [attr.data-bg]="prevWallpaper.thumbUrl"></div>
+        @if (!isChanged()) {
+          <div class="post-more-photo-content lazyload" [attr.data-bg]="prev.thumbUrl"></div>
         } @else {
           <div class="post-more-photo-content"
-               [style.background-image]="'url(' + prevWallpaper.thumbUrl + ')'"></div>
+               [style.background-image]="'url(' + prev.thumbUrl + ')'"></div>
         }
         <div class="post-more-photo-overlay"></div>
       </div>
       <div class="post-more-content">
         <div class="post-more-content-title">
-          {{ lang === 'en' ? prevWallpaper.copyrightEn : prevWallpaper.copyright }}
+          {{ l === 'en' ? prev.copyrightEn : prev.copyright }}
         </div>
         <div>上一篇</div>
       </div>
       <a class="post-more-link"
-         [routerLink]="['/detail', prevWallpaper.id]"
-         [queryParams]="getLangParams(prevWallpaper)"
-         [title]="lang === 'en' ? prevWallpaper.copyrightEn : prevWallpaper.copyright"></a>
+         [routerLink]="['/detail', prev.id]"
+         [queryParams]="getLangParams(prev)"
+         [title]="l === 'en' ? prev.copyrightEn : prev.copyright"></a>
     </div>
   } @else {
     <div></div>
   }
-  @if (nextWallpaper) {
+  @if (next) {
     <div class="post-more-next">
       <div class="post-more-photo">
-        @if (!isChanged) {
-          <div class="post-more-photo-content lazyload" [attr.data-bg]="nextWallpaper.thumbUrl"></div>
+        @if (!isChanged()) {
+          <div class="post-more-photo-content lazyload" [attr.data-bg]="next.thumbUrl"></div>
         } @else {
           <div class="post-more-photo-content"
-               [style.background-image]="'url(' + nextWallpaper.thumbUrl + ')'"></div>
+               [style.background-image]="'url(' + next.thumbUrl + ')'"></div>
         }
         <div class="post-more-photo-overlay"></div>
       </div>
       <div class="post-more-content">
         <div class="post-more-content-title">
-          {{ lang === 'en' ? nextWallpaper.copyrightEn : nextWallpaper.copyright }}
+          {{ l === 'en' ? next.copyrightEn : next.copyright }}
         </div>
         <div>下一篇</div>
       </div>
       <a class="post-more-link"
-         [routerLink]="['/detail', nextWallpaper.id]"
-         [queryParams]="getLangParams(nextWallpaper)"
-         [title]="lang === 'en' ? nextWallpaper.copyrightEn : nextWallpaper.copyright"></a>
+         [routerLink]="['/detail', next.id]"
+         [queryParams]="getLangParams(next)"
+         [title]="l === 'en' ? next.copyrightEn : next.copyright"></a>
     </div>
   } @else {
     <div></div>

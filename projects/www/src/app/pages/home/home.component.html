@@ -4,7 +4,7 @@
     <div class="banner-post">
       <div class="column-header">热门文章</div>
       <ul class="banner-post-list">
-        @for (post of hotPosts; track post.id; let i = $index) {
+        @for (post of hotPosts(); track post.id; let i = $index) {
           <li class="banner-post-item">
             <span class="hot-num">{{ i + 1 }}</span>
             <a [href]="domains['blog'].url + post.url" [title]="post.title">{{ post.title }}</a>
@@ -17,7 +17,7 @@
   <div class="main-content">
     <div class="column-header">最新文章</div>
     <div class="post-card-list post-card-list-4">
-      @for (post of latestPosts; track post.id) {
+      @for (post of latestPosts(); track post.id) {
         <article class="post-card-item post-card-item-wrap">
           <div class="post-card-item-body">
             <div class="post-card-cover">
@@ -63,7 +63,7 @@
   <div class="main-content">
     <div class="column-header">最新壁纸</div>
     <div class="post-card-list post-card-list-4">
-      @for (wallpaper of latestWallpapers; track wallpaper.id) {
+      @for (wallpaper of latestWallpapers(); track wallpaper.id) {
         <article class="post-card-item post-card-item-wrap">
           <div class="post-card-item-body">
             <div class="post-card-cover">
@@ -104,7 +104,7 @@
   <lib-carousel/>
   <div class="column-header m-column-header">最新文章</div>
   <div class="m-post-list">
-    @for (post of latestPosts; track post.id; let i = $index) {
+    @for (post of latestPosts(); track post.id; let i = $index) {
       <lib-post-item [post]="post" [index]="i"/>
     }
   </div>
@@ -113,7 +113,7 @@
   </div>
   <div class="column-header m-column-header">最新壁纸</div>
   <div class="m-post-list">
-    @for (wallpaper of latestWallpapers; track wallpaper.id; let i = $index) {
+    @for (wallpaper of latestWallpapers(); track wallpaper.id; let i = $index) {
       <lib-wallpaper-item [wallpaper]="wallpaper" [mode]="wallpaperListMode" [index]="i"/>
     }
   </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BreadcrumbComponent, MakeMoneyComponent } from 'common/components';
 import {
@@ -10,7 +10,7 @@ import {
   OptionEntity,
   UserAgentService
 } from 'common/core';
-import { LogTargetType, LogActionType } from 'common/enums';
+import { LogActionType, LogTargetType } from 'common/enums';
 import { FavoriteLink, TenantAppVo } from 'common/interfaces';
 import { CommonService, LinkService, LogService, OptionService, TenantAppService } from 'common/services';
 import { isEmpty } from 'lodash';
@@ -25,28 +25,24 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   styleUrls: ['../tool.less', './tool-list.component.less']
 })
 export class ToolListComponent implements OnInit {
-  isMobile = false;
-  favoriteLinks: FavoriteLink[] = [];
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly commonService = inject(CommonService);
+  private readonly metaService = inject(MetaService);
+  private readonly imageService = inject(NzImageService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+  private readonly linkService = inject(LinkService);
+  private readonly logService = inject(LogService);
 
-  protected pageIndex = 'tool';
+  readonly isMobile = this.uaService.isMobile;
+  readonly favoriteLinks = signal<FavoriteLink[]>([]);
 
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
+  protected readonly pageIndex = 'tool';
 
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly commonService: CommonService,
-    private readonly metaService: MetaService,
-    private readonly imageService: NzImageService,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService,
-    private readonly linkService: LinkService,
-    private readonly logService: LogService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-  }
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly options = signal<OptionEntity>({});
 
   ngOnInit(): void {
     this.updatePageIndex();
@@ -59,8 +55,8 @@ export class ToolListComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe(([appInfo, options]) => {
-        this.appInfo = appInfo;
-        this.options = options;
+        this.appInfo.set(appInfo);
+        this.options.set(options);
 
         this.updatePageInfo();
       });
@@ -93,18 +89,18 @@ export class ToolListComponent implements OnInit {
       .getFavoriteLinks()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.favoriteLinks = res || [];
+        this.favoriteLinks.set(res || []);
       });
   }
 
   private updatePageInfo() {
-    const titles = ['工具', this.appInfo.name];
-    const description = this.options['tool_description'];
+    const titles = ['工具', this.appInfo()!.name];
+    const description = this.options()['tool_description'];
     const metaData: HTMLMetaData = {
       title: titles.join(' - '),
       description,
-      keywords: this.options['tool_keywords'],
-      author: this.options['site_author']
+      keywords: this.options()['tool_keywords'],
+      author: this.options()['site_author']
     };
     this.metaService.updateHTMLMeta(metaData);
   }

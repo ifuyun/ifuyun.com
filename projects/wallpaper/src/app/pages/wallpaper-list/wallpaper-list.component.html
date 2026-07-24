@@ -1,31 +1,33 @@
+@let u = paginationUrl();
+@let m = mode();
 <lib-breadcrumb/>
-@if (total > 0) {
+@if (total() > 0) {
   <div class="filter" [class.p-filter]="!isMobile" [class.m-filter]="isMobile">
     <div>
       <nz-radio-group [(ngModel)]="langValue" nzButtonStyle="solid">
         <a nz-radio-button
            nzValue="all"
-           [routerLink]="paginationUrl"
-           [queryParams]="getListParam(null, mode)">全部</a>
+           [routerLink]="u"
+           [queryParams]="getListParam(null, m)">全部</a>
         <a nz-radio-button
            nzValue="cn"
-           [routerLink]="paginationUrl"
-           [queryParams]="getListParam(WallpaperLang.CN, mode)">中文</a>
+           [routerLink]="u"
+           [queryParams]="getListParam(WallpaperLang.CN, m)">中文</a>
         <a nz-radio-button
            nzValue="en"
-           [routerLink]="paginationUrl"
-           [queryParams]="getListParam(WallpaperLang.EN, mode)">English</a>
+           [routerLink]="u"
+           [queryParams]="getListParam(WallpaperLang.EN, m)">English</a>
       </nz-radio-group>
       <nz-radio-group class="icon-group" [(ngModel)]="modeValue" nzButtonStyle="solid">
         <a nz-radio-button
            nzValue="card"
-           [routerLink]="paginationUrl"
-           [queryParams]="getListParam(lang, ListMode.CARD, page)"
+           [routerLink]="u"
+           [queryParams]="getListParam(lang(), ListMode.CARD, page())"
            title="卡片模式"><nz-icon nzType="appstore"/></a>
         <a nz-radio-button
            nzValue="list"
-           [routerLink]="paginationUrl"
-           [queryParams]="getListParam(lang, ListMode.LIST, page)"
+           [routerLink]="u"
+           [queryParams]="getListParam(lang(), ListMode.LIST, page())"
            title="列表模式"><nz-icon nzType="bars"/></a>
       </nz-radio-group>
     </div>
@@ -38,15 +40,15 @@
       </div>
     }
   </div>
-  <div [class.post-list]="mode === 'list' && !isMobile"
-       [class.m-post-list]="mode === 'list' && isMobile"
-       [class.post-card-list]="mode !== 'list'"
-       [class.post-card-list-2]="mode !== 'list' && !isMobile">
-    @for (wallpaper of wallpapers; track wallpaper.id; let i = $index) {
-      <lib-wallpaper-item [class.post-card-item-wrap]="mode !== 'list'"
+  <div [class.post-list]="m === 'list' && !isMobile"
+       [class.m-post-list]="m === 'list' && isMobile"
+       [class.post-card-list]="m !== 'list'"
+       [class.post-card-list-2]="m !== 'list' && !isMobile">
+    @for (wallpaper of wallpapers(); track wallpaper.id; let i = $index) {
+      <lib-wallpaper-item [class.post-card-item-wrap]="m !== 'list'"
                           [wallpaper]="wallpaper"
-                          [lang]="lang"
-                          [mode]="mode"
+                          [lang]="lang()!"
+                          [mode]="m!"
                           [index]="i"/>
     }
   </div>
@@ -56,4 +58,8 @@
   </div>
 }
 <lib-make-money/>
-<lib-pagination/>
+<lib-pagination [page]="page()"
+                [total]="total()"
+                [pageSize]="pageSize()"
+                [url]="u"
+                [params]="paginationParams()"/>

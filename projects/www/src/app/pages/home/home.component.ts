@@ -1,9 +1,8 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CarouselComponent, PostItemComponent, WallpaperItemComponent } from 'common/components';
 import {
   AppConfigService,
-  AppDomainConfig,
   BreadcrumbService,
   DestroyService,
   MetaService,
@@ -12,7 +11,7 @@ import {
 } from 'common/core';
 import { ListMode, WallpaperLang } from 'common/enums';
 import { IconCalendarDateComponent, IconChatSquareComponent, IconChatSquareDotsComponent } from 'common/icons';
-import { PostVo, PostEntity, TenantAppVo, Wallpaper } from 'common/interfaces';
+import { PostEntity, PostVo, TenantAppVo, Wallpaper } from 'common/interfaces';
 import { NumberViewPipe } from 'common/pipes';
 import { CommonService, OptionService, PostService, TenantAppService, WallpaperService } from 'common/services';
 import { isEmpty, uniq } from 'lodash';
@@ -39,34 +38,28 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   styleUrl: './home.component.less'
 })
 export class HomeComponent implements OnInit {
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly commonService = inject(CommonService);
+  private readonly metaService = inject(MetaService);
+  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+  private readonly postService = inject(PostService);
+  private readonly wallpaperService = inject(WallpaperService);
+
   readonly wallpaperListMode = ListMode.LIST;
+  readonly isMobile = this.uaService.isMobile;
+  readonly domains = this.appConfigService.apps;
+  readonly hotPosts = signal<PostEntity[]>([]);
+  readonly latestPosts = signal<PostVo[]>([]);
+  readonly latestWallpapers = signal<Wallpaper[]>([]);
 
-  isMobile = false;
-  domains!: AppDomainConfig;
-  hotPosts: PostEntity[] = [];
-  latestPosts: PostVo[] = [];
-  latestWallpapers: Wallpaper[] = [];
+  protected readonly pageIndex = 'index';
 
-  protected pageIndex = 'index';
-
-  private appInfo!: TenantAppVo;
-  private options: OptionEntity = {};
-
-  constructor(
-    private readonly destroy$: DestroyService,
-    private readonly userAgentService: UserAgentService,
-    private readonly commonService: CommonService,
-    private readonly metaService: MetaService,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly appConfigService: AppConfigService,
-    private readonly tenantAppService: TenantAppService,
-    private readonly optionService: OptionService,
-    private readonly postService: PostService,
-    private readonly wallpaperService: WallpaperService
-  ) {
-    this.isMobile = this.userAgentService.isMobile;
-    this.domains = this.appConfigService.apps;
-  }
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly options = signal<OptionEntity>({});
 
   ngOnInit(): void {
     this.updatePageIndex();
@@ -78,8 +71,8 @@ export class HomeComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe(([appInfo, options]) => {
-        this.appInfo = appInfo;
-        this.options = options;
+        this.appInfo.set(appInfo);
+        this.options.set(options);
 
         this.updatePageInfo();
         this.getLatestPosts();
@@ -110,7 +103,7 @@ export class HomeComponent implements OnInit {
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.latestPosts = res.posts?.list || [];
+        this.latestPosts.set(res.posts?.list || []);
       });
   }
 
@@ -123,7 +116,7 @@ export class HomeComponent implements OnInit {
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.latestWallpapers = res.list || [];
+        this.latestWallpapers.set(res.list || []);
       });
   }
 
@@ -132,14 +125,15 @@ export class HomeComponent implements OnInit {
       .getHotPosts()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.hotPosts = res;
+        this.hotPosts.set(res);
       });
   }
 
   private updatePageInfo() {
-    const titles = [this.appInfo.slogan || '首页', this.appInfo.name];
-    const description = this.appInfo.description;
-    const keywords: string[] = [...this.appInfo.keywordList];
+    const appInfo = this.appInfo()!;
+    const titles = [appInfo.slogan || '首页', appInfo.name];
+    const description = appInfo.description;
+    const keywords: string[] = [...appInfo.keywordList];
 
     this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
@@ -147,7 +141,7 @@ export class HomeComponent implements OnInit {
       keywords: uniq(keywords)
         .filter((item) => !!item)
         .join(','),
-      author: this.options['site_author']
+      author: this.options()['site_author']
     });
   }
 

@@ -1,107 +1,109 @@
-@if (pagination && pagination.total > 0) {
+@let p = pagination();
+@let u = url();
+@if (p.total > 0) {
   @if (!isMobile) {
     <div class="pagination p-pagination">
       <ul>
-        @if (pagination.page > 1) {
+        @if (p.page > 1) {
           <li>
-            <a [routerLink]="linkUrl"
-               [queryParams]="getLinkParams(pagination.prev)"
+            <a [routerLink]="u"
+               [queryParams]="getUrlParams(p.prev)"
                title="上一页"><nz-icon nzType="left"/></a>
           </li>
         }
-        @if (pagination.pages < 10) {
-          @for (page of pagination.pages | range; track page) {
-            @if (page + 1 === pagination.page) {
+        @if (p.pages < 10) {
+          @for (page of p.pages | range; track page) {
+            @if (page + 1 === p.page) {
               <li class="active"><span>{{ page + 1 }}</span></li>
             } @else {
               <li>
-                <a [routerLink]="linkUrl"
-                   [queryParams]="getLinkParams(page + 1)"
+                <a [routerLink]="u"
+                   [queryParams]="getUrlParams(page + 1)"
                    title="第{{ page + 1 }}页">{{ page + 1 }}</a>
               </li>
             }
           }
         }
-        @if (pagination.pages >= 10 && pagination.page <= 5) {
+        @if (p.pages >= 10 && p.page <= 5) {
           @for (page of 5 | range; track page) {
-            @if (page + 1 === pagination.page) {
+            @if (page + 1 === p.page) {
               <li class="active"><span>{{ page + 1 }}</span></li>
             } @else {
               <li>
-                <a [routerLink]="linkUrl"
-                   [queryParams]="getLinkParams(page + 1)"
+                <a [routerLink]="u"
+                   [queryParams]="getUrlParams(page + 1)"
                    title="第{{ page + 1 }}页">{{ page + 1 }}</a>
               </li>
             }
           }
           <li class="ellipsis"><nz-icon nzType="ellipsis"/></li>
           <li>
-            <a [routerLink]="linkUrl"
-               [queryParams]="getLinkParams(pagination.pages)"
-               title="第{{ pagination.pages }}页">{{ pagination.pages }}</a>
+            <a [routerLink]="u"
+               [queryParams]="getUrlParams(p.pages)"
+               title="第{{ p.pages }}页">{{ p.pages }}</a>
           </li>
         }
-        @if (pagination.pages >= 10 && pagination.page >= pagination.pages - 4) {
-          <li><a [routerLink]="linkUrl"
-                 [queryParams]="getLinkParams(1)"
+        @if (p.pages >= 10 && p.page >= p.pages - 4) {
+          <li><a [routerLink]="u"
+                 [queryParams]="getUrlParams(1)"
                  title="第1页">1</a></li>
           <li class="ellipsis"><nz-icon nzType="ellipsis"/></li>
           @for (page of 5 | range; track page) {
-            @if (pagination.pages - 4 + page === pagination.page) {
-              <li class="active"><span>{{ pagination.pages - 4 + page }}</span></li>
+            @if (p.pages - 4 + page === p.page) {
+              <li class="active"><span>{{ p.pages - 4 + page }}</span></li>
             } @else {
               <li>
-                <a [routerLink]="linkUrl"
-                   [queryParams]="getLinkParams(pagination.pages - 4 + page)"
-                   title="第{{ pagination.pages - 4 + page }}页">{{ pagination.pages - 4 + page }}</a>
+                <a [routerLink]="u"
+                   [queryParams]="getUrlParams(p.pages - 4 + page)"
+                   title="第{{ p.pages - 4 + page }}页">{{ p.pages - 4 + page }}</a>
               </li>
             }
           }
         }
-        @if (pagination.pages >= 10 && pagination.page > 5 && pagination.page < pagination.pages - 4) {
-          <li><a [routerLink]="linkUrl" [queryParams]="getLinkParams(1)" title="第1页">1</a></li>
+        @if (p.pages >= 10 && p.page > 5 && p.page < p.pages - 4) {
+          <li><a [routerLink]="u" [queryParams]="getUrlParams(1)" title="第1页">1</a></li>
           <li class="ellipsis"><nz-icon nzType="ellipsis"/></li>
           @for (page of 5 | range; track page) {
-            @if (pagination.page - 2 + page === pagination.page) {
-              <li class="active"><span>{{ pagination.page - 2 + page }}</span></li>
+            @if (p.page - 2 + page === p.page) {
+              <li class="active"><span>{{ p.page - 2 + page }}</span></li>
             } @else {
               <li>
-                <a [routerLink]="linkUrl"
-                   [queryParams]="getLinkParams(pagination.page - 2 + page)"
-                   title="第{{ pagination.page - 2 + page }}页">{{ pagination.page - 2 + page }}</a>
+                <a [routerLink]="u"
+                   [queryParams]="getUrlParams(p.page - 2 + page)"
+                   title="第{{ p.page - 2 + page }}页">{{ p.page - 2 + page }}</a>
               </li>
             }
           }
           <li class="ellipsis"><nz-icon nzType="ellipsis"/></li>
           <li>
-            <a [routerLink]="linkUrl"
-               [queryParams]="getLinkParams(pagination.pages)"
-               title="第{{ pagination.pages }}页">{{ pagination.pages }}</a>
+            <a [routerLink]="u"
+               [queryParams]="getUrlParams(p.pages)"
+               title="第{{ p.pages }}页">{{ p.pages }}</a>
           </li>
         }
-        @if (pagination.page < pagination.end) {
+        @if (p.page < p.end) {
           <li>
-            <a [routerLink]="linkUrl"
-               [queryParams]="getLinkParams(pagination.next)"
+            <a [routerLink]="u"
+               [queryParams]="getUrlParams(p.next)"
                title="下一页"><nz-icon nzType="right"/></a>
           </li>
         }
       </ul>
     </div>
   } @else {
-    @if (pagination.pages > 1) {
+    @if (p.pages > 1) {
       <div class="pagination m-pagination">
         <div>
-          @if (pagination.page > 1) {
-            <a [routerLink]="linkUrl"
-               [queryParams]="getLinkParams(pagination.prev)"
+          @if (p.page > 1) {
+            <a [routerLink]="u"
+               [queryParams]="getUrlParams(p.prev)"
                title="上一页"><nz-icon nzType="left"/><span>上一页</span></a>
           }
         </div>
         <div>
-          @if (pagination.page < pagination.end) {
-            <a [routerLink]="linkUrl"
-               [queryParams]="getLinkParams(pagination.next)"
+          @if (p.page < p.end) {
+            <a [routerLink]="u"
+               [queryParams]="getUrlParams(p.next)"
                title="下一页"><span>下一页</span><nz-icon nzType="right"/></a>
           }
         </div>
