@@ -25,10 +25,11 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/common/tsconfig.spec.json",
-            "polyfills": ["zone.js", "zone.js/testing"]
+            "buildTarget": ":build:testing",
+            "runner": "vitest"
           }
         }
       }
@@ -72,7 +73,6 @@
             "outputPath": "dist/www",
             "index": "projects/www/src/index.html",
             "browser": "projects/www/src/main.ts",
-            "polyfills": ["zone.js"],
             "tsConfig": "projects/www/tsconfig.app.json",
             "inlineStyleLanguage": "less",
             "allowedCommonJsDependencies": ["lodash", "murmurhash"],
@@ -86,6 +86,9 @@
             ],
             "server": "projects/www/src/main.server.ts",
             "outputMode": "server",
+            "security": {
+              "allowedHosts": []
+            },
             "ssr": {
               "entry": "projects/www/src/server.ts"
             }
@@ -160,29 +163,12 @@
           },
           "defaultConfiguration": "development"
         },
-        "extract-i18n": {
-          "builder": "@angular/build:extract-i18n"
-        },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/www/tsconfig.spec.json",
-            "inlineStyleLanguage": "less",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public",
-                "output": "/"
-              },
-              {
-                "glob": "**/*",
-                "input": "projects/www/public/assets",
-                "output": "/assets"
-              }
-            ],
-            "styles": ["projects/www/src/styles.less"],
-            "scripts": []
+            "buildTarget": ":build:testing",
+            "runner": "vitest"
           }
         }
       }
@@ -226,7 +212,6 @@
             "outputPath": "dist/blog",
             "index": "projects/blog/src/index.html",
             "browser": "projects/blog/src/main.ts",
-            "polyfills": ["zone.js"],
             "tsConfig": "projects/blog/tsconfig.app.json",
             "inlineStyleLanguage": "less",
             "allowedCommonJsDependencies": ["lodash", "murmurhash"],
@@ -240,6 +225,9 @@
             ],
             "server": "projects/blog/src/main.server.ts",
             "outputMode": "server",
+            "security": {
+              "allowedHosts": []
+            },
             "ssr": {
               "entry": "projects/blog/src/server.ts"
             }
@@ -314,29 +302,12 @@
           },
           "defaultConfiguration": "development"
         },
-        "extract-i18n": {
-          "builder": "@angular/build:extract-i18n"
-        },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/blog/tsconfig.spec.json",
-            "inlineStyleLanguage": "less",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public",
-                "output": "/"
-              },
-              {
-                "glob": "**/*",
-                "input": "projects/blog/public/assets",
-                "output": "/assets"
-              }
-            ],
-            "styles": ["projects/blog/src/styles.less"],
-            "scripts": []
+            "buildTarget": ":build:testing",
+            "runner": "vitest"
           }
         }
       }
@@ -380,7 +351,6 @@
             "outputPath": "dist/wallpaper",
             "index": "projects/wallpaper/src/index.html",
             "browser": "projects/wallpaper/src/main.ts",
-            "polyfills": ["zone.js"],
             "tsConfig": "projects/wallpaper/tsconfig.app.json",
             "inlineStyleLanguage": "less",
             "allowedCommonJsDependencies": ["lodash", "murmurhash"],
@@ -394,6 +364,9 @@
             ],
             "server": "projects/wallpaper/src/main.server.ts",
             "outputMode": "server",
+            "security": {
+              "allowedHosts": []
+            },
             "ssr": {
               "entry": "projects/wallpaper/src/server.ts"
             }
@@ -468,29 +441,12 @@
           },
           "defaultConfiguration": "development"
         },
-        "extract-i18n": {
-          "builder": "@angular/build:extract-i18n"
-        },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/wallpaper/tsconfig.spec.json",
-            "inlineStyleLanguage": "less",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public",
-                "output": "/"
-              },
-              {
-                "glob": "**/*",
-                "input": "projects/wallpaper/public/assets",
-                "output": "/assets"
-              }
-            ],
-            "styles": ["projects/wallpaper/src/styles.less"],
-            "scripts": []
+            "buildTarget": ":build:testing",
+            "runner": "vitest"
           }
         }
       }
@@ -534,7 +490,6 @@
             "outputPath": "dist/jigsaw",
             "index": "projects/jigsaw/src/index.html",
             "browser": "projects/jigsaw/src/main.ts",
-            "polyfills": ["zone.js"],
             "tsConfig": "projects/jigsaw/tsconfig.app.json",
             "inlineStyleLanguage": "less",
             "allowedCommonJsDependencies": ["lodash", "murmurhash"],
@@ -548,6 +503,9 @@
             ],
             "server": "projects/jigsaw/src/main.server.ts",
             "outputMode": "server",
+            "security": {
+              "allowedHosts": []
+            },
             "ssr": {
               "entry": "projects/jigsaw/src/server.ts"
             }
@@ -622,29 +580,12 @@
           },
           "defaultConfiguration": "development"
         },
-        "extract-i18n": {
-          "builder": "@angular/build:extract-i18n"
-        },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/jigsaw/tsconfig.spec.json",
-            "inlineStyleLanguage": "less",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public",
-                "output": "/"
-              },
-              {
-                "glob": "**/*",
-                "input": "projects/jigsaw/public/assets",
-                "output": "/assets"
-              }
-            ],
-            "styles": ["projects/jigsaw/src/styles.less"],
-            "scripts": []
+            "buildTarget": ":build:testing",
+            "runner": "vitest"
           }
         }
       }
@@ -688,7 +629,6 @@
             "outputPath": "dist/game",
             "index": "projects/game/src/index.html",
             "browser": "projects/game/src/main.ts",
-            "polyfills": ["zone.js"],
             "tsConfig": "projects/game/tsconfig.app.json",
             "inlineStyleLanguage": "less",
             "allowedCommonJsDependencies": ["lodash", "murmurhash"],
@@ -702,6 +642,9 @@
             ],
             "server": "projects/game/src/main.server.ts",
             "outputMode": "server",
+            "security": {
+              "allowedHosts": []
+            },
             "ssr": {
               "entry": "projects/game/src/server.ts"
             }
@@ -776,58 +719,15 @@
           },
           "defaultConfiguration": "development"
         },
-        "extract-i18n": {
-          "builder": "@angular/build:extract-i18n"
-        },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/game/tsconfig.spec.json",
-            "inlineStyleLanguage": "less",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public",
-                "output": "/"
-              },
-              {
-                "glob": "**/*",
-                "input": "projects/game/public/assets",
-                "output": "/assets"
-              }
-            ],
-            "styles": ["projects/game/src/styles.less"],
-            "scripts": []
+            "buildTarget": ":build:testing",
+            "runner": "vitest"
           }
         }
       }
-    }
-  },
-  "schematics": {
-    "@schematics/angular:component": {
-      "type": "component"
-    },
-    "@schematics/angular:directive": {
-      "type": "directive"
-    },
-    "@schematics/angular:service": {
-      "type": "service"
-    },
-    "@schematics/angular:guard": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:interceptor": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:module": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:pipe": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:resolver": {
-      "typeSeparator": "."
     }
   }
 }

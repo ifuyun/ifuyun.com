@@ -11,15 +11,13 @@ import { WallpaperLang } from 'common/enums';
 import { SitemapData, Wallpaper } from 'common/interfaces';
 import { simpleRequest } from 'common/utils';
 import { environment } from 'env/environment';
-import express, { Request, Response } from 'express';
+import express from 'express';
 import { uniq } from 'lodash';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 import { EnumChangefreq, SitemapItemLoose, SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 
-const serverDistFolder = dirname(fileURLToPath(import.meta.url));
-const browserDistFolder = resolve(serverDistFolder, '../browser');
+const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine({
@@ -27,7 +25,7 @@ const angularApp = new AngularNodeAppEngine({
   trustProxyHeaders: environment.trustProxies
 });
 
-app.get('/rss.xml', async (req: Request, res: Response) => {
+app.get('/rss.xml', async (req, res) => {
   try {
     const { page, size, lang } = req.query;
     const { data: appInfo } = await simpleRequest({
@@ -97,7 +95,7 @@ app.get('/rss.xml', async (req: Request, res: Response) => {
     res.status(HttpStatusCode.InternalServerError).send(Message.ERROR_500);
   }
 });
-app.get('/sitemap.xml', async (req: Request, res: Response) => {
+app.get('/sitemap.xml', async (req, res) => {
   try {
     const sitemap: SitemapData = (
       await simpleRequest({
@@ -183,7 +181,7 @@ app.use(
 /**
  * Handle all other requests by rendering the Angular application.
  */
-app.use('/**', (req, res, next) => {
+app.use((req, res, next) => {
   angularApp
     .handle(req)
     .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))
@@ -191,14 +189,16 @@ app.use('/**', (req, res, next) => {
 });
 
 /**
- * Start the server if this module is the main entry point.
+ * Start the server if this module is the main entry point, or it is ran via PM2.
  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
- *
- * pm2 环境下 isMainModule(import.meta.url) 始终为 false，因此需要额外判断路径
  */
-if (isMainModule(import.meta.url) || !import.meta.url.includes('/.angular/')) {
+if (isMainModule(import.meta.url) || process.env['pm_id']) {
   const port = environment.apps.wallpaper.port;
-  app.listen(port, () => {
+  app.listen(port, (error) => {
+    if (error) {
+      throw error;
+    }
+
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
 }
