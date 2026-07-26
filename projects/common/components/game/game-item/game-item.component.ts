@@ -27,11 +27,15 @@ import { SmartLinkComponent } from '../../smart-link/smart-link.component';
   styleUrls: ['../../post/post-item/post-item.component.less', './game-item.component.less']
 })
 export class GameItemComponent {
+  private readonly uaService = inject(UserAgentService);
+  private readonly commonService = inject(CommonService);
+  private readonly appConfigService = inject(AppConfigService);
+
   readonly game = input.required<Game>();
   readonly mode = input.required<ListMode>();
   readonly index = input.required<number>();
 
-  readonly isMobile = computed(() => this.uaService.isMobile);
+  readonly isMobile = this.uaService.isMobile;
   readonly domains = computed(() => this.appConfigService.apps);
   readonly gameCover = computed(() => this.game().coverUrl || this.emptyCover());
   readonly gameExcerpt = computed(() => {
@@ -42,8 +46,4 @@ export class GameItemComponent {
   });
 
   private readonly emptyCover = computed(() => this.commonService.getCdnUrlPrefix() + GAME_EMPTY_COVER);
-
-  private readonly uaService = inject(UserAgentService);
-  private readonly commonService = inject(CommonService);
-  private readonly appConfigService = inject(AppConfigService);
 }

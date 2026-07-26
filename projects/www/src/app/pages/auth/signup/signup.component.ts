@@ -122,11 +122,13 @@ export class SignupComponent extends BaseComponent implements OnInit {
   }
 
   private updatePageInfo() {
+    const appInfo = this.appInfo()!;
+
     this.metaService.updateHTMLMeta({
-      title: ['注册', this.appInfo()!.name].join(' - '),
-      description: this.appInfo()!.description,
+      title: ['注册', appInfo.name].join(' - '),
+      description: appInfo.description,
       author: this.options()['site_author'],
-      keywords: this.appInfo()!.keywords
+      keywords: appInfo.keywords
     });
   }
 

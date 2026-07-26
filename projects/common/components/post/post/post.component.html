@@ -88,8 +88,7 @@
               <nz-icon nzType="translation"/>
             </div>
             <div class="post-meta-info">
-              <span class="post-meta-info-text"
-                    title="译者：{{ p.translator }}">译者：{{ p.translator }}</span>
+              <span class="post-meta-info-text" title="译者：{{ p.translator }}">译者：{{ p.translator }}</span>
             </div>
           </div>
         }
@@ -108,25 +107,25 @@
               }
             </div>
           </div>
-        }
-        @if (isArticle && p.isOriginal === 1) {
-          <div class="post-meta">
-            <div class="post-meta-icon">
-              <nz-icon nzType="copyright"/>
-            </div>
-            <div class="post-meta-info">
-              @if ([1, 2].includes(p.license)) {
-                <span class="post-meta-info-text"
-                      title="许可协议：{{ p.license | license }}">许可：{{ p.license | license }}</span>
-              } @else {
-                <span class="post-meta-info-text" title="许可协议：{{ p.license | license }}">
+          @if (p.isOriginal === 1) {
+            <div class="post-meta">
+              <div class="post-meta-icon">
+                <nz-icon nzType="copyright"/>
+              </div>
+              <div class="post-meta-info">
+                @if ([1, 2].includes(p.license)) {
+                  <span class="post-meta-info-text"
+                        title="许可协议：{{ p.license | license }}">许可：{{ p.license | license }}</span>
+                } @else {
+                  <span class="post-meta-info-text" title="许可协议：{{ p.license | license }}">
                   <a [href]="p.license | licenseLink"
                      target="_blank"
                      rel="license">许可：{{ p.license | license }}</a>
                 </span>
-              }
+                }
+              </div>
             </div>
-          </div>
+          }
         }
         <div class="post-meta">
           <div class="post-meta-icon">
@@ -165,7 +164,7 @@
     <lib-post-related/>
   }
   <lib-make-money/>
-  <lib-comment [targetType]="commentType" [enableAI]="!p.isPaid && p.visibility !== 3"/>
+  <lib-comment [targetType]="commentType()"/>
   @if (shareVisible()) {
     <lib-share-modal [shareUrl]="shareUrl()" (close)="closeShareQrcode()"/>
   }

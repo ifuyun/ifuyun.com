@@ -51,6 +51,11 @@ export interface ArchiveList {
   yearList: string[];
 }
 
+export interface SigninModalOptions {
+  visible: boolean;
+  closable: boolean;
+}
+
 export interface IPAddress {
   country: string;
   province: string;
@@ -66,9 +71,4 @@ export interface IPInfo extends IPAddress {
   endIP?: number;
   endIPStr?: string;
   isp: string;
-}
-
-export interface SigninModalOptions {
-  visible: boolean;
-  closable: boolean;
 }

@@ -118,7 +118,7 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
     this.commonService.smartNavigate('/search', this.domains['www'].url, {
       queryParams: {
         type: this.searchType() === 'all' ? undefined : this.searchType(),
-        keyword: keyword
+        keyword
       }
     });
   }

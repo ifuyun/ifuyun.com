@@ -52,12 +52,22 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
   styleUrl: './comment.component.less'
 })
 export class CommentComponent extends BaseComponent implements OnInit {
+  private readonly document = inject(DOCUMENT);
+  private readonly destroy$ = inject(DestroyService);
+  private readonly fb = inject(FormBuilder);
+  private readonly uaService = inject(UserAgentService);
+  private readonly commonService = inject(CommonService);
+  private readonly message = inject(MessageService);
+  private readonly tenantAppService = inject(TenantAppService);
+  private readonly optionService = inject(OptionService);
+  private readonly userService = inject(UserService);
+  private readonly commentService = inject(CommentService);
+  private readonly voteService = inject(VoteService);
+
   readonly targetType = input<CommentTargetType>(CommentTargetType.POST);
-  readonly enableAI = input(false);
 
   readonly maxContentLength = 400;
-
-  readonly isMobile = computed(() => this.uaService.isMobile);
+  readonly isMobile = this.uaService.isMobile;
   readonly isSignIn = signal(false);
   readonly page = signal(1);
   readonly comments = signal<Comment[]>([]);
@@ -86,20 +96,8 @@ export class CommentComponent extends BaseComponent implements OnInit {
     return avatarType;
   });
   private readonly threadDepth = computed(() => {
-    return this.isMobile() ? 2 : Number(this.options()['comment_thread_depth']) || 3;
+    return this.isMobile ? 2 : Number(this.options()['comment_thread_depth']) || 3;
   });
-
-  private readonly document = inject(DOCUMENT);
-  private readonly destroy$ = inject(DestroyService);
-  private readonly fb = inject(FormBuilder);
-  private readonly uaService = inject(UserAgentService);
-  private readonly commonService = inject(CommonService);
-  private readonly message = inject(MessageService);
-  private readonly tenantAppService = inject(TenantAppService);
-  private readonly optionService = inject(OptionService);
-  private readonly userService = inject(UserService);
-  private readonly commentService = inject(CommentService);
-  private readonly voteService = inject(VoteService);
 
   ngOnInit(): void {
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$])

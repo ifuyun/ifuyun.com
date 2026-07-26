@@ -1,21 +1,17 @@
-import { Inject, Injectable, Optional, REQUEST } from '@angular/core';
-import { IBrowser, ICPU, IDevice, IEngine, IOS, IResult, UAParser } from 'ua-parser-js';
+import { inject, Injectable, REQUEST } from '@angular/core';
+import { IBrowser, ICPU, IDevice, IEngine, IOS, UAParser } from 'ua-parser-js';
 import { PlatformService } from './platform.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserAgentService {
-  private readonly _uaResult!: IResult;
-  private readonly _uaString: string;
-
-  constructor(
-    private readonly platform: PlatformService,
-    @Optional() @Inject(REQUEST) private readonly request: any
-  ) {
-    this._uaString = this.platform.isBrowser ? navigator.userAgent : this.request?.headers.get('user-agent') || '';
-    this._uaResult = UAParser(this._uaString);
-  }
+  private readonly platform = inject(PlatformService);
+  private readonly request = inject(REQUEST);
+  private readonly _uaString = this.platform.isBrowser
+    ? navigator.userAgent
+    : this.request?.headers.get('user-agent') || '';
+  private readonly _uaResult = UAParser(this._uaString);
 
   get browser(): IBrowser {
     return this._uaResult.browser;

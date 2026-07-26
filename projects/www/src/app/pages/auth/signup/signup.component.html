@@ -1,4 +1,4 @@
-<form nz-form nzLayout="vertical" class="auth-form auth-form-padding" [formGroup]="signupForm">
+<form nz-form nzLayout="vertical" class="auth-form auth-form-padding" [formGroup]="signupForm" (ngSubmit)="signup()">
   <nz-form-item>
     <nz-form-label nzRequired>邮箱</nz-form-label>
     <nz-form-control [nzErrorTip]="nameErrorTpl">

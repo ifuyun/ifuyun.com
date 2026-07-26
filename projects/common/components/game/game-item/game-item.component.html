@@ -2,7 +2,7 @@
 @let d = domains();
 @let c = gameCover();
 @if (mode() === 'list') {
-  @if (!isMobile()) {
+  @if (!isMobile) {
     <article class="post-item">
       <div class="post-item-body">
         <div class="post-item-content">
@@ -130,7 +130,7 @@
 } @else {
   <article class="post-card-item">
     <div class="post-card-item-body">
-      <div class="post-card-cover" [class.m-post-card-cover]="isMobile()">
+      <div class="post-card-cover" [class.m-post-card-cover]="isMobile">
         <lib-a [href]="d['game'].url + '/detail/' + g.id" [title]="g.title">
           @if (index() > 3) {
             <span class="post-item-cover-img lazyload"

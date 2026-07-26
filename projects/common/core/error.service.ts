@@ -13,8 +13,6 @@ export class ErrorService {
   });
   public errorState$: Observable<ErrorState> = this.errorState.asObservable();
 
-  constructor() {}
-
   updateErrorState(error: ErrorState): void {
     this.errorState.next(error);
   }

@@ -124,7 +124,10 @@ export class AiChatComponent extends BaseComponent implements OnInit {
   readonly isChatModelEnabled = computed(() => {
     const conversation = this.conversation();
 
-    if (conversation?.bot) {
+    if (!conversation) {
+      return true;
+    }
+    if (conversation.bot) {
       return this.aiModels().includes(conversation.bot.llmModel.id);
     }
     return false;
@@ -137,8 +140,7 @@ export class AiChatComponent extends BaseComponent implements OnInit {
       this.userAiStatus() === UserAiStatus.ENABLED &&
       this.isChatModelEnabled() &&
       !this.isChatLimit() &&
-      conversation?.userId === this.userId() &&
-      conversation?.status === ConversationStatus.NORMAL
+      (!conversation || (conversation.userId === this.userId() && conversation.status === ConversationStatus.NORMAL))
     );
   });
   readonly isNotOwner = computed(() => {
@@ -210,7 +212,8 @@ export class AiChatComponent extends BaseComponent implements OnInit {
 
     if (key === 'enter' && !this.inputFlag() && !withCtrlKeys) {
       e.preventDefault();
-      this.sendStreamMessage();
+
+      this.startChat();
     }
   }
 
@@ -300,10 +303,6 @@ export class AiChatComponent extends BaseComponent implements OnInit {
       this.message.error('对话不存在');
       return;
     }
-    if (!this.bot()) {
-      this.message.error('机器人不存在');
-      return;
-    }
     const prompt = this.prompt().trim();
     if (!prompt) {
       this.message.warning('请输入内容');
@@ -376,7 +375,15 @@ export class AiChatComponent extends BaseComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res.code === ResponseCode.SUCCESS) {
-          msg.vote = vote;
+          this.messages.update((messages) => {
+            for (const message of messages) {
+              if (message.id === msg.id) {
+                message.vote = vote;
+              }
+            }
+
+            return [...messages];
+          });
         }
       });
   }
@@ -520,36 +527,56 @@ export class AiChatComponent extends BaseComponent implements OnInit {
   }
 
   private updateMessage(msg: StreamChatEvent) {
-    const activeMessage = <ChatMessage>this.messages().at(-1);
     switch (msg.type) {
       case 'done':
-        activeMessage.content = activeMessage.content || this.noneContent;
-        activeMessage.html = this.parseMarkdown(activeMessage.content);
-        activeMessage.status = 'done';
-        activeMessage.loading = false;
+        this.messages.update((messages) => {
+          const last = messages.at(-1)!;
 
+          last.content = last.content || this.noneContent;
+          last.html = this.parseMarkdown(last.content);
+          last.status = 'done';
+          last.loading = false;
+          last.id = msg.messageId;
+
+          return [...messages];
+        });
         this.loading.set(false);
         this.scrollBottom();
         break;
       case 'thinking':
-        activeMessage.reasoningContent += msg.reasoningMessage || '';
-        activeMessage.reasoningHtml = this.parseMarkdown(<string>activeMessage.reasoningContent);
-        activeMessage.thinking = true;
+        this.messages.update((messages) => {
+          const last = messages.at(-1)!;
 
+          last.reasoningContent += msg.reasoningMessage || '';
+          last.reasoningHtml = this.parseMarkdown(<string>last.reasoningContent);
+          last.thinking = true;
+
+          return [...messages];
+        });
         this.scrollBottom();
         break;
       case 'message':
-        activeMessage.content += msg.message || '';
-        activeMessage.html = this.parseMarkdown(activeMessage.content);
-        activeMessage.thinking = false;
+        this.messages.update((messages) => {
+          const last = messages.at(-1)!;
 
+          last.content += msg.message || '';
+          last.html = this.parseMarkdown(last.content);
+          last.thinking = false;
+
+          return [...messages];
+        });
         this.scrollBottom();
         break;
       case 'error':
-        activeMessage.status = 'error';
-        activeMessage.createdAt = Date.now();
-        activeMessage.loading = false;
+        this.messages.update((messages) => {
+          const last = messages.at(-1)!;
 
+          last.status = 'error';
+          last.createdAt = Date.now();
+          last.loading = false;
+
+          return [...messages];
+        });
         this.errorMessage.set(msg.message!);
         this.loading.set(false);
         this.message.error(msg.message!);

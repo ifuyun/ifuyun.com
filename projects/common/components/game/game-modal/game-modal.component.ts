@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, inject, input, OnDestroy, OnInit, output, signal } from '@angular/core';
+import { AfterViewInit, Component, inject, input, OnDestroy, OnInit, output, signal } from '@angular/core';
 import { AppConfigService, DestroyService, PlatformService, ScriptLoaderService, UserAgentService } from 'common/core';
 import { GameLogType } from 'common/enums';
 import { GameEntity } from 'common/interfaces';
@@ -15,15 +15,6 @@ import { GameService } from '../game.service';
   styleUrl: './game-modal.component.less'
 })
 export class GameModalComponent implements OnInit, AfterViewInit, OnDestroy {
-  readonly game = input.required<GameEntity>();
-  readonly close = output<void>();
-
-  readonly modalWidth = 800;
-  readonly modalHeight = signal((this.modalWidth * 2) / 3);
-
-  private readonly isMobile = computed(() => this.uaService.isMobile);
-  private readonly romURL = signal('');
-
   private readonly destroy$ = inject(DestroyService);
   private readonly platform = inject(PlatformService);
   private readonly uaService = inject(UserAgentService);
@@ -31,8 +22,17 @@ export class GameModalComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly gameService = inject(GameService);
   private readonly scriptLoaderService = inject(ScriptLoaderService);
 
+  readonly game = input.required<GameEntity>();
+  readonly close = output<void>();
+
+  readonly modalWidth = 800;
+  readonly modalHeight = signal((this.modalWidth * 2) / 3);
+
+  private readonly isMobile = this.uaService.isMobile;
+  private readonly romURL = signal('');
+
   ngOnInit(): void {
-    if (this.platform.isBrowser && this.isMobile()) {
+    if (this.platform.isBrowser && this.isMobile) {
       this.modalHeight.set(document.body.clientHeight - 87);
     }
   }

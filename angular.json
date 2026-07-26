@@ -79,6 +79,18 @@
             "stylePreprocessorOptions": {
               "includePaths": ["dist", "node_modules"]
             },
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public",
+                "output": "/"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/www/public/assets",
+                "output": "/assets"
+              }
+            ],
             "styles": ["projects/www/src/styles.less"],
             "scripts": [
               "node_modules/lazysizes/lazysizes.min.js",
@@ -95,18 +107,6 @@
           },
           "configurations": {
             "production": {
-              "assets": [
-                {
-                  "glob": "**/*",
-                  "input": "public",
-                  "output": "/"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/www/public/assets",
-                  "output": "/assets"
-                }
-              ],
               "deployUrl": "https://cdn.ifuyun.com/www/",
               "budgets": [
                 {
@@ -123,18 +123,6 @@
               "outputHashing": "all"
             },
             "development": {
-              "assets": [
-                {
-                  "glob": "**/*",
-                  "input": "public",
-                  "output": "/"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/www/public/assets",
-                  "output": "/assets"
-                }
-              ],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -218,6 +206,18 @@
             "stylePreprocessorOptions": {
               "includePaths": ["dist", "node_modules"]
             },
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public",
+                "output": "/"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/blog/public/assets",
+                "output": "/assets"
+              }
+            ],
             "styles": ["projects/blog/src/styles.less"],
             "scripts": [
               "node_modules/lazysizes/lazysizes.min.js",
@@ -234,18 +234,6 @@
           },
           "configurations": {
             "production": {
-              "assets": [
-                {
-                  "glob": "**/*",
-                  "input": "public",
-                  "output": "/"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/blog/public/assets",
-                  "output": "/assets"
-                }
-              ],
               "deployUrl": "https://cdn.ifuyun.com/blog/",
               "budgets": [
                 {
@@ -262,18 +250,6 @@
               "outputHashing": "all"
             },
             "development": {
-              "assets": [
-                {
-                  "glob": "**/*",
-                  "input": "public",
-                  "output": "/"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/blog/public/assets",
-                  "output": "/assets"
-                }
-              ],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -357,6 +333,18 @@
             "stylePreprocessorOptions": {
               "includePaths": ["dist", "node_modules"]
             },
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public",
+                "output": "/"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/wallpaper/public/assets",
+                "output": "/assets"
+              }
+            ],
             "styles": ["projects/wallpaper/src/styles.less"],
             "scripts": [
               "node_modules/lazysizes/lazysizes.min.js",
@@ -373,18 +361,6 @@
           },
           "configurations": {
             "production": {
-              "assets": [
-                {
-                  "glob": "**/*",
-                  "input": "public",
-                  "output": "/"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/wallpaper/public/assets",
-                  "output": "/assets"
-                }
-              ],
               "deployUrl": "https://cdn.ifuyun.com/wallpaper/",
               "budgets": [
                 {
@@ -401,18 +377,6 @@
               "outputHashing": "all"
             },
             "development": {
-              "assets": [
-                {
-                  "glob": "**/*",
-                  "input": "public",
-                  "output": "/"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/wallpaper/public/assets",
-                  "output": "/assets"
-                }
-              ],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -496,6 +460,18 @@
             "stylePreprocessorOptions": {
               "includePaths": ["dist", "node_modules", "projects"]
             },
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public",
+                "output": "/"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/jigsaw/public/assets",
+                "output": "/assets"
+              }
+            ],
             "styles": ["projects/jigsaw/src/styles.less"],
             "scripts": [
               "node_modules/lazysizes/lazysizes.min.js",
@@ -512,18 +488,6 @@
           },
           "configurations": {
             "production": {
-              "assets": [
-                {
-                  "glob": "**/*",
-                  "input": "public",
-                  "output": "/"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/jigsaw/public/assets",
-                  "output": "/assets"
-                }
-              ],
               "deployUrl": "https://cdn.ifuyun.com/jigsaw/",
               "budgets": [
                 {
@@ -540,18 +504,6 @@
               "outputHashing": "all"
             },
             "development": {
-              "assets": [
-                {
-                  "glob": "**/*",
-                  "input": "public",
-                  "output": "/"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/jigsaw/public/assets",
-                  "output": "/assets"
-                }
-              ],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -635,6 +587,18 @@
             "stylePreprocessorOptions": {
               "includePaths": ["dist", "node_modules"]
             },
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public",
+                "output": "/"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/game/public/assets",
+                "output": "/assets"
+              }
+            ],
             "styles": ["projects/game/src/styles.less"],
             "scripts": [
               "node_modules/lazysizes/lazysizes.min.js",
@@ -651,18 +615,6 @@
           },
           "configurations": {
             "production": {
-              "assets": [
-                {
-                  "glob": "**/*",
-                  "input": "public",
-                  "output": "/"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/game/public/assets",
-                  "output": "/assets"
-                }
-              ],
               "deployUrl": "https://cdn.ifuyun.com/game/",
               "budgets": [
                 {
@@ -679,18 +631,6 @@
               "outputHashing": "all"
             },
             "development": {
-              "assets": [
-                {
-                  "glob": "**/*",
-                  "input": "public",
-                  "output": "/"
-                },
-                {
-                  "glob": "**/*",
-                  "input": "projects/game/public/assets",
-                  "output": "/assets"
-                }
-              ],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,

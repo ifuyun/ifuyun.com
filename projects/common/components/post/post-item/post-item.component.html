@@ -130,7 +130,7 @@
       <span title="发布: {{ p.publishedAt | date:'yyyy-MM-dd' }}">
         <fi-calendar-date class="fi"/><span>{{ p.publishedAt | date:'yyyy-MM-dd' }}</span>
       </span>
-      <span title="作者: {{ p.author || p.creator.nickname }}">
+      <span class="auto-fit" title="作者: {{ p.author || p.creator.nickname }}">
         <nz-icon nzType="user"/><span>{{ p.author || p.creator.nickname }}</span>
       </span>
       @if (p.isOriginal === 1) {

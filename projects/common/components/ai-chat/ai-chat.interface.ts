@@ -42,6 +42,7 @@ export interface StreamChatEvent {
   type: 'thinking' | 'message' | 'done' | 'error';
   message?: string;
   reasoningMessage?: string;
+  messageId?: string;
 }
 
 export interface ChatUsage {
@@ -73,4 +74,9 @@ export interface ChatChunk {
     usage?: ChatUsage;
   }[];
   usage?: ChatUsage;
+}
+
+export interface ChatFinish {
+  reason: string;
+  messageId: string;
 }

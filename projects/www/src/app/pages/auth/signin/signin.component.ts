@@ -47,11 +47,13 @@ export class SigninComponent extends BaseComponent implements OnInit {
   }
 
   private updatePageInfo() {
+    const appInfo = this.appInfo()!;
+
     this.metaService.updateHTMLMeta({
-      title: ['登录', this.appInfo()!.name].join(' - '),
-      description: this.appInfo()!.description,
+      title: ['登录', appInfo.name].join(' - '),
+      description: appInfo.description,
       author: this.options()['site_author'],
-      keywords: this.appInfo()!.keywords
+      keywords: appInfo.keywords
     });
   }
 

@@ -1,4 +1,8 @@
-<form nz-form nzLayout="vertical" class="auth-form auth-form-padding" [formGroup]="forgotForm">
+<form nz-form
+      nzLayout="vertical"
+      class="auth-form auth-form-padding"
+      [formGroup]="forgotForm"
+      (ngSubmit)="resetPassword()">
   <nz-form-item>
     <nz-form-label>邮箱</nz-form-label>
     <nz-form-control [nzErrorTip]="nameErrorTpl">

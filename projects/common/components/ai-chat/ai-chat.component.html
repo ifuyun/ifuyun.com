@@ -11,7 +11,7 @@
     </div>
   </ng-template>
   <ng-container *nzDrawerContent>
-    <div class="bot-wrap">
+    <div class="chat-wrap">
       @if (initialized()) {
         @if (!authChat() || userAiStatus() === 2) {
           <nz-alert nzBanner nzType="error" [nzMessage]="noAuthMessage"></nz-alert>
@@ -103,21 +103,23 @@
                             <nz-icon nzType="check"/>
                           </div>
                         }
-                        @if (msg.vote === 0 || msg.vote === 1) {
-                          <div class="chat-action"
-                               [class.disabled]="msg.vote === 1"
-                               (click)="voteMessage(msg, 1)"
-                               title="Like">
-                            <nz-icon nzType="like" [nzTheme]="msg.vote > 0 ? 'fill' : 'outline'"/>
-                          </div>
-                        }
-                        @if (msg.vote === 0 || msg.vote === -1) {
-                          <div class="chat-action"
-                               [class.disabled]="msg.vote === -1"
-                               (click)="voteMessage(msg, -1)"
-                               title="Dislike">
-                            <nz-icon nzType="dislike" [nzTheme]="msg.vote < 0 ? 'fill' : 'outline'"/>
-                          </div>
+                        @if (msg.id) {
+                          @if (msg.vote === 0 || msg.vote === 1) {
+                            <div class="chat-action"
+                                 [class.disabled]="msg.vote === 1"
+                                 (click)="voteMessage(msg, 1)"
+                                 title="Like">
+                              <nz-icon nzType="like" [nzTheme]="msg.vote > 0 ? 'fill' : 'outline'"/>
+                            </div>
+                          }
+                          @if (msg.vote === 0 || msg.vote === -1) {
+                            <div class="chat-action"
+                                 [class.disabled]="msg.vote === -1"
+                                 (click)="voteMessage(msg, -1)"
+                                 title="Dislike">
+                              <nz-icon nzType="dislike" [nzTheme]="msg.vote < 0 ? 'fill' : 'outline'"/>
+                            </div>
+                          }
                         }
                       </div>
                     }
@@ -186,7 +188,7 @@
                       nzType="primary"
                       [nzLoading]="loading()"
                       [disabled]="!isChatEnabled() || loading() || !prompt().trim()"
-                      (click)="sendStreamMessage()">
+                      (click)="startChat()">
                 <nz-icon nzType="arrow-up"/>
               </button>
             </div>

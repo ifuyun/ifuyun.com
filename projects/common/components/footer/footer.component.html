@@ -1,5 +1,5 @@
 @let o = options();
-<footer class="footer-wrap" [class.m-footer-wrap]="isMobile()" [class.p-footer-wrap]="!isMobile()">
+<footer class="footer-wrap" [class.m-footer-wrap]="isMobile" [class.p-footer-wrap]="!isMobile">
   <div class="footer">
     <div class="footer-content">
       <ul class="footer-link">
@@ -10,14 +10,14 @@
                  [target]="link.target"
                  [title]="link.description">{{ link.name }}</a>
             } @else {
-              <lib-a [href]="wwwHost() + link.url"
+              <lib-a [href]="wwwHost + link.url"
                      [target]="link.target"
                      [title]="link.description">{{ link.name }}</lib-a>
             }
           </li>
         }
       </ul>
-      @if (!isMobile()) {
+      @if (!isMobile) {
         <div class="friend-link">
           <div class="footer-label">友情链接：</div>
           <ul>
@@ -33,7 +33,7 @@
       }
       <div>{{ copyright() }}</div>
       <div>&copy; Powered by <a href="https://www.ireadpay.com" target="_blank">抚云科技</a></div>
-      @if (!isMobile()) {
+      @if (!isMobile) {
         <ul class="beian-link">
           <li><a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">{{ o['icp_code'] }}</a></li>
           @if (o['record_code']) {
@@ -46,7 +46,7 @@
         <div><a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow">{{ o['icp_code'] }}</a></div>
       }
     </div>
-    @if (!isMobile()) {
+    @if (!isMobile) {
       <div class="footer-qrcode">
         <img class="img-preview lazyload"
              src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="

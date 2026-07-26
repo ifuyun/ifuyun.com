@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthLayoutComponent, ContentLayoutComponent } from 'common/components';
 import { ForbiddenComponent, NotFoundComponent, ServerErrorComponent } from 'common/error';
 import { ForgotComponent } from './pages/auth/forgot/forgot.component';
-import { LoginCallbackComponent } from './pages/auth/login-callback/login-callback.component';
+import { OauthCallbackComponent } from './pages/auth/oauth-callback/oauth-callback.component';
 import { SigninComponent } from './pages/auth/signin/signin.component';
 import { SignupConfirmComponent } from './pages/auth/signup-confirm/signup-confirm.component';
 import { SignupComponent } from './pages/auth/signup/signup.component';
@@ -26,7 +26,7 @@ export const routes: Routes = [
     component: AuthLayoutComponent,
     children: [
       { path: 'signin', component: SigninComponent },
-      { path: 'login/callback', component: LoginCallbackComponent, data: { bg: false } },
+      { path: 'oauth/callback', component: OauthCallbackComponent, data: { bg: false } },
       { path: 'signup', component: SignupComponent },
       { path: 'confirm', component: SignupConfirmComponent },
       { path: 'forgot', component: ForgotComponent }

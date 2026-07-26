@@ -104,7 +104,7 @@
   </div>
   <lib-wallpaper-related [lang]="lang()"/>
   <lib-make-money/>
-  <lib-comment [targetType]="commentType" [enableAI]="true"/>
+  <lib-comment [targetType]="commentType"/>
   @if (shareVisible()) {
     <lib-share-modal [shareUrl]="shareUrl()" (close)="closeShareQrcode()"/>
   }

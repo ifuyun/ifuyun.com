@@ -5,7 +5,7 @@ import { ClipboardService } from 'ngx-clipboard';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ICON_COPIED, ICON_COPY } from './ai-chat.constant';
-import { BotMessage, ChatChunk, StreamChatEvent, StreamChatParam } from './ai-chat.interface';
+import { BotMessage, ChatChunk, ChatFinish, StreamChatEvent, StreamChatParam } from './ai-chat.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -102,8 +102,20 @@ export class AiChatService {
             }
           } else if (msg.event === 'finish') {
             // finished
+            let messageId = '';
+            try {
+              if (msg.data) {
+                const finishMsg: ChatFinish = JSON.parse(msg.data);
+
+                messageId = finishMsg.messageId;
+              }
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            } catch (e) {
+              messageId = '';
+            }
             subscriber.next({
-              type: 'done'
+              type: 'done',
+              messageId
             });
             ctrl.abort();
           }

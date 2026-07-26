@@ -22,13 +22,13 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { combineLatest, skipWhile, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-login-callback',
+  selector: 'app-oauth-callback',
   imports: [NzIconModule],
   providers: [DestroyService],
-  templateUrl: './login-callback.component.html',
-  styleUrl: './login-callback.component.less'
+  templateUrl: './oauth-callback.component.html',
+  styleUrl: './oauth-callback.component.less'
 })
-export class LoginCallbackComponent implements OnInit {
+export class OauthCallbackComponent implements OnInit {
   private readonly destroy$ = inject(DestroyService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -153,11 +153,13 @@ export class LoginCallbackComponent implements OnInit {
   }
 
   private updatePageInfo() {
+    const appInfo = this.appInfo()!;
+
     this.metaService.updateHTMLMeta({
-      title: ['登录', this.appInfo()!.name].join(' - '),
-      description: this.appInfo()!.description,
+      title: ['登录', appInfo.name].join(' - '),
+      description: appInfo.description,
       author: this.options()['site_author'],
-      keywords: this.appInfo()!.keywords
+      keywords: appInfo.keywords
     });
   }
 

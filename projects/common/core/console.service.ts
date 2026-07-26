@@ -1,15 +1,12 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { PlatformService } from './platform.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConsoleService {
-  private console: Console;
-
-  constructor(private readonly platform: PlatformService) {
-    this.console = platform.isBrowser ? window.console : console;
-  }
+  private readonly platform = inject(PlatformService);
+  private readonly console = this.platform.isBrowser ? window.console : console;
 
   assert(condition?: boolean, ...data: any[]): void {
     if (this.console) {

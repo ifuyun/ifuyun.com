@@ -150,6 +150,7 @@ export class PostListComponent implements OnInit {
   }
 
   private updatePageInfo(breadcrumbData: BreadcrumbEntity[]) {
+    const tag = this.tag();
     const titles: string[] = ['博客', this.appInfo()!.name];
     const keywords: string[] = (this.options()['post_keywords'] || '').split(',');
     let description = '';
@@ -160,11 +161,11 @@ export class PostListComponent implements OnInit {
       keywords.unshift(label);
 
       description += `「${label}」`;
-    } else if (this.tag()) {
-      titles.unshift(this.tag());
-      keywords.unshift(this.tag());
+    } else if (tag) {
+      titles.unshift(tag);
+      keywords.unshift(tag);
 
-      description += `「${this.tag()}」`;
+      description += `「${tag}」`;
     } else if (this.year()) {
       const label = `${this.year()}年${this.month() ? this.month() + '月' : ''}`;
       titles.unshift(label);
@@ -195,6 +196,7 @@ export class PostListComponent implements OnInit {
   }
 
   private updateBreadcrumbs(breadcrumbData: BreadcrumbEntity[]) {
+    const tag = this.tag();
     let breadcrumbs: BreadcrumbEntity[] = [
       {
         label: '博客',
@@ -222,7 +224,7 @@ export class PostListComponent implements OnInit {
           isHeader: true
         }
       );
-    } else if (this.tag()) {
+    } else if (tag) {
       breadcrumbs.push(
         {
           label: '标签',
@@ -231,9 +233,9 @@ export class PostListComponent implements OnInit {
           isHeader: false
         },
         {
-          label: this.tag(),
-          tooltip: this.tag(),
-          url: `/tag/${this.tag()}`,
+          label: tag,
+          tooltip: tag,
+          url: `/tag/${tag}`,
           domain: 'blog',
           isHeader: true
         }

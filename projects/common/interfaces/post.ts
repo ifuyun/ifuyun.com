@@ -94,7 +94,7 @@ export interface PostQueryParam extends QueryParam {
 export interface PostList {
   posts: ResultList<PostVo>;
   book?: BookEntity;
-  breadcrumbs: BreadcrumbEntity[];
+  breadcrumbs?: BreadcrumbEntity[];
 }
 
 export interface PrevAndNextPosts {

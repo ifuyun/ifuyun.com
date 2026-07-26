@@ -96,14 +96,10 @@ export class HomeComponent implements OnInit {
 
   private getLatestPosts() {
     this.postService
-      .getPosts({
-        page: 1,
-        size: this.isMobile ? 10 : 8,
-        isPinned: 0
-      })
+      .getLatestPosts(this.isMobile ? 10 : 8)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.latestPosts.set(res.posts?.list || []);
+        this.latestPosts.set(res || []);
       });
   }
 

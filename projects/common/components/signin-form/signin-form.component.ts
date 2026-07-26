@@ -109,7 +109,7 @@ export class SigninFormComponent extends BaseComponent implements OnInit {
         } catch (e) {
           this.referrer.set(ref);
         }
-        if (ref === 'logout') {
+        if (ref === 'signout') {
           this.authService.clearAuth();
         }
       });
@@ -137,8 +137,9 @@ export class SigninFormComponent extends BaseComponent implements OnInit {
           const appInfo = this.appInfo();
           const urlParam = format(ADMIN_URL_PARAM, authInfo.token.token, this.appConfigService.appId);
           let redirectUrl: string;
+
           if (!this.isModal()) {
-            if (referrer && referrer !== 'logout') {
+            if (referrer && referrer !== 'signout') {
               const separator = referrer.indexOf('?') >= 0 ? '&' : '?';
               if (/^https?:\/\//i.test(referrer)) {
                 // 绝对路径

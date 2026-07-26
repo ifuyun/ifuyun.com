@@ -37,7 +37,16 @@ export class PostService {
       .pipe(map((res) => res?.data || []));
   }
 
-  getRandomPosts(size: number, detail: boolean): Observable<PostEntity[]> {
+  getLatestPosts(size: number): Observable<PostVo[]> {
+    return this.apiService
+      .httpGet(ApiUrl.POST_LATEST, {
+        size,
+        appId: this.appConfigService.appId
+      })
+      .pipe(map((res) => res?.data || []));
+  }
+
+  getRandomPosts(size: number, detail: boolean): Observable<PostModel[]> {
     return this.apiService
       .httpGet(ApiUrl.POST_RANDOM, {
         size,

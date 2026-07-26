@@ -44,7 +44,7 @@ app.get('/rss.xml', async (req, res) => {
         page: Number(page) || 1,
         size: Math.min(Number(size) || 10, 100),
         detail: showDetail ? 1 : 0,
-        sticky: 0
+        isPinned: 0
       },
       appId: environment.appId,
       apiBase: environment.apiBase

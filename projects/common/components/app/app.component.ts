@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import {
@@ -68,7 +69,8 @@ import { WallpaperModalComponent } from '../wallpaper/wallpaper-modal/wallpaper-
     IconStarsComponent,
     IconMagicComponent,
     IconRssComponent,
-    WallpaperModalComponent
+    WallpaperModalComponent,
+    NgOptimizedImage
   ],
   providers: [DestroyService, NzImageService],
   templateUrl: './app.component.html',
@@ -207,6 +209,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       if (this.platform.isBrowser) {
         if (visible) {
           this.bodyOffset.set(document.documentElement.scrollTop);
+
           document.documentElement.style.position = 'fixed';
           document.documentElement.style.top = `-${this.bodyOffset()}px`;
         } else {

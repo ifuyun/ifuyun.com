@@ -14,8 +14,15 @@ import { SmartLinkComponent } from '../smart-link/smart-link.component';
   styleUrl: './footer.component.less'
 })
 export class FooterComponent implements OnInit {
-  readonly isMobile = computed(() => this.uaService.isMobile);
-  readonly wwwHost = computed(() => this.appConfigService.apps['www'].url);
+  private readonly destroy$ = inject(DestroyService);
+  private readonly uaService = inject(UserAgentService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly optionService = inject(OptionService);
+  private readonly linkService = inject(LinkService);
+  private readonly urlService = inject(UrlService);
+
+  readonly isMobile = this.uaService.isMobile;
+  readonly wwwHost = this.appConfigService.apps['www'].url;
   readonly options = signal<OptionEntity>({});
   readonly footerLinks = signal<LinkVo[]>([]);
   readonly friendLinks = signal<LinkVo[]>([]);
@@ -40,13 +47,6 @@ export class FooterComponent implements OnInit {
   private readonly isHome = signal(false);
   private readonly isHomeChanged = signal(false);
 
-  private readonly destroy$ = inject(DestroyService);
-  private readonly uaService = inject(UserAgentService);
-  private readonly appConfigService = inject(AppConfigService);
-  private readonly optionService = inject(OptionService);
-  private readonly linkService = inject(LinkService);
-  private readonly urlService = inject(UrlService);
-
   ngOnInit(): void {
     this.optionService.options$
       .pipe(
@@ -64,7 +64,7 @@ export class FooterComponent implements OnInit {
       if (!this.isLoaded() || this.isHomeChanged()) {
         this.isHome.set(isHome);
 
-        if (!this.isMobile()) {
+        if (!this.isMobile) {
           this.getFriendLinks();
         }
       }

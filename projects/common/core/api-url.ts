@@ -17,6 +17,7 @@ export enum ApiUrl {
   POSTS = '/posts',
   POST = '/posts/post',
   POST_HOT = '/posts/hot',
+  POST_LATEST = '/posts/latest',
   POST_RANDOM = '/posts/random',
   POST_RELATED = '/posts/related',
   POST_LIST_BY_BOOK = '/posts/list-by-book',

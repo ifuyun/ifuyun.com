@@ -7,7 +7,7 @@
 
 A versatile content community that unites blogs, high-resolution wallpapers, wallpaper jigsaw puzzles, and classic NES mini-games into a one-stop hub for creativity and fun.
 
-[ifuyun.com](https://www.ifuyun.com) is powered by [Fuyun Tech](https://www.ireadpay.com)'s [Wutong CMS](https://admin.ireadpay.com/auth/login?appId=00m3ln4mfe58zyk1).
+[ifuyun.com](https://www.ifuyun.com) is powered by [Fuyun Tech](https://www.ireadpay.com)'s [Wutong CMS](https://admin.ireadpay.com/auth/signin?appId=00m3ln4mfe58zyk1).
 
 ## Monorepos
 

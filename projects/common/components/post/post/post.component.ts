@@ -104,23 +104,24 @@ export class PostComponent implements OnInit {
 
   readonly contentType = input<ContentType>(ContentType.POST);
 
-  readonly commentType = this.contentType() === ContentType.POST ? CommentTargetType.POST : CommentTargetType.PAGE;
-
-  isMobile = this.uaService.isMobile;
-  isArticle = this.contentType() === ContentType.POST;
-  blogHost = this.appConfigService.apps['blog'].url;
-  isSignIn = signal(false);
-  post = signal<PostModel | null>(null);
-  postMeta = signal<Record<string, any>>({});
-  postCategories = signal<PostCategoryVo[]>([]);
-  postTags = signal<PostTagVo[]>([]);
-  isFavorite = signal(false);
-  isVoted = signal(false);
-  voteLoading = signal(false);
-  favoriteLoading = signal(false);
-  shareVisible = signal(false);
-  shareUrl = signal('');
-  showPayMask = computed(() => {
+  readonly commentType = computed(() => {
+    return this.contentType() === ContentType.POST ? CommentTargetType.POST : CommentTargetType.PAGE;
+  });
+  readonly isMobile = this.uaService.isMobile;
+  readonly isArticle = this.contentType() === ContentType.POST;
+  readonly blogHost = this.appConfigService.apps['blog'].url;
+  readonly isSignIn = signal(false);
+  readonly post = signal<PostModel | null>(null);
+  readonly postMeta = signal<Record<string, any>>({});
+  readonly postCategories = signal<PostCategoryVo[]>([]);
+  readonly postTags = signal<PostTagVo[]>([]);
+  readonly isFavorite = signal(false);
+  readonly isVoted = signal(false);
+  readonly voteLoading = signal(false);
+  readonly favoriteLoading = signal(false);
+  readonly shareVisible = signal(false);
+  readonly shareUrl = signal('');
+  readonly showPayMask = computed(() => {
     const post = this.post();
     const user = this.user();
 
@@ -134,18 +135,18 @@ export class PostComponent implements OnInit {
     );
   });
 
-  protected pageIndex = signal('post-detail');
+  protected readonly pageIndex = signal('post-detail');
 
   private readonly copyHTML = `<span class="fi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/></svg></span>`;
   private readonly copiedHTML = `<span class="fi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg></span>`;
 
-  private appInfo = signal<TenantAppVo | null>(null);
-  private options = signal<OptionEntity>({});
-  private user = signal<UserModel | null>(null);
-  private postId = signal('');
-  private postSlug = signal('');
-  private referrer = signal('');
-  private codeList = signal<string[]>([]);
+  private readonly appInfo = signal<TenantAppVo | null>(null);
+  private readonly options = signal<OptionEntity>({});
+  private readonly user = signal<UserModel | null>(null);
+  private readonly postId = signal('');
+  private readonly postSlug = signal('');
+  private readonly referrer = signal('');
+  private readonly codeList = signal<string[]>([]);
 
   ngOnInit(): void {
     combineLatest([this.tenantAppService.appInfo$, this.optionService.options$, this.route.paramMap])
@@ -359,7 +360,6 @@ export class PostComponent implements OnInit {
   private initData(post: PostVo) {
     const result = this.postService.parseHTML(post.content, this.copyHTML);
 
-    // 避免覆盖
     this.post.set({
       ...post,
       content: result.content,

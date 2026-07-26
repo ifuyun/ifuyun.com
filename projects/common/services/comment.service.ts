@@ -120,7 +120,7 @@ export class CommentService {
           ? {
               ...item.parent,
               idHash: item.parent.id.substring(4, 10),
-              userName: item.parent.user?.nickname || item.parent.userName
+              userName: item.parent.user?.nickname || item.parent.userName || '匿名用户'
             }
           : undefined,
         children: []

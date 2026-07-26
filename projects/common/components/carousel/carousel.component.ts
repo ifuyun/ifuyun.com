@@ -1,15 +1,5 @@
 import { NgStyle } from '@angular/common';
-import {
-  AfterViewInit,
-  Component,
-  computed,
-  ElementRef,
-  inject,
-  OnDestroy,
-  OnInit,
-  signal,
-  viewChild
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { DestroyService, PlatformService, UserAgentService } from 'common/core';
 import { LinkTarget, LogActionType, LogTargetType, WallpaperLang } from 'common/enums';
 import { Carousel, CarouselOptions, Wallpaper } from 'common/interfaces';

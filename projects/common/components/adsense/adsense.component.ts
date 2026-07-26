@@ -53,9 +53,8 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
   readonly region = model<string>('ad-' + Math.floor(Math.random() * 10000) + 1);
   readonly testMode = model<boolean>(false);
 
-  private readonly adsenseClass = signal('adsbygoogle');
-  private readonly customClass = signal('ads-ins');
-
+  private readonly adsenseClass = 'adsbygoogle';
+  private readonly customClass = 'ads-ins';
   private readonly options = signal<OptionEntity>({});
   // 开关配置
   private readonly adsFlag = signal(false);
@@ -137,10 +136,10 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
     this.isValid.set(!!(this.clientId() && this.slotId()));
 
     const className = [
-      this.adsenseClass(),
+      this.adsenseClass,
       this.className(),
       adsenseOptions.className,
-      this.uaService.isMobile ? `m-${this.customClass()}` : `p-${this.customClass()}`
+      this.uaService.isMobile ? `m-${this.customClass}` : `p-${this.customClass}`
     ];
     this.className.set(uniq(className.filter((item) => !!item)).join(' '));
   }

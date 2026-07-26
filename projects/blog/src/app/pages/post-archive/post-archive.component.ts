@@ -6,7 +6,6 @@ import {
   BreadcrumbEntity,
   BreadcrumbService,
   DestroyService,
-  HTMLMetaData,
   MetaService,
   OptionEntity,
   UserAgentService
@@ -76,14 +75,15 @@ export class PostArchiveComponent implements OnInit {
   }
 
   private updatePageInfo() {
-    const titles = ['归档', '博客', this.appInfo()!.name];
-    const metaData: HTMLMetaData = {
+    const appInfo = this.appInfo()!;
+    const titles = ['归档', '博客', appInfo.name];
+
+    this.metaService.updateHTMLMeta({
       title: titles.join(' - '),
-      description: `${this.appInfo()!.name}博客归档。${this.options()['post_description']}`,
+      description: `${appInfo.name}博客归档。${this.options()['post_description']}`,
       keywords: this.options()['post_keywords'],
       author: this.options()['site_author']
-    };
-    this.metaService.updateHTMLMeta(metaData);
+    });
   }
 
   private updateBreadcrumbs(): void {

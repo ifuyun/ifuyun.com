@@ -1,5 +1,5 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, model, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ErrorState, Message } from 'common/core';
 import { CommonService } from 'common/services';
@@ -13,21 +13,21 @@ import { NzResultModule } from 'ng-zorro-antd/result';
   styleUrl: '../error.component.less'
 })
 export class ForbiddenComponent implements OnInit {
-  @Input() errorState?: ErrorState;
+  private readonly commonService = inject(CommonService);
 
-  protected pageIndex = 'error-403';
+  readonly errorState = model<ErrorState | null>(null);
 
-  constructor(private readonly commonService: CommonService) {}
+  protected readonly pageIndex = 'error-403';
 
   ngOnInit(): void {
     this.updatePageIndex();
 
-    if (!this.errorState) {
-      this.errorState = {
+    if (!this.errorState()) {
+      this.errorState.set({
         visible: true,
         code: HttpStatusCode.Forbidden,
         message: Message.ERROR_403
-      };
+      });
     }
   }
 

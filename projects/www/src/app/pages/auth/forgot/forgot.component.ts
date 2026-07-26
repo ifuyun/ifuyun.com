@@ -109,8 +109,10 @@ export class ForgotComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   ngOnDestroy() {
-    if (this.sendTimer()) {
-      window.clearInterval(this.sendTimer()!);
+    const timer = this.sendTimer();
+
+    if (timer) {
+      window.clearInterval(timer);
     }
   }
 
@@ -181,11 +183,13 @@ export class ForgotComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   private updatePageInfo() {
+    const appInfo = this.appInfo()!;
+
     this.metaService.updateHTMLMeta({
-      title: ['忘记密码', this.appInfo()!.name].join(' - '),
-      description: this.appInfo()!.description,
+      title: ['忘记密码', appInfo.name].join(' - '),
+      description: appInfo.description,
       author: this.options()['site_author'],
-      keywords: this.appInfo()!.keywords
+      keywords: appInfo.keywords
     });
   }
 

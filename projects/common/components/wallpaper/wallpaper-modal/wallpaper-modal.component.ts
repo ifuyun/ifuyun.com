@@ -50,7 +50,7 @@ export class WallpaperModalComponent implements OnChanges {
     this.commonService.smartNavigate('/detail/' + this.activeWallpaper().id, this.domains['wallpaper'].url, {
       queryParams: {
         lang: this.activeWallpaper().isCn ? null : 'en',
-        ref: 'toolbox'
+        ref: 'modal'
       }
     });
   }
@@ -63,7 +63,7 @@ export class WallpaperModalComponent implements OnChanges {
     this.closeModal();
     this.commonService.smartNavigate('/list', this.domains['wallpaper'].url, {
       queryParams: {
-        ref: 'toolbox'
+        ref: 'modal'
       }
     });
   }

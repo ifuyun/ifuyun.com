@@ -23,7 +23,7 @@ export * from './pagination/pagination.component';
 export * from './post/license.pipe';
 export * from './post/license-link.pipe';
 export * from './post/post.constant';
-export * from './post/post-detail/post.component';
+export * from './post/post/post.component';
 export * from './post/post-item/post-item.component';
 export * from './post/post-prev-next/post-prev-next.component';
 export * from './post/post-related/post-related.component';

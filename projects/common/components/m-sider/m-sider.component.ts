@@ -53,10 +53,9 @@ export class MSiderComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe((appInfo) => {
-        this.appInfo.set(appInfo);
-
         const urlParam = format(ADMIN_URL_PARAM, this.authService.getToken(), this.appConfigService.appId);
 
+        this.appInfo.set(appInfo);
         this.adminUrl.set(appInfo.adminUrl + '?' + urlParam);
       });
     this.commonService.siderVisible$.subscribe((visible) => {

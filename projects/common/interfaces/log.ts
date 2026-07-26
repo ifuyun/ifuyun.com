@@ -1,4 +1,4 @@
-import { LogTargetType, LogActionType, Theme } from 'common/enums';
+import { LogActionType, LogTargetType } from 'common/enums';
 
 export interface AccessLog {
   li?: string;
@@ -13,11 +13,6 @@ export interface AccessLog {
   ia: 0 | 1;
   in: 0 | 1;
   as: number;
-  appId: string;
-}
-
-export interface LeaveLog {
-  logId: string;
   appId: string;
 }
 

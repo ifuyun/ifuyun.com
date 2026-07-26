@@ -98,7 +98,7 @@
   </div>
   <app-game-related/>
   <lib-make-money/>
-  <lib-comment [targetType]="commentType" [enableAI]="false"/>
+  <lib-comment [targetType]="commentType"/>
   @if (shareVisible()) {
     <lib-share-modal [shareUrl]="shareUrl()" (close)="closeShareQrcode()"/>
   }

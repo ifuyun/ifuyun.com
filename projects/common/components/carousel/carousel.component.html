@@ -1,10 +1,10 @@
+@let list = carousels();
+@let index = activeIndex();
 <div class="carousel-wrap"
      [class.m-carousel-wrap]="isMobile"
      [class.p-carousel-wrap]="!isMobile"
      (mouseover)="carouselMouseOver()"
      (mouseout)="carouselMouseOut()">
-  @let list = carousels();
-  @let index = activeIndex();
   <div class="carousel"
        #carouselBody
        [ngStyle]="{'width': (100 * (list.length)) + '%'}"
