@@ -10,13 +10,11 @@
   }
 
   .banner-post {
+    display: flex;
+    flex-direction: column;
     margin-left: @content-margin;
     flex-grow: 1;
     overflow: hidden;
-  }
-
-  .banner-post-list {
-    margin-top: @primary-margin;
   }
 
   .banner-post-item {
@@ -76,7 +74,7 @@
 }
 
 .column-header {
-  margin-bottom: (@primary-margin / 2);
+  margin-bottom: @primary-margin;
   padding-left: 12px;
   border-left: 4px solid var(--primary-color);
   font-size: @header-font-size;

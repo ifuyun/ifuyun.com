@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiService, ApiUrl, AppConfigService, HttpResponseEntity, REGEXP_ID } from 'common/core';
+import { ApiService, ApiUrl, HttpResponseEntity, REGEXP_ID } from 'common/core';
 import {
   Game,
   GameCachedItem,
@@ -23,18 +23,10 @@ export class GameService {
   private activeRomURL: BehaviorSubject<string> = new BehaviorSubject<string>('');
   public activeRomURL$: Observable<string> = this.activeRomURL.asObservable();
 
-  constructor(
-    private readonly apiService: ApiService,
-    private readonly appConfigService: AppConfigService
-  ) {}
+  constructor(private readonly apiService: ApiService) {}
 
   getGames(param: GameQueryParam): Observable<GameList> {
-    return this.apiService
-      .httpGet(ApiUrl.GAMES, {
-        ...param,
-        appId: this.appConfigService.appId
-      })
-      .pipe(map((res) => res?.data || {}));
+    return this.apiService.httpGet(ApiUrl.GAMES, param).pipe(map((res) => res?.data || {}));
   }
 
   getHotGames(): Observable<GameEntity[]> {
@@ -63,8 +55,7 @@ export class GameService {
 
   getGameById(id: string, ref?: string): Observable<Game> {
     const payload: Record<string, any> = {
-      id,
-      appId: this.appConfigService.appId
+      id
     };
     if (ref?.trim()) {
       payload['ref'] = ref;
@@ -76,8 +67,7 @@ export class GameService {
     return this.apiService.httpGetFile(
       ApiUrl.GAME_ROM,
       {
-        id,
-        appId: this.appConfigService.appId
+        id
       },
       true
     );

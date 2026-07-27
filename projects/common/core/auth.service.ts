@@ -24,23 +24,14 @@ export class AuthService {
   ) {}
 
   signin(payload: SigninDto): Observable<HttpResponseEntity> {
-    return this.apiService
-      .httpPost(
-        ApiUrl.AUTH_SIGNIN,
-        {
-          ...payload,
-          appId: this.appConfigService.appId
-        },
-        true
-      )
-      .pipe(
-        map((res) => res || {}),
-        tap((res) => {
-          if (res.data?.token?.token) {
-            this.setAuth(res.data);
-          }
-        })
-      );
+    return this.apiService.httpPost(ApiUrl.AUTH_SIGNIN, payload, true).pipe(
+      map((res) => res || {}),
+      tap((res) => {
+        if (res.data?.token?.token) {
+          this.setAuth(res.data);
+        }
+      })
+    );
   }
 
   signout(): Observable<HttpResponseEntity> {
@@ -62,16 +53,7 @@ export class AuthService {
   }
 
   signup(payload: SignupDto): Observable<UserModel> {
-    return this.apiService
-      .httpPost(
-        ApiUrl.AUTH_SIGNUP,
-        {
-          ...payload,
-          appId: this.appConfigService.appId
-        },
-        true
-      )
-      .pipe(map((res) => res?.data || {}));
+    return this.apiService.httpPost(ApiUrl.AUTH_SIGNUP, payload, true).pipe(map((res) => res?.data || {}));
   }
 
   verify(id: string, code: string): Observable<SigninResponse> {
@@ -80,8 +62,7 @@ export class AuthService {
         ApiUrl.AUTH_VERIFY,
         {
           id,
-          code,
-          appId: this.appConfigService.appId
+          code
         },
         true
       )
@@ -96,16 +77,7 @@ export class AuthService {
   }
 
   sendCode(payload: { id?: string; email?: string }): Observable<HttpResponseEntity> {
-    return this.apiService
-      .httpPost(
-        ApiUrl.AUTH_SEND_CODE,
-        {
-          ...payload,
-          appId: this.appConfigService.appId
-        },
-        true
-      )
-      .pipe(map((res) => res || {}));
+    return this.apiService.httpPost(ApiUrl.AUTH_SEND_CODE, payload, true).pipe(map((res) => res || {}));
   }
 
   oauthSignin(authCode: string, source: string): Observable<HttpResponseEntity> {
@@ -114,8 +86,7 @@ export class AuthService {
         ApiUrl.AUTH_OAUTH,
         {
           authCode,
-          source,
-          appId: this.appConfigService.appId
+          source
         },
         false
       )
@@ -130,16 +101,7 @@ export class AuthService {
   }
 
   resetPassword(payload: { email: string; code: string; password: string }): Observable<SigninResponse> {
-    return this.apiService
-      .httpPost(
-        ApiUrl.AUTH_RESET_PASSWORD,
-        {
-          ...payload,
-          appId: this.appConfigService.appId
-        },
-        true
-      )
-      .pipe(map((res) => res?.data || {}));
+    return this.apiService.httpPost(ApiUrl.AUTH_RESET_PASSWORD, payload, true).pipe(map((res) => res?.data || {}));
   }
 
   getToken(): string {

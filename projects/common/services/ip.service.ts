@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiService, ApiUrl, AppConfigService } from 'common/core';
+import { ApiService, ApiUrl } from 'common/core';
 import { IPInfo, IPResult } from 'common/interfaces';
 import { map, Observable } from 'rxjs';
 
@@ -7,17 +7,13 @@ import { map, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class IpService {
-  constructor(
-    private readonly apiService: ApiService,
-    private readonly appConfigService: AppConfigService
-  ) {}
+  constructor(private readonly apiService: ApiService) {}
 
   searchIP(ip: string): Observable<IPResult> {
     return this.apiService
       .httpGet(ApiUrl.IP_SEARCH, {
         ip,
-        s: 0,
-        appId: this.appConfigService.appId
+        s: 0
       })
       .pipe(map((res) => res?.data || {}));
   }

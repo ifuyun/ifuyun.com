@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiService, ApiUrl, AppConfigService, ArchiveData } from 'common/core';
+import { ApiService, ApiUrl, ArchiveData } from 'common/core';
 import { BookType, ContentType } from 'common/enums';
 import { PostEntity, PostList, PostModel, PostQueryParam, PostSearchItem, PostVo } from 'common/interfaces';
 import highlight from 'highlight.js';
@@ -15,33 +15,24 @@ export class PostService {
   private activePost: BehaviorSubject<PostVo | null> = new BehaviorSubject<PostVo | null>(null);
   public activePost$: Observable<PostVo | null> = this.activePost.asObservable();
 
-  constructor(
-    private readonly apiService: ApiService,
-    private readonly appConfigService: AppConfigService
-  ) {}
+  constructor(private readonly apiService: ApiService) {}
 
   getPosts(param: PostQueryParam): Observable<PostList> {
     return this.apiService
       .httpGet(ApiUrl.POSTS, {
-        ...param,
-        appId: this.appConfigService.appId
+        ...param
       })
       .pipe(map((res) => res?.data || {}));
   }
 
   getHotPosts(): Observable<PostEntity[]> {
-    return this.apiService
-      .httpGet(ApiUrl.POST_HOT, {
-        appId: this.appConfigService.appId
-      })
-      .pipe(map((res) => res?.data || []));
+    return this.apiService.httpGet(ApiUrl.POST_HOT, {}).pipe(map((res) => res?.data || []));
   }
 
   getLatestPosts(size: number): Observable<PostVo[]> {
     return this.apiService
       .httpGet(ApiUrl.POST_LATEST, {
-        size,
-        appId: this.appConfigService.appId
+        size
       })
       .pipe(map((res) => res?.data || []));
   }
@@ -50,8 +41,7 @@ export class PostService {
     return this.apiService
       .httpGet(ApiUrl.POST_RANDOM, {
         size,
-        detail: detail ? 1 : 0,
-        appId: this.appConfigService.appId
+        detail: detail ? 1 : 0
       })
       .pipe(map((res) => res?.data || []));
   }
@@ -59,8 +49,7 @@ export class PostService {
   getRelatedPosts(id: string): Observable<PostSearchItem[]> {
     return this.apiService
       .httpGet(ApiUrl.POST_RELATED, {
-        id,
-        appId: this.appConfigService.appId
+        id
       })
       .pipe(map((res) => res?.data || []));
   }
@@ -69,8 +58,7 @@ export class PostService {
     return this.apiService
       .httpGet(ApiUrl.POST_ARCHIVES, {
         showCount: showCount ? 1 : 0,
-        limit,
-        appId: this.appConfigService.appId
+        limit
       })
       .pipe(map((res) => res?.data?.archives || []));
   }
@@ -78,8 +66,7 @@ export class PostService {
   getPostById(id: string, contentType: ContentType, ref?: string): Observable<PostVo> {
     const payload: Record<string, any> = {
       id,
-      contentType,
-      appId: this.appConfigService.appId
+      contentType
     };
     if (ref?.trim()) {
       payload['ref'] = ref;
@@ -90,8 +77,7 @@ export class PostService {
   getPostBySlug(slug: string, contentType: ContentType, ref?: string): Observable<PostVo> {
     const payload: Record<string, any> = {
       slug,
-      contentType,
-      appId: this.appConfigService.appId
+      contentType
     };
     if (ref?.trim()) {
       payload['ref'] = ref;
@@ -104,12 +90,7 @@ export class PostService {
     slug?: string;
     contentType?: ContentType;
   }): Observable<{ prevPost: PostModel; nextPost: PostModel }> {
-    return this.apiService
-      .httpGet(ApiUrl.POST_PREV_AND_NEXT, {
-        ...param,
-        appId: this.appConfigService.appId
-      })
-      .pipe(map((res) => res?.data || {}));
+    return this.apiService.httpGet(ApiUrl.POST_PREV_AND_NEXT, param).pipe(map((res) => res?.data || {}));
   }
 
   updateActivePostId(postId: string) {

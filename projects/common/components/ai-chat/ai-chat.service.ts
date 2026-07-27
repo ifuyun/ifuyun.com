@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EventStreamContentType, fetchEventSource } from '@microsoft/fetch-event-source';
-import { ApiService, ApiUrl, AuthService, HttpResponseEntity, Message } from 'common/core';
+import { ApiService, ApiUrl, AppConfigService, AuthService, HttpResponseEntity, Message } from 'common/core';
 import { ClipboardService } from 'ngx-clipboard';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,7 +14,8 @@ export class AiChatService {
   constructor(
     private readonly apiService: ApiService,
     private readonly authService: AuthService,
-    private readonly clipboardService: ClipboardService
+    private readonly clipboardService: ClipboardService,
+    private readonly appConfigService: AppConfigService
   ) {}
 
   getPostAskUrl() {
@@ -49,7 +50,8 @@ export class AiChatService {
         body: JSON.stringify({
           conversationId,
           message,
-          effort
+          effort,
+          appId: this.appConfigService.appId
         }),
         signal: ctrl.signal,
         openWhenHidden: true,

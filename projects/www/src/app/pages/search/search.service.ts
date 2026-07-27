@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiService, ApiUrl, AppConfigService, ResultList } from 'common/core';
+import { ApiService, ApiUrl, ResultList } from 'common/core';
 import {
   AllSearchResponse,
   GameSearchResponse,
@@ -14,44 +14,21 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class SearchService {
-  constructor(
-    private readonly apiService: ApiService,
-    private readonly appConfigService: AppConfigService
-  ) {}
+  constructor(private readonly apiService: ApiService) {}
 
   searchAll(param: SearchParam): Observable<ResultList<AllSearchResponse>> {
-    return this.apiService
-      .httpGet(ApiUrl.SEARCH_ALL, {
-        ...param,
-        appId: this.appConfigService.appId
-      })
-      .pipe(map((res) => res?.data || {}));
+    return this.apiService.httpGet(ApiUrl.SEARCH_ALL, param).pipe(map((res) => res?.data || {}));
   }
 
   searchPosts(param: SearchParam): Observable<ResultList<PostSearchResponse>> {
-    return this.apiService
-      .httpGet(ApiUrl.SEARCH_POSTS, {
-        ...param,
-        appId: this.appConfigService.appId
-      })
-      .pipe(map((res) => res?.data || {}));
+    return this.apiService.httpGet(ApiUrl.SEARCH_POSTS, param).pipe(map((res) => res?.data || {}));
   }
 
   searchWallpapers(param: SearchParam): Observable<ResultList<WallpaperSearchResponse>> {
-    return this.apiService
-      .httpGet(ApiUrl.SEARCH_WALLPAPERS, {
-        ...param,
-        appId: this.appConfigService.appId
-      })
-      .pipe(map((res) => res?.data || {}));
+    return this.apiService.httpGet(ApiUrl.SEARCH_WALLPAPERS, param).pipe(map((res) => res?.data || {}));
   }
 
   searchGames(param: SearchParam): Observable<ResultList<GameSearchResponse>> {
-    return this.apiService
-      .httpGet(ApiUrl.SEARCH_GAMES, {
-        ...param,
-        appId: this.appConfigService.appId
-      })
-      .pipe(map((res) => res?.data || {}));
+    return this.apiService.httpGet(ApiUrl.SEARCH_GAMES, param).pipe(map((res) => res?.data || {}));
   }
 }

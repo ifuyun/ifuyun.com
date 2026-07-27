@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiService, ApiUrl, AppConfigService, HttpResponseEntity, ResultList, URL_AVATAR_API } from 'common/core';
+import { ApiService, ApiUrl, HttpResponseEntity, ResultList, URL_AVATAR_API } from 'common/core';
 import { CommentTargetType } from 'common/enums';
 import { Comment, CommentDto } from 'common/interfaces';
 import { format } from 'common/utils';
@@ -15,8 +15,7 @@ export class CommentService {
 
   constructor(
     private readonly apiService: ApiService,
-    private readonly ipService: IpService,
-    private readonly appConfigService: AppConfigService
+    private readonly ipService: IpService
   ) {}
 
   updateTargetId(targetId: string) {
@@ -30,8 +29,7 @@ export class CommentService {
       .httpGet(ApiUrl.COMMENTS, {
         targetId: postId,
         page,
-        size,
-        appId: this.appConfigService.appId
+        size
       })
       .pipe(map((res) => res?.data || {}));
   }
@@ -47,8 +45,7 @@ export class CommentService {
       .httpGet(ApiUrl.COMMENTS, {
         targetId: wallpaperId,
         page,
-        size,
-        appId: this.appConfigService.appId
+        size
       })
       .pipe(map((res) => res?.data || {}));
   }
@@ -60,8 +57,7 @@ export class CommentService {
       .httpGet(ApiUrl.COMMENTS, {
         targetId: gameId,
         page,
-        size,
-        appId: this.appConfigService.appId
+        size
       })
       .pipe(map((res) => res?.data || {}));
   }
@@ -95,14 +91,7 @@ export class CommentService {
   }
 
   saveComment(comment: CommentDto): Observable<HttpResponseEntity> {
-    return this.apiService.httpPost(
-      ApiUrl.COMMENT,
-      {
-        ...comment,
-        appId: this.appConfigService.appId
-      },
-      true
-    );
+    return this.apiService.httpPost(ApiUrl.COMMENT, comment, true);
   }
 
   transformComments(comments: Comment[], avatarType: string): Comment[] {

@@ -28,7 +28,10 @@ export class ApiService {
     return this.http
       .get<T>(this.getApiUrl(url), {
         params: new HttpParams({
-          fromObject: param
+          fromObject: {
+            ...param,
+            appId: this.appConfigService.appId
+          }
         }),
         observe: 'body'
       })
@@ -40,6 +43,11 @@ export class ApiService {
     body: Record<string, any> | FormData = {},
     showMessage = true
   ): Observable<T> {
+    if (body instanceof FormData) {
+      body.append('appId', this.appConfigService.appId);
+    } else {
+      body['appId'] = this.appConfigService.appId;
+    }
     return this.http
       .post<T>(this.getApiUrl(url), body, {
         observe: 'body'
@@ -51,7 +59,10 @@ export class ApiService {
     return this.http
       .get(this.getApiUrl(url), {
         params: new HttpParams({
-          fromObject: param
+          fromObject: {
+            ...param,
+            appId: this.appConfigService.appId
+          }
         }),
         responseType: 'blob',
         observe: 'body'

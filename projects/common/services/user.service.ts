@@ -27,21 +27,16 @@ export class UserService {
   ) {}
 
   getProfile(): Observable<UserModel> {
-    return this.apiService
-      .httpGet(ApiUrl.USER_PROFILE, {
-        appId: this.appConfigService.appId
-      })
-      .pipe(
-        map((res) => res?.data || {}),
-        tap((user) => this.user.next(user))
-      );
+    return this.apiService.httpGet(ApiUrl.USER_PROFILE, {}).pipe(
+      map((res) => res?.data || {}),
+      tap((user) => this.user.next(user))
+    );
   }
 
   getSignupUser(userId: string): Observable<UserModel> {
     return this.apiService
       .httpGet(ApiUrl.USER_SIGNUP_INFO, {
-        userId,
-        appId: this.appConfigService.appId
+        userId
       })
       .pipe(map((res) => res?.data || {}));
   }

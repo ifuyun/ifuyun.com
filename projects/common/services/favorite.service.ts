@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiService, ApiUrl, AppConfigService, HttpResponseEntity } from 'common/core';
+import { ApiService, ApiUrl, HttpResponseEntity } from 'common/core';
 import { FavoriteType } from 'common/enums';
 import { map, Observable } from 'rxjs';
 
@@ -7,10 +7,7 @@ import { map, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class FavoriteService {
-  constructor(
-    private readonly apiService: ApiService,
-    private readonly appConfigService: AppConfigService
-  ) {}
+  constructor(private readonly apiService: ApiService) {}
 
   addFavorite(targetId: string, type = FavoriteType.POST): Observable<HttpResponseEntity> {
     return this.apiService
@@ -18,8 +15,7 @@ export class FavoriteService {
         ApiUrl.FAVORITE,
         {
           targetId,
-          type,
-          appId: this.appConfigService.appId
+          type
         },
         true
       )

@@ -26,48 +26,37 @@ export class WallpaperService {
   ) {}
 
   getWallpapers(param: WallpaperQueryParam): Observable<ResultList<Wallpaper>> {
-    return this.apiService
-      .httpGet(ApiUrl.WALLPAPERS, {
-        ...param,
-        appId: this.appConfigService.appId
+    return this.apiService.httpGet(ApiUrl.WALLPAPERS, param).pipe(
+      map((res) => {
+        if (!res?.data) {
+          return {};
+        }
+        return {
+          ...res.data,
+          list: res.data.list.map((item: Wallpaper) => this.transformWallpaper(item))
+        };
       })
-      .pipe(
-        map((res) => {
-          if (!res?.data) {
-            return {};
-          }
-          return {
-            ...res.data,
-            list: res.data.list.map((item: Wallpaper) => this.transformWallpaper(item))
-          };
-        })
-      );
+    );
   }
 
   getFutureWallpapers(param: WallpaperQueryParam): Observable<ResultList<Wallpaper>> {
-    return this.apiService
-      .httpGet(ApiUrl.WALLPAPER_FUTURE, {
-        ...param,
-        appId: this.appConfigService.appId
+    return this.apiService.httpGet(ApiUrl.WALLPAPER_FUTURE, param).pipe(
+      map((res) => {
+        if (!res?.data) {
+          return {};
+        }
+        return {
+          ...res.data,
+          list: res.data.list.map((item: Wallpaper) => this.transformWallpaper(item))
+        };
       })
-      .pipe(
-        map((res) => {
-          if (!res?.data) {
-            return {};
-          }
-          return {
-            ...res.data,
-            list: res.data.list.map((item: Wallpaper) => this.transformWallpaper(item))
-          };
-        })
-      );
+    );
   }
 
   getHotWallpapers(size: number): Observable<HotWallpaper[]> {
     return this.apiService
       .httpGet(ApiUrl.WALLPAPER_HOT, {
-        size,
-        appId: this.appConfigService.appId
+        size
       })
       .pipe(
         map((res) => {
@@ -87,8 +76,7 @@ export class WallpaperService {
   getRandomWallpapers(size: number, simple?: boolean, resolution?: string): Observable<Wallpaper[]> {
     const payload: Record<string, any> = {
       size,
-      simple: simple ? 1 : 0,
-      appId: this.appConfigService.appId
+      simple: simple ? 1 : 0
     };
     if (resolution) {
       payload['resolution'] = resolution;
@@ -110,17 +98,14 @@ export class WallpaperService {
   }
 
   getRelatedWallpapers(param: WallpaperRelatedParam): Observable<WallpaperSearchItem[]> {
-    return this.apiService
-      .httpGet(ApiUrl.WALLPAPER_RELATED, { ...param, appId: this.appConfigService.appId })
-      .pipe(map((res) => res?.data || []));
+    return this.apiService.httpGet(ApiUrl.WALLPAPER_RELATED, param).pipe(map((res) => res?.data || []));
   }
 
   getWallpaperArchives(showCount = false, limit = 10): Observable<ArchiveData[]> {
     return this.apiService
       .httpGet(ApiUrl.WALLPAPER_ARCHIVES, {
         showCount: showCount ? 1 : 0,
-        limit,
-        appId: this.appConfigService.appId
+        limit
       })
       .pipe(map((res) => res?.data?.archives || []));
   }
@@ -129,8 +114,7 @@ export class WallpaperService {
     return this.apiService
       .httpGet(ApiUrl.WALLPAPER, {
         id,
-        jigsaw: jigsaw ? 1 : 0,
-        appId: this.appConfigService.appId
+        jigsaw: jigsaw ? 1 : 0
       })
       .pipe(map((res) => res?.data));
   }
@@ -138,8 +122,7 @@ export class WallpaperService {
   getWallpapersOfPrevAndNext(id: string): Observable<PrevAndNextWallpapers> {
     return this.apiService
       .httpGet(ApiUrl.WALLPAPER_PREV_AND_NEXT, {
-        id,
-        appId: this.appConfigService.appId
+        id
       })
       .pipe(map((res) => res?.data || {}));
   }

@@ -18,8 +18,8 @@ export enum AdsStatus {
 export class LogService {
   constructor(
     private readonly apiService: ApiService,
-    private readonly appConfigService: AppConfigService,
-    private readonly commonService: CommonService
+    private readonly commonService: CommonService,
+    private readonly appConfigService: AppConfigService
   ) {}
 
   buildAccessLog(param: {
@@ -41,8 +41,7 @@ export class LogService {
       sw: this.commonService.getScreenWidth(),
       sh: this.commonService.getScreenHeight(),
       cd: window.screen.colorDepth.toString(),
-      ia: initialized ? 1 : 0,
-      appId: this.appConfigService.appId
+      ia: initialized ? 1 : 0
     };
   }
 
@@ -67,8 +66,7 @@ export class LogService {
       ApiUrl.ACTION_LOG,
       {
         ...log,
-        ref: location.href,
-        appId: this.appConfigService.appId
+        ref: location.href
       },
       false
     );
@@ -79,8 +77,7 @@ export class LogService {
       ApiUrl.ACCESS_LOG_PLUGIN,
       {
         logId,
-        status,
-        appId: this.appConfigService.appId
+        status
       },
       false
     );

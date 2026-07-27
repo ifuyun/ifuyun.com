@@ -136,27 +136,3 @@ export async function simpleRequest(payload: {
   }
   return response.json();
 }
-
-export function textPosition(inputEle: HTMLInputElement, text: string, isSelected: boolean) {
-  const curVal = inputEle.value;
-  const start = inputEle.selectionStart || 0;
-  const end = inputEle.selectionEnd || 0;
-
-  if (text) {
-    const inputVal = curVal.substring(0, start) + text + curVal.substring(end, curVal.length);
-
-    inputEle.focus();
-    inputEle.value = inputVal;
-    if (isSelected) {
-      inputEle.selectionStart = start;
-    } else {
-      inputEle.selectionStart = start + text.length;
-    }
-    inputEle.selectionEnd = start + text.length;
-  }
-
-  return {
-    start,
-    end
-  };
-}

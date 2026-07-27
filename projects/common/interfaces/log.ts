@@ -13,7 +13,6 @@ export interface AccessLog {
   ia: 0 | 1;
   in: 0 | 1;
   as: number;
-  appId: string;
 }
 
 export interface ActionLog {
