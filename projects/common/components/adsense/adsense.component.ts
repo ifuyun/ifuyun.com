@@ -37,19 +37,19 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
   readonly text = input<string>('');
   readonly wrapClass = input<string>('');
   // full options
-  readonly clientId = model<string>('');
-  readonly slotId = model<string | number>('');
-  readonly format = model<string>('');
-  readonly responsive = model<boolean | undefined>(true);
-  readonly className = model<string>('');
-  readonly style = model<string>('');
+  readonly clientId = model<string>();
+  readonly slotId = model<string | number>();
+  readonly format = model<string>();
+  readonly responsive = model<boolean>();
+  readonly className = model<string>();
+  readonly style = model<string>();
   readonly display = model<string>('block');
-  readonly width = model<number | string>('');
-  readonly height = model<number | string>('');
-  readonly minWidth = model<number | string>('');
-  readonly minHeight = model<number | string>('');
-  readonly maxWidth = model<number | string>('');
-  readonly maxHeight = model<number | string>('');
+  readonly width = model<number | string>();
+  readonly height = model<number | string>();
+  readonly minWidth = model<number | string>();
+  readonly minHeight = model<number | string>();
+  readonly maxWidth = model<number | string>();
+  readonly maxHeight = model<number | string>();
   readonly region = model<string>('ad-' + Math.floor(Math.random() * 10000) + 1);
   readonly testMode = model<boolean>(false);
 
@@ -126,12 +126,12 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
     this.responsive.set(this.responsive() ?? adsenseOptions.responsive);
     this.style.set(this.style() ?? adsenseOptions.style);
     this.display.set(this.display() ?? adsenseOptions.display);
-    this.width.set(this.parseSize(this.width() ?? adsenseOptions.width));
-    this.height.set(this.parseSize(this.height() ?? adsenseOptions.height));
-    this.minWidth.set(this.parseSize(this.minWidth() ?? adsenseOptions.minWidth));
-    this.minHeight.set(this.parseSize(this.minHeight() ?? adsenseOptions.minHeight));
-    this.maxWidth.set(this.parseSize(this.maxWidth() ?? adsenseOptions.maxWidth));
-    this.maxHeight.set(this.parseSize(this.maxHeight() ?? adsenseOptions.maxHeight));
+    this.width.set(this.parseSize(this.width() ?? adsenseOptions.width!));
+    this.height.set(this.parseSize(this.height() ?? adsenseOptions.height!));
+    this.minWidth.set(this.parseSize(this.minWidth() ?? adsenseOptions.minWidth!));
+    this.minHeight.set(this.parseSize(this.minHeight() ?? adsenseOptions.minHeight!));
+    this.maxWidth.set(this.parseSize(this.maxWidth() ?? adsenseOptions.maxWidth!));
+    this.maxHeight.set(this.parseSize(this.maxHeight() ?? adsenseOptions.maxHeight!));
     this.testMode.set(this.testMode() ?? adsenseOptions.testMode);
     this.isValid.set(!!(this.clientId() && this.slotId()));
 
@@ -149,7 +149,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
       if (this.adsFlag() && this.isValid()) {
         const ads: Record<string, string | boolean> = {};
         if (this.pageLevelAds()) {
-          ads['google_ad_client'] = this.clientId();
+          ads['google_ad_client'] = this.clientId()!;
           ads['enable_page_level_ads'] = true;
         }
         try {
@@ -173,8 +173,8 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
     }
     const adsBodyEle = document.createElement('ins');
 
-    adsBodyEle.className = this.className();
-    adsBodyEle.setAttribute('style', this.style());
+    adsBodyEle.className = this.className()!;
+    adsBodyEle.setAttribute('style', this.style()!);
     adsBodyEle.style.display = this.display();
 
     if (
@@ -202,11 +202,11 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
       adsBodyEle.style.maxHeight = this.maxHeight() + '';
     }
 
-    adsBodyEle.setAttribute('data-ad-client', this.clientId());
+    adsBodyEle.setAttribute('data-ad-client', this.clientId()!);
     adsBodyEle.setAttribute('data-ad-slot', this.slotId() + '');
     adsBodyEle.setAttribute('data-ad-region', this.region());
     if (this.format()) {
-      adsBodyEle.setAttribute('data-ad-format', this.format());
+      adsBodyEle.setAttribute('data-ad-format', this.format()!);
     }
     if (this.testMode()) {
       adsBodyEle.setAttribute('data-ad-adtest', 'on');
