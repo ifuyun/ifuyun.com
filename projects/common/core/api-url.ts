@@ -100,5 +100,5 @@ export enum ApiUrl {
   // app
   TENANT_APP = '/apps/app',
   // IP
-  IP_SEARCH = '/ips/search'
+  IP_SEARCH = '/ip/search'
 }

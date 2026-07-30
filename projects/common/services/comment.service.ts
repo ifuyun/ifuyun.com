@@ -102,7 +102,12 @@ export class CommentService {
         userName: item.user?.nickname || item.userName,
         userAvatar:
           item.user?.avatarUrl || format(URL_AVATAR_API, item.user?.emailHash || item.userEmailHash, avatarType),
-        userLocation: this.ipService.getIPLocation(item.ipInfo),
+        userLocation: this.ipService.getIPLocation({
+          country: item.ipCountry,
+          province: item.ipProvince,
+          city: item.ipCity,
+          isp: item.ipIsp
+        }),
         depth: 1,
         isLeaf: true,
         parent: item.parent

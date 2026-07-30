@@ -55,20 +55,3 @@ export interface SigninModalOptions {
   visible: boolean;
   closable: boolean;
 }
-
-export interface IPAddress {
-  country: string;
-  province: string;
-  city: string;
-  district: string;
-}
-
-export interface IPInfo extends IPAddress {
-  IP?: number;
-  IPStr?: string;
-  startIP?: number;
-  startIPStr?: string;
-  endIP?: number;
-  endIPStr?: string;
-  isp: string;
-}

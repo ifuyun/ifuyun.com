@@ -1,33 +1,31 @@
 import { Injectable } from '@angular/core';
-import { ApiService, ApiUrl } from 'common/core';
-import { IPInfo, IPResult } from 'common/interfaces';
-import { map, Observable } from 'rxjs';
+import { IPInfo } from 'common/interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IpService {
-  constructor(private readonly apiService: ApiService) {}
-
-  searchIP(ip: string): Observable<IPResult> {
-    return this.apiService
-      .httpGet(ApiUrl.IP_SEARCH, {
-        ip,
-        s: 0
-      })
-      .pipe(map((res) => res?.data || {}));
-  }
-
   getIPLocation(ipInfo?: IPInfo) {
     if (!ipInfo) {
       return '未知地区';
     }
+    const location: string[] = [];
     if (ipInfo.city) {
-      return ipInfo.province + ' · ' + ipInfo.city;
+      location.push(ipInfo.city);
+
+      if (ipInfo.province) {
+        location.unshift(ipInfo.province);
+      }
+      return location.join(' · ');
     }
     if (ipInfo.province) {
-      return ipInfo.country + ' · ' + ipInfo.province;
+      location.push(ipInfo.province);
+
+      if (ipInfo.country) {
+        location.unshift(ipInfo.country);
+      }
+      return location.join(' · ');
     }
-    return ipInfo.country;
+    return ipInfo.country || '未知地区';
   }
 }
