@@ -117,7 +117,7 @@ export class SigninFormComponent extends BaseComponent implements OnInit {
 
   signin() {
     const { value, valid } = this.validateForm(this.signinForm);
-    if (!valid) {
+    if (this.signinLoading() || !valid) {
       return;
     }
     const { name, password } = value;

@@ -99,7 +99,7 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
 
   verify() {
     const { value, valid } = this.validateForm(this.confirmForm);
-    if (!valid) {
+    if (this.confirmLoading() || !valid) {
       return;
     }
     const { code } = value;

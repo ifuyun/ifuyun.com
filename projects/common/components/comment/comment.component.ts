@@ -129,10 +129,7 @@ export class CommentComponent extends BaseComponent implements OnInit {
       return;
     }
     const { value, valid } = this.validateForm(form);
-    if (!valid) {
-      return;
-    }
-    if (!valid) {
+    if (this.saveLoading() || !valid) {
       return;
     }
     this.saveLoading.set(true);
