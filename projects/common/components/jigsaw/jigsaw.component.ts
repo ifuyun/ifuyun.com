@@ -552,7 +552,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!wallpaper || this.downloading()) {
       return;
     }
-    if (!this.isSignIn() && isUhd) {
+    if (!this.isSignIn()) {
       this.showSigninModal();
       return;
     }
