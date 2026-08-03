@@ -33,15 +33,11 @@ export class WallpaperItemComponent implements OnInit {
   readonly lang = input(WallpaperLang.CN);
   readonly mode = input(ListMode.CARD);
   readonly index = input.required<number>();
-  readonly jigsaw = input(false);
 
   readonly isMobile = this.uaService.isMobile;
   readonly domains = this.appConfigService.apps;
-
-  readonly linkPrefix = computed(() => {
-    const domain = this.jigsaw() ? this.domains['jigsaw'].url : this.domains['wallpaper'].url;
-
-    return domain + '/detail/';
+  readonly linkUrl = computed(() => {
+    return this.domains['wallpaper'].url + '/detail/' + this.wallpaper().id;
   });
   readonly wallpaperLocation = computed(() => {
     const wallpaper = this.wallpaper();
@@ -58,9 +54,6 @@ export class WallpaperItemComponent implements OnInit {
   }
 
   getLangParams(isCn: boolean): Params {
-    if (this.jigsaw()) {
-      return {};
-    }
     if (!this.lang()) {
       return isCn ? {} : { lang: WallpaperLang.EN };
     }

@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   BreadcrumbComponent,
   CommentComponent,
+  JigsawModal,
   MakeMoneyComponent,
   ShareModalComponent,
   WallpaperPrevNextComponent,
@@ -60,7 +61,8 @@ import { combineLatest, skipWhile, takeUntil } from 'rxjs';
     MakeMoneyComponent,
     IconCalendarDateComponent,
     IconDownloadComponent,
-    IconShareFillComponent
+    IconShareFillComponent,
+    JigsawModal
   ],
   providers: [DestroyService, NzImageService],
   templateUrl: './wallpaper.component.html',
@@ -94,6 +96,7 @@ export class WallpaperComponent implements OnInit {
   readonly favoriteLoading = signal(false);
   readonly shareVisible = signal(false);
   readonly shareUrl = signal('');
+  readonly jigsawModalVisible = signal(false);
   readonly langParams = computed(() => {
     return this.lang() === WallpaperLang.CN ? {} : { lang: this.lang() };
   });
@@ -265,6 +268,14 @@ export class WallpaperComponent implements OnInit {
 
   closeShareQrcode() {
     this.shareVisible.set(false);
+  }
+
+  showJigsawModal() {
+    this.jigsawModalVisible.set(true);
+  }
+
+  closeJigsawModal() {
+    this.jigsawModalVisible.set(false);
   }
 
   showSigninModal() {

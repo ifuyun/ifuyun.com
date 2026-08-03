@@ -7,7 +7,6 @@ export interface PageIndexInfo {
   isSearch: boolean;
   isAuth: boolean;
   isWallpaper: boolean;
-  isJigsaw: boolean;
   isGame: boolean;
   isTool: boolean;
   fullPage: string;

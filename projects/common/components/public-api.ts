@@ -17,6 +17,7 @@ export * from './jigsaw/jigsaw.component';
 export * from './jigsaw/jigsaw.interface';
 export * from './jigsaw/jigsaw.service';
 export * from './jigsaw/jigsaw-cache.service';
+export * from './jigsaw-modal/jigsaw-modal';
 export * from './m-sider/m-sider.component';
 export * from './make-money/make-money.component';
 export * from './pagination/pagination.component';

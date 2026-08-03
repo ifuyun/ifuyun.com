@@ -18,7 +18,6 @@ export class WallpaperRelatedComponent implements OnInit {
   private readonly wallpaperService = inject(WallpaperService);
 
   readonly lang = input(WallpaperLang.CN);
-  readonly jigsaw = input(false);
 
   readonly isMobile = this.uaService.isMobile;
   readonly relatedWallpapers = signal<WallpaperSearchItem[]>([]);

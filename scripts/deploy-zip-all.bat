@@ -30,14 +30,6 @@ if errorlevel 1 (
     exit /b 1
 )
 
-echo Deploying jigsaw...
-npm run deploy:zip:jigsaw
-if errorlevel 1 (
-    echo Error during deploy:zip:jigsaw
-    popd
-    exit /b 1
-)
-
 echo Deploying game...
 npm run deploy:zip:game
 if errorlevel 1 (

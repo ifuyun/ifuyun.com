@@ -16,7 +16,7 @@ echo -e "\033[95m[git]\033[0m Pulled master."
 # set version
 VERSION=v$(npm pkg get version | tr -d '"')
 
-APPS=("www" "blog" "wallpaper" "jigsaw" "game")
+APPS=("www" "blog" "wallpaper" "game")
 for APP_NAME in "${APPS[@]}"; do
   PM2_APP_NAME="${APP_NAME}.ifuyun.com"
   ZIP_FILENAME="release_${APP_NAME}_${VERSION}.zip"

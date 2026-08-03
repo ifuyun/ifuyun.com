@@ -145,9 +145,11 @@ export class SignupConfirmComponent extends BaseComponent implements OnInit, OnD
 
         if (res.status === UserStatus.NORMAL) {
           this.message.info('账号已验证，无需重复验证');
-          this.router.navigate(['/user/signin'], {
-            relativeTo: this.route
-          });
+          this.router
+            .navigate(['/user/signin'], {
+              relativeTo: this.route
+            })
+            .then();
         }
       });
   }

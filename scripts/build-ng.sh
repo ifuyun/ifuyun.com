@@ -22,9 +22,6 @@ npm run build:ng:blog
 echo -e "Building wallpaper..."
 npm run build:ng:wallpaper
 
-echo -e "Building jigsaw..."
-npm run build:ng:jigsaw
-
 echo -e "Building game..."
 npm run build:ng:game
 

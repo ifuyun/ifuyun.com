@@ -16,9 +16,6 @@ npm run build:zip:blog
 echo -e "Zipping wallpaper..."
 npm run build:zip:wallpaper
 
-echo -e "Zipping jigsaw..."
-npm run build:zip:jigsaw
-
 echo -e "Zipping game..."
 npm run build:zip:game
 

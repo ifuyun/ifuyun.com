@@ -66,13 +66,10 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly domains = this.appConfigService.apps;
   readonly indexInfo = signal<PageIndexInfo | null>(null);
   readonly hotPosts = signal<PostEntity[]>([]);
-  readonly randomPosts = signal<PostEntity[]>([]);
   readonly postArchives = signal<ArchiveData[]>([]);
   readonly hotWallpapers = signal<HotWallpaper[]>([]);
-  readonly randomWallpapers = signal<Wallpaper[]>([]);
   readonly wallpaperArchives = signal<ArchiveData[]>([]);
   readonly hotGames = signal<GameEntity[]>([]);
-  readonly randomGames = signal<GameEntity[]>([]);
   readonly recentGames = signal<GameEntity[]>([]);
   readonly hotJigsaws = signal<Wallpaper[]>([]);
   readonly hotJigsawType = model('m');
@@ -107,7 +104,7 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
           this.pageIndex.set(pageIndex);
           this.indexInfo.set(indexInfo);
 
-          const { isPost, isWallpaper, isJigsaw, isGame, isTool, isPage, isSearch } = indexInfo;
+          const { isPost, isWallpaper, isGame, isTool, isPage, isSearch } = indexInfo;
 
           if (isPost || isPage || isTool || isSearch) {
             this.getHotPosts();
@@ -126,32 +123,20 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           if (isPost) {
             this.getPostArchives();
-            this.getRandomPosts();
           } else {
             this.postArchives.set([]);
-            this.randomPosts.set([]);
           }
           if (isWallpaper) {
             this.getWallpaperArchives();
+            this.getHotJigsaws();
           } else {
             this.wallpaperArchives.set([]);
-          }
-          if (isWallpaper || isJigsaw) {
-            this.getRandomWallpapers();
-          } else {
-            this.randomWallpapers.set([]);
+            this.hotJigsaws.set([]);
           }
           if (isGame) {
             this.getRecentGames();
-            this.getRandomGames();
           } else {
             this.recentGames.set([]);
-            this.randomGames.set([]);
-          }
-          if (isJigsaw) {
-            this.getHotJigsaws();
-          } else {
-            this.hotJigsaws.set([]);
           }
         }
       });
@@ -193,15 +178,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  private getRandomPosts() {
-    this.postService
-      .getRandomPosts(10, false)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.randomPosts.set(res);
-      });
-  }
-
   private getPostArchives() {
     this.postService
       .getPostArchives(true, 10)
@@ -220,15 +196,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  private getRandomWallpapers() {
-    this.wallpaperService
-      .getRandomWallpapers(10, true)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.randomWallpapers.set(res);
-      });
-  }
-
   private getWallpaperArchives() {
     this.wallpaperService
       .getWallpaperArchives(true, 10)
@@ -244,15 +211,6 @@ export class SiderComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.hotGames.set(res);
-      });
-  }
-
-  private getRandomGames() {
-    this.gameService
-      .getRandomGames(10)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.randomGames.set(res);
       });
   }
 

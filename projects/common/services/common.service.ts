@@ -67,7 +67,6 @@ export class CommonService {
       isSearch: topPage === 'search',
       isAuth: topPage === 'auth',
       isWallpaper: topPage === 'wallpaper',
-      isJigsaw: topPage === 'jigsaw',
       isGame: topPage === 'game',
       isTool: topPage === 'tool',
       fullPage: pageIndex,

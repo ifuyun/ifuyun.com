@@ -15,10 +15,6 @@ export const environment = {
       port: 6003,
       url: 'http://localhost:6003'
     },
-    jigsaw: {
-      port: 6004,
-      url: 'http://localhost:6004'
-    },
     game: {
       port: 6005,
       url: 'http://localhost:6005'

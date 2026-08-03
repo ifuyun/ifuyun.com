@@ -46,14 +46,6 @@ if errorlevel 1 (
     exit /b 1
 )
 
-echo Building jigsaw...
-call npm run build:ng:jigsaw
-if errorlevel 1 (
-    echo Error during build:jigsaw
-    popd
-    exit /b 1
-)
-
 echo Building game...
 call npm run build:ng:game
 if errorlevel 1 (

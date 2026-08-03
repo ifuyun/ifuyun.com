@@ -18,7 +18,6 @@ export class WallpaperPrevNextComponent implements OnInit {
   private readonly wallpaperService = inject(WallpaperService);
 
   readonly lang = input(WallpaperLang.CN);
-  readonly jigsaw = input(false);
 
   readonly isMobile = this.uaService.isMobile;
   readonly isChanged = signal(false);

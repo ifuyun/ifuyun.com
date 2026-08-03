@@ -53,11 +53,6 @@ app.get('/sitemap.xml', async (req, res) => {
         priority: 1
       },
       {
-        url: environment.apps.jigsaw.url,
-        changefreq: EnumChangefreq.ALWAYS,
-        priority: 1
-      },
-      {
         url: environment.apps.game.url,
         changefreq: EnumChangefreq.ALWAYS,
         priority: 1

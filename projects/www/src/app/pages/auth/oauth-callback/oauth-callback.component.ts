@@ -103,22 +103,26 @@ export class OauthCallbackComponent implements OnInit {
   private signin() {
     if (this.source() === 'weibo' && this.errorCode() === '21330') {
       // cancel
-      this.router.navigate(['/user/signin'], {
-        replaceUrl: true,
-        queryParams: {
-          ref: this.ref() ? encodeURIComponent(this.ref()) : null
-        }
-      });
+      this.router
+        .navigate(['/user/signin'], {
+          replaceUrl: true,
+          queryParams: {
+            ref: this.ref() ? encodeURIComponent(this.ref()) : null
+          }
+        })
+        .then();
       return;
     }
     if (this.source() === 'github' && this.errorCode() === 'access_denied') {
       // cancel
-      this.router.navigate(['/user/signin'], {
-        replaceUrl: true,
-        queryParams: {
-          ref: this.ref() ? encodeURIComponent(this.ref()) : null
-        }
-      });
+      this.router
+        .navigate(['/user/signin'], {
+          replaceUrl: true,
+          queryParams: {
+            ref: this.ref() ? encodeURIComponent(this.ref()) : null
+          }
+        })
+        .then();
       return;
     }
 

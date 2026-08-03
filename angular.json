@@ -5,8 +5,35 @@
   "projects": {
     "common": {
       "projectType": "library",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "less",
+          "skipTests": true
+        },
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:interceptor": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:resolver": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
       "root": "projects/common",
-      "sourceRoot": "projects/common/src",
+      "sourceRoot": "projects/common",
       "prefix": "lib",
       "architect": {
         "build": {
@@ -409,133 +436,6 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/wallpaper/tsconfig.spec.json",
-            "buildTarget": ":build:testing",
-            "runner": "vitest"
-          }
-        }
-      }
-    },
-    "jigsaw": {
-      "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "less",
-          "skipTests": true
-        },
-        "@schematics/angular:class": {
-          "skipTests": true
-        },
-        "@schematics/angular:directive": {
-          "skipTests": true
-        },
-        "@schematics/angular:guard": {
-          "skipTests": true
-        },
-        "@schematics/angular:interceptor": {
-          "skipTests": true
-        },
-        "@schematics/angular:pipe": {
-          "skipTests": true
-        },
-        "@schematics/angular:resolver": {
-          "skipTests": true
-        },
-        "@schematics/angular:service": {
-          "skipTests": true
-        }
-      },
-      "root": "projects/jigsaw",
-      "sourceRoot": "projects/jigsaw/src",
-      "prefix": "app",
-      "architect": {
-        "build": {
-          "builder": "@angular/build:application",
-          "options": {
-            "outputPath": "dist/jigsaw",
-            "index": "projects/jigsaw/src/index.html",
-            "browser": "projects/jigsaw/src/main.ts",
-            "tsConfig": "projects/jigsaw/tsconfig.app.json",
-            "inlineStyleLanguage": "less",
-            "allowedCommonJsDependencies": ["lodash", "murmurhash"],
-            "stylePreprocessorOptions": {
-              "includePaths": ["dist", "node_modules", "projects"]
-            },
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public",
-                "output": "/"
-              },
-              {
-                "glob": "**/*",
-                "input": "projects/jigsaw/public/assets",
-                "output": "/assets"
-              }
-            ],
-            "styles": ["projects/jigsaw/src/styles.less"],
-            "scripts": [
-              "node_modules/lazysizes/lazysizes.min.js",
-              "node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.min.js"
-            ],
-            "server": "projects/jigsaw/src/main.server.ts",
-            "outputMode": "server",
-            "security": {
-              "allowedHosts": []
-            },
-            "ssr": {
-              "entry": "projects/jigsaw/src/server.ts"
-            }
-          },
-          "configurations": {
-            "production": {
-              "deployUrl": "https://cdn.ifuyun.com/jigsaw/",
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "4MB",
-                  "maximumError": "6MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "10kB",
-                  "maximumError": "20kB"
-                }
-              ],
-              "outputHashing": "all"
-            },
-            "development": {
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true,
-              "fileReplacements": [
-                {
-                  "replace": "env/environment.ts",
-                  "with": "env/environment.development.ts"
-                }
-              ]
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "serve": {
-          "builder": "@angular/build:dev-server",
-          "options": {
-            "port": 2004
-          },
-          "configurations": {
-            "production": {
-              "buildTarget": "jigsaw:build:production"
-            },
-            "development": {
-              "buildTarget": "jigsaw:build:development"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "test": {
-          "builder": "@angular/build:unit-test",
-          "options": {
-            "tsConfig": "projects/jigsaw/tsconfig.spec.json",
             "buildTarget": ":build:testing",
             "runner": "vitest"
           }

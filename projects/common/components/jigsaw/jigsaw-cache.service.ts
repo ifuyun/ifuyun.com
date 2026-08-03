@@ -7,8 +7,7 @@ import { JigsawCacheData, JigsawCacheDB } from './jigsaw.interface';
 @Injectable({ providedIn: 'root' })
 export class JigsawCacheService {
   private readonly storeName = 'progress';
-
-  private dbPromise?: Promise<IDBPDatabase<JigsawCacheDB>>;
+  private readonly dbPromise?: Promise<IDBPDatabase<JigsawCacheDB>>;
 
   constructor(
     private readonly platform: PlatformService,

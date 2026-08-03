@@ -110,11 +110,10 @@ export class WallpaperService {
       .pipe(map((res) => res?.data?.archives || []));
   }
 
-  getWallpaperById(id: string, jigsaw = false): Observable<Wallpaper> {
+  getWallpaperById(id: string): Observable<Wallpaper> {
     return this.apiService
       .httpGet(ApiUrl.WALLPAPER, {
-        id,
-        jigsaw: jigsaw ? 1 : 0
+        id
       })
       .pipe(map((res) => res?.data));
   }

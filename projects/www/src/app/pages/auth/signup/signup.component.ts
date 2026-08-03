@@ -107,12 +107,14 @@ export class SignupComponent extends BaseComponent implements OnInit {
         this.signupLoading.set(false);
 
         if (res.id) {
-          this.router.navigate(['/user/confirm'], {
-            relativeTo: this.route,
-            queryParams: {
-              userId: res.id
-            }
-          });
+          this.router
+            .navigate(['/user/confirm'], {
+              relativeTo: this.route,
+              queryParams: {
+                userId: res.id
+              }
+            })
+            .then();
         }
       });
   }

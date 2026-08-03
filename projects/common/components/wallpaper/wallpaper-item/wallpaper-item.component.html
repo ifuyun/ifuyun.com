@@ -1,7 +1,7 @@
 @let w = wallpaper();
 @let i = index();
 @let l = wallpaperLocation();
-@let lp = linkPrefix();
+@let u = linkUrl();
 @if (mode() === 'list') {
   @if (!isMobile) {
     <article class="post-item">
@@ -9,7 +9,7 @@
         <div class="post-item-content">
           <header>
             <h2>
-              <lib-a [href]="lp + w.id"
+              <lib-a [href]="u"
                      [queryParams]="getLangParams(w.isCn)"
                      [title]="w.copyright"
                      rel="bookmark">{{ w.copyright }}</lib-a>
@@ -25,7 +25,7 @@
             <div title="浏览: {{ w.wallpaperStat.viewCount | numberView: 'K' }}">
               <nz-icon nzType="eye"/><span>{{ w.wallpaperStat.viewCount | numberView: 'K' }}</span>
             </div>
-            <lib-a [href]="domains['jigsaw'].url + '/detail/' + w.id"
+            <lib-a [href]="u"
                    title="拼图: {{ w.wallpaperStat.playCount | numberView: 'K' }}">
               <nz-icon nzType="product"/><span>{{ w.wallpaperStat.playCount | numberView: 'K' }}</span>
             </lib-a>
@@ -38,7 +38,7 @@
           </div>
         </div>
         <div class="post-item-cover">
-          <lib-a [href]="lp + w.id"
+          <lib-a [href]="u"
                  [queryParams]="getLangParams(w.isCn)"
                  [title]="w.copyright">
             @if (i > 3) {
@@ -56,7 +56,7 @@
     <article class="m-post-item">
       <header>
         <h2>
-          <lib-a [href]="lp + w.id"
+          <lib-a [href]="u"
                  [queryParams]="getLangParams(w.isCn)"
                  [title]="w.copyright"
                  rel="bookmark">{{ w.copyright }}</lib-a>
@@ -76,7 +76,7 @@
         </span>
       </div>
       <div class="m-post-item-cover">
-        <lib-a [href]="lp + w.id"
+        <lib-a [href]="u"
                [queryParams]="getLangParams(w.isCn)"
                [title]="w.copyright">
           @if (i > 3) {
@@ -97,7 +97,7 @@
   <article class="post-card-item">
     <div class="post-card-item-body">
       <div class="post-card-cover" [class.m-post-card-cover]="isMobile">
-        <lib-a [href]="lp + w.id"
+        <lib-a [href]="u"
                [queryParams]="getLangParams(w.isCn)"
                [title]="w.copyright">
           @if (i > 3) {
@@ -111,7 +111,7 @@
       </div>
       <div class="post-content">
         <h2>
-          <lib-a [href]="lp + w.id"
+          <lib-a [href]="u"
                  [queryParams]="getLangParams(w.isCn)"
                  [title]="w.copyright"
                  rel="bookmark">{{ w.copyright }}</lib-a>
@@ -132,14 +132,14 @@
               <div title="浏览: {{ w.wallpaperStat.viewCount | numberView: 'K' }}">
                 <nz-icon nzType="eye"/><span>{{ w.wallpaperStat.viewCount | numberView: 'K' }}</span>
               </div>
-              <lib-a [href]="domains['jigsaw'].url + '/detail/' + w.id"
+              <lib-a [href]="u"
                      title="拼图: {{ w.wallpaperStat.playCount | numberView: 'K' }}">
                 <nz-icon nzType="product"/><span>{{ w.wallpaperStat.playCount | numberView: 'K' }}</span>
               </lib-a>
               <div title="喜欢: {{ w.wallpaperStat.likeCount | numberView: 'K' }}">
                 <nz-icon nzType="like"/><span>{{ w.wallpaperStat.likeCount | numberView: 'K' }}</span>
               </div>
-              <lib-a [href]="lp + w.id"
+              <lib-a [href]="u"
                      [queryParams]="getLangParams(w.isCn)"
                      fragment="comments"
                      title="评论: {{ w.wallpaperStat.commentCount | numberView: 'K' }}">

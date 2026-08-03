@@ -30,14 +30,6 @@ if errorlevel 1 (
     exit /b 1
 )
 
-echo Zipping jigsaw...
-call npm run build:win:zip:jigsaw
-if errorlevel 1 (
-    echo Error during build:win:zip:jigsaw
-    popd
-    exit /b 1
-)
-
 echo Zipping game...
 call npm run build:win:zip:game
 if errorlevel 1 (

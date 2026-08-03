@@ -42,10 +42,12 @@
                 title="下载《{{w.copyright}}》 4K 超高清壁纸">
           <fi-download class="fi"/><span>{{ isMobile ? '4K' : '4K 超高清' }}</span>
         </button>
-        <a nz-button
-           nzType="primary"
-           [href]="domains['jigsaw'].url + '/detail/' + w.id"
-           title="《{{w.copyright}}》拼图"><nz-icon nzType="product"/><span>拼图</span></a>
+        <button nz-button
+                nzType="primary"
+                (click)="showJigsawModal()"
+                title="《{{w.copyright}}》拼图">
+          <nz-icon nzType="product"/><span>拼图</span>
+        </button>
       </div>
       <h2>{{ w.storyTitle }}</h2>
       <article [innerHTML]="w.story | safeHtml"></article>
@@ -107,5 +109,8 @@
   <lib-comment [targetType]="commentType"/>
   @if (shareVisible()) {
     <lib-share-modal [shareUrl]="shareUrl()" (close)="closeShareQrcode()"/>
+  }
+  @if (jigsawModalVisible()) {
+    <lib-jigsaw-modal [wallpaper]="w" (close)="closeJigsawModal()"/>
   }
 }

@@ -6,7 +6,6 @@ echo -e "\033[95m[deploy]\033[0m Starting deployment..."
 PM2_APP_NAME_WWW=www.ifuyun.com
 PM2_APP_NAME_BLOG=blog.ifuyun.com
 PM2_APP_NAME_WALLPAPER=wallpaper.ifuyun.com
-PM2_APP_NAME_JIGSAW=jigsaw.ifuyun.com
 PM2_APP_NAME_GAME=game.ifuyun.com
 SHELL_PATH=$(dirname $0)
 
@@ -20,8 +19,6 @@ pm2 stop PM2_APP_NAME_BLOG -s
 echo -e "\033[95m[server]\033[0m Server: \033[36m${PM2_APP_NAME_BLOG}\033[0m is stopped."
 pm2 stop PM2_APP_NAME_WALLPAPER -s
 echo -e "\033[95m[server]\033[0m Server: \033[36m${PM2_APP_NAME_WALLPAPER}\033[0m is stopped."
-pm2 stop PM2_APP_NAME_JIGSAW -s
-echo -e "\033[95m[server]\033[0m Server: \033[36m${PM2_APP_NAME_JIGSAW}\033[0m is stopped."
 pm2 stop PM2_APP_NAME_GAME -s
 echo -e "\033[95m[server]\033[0m Server: \033[36m${PM2_APP_NAME_GAME}\033[0m is stopped."
 # pull master
@@ -52,8 +49,6 @@ pm2 restart PM2_APP_NAME_BLOG
 echo -e "\033[95m[server]\033[0m Server: \033[36m${PM2_APP_NAME_BLOG}\033[0m is online."
 pm2 restart PM2_APP_NAME_WALLPAPER
 echo -e "\033[95m[server]\033[0m Server: \033[36m${PM2_APP_NAME_WALLPAPER}\033[0m is online."
-pm2 restart PM2_APP_NAME_JIGSAW
-echo -e "\033[95m[server]\033[0m Server: \033[36m${PM2_APP_NAME_JIGSAW}\033[0m is online."
 pm2 restart PM2_APP_NAME_GAME
 echo -e "\033[95m[server]\033[0m Server: \033[36m${PM2_APP_NAME_GAME}\033[0m is online."
 

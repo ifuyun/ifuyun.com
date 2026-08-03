@@ -33,11 +33,6 @@
                  title="高清壁纸"
                  (click)="closeSider()"><nz-icon nzType="picture"/><span>壁纸</span></lib-a>
         </li>
-        <li [class.active]="ii?.isJigsaw">
-          <lib-a [href]="domains['jigsaw'].url"
-                 title="壁纸拼图"
-                 (click)="closeSider()"><nz-icon nzType="product"/><span>拼图</span></lib-a>
-        </li>
         <li [class.active]="ii?.isGame">
           <lib-a [href]="domains['game'].url"
                  title="游戏"

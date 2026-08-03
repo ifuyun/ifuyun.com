@@ -1,0 +1,16 @@
+<nz-modal nzDraggable
+          nzCentered
+          nzTitle="拼图"
+          [nzWidth]="965"
+          [nzVisible]="visible()"
+          [nzBodyStyle]="{'max-height': '90vh', overflow: 'auto'}"
+          [nzClosable]="true"
+          [nzMaskClosable]="false"
+          [nzFooter]="null"
+          (nzOnCancel)="closeModal()"
+          (nzOnOk)="closeModal()">
+  <ng-container *nzModalContent>
+    <!-- modal width = canvas + border + padding + scroll bar = 900 + 2 + 48 + 15 -->
+    <lib-jigsaw [canvasWidth]="900" [canvasHeight]="600"/>
+  </ng-container>
+</nz-modal>

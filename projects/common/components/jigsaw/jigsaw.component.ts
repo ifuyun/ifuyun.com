@@ -21,7 +21,6 @@ import {
   SsrCookieService,
   UserAgentService
 } from 'common/core';
-import { WallpaperLang } from 'common/enums';
 import {
   IconDownloadComponent,
   IconFullscreenComponent,
@@ -137,23 +136,20 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly rankings = signal<JigsawLog[]>([]);
   readonly rankingLoading = signal(false);
 
-  readonly detailLink = computed(() => {
-    const wallpaper = this.wallpaper();
-
-    if (wallpaper) {
-      const url = this.domains['wallpaper'].url + '/detail/' + wallpaper.id;
-      const param = wallpaper.isCn ? '' : '?lang=' + WallpaperLang.EN;
-
-      return url + param;
-    }
-    return '';
-  });
   readonly gamePercent = computed(() => {
     const totalSteps = this.activeDifficulty().pieces - 1;
     if (totalSteps <= 0) {
       return this.isMobile ? '0' : '0.0';
     }
-    return ((this.gameSteps() / totalSteps) * 100).toFixed(this.isMobile ? 0 : 1);
+    const percent = (this.gameSteps() / totalSteps) * 100;
+    if (percent === 0) {
+      return '0';
+    }
+    if (percent === 100) {
+      return '100';
+    }
+
+    return percent.toFixed(this.isMobile ? 0 : 1);
   });
   readonly cacheKey = computed(() => {
     return 'jigsaw-' + (this.wallpaper()?.id || '');
@@ -186,7 +182,6 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly cachedPieces = signal<Record<number, Pick<JigsawPiece, 'displayX' | 'displayY'>>>({});
   // 原始图片
   private readonly originalImage = signal<HTMLImageElement | null>(null);
-  private readonly seed = Math.floor(Math.random() * 10000); // 随机种子
   // 锯齿参数
   private readonly tabSize = 20; // 锯齿大小百分比 (10-30)
   private readonly jitter = 4; // 锯齿抖动百分比 (0-13)
@@ -217,7 +212,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly gameSteps = signal(0);
 
   ngOnInit() {
-    this.jigsawService.setSeed(this.seed);
+    this.jigsawService.setSeed(this.generateSeed());
     this.jigsawService.setTabSize(this.tabSize);
     this.jigsawService.setJitter(this.jitter);
 
@@ -304,6 +299,7 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // 重新生成拼图
     this.initPuzzle();
+    this.arrange();
     this.startTimer();
     this.saveStartLog();
   }
@@ -416,8 +412,9 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     const lastHeight = this.canvasHeight();
 
     if (!this.isFullScreen() || resize) {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+      // 需要去除滚动条宽高
+      const width = this.document.body.clientWidth;
+      const height = this.document.body.clientHeight;
       const controlHeight = 32;
 
       this.isFullScreen.set(true);
@@ -578,6 +575,10 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  private generateSeed() {
+    return Math.floor(Math.random() * 10000);
+  }
+
   private getClipSize(canvas: HTMLCanvasElement) {
     let sourceX = 0;
     let sourceY = 0;
@@ -691,12 +692,9 @@ export class JigsawComponent implements OnInit, AfterViewInit, OnDestroy {
     const { rows, cols } = this.activeDifficulty();
 
     // 设置锯齿参数
-    this.jigsawService.setSeed(this.seed);
+    this.jigsawService.setSeed(this.generateSeed());
     this.jigsawService.setTabSize(this.tabSize);
     this.jigsawService.setJitter(this.jitter);
-
-    // 重置缩放比例
-    this.zoomScale.set(1);
 
     // 生成拼图块
     this.jigsawPieces.set(

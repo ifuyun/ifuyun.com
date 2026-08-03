@@ -6,7 +6,6 @@ export interface AccessLog {
   au: string;
   s: 'web' | 'admin';
   rf: string;
-  rm?: string;
   sw: number | null;
   sh: number | null;
   cd: string;
