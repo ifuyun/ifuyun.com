@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { UserSource } from 'common/enums';
 import { format, generateId } from 'common/utils';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -80,7 +81,7 @@ export class AuthService {
     return this.apiService.httpPost(ApiUrl.AUTH_SEND_CODE, payload, true).pipe(map((res) => res || {}));
   }
 
-  oauthSignin(authCode: string, source: string): Observable<HttpResponseEntity> {
+  oauthSignin(authCode: string, source: UserSource): Observable<HttpResponseEntity> {
     return this.apiService
       .httpPost(
         ApiUrl.AUTH_OAUTH,
@@ -125,50 +126,61 @@ export class AuthService {
     this.cookieService.delete(COOKIE_KEY_USER_TOKEN);
   }
 
-  getOauthURL(param: { type: string; ref: string; options: OptionEntity; callbackUrl: string; isMobile: boolean }) {
-    const { type, ref, options, callbackUrl, isMobile } = param;
-    const oauthApi: Record<string, string> = Object.freeze({
-      wechat: '',
-      qq: '',
-      alipay:
-        'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=$0&scope=auth_user&redirect_uri=$1&state=$2',
-      weibo: 'https://api.weibo.com/oauth2/authorize?client_id=$0&response_type=code&redirect_uri=$1&state=$2',
-      github: 'https://github.com/login/oauth/authorize?client_id=$0&redirect_uri=$1&state=$2'
-    });
+  getOauthURL(param: {
+    source: UserSource;
+    ref: string;
+    options: OptionEntity;
+    callbackUrl: string;
+    isMobile: boolean;
+  }) {
+    const { source, ref, options, callbackUrl, isMobile } = param;
+    const oauthApi = new Map<UserSource, string>([
+      [
+        UserSource.ALIPAY,
+        'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=$0&scope=auth_user&redirect_uri=$1&state=$2'
+      ],
+      [
+        UserSource.WEIBO,
+        'https://api.weibo.com/oauth2/authorize?client_id=$0&response_type=code&redirect_uri=$1&state=$2'
+      ],
+      [UserSource.GITHUB, 'https://github.com/login/oauth/authorize?client_id=$0&redirect_uri=$1&state=$2'],
+      [UserSource.WECHAT, ''],
+      [UserSource.QQ, '']
+    ]);
     let url = '';
 
-    switch (type) {
-      case 'alipay':
+    switch (source) {
+      case UserSource.ALIPAY:
         if (isMobile) {
           const authUrl = format(
-            oauthApi[type],
+            oauthApi.get(source)!,
             options['open_alipay_app_id'],
-            encodeURIComponent(this.getOauthCallbackURL('m_alipay', ref, callbackUrl)),
+            encodeURIComponent(this.getOauthCallbackURL(UserSource.ALIPAY_MOBILE, ref, callbackUrl)),
             this.generateState(ref)
           );
           url = `alipays://platformapi/startapp?appId=20000067&url=${encodeURIComponent(authUrl)}`;
         } else {
           url = format(
-            oauthApi[type],
+            oauthApi.get(source)!,
             options['open_alipay_app_id'],
-            encodeURIComponent(this.getOauthCallbackURL('alipay', ref, callbackUrl)),
+            encodeURIComponent(this.getOauthCallbackURL(UserSource.ALIPAY, ref, callbackUrl)),
             this.generateState(ref)
           );
         }
         break;
-      case 'weibo':
+      case UserSource.WEIBO:
         url = format(
-          oauthApi[type],
+          oauthApi.get(source)!,
           options['open_weibo_app_key'],
-          encodeURIComponent(this.getOauthCallbackURL('weibo', ref, callbackUrl)),
+          encodeURIComponent(this.getOauthCallbackURL(UserSource.WEIBO, ref, callbackUrl)),
           this.generateState(ref)
         );
         break;
-      case 'github':
+      case UserSource.GITHUB:
         url = format(
-          oauthApi[type],
+          oauthApi.get(source)!,
           options['open_github_client_id'],
-          encodeURIComponent(this.getOauthCallbackURL('github', ref, callbackUrl)),
+          encodeURIComponent(this.getOauthCallbackURL(UserSource.GITHUB, ref, callbackUrl)),
           this.generateState(ref)
         );
     }
@@ -176,9 +188,9 @@ export class AuthService {
     return url;
   }
 
-  getOauthCallbackURL(channel: string, ref: string, callbackUrl: string) {
-    callbackUrl = callbackUrl.replace('{from}', channel);
-    if (channel === 'github') {
+  getOauthCallbackURL(source: UserSource, ref: string, callbackUrl: string) {
+    callbackUrl = callbackUrl.replace('{from}', source + '');
+    if (source === UserSource.GITHUB) {
       return callbackUrl.replace('{ref}', '');
     }
     return callbackUrl.replace('{ref}', encodeURIComponent(ref));

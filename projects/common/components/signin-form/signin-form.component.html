@@ -58,24 +58,24 @@
     <div class="auth-type">
       <nz-icon nzType="wechat"
                class="auth-type-wechat"
-               [class.disabled]="!o['wechat']"
-               (click)="oauthSignin('wechat')"/>
+               [class.disabled]="!o[4]"
+               (click)="oauthSignin(4)"/>
       <nz-icon nzType="qq"
                class="auth-type-qq"
-               [class.disabled]="!o['qq']"
-               (click)="oauthSignin('qq')"/>
+               [class.disabled]="!o[5]"
+               (click)="oauthSignin(5)"/>
       <nz-icon nzType="alipay"
                class="auth-type-alipay"
-               [class.disabled]="!o['alipay']"
-               (click)="oauthSignin('alipay')"/>
+               [class.disabled]="!o[2]"
+               (click)="oauthSignin(2)"/>
       <nz-icon nzType="weibo"
                class="auth-type-weibo"
-               [class.disabled]="!o['weibo']"
-               (click)="oauthSignin('weibo')"/>
+               [class.disabled]="!o[6]"
+               (click)="oauthSignin(6)"/>
       <nz-icon nzType="github"
                class="auth-type-github"
-               [class.disabled]="!o['github']"
-               (click)="oauthSignin('github')"/>
+               [class.disabled]="!o[7]"
+               (click)="oauthSignin(7)"/>
     </div>
   }
 </form>
