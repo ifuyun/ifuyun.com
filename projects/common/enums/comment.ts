@@ -13,8 +13,8 @@ export enum CommentStatus {
 }
 
 export enum CommentTargetType {
-  POST = 'post',
-  PAGE = 'page',
-  WALLPAPER = 'wallpaper',
-  GAME = 'game'
+  POST = 1,
+  PAGE = 2,
+  WALLPAPER = 3,
+  GAME = 4
 }

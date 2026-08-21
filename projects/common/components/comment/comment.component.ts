@@ -191,8 +191,8 @@ export class CommentComponent extends BaseComponent implements OnInit {
         });
 
         if (res.code === ResponseCode.SUCCESS) {
-          comment.likes = res.data.likeCount;
-          comment.dislikes = res.data.dislikeCount;
+          comment.likeCount = res.data.likeCount;
+          comment.dislikeCount = res.data.dislikeCount;
           comment.liked = like;
           comment.disliked = !like;
         }

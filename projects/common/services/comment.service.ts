@@ -70,7 +70,7 @@ export class CommentService {
   }): Observable<ResultList<Comment>> {
     const { targetId, targetType, page, size } = param;
 
-    if (targetType === CommentTargetType.POST) {
+    if (targetType === CommentTargetType.POST || targetType === CommentTargetType.PAGE) {
       return this.getCommentsByPostId({
         postId: targetId,
         page,

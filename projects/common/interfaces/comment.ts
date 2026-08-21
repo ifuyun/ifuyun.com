@@ -27,8 +27,8 @@ export interface CommentModel extends CommentDto {
   userAgent: string;
   parentId: string;
   userId: string;
-  likes: number;
-  dislikes: number;
+  likeCount: number;
+  dislikeCount: number;
   user?: UserModel;
   userLocation: string;
   liked?: boolean;

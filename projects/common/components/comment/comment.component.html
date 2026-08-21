@@ -47,7 +47,7 @@
                   } @else {
                     <nz-icon nzType="like" [nzTheme]="comment.liked ? 'fill' : 'outline'"/>
                   }
-                  <span>{{ comment.likes }}</span>
+                  <span>{{ comment.likeCount }}</span>
                 </a>
                 <a [class.voted]="comment.disliked"
                    [class.disabled]="comment.liked || comment.disliked || vlm[comment.id]"
@@ -57,7 +57,7 @@
                   } @else {
                     <nz-icon nzType="dislike" [nzTheme]="comment.disliked ? 'fill' : 'outline'"/>
                   }
-                  <span>{{ comment.dislikes }}</span>
+                  <span>{{ comment.dislikeCount }}</span>
                 </a>
                 @if (!rvm[comment.id]) {
                   <a (click)="reply(comment)"><fi-chat-square class="fi"/><span>回复</span></a>
@@ -100,7 +100,7 @@
                       } @else {
                         <nz-icon nzType="like" [nzTheme]="comment.liked ? 'fill' : 'outline'"/>
                       }
-                      <span>{{ comment.likes }}</span>
+                      <span>{{ comment.likeCount }}</span>
                     </a>
                     <a [class.voted]="comment.disliked"
                        [class.disabled]="comment.liked || comment.disliked || vlm[comment.id]"
@@ -110,7 +110,7 @@
                       } @else {
                         <nz-icon nzType="dislike" [nzTheme]="comment.disliked ? 'fill' : 'outline'"/>
                       }
-                      <span>{{ comment.dislikes }}</span>
+                      <span>{{ comment.dislikeCount }}</span>
                     </a>
                     @if (!rvm[comment.id]) {
                       <a (click)="reply(comment)"><fi-chat-square/></a>
