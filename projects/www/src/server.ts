@@ -88,8 +88,7 @@ app.get('/sitemap.xml', async (req, res) => {
     streamToPromise(<Readable>Readable.from(links.concat(pages, tools)).pipe(sitemapStream)).then((data) => {
       return res.type('application/xml').send(data.toString());
     });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (e: any) {
+  } catch {
     res.status(HttpStatusCode.InternalServerError).send(Message.ERROR_500);
   }
 });

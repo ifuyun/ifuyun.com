@@ -161,8 +161,7 @@ export class GameService {
       const games: GameCachedItem[] = JSON.parse(localStorage.getItem(STORAGE_KEY_GAMES) || '[]');
 
       return games.sort((a, b) => (a.added < b.added ? (desc ? 1 : -1) : desc ? -1 : 1));
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e) {
+    } catch {
       return [];
     }
   }
@@ -184,8 +183,7 @@ export class GameService {
       }
       cachedGames.push(game);
       localStorage.setItem(STORAGE_KEY_GAMES, JSON.stringify(cachedGames));
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e) {}
+    } catch {}
   }
 
   saveGameLog(log: GameLogEntity): Observable<HttpResponseEntity> {

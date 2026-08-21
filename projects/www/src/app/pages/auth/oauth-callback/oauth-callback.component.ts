@@ -90,8 +90,7 @@ export class OauthCallbackComponent implements OnInit {
           } else {
             this.ref.set(decodeURIComponent(this.ref()));
           }
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (e) {}
+        } catch {}
 
         if (this.platform.isBrowser) {
           this.signin();
@@ -105,13 +104,15 @@ export class OauthCallbackComponent implements OnInit {
 
   private signin() {
     const source = this.source();
+    const ref = this.ref();
+
     if (!source) {
       this.message.error('登录方式不支持');
       this.router
         .navigate(['/user/signin'], {
           replaceUrl: true,
           queryParams: {
-            ref: this.ref() ? encodeURIComponent(this.ref()) : null
+            ref: ref ? encodeURIComponent(ref) : null
           }
         })
         .then();
@@ -124,7 +125,7 @@ export class OauthCallbackComponent implements OnInit {
         .navigate(['/user/signin'], {
           replaceUrl: true,
           queryParams: {
-            ref: this.ref() ? encodeURIComponent(this.ref()) : null
+            ref: ref ? encodeURIComponent(ref) : null
           }
         })
         .then();
@@ -137,7 +138,7 @@ export class OauthCallbackComponent implements OnInit {
         .navigate(['/user/signin'], {
           replaceUrl: true,
           queryParams: {
-            ref: this.ref() ? encodeURIComponent(this.ref()) : null
+            ref: ref ? encodeURIComponent(ref) : null
           }
         })
         .then();

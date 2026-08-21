@@ -58,8 +58,7 @@ export class JigsawCacheService {
     if (record.sign === signature) {
       try {
         return JSON.parse(cacheData);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {
+      } catch {
         return null;
       }
     }

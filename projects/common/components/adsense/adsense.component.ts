@@ -112,8 +112,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
     if (this.dynamic() && this.optionKey()) {
       try {
         adsenseOptions = JSON.parse(this.options()[this.optionKey()]);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {}
+      } catch {}
     }
     adsenseOptions = {
       ...defaults,
@@ -156,8 +155,7 @@ export class AdsenseComponent implements AfterViewInit, OnDestroy {
           this.renderAdsense();
 
           ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(ads);
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (e: any) {
+        } catch {
           this.adsService.updateAdsStatus(AdsStatus.ERROR);
         }
       } else {

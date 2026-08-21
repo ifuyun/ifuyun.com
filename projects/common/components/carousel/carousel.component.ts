@@ -45,8 +45,7 @@ export class CarouselComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((options) => {
         try {
           this.carouselOptions.set(JSON.parse(options['carousel_config']));
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (e) {
+        } catch {
           this.carouselOptions.set({ type: 'wallpaper', orderBy: 'newest' });
         }
 
