@@ -115,6 +115,7 @@ export class OauthCallbackComponent implements OnInit {
           }
         })
         .then();
+
       return;
     }
     if (source === UserSource.WEIBO && this.errorCode() === '21330') {
@@ -127,6 +128,7 @@ export class OauthCallbackComponent implements OnInit {
           }
         })
         .then();
+
       return;
     }
     if (source === UserSource.GITHUB && this.errorCode() === 'access_denied') {
@@ -139,6 +141,7 @@ export class OauthCallbackComponent implements OnInit {
           }
         })
         .then();
+
       return;
     }
 

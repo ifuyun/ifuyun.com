@@ -190,6 +190,7 @@ export class AuthService {
 
   getOauthCallbackURL(source: UserSource, ref: string, callbackUrl: string) {
     callbackUrl = callbackUrl.replace('{from}', source + '');
+
     if (source === UserSource.GITHUB) {
       return callbackUrl.replace('{ref}', '');
     }

@@ -377,6 +377,7 @@ export class PostComponent implements OnInit {
 
     this.postService.updateActivePostId(post.id);
     this.postService.updateActivePost(post);
+
     this.updateBreadcrumbs(this.isArticle() ? post.breadcrumbs || [] : []);
     this.updatePageIndex();
     this.updatePageInfo();
@@ -388,6 +389,7 @@ export class PostComponent implements OnInit {
       url: `/category/${item.slug}`,
       domain: 'blog'
     }));
+
     breadcrumbs.unshift({
       label: '博客',
       tooltip: '博客',
