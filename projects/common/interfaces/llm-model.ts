@@ -1,4 +1,4 @@
-import { LlmModelStatus, LlmModelType, SwitchValue } from 'common/enums';
+import { AiModelStatus, AiModelType, SwitchValue } from 'common/enums';
 
 export interface LlmModelEntity {
   id: string;
@@ -6,7 +6,7 @@ export interface LlmModelEntity {
   name: string;
   displayName: string;
   description?: string;
-  type: LlmModelType;
+  type: AiModelType;
   inputText?: SwitchValue;
   inputImage?: SwitchValue;
   inputAudio?: SwitchValue;
@@ -35,7 +35,7 @@ export interface LlmModelEntity {
   presencePenaltyDefault?: number;
   releaseDate?: number;
   sort: number;
-  status: LlmModelStatus;
+  status: AiModelStatus;
 }
 
 export interface LlmModel extends LlmModelEntity {

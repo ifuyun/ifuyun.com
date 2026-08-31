@@ -1,4 +1,4 @@
-export enum LlmModelType {
+export enum AiModelType {
   TEXT_GENERATION = 'text-generation',
   REASONING = 'reasoning',
   TRANSLATION = 'translation',
@@ -11,7 +11,7 @@ export enum LlmModelType {
   EMBEDDING = 'embedding'
 }
 
-export enum LlmModelStatus {
+export enum AiModelStatus {
   TRASHED = 2,
   DISABLED = 16,
   ACTIVE = 17,

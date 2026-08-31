@@ -13,7 +13,6 @@ import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { apiRequestInterceptor, AppConfigModule, GlobalErrorHandler } from 'common/core';
 import { environment } from 'env/environment';
 import { provideNzNoAnimation } from 'ng-zorro-antd/core/animation';
-import { provideNzDateFnsAdapter } from 'ng-zorro-antd/core/time';
 import { provideNzI18n, zh_CN } from 'ng-zorro-antd/i18n';
 import { provideNzIcons } from 'ng-zorro-antd/icon';
 import { routes } from './app.routes';
@@ -56,7 +55,6 @@ export const appConfig: ApplicationConfig = {
     provideNzI18n(zh_CN),
     importProvidersFrom(FormsModule),
     provideNzIcons(icons),
-    provideNzDateFnsAdapter(),
     provideNzNoAnimation()
   ]
 };

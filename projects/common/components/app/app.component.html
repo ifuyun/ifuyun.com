@@ -19,7 +19,7 @@
                      [post]="post()"
                      [wallpaper]="wallpaper()"
                      [targetType]="ii?.isPost ? 'post' : 'wallpaper'"
-                     (closeDrawer)="closeChat()"/>
+                     (onClose)="closeChat()"/>
       }
       <lib-wallpaper-modal [visible]="wallpaperModalVisible()" (close)="closeWallpaperModal()"/>
     } @else {

@@ -79,9 +79,7 @@ export class AiChatComponent extends BaseComponent implements OnInit {
   readonly targetType = model<'post' | 'wallpaper'>('post');
   readonly post = input<PostVo | null>(null);
   readonly wallpaper = input<Wallpaper | null>(null);
-  readonly closeDrawer = output<void>();
-
-  readonly chatBody = viewChild.required<ElementRef<HTMLDivElement>>('chatBody');
+  readonly onClose = output<void>();
 
   readonly noAuthMessage = Message.USER_CHAT_BOT_IS_CLOSED;
   readonly expiredMessage = Message.USER_CHAT_BOT_IS_EXPIRED;
@@ -171,6 +169,7 @@ export class AiChatComponent extends BaseComponent implements OnInit {
   private readonly noneContent = '无输出';
   private readonly copyTimeout = 2000;
 
+  private readonly chatBody = viewChild.required<ElementRef<HTMLDivElement>>('chatBody');
   private readonly options = signal<OptionEntity>({});
   private readonly inputFlag = signal(false);
   private readonly user = signal<UserModel | null>(null);
@@ -292,7 +291,7 @@ export class AiChatComponent extends BaseComponent implements OnInit {
   }
 
   closeChat() {
-    this.closeDrawer.emit();
+    this.onClose.emit();
   }
 
   sendStreamMessage() {

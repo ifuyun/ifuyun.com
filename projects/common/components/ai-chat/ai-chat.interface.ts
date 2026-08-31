@@ -1,6 +1,6 @@
 import { MessageRole, MessageStatus, ReasoningEffort } from './ai-chat.enum';
 
-export interface BotMessage {
+export interface AiMessage {
   id: string;
   conversationId: string;
   role: MessageRole;

@@ -5,7 +5,7 @@ import { ClipboardService } from 'ngx-clipboard';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ICON_COPIED, ICON_COPY } from './ai-chat.constant';
-import { BotMessage, ChatChunk, ChatFinish, StreamChatEvent, StreamChatParam } from './ai-chat.interface';
+import { AiMessage, ChatChunk, ChatFinish, StreamChatEvent, StreamChatParam } from './ai-chat.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +30,7 @@ export class AiChatService {
     return this.apiService.httpGet(ApiUrl.BOT_MESSAGE_USAGE).pipe(map((res) => res?.data || {}));
   }
 
-  getMessages(conversationId: string): Observable<BotMessage[]> {
+  getMessages(conversationId: string): Observable<AiMessage[]> {
     return this.apiService.httpGet(ApiUrl.BOT_MESSAGES, { conversationId }).pipe(map((res) => res?.data || []));
   }
 
